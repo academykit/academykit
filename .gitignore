@@ -10,6 +10,8 @@
 *.userosscache
 *.sln.docstates
 
+.vs
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -30,8 +32,9 @@ mono_crash.*
 /src/Domain/bin/*
 
 
-/src/WebApi/obj/*
-/src/WebApi/bin/*
+/src/Api/obj/*
+/src/Api/bin/*
+/src/Api/Properties/*
 
 /tests/Application.IntegrationTests/bin/*
 /tests/Application.IntegrationTests/obj/*
