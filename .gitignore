@@ -17,8 +17,16 @@
 mono_crash.*
 
 # Build results
-/src/Appplication/bin/*
-[Oo]bj/*
+
+
+
+src/Infrastructure/obj/*
+src/Infrastructure/bin/*
+
+src/Appplication/obj/*
+src/Application/bin/*
+
+
 
 [Dd]ebug/
 [Dd]ebugPublic/
