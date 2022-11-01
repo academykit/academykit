@@ -277,42 +277,35 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Dell\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/Users/bijaydhimal/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Development\\lingtren\\src\\WebApi\\WebApi.csproj",
+      "projectUniqueName": "/Users/bijaydhimal/Documents/VuriloProject/lingtren/src/WebApi/WebApi.csproj",
       "projectName": "WebApi",
-      "projectPath": "E:\\Development\\lingtren\\src\\WebApi\\WebApi.csproj",
-      "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
-      "outputPath": "E:\\Development\\lingtren\\src\\WebApi\\obj\\",
+      "projectPath": "/Users/bijaydhimal/Documents/VuriloProject/lingtren/src/WebApi/WebApi.csproj",
+      "packagesPath": "/Users/bijaydhimal/.nuget/packages/",
+      "outputPath": "/Users/bijaydhimal/Documents/VuriloProject/lingtren/src/WebApi/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/bijaydhimal/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "E:\\Development\\lingtren\\src\\Application\\Application.csproj": {
-              "projectPath": "E:\\Development\\lingtren\\src\\Application\\Application.csproj"
+            "/Users/bijaydhimal/Documents/VuriloProject/lingtren/src/Application/Application.csproj": {
+              "projectPath": "/Users/bijaydhimal/Documents/VuriloProject/lingtren/src/Application/Application.csproj"
             },
-            "E:\\Development\\lingtren\\src\\Infrastructure\\Infrastructure.csproj": {
-              "projectPath": "E:\\Development\\lingtren\\src\\Infrastructure\\Infrastructure.csproj"
+            "/Users/bijaydhimal/Documents/VuriloProject/lingtren/src/Infrastructure/Infrastructure.csproj": {
+              "projectPath": "/Users/bijaydhimal/Documents/VuriloProject/lingtren/src/Infrastructure/Infrastructure.csproj"
             }
           }
         }
@@ -351,7 +344,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.400/RuntimeIdentifierGraph.json"
       }
     }
   }
