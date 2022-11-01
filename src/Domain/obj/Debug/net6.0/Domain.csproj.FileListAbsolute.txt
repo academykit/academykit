@@ -1,0 +1,12 @@
+E:\Development\lingtren\src\Domain\bin\Debug\net6.0\Domain.deps.json
+E:\Development\lingtren\src\Domain\bin\Debug\net6.0\Domain.dll
+E:\Development\lingtren\src\Domain\bin\Debug\net6.0\Domain.pdb
+E:\Development\lingtren\src\Domain\obj\Debug\net6.0\Domain.csproj.AssemblyReference.cache
+E:\Development\lingtren\src\Domain\obj\Debug\net6.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\Development\lingtren\src\Domain\obj\Debug\net6.0\Domain.AssemblyInfoInputs.cache
+E:\Development\lingtren\src\Domain\obj\Debug\net6.0\Domain.AssemblyInfo.cs
+E:\Development\lingtren\src\Domain\obj\Debug\net6.0\Domain.csproj.CoreCompileInputs.cache
+E:\Development\lingtren\src\Domain\obj\Debug\net6.0\Domain.dll
+E:\Development\lingtren\src\Domain\obj\Debug\net6.0\refint\Domain.dll
+E:\Development\lingtren\src\Domain\obj\Debug\net6.0\Domain.pdb
+E:\Development\lingtren\src\Domain\obj\Debug\net6.0\ref\Domain.dll
