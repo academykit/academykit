@@ -31,9 +31,7 @@ mono_crash.*
 
 
 /src/WebApi/obj/*
-
-
-src/WebApi/bin/*
+/src/WebApi/bin/*
 
 /tests/Application.IntegrationTests/bin/*
 /tests/Application.IntegrationTests/obj/*
@@ -482,4 +480,4 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 
-.gitignore
+
