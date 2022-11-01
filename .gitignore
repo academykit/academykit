@@ -23,7 +23,7 @@ mono_crash.*
 src/Infrastructure/obj/*
 src/Infrastructure/bin/*
 
-src/Appplication/obj/*
+src/Application/obj/*
 src/Application/bin/*
 
 
