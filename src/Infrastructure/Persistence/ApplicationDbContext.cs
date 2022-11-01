@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Persistence
+﻿namespace Lingtren.Infrastructure.Persistence
 {
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
