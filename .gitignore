@@ -20,11 +20,31 @@ mono_crash.*
 
 
 
-src/Infrastructure/obj/*
-src/Infrastructure/bin/*
+/src/Infrastructure/obj/*
+/src/Infrastructure/bin/*
 
-src/Application/obj/*
-src/Application/bin/*
+/src/Application/obj/*
+/src/Application/bin/*
+
+/src/Domain/obj/*
+/src/Domain/bin/*
+
+
+/src/WebApi/obj/*
+
+
+src/WebApi/bin/*
+
+/tests/Application.IntegrationTests/bin/*
+/tests/Application.IntegrationTests/obj/*
+
+
+/tests/Application.UnitTests/bin/*
+/tests/Application.UnitTests/obj/*
+
+
+/tests/Domain.UnitTests/bin/*
+/tests/Domain.UnitTests/obj/*
 
 
 
@@ -461,3 +481,5 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+.gitignore
