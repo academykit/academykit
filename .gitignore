@@ -10,7 +10,7 @@
 *.userosscache
 *.sln.docstates
 
-.vs
+*.vs
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -20,7 +20,7 @@ mono_crash.*
 
 # Build results
 
-
+[Oo]bj
 
 /src/Infrastructure/obj/*
 /src/Infrastructure/bin/*

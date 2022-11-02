@@ -1,13 +1,10 @@
 ﻿namespace Lingtren.Domain.Entities
 {
+    using Lingtren.Domain.Common;
     using Lingtren.Domain.Enums;
 
-    public class User
+    public class User : AuditableEntity
     {
-        /// <summary>
-        /// Get or set id
-        /// </summary>
-        public Guid Id { get; set; }
 
         /// <summary>
         /// Get or set first name
@@ -30,9 +27,9 @@
         public string Email { get; set; }
 
         /// <summary>
-        /// Get or set phone number
+        /// Get or set mobile number
         /// </summary>
-        public string PhoneNumber { get; set; }
+        public string MobileNumber { get; set; }
 
         /// <summary>
         /// Get or set role
@@ -70,26 +67,6 @@
         public bool IsActive { get; set; }
 
         /// <summary>
-        /// Get or set created on
-        /// </summary>
-        public DateTime CreatedOn { get; set; }
-
-        /// <summary>
-        /// Get or set created by
-        /// </summary>
-        public Guid? CreatedBy { get; set; }
-
-        /// <summary>
-        /// Get or set updated on
-        /// </summary>
-        public DateTime UpdatedOn { get; set; }
-
-        /// <summary>
-        /// Get or set updated by
-        /// </summary>
-        public Guid? UpdatedBy { get; set; }
-
-        /// <summary>
         /// Get or set password reset token
         /// </summary>
         public string PasswordResetToken { get; set; }
@@ -97,11 +74,13 @@
         /// <summary>
         /// Get or set password reset token expiry
         /// </summary>
-        public DateTime PasswordResetTokenExpiry { get; set; }
+        public DateTime? PasswordResetTokenExpiry { get; set; }
 
         /// <summary>
         /// Get or set password change token
         /// </summary>
         public string PasswordChangeToken { get; set; }
+
+        public IList<RefreshToken> RefreshTokens { get; set; }
     }
 }

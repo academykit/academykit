@@ -10,7 +10,7 @@
         /// <summary>
         /// Get or set created by
         /// </summary>
-        public long CreatedBy { get; set; }
+        public Guid CreatedBy { get; set; }
 
         /// <summary>
         /// Get or set created on
@@ -20,12 +20,12 @@
         /// <summary>
         /// Get or set updated by
         /// </summary>
-        public long? UpdatedBy { get; set; }
+        public Guid? UpdatedBy { get; set; }
 
         /// <summary>
         /// Get or set updated on
         /// </summary>
-        public DateTime UpdatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
 
 
         /// <summary>

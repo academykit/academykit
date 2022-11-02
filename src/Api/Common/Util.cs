@@ -53,9 +53,9 @@
         {
             var userId = claimsPrincipal.GetClaim(ClaimTypes.NameIdentifier, isRequired: true);
             var email = claimsPrincipal.GetClaim(ClaimTypes.Email, isRequired: false);
-            var phoneNumber = claimsPrincipal.GetClaim("phone_number", isRequired: false);
+            var mobileNumber = claimsPrincipal.GetClaim("mobile_number", isRequired: false);
 
-            return new CurrentUser { Id = long.Parse(userId), Email = email, PhoneNumber = phoneNumber, };
+            return new CurrentUser { Id = long.Parse(userId), Email = email, MobileNumber = mobileNumber, };
         }
 
         /// <summary>

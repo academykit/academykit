@@ -4,14 +4,12 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    internal static class ServiceConfigurationExtensions
+    public static class ServiceConfigurationExtensions
     {
-        internal static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            var dbConnectionString = configuration.GetConnectionString("DefaultConnection");
-            var serverVersion = MySqlServerVersion.LatestSupportedServerVersion;
-
-            services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(dbConnectionString, serverVersion),
+            services.AddDbContext<ApplicationDbContext>(options => options.UseMySql
+            (configuration.GetConnectionString("DefaultConnection"), MySqlServerVersion.LatestSupportedServerVersion),
             ServiceLifetime.Scoped);
 
             return services;
