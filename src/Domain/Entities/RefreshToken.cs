@@ -1,8 +1,9 @@
 ﻿namespace Lingtren.Domain.Entities
 {
-    public class RefreshToken
+    using Lingtren.Domain.Common;
+
+    public class RefreshToken : AuditableEntity
     {
-        public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public string Token { get; set; }
         public DateTime LoginAt { get; set; }

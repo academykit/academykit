@@ -32,9 +32,9 @@ namespace Application.Common.Models.ResponseModels
         public string Email { get; set; }
 
         /// <summary>
-        /// Get or set phone number
+        /// Get or set mobile number
         /// </summary>
-        public string PhoneNumber { get; set; }
+        public string MobileNumber { get; set; }
 
         /// <summary>
         /// Get or set role
@@ -87,7 +87,7 @@ namespace Application.Common.Models.ResponseModels
             MiddleName = user.MiddleName;
             LastName = user.LastName;
             Email = user.Email;
-            PhoneNumber = user.PhoneNumber;
+            MobileNumber = user.MobileNumber;
             Role = user.Role;
             Profession = user.Profession;
             Address = user.Address;
