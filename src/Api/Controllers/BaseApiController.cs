@@ -1,6 +1,8 @@
 ﻿namespace Lingtren.Api.Controllers
 {
     using Lingtren.Api.Common;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     [ApiVersion("1.0")]
@@ -8,6 +10,7 @@
     [ApiController]
     [Produces("application/json")]
     // [ApiExplorerSettings(IgnoreApi = true)] 
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class BaseApiController : ControllerBase
     {
         /// <summary>

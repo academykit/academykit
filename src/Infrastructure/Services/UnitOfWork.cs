@@ -1,11 +1,8 @@
-﻿
-
-namespace Lingtren.Infrastructure.Services
+﻿namespace Lingtren.Infrastructure.Services
 {
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Persistence;
-    using Lingtren.Infrastructure.Services;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;

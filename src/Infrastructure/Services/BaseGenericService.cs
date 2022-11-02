@@ -39,8 +39,8 @@
         /// <param name="unitOfWork">The unit of work</param>
         /// <param name="logger">The logger</param>
         /// <param name="localizer">The localization</param>
-        protected BaseGenericService(IUnitOfWork unitOfWork, ILogger logger, IStringLocalizer<ExceptionLocalizer> localizer)
-            : base(unitOfWork, logger, localizer)
+        protected BaseGenericService(IUnitOfWork unitOfWork, ILogger logger)
+            : base(unitOfWork, logger)
         {
         }
 

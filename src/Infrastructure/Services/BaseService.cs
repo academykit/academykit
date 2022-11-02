@@ -22,20 +22,13 @@
         protected readonly ILogger _logger;
 
         /// <summary>
-        /// The localizer.
-        /// </summary>
-        protected readonly IStringLocalizer<ExceptionLocalizer> _localizer;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="BaseService"/> class.
         /// </summary>
         /// <param name="unitOfWork">The unit of work</param>
         /// <param name="logger">The logger</param>
-        /// <param name="localizer">The localization</param>
-        protected BaseService(IUnitOfWork unitOfWork, ILogger logger, IStringLocalizer<ExceptionLocalizer> localizer)
+        protected BaseService(IUnitOfWork unitOfWork, ILogger logger)
         {
             _logger = logger;
-            _localizer = localizer;
             _unitOfWork = unitOfWork;
         }
 
