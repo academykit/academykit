@@ -105,7 +105,7 @@
                 return BadRequest("User not found");
             }
             user.HashPassword = _userService.HashPassword(model.NewPassword);
-            await _userService.UpdateUserAsync(user);
+            await _userService.UpdateAsync(user);
             return Ok(true);
         }
 
