@@ -33,7 +33,7 @@
         [AllowAnonymous]
         public async Task<SearchResult<UserResponseModel>> SearchAsync([FromQuery] UserSearchCriteria searchCriteria)
         {
-            var searchResult = await _userService.SearchAsync(searchCriteria).ConfigureAwait(false);
+            var searchResult = await _userService.SearchAsync(searchCriteria, includeAllProperties:false).ConfigureAwait(false);
 
             var response = new SearchResult<UserResponseModel>
             {
@@ -94,7 +94,7 @@
         [AllowAnonymous]
         public async Task<UserResponseModel> Get(Guid id)
         {
-            User model = await _userService.GetAsync(id).ConfigureAwait(false);
+            User model = await _userService.GetAsync(id, includeAllProperties:false).ConfigureAwait(false);
             return new UserResponseModel(model);
         }
 
@@ -108,7 +108,7 @@
         public async Task<UserResponseModel> UpdateUser(Guid userId, UserRequestModel model)
         {
             await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Update").ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _userService.GetAsync(userId, CurrentUser.Id.ToString()).ConfigureAwait(false);
+            var existing = await _userService.GetAsync(userId, CurrentUser.Id.ToString(),includeAllProperties:false).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
 
             existing.Id = existing.Id;
@@ -138,7 +138,7 @@
         [HttpPatch("{userId}/status")]
         public async Task<UserResponseModel> ChangeStatus(Guid userId, [FromQuery] bool enabled)
         {
-            var existing = await _userService.GetAsync(userId, CurrentUser.Id.ToString()).ConfigureAwait(false);
+            var existing = await _userService.GetAsync(userId, CurrentUser.Id.ToString(), includeAllProperties:false).ConfigureAwait(false);
 
             var currentTimeStamp = DateTime.UtcNow;
 

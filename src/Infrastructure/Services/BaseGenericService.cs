@@ -142,11 +142,11 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public async Task<T> GetAsync(Guid id, string currentUserId = null)
+        public async Task<T> GetAsync(Guid id, string currentUserId = null, bool includeAllProperties = true)
         {
             return await ExecuteWithResult(async () =>
             {
-                T entity = await Get(id, true).ConfigureAwait(false);
+                T entity = await Get(id, includeAllProperties).ConfigureAwait(false);
                 await PopulateRetrievedEntity(entity).ConfigureAwait(false);
                 await CheckGetPermissionsAsync(entity, currentUserId).ConfigureAwait(false);
                 return entity;
@@ -242,7 +242,7 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public async Task<SearchResult<T>> SearchAsync(S criteria)
+        public async Task<SearchResult<T>> SearchAsync(S criteria, bool includeAllProperties = true)
         {
             return await ExecuteWithResultAsync<SearchResult<T>>(async () =>
             {
@@ -254,7 +254,7 @@
                 predicate = ConstructQueryConditions(predicate, criteria);
 
                 // execute query and set result properties
-                var query = _unitOfWork.GetRepository<T>().GetAll(predicate: predicate, include: IncludeNavigationProperties);
+                var query = _unitOfWork.GetRepository<T>().GetAll(predicate: predicate, include: includeAllProperties ? IncludeNavigationProperties : null);
 
                 // construct SortBy property selector expression
 

@@ -36,7 +36,7 @@
         /// <param name="id">The id of the entity to retrieve.</param>
         /// <param name="currentUserId">The id of the current user.</param>
         /// <returns>The retrieved entity.</returns>
-        Task<T> GetAsync(Guid id, string currentUserId = null);
+        Task<T> GetAsync(Guid id, string currentUserId = null, bool includeAllProperties = true);
 
         /// <summary>
         /// Retrieves entity with the given slug.
@@ -75,6 +75,6 @@
         ///
         /// <param name="criteria">The search criteria.</param>
         /// <returns>The matched entities.</returns>
-        Task<SearchResult<T>> SearchAsync(S criteria);
+        Task<SearchResult<T>> SearchAsync(S criteria, bool includeAllProperties = true);
     }
 }
