@@ -3,7 +3,7 @@ namespace Lingtren.Domain.Entities
     using Lingtren.Domain.Common;
     using Lingtren.Domain.Enums;
 
-    public class Course : AuditableEntity                   
+    public class Course : AuditableEntity
     {
         public string Slug { get; set; }
         public string Name { get; set; }
@@ -17,5 +17,9 @@ namespace Lingtren.Domain.Entities
         public Guid LevelId { get; set; }
         public Level Level { get; set; }
         public User User { get; set; }
+        public IList<Section> Sections { get; set; }
+        public IList<Lesson> Lessons { get; set; }
+        public IList<CourseTeacher> CourseTeachers { get; set; }
+        public IList<CourseTag> CourseTags { get; set; }
     }
-}           
+}
