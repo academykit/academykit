@@ -27,6 +27,8 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(
                 .AllowAnyMethod()
                 ));
 
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 
@@ -41,4 +43,7 @@ app.UseCors(x => x
               .SetIsOriginAllowed(origin => true) // allow any origin
               .AllowCredentials());
 
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
 app.Run();

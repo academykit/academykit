@@ -8,7 +8,6 @@
     using System.IdentityModel.Tokens.Jwt;
     using System.Text.RegularExpressions;
 
-    [Authorize]
     public class AccountController : BaseApiController
     {
         private readonly IUserService _userService;

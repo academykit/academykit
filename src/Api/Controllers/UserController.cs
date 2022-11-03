@@ -7,11 +7,9 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
     using LinqKit;
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserController : BaseApiController
     {
         private readonly IValidator<UserRequestModel> _validator;
