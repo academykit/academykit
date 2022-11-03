@@ -85,11 +85,15 @@
             await _refreshTokenService.CreateAsync(refreshToken).ConfigureAwait(false);
             return authenticationModel;
         }
-        public async Task<bool> RevokeToken(string token)
+        public async Task<bool> Logout(string token, Guid currentUserId)
         {
             var user = await GetUserFromRefreshToken(token);
             // return false if no user found with token
             if (user == null)
+            {
+                return false;
+            }
+            if (user.Id != currentUserId)
             {
                 return false;
             }
@@ -363,7 +367,7 @@
             var userRefreshToken = await GetUserRefreshToken(token).ConfigureAwait(false);
             if (userRefreshToken != null)
             {
-                var user = await GetAsync(userRefreshToken.UserId, includeAllProperties:false);
+                var user = await GetAsync(userRefreshToken.UserId, includeAllProperties: false);
                 return user;
             }
             return null;

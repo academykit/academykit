@@ -13,7 +13,13 @@
         /// <returns>the instance of <see cref="AuthenticationModel"/></returns>
         Task<AuthenticationModel> VerifyUserAndGetToken(LoginRequestModel model);
 
-        Task<bool> RevokeToken(string token);
+        /// <summary>
+        /// Handle to logout 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="currentUserId"></param>
+        /// <returns></returns>
+        Task<bool> Logout(string token, Guid currentUserId);
 
         /// <summary>
         /// Get refresh token

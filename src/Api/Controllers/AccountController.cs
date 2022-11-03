@@ -56,10 +56,10 @@
             {
                 return BadRequest(new CommonResponseModel { Message = "Token is required." });
             }
-            var response = await _userService.RevokeToken(model.Token);
+            var response = await _userService.Logout(model.Token, CurrentUser.Id);
             if (!response)
             {
-                return NotFound(new CommonResponseModel { Message = "Token Not Found" });
+                return NotFound(new CommonResponseModel { Message = "Token not matched." });
             }
             return Ok(new { message = "Logout successfully." });
         }

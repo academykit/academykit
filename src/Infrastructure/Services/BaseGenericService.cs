@@ -154,10 +154,10 @@
         }
 
         /// <summary>
-        /// Retrieves entity with the given slug.
+        /// Retrieves entity with the given slug or id.
         /// </summary>
         ///
-        /// <param name="slug">The slug of the entity to retrieve.</param>
+        /// <param name="identity">The slug of the entity to retrieve.</param>
         /// <returns>The retrieved entity.</returns>
         ///
         /// <exception cref="ArgumentException">
@@ -172,24 +172,13 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public async Task<T> GetBySlugAsync(string slug, string currentUserId = null)
-        {
-            return await ExecuteWithResult(async () =>
-            {
-                CommonHelper.ValidateArgumentNotNullOrEmpty(slug, nameof(slug));
-                T entity = await Get(PredicateForSlug(slug), true).ConfigureAwait(false);
-                await PopulateRetrievedEntity(entity).ConfigureAwait(false);
-                await CheckGetPermissionsAsync(entity, currentUserId).ConfigureAwait(false);
-                return entity;
-            }).ConfigureAwait(false);
-        }
 
-        public async Task<T> GetByIdOrSlug(string identity, string currentUserId = null)
+        public async Task<T> GetByIdOrSlugAsync(string identity, string currentUserId = null, bool inclueProperties = true)
         {
             return await ExecuteWithResult(async () =>
             {
                 CommonHelper.ValidateArgumentNotNullOrEmpty(identity, nameof(identity));
-                T entity = await GetEntity(PredicateForIdOrSlug(identity)).ConfigureAwait(false);
+                T entity = await Get(PredicateForIdOrSlug(identity),inclueProperties).ConfigureAwait(false);
                 await PopulateRetrievedEntity(entity).ConfigureAwait(false);
                 await CheckGetPermissionsAsync(entity, currentUserId).ConfigureAwait(false);
                 return entity;
@@ -283,14 +272,10 @@
         }
 
         /// <summary>
-        /// If entity needs to support the get by slug then has to override this method.
+        /// If entity needs to support the get by slug or id then has to override this method.
         /// </summary>
         /// <param name="slug">The slug</param>
-        /// <returns>The expression to filter by slug</returns>
-        protected virtual Expression<Func<T, bool>> PredicateForSlug(string slug)
-        {
-            throw new ServiceException($"The {_entityName} does not support get by slug");
-        }
+        /// <returns>The expression to filter by slug or slug</returns>
 
         protected virtual Expression<Func<T, bool>> PredicateForIdOrSlug(string identity)
         {
@@ -521,13 +506,6 @@
         {
             T entity = await _unitOfWork.GetRepository<T>().GetFirstOrDefaultAsync(predicate: predicate,
             include: full ? IncludeNavigationProperties : null).ConfigureAwait(false);
-            CommonHelper.CheckFoundEntity(entity);
-            return entity;
-        }
-
-        protected virtual async Task<T> GetEntity(Expression<Func<T, bool>> predicate)
-        {
-            T entity = await _unitOfWork.GetRepository<T>().GetFirstOrDefaultAsync(predicate: predicate).ConfigureAwait(false);
             CommonHelper.CheckFoundEntity(entity);
             return entity;
         }

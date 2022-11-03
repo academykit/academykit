@@ -1,13 +1,11 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
-    using System;
-    using System.Threading.Tasks;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Domain.Common;
     using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Localization;
-    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
+    using System;
+    using System.Threading.Tasks;
 
     public abstract class BaseService
     {

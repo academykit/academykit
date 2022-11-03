@@ -30,7 +30,7 @@
         [AllowAnonymous]
         public async Task<SearchResult<GroupResponseModel>> SearchAsync([FromQuery] BaseSearchCriteria searchCriteria)
         {
-            var searchResult = await _groupService.SearchAsync(searchCriteria,includeAllProperties:false).ConfigureAwait(false);
+            var searchResult = await _groupService.SearchAsync(searchCriteria, includeAllProperties: false).ConfigureAwait(false);
 
             var response = new SearchResult<GroupResponseModel>
             {
@@ -82,7 +82,7 @@
         [AllowAnonymous]
         public async Task<GroupResponseModel> Get(Guid id)
         {
-            Group model = await _groupService.GetAsync(id,includeAllProperties:false).ConfigureAwait(false);
+            Group model = await _groupService.GetAsync(id, includeAllProperties: false).ConfigureAwait(false);
             return new GroupResponseModel(model);
         }
 
@@ -92,11 +92,11 @@
         /// <param name="groupId"> the group id</param>
         /// <param name="model"> the  instance of <see cref="GroupRequestModel" /> .</param>
         /// <returns> the instance of <see cref="GroupResponseModel" /> .</returns>
-        [HttpPut("{groupId}")]
-        public async Task<GroupResponseModel> UpdateGroup(Guid groupId, GroupRequestModel model)
+        [HttpPut("{identity}")]
+        public async Task<GroupResponseModel> UpdateGroup(string identity, GroupRequestModel model)
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _groupService.GetAsync(groupId, CurrentUser.Id.ToString(), includeAllProperties:false).ConfigureAwait(false);
+            var existing = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id.ToString(), inclueProperties: false).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
 
             existing.Id = existing.Id;
@@ -108,5 +108,11 @@
             var savedEntity = await _groupService.UpdateAsync(existing).ConfigureAwait(false);
             return new GroupResponseModel(savedEntity);
         }
+
+        //[HttpPost("{identity}/addMember")]
+        //public async Task<GroupResponseModel> AddMember(string identity, AddGroupMemberRequestModel model)
+        //{
+            
+        //}
     }
 }

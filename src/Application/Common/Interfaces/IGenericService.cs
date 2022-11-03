@@ -39,10 +39,10 @@
         Task<T> GetAsync(Guid id, string currentUserId = null, bool includeAllProperties = true);
 
         /// <summary>
-        /// Retrieves entity with the given slug.
+        /// Retrieves entity with the given id or slug.
         /// </summary>
         ///
-        /// <param name="slug">The slug of the entity to retrieve.</param>
+        /// <param name="identity">The slug of the entity to retrieve.</param>
         /// <returns>The retrieved entity.</returns>
         ///
         /// <exception cref="ArgumentException">
@@ -57,9 +57,7 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        Task<T> GetBySlugAsync(string slug, string currentUserId = null);
-
-        Task<T> GetByIdOrSlug(string identity, string currentUserId = null);
+        Task<T> GetByIdOrSlugAsync(string identity, string currentUserId = null, bool inclueProperties = true);
 
         /// <summary>
         /// Deletes entity with the given Id.
