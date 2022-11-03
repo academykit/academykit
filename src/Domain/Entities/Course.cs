@@ -1,0 +1,21 @@
+namespace Lingtren.Domain.Entities
+{
+    using Lingtren.Domain.Common;
+    using Lingtren.Domain.Enums;
+
+    public class Course : AuditableEntity                   
+    {
+        public string Slug { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public Guid? GroupId { get; set; }
+        public Group Group { get; set; }
+        public Status Status { get; set; }
+        public Language Language { get; set; }
+        public string ThumbnailUrl { get; set; }
+        public int Duration { get; set; }
+        public Guid LevelId { get; set; }
+        public Level Level { get; set; }
+        public User User { get; set; }
+    }
+}           
