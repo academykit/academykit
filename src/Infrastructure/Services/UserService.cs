@@ -8,20 +8,18 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Configurations;
-    using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.AspNetCore.Cryptography.KeyDerivation;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
-    using System.Data;
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq.Expressions;
     using System.Security.Claims;
     using System.Security.Cryptography;
     using System.Text;
 
-    public class UserService : BaseService, IUserService
+    public class UserService : BaseGenericService<User, UserSearchCriteria>, IUserService
     {
         private readonly IRefreshTokenService _refreshTokenService;
         private readonly JWT _jwt;
@@ -34,6 +32,9 @@
             _refreshTokenService = refreshTokenService;
             _jwt = jwt.Value;
         }
+
+
+        #region Account Services
 
         /// <summary>
         /// Handle to verified user during login and generate token
@@ -101,7 +102,6 @@
             await _refreshTokenService.UpdateAsync(refreshToken);
             return true;
         }
-
         public async Task<AuthenticationModel> RefreshTokenAsync(string token)
         {
             var authenticationModel = new AuthenticationModel();
@@ -152,8 +152,6 @@
             return authenticationModel;
         }
 
-
-
         /// <summary>
         /// Get single active refresh token of the user
         /// </summary>
@@ -166,53 +164,23 @@
             return refreshTokens.FirstOrDefault();
         }
 
-        /// <summary>
-        /// Handle to search users
-        /// </summary>
-        /// <param name="searchCriteria"> the instance of <see cref="UserSearchCriteria" /> </param>
-        /// <returns> the instance of <see cref="SearchResult{User}" /> .</returns>
-        public async Task<SearchResult<User>> SearchUserAsync(UserSearchCriteria searchCriteria)
-        {
-            try
-            {
-                var predicate = PredicateBuilder.New<User>(true);
-                predicate = ConstructQueryConditions(predicate, searchCriteria);
-                var query = _unitOfWork.GetRepository<User>().GetAll(predicate: predicate, include: null);
-
-                if (searchCriteria.SortBy == null)
-                {
-                    SetDefaultSortOption(searchCriteria);
-                }
-                query = searchCriteria.SortType == SortType.Ascending
-                    ? query.OrderBy(searchCriteria.SortBy)
-                    : query.OrderByDescending(searchCriteria.SortBy);
-
-                return await query.ToPagedListAsync(searchCriteria.Page, searchCriteria.Size);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while attempting to search user.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to search user.");
-            }
-        }
-
-        /// <summary>
-        /// Handle to get user detail by id
-        /// </summary>
-        /// <param name="id">the user id</param>
-        /// <returns>the instance of <see cref="User"/></returns>
-        public async Task<User> GetUserAsync(Guid id)
-        {
-            try
-            {
-                return await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == id).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while attempting to fetch single user.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to fetch single user.");
-            }
-        }
+        ///// <summary>
+        ///// Handle to get user detail by id
+        ///// </summary>
+        ///// <param name="id">the user id</param>
+        ///// <returns>the instance of <see cref="User"/></returns>
+        //public async Task<User> GetUserAsync(Guid id)
+        //{
+        //    try
+        //    {
+        //        return await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == id).ConfigureAwait(false);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "An error occurred while attempting to fetch single user.");
+        //        throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to fetch single user.");
+        //    }
+        //}
 
         /// <summary>
         /// Handle to get user detail by id
@@ -229,46 +197,6 @@
             {
                 _logger.LogError(ex, "An error occurred while attempting to fetch user by email.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to fetch user by email.");
-            }
-        }
-
-        /// <summary>
-        /// Handle to create user
-        /// </summary>
-        /// <param name="entity">the instance of <see cref="User"/></param>
-        /// <returns>the instance of <see cref="User"/></returns>
-        public async Task<User> CreateUserAsync(User entity)
-        {
-            try
-            {
-                await _unitOfWork.GetRepository<User>().InsertAsync(entity).ConfigureAwait(false);
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                return entity;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while attempting to create user.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to create user");
-            }
-        }
-
-        /// <summary>
-        /// Handle to update user information
-        /// </summary>
-        /// <param name="entity">the instance of <see cref="User"</param>
-        /// <returns>the instance of <see cref="User"/></returns>
-        public async Task<User> UpdateUserAsync(User entity)
-        {
-            try
-            {
-                _unitOfWork.GetRepository<User>().Update(entity);
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                return entity;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while attempting to update user.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to update user");
             }
         }
 
@@ -357,8 +285,15 @@
 
         }
 
-        #region Private Methods
-        private Expression<Func<User, bool>> ConstructQueryConditions(Expression<Func<User, bool>> predicate, UserSearchCriteria criteria)
+        #endregion Account Services
+        #region Protected Methods
+        /// <summary>
+        /// Construct query condition according to search criteria
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
+        protected override Expression<Func<User, bool>> ConstructQueryConditions(Expression<Func<User, bool>> predicate, UserSearchCriteria criteria)
         {
 
             if (!string.IsNullOrWhiteSpace(criteria.Search))
@@ -379,11 +314,14 @@
         /// <remarks>
         /// All thrown exceptions will be propagated to caller method.
         /// </remarks>
-        private void SetDefaultSortOption(UserSearchCriteria criteria)
+        protected override void SetDefaultSortOption(UserSearchCriteria criteria)
         {
             criteria.SortBy = nameof(User.CreatedOn);
             criteria.SortType = SortType.Descending;
         }
+        #endregion Protected Methods
+
+        #region Private Methods
 
         /// <summary>
         /// Handle to create jwt token
@@ -413,13 +351,6 @@
             await Task.CompletedTask;
             return jwtSecurityToken;
         }
-
-        private async Task<IEnumerable<RefreshToken>> GetUserRefreshTokenList(string email)
-        {
-            var user = await GetUserByEmailAsync(email).ConfigureAwait(false);
-            var tokens = await _refreshTokenService.GetByUserId(user.Id).ConfigureAwait(false);
-            return tokens;
-        }
         private async Task<RefreshToken> GetUserRefreshToken(string token)
         {
             return await _refreshTokenService.GetByValue(token).ConfigureAwait(false);
@@ -430,7 +361,7 @@
             var userRefreshToken = await GetUserRefreshToken(token).ConfigureAwait(false);
             if (userRefreshToken != null)
             {
-                var user = await GetUserAsync(userRefreshToken.UserId);
+                var user = await GetAsync(userRefreshToken.UserId);
                 return user;
             }
             return null;

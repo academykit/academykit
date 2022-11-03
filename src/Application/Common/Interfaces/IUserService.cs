@@ -3,7 +3,7 @@
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
-    public interface IUserService
+    public interface IUserService: IGenericService<User,UserSearchCriteria>
     {
 
         /// <summary>
@@ -29,20 +29,6 @@
         /// <returns>the instance of <see cref="RefreshToken"/></returns>
         Task<RefreshToken?> GetActiveRefreshToken(User user);
 
-        /// <summary>
-        /// Handle to search users
-        /// </summary>
-        /// <param name="searchCriteria"> the instance of <see cref="UserSearchCriteria" /> </param>
-        /// <returns> the instance of <see cref="SearchResult{User}" /> .</returns>
-        Task<SearchResult<User>> SearchUserAsync(UserSearchCriteria searchCriteria);
-
-
-        /// <summary>
-        /// Handle to get user detail by id
-        /// </summary>
-        /// <param name="id">the user id</param>
-        /// <returns>the instance of <see cref="User"/></returns>
-        Task<User> GetUserAsync(Guid id);
 
         /// <summary>
         /// Handle to get user detail by id
@@ -50,20 +36,6 @@
         /// <param name="id">the user id</param>
         /// <returns>the instance of <see cref="User"/></returns>
         Task<User> GetUserByEmailAsync(string email);
-
-        /// <summary>
-        /// Handle to create user
-        /// </summary>
-        /// <param name="entity">the instance of <see cref="User"/></param>
-        /// <returns>the instance of <see cref="User"/></returns>
-        Task<User> CreateUserAsync(User entity);
-
-        /// <summary>
-        /// Handle to update user information
-        /// </summary>
-        /// <param name="entity">the instance of <see cref="User"</param>
-        /// <returns>the instance of <see cref="User"/></returns>
-        Task<User> UpdateUserAsync(User entity);
 
         /// <summary>
         /// Handle to hash password

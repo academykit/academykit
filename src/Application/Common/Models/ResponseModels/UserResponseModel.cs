@@ -2,7 +2,7 @@
 using Lingtren.Domain.Entities;
 using Lingtren.Domain.Enums;
 
-namespace Application.Common.Models.ResponseModels
+namespace Lingtren.Application.Common.Models.ResponseModels
 {
     public class UserResponseModel
     {
