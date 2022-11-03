@@ -12,6 +12,12 @@
             ILogger<RefreshTokenService> logger) : base(unitOfWork, logger)
         {
         }
+
+        /// <summary>
+        /// Get refresh token by user id
+        /// </summary>
+        /// <param name="userId">the user id</param>
+        /// <returns>the list of <see cref="RefreshToken"/> </returns>
         public async Task<IList<RefreshToken>> GetByUserId(Guid userId)
         {
             try
@@ -24,6 +30,12 @@
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to fetch refresh token by user id.");
             }
         }
+
+        /// <summary>
+        /// Handle to fetch refresh token by value
+        /// </summary>
+        /// <param name="token">the refresh token</param>
+        /// <returns>the instance of <see cref="RefreshToken"/></returns>
         public async Task<RefreshToken> GetByValue(string token)
         {
             try
@@ -37,6 +49,11 @@
             }
         }
 
+        /// <summary>
+        /// Handle to create refresh token
+        /// </summary>
+        /// <param name="token">the instance of <see cref="RefreshToken"/> </param>
+        /// <returns></returns>
         public async Task CreateAsync(RefreshToken token)
         {
             try
@@ -51,6 +68,11 @@
             }
         }
 
+        /// <summary>
+        /// Handle to update refresh token
+        /// </summary>
+        /// <param name="token">the instance of <see cref="RefreshToken"/></param>
+        /// <returns></returns>
         public async Task UpdateAsync(RefreshToken token)
         {
             try

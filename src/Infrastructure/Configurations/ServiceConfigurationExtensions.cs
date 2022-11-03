@@ -1,6 +1,9 @@
 ﻿namespace Lingtren.Infrastructure.Configurations
 {
+    using FluentValidation;
     using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Validators;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Persistence;
     using Lingtren.Infrastructure.Services;
@@ -19,6 +22,11 @@
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRefreshTokenService, RefreshTokenService>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IGroupService, GroupService>();
+
+
+            services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();
+            services.AddSingleton<IValidator<GroupRequestModel>, GroupValidator>();
 
             return services;
         }

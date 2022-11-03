@@ -1,14 +1,15 @@
 ﻿namespace Lingtren.Api.Controllers
 {
     using Application.Common.Dtos;
+    using Lingtren.Api.Common;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.IdentityModel.Tokens.Jwt;
     using System.Text.RegularExpressions;
 
-    [Authorize]
     public class AccountController : BaseApiController
     {
         private readonly IUserService _userService;
@@ -19,6 +20,13 @@
         {
             _userService = userService;
             _emailService = emailService;
+        }
+
+        [HttpGet]
+        public async Task<UserResponseModel> GetUser()
+        {
+            var user = await _userService.GetAsync(CurrentUser.Id);
+            return new UserResponseModel(user);
         }
 
         [HttpPost("Login")]
@@ -32,12 +40,12 @@
                                                         .SelectMany(E => E.Errors)
                                                         .Select(E => E.ErrorMessage)
                                                         .ToArray());
-                return BadRequest(validationErrors);
+                return BadRequest(new CommonResponseModel { Message = validationErrors });
             }
             var result = await _userService.VerifyUserAndGetToken(model).ConfigureAwait(false);
             if (!result.IsAuthenticated)
             {
-                return BadRequest(result);
+                return BadRequest(new CommonResponseModel { Message = result.Message });
             }
             return Ok(result);
         }
@@ -45,12 +53,15 @@
         public async Task<IActionResult> Logout([FromBody] RefreshTokenRequestModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Token))
-                return BadRequest(new { message = "Token is required" });
-
+            {
+                return BadRequest(new CommonResponseModel { Message = "Token is required." });
+            }
             var response = await _userService.RevokeToken(model.Token);
             if (!response)
-                return NotFound(new { message = "Token not found" });
-            return Ok(new { message = "Token revoked" });
+            {
+                return NotFound(new CommonResponseModel { Message = "Token Not Found" });
+            }
+            return Ok(new { message = "Logout successfully." });
         }
 
         [HttpPost("ForgotPassword")]
@@ -60,7 +71,7 @@
             var user = await _userService.GetUserByEmailAsync(model.Email);
             if (user == null)
             {
-                return BadRequest("User not found");
+                return BadRequest(new CommonResponseModel { Message = "User Not Found" });
             }
             var generator = new Random();
             var token = generator.Next(0, 1000000).ToString("D6");
@@ -86,7 +97,7 @@
             var symbol = new Regex("(\\W)+");
             if (!lowercase.IsMatch(model.NewPassword) || !uppercase.IsMatch(model.NewPassword) || !digit.IsMatch(model.NewPassword) || !symbol.IsMatch(model.NewPassword))
             {
-                return BadRequest("Password should contains at least one lowercase, one uppercase, one digit and one symbol");
+                return BadRequest(new CommonResponseModel { Message = "Password should contains at least one lowercase, one uppercase, one digit and one symbol" });
             }
             var token = new JwtSecurityTokenHandler().ReadJwtToken(model.PasswordChangeToken);
 
@@ -95,14 +106,14 @@
 
             if (DateTimeOffset.FromUnixTimeSeconds(exp).ToUniversalTime() <= DateTimeOffset.UtcNow)
             {
-                return BadRequest("Token Expired");
+                return BadRequest(new CommonResponseModel { Message = "Token Expired" });
             }
 
             var user = await _userService.GetUserByEmailAsync(email.Trim().ToLower());
 
             if (user == null)
             {
-                return BadRequest("User not found");
+                return BadRequest(new CommonResponseModel { Message = "User Not Found" });
             }
             user.HashPassword = _userService.HashPassword(model.NewPassword);
             await _userService.UpdateAsync(user);
@@ -120,7 +131,7 @@
             }
             else
             {
-                return BadRequest(response.Message);
+                return BadRequest(new CommonResponseModel { Message = response.Message });
             }
         }
     }

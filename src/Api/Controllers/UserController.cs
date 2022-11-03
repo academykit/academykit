@@ -7,11 +7,9 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
     using LinqKit;
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserController : BaseApiController
     {
         private readonly IValidator<UserRequestModel> _validator;
@@ -27,15 +25,15 @@
         }
 
         /// <summary>
-        /// Search the live sessions.
+        /// Search the users.
         /// </summary>
-        /// <param name="searchCriteria">The live session search criteria.</param>
+        /// <param name="searchCriteria">The user search criteria.</param>
         /// <returns>The paginated search result.</returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<SearchResult<UserResponseModel>> SearchAsync([FromQuery] UserSearchCriteria searchCriteria)
         {
-            var searchResult = await _userService.SearchAsync(searchCriteria).ConfigureAwait(false);
+            var searchResult = await _userService.SearchAsync(searchCriteria, includeAllProperties:false).ConfigureAwait(false);
 
             var response = new SearchResult<UserResponseModel>
             {
@@ -58,10 +56,10 @@
         /// <param name="model"> the instance of <see cref="UserRequestModel" /> .</param>
         /// <returns> the instance of <see cref="UserResponseModel" /> .</returns>
         [HttpPost]
-        public async Task<UserResponseModel> CreateLiveSession(UserRequestModel model)
+        public async Task<UserResponseModel> CreateUser(UserRequestModel model)
         {
             var currentTimeStamp = DateTime.UtcNow;
-            await this._validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await this._validator.ValidateAsync(model, options => options.IncludeRuleSets("Add").ThrowOnFailures()).ConfigureAwait(false);
 
             var entity = new User()
             {
@@ -96,7 +94,7 @@
         [AllowAnonymous]
         public async Task<UserResponseModel> Get(Guid id)
         {
-            User model = await _userService.GetAsync(id).ConfigureAwait(false);
+            User model = await _userService.GetAsync(id, includeAllProperties:false).ConfigureAwait(false);
             return new UserResponseModel(model);
         }
 
@@ -104,13 +102,13 @@
         /// update user
         /// </summary>
         /// <param name="userId"> the user id</param>
-        /// <param name="model"> the  instance of <see cref="LiveSessionRequestModel" /> .</param>
-        /// <returns> the instance of <see cref="LiveSessionResponseModel" /> .</returns>
+        /// <param name="model"> the  instance of <see cref="UserRequestModel" /> .</param>
+        /// <returns> the instance of <see cref="UserResponseModel" /> .</returns>
         [HttpPut("{userId}")]
         public async Task<UserResponseModel> UpdateUser(Guid userId, UserRequestModel model)
         {
-            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _userService.GetAsync(userId, CurrentUser.Id.ToString()).ConfigureAwait(false);
+            await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Update").ThrowOnFailures()).ConfigureAwait(false);
+            var existing = await _userService.GetAsync(userId, CurrentUser.Id.ToString(),includeAllProperties:false).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
 
             existing.Id = existing.Id;
@@ -140,7 +138,7 @@
         [HttpPatch("{userId}/status")]
         public async Task<UserResponseModel> ChangeStatus(Guid userId, [FromQuery] bool enabled)
         {
-            var existing = await _userService.GetAsync(userId, CurrentUser.Id.ToString()).ConfigureAwait(false);
+            var existing = await _userService.GetAsync(userId, CurrentUser.Id.ToString(), includeAllProperties:false).ConfigureAwait(false);
 
             var currentTimeStamp = DateTime.UtcNow;
 

@@ -75,7 +75,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         /// Get or set FullName
         /// </summary>
         public string FullName { get; set; }
-
+        
         public UserResponseModel(User user)
         {
             var sanitizer = new HtmlSanitizer

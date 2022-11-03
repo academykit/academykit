@@ -79,7 +79,7 @@
             authenticationModel.Email = user.Email;
             authenticationModel.UserId = user.Id;
             authenticationModel.Role = user.Role;
-            authenticationModel.RefreshToken = await GetUniqueRefreshToken().ConfigureAwait(false);
+            authenticationModel.RefreshToken = refreshToken.Token;
             authenticationModel.UserId = user.Id;
 
             await _refreshTokenService.CreateAsync(refreshToken).ConfigureAwait(false);
@@ -137,11 +137,13 @@
                 Token = await GetUniqueRefreshToken().ConfigureAwait(false),
                 LoginAt = DateTime.UtcNow,
                 IsActive = true,
+                UserId = user.Id,
             };
 
             await _refreshTokenService.CreateAsync(newRefreshToken);
 
             //Generates new jwt
+            authenticationModel.UserId = user.Id;
             authenticationModel.IsAuthenticated = true;
             JwtSecurityToken jwtSecurityToken = await CreateJwtToken(user);
             authenticationModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
@@ -361,7 +363,7 @@
             var userRefreshToken = await GetUserRefreshToken(token).ConfigureAwait(false);
             if (userRefreshToken != null)
             {
-                var user = await GetAsync(userRefreshToken.UserId);
+                var user = await GetAsync(userRefreshToken.UserId, includeAllProperties:false);
                 return user;
             }
             return null;
