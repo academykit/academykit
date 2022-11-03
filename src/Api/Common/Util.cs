@@ -56,7 +56,7 @@
             var email = claimsPrincipal.GetClaim(ClaimTypes.Email, isRequired: false);
             var mobileNumber = claimsPrincipal.GetClaim("mobile_number", isRequired: false);
 
-            return new CurrentUser { Id = Guid.Parse(userId), Name = userName, Email = email, MobileNumber = mobileNumber, };
+            return new CurrentUser { Id = Guid.Parse(userId), Name = userName, Email = email, MobileNumber = mobileNumber };
         }
 
         /// <summary>
