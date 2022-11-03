@@ -3,8 +3,10 @@
     using Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using System.ComponentModel.DataAnnotations;
     using System.IdentityModel.Tokens.Jwt;
     using System.Text.RegularExpressions;
 
@@ -18,6 +20,13 @@
         {
             _userService = userService;
             _emailService = emailService;
+        }
+
+        [HttpGet]
+        public async Task<UserResponseModel> GetUser()
+        {
+            var user = await _userService.GetAsync(CurrentUser.Id);
+            return new UserResponseModel(user);
         }
 
         [HttpPost("Login")]

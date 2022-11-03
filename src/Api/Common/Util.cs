@@ -51,11 +51,12 @@
         /// <returns>The logged in user details.</returns>
         public static CurrentUser ToLoggedInUser(this ClaimsPrincipal claimsPrincipal)
         {
-            var userId = claimsPrincipal.GetClaim(ClaimTypes.NameIdentifier, isRequired: true);
+            var userId = claimsPrincipal.GetClaim("uid", isRequired: true);
+            var userName = claimsPrincipal.GetClaim(ClaimTypes.NameIdentifier, isRequired: true);
             var email = claimsPrincipal.GetClaim(ClaimTypes.Email, isRequired: false);
             var mobileNumber = claimsPrincipal.GetClaim("mobile_number", isRequired: false);
 
-            return new CurrentUser { Id = Guid.Parse(userId), Email = email, MobileNumber = mobileNumber, };
+            return new CurrentUser { Id = Guid.Parse(userId), Name = userName, Email = email, MobileNumber = mobileNumber, };
         }
 
         /// <summary>
