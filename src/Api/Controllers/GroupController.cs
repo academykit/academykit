@@ -64,9 +64,7 @@
                 Name = model.Name,
                 IsActive = true,
                 CreatedBy = CurrentUser.Id,
-                CreatedOn = currentTimeStamp,
-                UpdatedBy = CurrentUser.Id,
-                UpdatedOn = currentTimeStamp,
+                CreatedOn = DateTime.UtcNow
             };
 
             var response = await _groupService.CreateAsync(entity).ConfigureAwait(false);
