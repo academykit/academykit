@@ -1,20 +1,16 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
     using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
-    using System.Net;
 
     public class GroupService : BaseGenericService<Group, BaseSearchCriteria>, IGroupService
     {

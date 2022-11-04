@@ -48,7 +48,7 @@
         ///
         /// <param name="entity">The entity to create.</param>
         /// <returns>The created entity.</returns>
-        public async Task<T> CreateAsync(T entity)
+        public async Task<T> CreateAsync(T entity, bool includeProperties = true)
         {
             return await ExecuteWithResultAsync(async () =>
             {
@@ -67,7 +67,7 @@
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
                 // load entity again to return all fields populated, because child entities may contain just Ids
-                T entityRetrievedFromDb = await Get(entity.Id, true).ConfigureAwait(false);
+                T entityRetrievedFromDb = await Get(entity.Id, includeProperties).ConfigureAwait(false);
 
                 await CreatePostHookAsync(entityRetrievedFromDb).ConfigureAwait(false);
 
@@ -94,13 +94,13 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public async Task<T> UpdateAsync(T entity)
+        public async Task<T> UpdateAsync(T entity,bool includeProperties = true)
         {
             return await ExecuteWithResult(async () =>
             {
                 CommonHelper.ValidateArgumentNotNull(entity, nameof(entity));
 
-                T existing = await Get(entity.Id, true).ConfigureAwait(false);
+                T existing = await Get(entity.Id, includeProperties).ConfigureAwait(false);
 
                 // get existing child entities from DB, otherwise new entities will be created in database
                 await ResolveChildEntitiesAsync(entity).ConfigureAwait(false);
@@ -117,7 +117,7 @@
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
                 // load entity again to return all fields populated, because child entities may contain just Ids
-                return await Get(entity.Id, true).ConfigureAwait(false);
+                return await Get(entity.Id, includeProperties).ConfigureAwait(false);
             }).ConfigureAwait(false);
         }
 

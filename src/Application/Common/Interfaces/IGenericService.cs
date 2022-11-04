@@ -19,7 +19,7 @@
         ///
         /// <param name="entity">The entity to create.</param>
         /// <returns>The created entity.</returns>
-        Task<T> CreateAsync(T entity);
+        Task<T> CreateAsync(T entity, bool includeProperties = true);
 
         /// <summary>
         /// Updates given entity.
@@ -27,7 +27,7 @@
         ///
         /// <param name="entity">The entity to update.</param>
         /// <returns>The updated entity.</returns>
-        Task<T> UpdateAsync(T entity);
+        Task<T> UpdateAsync(T entity,bool includeProperties = true);
 
         /// <summary>
         /// Retrieves entity with the given Id.

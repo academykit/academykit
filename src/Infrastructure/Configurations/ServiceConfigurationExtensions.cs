@@ -23,6 +23,7 @@
             services.AddTransient<IRefreshTokenService, RefreshTokenService>();
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IGroupService, GroupService>();
+            services.AddTransient<ITagService, TagService>();
             services.AddTransient<IZoomSettingService, ZoomSettingService>();
             services.AddTransient<ISMTPSettingService, SMTPSettingService>();
 
