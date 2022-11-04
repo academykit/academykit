@@ -28,12 +28,9 @@
         {
             get
             {
-                if (_currentUser == null)
+                if (_currentUser == null && User.Identity.IsAuthenticated)
                 {
-                    if (User.Identity.IsAuthenticated)
-                    {
-                        _currentUser = User.ToLoggedInUser();
-                    }
+                    _currentUser = User.ToLoggedInUser();
                 }
                 return _currentUser;
             }

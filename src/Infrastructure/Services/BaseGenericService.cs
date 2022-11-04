@@ -11,10 +11,8 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
-    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore.Query;
-    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
 
     /// <summary>
@@ -142,11 +140,11 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public async Task<T> GetAsync(Guid id, string currentUserId = null, bool includeAllProperties = true)
+        public async Task<T> GetAsync(Guid id, string currentUserId = null, bool includeProperties = true)
         {
             return await ExecuteWithResult(async () =>
             {
-                T entity = await Get(id, includeAllProperties).ConfigureAwait(false);
+                T entity = await Get(id, includeProperties).ConfigureAwait(false);
                 await PopulateRetrievedEntity(entity).ConfigureAwait(false);
                 await CheckGetPermissionsAsync(entity, currentUserId).ConfigureAwait(false);
                 return entity;
@@ -172,13 +170,43 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-
-        public async Task<T> GetByIdOrSlugAsync(string identity, string currentUserId = null, bool inclueProperties = true)
+        public async Task<T> GetByIdOrSlugAsync(string identity, string currentUserId = null, bool includeProperties = true)
         {
             return await ExecuteWithResult(async () =>
             {
                 CommonHelper.ValidateArgumentNotNullOrEmpty(identity, nameof(identity));
-                T entity = await Get(PredicateForIdOrSlug(identity),inclueProperties).ConfigureAwait(false);
+                T entity = await Get(PredicateForIdOrSlug(identity), includeProperties).ConfigureAwait(false);
+                await PopulateRetrievedEntity(entity).ConfigureAwait(false);
+                await CheckGetPermissionsAsync(entity, currentUserId).ConfigureAwait(false);
+                return entity;
+            }).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Retrieves entity with the given Id.
+        /// </summary>
+        ///
+        /// <param name="id">The id of the entity to retrieve.</param>
+        /// <returns>The retrieved entity.</returns>
+        ///
+        /// <exception cref="ArgumentException">
+        /// If <paramref name="id"/> is not positive.
+        /// </exception>
+        /// <exception cref="EntityNotFoundException">
+        /// If entity with the given Id doesn't exist in DB.
+        /// </exception>
+        /// <exception cref="PersistenceException">
+        /// If a DB-based error occurs.
+        /// </exception>
+        /// <exception cref="ServiceException">
+        /// If any other errors occur while performing this operation.
+        /// </exception>
+        public async Task<T> GetFirstOrDefaultAsync(string currentUserId = null, bool includeProperties = true)
+        {
+            return await ExecuteWithResult(async () =>
+            {
+                T entity = await _unitOfWork.GetRepository<T>().GetFirstOrDefaultAsync(
+                    include: includeProperties ? IncludeNavigationProperties : null).ConfigureAwait(false);
                 await PopulateRetrievedEntity(entity).ConfigureAwait(false);
                 await CheckGetPermissionsAsync(entity, currentUserId).ConfigureAwait(false);
                 return entity;
@@ -231,7 +259,7 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public async Task<SearchResult<T>> SearchAsync(S criteria, bool includeAllProperties = true)
+        public async Task<SearchResult<T>> SearchAsync(S criteria, bool includeProperties = true)
         {
             return await ExecuteWithResultAsync<SearchResult<T>>(async () =>
             {
@@ -243,7 +271,7 @@
                 predicate = ConstructQueryConditions(predicate, criteria);
 
                 // execute query and set result properties
-                var query = _unitOfWork.GetRepository<T>().GetAll(predicate: predicate, include: includeAllProperties ? IncludeNavigationProperties : null);
+                var query = _unitOfWork.GetRepository<T>().GetAll(predicate: predicate, include: includeProperties ? IncludeNavigationProperties : null);
 
                 // construct SortBy property selector expression
 
@@ -276,7 +304,6 @@
         /// </summary>
         /// <param name="slug">The slug</param>
         /// <returns>The expression to filter by slug or slug</returns>
-
         protected virtual Expression<Func<T, bool>> PredicateForIdOrSlug(string identity)
         {
             throw new ServiceException($"The {_entityName} does not support get by slug or slug");
@@ -377,20 +404,20 @@
             await Task.FromResult(0);
         }
 
-        // /// <summary>
-        // /// Populates the retrieved entities in batch.
-        // /// </summary>
-        // /// <remarks>
-        // /// It should be overridden in child services to populate extra properties.
-        // /// </remarks>
-        // protected virtual async Task PopulateRetrievedEntities(IList<T> entities)
-        // {
-        //     // do nothing by default
-        //     foreach (var entity in entities)
-        //     {
-        //         await PopulateRetrievedEntity(entity);
-        //     }
-        // }
+        /// <summary>
+        /// Populates the retrieved entities in batch.
+        /// </summary>
+        /// <remarks>
+        /// It should be overridden in child services to populate extra properties.
+        /// </remarks>
+        protected virtual async Task PopulateRetrievedEntities(IList<T> entities)
+        {
+            // do nothing by default
+            foreach (var entity in entities)
+            {
+                await PopulateRetrievedEntity(entity);
+            }
+        }
 
         /// <summary>
         /// Applies filters to the given query.
@@ -511,4 +538,3 @@
         }
     }
 }
-

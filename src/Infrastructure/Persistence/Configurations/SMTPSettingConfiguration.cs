@@ -11,6 +11,7 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.MailServer).HasColumnName("mail_server").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
             builder.Property(x => x.MailPort).HasColumnName("mail_port").IsRequired();
+            builder.Property(x => x.SenderName).HasColumnName("sender_name").IsRequired();
             builder.Property(x => x.SenderEmail).HasColumnName("sender_email").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
             builder.Property(x => x.UserName).HasColumnName("user_name").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
             builder.Property(x => x.Password).HasColumnName("password").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();

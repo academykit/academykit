@@ -367,7 +367,7 @@
             var userRefreshToken = await GetUserRefreshToken(token).ConfigureAwait(false);
             if (userRefreshToken != null)
             {
-                var user = await GetAsync(userRefreshToken.UserId, includeAllProperties: false);
+                var user = await GetAsync(userRefreshToken.UserId, includeProperties: false);
                 return user;
             }
             return null;

@@ -23,11 +23,13 @@
             services.AddTransient<IRefreshTokenService, RefreshTokenService>();
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IGroupService, GroupService>();
-
+            services.AddTransient<IZoomSettingService, ZoomSettingService>();
+            services.AddTransient<ISMTPSettingService, SMTPSettingService>();
 
             services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();
             services.AddSingleton<IValidator<GroupRequestModel>, GroupValidator>();
-
+            services.AddSingleton<IValidator<ZoomSettingRequestModel>, ZoomSettingValidator>();
+            services.AddSingleton<IValidator<SMTPSettingRequestModel>, SMTPSettingValidator>();
             return services;
         }
     }

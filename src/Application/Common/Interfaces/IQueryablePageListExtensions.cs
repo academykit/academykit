@@ -16,13 +16,13 @@
         /// </param>
         /// <returns>An instance of the inherited from <see cref="PagedList{T}"/> interface.</returns>
         public static async Task<SearchResult<T>> ToPagedListAsync<T>(this IQueryable<T> source, int pageNumber,
-        int pageSize, CancellationToken cancellationToken = default(CancellationToken))
+        int pageSize, CancellationToken cancellationToken = default)
         {
             var count = await source.CountAsync(cancellationToken).ConfigureAwait(false);
             var items = await source.Skip((pageNumber - 1) * pageSize)
                                     .Take(pageSize).ToListAsync(cancellationToken).ConfigureAwait(false);
 
-            var pagedList = new SearchResult<T>()
+            return new SearchResult<T>()
             {
                 CurrentPage = pageNumber,
                 PageSize = pageSize,
@@ -30,8 +30,6 @@
                 Items = items,
                 TotalPage = (int)Math.Ceiling(count / (double)pageSize)
             };
-
-            return pagedList;
         }
 
         /// <summary>
@@ -41,18 +39,15 @@
         /// <param name="source">The source to paging.</param>
         /// <param name="pageNumber">The current number of the page.</param>
         /// <param name="pageSize">The size of the page.</param>
-        /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
-        /// </param>
         /// <returns>An instance of the inherited from <see cref="PagedList{T}"/> interface.</returns>
         public static SearchResult<T> ToPagedList<T>(this IQueryable<T> source, int pageNumber,
-        int pageSize, CancellationToken cancellationToken = default(CancellationToken))
+        int pageSize)
         {
             var count = source.Count();
             var items = source.Skip((pageNumber - 1) * pageSize)
                                     .Take(pageSize).ToList();
 
-            var pagedList = new SearchResult<T>()
+            return new SearchResult<T>()
             {
                 CurrentPage = pageNumber,
                 PageSize = pageSize,
@@ -60,8 +55,6 @@
                 Items = items,
                 TotalPage = (int)Math.Ceiling(count / (double)pageSize)
             };
-
-            return pagedList;
         }
 
         /// <summary>
@@ -71,18 +64,15 @@
         /// <param name="source">The source to paging.</param>
         /// <param name="pageNumber">The current number of the page.</param>
         /// <param name="pageSize">The size of the page.</param>
-        /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
-        /// </param>
         /// <returns>An instance of the inherited from <see cref="PagedList{T}"/> interface.</returns>
         public static SearchResult<T> ToIPagedList<T>(this IList<T> source, int pageNumber,
-        int pageSize, CancellationToken cancellationToken = default(CancellationToken))
+        int pageSize)
         {
             var count = source.Count;
             var items = source.Skip((pageNumber - 1) * pageSize)
                                     .Take(pageSize).ToList();
 
-            var pagedList = new SearchResult<T>()
+            return new SearchResult<T>()
             {
                 CurrentPage = pageNumber,
                 PageSize = pageSize,
@@ -90,8 +80,6 @@
                 Items = items,
                 TotalPage = (int)Math.Ceiling(count / (double)pageSize)
             };
-
-            return pagedList;
         }
     }
 }

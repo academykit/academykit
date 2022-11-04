@@ -6,7 +6,8 @@ namespace Lingtren.Application.Common.Models.ResponseModels
     {
         public Guid Id { get; set; }
         public string MailServer { get; set; }
-        public string MailPort { get; set; }
+        public int MailPort { get; set; }
+        public string SenderName { get; set; }
         public string SenderEmail { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
@@ -19,6 +20,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             Id = model.Id;
             MailServer = model.MailServer;
             MailPort = model.MailPort;
+            SenderName = model.SenderName;
             SenderEmail = model.SenderEmail;
             UserName = model.UserName;
             Password = model.Password;

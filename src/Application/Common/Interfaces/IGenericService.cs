@@ -39,6 +39,27 @@
         Task<T> GetAsync(Guid id, string currentUserId = null, bool includeAllProperties = true);
 
         /// <summary>
+        /// Retrieves entity with the given Id.
+        /// </summary>
+        ///
+        /// <param name="id">The id of the entity to retrieve.</param>
+        /// <returns>The retrieved entity.</returns>
+        ///
+        /// <exception cref="ArgumentException">
+        /// If <paramref name="id"/> is not positive.
+        /// </exception>
+        /// <exception cref="EntityNotFoundException">
+        /// If entity with the given Id doesn't exist in DB.
+        /// </exception>
+        /// <exception cref="PersistenceException">
+        /// If a DB-based error occurs.
+        /// </exception>
+        /// <exception cref="ServiceException">
+        /// If any other errors occur while performing this operation.
+        /// </exception>
+        Task<T> GetFirstOrDefaultAsync(string currentUserId = null, bool includeProperties = true);
+
+        /// <summary>
         /// Retrieves entity with the given id or slug.
         /// </summary>
         ///
@@ -57,7 +78,7 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        Task<T> GetByIdOrSlugAsync(string identity, string currentUserId = null, bool inclueProperties = true);
+        Task<T> GetByIdOrSlugAsync(string identity, string currentUserId = null, bool includeProperties = true);
 
         /// <summary>
         /// Deletes entity with the given Id.

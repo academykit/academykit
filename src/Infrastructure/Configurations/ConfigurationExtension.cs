@@ -13,7 +13,6 @@
         public static void AddJWTConfigurationServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JWT>(configuration.GetSection("JWT"));
-            services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
             services.Configure<ApplicationInfo>(configuration.GetSection("Application"));
 
             services.AddAuthentication(options =>

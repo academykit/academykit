@@ -8,6 +8,7 @@
         {
             RuleFor(x => x.MailServer).NotNull().NotEmpty().WithMessage("Mail server is required");
             RuleFor(x => x.MailPort).NotNull().NotEmpty().WithMessage("Mail port is required");
+            RuleFor(x => x.SenderName).NotNull().NotEmpty().WithMessage("Sender name is required");
             RuleFor(x => x.SenderEmail).NotNull().NotEmpty().WithMessage("Sender email is required");
             RuleFor(x => x.UserName).NotNull().NotEmpty().WithMessage("User name is required");
             RuleFor(x => x.Password).NotNull().NotEmpty().WithMessage("Password is required");

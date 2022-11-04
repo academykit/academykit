@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
     using Lingtren.Application.Common.Dtos;
+    using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Infrastructure.Configurations;
     using MailKit.Net.Smtp;
@@ -11,15 +12,15 @@
     public class EmailService : IEmailService
     {
         private readonly string _footerEmail = "Sincerely,<br>- The Vurilo Team";
-        private readonly EmailSettings _emailSetting;
         private readonly ILogger<EmailService> _logger;
+        private readonly ISMTPSettingService _smtpSettingService;
 
         public EmailService(
-            IOptions<EmailSettings> emailSetting,
-            ILogger<EmailService> logger)
+            ILogger<EmailService> logger,
+            ISMTPSettingService smtpSettingService)
         {
-            _emailSetting = emailSetting.Value;
             _logger = logger;
+            _smtpSettingService = smtpSettingService;
         }
 
         public async Task SendMailWithHtmlBodyAsync(EmailRequestDto emailRequestDto)
@@ -30,12 +31,18 @@
                 using StreamReader str = new(FilePath);
                 string htmlBody = str.ReadToEnd();
 
-                htmlBody = htmlBody.Replace("[content]", emailRequestDto.Message);
+                var smtpSetting = await _smtpSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
+                if (smtpSetting == null)
+                {
+                    _logger.LogWarning("SMTP Setting not found");
+                    throw new EntityNotFoundException("SMTP Setting not found");
+                }
 
+                htmlBody = htmlBody.Replace("[content]", emailRequestDto.Message);
                 var mimeMessage = new MimeMessage();
-                mimeMessage.From.Add(new MailboxAddress(_emailSetting.SenderName, _emailSetting.Sender));
+                mimeMessage.From.Add(new MailboxAddress(smtpSetting.SenderName, smtpSetting.SenderEmail));
                 mimeMessage.To.Add(new MailboxAddress(emailRequestDto.To, emailRequestDto.To));
-                mimeMessage.ReplyTo.Add(new MailboxAddress(_emailSetting.SenderName, _emailSetting.ReplayTo));
+                mimeMessage.ReplyTo.Add(new MailboxAddress(smtpSetting.SenderName, smtpSetting.ReplayTo));
                 mimeMessage.Subject = emailRequestDto.Subject;
 
                 var builder = new BodyBuilder
@@ -50,14 +57,14 @@
                 }
 
                 using var client = new SmtpClient();
-                await client.ConnectAsync(_emailSetting.MailServer, _emailSetting.MailPort, true);
-                await client.AuthenticateAsync(_emailSetting.UserName, _emailSetting.Password);
+                await client.ConnectAsync(smtpSetting.MailServer, smtpSetting.MailPort, true);
+                await client.AuthenticateAsync(smtpSetting.UserName, smtpSetting.Password);
                 await client.SendAsync(mimeMessage);
                 await client.DisconnectAsync(true);
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while attempting to send email with html body contain.");
             }
         }
 
@@ -65,7 +72,6 @@
         {
             try
             {
-
                 var html = $"Dear {firstName},<br><br>";
                 html += $"Your account requested for forgot password. <br> Your Token is <b><u>'{resetToken}'</u></b> for password reset.<br><br>";
                 html += _footerEmail;
@@ -80,7 +86,7 @@
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while attempting to send forget password email.");
             }
         }
     }

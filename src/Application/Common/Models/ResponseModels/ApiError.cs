@@ -26,8 +26,7 @@
         public ApiError(ModelStateDictionary modelState)
         {
             var errors = modelState?.Keys.SelectMany(key => modelState[key].Errors.Select(x => x.ErrorMessage));
-            this.Message = string.Join(Environment.NewLine, errors);
+            Message = string.Join(Environment.NewLine, errors);
         }
     }
 }
-
