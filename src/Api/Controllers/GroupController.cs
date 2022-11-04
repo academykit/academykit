@@ -30,7 +30,7 @@
         [AllowAnonymous]
         public async Task<SearchResult<GroupResponseModel>> SearchAsync([FromQuery] BaseSearchCriteria searchCriteria)
         {
-            var searchResult = await _groupService.SearchAsync(searchCriteria, includeAllProperties: false).ConfigureAwait(false);
+            var searchResult = await _groupService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             var response = new SearchResult<GroupResponseModel>
             {
@@ -80,7 +80,7 @@
         [AllowAnonymous]
         public async Task<GroupResponseModel> Get(string identity)
         {
-            Group model = await _groupService.GetByIdOrSlugAsync(identity, includeProperties: false).ConfigureAwait(false);
+            Group model = await _groupService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
             return new GroupResponseModel(model);
         }
 
@@ -94,7 +94,7 @@
         public async Task<GroupResponseModel> UpdateGroup(string identity, GroupRequestModel model)
         {
             await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Update").ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id.ToString(), includeProperties: false).ConfigureAwait(false);
+            var existing = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id.ToString()).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
 
             existing.Id = existing.Id;

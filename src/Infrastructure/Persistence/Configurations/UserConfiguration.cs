@@ -24,12 +24,13 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.PublicUrls).HasColumnName("public_urls").HasColumnType("VARCHAR(200)").HasMaxLength(200).IsRequired(false);
             builder.Property(x => x.IsActive).HasColumnName("is_active").HasDefaultValue(false);
             builder.Property(x => x.PasswordResetToken).HasColumnName("password_reset_token").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
-            builder.Property(x => x.PasswordChangeToken).HasColumnName("password_change_token").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
+            builder.Property(x => x.PasswordChangeToken).HasColumnName("password_change_token").HasColumnType("VARCHAR(500)").HasMaxLength(500).IsRequired(false);
             builder.Property(x => x.PasswordResetTokenExpiry).HasColumnName("password_reset_token_expiry").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.CreatedOn).HasColumnName("created_on").IsRequired().HasColumnType("DATETIME");
             builder.Property(x => x.UpdatedBy).HasColumnName("updated_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
             builder.Property(x => x.UpdatedOn).HasColumnName("updated_on").HasColumnType("DATETIME").IsRequired(false);
+            builder.Property(x => x.DepartmentId).HasColumnName("department_id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
             builder.HasMany(x => x.RefreshTokens).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.Groups).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.GroupMembers).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
@@ -48,6 +49,8 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.HasMany(x => x.Meetings).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.LiveSessionReports).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.LiveSessionMembers).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.GeneralSettings).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.Departments).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

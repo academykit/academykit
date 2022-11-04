@@ -9,5 +9,6 @@ namespace Lingtren.Domain.Entities
         public string CompanyAddress { get; set; }
         public string CompanyContactNumber { get; set; }
         public string EmailSignature { get; set; }
+        public User User { get; set; }
     }
 }

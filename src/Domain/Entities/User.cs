@@ -21,6 +21,8 @@
         public string ImageUrl { get; set; }
         public DateTime? PasswordResetTokenExpiry { get; set; }
         public string PasswordChangeToken { get; set; }
+        public Guid? DepartmentId { get; set; }
+        public Department Department { get; set; }
         public IList<RefreshToken> RefreshTokens { get; set; }
         public IList<Group> Groups { get; set; }
         public IList<GroupMember> GroupMembers { get; set; }
@@ -39,5 +41,7 @@
         public IList<Meeting> Meetings { get; set; }
         public IList<LiveSessionReport> LiveSessionReports { get; set; }
         public IList<LiveSessionMember> LiveSessionMembers { get; set; }
+        public IList<GeneralSetting> GeneralSettings { get; set; }
+        public IList<Department> Departments { get; set; }
     }
 }

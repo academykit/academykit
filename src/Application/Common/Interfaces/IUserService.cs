@@ -61,6 +61,13 @@
         bool VerifyPassword(string hashedPasswordWithSalt, string password);
 
         /// <summary>
+        /// Handle to reset password
+        /// </summary>
+        /// <param name="model">the instance of <see cref="VerifyResetTokenModel"/></param>
+        /// <returns>the password change token</returns>
+        Task ResetPasswordAsync(User user);
+
+        /// <summary>
         /// Handle to verify reset token
         /// </summary>
         /// <param name="model">the instance of <see cref="VerifyResetTokenModel"/></param>

@@ -21,14 +21,17 @@
 
     public class UserService : BaseGenericService<User, UserSearchCriteria>, IUserService
     {
+        private readonly IEmailService _emailService;
         private readonly IRefreshTokenService _refreshTokenService;
         private readonly JWT _jwt;
 
         public UserService(IUnitOfWork unitOfWork,
             ILogger<UserService> logger,
+            IEmailService emailService,
             IRefreshTokenService refreshTokenService,
             IOptions<JWT> jwt) : base(unitOfWork, logger)
         {
+            _emailService = emailService;
             _refreshTokenService = refreshTokenService;
             _jwt = jwt.Value;
         }
@@ -258,6 +261,32 @@
         }
 
         /// <summary>
+        /// Handle to reset password
+        /// </summary>
+        /// <param name="model">the instance of <see cref="VerifyResetTokenModel"/></param>
+        /// <returns>the password change token</returns>
+        public async Task ResetPasswordAsync(User user)
+        {
+            try
+            {
+                var generator = new Random();
+                var token = generator.Next(0, 1000000).ToString("D6");
+                var tokenExpiry = DateTime.UtcNow.AddMinutes(5);
+                await _emailService.SendForgetPasswordEmail(user.Email, user.FirstName, token);
+                user.PasswordResetToken = token;
+                user.PasswordResetTokenExpiry = tokenExpiry;
+                _unitOfWork.GetRepository<User>().Update(user);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to verify reset token.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to verify reset token.");
+            }
+
+        }
+
+        /// <summary>
         /// Handle to verify reset token
         /// </summary>
         /// <param name="model">the instance of <see cref="VerifyResetTokenModel"/></param>
@@ -266,11 +295,17 @@
         {
             try
             {
+                var currentTimeStamp = DateTime.UtcNow;
                 var user = await GetUserByEmailAsync(model.Email).ConfigureAwait(false);
                 if (user == null)
                 {
                     _logger.LogWarning("User not found with email: {email}.", model.Email);
                     throw new EntityNotFoundException("User Not Found.");
+                }
+                if (currentTimeStamp > user.PasswordResetTokenExpiry)
+                {
+                    _logger.LogWarning("Password reset token expired for the user with id : {id}", user.Id);
+                    throw new ForbiddenException("Password reset token expired.");
                 }
                 if (model.Token != user.PasswordResetToken)
                 {
