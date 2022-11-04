@@ -1,16 +1,14 @@
 namespace Lingtren.Api.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class TagController : BaseApiController
     {
@@ -53,7 +51,7 @@ namespace Lingtren.Api.Controllers
         [HttpPost]
         public async Task<TagResponseModel> CreateTag(TagRequestModel model)
         {
-            var response = await _tagService.CreateTagAsync(model.Name,CurrentUser.Id).ConfigureAwait(false);
+            var response = await _tagService.CreateTagAsync(model.Name, CurrentUser.Id).ConfigureAwait(false);
             return new TagResponseModel(response);
         }
 
@@ -66,13 +64,13 @@ namespace Lingtren.Api.Controllers
         [HttpPut("{identity}")]
         public async Task<TagResponseModel> UpdateTag(string identity, TagRequestModel model)
         {
-            var existing = await _tagService.GetByIdOrSlugAsync(identity, CurrentUser.Id.ToString(),false).ConfigureAwait(false);
+            var existing = await _tagService.GetByIdOrSlugAsync(identity, CurrentUser.Id.ToString(), false).ConfigureAwait(false);
 
             existing.Name = model.Name;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = DateTime.UtcNow;
 
-            var savedEntity = await _tagService.UpdateAsync(existing,false).ConfigureAwait(false);
+            var savedEntity = await _tagService.UpdateAsync(existing, false).ConfigureAwait(false);
             return new TagResponseModel(savedEntity);
         }
 

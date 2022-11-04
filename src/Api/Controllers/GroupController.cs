@@ -77,7 +77,6 @@
         /// <param name="identity"> the group id or slug</param>
         /// <returns> the instance of <see cref="GroupResponseModel" /> .</returns>
         [HttpGet("{identity}")]
-        [AllowAnonymous]
         public async Task<GroupResponseModel> Get(string identity)
         {
             Group model = await _groupService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);

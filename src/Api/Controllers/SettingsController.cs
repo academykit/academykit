@@ -13,24 +13,90 @@ namespace Lingtren.Api.Controllers
     public class SettingsController : BaseApiController
     {
         private readonly ILogger<SettingsController> _logger;
+        private readonly IGeneralSettingService _generalSettingService;
         private readonly IZoomSettingService _zoomSettingService;
         private readonly ISMTPSettingService _smtpSettingService;
+        private readonly IValidator<GeneralSettingRequestModel> _generalSettingValidator;
         private readonly IValidator<ZoomSettingRequestModel> _zoomSettingValidator;
         private readonly IValidator<SMTPSettingRequestModel> _smtpSettingValidator;
 
         public SettingsController(
             ILogger<SettingsController> logger,
+            IGeneralSettingService generalSettingService,
             IZoomSettingService zoomSettingService,
             ISMTPSettingService smtpSettingService,
+            IValidator<GeneralSettingRequestModel> generalSettingValidator,
             IValidator<ZoomSettingRequestModel> zoomSettingValidator,
             IValidator<SMTPSettingRequestModel> smtpSettingValidator)
         {
             _logger = logger;
+            _generalSettingService = generalSettingService;
             _zoomSettingService = zoomSettingService;
             _smtpSettingService = smtpSettingService;
+            _generalSettingValidator = generalSettingValidator;
             _zoomSettingValidator = zoomSettingValidator;
             _smtpSettingValidator = smtpSettingValidator;
         }
+
+        #region general settings
+
+        /// <summary>
+        /// get general  setting by id
+        /// </summary>
+        /// <param name="id"> the general setting id</param>
+        /// <returns> the instance of <see cref="GeneralSettingResponseModel" /> .</returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<GeneralSettingResponseModel> Get()
+        {
+            if (CurrentUser.Role != UserRole.Admin)
+            {
+                _logger.LogWarning("User with id : {id} is not admin to access general setting", CurrentUser.Id);
+                throw new ForbiddenException("Only user with admin role is allowed to view general setting");
+            }
+            var model = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
+            return new GeneralSettingResponseModel(model);
+        }
+
+        /// <summary>
+        /// update general settings
+        /// </summary>
+        /// <param name="id"> the general setting id</param>
+        /// <param name="model"> the  instance of <see cref="GeneralSettingRequestModel" /> .</param>
+        /// <returns> the instance of <see cref="GeneralSettingResponseModel" /> .</returns>
+        [HttpPut("{id}")]
+        public async Task<GeneralSettingResponseModel> UpdateSMTPSetting(Guid id, GeneralSettingRequestModel model)
+        {
+            if (CurrentUser.Role != UserRole.Admin)
+            {
+                _logger.LogWarning("User with Id : {userId} is not allowed to edit general setting with Id : {generalSettingId}", CurrentUser.Id, id);
+                throw new ForbiddenException("Only user with admin role is allowed to update general setting");
+            }
+
+            await _generalSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            var existing = await _generalSettingService.GetAsync(id, CurrentUser.Id.ToString()).ConfigureAwait(false);
+
+            if (existing == null)
+            {
+                _logger.LogWarning("General Setting with id : {id} is not found", id);
+                throw new EntityNotFoundException("General setting was not found.");
+            }
+            var currentTimeStamp = DateTime.UtcNow;
+
+            existing.Id = existing.Id;
+            existing.LogoUrl = model.LogoUrl;
+            existing.CompanyName = model.CompanyName;
+            existing.CompanyAddress = model.CompanyAddress;
+            existing.CompanyContactNumber = model.CompanyContactNumber;
+            existing.EmailSignature = model.EmailSignature;
+            existing.UpdatedBy = CurrentUser.Id;
+            existing.UpdatedOn = currentTimeStamp;
+
+            var savedEntity = await _generalSettingService.UpdateAsync(existing).ConfigureAwait(false);
+            return new GeneralSettingResponseModel(savedEntity);
+        }
+
+        #endregion general settings
 
         #region zoom settings
 
@@ -149,5 +215,7 @@ namespace Lingtren.Api.Controllers
         }
 
         #endregion smtp settings
+
+
     }
 }

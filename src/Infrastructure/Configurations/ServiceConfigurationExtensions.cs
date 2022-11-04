@@ -26,11 +26,15 @@
             services.AddTransient<ITagService, TagService>();
             services.AddTransient<IZoomSettingService, ZoomSettingService>();
             services.AddTransient<ISMTPSettingService, SMTPSettingService>();
+            services.AddTransient<IGeneralSettingService, GeneralSettingService>();
+            services.AddTransient<IDepartmentService, DepartmentService>();
 
             services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();
             services.AddSingleton<IValidator<GroupRequestModel>, GroupValidator>();
             services.AddSingleton<IValidator<ZoomSettingRequestModel>, ZoomSettingValidator>();
             services.AddSingleton<IValidator<SMTPSettingRequestModel>, SMTPSettingValidator>();
+            services.AddSingleton<IValidator<GeneralSettingRequestModel>, GeneralSettingValidator>();
+
             return services;
         }
     }

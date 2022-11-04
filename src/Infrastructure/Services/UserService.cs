@@ -134,6 +134,8 @@
                 authenticationModel.Message = "Token Not Active.";
                 return authenticationModel;
             }
+            refreshToken.IsActive = false;
+
             //Revoke Current Refresh Token
             await _refreshTokenService.UpdateAsync(refreshToken);
 
