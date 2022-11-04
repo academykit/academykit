@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Api.Common
 {
     using Lingtren.Application.Common.Exceptions;
+    using Lingtren.Domain.Enums;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
     using System.Linq;
@@ -55,8 +56,10 @@
             var userName = claimsPrincipal.GetClaim(ClaimTypes.NameIdentifier, isRequired: true);
             var email = claimsPrincipal.GetClaim(ClaimTypes.Email, isRequired: false);
             var mobileNumber = claimsPrincipal.GetClaim("mobile_number", isRequired: false);
+            var role = claimsPrincipal.GetClaim(ClaimTypes.Role, isRequired: true);
 
-            return new CurrentUser { Id = Guid.Parse(userId), Name = userName, Email = email, MobileNumber = mobileNumber };
+
+            return new CurrentUser { Id = Guid.Parse(userId), Name = userName, Email = email, MobileNumber = mobileNumber, Role = Enum.Parse<UserRole>(role) };
         }
 
         /// <summary>

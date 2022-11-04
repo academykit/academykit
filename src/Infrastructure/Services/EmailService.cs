@@ -73,7 +73,7 @@
             try
             {
                 var html = $"Dear {firstName},<br><br>";
-                html += $"Your account requested for forgot password. <br> Your Token is <b><u>'{resetToken}'</u></b> for password reset.<br><br>";
+                html += $"Requested for password reset. <br> Your Token is <b><u>'{resetToken}'</u></b> for password reset. Token is valid for 5 minutes only<br><br>";
                 html += _footerEmail;
 
                 var mail = new EmailRequestDto

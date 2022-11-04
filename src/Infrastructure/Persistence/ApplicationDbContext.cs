@@ -1,8 +1,8 @@
-﻿using System.Runtime.InteropServices;
-namespace Lingtren.Infrastructure.Persistence
+﻿namespace Lingtren.Infrastructure.Persistence
 {
     using System.Reflection;
     using Lingtren.Domain.Entities;
+    using Lingtren.Domain.Enums;
     using Microsoft.EntityFrameworkCore;
 
     public class ApplicationDbContext : DbContext
@@ -28,9 +28,78 @@ namespace Lingtren.Infrastructure.Persistence
         public DbSet<Meeting> Meetings { get; set; }
         public DbSet<LiveSessionReport> LiveSessionReports { get; set; }
         public DbSet<LiveSessionMember> LiveSessionMembers { get; set; }
+        public DbSet<GeneralSetting> GeneralSettings { get; set; }
+        public DbSet<Department> Departments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            var userId = new Guid("30fcd978-f256-4733-840f-759181bc5e63");
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            builder.Entity<User>().HasData(
+                new User
+                {
+                    Id = userId,
+                    FirstName = "ABC",
+                    MiddleName = null,
+                    LastName = "XYZ",
+                    Address = "ADDRESS",
+                    Email = "vuriloapp@gmail.com",
+                    MobileNumber = "1234567890",
+                    CreatedBy = userId,
+                    CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
+                    UpdatedBy = userId,
+                    UpdatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
+                    IsActive = true,
+                    HashPassword = "+gURQgHBT1zJz5AljZhAMyaNRFQBVorq5HIlEmhf+ZQ=:BBLvXedGXzdz0ZlypoKQxQ==",  // Admin@123
+                    Role = UserRole.Admin,
+                }
+            );
+            builder.Entity<SMTPSetting>().HasData(
+                new SMTPSetting
+                {
+                    Id = new Guid("d3c343d8-adf8-45d4-afbe-e09c3285da24"),
+                    MailPort = 123,
+                    MailServer = "email-smtp.ap-south-1.amazonaws.com",
+                    Password = "password",
+                    ReplayTo = "support@vurilo.com",
+                    SenderEmail = "noreply@vurilo.com",
+                    SenderName = "Vurilo",
+                    UserName = "username",
+                    UseSSL = true,
+                    CreatedBy = userId,
+                    CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
+                    UpdatedBy = userId,
+                    UpdatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
+                }
+            );
+            builder.Entity<ZoomSetting>().HasData(
+                new ZoomSetting
+                {
+                    Id = new Guid("f41a902f-fabd-4749-ac28-91137f685cb8"),
+                    ApiKey = "api_key value",
+                    SecretKey = "secret key value",
+                    IsRecordingEnabled = false,
+                    CreatedBy = userId,
+                    CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
+                    UpdatedBy = userId,
+                    UpdatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
+                }
+            );
+            builder.Entity<GeneralSetting>().HasData(
+                new GeneralSetting
+                {
+                    Id = new Guid("2d7867fc-b7e7-461d-9257-d0990b5ac991"),
+                    CompanyName = "company name",
+                    CompanyAddress = "company address",
+                    CompanyContactNumber = "company contact number",
+                    EmailSignature = "company default email signature",
+                    LogoUrl = "image path",
+                    CreatedBy = userId,
+                    CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
+                    UpdatedBy = userId,
+                    UpdatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
+                }
+            );
             base.OnModelCreating(builder);
         }
     }

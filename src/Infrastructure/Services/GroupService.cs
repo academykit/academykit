@@ -52,7 +52,7 @@
                  || x.User.FirstName.ToLower().Trim().Contains(search));
             }
 
-            return predicate.And(x => x.CreatedBy == criteria.CurrentUserId);
+            return predicate;
         }
 
         /// <summary>

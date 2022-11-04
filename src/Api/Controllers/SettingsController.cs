@@ -37,13 +37,16 @@ namespace Lingtren.Api.Controllers
         /// <summary>
         /// get zoom  setting by id
         /// </summary>
-        /// <param name="id"> the zoom setting id</param>
         /// <returns> the instance of <see cref="ZoomSettingResponseModel" /> .</returns>
-        [HttpGet("zoom/{id}")]
-        [AllowAnonymous]
-        public async Task<ZoomSettingResponseModel> GetZoomSetting(Guid id)
+        [HttpGet("zoom")]
+        public async Task<ZoomSettingResponseModel> GetZoomSetting()
         {
-            var model = await _zoomSettingService.GetAsync(id).ConfigureAwait(false);
+            if (CurrentUser.Role != UserRole.Admin)
+            {
+                _logger.LogWarning("User with id : {id} is not admin to access zoom setting", CurrentUser.Id);
+                throw new ForbiddenException("Only user with admin role is allowed to view zoom setting");
+            }
+            var model = await _zoomSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return new ZoomSettingResponseModel(model);
         }
 
@@ -92,11 +95,16 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="id"> the smtp setting id</param>
         /// <returns> the instance of <see cref="SMTPSettingResponseModel" /> .</returns>
-        [HttpGet("smtp/{id}")]
+        [HttpGet("smtp")]
         [AllowAnonymous]
-        public async Task<SMTPSettingResponseModel> GetSMTPSetting(Guid id)
+        public async Task<SMTPSettingResponseModel> GetSMTPSetting()
         {
-            var model = await _smtpSettingService.GetAsync(id).ConfigureAwait(false);
+            if (CurrentUser.Role != UserRole.Admin)
+            {
+                _logger.LogWarning("User with id : {id} is not admin to access smtp setting", CurrentUser.Id);
+                throw new ForbiddenException("Only user with admin role is allowed to view smtp setting");
+            }
+            var model = await _smtpSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return new SMTPSettingResponseModel(model);
         }
 

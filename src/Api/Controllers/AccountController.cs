@@ -73,10 +73,8 @@
             {
                 return BadRequest(new CommonResponseModel { Message = "User Not Found" });
             }
-            var generator = new Random();
-            var token = generator.Next(0, 1000000).ToString("D6");
-            await _emailService.SendForgetPasswordEmail(user.Email, user.FirstName, token);
-            return Ok();
+            await _userService.ResetPasswordAsync(user).ConfigureAwait(false);
+            return Ok(new { message = "Forgot password executed successfully", success = true });
         }
 
         [HttpPost("VerifyResetToken")]
