@@ -24,6 +24,7 @@
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IGroupService, GroupService>();
             services.AddTransient<ITagService, TagService>();
+            services.AddTransient<ILevelService,LevelService>();
             services.AddTransient<IZoomSettingService, ZoomSettingService>();
             services.AddTransient<ISMTPSettingService, SMTPSettingService>();
 
