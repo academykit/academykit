@@ -56,7 +56,7 @@
         public async Task<GroupResponseModel> CreateGroup(GroupRequestModel model)
         {
             var currentTimeStamp = DateTime.UtcNow;
-            await this._validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await this._validator.ValidateAsync(model, options => options.IncludeRuleSets("Add").ThrowOnFailures()).ConfigureAwait(false);
 
             var entity = new Group()
             {
@@ -74,15 +74,15 @@
         }
 
         /// <summary>
-        /// get group by id
+        /// get group by id or slug
         /// </summary>
-        /// <param name="id"> the group id </param>
+        /// <param name="identity"> the group id or slug</param>
         /// <returns> the instance of <see cref="GroupResponseModel" /> .</returns>
-        [HttpGet("{id}")]
+        [HttpGet("{identity}")]
         [AllowAnonymous]
-        public async Task<GroupResponseModel> Get(Guid id)
+        public async Task<GroupResponseModel> Get(string identity)
         {
-            Group model = await _groupService.GetAsync(id, includeAllProperties: false).ConfigureAwait(false);
+            Group model = await _groupService.GetByIdOrSlugAsync(identity, inclueProperties: false).ConfigureAwait(false);
             return new GroupResponseModel(model);
         }
 
@@ -95,7 +95,7 @@
         [HttpPut("{identity}")]
         public async Task<GroupResponseModel> UpdateGroup(string identity, GroupRequestModel model)
         {
-            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Update").ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id.ToString(), inclueProperties: false).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
 
@@ -112,7 +112,7 @@
         //[HttpPost("{identity}/addMember")]
         //public async Task<GroupResponseModel> AddMember(string identity, AddGroupMemberRequestModel model)
         //{
-            
+
         //}
     }
 }
