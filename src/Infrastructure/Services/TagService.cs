@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 namespace Lingtren.Infrastructure.Services
 {
     using System;
@@ -45,6 +44,7 @@ namespace Lingtren.Infrastructure.Services
                     Id = Guid.NewGuid(),
                     Slug = slug,
                     Name = name,
+                    IsActive = true,
                     CreatedBy = currentUserId,
                     CreatedOn = DateTime.UtcNow
                 };
