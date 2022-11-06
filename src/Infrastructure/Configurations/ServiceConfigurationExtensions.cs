@@ -24,11 +24,12 @@
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IGroupService, GroupService>();
             services.AddTransient<ITagService, TagService>();
-            services.AddTransient<ILevelService,LevelService>();
+            services.AddTransient<ILevelService, LevelService>();
             services.AddTransient<IZoomSettingService, ZoomSettingService>();
             services.AddTransient<ISMTPSettingService, SMTPSettingService>();
             services.AddTransient<IGeneralSettingService, GeneralSettingService>();
             services.AddTransient<IDepartmentService, DepartmentService>();
+            services.AddTransient<IGroupMemberService, GroupMemberService>();
 
             services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();
             services.AddSingleton<IValidator<GroupRequestModel>, GroupValidator>();
