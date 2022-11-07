@@ -43,6 +43,7 @@
             services.AddSingleton<IValidator<GeneralSettingRequestModel>, GeneralSettingValidator>();
             services.AddSingleton<IValidator<DepartmentRequestModel>, DepartmentValidator>();
             services.AddSingleton<IValidator<ZoomLicenseRequestModel>, ZoomLicenseValidator>();
+            services.AddSingleton<IValidator<SectionRequestModel>, SectionValidator>();
 
             return services;
         }
