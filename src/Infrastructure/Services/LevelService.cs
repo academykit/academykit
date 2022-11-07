@@ -30,18 +30,24 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var slug = CommonHelper.GetEntityTitleSlug<Level>(_unitOfWork, (slug) => q => q.Slug == slug, name);
-                var tag = await _unitOfWork.GetRepository<Level>().GetFirstOrDefaultAsync(predicate: x => x.Name.ToLower() == name.ToLower()
-                          && x.IsActive).ConfigureAwait(false);
-                if (tag != default)
+                var levelName = name.TrimStart().TrimEnd();
+                var isAdmin = await ValidateIsAdminAsync(currentUserId).ConfigureAwait(false);
+                if (!isAdmin)
                 {
-                    throw new ArgumentException("Tag already exist");
+                    throw new ForbiddenException("Unauthorized user");
+                }
+                var slug = CommonHelper.GetEntityTitleSlug<Level>(_unitOfWork, (slug) => q => q.Slug == slug, levelName);
+                var level = await _unitOfWork.GetRepository<Level>().GetFirstOrDefaultAsync(predicate: x => x.Name.ToLower() == levelName.ToLower()
+                          && x.IsActive).ConfigureAwait(false);
+                if (level != default)
+                {
+                    throw new ArgumentException("level already exist");
                 }
                 var entity = new Level()
                 {
                     Id = Guid.NewGuid(),
                     Slug = slug,
-                    Name = name,
+                    Name = levelName,
                     IsActive = true,
                     CreatedBy = currentUserId,
                     CreatedOn = DateTime.UtcNow
@@ -49,6 +55,52 @@ namespace Lingtren.Infrastructure.Services
                 await _unitOfWork.GetRepository<Level>().InsertAsync(entity).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return entity;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handle to update level async
+        /// </summary>
+        /// <param name="identity"> the id or slug </param>
+        /// <param name="name"> the level name </param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the instance of <see cref="Level" />.</returns>
+        public async Task<Level> UpdateLevelAsync(string identity, string name, Guid currentUserId)
+        {
+            try
+            {
+                var levelName = name.TrimStart().TrimEnd();
+                var isAdmin = await ValidateIsAdminAsync(currentUserId).ConfigureAwait(false);
+                if (!isAdmin)
+                {
+                    throw new ForbiddenException("Unauthorized user");
+                }
+
+                var levels = await _unitOfWork.GetRepository<Level>().GetAllAsync(predicate: x => x.IsActive).ConfigureAwait(false);
+
+                var level = levels.FirstOrDefault(x => x.Id.ToString() == identity || x.Slug.Equals(identity));
+                if (level == null)
+                {
+                    throw new EntityNotFoundException("Level not found");
+                }
+
+                var levelNameExist = levels.Any(x => x.Id != level.Id && x.Name.ToLower() == levelName.ToLower());
+                if (levelNameExist)
+                {
+                    throw new ArgumentException("Level name already exist.");
+                }
+
+                level.Name = levelName;
+                level.UpdatedOn = DateTime.UtcNow;
+                level.UpdatedBy = currentUserId;
+                _unitOfWork.GetRepository<Level>().Update(level);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                return level;
             }
             catch (Exception ex)
             {
@@ -67,19 +119,17 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
+                var isAdmin = await ValidateIsAdminAsync(currentUserId).ConfigureAwait(false);
+                if (!isAdmin)
+                {
+                    throw new ForbiddenException("Unauthorized user");
+                }
                 var level = await _unitOfWork.GetRepository<Level>().GetFirstOrDefaultAsync(predicate: x => x.Id.ToString() == identity ||
                 x.Slug.Equals(identity)).ConfigureAwait(false);
                 if (level == default)
                 {
                     throw new EntityNotFoundException("Tag not found");
                 }
-
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: x => x.Id == currentUserId).ConfigureAwait(false);
-                if (user == null)
-                {
-                    throw new EntityNotFoundException("User not found");
-                }
-
 
                 level.IsActive = false;
                 level.UpdatedBy = currentUserId;
@@ -99,9 +149,18 @@ namespace Lingtren.Infrastructure.Services
         /// Handle to get levels
         /// </summary>
         /// <returns> the list of <see cref="Level" />.</returns>
-        public Task<IList<Level>> GetLevelsAsync()
+        public async Task<IList<Level>> GetLevelsAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var levels = await _unitOfWork.GetRepository<Level>().GetAllAsync(predicate: x => x.IsActive).ConfigureAwait(false);
+                return levels;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
         }
 
         /// <summary>
@@ -113,5 +172,30 @@ namespace Lingtren.Infrastructure.Services
         {
             return p => p.Id.ToString() == identity || p.Slug == identity;
         }
+
+        #region  private method
+
+        /// <summary>
+        /// Handle to validate user  is admin
+        /// </summary>
+        /// <param name="userId"> the user id  </param>
+        /// <returns> the boolean value</returns>
+        private async Task<bool> ValidateIsAdminAsync(Guid userId)
+        {
+            try
+            {
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: x => x.Id == userId &&
+                            x.Role == UserRole.Admin).ConfigureAwait(false);
+
+                return user != default;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message, ex);
+            }
+        }
+
+        #endregion
     }
 }

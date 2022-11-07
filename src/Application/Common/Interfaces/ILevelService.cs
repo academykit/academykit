@@ -25,5 +25,14 @@ namespace Lingtren.Application.Common.Interfaces
         /// </summary>
         /// <returns> the list of <see cref="Level" />.</returns>
         Task<IList<Level>> GetLevelsAsync();
+
+        /// <summary>
+        /// Handle to update level async
+        /// </summary>
+        /// <param name="identity"> the id or slug </param>
+        /// <param name="name"> the level name </param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the instance of <see cref="Level" />.</returns>
+        Task<Level> UpdateLevelAsync(string identity, string name, Guid currentUserId);
     }
 }

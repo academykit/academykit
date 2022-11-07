@@ -31,8 +31,9 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var slug = CommonHelper.GetEntityTitleSlug<Tag>(_unitOfWork, (slug) => q => q.Slug == slug, name);
-                var tag = await _unitOfWork.GetRepository<Tag>().GetFirstOrDefaultAsync(predicate: x => x.Name.ToLower() == name.ToLower()
+                var tagName = name.TrimStart().TrimEnd();
+                var slug = CommonHelper.GetEntityTitleSlug<Tag>(_unitOfWork, (slug) => q => q.Slug == slug, tagName);
+                var tag = await _unitOfWork.GetRepository<Tag>().GetFirstOrDefaultAsync(predicate: x => x.Name.ToLower() == tagName.ToLower()
                           && x.IsActive).ConfigureAwait(false);
                 if (tag != default)
                 {
@@ -43,7 +44,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     Id = Guid.NewGuid(),
                     Slug = slug,
-                    Name = name,
+                    Name = tagName,
                     IsActive = true,
                     CreatedBy = currentUserId,
                     CreatedOn = DateTime.UtcNow
@@ -95,6 +96,46 @@ namespace Lingtren.Infrastructure.Services
 
                 _unitOfWork.GetRepository<Tag>().Update(tag);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handle to update the tag
+        /// </summary>
+        /// <param name="identity"> the id or slug </param>
+        /// <param name="name"> the tag name </param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the instance of <see cref="Tag" />.</returns>
+        public async Task<Tag> UpdateTagAsync(string identity, string name, Guid currentUserId)
+        {
+            try
+            {
+                var tagName = name.TrimStart().TrimEnd();
+                var tags = await _unitOfWork.GetRepository<Tag>().GetAllAsync(predicate: x => x.IsActive).ConfigureAwait(false);
+
+                var tag = tags.FirstOrDefault(x => x.Id.ToString() == identity || x.Slug.Equals(identity));
+                if (tag == null)
+                {
+                    throw new EntityNotFoundException("Tag not found.");
+                }
+
+                var tagNameExist = tags.Any(x => x.Id != tag.Id && x.Name.ToLower() == tagName.ToLower());
+                if (tagNameExist)
+                {
+                    throw new ArgumentException("Tag name already exist");
+                }
+
+                tag.Name = tagName;
+                tag.UpdatedBy = currentUserId;
+                tag.UpdatedOn = DateTime.UtcNow;
+                _unitOfWork.GetRepository<Tag>().Update(tag);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                return tag;
             }
             catch (Exception ex)
             {

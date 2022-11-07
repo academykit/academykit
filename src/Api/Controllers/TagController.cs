@@ -5,6 +5,7 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using LinqKit;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Collections.Generic;
@@ -24,6 +25,7 @@ namespace Lingtren.Api.Controllers
         /// <param name="searchCriteria"> the instance of <see cref="BaseSearchCriteria" /> .</param>
         /// <returns> the list of <see cref="TagResponseModel" /> .</returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<SearchResult<TagResponseModel>> SearchAsync([FromQuery] BaseSearchCriteria searchCriteria)
         {
             var searchResult = await _tagService.SearchAsync(searchCriteria, includeAllProperties: false).ConfigureAwait(false);
@@ -64,14 +66,8 @@ namespace Lingtren.Api.Controllers
         [HttpPut("{identity}")]
         public async Task<TagResponseModel> UpdateTag(string identity, TagRequestModel model)
         {
-            var existing = await _tagService.GetByIdOrSlugAsync(identity, CurrentUser.Id.ToString(), false).ConfigureAwait(false);
-
-            existing.Name = model.Name;
-            existing.UpdatedBy = CurrentUser.Id;
-            existing.UpdatedOn = DateTime.UtcNow;
-
-            var savedEntity = await _tagService.UpdateAsync(existing, false).ConfigureAwait(false);
-            return new TagResponseModel(savedEntity);
+            var tag = await _tagService.UpdateTagAsync(identity, model.Name, CurrentUser.Id).ConfigureAwait(false);
+            return new TagResponseModel(tag);
         }
 
         /// <summary>
