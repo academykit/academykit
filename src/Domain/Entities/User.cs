@@ -43,5 +43,16 @@
         public IList<LiveSessionMember> LiveSessionMembers { get; set; }
         public IList<GeneralSetting> GeneralSettings { get; set; }
         public IList<Department> Departments { get; set; }
+
+        /// <summary>
+        /// Get or set full name
+        /// </summary>
+        public string FullName
+        {
+            get
+            {
+                return $"{FirstName} {MiddleName} {LastName}";
+            }
+        }
     }
 }

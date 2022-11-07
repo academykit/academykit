@@ -36,6 +36,8 @@
             services.AddSingleton<IValidator<ZoomSettingRequestModel>, ZoomSettingValidator>();
             services.AddSingleton<IValidator<SMTPSettingRequestModel>, SMTPSettingValidator>();
             services.AddSingleton<IValidator<GeneralSettingRequestModel>, GeneralSettingValidator>();
+            services.AddSingleton<IValidator<DepartmentRequestModel>, DepartmentValidator>();
+
 
             return services;
         }

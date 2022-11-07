@@ -2,7 +2,7 @@
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Domain.Entities;
-    public interface IDepartmentService : IGenericService<Department, BaseSearchCriteria>
+    public interface IDepartmentService : IGenericService<Department, DepartmentBaseSearchCriteria>
     {
     }
 }

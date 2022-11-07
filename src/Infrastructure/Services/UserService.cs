@@ -329,6 +329,7 @@
         }
 
         #endregion Account Services
+
         #region Protected Methods
         /// <summary>
         /// Construct query condition according to search criteria
@@ -342,12 +343,15 @@
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(x => x.FirstName.ToLower().Trim().Contains(search)
-                 || x.LastName.ToLower().Trim().Contains(search)
-                 || x.MiddleName.ToLower().Trim().Contains(search)
-                 || x.Email.ToLower().Trim().Contains(search));
+                predicate = predicate.And(x => x.FullName.ToLower().Trim().Contains(search)
+                 || x.Email.ToLower().Trim().Contains(search)
+                 || x.MobileNumber.ToLower().Trim().Contains(search));
             }
-            return predicate;
+            if (criteria.Role.HasValue)
+            {
+                predicate = predicate.And(p => p.Role == criteria.Role.Value);
+            }
+            return predicate.And(p => p.IsActive == criteria.IsActive);
         }
 
         /// <summary>
@@ -446,7 +450,6 @@
         }
 
         #endregion Private Methods
-
     }
 }
 
