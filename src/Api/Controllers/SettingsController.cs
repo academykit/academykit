@@ -46,7 +46,6 @@ namespace Lingtren.Api.Controllers
         /// <param name="id"> the general setting id</param>
         /// <returns> the instance of <see cref="GeneralSettingResponseModel" /> .</returns>
         [HttpGet]
-        [AllowAnonymous]
         public async Task<GeneralSettingResponseModel> Get()
         {
             if (CurrentUser.Role != UserRole.Admin)
@@ -162,7 +161,6 @@ namespace Lingtren.Api.Controllers
         /// <param name="id"> the smtp setting id</param>
         /// <returns> the instance of <see cref="SMTPSettingResponseModel" /> .</returns>
         [HttpGet("smtp")]
-        [AllowAnonymous]
         public async Task<SMTPSettingResponseModel> GetSMTPSetting()
         {
             if (CurrentUser.Role != UserRole.Admin)

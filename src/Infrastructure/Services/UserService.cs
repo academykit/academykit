@@ -9,11 +9,13 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Configurations;
+    using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.AspNetCore.Cryptography.KeyDerivation;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
+    using System;
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq.Expressions;
     using System.Security.Claims;
@@ -332,6 +334,28 @@
         #endregion Account Services
 
         #region Protected Methods
+
+        /// <summary>
+        /// This is called before entity is saved to DB.
+        /// </summary>
+        /// <remarks>
+        /// It should be overridden in child services to do other updates before entity is saved.
+        /// </remarks>
+        protected override async Task CreatePreHookAsync(User entity)
+        {
+            var password = GenerateRandomPassword(8);
+            entity.HashPassword = HashPassword(password);
+            await Task.FromResult(0);
+        }
+
+        private static string GenerateRandomPassword(int length)
+        {
+            Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
         /// <summary>
         /// Construct query condition according to search criteria
         /// </summary>

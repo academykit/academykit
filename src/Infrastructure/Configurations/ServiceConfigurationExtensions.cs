@@ -44,6 +44,7 @@
             services.AddSingleton<IValidator<DepartmentRequestModel>, DepartmentValidator>();
             services.AddSingleton<IValidator<ZoomLicenseRequestModel>, ZoomLicenseValidator>();
             services.AddSingleton<IValidator<SectionRequestModel>, SectionValidator>();
+            services.AddSingleton<IValidator<CourseRequestModel>, CourseValidator>();
 
             return services;
         }

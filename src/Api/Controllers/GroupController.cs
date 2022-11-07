@@ -33,7 +33,6 @@
         /// <param name="searchCriteria">The group search criteria.</param>
         /// <returns>The paginated search result.</returns>
         [HttpGet]
-        [AllowAnonymous]
         public async Task<SearchResult<GroupResponseModel>> SearchAsync([FromQuery] BaseSearchCriteria searchCriteria)
         {
             var searchResult = await _groupService.SearchAsync(searchCriteria).ConfigureAwait(false);

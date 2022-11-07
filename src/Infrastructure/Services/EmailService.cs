@@ -3,10 +3,8 @@
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Infrastructure.Configurations;
     using MailKit.Net.Smtp;
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
     using MimeKit;
 
     public class EmailService : IEmailService
@@ -68,18 +66,56 @@
             }
         }
 
+        /// <summary>
+        /// Email for forget password
+        /// </summary>
+        /// <param name="emailAddress">the email address of the receiver</param>
+        /// <param name="firstName">the first name of the receiver</param>
+        /// <param name="resetToken">the reset token</param>
+        /// <returns></returns>
+
         public async Task SendForgetPasswordEmail(string emailAddress, string firstName, string resetToken)
         {
             try
             {
                 var html = $"Dear {firstName},<br><br>";
-                html += $"Requested for password reset. <br> Your Token is <b><u>'{resetToken}'</u></b> for password reset. Token is valid for 5 minutes only<br><br>";
+                html += $"Requested for password reset. <br> Your Token is <b><u>'{resetToken}'</u></b> for password reset. Token is valid for 5 minutes only.<br><br>";
                 html += _footerEmail;
 
                 var mail = new EmailRequestDto
                 {
                     To = emailAddress,
                     Subject = "Forgot Password",
+                    Message = html
+                };
+                await SendMailWithHtmlBodyAsync(mail).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to send forget password email.");
+            }
+        }
+
+        /// <summary>
+        /// Email for account created and password
+        /// </summary>
+        /// <param name="emailAddress">the email address of the receiver</param>
+        /// <param name="firstName">the first name of the receiver</param>
+        /// <param name="password">the login password of the receiver</param>
+        /// <returns></returns>
+
+        public async Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password)
+        {
+            try
+            {
+                var html = $"Dear {firstName},<br><br>";
+                html += $"Your account has been created in Vurilo Team. <br> Your Login Password is <b><u>'{password}'</u></b>.<br><br>";
+                html += _footerEmail;
+
+                var mail = new EmailRequestDto
+                {
+                    To = emailAddress,
+                    Subject = "Account Created",
                     Message = html
                 };
                 await SendMailWithHtmlBodyAsync(mail).ConfigureAwait(false);

@@ -15,18 +15,21 @@
     public class UserController : BaseApiController
     {
         private readonly ILogger<UserController> _logger;
-        private readonly IValidator<UserRequestModel> _validator;
         private readonly IUserService _userService;
+        private readonly IEmailService _emailService;
+        private readonly IValidator<UserRequestModel> _validator;
 
         public UserController(
                             ILogger<UserController> logger,
                             IUserService userService,
+                            IEmailService emailService,
                             IValidator<UserRequestModel> validator
                            )
         {
             _logger = logger;
-            _validator = validator;
             _userService = userService;
+            _emailService = emailService;
+            _validator = validator;
         }
 
         /// <summary>
@@ -35,7 +38,6 @@
         /// <param name="searchCriteria">The user search criteria.</param>
         /// <returns>The paginated search result.</returns>
         [HttpGet]
-        [AllowAnonymous]
         public async Task<SearchResult<UserResponseModel>> SearchAsync([FromQuery] UserSearchCriteria searchCriteria)
         {
             var searchResult = await _userService.SearchAsync(searchCriteria, includeAllProperties: false).ConfigureAwait(false);
@@ -72,6 +74,7 @@
             var currentTimeStamp = DateTime.UtcNow;
             await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Add").ThrowOnFailures()).ConfigureAwait(false);
 
+            var password = "Asdasd";
             var entity = new User()
             {
                 Id = Guid.NewGuid(),
@@ -91,8 +94,9 @@
                 UpdatedBy = CurrentUser.Id,
                 UpdatedOn = currentTimeStamp,
             };
-
-            var response = await _userService.CreateAsync(entity,includeProperties:false).ConfigureAwait(false);
+            entity.HashPassword = _userService.HashPassword(password);
+            var response = await _userService.CreateAsync(entity, includeProperties: false).ConfigureAwait(false);
+            await _emailService.SendForgetPasswordEmail(entity.Email, entity.FirstName, entity.HashPassword).ConfigureAwait(false);
             return new UserResponseModel(response);
         }
 
@@ -102,7 +106,6 @@
         /// <param name="id"> the user id </param>
         /// <returns> the instance of <see cref="UserResponseModel" /> .</returns>
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public async Task<UserResponseModel> Get(Guid id)
         {
             User model = await _userService.GetAsync(id, includeAllProperties: false).ConfigureAwait(false);
@@ -118,10 +121,10 @@
         [HttpPut("{userId}")]
         public async Task<UserResponseModel> UpdateUser(Guid userId, UserRequestModel model)
         {
-            if (CurrentUser.Role != UserRole.Admin)
+            if (CurrentUser.Id != userId && CurrentUser.Role != UserRole.Admin)
             {
                 _logger.LogWarning("User with Id : {userId} and role :{role} is not allowed to update user", CurrentUser.Id, CurrentUser.Role.ToString());
-                throw new ForbiddenException("Only user with admin role is allowed to update user");
+                throw new ForbiddenException("Only same user is allowed to update user or by admin only");
             }
             await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Update").ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _userService.GetAsync(userId, CurrentUser.Id, includeAllProperties: false).ConfigureAwait(false);
@@ -141,7 +144,7 @@
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
 
-            var savedEntity = await _userService.UpdateAsync(existing,false).ConfigureAwait(false);
+            var savedEntity = await _userService.UpdateAsync(existing, false).ConfigureAwait(false);
             return new UserResponseModel(savedEntity);
         }
 
@@ -154,10 +157,11 @@
         [HttpPatch("{userId}/status")]
         public async Task<UserResponseModel> ChangeStatus(Guid userId, [FromQuery] bool enabled)
         {
-            if (CurrentUser.Role != UserRole.Admin)
+            IsAdmin(CurrentUser.Role);
+            if (CurrentUser.Id == userId)
             {
-                _logger.LogWarning("User with Id : {userId} and role :{role} is not allowed to change user status", CurrentUser.Id, CurrentUser.Role.ToString());
-                throw new ForbiddenException("Only user with admin role is allowed to change user status");
+                _logger.LogWarning("User with userId : {userId} is trying to change status of themselves", userId);
+                throw new ForbiddenException("User cannot change their own status");
             }
             var existing = await _userService.GetAsync(userId, CurrentUser.Id, includeAllProperties: false).ConfigureAwait(false);
 
@@ -168,7 +172,7 @@
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
 
-            var savedEntity = await _userService.UpdateAsync(existing,includeProperties:false).ConfigureAwait(false);
+            var savedEntity = await _userService.UpdateAsync(existing, includeProperties: false).ConfigureAwait(false);
             return new UserResponseModel(savedEntity);
         }
     }

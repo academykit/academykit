@@ -54,7 +54,6 @@
         /// <param name="id"> the user id </param>
         /// <returns> the instance of <see cref="ZoomLicenseResponseModel" /> .</returns>
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public async Task<ZoomLicenseResponseModel> Get(Guid id)
         {
             var model = await _zoomLicenseService.GetAsync(id).ConfigureAwait(false);

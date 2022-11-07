@@ -20,7 +20,6 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <returns> the list of <see cref="LevelResponseModel" /> .</returns>
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IList<LevelResponseModel>> SearchAsync()
         {
             var levels = await _levelService.GetLevelsAsync().ConfigureAwait(false);

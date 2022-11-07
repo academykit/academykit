@@ -24,7 +24,6 @@ namespace Lingtren.Api.Controllers
         /// <param name="searchCriteria"> the instance of <see cref="BaseSearchCriteria" /> .</param>
         /// <returns> the list of <see cref="TagResponseModel" /> .</returns>
         [HttpGet]
-        [AllowAnonymous]
         public async Task<SearchResult<TagResponseModel>> SearchAsync([FromQuery] BaseSearchCriteria searchCriteria)
         {
             var searchResult = await _tagService.SearchAsync(searchCriteria, includeAllProperties: false).ConfigureAwait(false);
