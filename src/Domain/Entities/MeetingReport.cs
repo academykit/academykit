@@ -1,12 +1,10 @@
 namespace Lingtren.Domain.Entities
 {
-    public class LiveSessionReport
+    public class MeetingReport
     {
         public Guid Id { get; set; }
         public Guid MeetingId { get; set; }
         public Meeting Meeting { get; set; }
-        public Guid LiveSessionId { get; set; }
-        public LiveSession LiveSession { get; set; }
         public Guid UserId { get; set; }
         public User User { get; set; }
         public DateTime StartTime { get; set; }

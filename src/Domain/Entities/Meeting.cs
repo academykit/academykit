@@ -5,9 +5,11 @@ namespace Lingtren.Domain.Entities
     {
         public long MeetingNumber { get; set; }
         public string PassCode { get; set; }
-        public Guid LiveSessionId { get; set; }
-        public LiveSession LiveSession { get; set; }
+        public Guid ZoomLicenseId { get; set; }
+        public ZoomLicense ZoomLicense { get; set; }
+        public DateTime? StartDate { get; set; }
+        public IList<MeetingReport> MeetingReports { get; set; }
+        public IList<Lesson> Lessons { get; set; }
         public User User { get; set; }
-        public IList<LiveSessionReport> LiveSessionReports { get; set; }
     }
 }

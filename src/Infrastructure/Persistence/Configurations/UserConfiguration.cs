@@ -40,15 +40,11 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.HasMany(x => x.Sections).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.Lessons).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.CourseTeachers).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
-            builder.HasMany(x => x.LiveSessions).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
-            builder.HasMany(x => x.LiveSessionModerators).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
-            builder.HasMany(x => x.LiveSessionTags).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.ZoomSettings).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.ZoomLicenses).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.SMTPSettings).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.Meetings).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
-            builder.HasMany(x => x.LiveSessionReports).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
-            builder.HasMany(x => x.LiveSessionMembers).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.MeetingReports).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.GeneralSettings).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.Departments).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
         }

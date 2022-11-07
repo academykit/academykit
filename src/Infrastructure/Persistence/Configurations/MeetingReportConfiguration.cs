@@ -3,13 +3,12 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Lingtren.Domain.Entities;
-    public class LiveSessionReportConfiguration : IEntityTypeConfiguration<LiveSessionReport>
+    public class MeetingReportConfiguration : IEntityTypeConfiguration<MeetingReport>
     {
-        public void Configure(EntityTypeBuilder<LiveSessionReport> builder)
+        public void Configure(EntityTypeBuilder<MeetingReport> builder)
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
-            builder.Property(x => x.LiveSessionId).HasColumnName("live_session_id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.MeetingId).HasColumnName("meeting_id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.UserId).HasColumnName("user_id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.StartTime).HasColumnName("start_time").HasColumnType("DATETIME").IsRequired();

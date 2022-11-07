@@ -32,15 +32,11 @@
         public IList<Section> Sections { get; set; }
         public IList<Lesson> Lessons { get; set; }
         public IList<CourseTeacher> CourseTeachers { get; set; }
-        public IList<LiveSession> LiveSessions { get; set; }
-        public IList<LiveSessionModerator> LiveSessionModerators { get; set; }
-        public IList<LiveSessionTag> LiveSessionTags { get; set; }
         public IList<ZoomSetting> ZoomSettings { get; set; }
         public IList<ZoomLicense> ZoomLicenses { get; set; }
         public IList<SMTPSetting> SMTPSettings { get; set; }
         public IList<Meeting> Meetings { get; set; }
-        public IList<LiveSessionReport> LiveSessionReports { get; set; }
-        public IList<LiveSessionMember> LiveSessionMembers { get; set; }
+        public IList<MeetingReport> MeetingReports { get; set; }
         public IList<GeneralSetting> GeneralSettings { get; set; }
         public IList<Department> Departments { get; set; }
     }

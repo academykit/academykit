@@ -8,6 +8,5 @@ namespace Lingtren.Domain.Entities
         public bool IsActive { get; set; }
         public User User { get; set; }
         public IList<CourseTag> CourseTags { get; set; }
-        public IList<LiveSessionTag> LiveSessionTags { get; set; }
     }
 }

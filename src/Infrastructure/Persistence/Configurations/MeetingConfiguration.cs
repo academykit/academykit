@@ -1,3 +1,4 @@
+using System.ComponentModel;
 namespace Lingtren.Infrastructure.Persistence.Configurations
 {
     using Microsoft.EntityFrameworkCore;
@@ -9,14 +10,16 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
-            builder.Property(x => x.LiveSessionId).HasColumnName("live_session_id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
+            builder.Property(x => x.StartDate).HasColumnName("start_date").HasColumnType("DATETIME").IsRequired(false);
+            builder.Property(x => x.ZoomLicenseId).HasColumnName("zoom_license_id").HasColumnType("VARCHAR(50)").IsRequired();
             builder.Property(x => x.PassCode).HasColumnName("PassCode").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.MeetingNumber).HasColumnName("meeting_number").IsRequired();
             builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.CreatedOn).HasColumnName("created_on").IsRequired().HasColumnType("DATETIME");
             builder.Property(x => x.UpdatedBy).HasColumnName("updated_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
             builder.Property(x => x.UpdatedOn).HasColumnName("updated_on").HasColumnType("DATETIME").IsRequired(false);
-            builder.HasMany(x => x.LiveSessionReports).WithOne(x => x.Meeting).HasForeignKey(x => x.MeetingId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.MeetingReports).WithOne(x => x.Meeting).HasForeignKey(x => x.MeetingId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.Lessons).WithOne(x => x.Meeting).HasForeignKey(x => x.MeetingId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

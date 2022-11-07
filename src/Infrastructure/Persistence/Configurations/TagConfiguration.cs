@@ -17,7 +17,6 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.UpdatedBy).HasColumnName("updated_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
             builder.Property(x => x.UpdatedOn).HasColumnName("updated_on").HasColumnType("DATETIME").IsRequired(false);
             builder.HasMany(x => x.CourseTags).WithOne(x => x.Tag).HasForeignKey(x => x.TagId).OnDelete(DeleteBehavior.NoAction);
-            builder.HasMany(x => x.LiveSessionTags).WithOne(x => x.Tag).HasForeignKey(x => x.TagId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

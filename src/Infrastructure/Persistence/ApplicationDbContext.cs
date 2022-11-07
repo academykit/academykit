@@ -19,15 +19,11 @@
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<CourseTeacher> CourseTeachers { get; set; }
         public DbSet<CourseTag> CourseTags { get; set; }
-        public DbSet<LiveSession> LiveSessions { get; set; }
-        public DbSet<LiveSessionModerator> LiveSessionModerators { get; set; }
-        public DbSet<LiveSessionTag> LiveSessionTags { get; set; }
         public DbSet<ZoomSetting> ZoomSettings { get; set; }
         public DbSet<ZoomLicense> ZoomLicenses { get; set; }
         public DbSet<SMTPSetting> SMTPSettings { get; set; }
         public DbSet<Meeting> Meetings { get; set; }
-        public DbSet<LiveSessionReport> LiveSessionReports { get; set; }
-        public DbSet<LiveSessionMember> LiveSessionMembers { get; set; }
+        public DbSet<MeetingReport> MeetingReports { get; set; }
         public DbSet<GeneralSetting> GeneralSettings { get; set; }
         public DbSet<Department> Departments { get; set; }
 
