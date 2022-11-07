@@ -1,9 +1,12 @@
 ﻿namespace Lingtren.Infrastructure.Helpers
 {
+    using AngleSharp.Dom;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Domain.Common;
+    using Lingtren.Domain.Entities;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Services;
     using Newtonsoft.Json;
     using System.Data;
     using System.Linq.Expressions;

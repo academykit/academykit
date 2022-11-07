@@ -1,9 +1,5 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
-    using System;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Threading.Tasks;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -14,6 +10,10 @@
     using LinqKit;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// This abstract class is a base for all <see cref="IGenericService{T,S}"/> service implementations. It
@@ -94,7 +94,7 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public async Task<T> UpdateAsync(T entity,bool includeProperties = true)
+        public async Task<T> UpdateAsync(T entity, bool includeProperties = true)
         {
             return await ExecuteWithResult(async () =>
             {
@@ -140,7 +140,7 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public async Task<T> GetAsync(Guid id, string currentUserId = null, bool includeProperties = true)
+        public async Task<T> GetAsync(Guid id, Guid? currentUserId = null, bool includeProperties = true)
         {
             return await ExecuteWithResult(async () =>
             {
@@ -170,7 +170,7 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public async Task<T> GetByIdOrSlugAsync(string identity, string currentUserId = null, bool includeProperties = true)
+        public async Task<T> GetByIdOrSlugAsync(string identity, Guid? currentUserId = null, bool includeProperties = true)
         {
             return await ExecuteWithResult(async () =>
             {
@@ -201,7 +201,7 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public async Task<T> GetFirstOrDefaultAsync(string currentUserId = null, bool includeProperties = true)
+        public async Task<T> GetFirstOrDefaultAsync(Guid? currentUserId = null, bool includeProperties = true)
         {
             return await ExecuteWithResult(async () =>
             {
@@ -214,14 +214,14 @@
         }
 
         /// <summary>
-        /// Deletes entity with the given Id.
+        /// Deletes entity with the given Id or Slug.
         /// </summary>
         ///
-        /// <param name="id">The id of the entity to delete.</param>
+        /// <param name="identity">The id or slug of the entity to delete.</param>
         /// <param name="currentUserId"> The current user Id.</param>
         ///
         /// <exception cref="ArgumentException">
-        /// If <paramref name="id"/> is not positive.
+        /// If <paramref name="identity"/> is not positive.
         /// </exception>
         /// <exception cref="EntityNotFoundException">
         /// If entity with the given Id doesn't exist in DB.
@@ -232,11 +232,11 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public virtual async Task DeleteAsync(Guid id, string currentUserId = null)
+        public virtual async Task DeleteAsync(string identity, Guid? currentUserId = null)
         {
             await ExecuteAsync(async () =>
             {
-                T entity = await Get(id, false).ConfigureAwait(false);
+                T entity = await GetByIdOrSlugAsync(identity, currentUserId, false).ConfigureAwait(false);
                 await CheckDeletePermissionsAsync(entity, currentUserId).ConfigureAwait(false);
                 _unitOfWork.GetRepository<T>().Delete(entity);
                 _unitOfWork.SaveChanges();
@@ -313,7 +313,7 @@
         /// Check if entity could be accessed by current user
         /// </summary>
         /// <param name="entityToReturn">The entity being returned</param>
-        protected virtual async Task CheckGetPermissionsAsync(T entityToReturn, string CurrentUserId)
+        protected virtual async Task CheckGetPermissionsAsync(T entityToReturn, Guid? CurrentUserId = null)
         {
             await Task.FromResult(0);
         }
@@ -322,7 +322,7 @@
         /// Check if entity could be deleted
         /// </summary>
         /// <param name="entityToDelete">The entity being deleted</param>
-        protected virtual async Task CheckDeletePermissionsAsync(T entityToDelete, string CurrentUserId)
+        protected virtual async Task CheckDeletePermissionsAsync(T entityToDelete, Guid? CurrentUserId = null)
         {
             await Task.FromResult(0);
         }

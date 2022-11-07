@@ -27,7 +27,7 @@
         ///
         /// <param name="entity">The entity to update.</param>
         /// <returns>The updated entity.</returns>
-        Task<T> UpdateAsync(T entity,bool includeProperties = true);
+        Task<T> UpdateAsync(T entity, bool includeProperties = true);
 
         /// <summary>
         /// Retrieves entity with the given Id.
@@ -36,7 +36,7 @@
         /// <param name="id">The id of the entity to retrieve.</param>
         /// <param name="currentUserId">The id of the current user.</param>
         /// <returns>The retrieved entity.</returns>
-        Task<T> GetAsync(Guid id, string currentUserId = null, bool includeAllProperties = true);
+        Task<T> GetAsync(Guid id, Guid? currentUserId = null, bool includeAllProperties = true);
 
         /// <summary>
         /// Retrieves entity with the given Id.
@@ -57,7 +57,7 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        Task<T> GetFirstOrDefaultAsync(string currentUserId = null, bool includeProperties = true);
+        Task<T> GetFirstOrDefaultAsync(Guid? currentUserId = null, bool includeProperties = true);
 
         /// <summary>
         /// Retrieves entity with the given id or slug.
@@ -78,7 +78,7 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        Task<T> GetByIdOrSlugAsync(string identity, string currentUserId = null, bool includeProperties = true);
+        Task<T> GetByIdOrSlugAsync(string identity, Guid? currentUserId = null, bool includeProperties = true);
 
         /// <summary>
         /// Deletes entity with the given Id.
@@ -86,7 +86,7 @@
         ///
         /// <param name="id">The id of the entity to delete.</param>
         /// <param name="currentUserId">The id of the current user.</param>
-        Task DeleteAsync(Guid id, string currentUserId = null);
+        Task DeleteAsync(string identity, Guid? currentUserId = null);
 
         /// <summary>
         /// Retrieves entities matching given search criteria.

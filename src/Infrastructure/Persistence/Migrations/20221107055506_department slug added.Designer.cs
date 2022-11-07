@@ -3,6 +3,7 @@ using System;
 using Lingtren.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221107055506_department slug added")]
+    partial class departmentslugadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -467,11 +469,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(500)")
                         .HasColumnName("description");
 
-                    b.Property<string>("DocumentUrl")
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
-                        .HasColumnName("document_url");
-
                     b.Property<int>("Duration")
                         .HasColumnType("int")
                         .HasColumnName("duration");
@@ -487,10 +484,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false)
                         .HasColumnName("is_preview");
-
-                    b.Property<string>("MeetingId")
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("meeting_id");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -522,10 +515,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(250)")
                         .HasColumnName("thumbnail_url");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int")
-                        .HasColumnName("type");
-
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
                         .HasColumnType("VARCHAR(50)")
@@ -545,8 +534,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("CourseId");
 
                     b.HasIndex("CreatedBy");
-
-                    b.HasIndex("MeetingId");
 
                     b.HasIndex("SectionId");
 
@@ -605,7 +592,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Levels");
                 });
 
-            modelBuilder.Entity("Lingtren.Domain.Entities.Meeting", b =>
+            modelBuilder.Entity("Lingtren.Domain.Entities.LiveSession", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -623,19 +610,57 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("DATETIME")
                         .HasColumnName("created_on");
 
-                    b.Property<long>("MeetingNumber")
-                        .HasColumnType("bigint")
-                        .HasColumnName("meeting_number");
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnName("description");
 
-                    b.Property<string>("PassCode")
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("end_date");
+
+                    b.Property<int>("EventType")
+                        .HasColumnType("int")
+                        .HasColumnName("event_type");
+
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("PassCode");
+                        .HasMaxLength(250)
+                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnName("name");
 
-                    b.Property<DateTime?>("StartDate")
+                    b.Property<DateTime?>("NearestEndTime")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("nearest_end_time");
+
+                    b.Property<DateTime?>("NearestStartTime")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("nearest_start_time");
+
+                    b.Property<string>("Recurrence")
+                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnName("recurrence");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnName("slug");
+
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("DATETIME")
                         .HasColumnName("start_date");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
@@ -646,21 +671,120 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("DATETIME")
                         .HasColumnName("updated_on");
 
-                    b.Property<string>("ZoomLicenseId")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("zoom_license_id");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
 
-                    b.HasIndex("ZoomLicenseId");
-
-                    b.ToTable("Meetings");
+                    b.ToTable("LiveSessions");
                 });
 
-            modelBuilder.Entity("Lingtren.Domain.Entities.MeetingReport", b =>
+            modelBuilder.Entity("Lingtren.Domain.Entities.LiveSessionMember", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("LiveSessionId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("live_session_id");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LiveSessionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LiveSessionMembers");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.LiveSessionModerator", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<string>("LiveSessionId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("live_session_id");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LiveSessionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LiveSessionModerators");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.LiveSessionReport", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -684,6 +808,12 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("DATETIME")
                         .HasColumnName("left_time");
 
+                    b.Property<string>("LiveSessionId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("live_session_id");
+
                     b.Property<string>("MeetingId")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -706,11 +836,115 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LiveSessionId");
+
                     b.HasIndex("MeetingId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("MeetingReports");
+                    b.ToTable("LiveSessionReports");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.LiveSessionTag", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<string>("LiveSessionId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("live_session_id");
+
+                    b.Property<string>("TagId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("tag_id");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LiveSessionId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("LiveSessionTags");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.Meeting", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<string>("LiveSessionId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("live_session_id");
+
+                    b.Property<long>("MeetingNumber")
+                        .HasColumnType("bigint")
+                        .HasColumnName("meeting_number");
+
+                    b.Property<string>("PassCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("PassCode");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LiveSessionId");
+
+                    b.ToTable("Meetings");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.RefreshToken", b =>
@@ -1145,45 +1379,6 @@ namespace Infrastructure.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Lingtren.Domain.Entities.VideoQueue", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("created_on");
-
-                    b.Property<string>("LessonId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("lesson_id");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int")
-                        .HasColumnName("status");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("updated_on");
-
-                    b.Property<string>("VideoUrl")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
-                        .HasColumnName("video_url");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LessonId");
-
-                    b.ToTable("VideoQueue");
-                });
-
             modelBuilder.Entity("Lingtren.Domain.Entities.ZoomLicense", b =>
                 {
                     b.Property<string>("Id")
@@ -1191,10 +1386,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("VARCHAR(50)")
                         .HasColumnName("id");
-
-                    b.Property<int>("Capacity")
-                        .HasColumnType("int")
-                        .HasColumnName("capacity");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -1211,12 +1402,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("VARCHAR(50)")
                         .HasColumnName("host_id");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true)
-                        .HasColumnName("is_active");
 
                     b.Property<string>("LicenseEmail")
                         .IsRequired()
@@ -1442,12 +1627,6 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Lingtren.Domain.Entities.Meeting", "Meeting")
-                        .WithMany("Lessons")
-                        .HasForeignKey("MeetingId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("Lingtren.Domain.Entities.Section", "Section")
                         .WithMany("Lessons")
                         .HasForeignKey("SectionId")
@@ -1455,8 +1634,6 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Course");
-
-                    b.Navigation("Meeting");
 
                     b.Navigation("Section");
 
@@ -1474,6 +1651,109 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Lingtren.Domain.Entities.LiveSession", b =>
+                {
+                    b.HasOne("Lingtren.Domain.Entities.User", "User")
+                        .WithMany("LiveSessions")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.LiveSessionMember", b =>
+                {
+                    b.HasOne("Lingtren.Domain.Entities.LiveSession", "LiveSession")
+                        .WithMany("LiveSessionMembers")
+                        .HasForeignKey("LiveSessionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Lingtren.Domain.Entities.User", "User")
+                        .WithMany("LiveSessionMembers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("LiveSession");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.LiveSessionModerator", b =>
+                {
+                    b.HasOne("Lingtren.Domain.Entities.LiveSession", "LiveSession")
+                        .WithMany("LiveSessionModerators")
+                        .HasForeignKey("LiveSessionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Lingtren.Domain.Entities.User", "User")
+                        .WithMany("LiveSessionModerators")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("LiveSession");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.LiveSessionReport", b =>
+                {
+                    b.HasOne("Lingtren.Domain.Entities.LiveSession", "LiveSession")
+                        .WithMany("LiveSessionReports")
+                        .HasForeignKey("LiveSessionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Lingtren.Domain.Entities.Meeting", "Meeting")
+                        .WithMany("LiveSessionReports")
+                        .HasForeignKey("MeetingId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Lingtren.Domain.Entities.User", "User")
+                        .WithMany("LiveSessionReports")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("LiveSession");
+
+                    b.Navigation("Meeting");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.LiveSessionTag", b =>
+                {
+                    b.HasOne("Lingtren.Domain.Entities.User", "User")
+                        .WithMany("LiveSessionTags")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Lingtren.Domain.Entities.LiveSession", "LiveSession")
+                        .WithMany("LiveSessionTags")
+                        .HasForeignKey("LiveSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lingtren.Domain.Entities.Tag", "Tag")
+                        .WithMany("LiveSessionTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("LiveSession");
+
+                    b.Navigation("Tag");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Lingtren.Domain.Entities.Meeting", b =>
                 {
                     b.HasOne("Lingtren.Domain.Entities.User", "User")
@@ -1482,32 +1762,13 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Lingtren.Domain.Entities.ZoomLicense", "ZoomLicense")
+                    b.HasOne("Lingtren.Domain.Entities.LiveSession", "LiveSession")
                         .WithMany("Meetings")
-                        .HasForeignKey("ZoomLicenseId")
+                        .HasForeignKey("LiveSessionId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("User");
-
-                    b.Navigation("ZoomLicense");
-                });
-
-            modelBuilder.Entity("Lingtren.Domain.Entities.MeetingReport", b =>
-                {
-                    b.HasOne("Lingtren.Domain.Entities.Meeting", "Meeting")
-                        .WithMany("MeetingReports")
-                        .HasForeignKey("MeetingId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Lingtren.Domain.Entities.User", "User")
-                        .WithMany("MeetingReports")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Meeting");
+                    b.Navigation("LiveSession");
 
                     b.Navigation("User");
                 });
@@ -1574,17 +1835,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Department");
                 });
 
-            modelBuilder.Entity("Lingtren.Domain.Entities.VideoQueue", b =>
-                {
-                    b.HasOne("Lingtren.Domain.Entities.Lesson", "Lesson")
-                        .WithMany()
-                        .HasForeignKey("LessonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Lesson");
-                });
-
             modelBuilder.Entity("Lingtren.Domain.Entities.ZoomLicense", b =>
                 {
                     b.HasOne("Lingtren.Domain.Entities.User", "User")
@@ -1635,11 +1885,22 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Courses");
                 });
 
+            modelBuilder.Entity("Lingtren.Domain.Entities.LiveSession", b =>
+                {
+                    b.Navigation("LiveSessionMembers");
+
+                    b.Navigation("LiveSessionModerators");
+
+                    b.Navigation("LiveSessionReports");
+
+                    b.Navigation("LiveSessionTags");
+
+                    b.Navigation("Meetings");
+                });
+
             modelBuilder.Entity("Lingtren.Domain.Entities.Meeting", b =>
                 {
-                    b.Navigation("Lessons");
-
-                    b.Navigation("MeetingReports");
+                    b.Navigation("LiveSessionReports");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Section", b =>
@@ -1650,6 +1911,8 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Lingtren.Domain.Entities.Tag", b =>
                 {
                     b.Navigation("CourseTags");
+
+                    b.Navigation("LiveSessionTags");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.User", b =>
@@ -1670,7 +1933,15 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Navigation("Levels");
 
-                    b.Navigation("MeetingReports");
+                    b.Navigation("LiveSessionMembers");
+
+                    b.Navigation("LiveSessionModerators");
+
+                    b.Navigation("LiveSessionReports");
+
+                    b.Navigation("LiveSessionTags");
+
+                    b.Navigation("LiveSessions");
 
                     b.Navigation("Meetings");
 
@@ -1685,11 +1956,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("ZoomLicenses");
 
                     b.Navigation("ZoomSettings");
-                });
-
-            modelBuilder.Entity("Lingtren.Domain.Entities.ZoomLicense", b =>
-                {
-                    b.Navigation("Meetings");
                 });
 #pragma warning restore 612, 618
         }

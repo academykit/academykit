@@ -74,7 +74,7 @@ namespace Lingtren.Api.Controllers
             }
 
             await _generalSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _generalSettingService.GetAsync(id, CurrentUser.Id.ToString()).ConfigureAwait(false);
+            var existing = await _generalSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
 
             if (existing == null)
             {
@@ -132,7 +132,7 @@ namespace Lingtren.Api.Controllers
             }
 
             await _zoomSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _zoomSettingService.GetAsync(id, CurrentUser.Id.ToString()).ConfigureAwait(false);
+            var existing = await _zoomSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
 
             if (existing == null)
             {
@@ -190,7 +190,7 @@ namespace Lingtren.Api.Controllers
             }
 
             await _smtpSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _smtpSettingService.GetAsync(id, CurrentUser.Id.ToString()).ConfigureAwait(false);
+            var existing = await _smtpSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
 
             if (existing == null)
             {

@@ -62,7 +62,7 @@
         public async Task<GroupResponseModel> CreateGroup(GroupRequestModel model)
         {
             var currentTimeStamp = DateTime.UtcNow;
-            await this._validator.ValidateAsync(model, options => options.IncludeRuleSets("Add").ThrowOnFailures()).ConfigureAwait(false);
+            await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Add").ThrowOnFailures()).ConfigureAwait(false);
 
             var entity = new Group()
             {
@@ -99,7 +99,7 @@
         public async Task<GroupResponseModel> UpdateGroup(string identity, GroupRequestModel model)
         {
             await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Update").ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id.ToString()).ConfigureAwait(false);
+            var existing = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
 
             existing.Id = existing.Id;

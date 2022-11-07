@@ -2,6 +2,7 @@
 {
     using Lingtren.Domain.Common;
     using Lingtren.Domain.Enums;
+    using System.Text.RegularExpressions;
 
     public class User : AuditableEntity
     {
@@ -39,5 +40,16 @@
         public IList<MeetingReport> MeetingReports { get; set; }
         public IList<GeneralSetting> GeneralSettings { get; set; }
         public IList<Department> Departments { get; set; }
+
+        /// <summary>
+        /// Get or set full name
+        /// </summary>
+        public string FullName
+        {
+            get
+            {
+                return Regex.Replace($"{FirstName} {MiddleName} {LastName}", @"\s+", " ");
+            }
+        }
     }
 }

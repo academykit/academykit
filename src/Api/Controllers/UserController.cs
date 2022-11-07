@@ -3,23 +3,28 @@
     using Application.Common.Models.ResponseModels;
     using FluentValidation;
     using Lingtren.Application.Common.Dtos;
+    using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
+    using Lingtren.Domain.Enums;
     using LinqKit;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class UserController : BaseApiController
     {
+        private readonly ILogger<UserController> _logger;
         private readonly IValidator<UserRequestModel> _validator;
         private readonly IUserService _userService;
 
         public UserController(
+                            ILogger<UserController> logger,
                             IUserService userService,
                             IValidator<UserRequestModel> validator
                            )
         {
+            _logger = logger;
             _validator = validator;
             _userService = userService;
         }
@@ -58,8 +63,14 @@
         [HttpPost]
         public async Task<UserResponseModel> CreateUser(UserRequestModel model)
         {
+            if (CurrentUser.Role != UserRole.Admin)
+            {
+                _logger.LogWarning("User with Id : {userId} and role :{role} is not allowed to create user", CurrentUser.Id, CurrentUser.Role.ToString());
+                throw new ForbiddenException("Only user with admin role is allowed to create user");
+            }
+
             var currentTimeStamp = DateTime.UtcNow;
-            await this._validator.ValidateAsync(model, options => options.IncludeRuleSets("Add").ThrowOnFailures()).ConfigureAwait(false);
+            await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Add").ThrowOnFailures()).ConfigureAwait(false);
 
             var entity = new User()
             {
@@ -107,8 +118,13 @@
         [HttpPut("{userId}")]
         public async Task<UserResponseModel> UpdateUser(Guid userId, UserRequestModel model)
         {
+            if (CurrentUser.Role != UserRole.Admin)
+            {
+                _logger.LogWarning("User with Id : {userId} and role :{role} is not allowed to update user", CurrentUser.Id, CurrentUser.Role.ToString());
+                throw new ForbiddenException("Only user with admin role is allowed to update user");
+            }
             await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Update").ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _userService.GetAsync(userId, CurrentUser.Id.ToString(), includeAllProperties: false).ConfigureAwait(false);
+            var existing = await _userService.GetAsync(userId, CurrentUser.Id, includeAllProperties: false).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
 
             existing.Id = existing.Id;
@@ -138,7 +154,12 @@
         [HttpPatch("{userId}/status")]
         public async Task<UserResponseModel> ChangeStatus(Guid userId, [FromQuery] bool enabled)
         {
-            var existing = await _userService.GetAsync(userId, CurrentUser.Id.ToString(), includeAllProperties: false).ConfigureAwait(false);
+            if (CurrentUser.Role != UserRole.Admin)
+            {
+                _logger.LogWarning("User with Id : {userId} and role :{role} is not allowed to change user status", CurrentUser.Id, CurrentUser.Role.ToString());
+                throw new ForbiddenException("Only user with admin role is allowed to change user status");
+            }
+            var existing = await _userService.GetAsync(userId, CurrentUser.Id, includeAllProperties: false).ConfigureAwait(false);
 
             var currentTimeStamp = DateTime.UtcNow;
 
