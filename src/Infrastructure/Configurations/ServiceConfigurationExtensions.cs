@@ -30,6 +30,9 @@
             services.AddTransient<IGeneralSettingService, GeneralSettingService>();
             services.AddTransient<IDepartmentService, DepartmentService>();
             services.AddTransient<IGroupMemberService, GroupMemberService>();
+            services.AddTransient<ISectionService, SectionService>();
+            services.AddTransient<ILessonService, LessonService>();
+            services.AddTransient<ICourseService, CourseService>();
 
             services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();
             services.AddSingleton<IValidator<GroupRequestModel>, GroupValidator>();
