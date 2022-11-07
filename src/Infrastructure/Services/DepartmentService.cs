@@ -19,9 +19,8 @@
             IUnitOfWork unitOfWork,
             ILogger<DepartmentService> logger) : base(unitOfWork, logger)
         {
-
         }
-
+        #region Protected Methods
         /// <summary>
         /// This is called before entity is saved to DB.
         /// </summary>
@@ -97,7 +96,9 @@
         {
             return p => p.Id.ToString() == identity || p.Slug == identity;
         }
+        #endregion Protected Methods
 
+        #region Private Methods
         /// <summary>
         /// Check duplicate name
         /// </summary>
@@ -114,5 +115,6 @@
                 throw new ServiceException("Duplicate department name is found");
             }
         }
+        #endregion Private Methods
     }
 }

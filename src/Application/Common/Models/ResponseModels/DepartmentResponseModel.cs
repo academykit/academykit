@@ -17,7 +17,7 @@
             Name = model.Name;
             IsActive = model.IsActive;
             UpdatedOn = model.UpdatedOn;
-            User = new UserResponseModel(model.User);
+            User = model.User != null ? new UserResponseModel(model.User) : new UserResponseModel();
         }
     }
 }

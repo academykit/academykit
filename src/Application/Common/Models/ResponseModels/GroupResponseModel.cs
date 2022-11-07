@@ -8,13 +8,13 @@
         public string Name { get; set; }
         public bool IsActive { get; set; }
         public UserResponseModel User { get; set; }
-        public GroupResponseModel(Group entitiy)
+        public GroupResponseModel(Group model)
         {
-            Id = entitiy.Id;
-            Slug = entitiy.Slug;
-            Name = entitiy.Name;
-            IsActive = entitiy.IsActive;
-            User = new UserResponseModel(entitiy.User);
+            Id = model.Id;
+            Slug = model.Slug;
+            Name = model.Name;
+            IsActive = model.IsActive;
+            User = model.User != null ? new UserResponseModel(model.User) : new UserResponseModel();
         }
     }
 }

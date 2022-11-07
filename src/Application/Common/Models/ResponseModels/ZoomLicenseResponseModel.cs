@@ -2,18 +2,20 @@
 {
     using Lingtren.Domain.Entities;
 
-    public class GroupMemberResponseModel
+    public class ZoomLicenseResponseModel
     {
         public Guid Id { get; set; }
-        public Guid GroupId { get; set; }
-        public string GroupName { get; set; }
+        public string LicenseEmail { get; set; }
+        public string HostId { get; set; }
+        public int Capacity { get; set; }
         public bool IsActive { get; set; }
         public UserResponseModel User { get; set; }
-        public GroupMemberResponseModel(GroupMember model)
+        public ZoomLicenseResponseModel(ZoomLicense model)
         {
             Id = model.Id;
-            GroupId = model.GroupId;
-            GroupName = model.Group.Name;
+            LicenseEmail = model.LicenseEmail;
+            HostId = model.HostId;
+            Capacity = model.Capacity;
             IsActive = model.IsActive;
             User = model.User != null ? new UserResponseModel(model.User) : new UserResponseModel();
         }

@@ -59,11 +59,8 @@
         [HttpPost]
         public async Task<DepartmentResponseModel> CreateAsync(DepartmentRequestModel model)
         {
-            if (CurrentUser.Role != UserRole.Admin)
-            {
-                _logger.LogWarning("User with Id : {userId} is not allowed to create department having user role : {role}", CurrentUser.Id, CurrentUser.Role.ToString());
-                throw new ForbiddenException("Only user with admin role is allowed to create department");
-            }
+            IsAdmin(CurrentUser.Role);
+
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
             var entity = new Department
@@ -89,11 +86,8 @@
         [HttpPut("{identity}")]
         public async Task<DepartmentResponseModel> UpdateAsync(string identity, DepartmentRequestModel model)
         {
-            if (CurrentUser.Role != UserRole.Admin)
-            {
-                _logger.LogWarning("User with Id : {userId} is not allowed to update department with identity : {identity} and having user role : {role}", CurrentUser.Id, identity, CurrentUser.Role.ToString());
-                throw new ForbiddenException("Only user with admin role is allowed to update department");
-            }
+            IsAdmin(CurrentUser.Role);
+
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _departmentService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
@@ -116,11 +110,8 @@
         [HttpDelete("{identity}")]
         public async Task<CommonResponseModel> DeletAsync(string identity)
         {
-            if (CurrentUser.Role != UserRole.Admin)
-            {
-                _logger.LogWarning("User with Id : {userId} is not allowed to delete department having user role : {role}", CurrentUser.Id, CurrentUser.Role.ToString());
-                throw new ForbiddenException("Only user with admin role is allowed to delete department");
-            }
+            IsAdmin(CurrentUser.Role);
+
             await _departmentService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             return new CommonResponseModel() { Success = true, Message = "Department removed successfully." };
         }
@@ -134,6 +125,8 @@
         [HttpPatch("{identity}/status")]
         public async Task<DepartmentResponseModel> ChangeStatus(string identity, [FromQuery] bool enabled)
         {
+            IsAdmin(CurrentUser.Role);
+
             var existing = await _departmentService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
 
             existing.Id = existing.Id;

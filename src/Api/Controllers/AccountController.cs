@@ -114,7 +114,7 @@
                 return BadRequest(new CommonResponseModel { Message = "User Not Found" });
             }
             user.HashPassword = _userService.HashPassword(model.NewPassword);
-            await _userService.UpdateAsync(user);
+            await _userService.UpdateAsync(user,includeProperties:false);
             return Ok(true);
         }
 

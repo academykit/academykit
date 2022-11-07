@@ -92,7 +92,7 @@
                 UpdatedOn = currentTimeStamp,
             };
 
-            var response = await _userService.CreateAsync(entity).ConfigureAwait(false);
+            var response = await _userService.CreateAsync(entity,includeProperties:false).ConfigureAwait(false);
             return new UserResponseModel(response);
         }
 
@@ -141,7 +141,7 @@
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
 
-            var savedEntity = await _userService.UpdateAsync(existing).ConfigureAwait(false);
+            var savedEntity = await _userService.UpdateAsync(existing,false).ConfigureAwait(false);
             return new UserResponseModel(savedEntity);
         }
 
@@ -168,7 +168,7 @@
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
 
-            var savedEntity = await _userService.UpdateAsync(existing).ConfigureAwait(false);
+            var savedEntity = await _userService.UpdateAsync(existing,includeProperties:false).ConfigureAwait(false);
             return new UserResponseModel(savedEntity);
         }
     }

@@ -1,7 +1,7 @@
-﻿using Lingtren.Domain.Entities;
-
-namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace Lingtren.Application.Common.Models.ResponseModels
 {
+    using Lingtren.Domain.Entities;
+
     public class ZoomSettingResponseModel
     {
         public Guid Id { get; set; }

@@ -21,7 +21,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             CompanyContactNumber = model.CompanyContactNumber;
             EmailSignature = model.EmailSignature;
             UpdatedOn = model.UpdatedOn;
-            User = new UserResponseModel(model.User);
+            User = model.User != null ? new UserResponseModel(model.User) : new UserResponseModel();
         }
     }
 }
