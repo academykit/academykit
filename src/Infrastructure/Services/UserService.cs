@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
     using Domain.Entities;
+    using global::Infrastructure.Persistence.Migrations;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -343,7 +344,8 @@
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(x => x.FullName.ToLower().Trim().Contains(search)
+                predicate = predicate.And(x=>
+                    ((x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim() + " " + x.LastName.Trim()).Trim().Contains(search)
                  || x.Email.ToLower().Trim().Contains(search)
                  || x.MobileNumber.ToLower().Trim().Contains(search));
             }

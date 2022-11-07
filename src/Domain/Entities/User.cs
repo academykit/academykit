@@ -2,6 +2,7 @@
 {
     using Lingtren.Domain.Common;
     using Lingtren.Domain.Enums;
+    using System.Text.RegularExpressions;
 
     public class User : AuditableEntity
     {
@@ -51,7 +52,7 @@
         {
             get
             {
-                return $"{FirstName} {MiddleName} {LastName}";
+                return Regex.Replace($"{FirstName} {MiddleName} {LastName}", @"\s+", " ");
             }
         }
     }

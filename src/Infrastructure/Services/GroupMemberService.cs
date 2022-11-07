@@ -32,9 +32,7 @@
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(x => x.User.FirstName.ToLower().Trim().Contains(search)
-                 || x.User.MiddleName.ToLower().Trim().Contains(search)
-                 || x.User.LastName.ToLower().Trim().Contains(search));
+                predicate = predicate.And(x => ((x.User.FirstName.Trim() + " " + x.User.MiddleName.Trim()).Trim() + " " + x.User.LastName.Trim()).Trim().Contains(search));
             }
             return predicate;
         }
