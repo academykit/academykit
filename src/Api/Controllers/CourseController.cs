@@ -3,6 +3,7 @@ namespace Lingtren.Api.Controllers
     using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
+    using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
@@ -15,12 +16,16 @@ namespace Lingtren.Api.Controllers
     {
         private readonly ICourseService _courseService;
         private readonly IValidator<CourseRequestModel> _validator;
+        private readonly ILogger<CourseController> _logger;
+
         public CourseController(
             ICourseService courseService,
-            IValidator<CourseRequestModel> validator)
+            IValidator<CourseRequestModel> validator,
+            ILogger<CourseController> logger)
         {
             _courseService = courseService;
             _validator = validator;
+            _logger = logger;
         }
 
         /// <summary>
@@ -126,8 +131,6 @@ namespace Lingtren.Api.Controllers
         [HttpPut("{identity}")]
         public async Task<CourseResponseModel> UpdateAsync(string identity, CourseRequestModel model)
         {
-            IsAdmin(CurrentUser.Role);
-
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
@@ -170,12 +173,26 @@ namespace Lingtren.Api.Controllers
         [HttpDelete("{identity}")]
         public async Task<IActionResult> DeletAsync(string identity)
         {
-            IsAdmin(CurrentUser.Role);
-
             await _courseService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Course removed successfully." });
         }
 
-
+        /// <summary>
+        /// change course status api
+        /// </summary>
+        /// <param name="identity"> id or slug </param>
+        /// <returns> the task complete </returns>
+        [HttpPatch("{identity}/status")]
+        public async Task<IActionResult> ChangeStatus(string identity, [FromQuery] Status status)
+        {
+            var statusExists = Enum.IsDefined(typeof(Status), status);
+            if (!statusExists)
+            {
+                _logger.LogWarning("Invalid course status : {status} requested for status change by the user with id : {userId}", status, CurrentUser.Id);
+                throw new ForbiddenException("Invalid course status requested");
+            }
+            await _courseService.ChangeStatusAsync(identity, status, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Course status changed successfully." });
+        }
     }
 }

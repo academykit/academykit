@@ -168,7 +168,7 @@
                 }
                 throw new ForbiddenException("You are not allowed to access this course.");
             }
-            throw new ForbiddenException("You are not allowed to modify this live session.");
+            throw new ForbiddenException("You are not allowed to modify this course.");
         }
 
         protected async Task<bool> ValidateUserCanAccessGroupCourse(Course course, Guid currentUserId)

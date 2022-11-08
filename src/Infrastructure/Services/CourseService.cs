@@ -117,6 +117,11 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         protected override async Task CheckDeletePermissionsAsync(Course course, Guid currentUserId)
         {
+            if (course.Status != Status.Draft)
+            {
+                _logger.LogWarning("Course with id : {courseId} cannot be delete having status : {status}", course.Id, course.Status.ToString());
+                throw new ForbiddenException("Only draft course can be delete");
+            }
             await ValidateAndGetCourse(currentUserId, courseIdentity: course.Id.ToString(), validateForModify: true).ConfigureAwait(false);
         }
 
@@ -150,5 +155,27 @@ namespace Lingtren.Infrastructure.Services
             }
         }
         #endregion Protected Methods
+
+        /// <summary>
+        /// Handle to change course status
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="status">the course status</param>
+        /// <param name="currentUserId">the current id</param>
+        /// <returns></returns>
+        public async Task ChangeStatusAsync(string identity, Status status, Guid currentUserId)
+        {
+            var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+            if (course.Status == status)
+            {
+                _logger.LogWarning("Course with id : {courseId} cannot be changed to same status by User with id {userId}", course.Id, currentUserId);
+                throw new ForbiddenException("Course cannot be changed to same status");
+            }
+            course.Status = status;
+            course.UpdatedBy = currentUserId;
+            course.UpdatedOn = DateTime.UtcNow;
+            _unitOfWork.GetRepository<Course>().Update(course);
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+        }
     }
 }

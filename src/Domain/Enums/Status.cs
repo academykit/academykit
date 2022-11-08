@@ -2,8 +2,8 @@ namespace Lingtren.Domain.Enums
 {
     public enum Status
     {
-        Draft = 0,
-        Published = 1,
-        Archived = 2
+        Draft = 1,
+        Published = 2,
+        Archived = 3
     }
 }
