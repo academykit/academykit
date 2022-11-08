@@ -59,5 +59,17 @@ namespace Lingtren.Api.Controllers
             var response = await _sectionService.UpdateAsync(entity).ConfigureAwait(false);
             return new SectionResponseModel(response);
         }
+
+        /// <summary>
+        /// delete section api
+        /// </summary>
+        /// <param name="identity"> the id or slug </param>
+        /// <returns> the task complete </returns>
+        [HttpDelete("{identity}")]
+        public async Task<IActionResult> Delete(string identity)
+        {
+            await _sectionService.DeleteSectionAsync(identity,CurrentUser.Id).ConfigureAwait(false);
+            return Ok();
+        }
     }
 }
