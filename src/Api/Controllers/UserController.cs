@@ -9,7 +9,6 @@
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using LinqKit;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class UserController : BaseApiController
@@ -65,16 +64,11 @@
         [HttpPost]
         public async Task<UserResponseModel> CreateUser(UserRequestModel model)
         {
-            if (CurrentUser.Role != UserRole.Admin)
-            {
-                _logger.LogWarning("User with Id : {userId} and role :{role} is not allowed to create user", CurrentUser.Id, CurrentUser.Role.ToString());
-                throw new ForbiddenException("Only user with admin role is allowed to create user");
-            }
+            IsAdmin(CurrentUser.Role);
 
             var currentTimeStamp = DateTime.UtcNow;
             await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Add").ThrowOnFailures()).ConfigureAwait(false);
 
-            var password = "Asdasd";
             var entity = new User()
             {
                 Id = Guid.NewGuid(),
@@ -94,9 +88,12 @@
                 UpdatedBy = CurrentUser.Id,
                 UpdatedOn = currentTimeStamp,
             };
+
+            var password = await _userService.GenerateRandomPassword(8).ConfigureAwait(false);
             entity.HashPassword = _userService.HashPassword(password);
+
             var response = await _userService.CreateAsync(entity, includeProperties: false).ConfigureAwait(false);
-            await _emailService.SendForgetPasswordEmail(entity.Email, entity.FirstName, entity.HashPassword).ConfigureAwait(false);
+            await _emailService.SendUserCreatedPasswordEmail(entity.Email, entity.FullName, password).ConfigureAwait(false);
             return new UserResponseModel(response);
         }
 

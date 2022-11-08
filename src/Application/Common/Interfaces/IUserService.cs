@@ -3,7 +3,7 @@
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
-    public interface IUserService: IGenericService<User,UserSearchCriteria>
+    public interface IUserService : IGenericService<User, UserSearchCriteria>
     {
 
         /// <summary>
@@ -73,5 +73,12 @@
         /// <param name="model">the instance of <see cref="VerifyResetTokenModel"/></param>
         /// <returns>the password change token</returns>
         Task<string> VerifyPasswordResetTokenAsync(VerifyResetTokenModel model);
+
+        /// <summary>
+        /// Handle to generate random password
+        /// </summary>
+        /// <param name="length">the length</param>
+        /// <returns></returns>
+        Task<string> GenerateRandomPassword(int length);
     }
 }

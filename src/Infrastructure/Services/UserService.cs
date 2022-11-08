@@ -1,7 +1,6 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
     using Domain.Entities;
-    using global::Infrastructure.Persistence.Migrations;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -9,7 +8,6 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Configurations;
-    using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.AspNetCore.Cryptography.KeyDerivation;
     using Microsoft.Extensions.Logging;
@@ -171,30 +169,11 @@
         /// </summary>
         /// <param name="user">the instance of <see cref="User"/></param>
         /// <returns>the instance of <see cref="RefreshToken"/></returns>
-
         public async Task<RefreshToken?> GetActiveRefreshToken(User user)
         {
             var refreshTokens = await _refreshTokenService.GetByUserId(user.Id).ConfigureAwait(false);
             return refreshTokens.FirstOrDefault();
         }
-
-        ///// <summary>
-        ///// Handle to get user detail by id
-        ///// </summary>
-        ///// <param name="id">the user id</param>
-        ///// <returns>the instance of <see cref="User"/></returns>
-        //public async Task<User> GetUserAsync(Guid id)
-        //{
-        //    try
-        //    {
-        //        return await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == id).ConfigureAwait(false);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "An error occurred while attempting to fetch single user.");
-        //        throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to fetch single user.");
-        //    }
-        //}
 
         /// <summary>
         /// Handle to get user detail by id
@@ -331,6 +310,20 @@
 
         }
 
+        /// <summary>
+        /// Handle to generate random password
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public async Task<string> GenerateRandomPassword(int length)
+        {
+            Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var password = new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+            return await Task.FromResult(password.ToLower());
+        }
+
         #endregion Account Services
 
         #region Protected Methods
@@ -343,18 +336,10 @@
         /// </remarks>
         protected override async Task CreatePreHookAsync(User entity)
         {
-            var password = GenerateRandomPassword(8);
-            entity.HashPassword = HashPassword(password);
+            await CheckDuplicateEmailAsync(entity).ConfigureAwait(false);
             await Task.FromResult(0);
         }
 
-        private static string GenerateRandomPassword(int length)
-        {
-            Random random = new Random();
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
 
         /// <summary>
         /// Construct query condition according to search criteria
@@ -368,7 +353,7 @@
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(x=>
+                predicate = predicate.And(x =>
                     ((x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim() + " " + x.LastName.Trim()).Trim().Contains(search)
                  || x.Email.ToLower().Trim().Contains(search)
                  || x.MobileNumber.ToLower().Trim().Contains(search));
@@ -473,6 +458,23 @@
               signingCredentials: signingCredentials);
 
             return await Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
+        }
+
+        /// <summary>
+        /// Check duplicate name
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        /// <exception cref="ServiceException"></exception>
+        private async Task CheckDuplicateEmailAsync(User entity)
+        {
+            var checkDuplicateEmail = await _unitOfWork.GetRepository<User>().ExistsAsync(
+                predicate: p => p.Id != entity.Id && p.Email.ToLower() == entity.Email.ToLower()).ConfigureAwait(false);
+            if (checkDuplicateEmail)
+            {
+                _logger.LogWarning("Duplicate user email : {email} is found.", entity.Email);
+                throw new ServiceException("Duplicate email is found");
+            }
         }
 
         #endregion Private Methods

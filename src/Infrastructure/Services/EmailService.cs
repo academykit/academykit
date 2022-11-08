@@ -79,7 +79,7 @@
             try
             {
                 var html = $"Dear {firstName},<br><br>";
-                html += $"Requested for password reset. <br> Your Token is <b><u>'{resetToken}'</u></b> for password reset. Token is valid for 5 minutes only.<br><br>";
+                html += $"Requested for password reset. <br> Your Token is <b><u>{resetToken}</u></b> for password reset. Token is valid for 5 minutes only.<br><br>";
                 html += _footerEmail;
 
                 var mail = new EmailRequestDto
@@ -109,7 +109,7 @@
             try
             {
                 var html = $"Dear {firstName},<br><br>";
-                html += $"Your account has been created in Vurilo Team. <br> Your Login Password is <b><u>'{password}'</u></b>.<br><br>";
+                html += $"Your account has been created in Vurilo Team. <br> Your Login Password is <b><u>{password}</u></b>.<br><br>";
                 html += _footerEmail;
 
                 var mail = new EmailRequestDto
