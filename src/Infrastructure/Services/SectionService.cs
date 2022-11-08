@@ -7,6 +7,8 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
     using Microsoft.Extensions.Logging;
+    using Microsoft.EntityFrameworkCore;
+    using Lingtren.Domain.Enums;
 
     public class SectionService : BaseGenericService<Section, BaseSearchCriteria>, ISectionService
     {
@@ -22,7 +24,7 @@ namespace Lingtren.Infrastructure.Services
         /// </remarks>
         protected override async Task CreatePreHookAsync(Section entity)
         {
-            await CheckCourseTeacherAsync(entity).ConfigureAwait(false);
+            await CheckCourseTeacherAsync(entity, entity.CreatedBy).ConfigureAwait(false);
             await CheckDuplicateNameAsync(entity).ConfigureAwait(false);
             var order = await LastSectionOrder(entity).ConfigureAwait(false);
             entity.Order = order;
@@ -38,9 +40,51 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="newEntity">The new entity.</param>
         protected override async Task UpdateEntityFieldsAsync(Section existing, Section newEntity)
         {
-            await CheckCourseTeacherAsync(newEntity).ConfigureAwait(false);
+            await CheckCourseTeacherAsync(newEntity, newEntity.UpdatedBy.Value).ConfigureAwait(false);
             await CheckDuplicateNameAsync(newEntity).ConfigureAwait(false);
             _unitOfWork.GetRepository<Section>().Update(newEntity);
+        }
+
+        /// <summary>
+        /// Handle to delete the section
+        /// </summary>
+        /// <param name="identity"> the id or slug </param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the task complete </returns>
+        public async Task DeleteSectionAsync(string identity, Guid currentUserId)
+        {
+            try
+            {
+                var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(predicate: x => !x.IsDeleted &&
+                (x.Id.ToString() == identity || x.Slug.Equals(identity)), include: s => s.Include(x => x.Lessons).Include(x => x.Course)).ConfigureAwait(false);
+
+                if (section == null)
+                {
+                    throw new EntityNotFoundException("Section not found");
+                }
+                await CheckCourseTeacherAsync(section, currentUserId).ConfigureAwait(false);
+                if (section.Status == Status.Published || section.Course.Status == Status.Published)
+                {
+                    throw new ForbiddenException("Course section is published.");
+                }
+
+                if (section.Lessons.Any(x => !x.IsDeleted))
+                {
+                    throw new ArgumentException("Course section consist lessons");
+                }
+
+                section.IsDeleted = true;
+                section.UpdatedBy = currentUserId;
+                section.UpdatedOn = DateTime.UtcNow;
+
+                _unitOfWork.GetRepository<Section>().Update(section);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
         }
 
         #region Private Methods
@@ -66,10 +110,10 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="entity"> the instance of <see cref="Section" /> .</param>
         /// <returns> the task complete ˝</returns>
-        private async Task CheckCourseTeacherAsync(Section entity)
+        private async Task CheckCourseTeacherAsync(Section entity, Guid userId)
         {
             var teacher = await _unitOfWork.GetRepository<CourseTeacher>().GetFirstOrDefaultAsync(predicate: x => x.CourseId == entity.CourseId &&
-                            x.UserId == entity.CreatedBy).ConfigureAwait(false);
+                            x.UserId == userId).ConfigureAwait(false);
             if (teacher == null)
             {
                 _logger.LogWarning("Unauthroized user : {0} is not teacher of course {1}", entity.CreatedBy, entity.CourseId);
