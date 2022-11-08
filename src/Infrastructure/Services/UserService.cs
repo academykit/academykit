@@ -89,6 +89,13 @@
             await _refreshTokenService.CreateAsync(refreshToken).ConfigureAwait(false);
             return authenticationModel;
         }
+
+        /// <summary>
+        /// Handle to logout user and set refresh token false
+        /// </summary>
+        /// <param name="token">the refresh token</param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
         public async Task<bool> Logout(string token, Guid currentUserId)
         {
             var user = await GetUserFromRefreshToken(token);
@@ -110,6 +117,12 @@
             await _refreshTokenService.UpdateAsync(refreshToken);
             return true;
         }
+
+        /// <summary>
+        /// Handle to generate new jwt token from refresh token
+        /// </summary>
+        /// <param name="token">the refresh token</param>
+        /// <returns></returns>
         public async Task<AuthenticationModel> RefreshTokenAsync(string token)
         {
             var authenticationModel = new AuthenticationModel();
@@ -322,6 +335,27 @@
             var password = new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
             return await Task.FromResult(password.ToLower());
+        }
+
+        /// <summary>
+        /// Handle to change user password
+        /// </summary>
+        /// <param name="model">the instance of <see cref="ChangePasswordRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user</param>
+        /// <returns></returns>
+        public async Task ChangePasswordAsync(ChangePasswordRequestModel model, Guid currentUserId)
+        {
+            var user = await GetAsync(currentUserId, includeProperties: false).ConfigureAwait(false);
+            var currentPasswordMatched = VerifyPassword(user.HashPassword, model.CurrentPassword);
+            if (!currentPasswordMatched)
+            {
+                _logger.LogWarning("User with userId : {id} current password does not matched while changing password.", currentUserId);
+                throw new ForbiddenException("Current Password does not matched.");
+            }
+            user.HashPassword = HashPassword(model.NewPassword);
+            user.UpdatedOn = DateTime.UtcNow;
+            _unitOfWork.GetRepository<User>().Update(user);
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
 
         #endregion Account Services

@@ -12,19 +12,19 @@
         /// <param name="tokenRequestDto">the instance of <see cref="TokenRequestDto"/></param>
         /// <returns>the instance of <see cref="AuthenticationModel"/></returns>
         Task<AuthenticationModel> VerifyUserAndGetToken(LoginRequestModel model);
-
+        
         /// <summary>
-        /// Handle to logout 
+        /// Handle to logout user and set refresh token false
         /// </summary>
-        /// <param name="token"></param>
-        /// <param name="currentUserId"></param>
+        /// <param name="token">the refresh token</param>
+        /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
         Task<bool> Logout(string token, Guid currentUserId);
 
         /// <summary>
-        /// Get refresh token
+        /// Handle to generate new jwt token from refresh token
         /// </summary>
-        /// <param name="token"></param>
+        /// <param name="token">the refresh token</param>
         /// <returns></returns>
         Task<AuthenticationModel> RefreshTokenAsync(string token);
 
@@ -34,7 +34,6 @@
         /// <param name="user">the instance of <see cref="User"/></param>
         /// <returns>the instance of <see cref="RefreshToken"/></returns>
         Task<RefreshToken?> GetActiveRefreshToken(User user);
-
 
         /// <summary>
         /// Handle to get user detail by id
@@ -80,5 +79,13 @@
         /// <param name="length">the length</param>
         /// <returns></returns>
         Task<string> GenerateRandomPassword(int length);
+
+        /// <summary>
+        /// Handle to change user password
+        /// </summary>
+        /// <param name="model">the instance of <see cref="ChangePasswordRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user</param>
+        /// <returns></returns>
+        Task ChangePasswordAsync(ChangePasswordRequestModel model, Guid currentUserId);
     }
 }

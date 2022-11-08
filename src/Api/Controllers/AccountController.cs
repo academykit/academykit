@@ -15,12 +15,16 @@
     {
         private readonly IUserService _userService;
         private readonly IValidator<LoginRequestModel> _validator;
+        private readonly IValidator<ChangePasswordRequestModel> _changePasswordValidator;
+
         public AccountController(
             IUserService userService,
-            IValidator<LoginRequestModel> validator)
+            IValidator<LoginRequestModel> validator,
+            IValidator<ChangePasswordRequestModel> changePasswordValidator)
         {
             _userService = userService;
             _validator = validator;
+            _changePasswordValidator = changePasswordValidator;
         }
 
         [HttpGet]
@@ -124,6 +128,14 @@
             {
                 return BadRequest(new CommonResponseModel { Message = response.Message });
             }
+        }
+
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestModel model)
+        {
+            await _changePasswordValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await _userService.ChangePasswordAsync(model, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new { message = "Password changed successfully.", success = true });
         }
     }
 }

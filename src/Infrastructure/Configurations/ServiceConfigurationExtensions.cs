@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Infrastructure.Configurations
 {
     using FluentValidation;
+    using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Validators;
@@ -47,6 +48,7 @@
             services.AddSingleton<IValidator<SectionRequestModel>, SectionValidator>();
             services.AddSingleton<IValidator<CourseRequestModel>, CourseValidator>();
             services.AddSingleton<IValidator<CourseTeacherRequestModel>, CourseTeacherValidator>();
+            services.AddSingleton<IValidator<ChangePasswordRequestModel>, ChangePasswordValidator>();
 
             return services;
         }
