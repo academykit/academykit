@@ -119,12 +119,12 @@
         /// <param name="identity"> id or slug </param>
         /// <returns> the task complete </returns>
         [HttpDelete("{id}")]
-        public async Task<CommonResponseModel> DeletAsync(Guid id)
+        public async Task<IActionResult> DeletAsync(Guid id)
         {
             IsAdmin(CurrentUser.Role);
 
             await _zoomLicenseService.DeleteAsync(id.ToString(), CurrentUser.Id).ConfigureAwait(false);
-            return new CommonResponseModel() { Success = true, Message = "ZoomLicense removed successfully." };
+            return Ok(new CommonResponseModel() { Success = true, Message = "ZoomLicense removed successfully." });
         }
 
         /// <summary>

@@ -2,7 +2,12 @@
 {
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Domain.Common;
+    using Lingtren.Domain.Entities;
+    using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Helpers;
+    using LinqKit;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using System;
     using System.Threading.Tasks;
@@ -124,6 +129,56 @@
             }
 
             return child;
+        }
+
+        /// <summary>
+        /// Validate user and get courses 
+        /// </summary>
+        /// <param name="currentUserId">the current user id</param>
+        /// <param name="courseIdentity">the course id or slug</param>
+        /// <param name="validateForModify"></param>
+        /// <returns></returns>
+        /// <exception cref="ForbiddenException"></exception>
+        protected async Task<Course> ValidateAndGetCourse(Guid currentUserId, string courseIdentity, bool validateForModify = true)
+        {
+            CommonHelper.ValidateArgumentNotNullOrEmpty(courseIdentity, nameof(courseIdentity));
+            var predicate = PredicateBuilder.New<Course>(true);
+
+            predicate = predicate.And(x => x.Id.ToString() == courseIdentity || x.Slug == courseIdentity);
+
+            var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(
+                predicate: predicate,
+                include: s => s.Include(x => x.CourseTeachers)
+                                .Include(x => x.Group).ThenInclude(x => x.GroupMembers)).ConfigureAwait(false);
+
+            CommonHelper.CheckFoundEntity(course);
+
+            // if current user is the creator he can modify/access the live session
+            if (course.CreatedBy.Equals(currentUserId) || course.CourseTeachers.Any(x => x.UserId == currentUserId))
+            {
+                return course;
+            }
+
+            if (!validateForModify)
+            {
+                var canAccess = await ValidateUserCanAccessGroupCourse(course, currentUserId).ConfigureAwait(false);
+                if (canAccess && course.Status == Status.Published)
+                {
+                    return course;
+                }
+                throw new ForbiddenException("You are not allowed to access this course.");
+            }
+            throw new ForbiddenException("You are not allowed to modify this live session.");
+        }
+
+        protected async Task<bool> ValidateUserCanAccessGroupCourse(Course course, Guid currentUserId)
+        {
+            if (!course.GroupId.HasValue)
+            {
+                return true;
+            }
+            var isCourseMember = course.Group.GroupMembers.Any(x => x.UserId == currentUserId);
+            return await Task.FromResult(isCourseMember);
         }
     }
 }

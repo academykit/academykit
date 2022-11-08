@@ -55,7 +55,7 @@ namespace Lingtren.Api.Controllers
         [HttpPost]
         public async Task<CourseResponseModel> CreateAsync(CourseRequestModel model)
         {
-            IsAdmin(CurrentUser.Role);
+            IsTeacherAdmin(CurrentUser.Role);
 
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
@@ -75,6 +75,7 @@ namespace Lingtren.Api.Controllers
                 UpdatedOn = currentTimeStamp,
                 UpdatedBy = CurrentUser.Id,
                 CourseTags = new List<CourseTag>(),
+                CourseTeachers = new List<CourseTeacher>()
             };
             foreach (var tagId in model.TagIds)
             {
@@ -89,6 +90,17 @@ namespace Lingtren.Api.Controllers
                     UpdatedBy = CurrentUser.Id,
                 });
             }
+            entity.CourseTeachers.Add(new CourseTeacher
+            {
+                Id = Guid.NewGuid(),
+                CourseId = entity.Id,
+                UserId = CurrentUser.Id,
+                CreatedOn = currentTimeStamp,
+                CreatedBy = CurrentUser.Id,
+                UpdatedOn = currentTimeStamp,
+                UpdatedBy = CurrentUser.Id,
+            });
+
             var response = await _courseService.CreateAsync(entity).ConfigureAwait(false);
             return new CourseResponseModel(response);
         }
@@ -123,14 +135,14 @@ namespace Lingtren.Api.Controllers
         /// <param name="identity"> id or slug </param>
         /// <returns> the task complete </returns>
         [HttpDelete("{identity}")]
-        public async Task<CommonResponseModel> DeletAsync(string identity)
+        public async Task<IActionResult> DeletAsync(string identity)
         {
             IsAdmin(CurrentUser.Role);
 
             await _courseService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return new CommonResponseModel() { Success = true, Message = "Course removed successfully." };
+            return Ok(new CommonResponseModel() { Success = true, Message = "Course removed successfully." });
         }
 
-        
+
     }
 }

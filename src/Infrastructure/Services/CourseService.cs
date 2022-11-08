@@ -28,9 +28,22 @@ namespace Lingtren.Infrastructure.Services
         {
             entity.Slug = CommonHelper.GetEntityTitleSlug<Course>(_unitOfWork, (slug) => q => q.Slug == slug, entity.Name);
             await _unitOfWork.GetRepository<CourseTag>().InsertAsync(entity.CourseTags).ConfigureAwait(false);
+            await _unitOfWork.GetRepository<CourseTeacher>().InsertAsync(entity.CourseTeachers).ConfigureAwait(false);
             await Task.FromResult(0);
         }
 
+        /// <summary>
+        /// Updates the <paramref name="existing"/> entity according to <paramref name="newEntity"/> entity.
+        /// </summary>
+        /// <remarks>Override in child services to update navigation properties.</remarks>
+        /// <param name="existing">The existing entity.</param>
+        /// <param name="newEntity">The new entity.</param>
+        protected override async Task UpdateEntityFieldsAsync(Course existing, Course newEntity)
+        {
+            //await CheckCourseTeacherAsync(newEntity).ConfigureAwait(false);
+            //await CheckDuplicateNameAsync(newEntity).ConfigureAwait(false);
+            _unitOfWork.GetRepository<Course>().Update(newEntity);
+        }
 
         /// <summary>
         /// Applies filters to the given query.

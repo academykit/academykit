@@ -173,12 +173,12 @@
         /// <param name="identity">the group id or slug</param>
         /// <param name="id">the group member id</param>
         /// <param name="enabled">the status</param>
-        /// <returns>the instance of <see cref="CommonResponseModel"/></returns>
+        /// <returns></returns>
         [HttpPatch("{identity}/status/{id}")]
-        public async Task<CommonResponseModel> ChangeStatus(string identity, Guid id, [FromQuery] bool enabled)
+        public async Task<IActionResult> ChangeStatus(string identity, Guid id, [FromQuery] bool enabled)
         {
             await _groupService.ChangeMemberStatusAsync(identity, id, enabled, CurrentUser.Id).ConfigureAwait(false);
-            return new CommonResponseModel() { Success = true, Message = "Member status changed successfully." };
+            return Ok(new CommonResponseModel() { Success = true, Message = "Member status changed successfully." });
         }
 
         /// <summary>
@@ -186,13 +186,13 @@
         /// </summary>
         /// <param name="identity">the group id or slug</param>
         /// <param name="id">group member id</param>
-        /// <returns>the instance of <see cref="CommonResponseModel"/></returns>
+        /// <returns></returns>
 
         [HttpDelete("{identity}/removeMember/{id}")]
-        public async Task<CommonResponseModel> RemoveMember(string identity, Guid id)
+        public async Task<IActionResult> RemoveMember(string identity, Guid id)
         {
             await _groupService.RemoveMemberAsync(identity, id, CurrentUser.Id).ConfigureAwait(false);
-            return new CommonResponseModel() { Success = true, Message = "Member removed successfully." };
+            return Ok(new CommonResponseModel() { Success = true, Message = "Member removed successfully."});
         }
     }
 }

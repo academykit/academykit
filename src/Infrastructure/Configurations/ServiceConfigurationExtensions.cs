@@ -34,7 +34,7 @@
             services.AddTransient<ILessonService, LessonService>();
             services.AddTransient<ICourseService, CourseService>();
             services.AddTransient<IZoomLicenseService, ZoomLicenseService>();
-
+            services.AddTransient<ICourseTeacherService, CourseTeacherService>();
 
             services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();
             services.AddSingleton<IValidator<GroupRequestModel>, GroupValidator>();
@@ -45,6 +45,7 @@
             services.AddSingleton<IValidator<ZoomLicenseRequestModel>, ZoomLicenseValidator>();
             services.AddSingleton<IValidator<SectionRequestModel>, SectionValidator>();
             services.AddSingleton<IValidator<CourseRequestModel>, CourseValidator>();
+            services.AddSingleton<IValidator<CourseTeacherRequestModel>, CourseTeacherValidator>();
 
             return services;
         }
