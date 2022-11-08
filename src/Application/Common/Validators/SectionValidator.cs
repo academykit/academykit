@@ -1,4 +1,3 @@
-using System.ComponentModel;
 namespace Lingtren.Application.Common.Validators
 {
     using Lingtren.Application.Common.Models.RequestModels;

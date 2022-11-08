@@ -1,15 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
-
 namespace Lingtren.Application.Common.Models.RequestModels
 {
+    using System.Text.RegularExpressions;
+
     public class LoginRequestModel : IValidatableObject
     {
-        [Required(ErrorMessage = "Email is required")]
         public string Email { get; set; }
-        [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
-        public bool RememberMe { get; set; }
         public bool IsEmail { get; private set; } = false;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

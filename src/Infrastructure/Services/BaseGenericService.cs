@@ -232,7 +232,7 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public virtual async Task DeleteAsync(string identity, Guid? currentUserId = null)
+        public virtual async Task DeleteAsync(string identity, Guid currentUserId)
         {
             await ExecuteAsync(async () =>
             {
@@ -322,7 +322,7 @@
         /// Check if entity could be deleted
         /// </summary>
         /// <param name="entityToDelete">The entity being deleted</param>
-        protected virtual async Task CheckDeletePermissionsAsync(T entityToDelete, Guid? CurrentUserId = null)
+        protected virtual async Task CheckDeletePermissionsAsync(T entityToDelete, Guid CurrentUserId)
         {
             await Task.FromResult(0);
         }

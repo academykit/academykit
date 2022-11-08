@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Api.Controllers
 {
     using Application.Common.Dtos;
+    using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
@@ -13,13 +14,13 @@
     public class AccountController : BaseApiController
     {
         private readonly IUserService _userService;
-        private readonly IEmailService _emailService;
+        private readonly IValidator<LoginRequestModel> _validator;
         public AccountController(
             IUserService userService,
-            IEmailService emailService)
+            IValidator<LoginRequestModel> validator)
         {
             _userService = userService;
-            _emailService = emailService;
+            _validator = validator;
         }
 
         [HttpGet]
@@ -33,15 +34,7 @@
         [AllowAnonymous]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                string validationErrors = string.Join(",<br/>",
-                                                        ModelState.Values.Where(E => E.Errors.Count > 0)
-                                                        .SelectMany(E => E.Errors)
-                                                        .Select(E => E.ErrorMessage)
-                                                        .ToArray());
-                return BadRequest(new CommonResponseModel { Message = validationErrors });
-            }
+            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var result = await _userService.VerifyUserAndGetToken(model).ConfigureAwait(false);
             if (!result.IsAuthenticated)
             {
@@ -114,7 +107,7 @@
                 return BadRequest(new CommonResponseModel { Message = "User Not Found" });
             }
             user.HashPassword = _userService.HashPassword(model.NewPassword);
-            await _userService.UpdateAsync(user,includeProperties:false);
+            await _userService.UpdateAsync(user, includeProperties: false);
             return Ok(true);
         }
 

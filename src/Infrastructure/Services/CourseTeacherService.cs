@@ -33,13 +33,9 @@
         /// <param name="course teacher"></param>
         /// <param name="currentUserId"></param>
         /// <returns></returns>
-        protected override async Task CheckDeletePermissionsAsync(CourseTeacher teacher, Guid? currentUserId = null)
+        protected override async Task CheckDeletePermissionsAsync(CourseTeacher teacher, Guid currentUserId)
         {
-            if (!currentUserId.HasValue)
-            {
-                throw new ArgumentException("Current user id is required");
-            }
-            await ValidateAndGetCourse(currentUserId.Value, courseIdentity: teacher.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
+            await ValidateAndGetCourse(currentUserId, courseIdentity: teacher.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
         }
 
         /// <summary>

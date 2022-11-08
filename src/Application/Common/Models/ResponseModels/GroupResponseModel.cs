@@ -7,14 +7,14 @@
         public string Slug { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
-        public UserResponseModel User { get; set; }
+        public UserModel User { get; set; }
         public GroupResponseModel(Group model)
         {
             Id = model.Id;
             Slug = model.Slug;
             Name = model.Name;
             IsActive = model.IsActive;
-            User = model.User != null ? new UserResponseModel(model.User) : new UserResponseModel();
+            User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
     }
 }

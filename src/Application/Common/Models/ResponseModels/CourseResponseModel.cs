@@ -16,7 +16,7 @@
         public int Duration { get; set; }
         public Guid LevelId { get; set; }
         public string LevelName { get; set; }
-        public UserResponseModel User { get; set; }
+        public UserModel User { get; set; }
 
         public CourseResponseModel(Course model)
         {
@@ -31,8 +31,8 @@
             Language = model.Language;
             Duration = model.Duration;
             LevelId = model.LevelId;
-            LevelName = model.Level.Name;
-            User = model.User != null ? new UserResponseModel(model.User) : new UserResponseModel();
+            LevelName = model.Level?.Name;
+            User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
     }
 }

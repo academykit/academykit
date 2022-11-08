@@ -10,6 +10,6 @@
         public Language Language { get; set; }
         public int Duration { get; set; }
         public Guid LevelId { get; set; }
-        public IList<Guid> TagIds { get; set; }
+        public IList<Guid> TagIds { get; set; } = new List<Guid>();
     }
 }

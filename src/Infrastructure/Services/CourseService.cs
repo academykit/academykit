@@ -1,6 +1,7 @@
 namespace Lingtren.Infrastructure.Services
 {
     using Lingtren.Application.Common.Dtos;
+    using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
@@ -40,9 +41,18 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="newEntity">The new entity.</param>
         protected override async Task UpdateEntityFieldsAsync(Course existing, Course newEntity)
         {
-            //await CheckCourseTeacherAsync(newEntity).ConfigureAwait(false);
-            //await CheckDuplicateNameAsync(newEntity).ConfigureAwait(false);
-            _unitOfWork.GetRepository<Course>().Update(newEntity);
+            if (existing.CourseTags.Count > 0)
+            {
+                _unitOfWork.GetRepository<CourseTag>().Delete(existing.CourseTags);
+            }
+            existing.CourseTags = new List<CourseTag>();
+            existing.CourseTags.AddRange(newEntity.CourseTags);
+            _unitOfWork.DbContext.Entry(existing).CurrentValues.SetValues(newEntity);
+            if (existing.CourseTags.Count > 0)
+            {
+                await _unitOfWork.GetRepository<CourseTag>().InsertAsync(existing.CourseTags).ConfigureAwait(false);
+            }
+            _unitOfWork.GetRepository<Course>().Update(existing);
         }
 
         /// <summary>
@@ -83,7 +93,10 @@ namespace Lingtren.Infrastructure.Services
         /// <returns>The updated query.</returns>
         protected override IIncludableQueryable<Course, object> IncludeNavigationProperties(IQueryable<Course> query)
         {
-            return query.Include(x => x.User);
+            return query.Include(x => x.User)
+                        .Include(x => x.CourseTags)
+                        .Include(x => x.Level)
+                        .Include(x => x.CourseTeachers);
         }
 
         /// <summary>
@@ -94,6 +107,47 @@ namespace Lingtren.Infrastructure.Services
         protected override Expression<Func<Course, bool>> PredicateForIdOrSlug(string identity)
         {
             return p => p.Id.ToString() == identity || p.Slug == identity;
+        }
+
+        /// <summary>
+        /// Check the validations required for delete
+        /// </summary>
+        /// <param name="course teacher"></param>
+        /// <param name="currentUserId"></param>
+        /// <returns></returns>
+        protected override async Task CheckDeletePermissionsAsync(Course course, Guid currentUserId)
+        {
+            await ValidateAndGetCourse(currentUserId, courseIdentity: course.Id.ToString(), validateForModify: true).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Check if entity could be accessed by current user
+        /// </summary>
+        /// <param name="entityToReturn">The entity being returned</param>
+        protected override async Task CheckGetPermissionsAsync(Course entityToReturn, Guid? CurrentUserId = null)
+        {
+            if (!CurrentUserId.HasValue)
+            {
+                _logger.LogWarning("CurrentUserId is required");
+                throw new ForbiddenException("CurrentUserId is required");
+            }
+            // for creator and course teacher return if exists
+            if (entityToReturn.CreatedBy == CurrentUserId || entityToReturn.CourseTeachers.Any(x => x.UserId == CurrentUserId))
+            {
+                return;
+            }
+            if (entityToReturn.Status != Status.Published)
+            {
+                throw new EntityNotFoundException("The course could not be found");
+            }
+            if (entityToReturn.GroupId.HasValue)
+            {
+                var hasAccess = await ValidateUserCanAccessGroupCourse(entityToReturn, CurrentUserId.Value).ConfigureAwait(false);
+                if (!hasAccess)
+                {
+                    throw new ForbiddenException("User not allowed to access this course");
+                }
+            }
         }
         #endregion Protected Methods
     }

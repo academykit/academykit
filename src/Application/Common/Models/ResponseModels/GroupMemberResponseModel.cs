@@ -8,14 +8,14 @@
         public Guid GroupId { get; set; }
         public string GroupName { get; set; }
         public bool IsActive { get; set; }
-        public UserResponseModel User { get; set; }
+        public UserModel User { get; set; }
         public GroupMemberResponseModel(GroupMember model)
         {
             Id = model.Id;
             GroupId = model.GroupId;
             GroupName = model.Group.Name;
             IsActive = model.IsActive;
-            User = model.User != null ? new UserResponseModel(model.User) : new UserResponseModel();
+            User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
     }
 }

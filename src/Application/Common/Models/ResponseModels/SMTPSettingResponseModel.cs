@@ -1,7 +1,7 @@
-﻿using Lingtren.Domain.Entities;
-
-namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace Lingtren.Application.Common.Models.ResponseModels
 {
+    using Lingtren.Domain.Entities;
+
     public class SMTPSettingResponseModel
     {
         public Guid Id { get; set; }
@@ -14,7 +14,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string ReplayTo { get; set; }
         public bool UseSSL { get; set; }
         public DateTime? UpdatedOn { get; set; }
-        public UserResponseModel User { get; set; }
+        public UserModel User { get; set; }
         public SMTPSettingResponseModel(SMTPSetting model)
         {
             Id = model.Id;
@@ -27,7 +27,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             ReplayTo = model.ReplayTo;
             UseSSL = model.UseSSL;
             UpdatedOn = model.UpdatedOn;
-            User = model.User != null ? new UserResponseModel(model.User) : new UserResponseModel();
+            User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
     }
 }

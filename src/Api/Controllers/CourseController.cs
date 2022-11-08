@@ -106,7 +106,19 @@ namespace Lingtren.Api.Controllers
         }
 
         /// <summary>
-        /// update department api
+        /// get department by id or slug
+        /// </summary>
+        /// <param name="identity"> the department id or slug</param>
+        /// <returns> the instance of <see cref="DepartmentResponseModel" /> .</returns>
+        [HttpGet("{identity}")]
+        public async Task<CourseResponseModel> Get(string identity)
+        {
+            var model = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            return new CourseResponseModel(model);
+        }
+
+        /// <summary>
+        /// update course api
         /// </summary>
         /// <param name="identity"> id or slug </param>
         /// <param name="model"> the instance of <see cref="CourseRequestModel" />. </param>
@@ -122,15 +134,36 @@ namespace Lingtren.Api.Controllers
 
             existing.Id = existing.Id;
             existing.Name = model.Name;
+            existing.Language = model.Language;
+            existing.GroupId = model.GroupId;
+            existing.LevelId = model.LevelId;
+            existing.Duration = model.Duration;
+            existing.Description = model.Description;
+            existing.ThumbnailUrl = model.ThumbnailUrl;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
+            existing.CourseTags = new List<CourseTag>();
+
+            foreach (var tagId in model.TagIds)
+            {
+                existing.CourseTags.Add(new CourseTag
+                {
+                    Id = Guid.NewGuid(),
+                    TagId = tagId,
+                    CourseId = existing.Id,
+                    CreatedOn = currentTimeStamp,
+                    CreatedBy = CurrentUser.Id,
+                    UpdatedOn = currentTimeStamp,
+                    UpdatedBy = CurrentUser.Id,
+                });
+            }
 
             var savedEntity = await _courseService.UpdateAsync(existing).ConfigureAwait(false);
             return new CourseResponseModel(savedEntity);
         }
 
         /// <summary>
-        /// delete department api
+        /// delete course api
         /// </summary>
         /// <param name="identity"> id or slug </param>
         /// <returns> the task complete </returns>

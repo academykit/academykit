@@ -9,7 +9,7 @@
         public string HostId { get; set; }
         public int Capacity { get; set; }
         public bool IsActive { get; set; }
-        public UserResponseModel User { get; set; }
+        public UserModel User { get; set; }
         public ZoomLicenseResponseModel(ZoomLicense model)
         {
             Id = model.Id;
@@ -17,7 +17,7 @@
             HostId = model.HostId;
             Capacity = model.Capacity;
             IsActive = model.IsActive;
-            User = model.User != null ? new UserResponseModel(model.User) : new UserResponseModel();
+            User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
     }
 }

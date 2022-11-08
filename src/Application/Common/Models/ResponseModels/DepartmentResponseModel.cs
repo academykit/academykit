@@ -9,7 +9,7 @@
         public string Name { get; set; }
         public bool IsActive { get; set; }
         public DateTime? UpdatedOn { get; set; }
-        public UserResponseModel User { get; set; }
+        public UserModel User { get; set; }
         public DepartmentResponseModel(Department model)
         {
             Id = model.Id;
@@ -17,7 +17,7 @@
             Name = model.Name;
             IsActive = model.IsActive;
             UpdatedOn = model.UpdatedOn;
-            User = model.User != null ? new UserResponseModel(model.User) : new UserResponseModel();
+            User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
     }
 }

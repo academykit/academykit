@@ -11,7 +11,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string CompanyContactNumber { get; set; }
         public string EmailSignature { get; set; }
         public DateTime? UpdatedOn { get; set; }
-        public UserResponseModel User { get; set; }
+        public UserModel User { get; set; }
         public GeneralSettingResponseModel(GeneralSetting model)
         {
             Id = model.Id;
@@ -21,7 +21,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             CompanyContactNumber = model.CompanyContactNumber;
             EmailSignature = model.EmailSignature;
             UpdatedOn = model.UpdatedOn;
-            User = model.User != null ? new UserResponseModel(model.User) : new UserResponseModel();
+            User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
     }
 }

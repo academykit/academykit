@@ -3,12 +3,10 @@
     using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +30,7 @@
         /// </summary>
         /// <returns> the list of <see cref="DepartmentResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<SearchResult<DepartmentResponseModel>> SearchAsync([FromQuery]DepartmentBaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<DepartmentResponseModel>> SearchAsync([FromQuery] DepartmentBaseSearchCriteria searchCriteria)
         {
             var searchResult = await _departmentService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
@@ -75,6 +73,18 @@
             };
             var response = await _departmentService.CreateAsync(entity).ConfigureAwait(false);
             return new DepartmentResponseModel(response);
+        }
+
+        /// <summary>
+        /// get department by id or slug
+        /// </summary>
+        /// <param name="identity"> the department id or slug</param>
+        /// <returns> the instance of <see cref="DepartmentResponseModel" /> .</returns>
+        [HttpGet("{identity}")]
+        public async Task<DepartmentResponseModel> Get(string identity)
+        {
+            var model = await _departmentService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
+            return new DepartmentResponseModel(model);
         }
 
         /// <summary>

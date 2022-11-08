@@ -56,7 +56,7 @@
         /// </summary>
         protected void IsTeacherAdmin(UserRole role)
         {
-            if (role != UserRole.Admin || role != UserRole.Teacher)
+            if (role != UserRole.Admin && role != UserRole.Teacher)
             {
                 throw new ForbiddenException("Admin or Teacher Access");
             }

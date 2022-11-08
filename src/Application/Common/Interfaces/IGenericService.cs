@@ -86,7 +86,7 @@
         ///
         /// <param name="id">The id of the entity to delete.</param>
         /// <param name="currentUserId">The id of the current user.</param>
-        Task DeleteAsync(string identity, Guid? currentUserId = null);
+        Task DeleteAsync(string identity, Guid currentUserId);
 
         /// <summary>
         /// Retrieves entities matching given search criteria.
