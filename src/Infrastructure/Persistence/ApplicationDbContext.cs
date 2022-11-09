@@ -26,6 +26,7 @@
         public DbSet<MeetingReport> MeetingReports { get; set; }
         public DbSet<GeneralSetting> GeneralSettings { get; set; }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<QuestionSet> QuestionSets { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -41,6 +41,7 @@
         public IList<GeneralSetting> GeneralSettings { get; set; }
         public IList<Department> Departments { get; set; }
         public IList<CourseTag> CourseTags { get; set; }
+        public IList<QuestionSet> QuestionSets { get; set; }
 
 
         /// <summary>

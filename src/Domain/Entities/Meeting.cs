@@ -6,6 +6,7 @@ namespace Lingtren.Domain.Entities
         public long MeetingNumber { get; set; }
         public string PassCode { get; set; }
         public Guid ZoomLicenseId { get; set; }
+        public int Duration { get; set; }
         public ZoomLicense ZoomLicense { get; set; }
         public DateTime? StartDate { get; set; }
         public IList<MeetingReport> MeetingReports { get; set; }
