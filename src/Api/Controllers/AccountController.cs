@@ -9,21 +9,23 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.IdentityModel.Tokens.Jwt;
-    using System.Text.RegularExpressions;
 
     public class AccountController : BaseApiController
     {
         private readonly IUserService _userService;
         private readonly IValidator<LoginRequestModel> _validator;
+        private readonly IValidator<ResetPasswordRequestModel> _resetPasswordValidator;
         private readonly IValidator<ChangePasswordRequestModel> _changePasswordValidator;
 
         public AccountController(
             IUserService userService,
             IValidator<LoginRequestModel> validator,
+            IValidator<ResetPasswordRequestModel> resetPasswordValidator,
             IValidator<ChangePasswordRequestModel> changePasswordValidator)
         {
             _userService = userService;
             _validator = validator;
+            _resetPasswordValidator = resetPasswordValidator;
             _changePasswordValidator = changePasswordValidator;
         }
 
@@ -86,14 +88,7 @@
         [AllowAnonymous]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestModel model)
         {
-            var lowercase = new Regex("[a-z]+");
-            var uppercase = new Regex("[A-Z]+");
-            var digit = new Regex("(\\d)+");
-            var symbol = new Regex("(\\W)+");
-            if (!lowercase.IsMatch(model.NewPassword) || !uppercase.IsMatch(model.NewPassword) || !digit.IsMatch(model.NewPassword) || !symbol.IsMatch(model.NewPassword))
-            {
-                return BadRequest(new CommonResponseModel { Message = "Password should contains at least one lowercase, one uppercase, one digit and one symbol" });
-            }
+            await _resetPasswordValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var token = new JwtSecurityTokenHandler().ReadJwtToken(model.PasswordChangeToken);
 
             var email = (string)token.Payload["email"];
@@ -112,7 +107,7 @@
             }
             user.HashPassword = _userService.HashPassword(model.NewPassword);
             await _userService.UpdateAsync(user, includeProperties: false);
-            return Ok(true);
+            return Ok(new { message = "Password reset successfully." });
         }
 
         [HttpPost("RefreshToken")]

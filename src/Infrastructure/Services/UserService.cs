@@ -269,11 +269,11 @@
                 var generator = new Random();
                 var token = generator.Next(0, 1000000).ToString("D6");
                 var tokenExpiry = DateTime.UtcNow.AddMinutes(5);
-                await _emailService.SendForgetPasswordEmail(user.Email, user.FirstName, token);
                 user.PasswordResetToken = token;
                 user.PasswordResetTokenExpiry = tokenExpiry;
                 _unitOfWork.GetRepository<User>().Update(user);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                await _emailService.SendForgetPasswordEmail(user.Email, user.FirstName, token).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

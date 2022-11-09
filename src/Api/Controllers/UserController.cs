@@ -100,12 +100,12 @@
         /// <summary>
         /// get user by id
         /// </summary>
-        /// <param name="id"> the user id </param>
+        /// <param name="userId"> the user id </param>
         /// <returns> the instance of <see cref="UserResponseModel" /> .</returns>
-        [HttpGet("{id}")]
-        public async Task<UserResponseModel> Get(Guid id)
+        [HttpGet("{userId}")]
+        public async Task<UserResponseModel> Get(Guid userId)
         {
-            User model = await _userService.GetAsync(id, includeAllProperties: false).ConfigureAwait(false);
+            User model = await _userService.GetAsync(userId, includeAllProperties: false).ConfigureAwait(false);
             return new UserResponseModel(model);
         }
 

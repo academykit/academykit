@@ -49,6 +49,7 @@
             services.AddSingleton<IValidator<CourseRequestModel>, CourseValidator>();
             services.AddSingleton<IValidator<CourseTeacherRequestModel>, CourseTeacherValidator>();
             services.AddSingleton<IValidator<ChangePasswordRequestModel>, ChangePasswordValidator>();
+            services.AddSingleton<IValidator<ResetPasswordRequestModel>, ResetPasswordValidator>();
 
             return services;
         }

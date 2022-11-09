@@ -34,4 +34,7 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\Templates\DefaultTemplate.html" />
+  </ItemGroup>
 </Project>

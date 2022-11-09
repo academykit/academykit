@@ -4,6 +4,7 @@
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using MailKit.Net.Smtp;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Logging;
     using MimeKit;
 
@@ -12,21 +13,25 @@
         private readonly string _footerEmail = "Sincerely,<br>- The Vurilo Team";
         private readonly ILogger<EmailService> _logger;
         private readonly ISMTPSettingService _smtpSettingService;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         public EmailService(
             ILogger<EmailService> logger,
-            ISMTPSettingService smtpSettingService)
+            ISMTPSettingService smtpSettingService,
+            IWebHostEnvironment hostingEnvironment
+            )
         {
             _logger = logger;
             _smtpSettingService = smtpSettingService;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public async Task SendMailWithHtmlBodyAsync(EmailRequestDto emailRequestDto)
         {
             try
             {
-                string FilePath = Path.Combine(Directory.GetCurrentDirectory(), Path.Combine("Templates", "DefaultTemplate.html"));
-                using StreamReader str = new(FilePath);
+                string filePath =Path.Combine(_hostingEnvironment.WebRootPath, Path.Combine("Templates", "DefaultTemplate.html"));
+                using StreamReader str = new(filePath);
                 string htmlBody = str.ReadToEnd();
 
                 var smtpSetting = await _smtpSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
