@@ -2,6 +2,7 @@
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
@@ -72,6 +73,39 @@
             return p => p.Id.ToString() == identity;
         }
         #endregion Protected Methods
+
+        /// <summary>
+        /// Handle to get active available zoom license with in given time period
+        /// </summary>
+        /// <param name="startDateTime">meeting start date</param>
+        /// <param name="duration">meeting duration</param>
+        /// <returns></returns>
+        public async Task<IList<ZoomLicenseResponseModel>> GetActiveLicenses(DateTime startDateTime, int duration)
+        {
+            var data = from zoomLicense in _unitOfWork.DbContext.ZoomLicenses.ToList()
+                       join meeting in _unitOfWork.DbContext.Meetings.ToList() on zoomLicense.Id equals meeting.ZoomLicenseId
+                       where meeting.StartDate.HasValue == true && zoomLicense.IsActive ==true &&
+                       (meeting.StartDate.Value.AddSeconds(meeting.Duration) < startDateTime || meeting.StartDate.Value > startDateTime.AddSeconds(duration))
+                       group meeting by zoomLicense into g
+                       select new
+                       {
+                           Id = g.Key.Id,
+                           HostId = g.Key.HostId,
+                           Capacity = g.Key.Capacity,
+                           LicenseEmail = g.Key.LicenseEmail,
+                           IsActive = g.Key.IsActive,
+                           Count = g.Count()
+                       };
+            var response = data.Where(x => x.Count < 2).Select(x => new ZoomLicenseResponseModel
+            {
+                Id = x.Id,
+                HostId = x.HostId,
+                Capacity = x.Capacity,
+                LicenseEmail = x.LicenseEmail,
+                IsActive = x.IsActive,
+            }).ToList();
+            return await Task.FromResult(response);
+        }
 
     }
 }

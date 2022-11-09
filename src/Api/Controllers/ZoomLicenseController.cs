@@ -3,13 +3,12 @@
     using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
+    using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
-    using Lingtren.Infrastructure.Services;
     using LinqKit;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class ZoomLicenseController : BaseApiController
@@ -147,6 +146,23 @@
 
             var savedEntity = await _zoomLicenseService.UpdateAsync(existing).ConfigureAwait(false);
             return new ZoomLicenseResponseModel(savedEntity);
+        }
+
+        [HttpGet("Active")]
+        public async Task<List<ZoomLicenseResponseModel>> Active([FromQuery] DateTime startDateTime, [FromQuery] int duration)
+        {
+            IsTeacherAdmin(CurrentUser.Role);
+
+            if (startDateTime == default)
+            {
+                throw new ForbiddenException("Start date is required");
+            }
+            if (duration < 0 || duration == default)
+            {
+                throw new ForbiddenException("Duration is required");
+            }
+            var zoomLicenses = await _zoomLicenseService.GetActiveLicenses(startDateTime, duration).ConfigureAwait(false);
+            return zoomLicenses.ToList();
         }
     }
 }

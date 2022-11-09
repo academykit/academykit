@@ -19,5 +19,9 @@
             IsActive = model.IsActive;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
+        public ZoomLicenseResponseModel()
+        {
+
+        }
     }
 }
