@@ -63,7 +63,7 @@ namespace Lingtren.Infrastructure.Services
                     throw new EntityNotFoundException("Section not found");
                 }
                 await CheckCourseTeacherAsync(section, currentUserId).ConfigureAwait(false);
-                if (section.Status == Status.Published || section.Course.Status == Status.Published)
+                if (section.Status == CourseStatus.Published || section.Course.Status == CourseStatus.Published)
                 {
                     throw new ForbiddenException("Course section is published.");
                 }

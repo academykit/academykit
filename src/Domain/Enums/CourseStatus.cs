@@ -1,6 +1,6 @@
 namespace Lingtren.Domain.Enums
 {
-    public enum Status
+    public enum CourseStatus
     {
         Draft = 1,
         Published = 2,

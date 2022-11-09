@@ -12,7 +12,7 @@ namespace Lingtren.Domain.Entities
         public int Order { get; set; }
         public int Duration { get; set; }
         public bool IsDeleted { get; set; }
-        public Status Status { get; set; }
+        public CourseStatus Status { get; set; }
         public IList<Lesson> Lessons { get; set; }
         public User User { get; set; }
     }

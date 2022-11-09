@@ -8,7 +8,10 @@ namespace Lingtren.Domain.Enums
         Assignment = 4,
         LiveClass = 5,
 
-        // Live Class to recorded video
+        /// <summary>
+        /// After completion of live class its recorded video is uploaded into lesson
+        /// and status is changed to RecordedVideo from LiveClass
+        /// </summary>
         RecordedVideo = 6
     }
 }

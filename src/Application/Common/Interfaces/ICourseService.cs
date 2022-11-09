@@ -15,6 +15,6 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="status">the course status</param>
         /// <param name="currentUserId">the current id</param>
         /// <returns></returns>
-        Task ChangeStatusAsync(string identity, Status status, Guid currentUserId);
+        Task ChangeStatusAsync(string identity, CourseStatus status, Guid currentUserId);
     }
 }

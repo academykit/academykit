@@ -15,7 +15,7 @@ namespace Lingtren.Domain.Entities
         public bool IsPreview { get; set; }
         public LessonType Type { get; set; }
         public bool IsDeleted { get; set; }
-        public Status Status { get; set; }
+        public CourseStatus Status { get; set; }
         public Guid CourseId { get; set; }
         public Course Course { get; set; }
         public Guid SectionId { get; set; }

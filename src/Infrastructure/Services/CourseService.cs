@@ -117,7 +117,7 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         protected override async Task CheckDeletePermissionsAsync(Course course, Guid currentUserId)
         {
-            if (course.Status != Status.Draft)
+            if (course.Status != CourseStatus.Draft)
             {
                 _logger.LogWarning("Course with id : {courseId} cannot be delete having status : {status}", course.Id, course.Status.ToString());
                 throw new ForbiddenException("Only draft course can be delete");
@@ -141,7 +141,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 return;
             }
-            if (entityToReturn.Status != Status.Published)
+            if (entityToReturn.Status != CourseStatus.Published)
             {
                 throw new EntityNotFoundException("The course could not be found");
             }
@@ -163,7 +163,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="status">the course status</param>
         /// <param name="currentUserId">the current id</param>
         /// <returns></returns>
-        public async Task ChangeStatusAsync(string identity, Status status, Guid currentUserId)
+        public async Task ChangeStatusAsync(string identity, CourseStatus status, Guid currentUserId)
         {
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
             if (course.Status == status)

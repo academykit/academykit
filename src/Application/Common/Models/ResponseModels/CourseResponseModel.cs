@@ -11,7 +11,7 @@
         public string Description { get; set; }
         public Guid? GroupId { get; set; }
         public string GroupName { get; set; } = string.Empty;
-        public Status Status { get; set; }
+        public CourseStatus Status { get; set; }
         public Language Language { get; set; }
         public int Duration { get; set; }
         public Guid LevelId { get; set; }

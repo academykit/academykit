@@ -4,7 +4,6 @@ using Lingtren.Application.Common.Interfaces;
 using Lingtren.Application.Common.Models.RequestModels;
 using Lingtren.Application.Common.Models.ResponseModels;
 using Lingtren.Domain.Enums;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lingtren.Api.Controllers

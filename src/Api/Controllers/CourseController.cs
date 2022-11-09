@@ -74,7 +74,7 @@ namespace Lingtren.Api.Controllers
                 Duration = model.Duration,
                 Description = model.Description,
                 ThumbnailUrl = model.ThumbnailUrl,
-                Status = Status.Draft,
+                Status = CourseStatus.Draft,
                 CreatedOn = currentTimeStamp,
                 CreatedBy = CurrentUser.Id,
                 UpdatedOn = currentTimeStamp,
@@ -183,9 +183,9 @@ namespace Lingtren.Api.Controllers
         /// <param name="identity"> id or slug </param>
         /// <returns> the task complete </returns>
         [HttpPatch("{identity}/status")]
-        public async Task<IActionResult> ChangeStatus(string identity, [FromQuery] Status status)
+        public async Task<IActionResult> ChangeStatus(string identity, [FromQuery] CourseStatus status)
         {
-            var statusExists = Enum.IsDefined(typeof(Status), status);
+            var statusExists = Enum.IsDefined(typeof(CourseStatus), status);
             if (!statusExists)
             {
                 _logger.LogWarning("Invalid course status : {status} requested for status change by the user with id : {userId}", status, CurrentUser.Id);
