@@ -27,6 +27,11 @@
         public DbSet<GeneralSetting> GeneralSettings { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<QuestionSet> QuestionSets { get; set; }
+        public DbSet<QuestionPool> QuestionPools { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<QuestionOption> QuestionOptions { get; set; }
+        public DbSet<QuestionPoolQuestion> QuestionPoolQuestions { get; set; }
+        public DbSet<QuestionSetQuestion> QuestionSetQuestions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

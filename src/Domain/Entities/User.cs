@@ -42,7 +42,11 @@
         public IList<Department> Departments { get; set; }
         public IList<CourseTag> CourseTags { get; set; }
         public IList<QuestionSet> QuestionSets { get; set; }
-
+        public IList<QuestionPool> QuestionPools { get; set; }
+        public IList<Question> Questions { get; set; }
+        public IList<QuestionOption> QuestionOptions { get; set; }
+        public IList<QuestionSetQuestion> QuestionSetQuestions { get; set; }
+        public IList<QuestionPoolQuestion> QuestionPoolQuestions { get; set; }
 
         /// <summary>
         /// Get or set full name
