@@ -57,7 +57,7 @@
                     MailPort = 123,
                     MailServer = "email-smtp.ap-south-1.amazonaws.com",
                     Password = "password",
-                    ReplayTo = "support@vurilo.com",
+                    ReplyTo = "support@vurilo.com",
                     SenderEmail = "noreply@vurilo.com",
                     SenderName = "Vurilo",
                     UserName = "username",

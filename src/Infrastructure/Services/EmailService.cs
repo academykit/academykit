@@ -45,7 +45,7 @@
                 var mimeMessage = new MimeMessage();
                 mimeMessage.From.Add(new MailboxAddress(smtpSetting.SenderName, smtpSetting.SenderEmail));
                 mimeMessage.To.Add(new MailboxAddress(emailRequestDto.To, emailRequestDto.To));
-                mimeMessage.ReplyTo.Add(new MailboxAddress(smtpSetting.SenderName, smtpSetting.ReplayTo));
+                mimeMessage.ReplyTo.Add(new MailboxAddress(smtpSetting.SenderName, smtpSetting.ReplyTo));
                 mimeMessage.Subject = emailRequestDto.Subject;
 
                 var builder = new BodyBuilder

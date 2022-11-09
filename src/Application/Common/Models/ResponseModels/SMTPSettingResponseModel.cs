@@ -11,8 +11,7 @@
         public string SenderEmail { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public string ReplayTo { get; set; }
-        public bool UseSSL { get; set; }
+        public string ReplyTo { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
         public SMTPSettingResponseModel(SMTPSetting model)
@@ -24,8 +23,7 @@
             SenderEmail = model.SenderEmail;
             UserName = model.UserName;
             Password = model.Password;
-            ReplayTo = model.ReplayTo;
-            UseSSL = model.UseSSL;
+            ReplyTo = model.ReplyTo;
             UpdatedOn = model.UpdatedOn;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
