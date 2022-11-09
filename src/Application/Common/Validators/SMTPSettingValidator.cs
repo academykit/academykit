@@ -13,7 +13,7 @@
             RuleFor(x => x.UserName).NotNull().NotEmpty().WithMessage("User name is required");
             RuleFor(x => x.Password).NotNull().NotEmpty().WithMessage("Password is required");
             RuleFor(x => x.ReplayTo).NotNull().NotEmpty().WithMessage("Reply to is required");
-            RuleFor(x => x.UseSSL).NotNull().NotEmpty().WithMessage("Use SSL is required");
+            RuleFor(x => x.UseSSL).NotNull().WithMessage("Use SSL is required");
         }
     }
 }

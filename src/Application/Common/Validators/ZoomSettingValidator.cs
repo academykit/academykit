@@ -8,7 +8,7 @@
         {
             RuleFor(x => x.ApiKey).NotNull().NotEmpty().WithMessage("Api key is required");
             RuleFor(x => x.SecretKey).NotNull().NotEmpty().WithMessage("Secret key is required");
-            RuleFor(x => x.IsRecordingEnabled).NotNull().NotEmpty().WithMessage("Is Recording Enabled is required");
+            RuleFor(x => x.IsRecordingEnabled).NotNull().WithMessage("Is Recording Enabled is required");
         }
     }
 }
