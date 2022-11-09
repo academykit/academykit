@@ -19,5 +19,6 @@ namespace Lingtren.Domain.Entities
         public DateTime? EndTime { get; set; }
         public bool IsDeleted { get; set; }
         public User User { get; set; }
+        public IList<QuestionSetQuestion> QuestionSetQuestions { get; set; }
     }
 }

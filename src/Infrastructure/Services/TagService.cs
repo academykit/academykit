@@ -37,7 +37,7 @@ namespace Lingtren.Infrastructure.Services
                           && x.IsActive).ConfigureAwait(false);
                 if (tag != default)
                 {
-                    throw new ArgumentException("Tag already exist");
+                    return tag;
                 }
 
                 var entity = new Tag()
