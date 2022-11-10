@@ -14,6 +14,7 @@
         public int Order { get; set; }
         public int Duration { get; set; }
         public bool IsPreview { get; set; }
+        public bool IsMandatory { get; set; }
         public LessonType Type { get; set; }
         public bool IsDeleted { get; set; }
         public CourseStatus Status { get; set; }
@@ -35,6 +36,7 @@
             Order = model.Order;
             IsDeleted = model.IsDeleted;
             IsPreview = model.IsPreview;
+            IsMandatory = model.IsMandatory;
             IsDeleted = model.IsDeleted;
             Status = model.Status;
             CourseId = model.CourseId;

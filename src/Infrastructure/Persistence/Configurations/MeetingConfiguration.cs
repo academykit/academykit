@@ -1,9 +1,8 @@
-using System.ComponentModel;
 namespace Lingtren.Infrastructure.Persistence.Configurations
 {
+    using Lingtren.Domain.Entities;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using Lingtren.Domain.Entities;
     public class MeetingConfiguration : IEntityTypeConfiguration<Meeting>
     {
         public void Configure(EntityTypeBuilder<Meeting> builder)
@@ -20,7 +19,8 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.UpdatedBy).HasColumnName("updated_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
             builder.Property(x => x.UpdatedOn).HasColumnName("updated_on").HasColumnType("DATETIME").IsRequired(false);
             builder.HasMany(x => x.MeetingReports).WithOne(x => x.Meeting).HasForeignKey(x => x.MeetingId).OnDelete(DeleteBehavior.NoAction);
-            builder.HasMany(x => x.Lessons).WithOne(x => x.Meeting).HasForeignKey(x => x.MeetingId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(x => x.Lesson).WithOne(x => x.Meeting).HasForeignKey<Lesson>(x => x.MeetingId).OnDelete(DeleteBehavior.NoAction);
+
         }
     }
 }

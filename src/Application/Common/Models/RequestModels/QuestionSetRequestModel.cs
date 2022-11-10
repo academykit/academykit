@@ -1,11 +1,8 @@
-namespace Lingtren.Domain.Entities
+﻿namespace Lingtren.Application.Common.Models.RequestModels
 {
-    using Lingtren.Domain.Common;
-
-    public class QuestionSet : AuditableEntity
+    public class QuestionSetRequestModel
     {
         public string Name { get; set; }
-        public string Slug { get; set; }
         public string ThumbnailUrl { get; set; }
         public string Description { get; set; }
         public decimal NegativeMarking { get; set; }
@@ -21,9 +18,5 @@ namespace Lingtren.Domain.Entities
         public int Duration { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
-        public bool IsDeleted { get; set; }
-        public User User { get; set; }
-        public IList<QuestionSetQuestion> QuestionSetQuestions { get; set; }
-        public Lesson Lesson { get; set; }
     }
 }

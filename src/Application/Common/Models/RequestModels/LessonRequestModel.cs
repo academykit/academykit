@@ -12,10 +12,10 @@
         public string DocumentUrl { get; set; }
         public int Order { get; set; }
         public bool IsPreview { get; set; }
+        public bool IsMandatory { get; set; }
         public LessonType Type { get; set; }
-        public DateTime MeetingStartDate { get; set; }
-        public int MeetingDuration { get; set; }
-        public Guid? ZoomLicenseId { get; set; }
+        public MeetingRequestModel Meeting { get; set; }
+        public QuestionSetRequestModel QuestionSet { get; set; }
 
     }
 }

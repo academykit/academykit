@@ -47,12 +47,14 @@ namespace Lingtren.Infrastructure.Services
                 ThumbnailUrl = model.ThumbnailUrl,
                 Type = model.Type,
                 IsPreview = model.IsPreview,
+                IsMandatory = model.IsMandatory,
                 SectionId = section.Id,
                 CreatedBy = currentUserId,
                 CreatedOn = currentTimeStamp,
                 UpdatedBy = currentUserId,
                 UpdatedOn = currentTimeStamp,
                 Meeting = new Meeting(),
+                QuestionSet = new QuestionSet()
             };
             lesson.Slug = CommonHelper.GetEntityTitleSlug<Course>(_unitOfWork, (slug) => q => q.Slug == slug, lesson.Name);
 
@@ -66,25 +68,68 @@ namespace Lingtren.Infrastructure.Services
             }
             if (lesson.Type == LessonType.LiveClass)
             {
-                lesson.Meeting = new Meeting
-                {
-                    Id = Guid.NewGuid(),
-                    StartDate = model.MeetingStartDate,
-                    ZoomLicenseId = model.ZoomLicenseId.Value,
-                    Duration = model.MeetingDuration,
-                    CreatedBy = currentUserId,
-                    CreatedOn = currentTimeStamp,
-                    UpdatedBy = currentUserId,
-                    UpdatedOn = currentTimeStamp
-                };
-                lesson.MeetingId = lesson.Meeting.Id;
-                lesson.Duration = model.MeetingDuration;
-
-                await _unitOfWork.GetRepository<Meeting>().InsertAsync(lesson.Meeting).ConfigureAwait(false);
+                await CreateMeetingAsync(model, lesson).ConfigureAwait(false);
+            }
+            if (lesson.Type == LessonType.Exam)
+            {
+                await CreateQuestionSetAsync(model, lesson).ConfigureAwait(false);
             }
             await _unitOfWork.GetRepository<Lesson>().InsertAsync(lesson).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             return lesson;
+        }
+
+        /// <summary>
+        /// Handle to  create question set
+        /// </summary>
+        /// <param name="model">the instance of <see cref="LessonRequestModel"/></param>
+        /// <param name="lesson"></param>
+        /// <returns></returns>
+
+        private async Task CreateQuestionSetAsync(LessonRequestModel model, Lesson lesson)
+        {
+            lesson.QuestionSet = new QuestionSet
+            {
+                Id = Guid.NewGuid(),
+                Slug = string.Concat(lesson.Slug, "-", lesson.Id.ToString().AsSpan(0, 5)),
+                Name = lesson.Name,
+                ThumbnailUrl = lesson.ThumbnailUrl,
+                Description = lesson.Description,
+                NegativeMarking = lesson.QuestionSet.NegativeMarking,
+                QuestionMarking = lesson.QuestionSet.QuestionMarking,
+                PassingWeightage = lesson.QuestionSet.PassingWeightage,
+                AllowedRetake = lesson.QuestionSet.AllowedRetake,
+                StartTime = lesson.QuestionSet.StartTime,
+                EndTime = lesson.QuestionSet.EndTime,
+                Duration = lesson.QuestionSet.Duration,
+                CreatedBy = lesson.CreatedBy,
+                CreatedOn = lesson.CreatedOn,
+                UpdatedBy = lesson.UpdatedBy,
+                UpdatedOn = lesson.UpdatedOn
+            };
+            lesson.Duration = model.QuestionSet.Duration;
+            lesson.QuestionSetId = lesson.QuestionSet.Id;
+
+            await _unitOfWork.GetRepository<QuestionSet>().InsertAsync(lesson.QuestionSet).ConfigureAwait(false);
+        }
+
+        private async Task CreateMeetingAsync(LessonRequestModel model, Lesson lesson)
+        {
+            lesson.Meeting = new Meeting
+            {
+                Id = Guid.NewGuid(),
+                StartDate = model.Meeting.MeetingStartDate,
+                ZoomLicenseId = model.Meeting.ZoomLicenseId.Value,
+                Duration = model.Meeting.MeetingDuration,
+                CreatedBy = lesson.CreatedBy,
+                CreatedOn = lesson.CreatedOn,
+                UpdatedBy = lesson.UpdatedBy,
+                UpdatedOn = lesson.UpdatedOn
+            };
+            lesson.MeetingId = lesson.Meeting.Id;
+            lesson.Duration = model.Meeting.MeetingDuration;
+
+            await _unitOfWork.GetRepository<Meeting>().InsertAsync(lesson.Meeting).ConfigureAwait(false);
         }
     }
 }

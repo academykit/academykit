@@ -10,7 +10,7 @@ namespace Lingtren.Domain.Entities
         public ZoomLicense ZoomLicense { get; set; }
         public DateTime? StartDate { get; set; }
         public IList<MeetingReport> MeetingReports { get; set; }
-        public IList<Lesson> Lessons { get; set; }
+        public Lesson Lesson { get; set; }
         public User User { get; set; }
     }
 }

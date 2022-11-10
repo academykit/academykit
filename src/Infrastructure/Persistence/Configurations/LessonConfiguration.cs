@@ -1,9 +1,8 @@
-using System;
 namespace Lingtren.Infrastructure.Persistence.Configurations
 {
+    using Lingtren.Domain.Entities;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using Lingtren.Domain.Entities;
     public class LessonConfiguration : IEntityTypeConfiguration<Lesson>
     {
         public void Configure(EntityTypeBuilder<Lesson> builder)
@@ -19,12 +18,14 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Type).HasColumnName("type").IsRequired();
             builder.Property(x => x.DocumentUrl).HasColumnName("document_url").HasColumnType("VARCHAR(250)").HasMaxLength(250).IsRequired(false);
             builder.Property(x => x.IsPreview).HasColumnName("is_preview").HasDefaultValue(false);
+            builder.Property(x => x.IsMandatory).HasColumnName("is_mandatory").HasDefaultValue(false);
             builder.Property(x => x.VideoUrl).HasColumnName("video_url").HasColumnType("VARCHAR(250)").HasMaxLength(250).IsRequired(false);
             builder.Property(x => x.ThumbnailUrl).HasColumnName("thumbnail_url").HasColumnType("VARCHAR(250)").HasMaxLength(250).IsRequired(false);
             builder.Property(x => x.IsDeleted).HasColumnName("is_deleted").HasDefaultValue(false);
             builder.Property(x => x.CourseId).HasColumnName("course_id").HasColumnType("VARCHAR(50)").IsRequired();
             builder.Property(x => x.SectionId).HasColumnName("section_id").HasColumnType("VARCHAR(50)").IsRequired();
             builder.Property(x => x.MeetingId).HasColumnName("meeting_id").HasColumnType("VARCHAR(50)").IsRequired(false);
+            builder.Property(x => x.QuestionSetId).HasColumnName("question_set_id").HasColumnType("VARCHAR(50)").IsRequired(false);
             builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.CreatedOn).HasColumnName("created_on").IsRequired().HasColumnType("DATETIME");
             builder.Property(x => x.UpdatedBy).HasColumnName("updated_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);

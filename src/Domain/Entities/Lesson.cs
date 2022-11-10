@@ -13,6 +13,7 @@ namespace Lingtren.Domain.Entities
         public int Order { get; set; }
         public int Duration { get; set; }
         public bool IsPreview { get; set; }
+        public bool IsMandatory { get; set; }
         public LessonType Type { get; set; }
         public bool IsDeleted { get; set; }
         public CourseStatus Status { get; set; }
@@ -22,6 +23,8 @@ namespace Lingtren.Domain.Entities
         public Section Section { get; set; }
         public Guid? MeetingId { get; set; }
         public Meeting Meeting { get; set; }
+        public Guid? QuestionSetId { get; set; }
+        public QuestionSet QuestionSet { get; set; }
         public User User { get; set; }
     }
 }

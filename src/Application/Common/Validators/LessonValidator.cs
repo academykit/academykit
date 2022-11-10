@@ -1,9 +1,8 @@
-﻿using FluentValidation;
-using Lingtren.Application.Common.Models.RequestModels;
-using Lingtren.Domain.Enums;
-
-namespace Lingtren.Application.Common.Validators
+﻿namespace Lingtren.Application.Common.Validators
 {
+    using FluentValidation;
+    using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Domain.Enums;
     public class LessonValidator : AbstractValidator<LessonRequestModel>
     {
         public LessonValidator()
@@ -15,6 +14,7 @@ namespace Lingtren.Application.Common.Validators
                                     .WithMessage("Document is required for lesson type is document");
             RuleFor(x => x.VideoUrl).NotNull().NotEmpty().When(x => x.Type == LessonType.Video || x.Type == LessonType.RecordedVideo)
                                     .WithMessage("Video is required for lesson type is video or recorded video");
+
         }
     }
 }
