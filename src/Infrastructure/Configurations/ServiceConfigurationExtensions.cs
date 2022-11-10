@@ -36,6 +36,7 @@
             services.AddTransient<ICourseService, CourseService>();
             services.AddTransient<IZoomLicenseService, ZoomLicenseService>();
             services.AddTransient<ICourseTeacherService, CourseTeacherService>();
+            services.AddTransient<IMediaService, MediaService>();
 
             services.AddSingleton<IValidator<LoginRequestModel>, LoginValidator>();
             services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();

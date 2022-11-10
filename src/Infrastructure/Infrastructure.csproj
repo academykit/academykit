@@ -22,6 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.Core" Version="3.7.100.14" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.101.14" />
     <PackageReference Include="FluentValidation" Version="11.2.2" />
     <PackageReference Include="LinqKit" Version="1.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.10" />
