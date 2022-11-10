@@ -162,7 +162,7 @@
             if (!validateForModify)
             {
                 var canAccess = await ValidateUserCanAccessGroupCourse(course, currentUserId).ConfigureAwait(false);
-                if (canAccess && course.Status == Status.Published)
+                if (canAccess && course.Status == CourseStatus.Published)
                 {
                     return course;
                 }

@@ -10,7 +10,7 @@ namespace Lingtren.Domain.Entities
         public string Description { get; set; }
         public Guid? GroupId { get; set; }
         public Group Group { get; set; }
-        public Status Status { get; set; }
+        public CourseStatus Status { get; set; }
         public Language Language { get; set; }
         public string ThumbnailUrl { get; set; }
         public int Duration { get; set; }
