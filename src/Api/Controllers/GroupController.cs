@@ -120,7 +120,7 @@
         /// <exception cref="EntityNotFoundException"></exception>
 
         [HttpGet("{identity}/members")]
-        public async Task<SearchResult<GroupMemberResponseModel>> SearchGroupMembers(string identity, BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<GroupMemberResponseModel>> SearchGroupMembers(string identity,[FromQuery] BaseSearchCriteria searchCriteria)
         {
             var group = await _groupService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
             if (group == null)

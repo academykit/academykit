@@ -9,7 +9,7 @@ namespace Lingtren.Api.Controllers
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
 
-    [Route("api/course/{identity}")]
+    [Route("api/course/{identity}/lesson")]
     public class LessonController : BaseApiController
     {
         private readonly ILessonService _lessonService;
