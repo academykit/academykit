@@ -396,7 +396,11 @@
             {
                 predicate = predicate.And(p => p.Role == criteria.Role.Value);
             }
-            return predicate.And(p => p.IsActive == criteria.IsActive);
+            if (criteria.IsActive != null)
+            {
+                predicate.And(p => p.IsActive == criteria.IsActive);
+            }
+            return predicate;
         }
 
         /// <summary>

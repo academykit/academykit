@@ -59,8 +59,11 @@
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
             }
-
-            return predicate.And(p => p.IsActive == criteria.IsActive);
+            if (criteria.IsActive != null)
+            {
+                predicate.And(p => p.IsActive == criteria.IsActive);
+            }
+            return predicate;
         }
 
         /// <summary>

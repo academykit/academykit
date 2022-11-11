@@ -4,7 +4,7 @@
 
     public class UserSearchCriteria : BaseSearchCriteria
     {
-        public bool IsActive { get; set; } = true;
+        public bool? IsActive { get; set; }
         public UserRole? Role { get; set; }
     }
 }

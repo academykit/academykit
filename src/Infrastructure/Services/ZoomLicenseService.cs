@@ -35,8 +35,11 @@
                 predicate = predicate.And(x => x.LicenseEmail.ToLower().Trim().Contains(search)
                 || x.HostId.Contains(search));
             }
-
-            return predicate.And(p => p.IsActive == criteria.IsActive);
+            if (criteria.IsActive != null)
+            {
+                predicate.And(p => p.IsActive == criteria.IsActive);
+            }
+            return predicate;
         }
 
         /// <summary>
