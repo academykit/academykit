@@ -65,7 +65,7 @@
         protected override void SetDefaultSortOption(BaseSearchCriteria criteria)
         {
             criteria.SortBy = nameof(Group.CreatedOn);
-            criteria.SortType = SortType.Ascending;
+            criteria.SortType = SortType.Descending;
         }
 
 

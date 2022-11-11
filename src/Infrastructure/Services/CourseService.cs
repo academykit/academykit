@@ -82,7 +82,7 @@ namespace Lingtren.Infrastructure.Services
         protected override void SetDefaultSortOption(CourseBaseSearchCriteria criteria)
         {
             criteria.SortBy = nameof(Course.CreatedOn);
-            criteria.SortType = SortType.Ascending;
+            criteria.SortType = SortType.Descending;
         }
 
 

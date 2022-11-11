@@ -13,11 +13,12 @@
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
 
-    public class DepartmentService : BaseGenericService<Department, DepartmentBaseSearchCriteria>, IDepartmentService
+    public class QuestionPoolService : BaseGenericService<QuestionPool, BaseSearchCriteria>, IQuestionPoolService
     {
-        public DepartmentService(
+        public QuestionPoolService(
             IUnitOfWork unitOfWork,
-            ILogger<DepartmentService> logger) : base(unitOfWork, logger)
+            ILogger<QuestionPoolService> logger
+            ) : base(unitOfWork, logger)
         {
         }
         #region Protected Methods
@@ -27,10 +28,10 @@
         /// <remarks>
         /// It should be overridden in child services to do other updates before entity is saved.
         /// </remarks>
-        protected override async Task CreatePreHookAsync(Department entity)
+        protected override async Task CreatePreHookAsync(QuestionPool entity)
         {
-            await CheckDuplicateDepartmentNameAsync(entity).ConfigureAwait(false);
-            entity.Slug = CommonHelper.GetEntityTitleSlug<Department>(_unitOfWork, (slug) => q => q.Slug == slug, entity.Name);
+            await CheckDuplicateQuestionPoolNameAsync(entity).ConfigureAwait(false);
+            entity.Slug = CommonHelper.GetEntityTitleSlug<QuestionPool>(_unitOfWork, (slug) => q => q.Slug == slug, entity.Name);
             await Task.FromResult(0);
         }
 
@@ -40,10 +41,10 @@
         /// <remarks>Override in child services to update navigation properties.</remarks>
         /// <param name="existing">The existing entity.</param>
         /// <param name="newEntity">The new entity.</param>
-        protected override async Task UpdateEntityFieldsAsync(Department existing, Department newEntity)
+        protected override async Task UpdateEntityFieldsAsync(QuestionPool existing, QuestionPool newEntity)
         {
-            await CheckDuplicateDepartmentNameAsync(newEntity).ConfigureAwait(false);
-            _unitOfWork.GetRepository<Department>().Update(newEntity);
+            await CheckDuplicateQuestionPoolNameAsync(newEntity).ConfigureAwait(false);
+            _unitOfWork.GetRepository<QuestionPool>().Update(newEntity);
         }
 
         /// <summary>
@@ -52,15 +53,14 @@
         /// <param name="predicate">The predicate.</param>
         /// <param name="criteria">The search criteria.</param>
         /// <returns>The updated predicate with applied filters.</returns>
-        protected override Expression<Func<Department, bool>> ConstructQueryConditions(Expression<Func<Department, bool>> predicate, DepartmentBaseSearchCriteria criteria)
+        protected override Expression<Func<QuestionPool, bool>> ConstructQueryConditions(Expression<Func<QuestionPool, bool>> predicate, BaseSearchCriteria criteria)
         {
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
             }
-
-            return predicate.And(p => p.IsActive == criteria.IsActive);
+            return predicate;
         }
 
         /// <summary>
@@ -70,9 +70,9 @@
         /// <remarks>
         /// All thrown exceptions will be propagated to caller method.
         /// </remarks>
-        protected override void SetDefaultSortOption(DepartmentBaseSearchCriteria criteria)
+        protected override void SetDefaultSortOption(BaseSearchCriteria criteria)
         {
-            criteria.SortBy = nameof(Department.CreatedOn);
+            criteria.SortBy = nameof(QuestionPool.CreatedOn);
             criteria.SortType = SortType.Descending;
         }
 
@@ -82,7 +82,7 @@
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>The updated query.</returns>
-        protected override IIncludableQueryable<Department, object> IncludeNavigationProperties(IQueryable<Department> query)
+        protected override IIncludableQueryable<QuestionPool, object> IncludeNavigationProperties(IQueryable<QuestionPool> query)
         {
             return query.Include(x => x.User);
         }
@@ -92,7 +92,7 @@
         /// </summary>
         /// <param name="slug">The slug</param>
         /// <returns>The expression to filter by slug or slug</returns>
-        protected override Expression<Func<Department, bool>> PredicateForIdOrSlug(string identity)
+        protected override Expression<Func<QuestionPool, bool>> PredicateForIdOrSlug(string identity)
         {
             return p => p.Id.ToString() == identity || p.Slug == identity;
         }
@@ -105,14 +105,14 @@
         /// <param name="entity"></param>
         /// <returns></returns>
         /// <exception cref="ServiceException"></exception>
-        private async Task CheckDuplicateDepartmentNameAsync(Department entity)
+        private async Task CheckDuplicateQuestionPoolNameAsync(QuestionPool entity)
         {
-            var departmentExist = await _unitOfWork.GetRepository<Department>().ExistsAsync(
+            var QuestionPoolExist = await _unitOfWork.GetRepository<QuestionPool>().ExistsAsync(
                 predicate: p => p.Id != entity.Id && p.Name.ToLower() == entity.Name.ToLower()).ConfigureAwait(false);
-            if (departmentExist)
+            if (QuestionPoolExist)
             {
-                _logger.LogWarning("Duplicate department name : {name} is found for the department with id : {id}", entity.Name, entity.Id);
-                throw new ServiceException("Duplicate department name is found");
+                _logger.LogWarning("Duplicate QuestionPool name : {name} is found for the QuestionPool with id : {id}", entity.Name, entity.Id);
+                throw new ServiceException("Duplicate QuestionPool name is found");
             }
         }
         #endregion Private Methods

@@ -49,7 +49,7 @@
         protected override void SetDefaultSortOption(ZoomLicenseBaseSearchCriteria criteria)
         {
             criteria.SortBy = nameof(ZoomLicense.CreatedOn);
-            criteria.SortType = SortType.Ascending;
+            criteria.SortType = SortType.Descending;
         }
 
 

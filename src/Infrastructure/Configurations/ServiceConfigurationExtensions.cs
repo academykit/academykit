@@ -37,6 +37,7 @@
             services.AddTransient<IZoomLicenseService, ZoomLicenseService>();
             services.AddTransient<ICourseTeacherService, CourseTeacherService>();
             services.AddTransient<IMediaService, MediaService>();
+            services.AddTransient<IQuestionPoolService, QuestionPoolService>();
 
             services.AddSingleton<IValidator<LoginRequestModel>, LoginValidator>();
             services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();
@@ -51,6 +52,7 @@
             services.AddSingleton<IValidator<CourseTeacherRequestModel>, CourseTeacherValidator>();
             services.AddSingleton<IValidator<ChangePasswordRequestModel>, ChangePasswordValidator>();
             services.AddSingleton<IValidator<ResetPasswordRequestModel>, ResetPasswordValidator>();
+            services.AddSingleton<IValidator<QuestionPoolRequestModel>, QuestionPoolValidator>();
 
             return services;
         }
