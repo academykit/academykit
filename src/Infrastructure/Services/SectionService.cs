@@ -4,16 +4,39 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Domain.Entities;
+    using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
-    using Microsoft.Extensions.Logging;
     using Microsoft.EntityFrameworkCore;
-    using Lingtren.Domain.Enums;
+    using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Logging;
+    using System.Linq.Expressions;
 
-    public class SectionService : BaseGenericService<Section, BaseSearchCriteria>, ISectionService
+    public class SectionService : BaseGenericService<Section, SectionBaseSearchCriteria>, ISectionService
     {
         public SectionService(IUnitOfWork unitOfWork, ILogger<SectionService> logger) : base(unitOfWork, logger)
         {
+        }
+
+        #region Protected Reggion
+        /// <summary>
+        /// Includes the navigation properties loading for the entity.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <returns>The updated query.</returns>
+        protected override IIncludableQueryable<Section, object> IncludeNavigationProperties(IQueryable<Section> query)
+        {
+            return query.Include(x => x.User);
+        }
+        /// <summary>
+        /// Handel to populate live session retrieved entity
+        /// </summary>
+        /// <param name="entity">the instance of <see cref="LiveSession"/></param>
+        /// <returns></returns>
+        protected override async Task PopulateRetrievedEntity(Section entity)
+        {
+            var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.SectionId == entity.Id).ConfigureAwait(false);
+            entity.Lessons = lessons;
         }
 
         /// <summary>
@@ -45,6 +68,17 @@ namespace Lingtren.Infrastructure.Services
             _unitOfWork.GetRepository<Section>().Update(newEntity);
         }
 
+        /// <summary>
+        /// If entity needs to support the get by slug or id then has to override this method.
+        /// </summary>
+        /// <param name="slug">The slug</param>
+        /// <returns>The expression to filter by slug or slug</returns>
+        protected override Expression<Func<Section, bool>> PredicateForIdOrSlug(string identity)
+        {
+            return p => p.Id.ToString() == identity || p.Slug == identity;
+        }
+
+        #endregion Protected Region
         /// <summary>
         /// Handle to delete the section
         /// </summary>

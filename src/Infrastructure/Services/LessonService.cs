@@ -53,8 +53,6 @@ namespace Lingtren.Infrastructure.Services
                 CreatedOn = currentTimeStamp,
                 UpdatedBy = currentUserId,
                 UpdatedOn = currentTimeStamp,
-                Meeting = new Meeting(),
-                QuestionSet = new QuestionSet()
             };
             lesson.Slug = CommonHelper.GetEntityTitleSlug<Course>(_unitOfWork, (slug) => q => q.Slug == slug, lesson.Name);
 
@@ -88,6 +86,7 @@ namespace Lingtren.Infrastructure.Services
 
         private async Task CreateQuestionSetAsync(LessonRequestModel model, Lesson lesson)
         {
+            lesson.QuestionSet = new QuestionSet();
             lesson.QuestionSet = new QuestionSet
             {
                 Id = Guid.NewGuid(),
@@ -115,6 +114,7 @@ namespace Lingtren.Infrastructure.Services
 
         private async Task CreateMeetingAsync(LessonRequestModel model, Lesson lesson)
         {
+            lesson.Meeting = new Meeting();
             lesson.Meeting = new Meeting
             {
                 Id = Guid.NewGuid(),

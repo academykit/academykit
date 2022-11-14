@@ -31,7 +31,7 @@ namespace Lingtren.Api.Controllers
         /// <summary>
         /// course search api
         /// </summary>
-        /// <returns> the list of <see cref="DepartmentResponseModel" /> .</returns>
+        /// <returns> the list of <see cref="CourseResponseModel" /> .</returns>
         [HttpGet]
         public async Task<SearchResult<CourseResponseModel>> SearchAsync([FromQuery] CourseBaseSearchCriteria searchCriteria)
         {
@@ -55,7 +55,7 @@ namespace Lingtren.Api.Controllers
         /// <summary>
         /// create course api
         /// </summary>
-        /// <param name="model"> the instance of <see cref="CourseRequestModelv" />. </param>
+        /// <param name="model"> the instance of <see cref="CourseRequestModel" />. </param>
         /// <returns> the instance of <see cref="CourseResponseModel" /> .</returns>
         [HttpPost]
         public async Task<CourseResponseModel> CreateAsync(CourseRequestModel model)
@@ -111,10 +111,10 @@ namespace Lingtren.Api.Controllers
         }
 
         /// <summary>
-        /// get department by id or slug
+        /// get course by id or slug
         /// </summary>
-        /// <param name="identity"> the department id or slug</param>
-        /// <returns> the instance of <see cref="DepartmentResponseModel" /> .</returns>
+        /// <param name="identity"> the course id or slug</param>
+        /// <returns> the instance of <see cref="CourseResponseModel" /> .</returns>
         [HttpGet("{identity}")]
         public async Task<CourseResponseModel> Get(string identity)
         {

@@ -293,7 +293,7 @@
 
                 var result = query.ToPagedList(criteria.Page, criteria.Size);
 
-                // await PopulateRetrievedEntities(result.Items).ConfigureAwait(false);
+                await PopulateRetrievedEntities(result.Items).ConfigureAwait(false);
 
                 return result;
             }).ConfigureAwait(false);

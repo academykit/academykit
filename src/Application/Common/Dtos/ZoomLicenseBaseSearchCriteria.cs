@@ -2,6 +2,6 @@
 {
     public class ZoomLicenseBaseSearchCriteria : BaseSearchCriteria
     {
-        public bool? IsActive { get; set; };
+        public bool? IsActive { get; set; }
     }
 }

@@ -50,6 +50,7 @@
             services.AddSingleton<IValidator<SectionRequestModel>, SectionValidator>();
             services.AddSingleton<IValidator<CourseRequestModel>, CourseValidator>();
             services.AddSingleton<IValidator<CourseTeacherRequestModel>, CourseTeacherValidator>();
+            services.AddSingleton<IValidator<LessonRequestModel>, LessonValidator>();
             services.AddSingleton<IValidator<ChangePasswordRequestModel>, ChangePasswordValidator>();
             services.AddSingleton<IValidator<ResetPasswordRequestModel>, ResetPasswordValidator>();
             services.AddSingleton<IValidator<QuestionPoolRequestModel>, QuestionPoolValidator>();
