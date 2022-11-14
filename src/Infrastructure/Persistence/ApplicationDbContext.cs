@@ -1,9 +1,9 @@
 ﻿namespace Lingtren.Infrastructure.Persistence
 {
-    using System.Reflection;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Microsoft.EntityFrameworkCore;
+    using System.Reflection;
 
     public class ApplicationDbContext : DbContext
     {
@@ -33,7 +33,7 @@
         public DbSet<QuestionPoolQuestion> QuestionPoolQuestions { get; set; }
         public DbSet<QuestionSetQuestion> QuestionSetQuestions { get; set; }
         public DbSet<QuestionPoolTeacher> QuestionPoolTeachers { get; set; }
-
+        public DbSet<QuestionTag> QuestionTags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

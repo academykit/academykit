@@ -2,6 +2,7 @@
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
+    using Lingtren.Application.Common.Interfaces;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
@@ -12,7 +13,7 @@
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
 
-    public class QuestionPoolTeacherService : BaseGenericService<QuestionPoolTeacher, QuestionPoolTeacherBaseSearchCriteria>
+    public class QuestionPoolTeacherService : BaseGenericService<QuestionPoolTeacher, QuestionPoolTeacherBaseSearchCriteria>, IQuestionPoolTeacherService
     {
         public QuestionPoolTeacherService(IUnitOfWork unitOfWork,
             ILogger<QuestionPoolTeacherService> logger) : base(unitOfWork, logger)

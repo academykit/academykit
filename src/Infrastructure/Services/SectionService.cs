@@ -34,7 +34,7 @@ namespace Lingtren.Infrastructure.Services
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
             }
-            return predicate;
+            return predicate.And(p => !p.IsDeleted);
         }
 
 
@@ -113,7 +113,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 var course = await ValidateAndGetCourse(currentUserId, identity).ConfigureAwait(false);
                 var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
-                    predicate: x => !x.IsDeleted && x.CourseId == course.Id && (x.Id.ToString() == sectionIdentity || x.Slug.Equals(sectionIdentity)), 
+                    predicate: x => !x.IsDeleted && x.CourseId == course.Id && (x.Id.ToString() == sectionIdentity || x.Slug.Equals(sectionIdentity)),
                     include: s => s.Include(x => x.Lessons).Include(x => x.Course)).ConfigureAwait(false);
                 if (section == null)
                 {
