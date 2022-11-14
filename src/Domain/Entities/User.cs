@@ -47,6 +47,7 @@
         public IList<QuestionOption> QuestionOptions { get; set; }
         public IList<QuestionSetQuestion> QuestionSetQuestions { get; set; }
         public IList<QuestionPoolQuestion> QuestionPoolQuestions { get; set; }
+        public IList<QuestionPoolTeacher> QuestionPoolTeachers { get; set; }
 
         /// <summary>
         /// Get or set full name

@@ -32,6 +32,7 @@
         {
             await CheckDuplicateQuestionPoolNameAsync(entity).ConfigureAwait(false);
             entity.Slug = CommonHelper.GetEntityTitleSlug<QuestionPool>(_unitOfWork, (slug) => q => q.Slug == slug, entity.Name);
+            await _unitOfWork.GetRepository<QuestionPoolTeacher>().InsertAsync(entity.QuestionPoolTeachers).ConfigureAwait(false);
             await Task.FromResult(0);
         }
 

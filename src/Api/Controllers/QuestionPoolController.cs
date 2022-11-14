@@ -7,6 +7,7 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
+    using Lingtren.Domain.Enums;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
 
@@ -64,8 +65,20 @@
                 CreatedOn = currentTimeStamp,
                 CreatedBy = CurrentUser.Id,
                 UpdatedOn = currentTimeStamp,
-                UpdatedBy = CurrentUser.Id
+                UpdatedBy = CurrentUser.Id,
+                QuestionPoolTeachers = new List<QuestionPoolTeacher>()
             };
+            entity.QuestionPoolTeachers.Add(new QuestionPoolTeacher()
+            {
+                Id = Guid.NewGuid(),
+                QuestionPoolId = entity.Id,
+                UserId = CurrentUser.Id,
+                Role = PoolRole.Author,
+                CreatedOn = currentTimeStamp,
+                CreatedBy = CurrentUser.Id,
+                UpdatedOn = currentTimeStamp,
+                UpdatedBy = CurrentUser.Id,
+            });
             var response = await _questionPoolService.CreateAsync(entity).ConfigureAwait(false);
             return new QuestionPoolResponseModel(response);
         }

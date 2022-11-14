@@ -8,5 +8,7 @@ namespace Lingtren.Domain.Entities
         public bool IsDeleted { get; set; }
         public User User { get; set; }
         public IList<QuestionPoolQuestion> QuestionPoolQuestions { get; set; }
+        public IList<QuestionPoolTeacher> QuestionPoolTeachers { get; set; }
+
     }
 }

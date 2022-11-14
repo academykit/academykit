@@ -100,10 +100,10 @@
         /// <exception cref="ForbiddenException"></exception>
         public async Task<GroupAddMemberResponseModel> AddMemberAsync(string identity, AddGroupMemberRequestModel model, Guid currentUserId)
         {
-            if (model.UserIds.Any(x => default))
+            if (model.Emails.Any(x => default))
             {
-                _logger.LogInformation("Please select users for group with identity : {identity}", identity);
-                throw new ForbiddenException("Please select users.");
+                _logger.LogInformation("Please enter user email for group with identity : {identity}", identity);
+                throw new ForbiddenException("Please enter user email.");
             }
             var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(
                 predicate: p => p.Slug.ToLower().Equals(identity) || p.Id.ToString().Equals(identity)).ConfigureAwait(false);
@@ -120,15 +120,23 @@
                 throw new ForbiddenException("Only user with admin or teacher role is allowed to add member in the group.");
             }
 
+            var users = await _unitOfWork.GetRepository<User>().GetAllAsync(
+                predicate: p => model.Emails.Contains(p.Email)).ConfigureAwait(false);
+
+            var userIds = users.Select(x => x.Id).ToList();
+
+            var nonUsers = model.Emails.Except(users.Select(x => x.Email)).ToList();
+
+
             var duplicateUsers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(
-                predicate: p => model.UserIds.Contains(p.UserId) && p.IsActive == true,
+                predicate: p => userIds.Contains(p.UserId) && p.IsActive == true,
                 include: src => src.Include(x => x.User)).ConfigureAwait(false);
 
             var inActiveUsers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(
-                predicate: p => model.UserIds.Contains(p.UserId) && p.IsActive == false,
+                predicate: p => userIds.Contains(p.UserId) && p.IsActive == false,
                 include: src => src.Include(x => x.User)).ConfigureAwait(false);
 
-            var usersToBeAdded = model.UserIds.Except(duplicateUsers.Select(x => x.UserId))
+            var usersToBeAdded = userIds.Except(duplicateUsers.Select(x => x.UserId))
                                               .Except(inActiveUsers.Select(x => x.UserId));
 
             var groupMembers = new List<GroupMember>();
@@ -160,6 +168,12 @@
             {
                 result.HttpStatusCode = HttpStatusCode.PartialContent;
                 result.Message += $" & {string.Join(',', inActiveUsers.Select(x => x.User.FirstName))} already exist as inactive group member.";
+                result.Message = result.Message.TrimStart(' ', '&');
+            }
+            if (nonUsers.Count > 0)
+            {
+                result.HttpStatusCode = HttpStatusCode.PartialContent;
+                result.Message += $" & {string.Join(',', nonUsers.Select(x => x))} is not a users in the system";
                 result.Message = result.Message.TrimStart(' ', '&');
             }
             return result;

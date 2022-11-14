@@ -153,7 +153,7 @@
 
             CommonHelper.CheckFoundEntity(course);
 
-            // if current user is the creator he can modify/access the live session
+            // if current user is the creator he can modify/access the course
             if (course.CreatedBy.Equals(currentUserId) || course.CourseTeachers.Any(x => x.UserId == currentUserId))
             {
                 return course;
@@ -179,6 +179,36 @@
             }
             var isCourseMember = course.Group.GroupMembers.Any(x => x.UserId == currentUserId);
             return await Task.FromResult(isCourseMember);
+        }
+
+        /// <summary>
+        /// Validate user and get courses 
+        /// </summary>
+        /// <param name="currentUserId">the current user id</param>
+        /// <param name="courseIdentity">the course id or slug</param>
+        /// <param name="validateForModify"></param>
+        /// <returns></returns>
+        /// <exception cref="ForbiddenException"></exception>
+        protected async Task<QuestionPool> ValidateAndGetQuestionPool(Guid currentUserId, string questionPoolIdentity, bool validateForModify = true)
+        {
+            CommonHelper.ValidateArgumentNotNullOrEmpty(questionPoolIdentity, nameof(questionPoolIdentity));
+            var predicate = PredicateBuilder.New<QuestionPool>(true);
+
+            predicate = predicate.And(x => x.Id.ToString() == questionPoolIdentity || x.Slug == questionPoolIdentity);
+
+            var questionPool = await _unitOfWork.GetRepository<QuestionPool>().GetFirstOrDefaultAsync(
+                predicate: predicate,
+                include: s => s.Include(x => x.QuestionPoolTeachers)).ConfigureAwait(false);
+
+            CommonHelper.CheckFoundEntity(questionPool);
+
+            // if current user is the creator he can modify/access the question pool
+            if (questionPool.CreatedBy.Equals(currentUserId) || questionPool.QuestionPoolTeachers.Any(x => x.UserId == currentUserId))
+            {
+                return questionPool;
+            }
+
+            throw new ForbiddenException("You are not allowed to modify this question pool.");
         }
     }
 }

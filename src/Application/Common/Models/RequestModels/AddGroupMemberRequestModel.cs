@@ -2,6 +2,6 @@
 {
     public class AddGroupMemberRequestModel
     {
-        public IList<Guid> UserIds { get; set; }
+        public IList<string> Emails { get; set; }
     }
 }
