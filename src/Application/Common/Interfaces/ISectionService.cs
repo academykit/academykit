@@ -7,9 +7,10 @@ namespace Lingtren.Application.Common.Interfaces
         /// <summary>
         /// Handle to delete the section
         /// </summary>
-        /// <param name="identity"> the id or slug </param>
+        /// <param name="identity"> the course id or slug </param>
+        /// <param name="sectionIdentity"> the section id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
-        Task DeleteSectionAsync(string identity, Guid currentUserId);
+        Task DeleteSectionAsync(string identity, string sectionIdentity, Guid currentUserId);
     }
 }

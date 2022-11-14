@@ -7,6 +7,7 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
+    using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
@@ -18,7 +19,25 @@ namespace Lingtren.Infrastructure.Services
         {
         }
 
-        #region Protected Reggion
+        #region Protected Region
+
+        /// <summary>
+        /// Applies filters to the given query.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="criteria">The search criteria.</param>
+        /// <returns>The updated predicate with applied filters.</returns>
+        protected override Expression<Func<Section, bool>> ConstructQueryConditions(Expression<Func<Section, bool>> predicate, SectionBaseSearchCriteria criteria)
+        {
+            if (!string.IsNullOrWhiteSpace(criteria.Search))
+            {
+                var search = criteria.Search.ToLower().Trim();
+                predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
+            }
+            return predicate;
+        }
+
+
         /// <summary>
         /// Includes the navigation properties loading for the entity.
         /// </summary>
@@ -79,19 +98,23 @@ namespace Lingtren.Infrastructure.Services
         }
 
         #endregion Protected Region
+
+
         /// <summary>
         /// Handle to delete the section
         /// </summary>
-        /// <param name="identity"> the id or slug </param>
+        /// <param name="identity"> the course id or slug </param>
+        /// <param name="sectionIdentity"> the section id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
-        public async Task DeleteSectionAsync(string identity, Guid currentUserId)
+        public async Task DeleteSectionAsync(string identity, string sectionIdentity, Guid currentUserId)
         {
             try
             {
-                var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(predicate: x => !x.IsDeleted &&
-                (x.Id.ToString() == identity || x.Slug.Equals(identity)), include: s => s.Include(x => x.Lessons).Include(x => x.Course)).ConfigureAwait(false);
-
+                var course = await ValidateAndGetCourse(currentUserId, identity).ConfigureAwait(false);
+                var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
+                    predicate: x => !x.IsDeleted && x.CourseId == course.Id && (x.Id.ToString() == sectionIdentity || x.Slug.Equals(sectionIdentity)), 
+                    include: s => s.Include(x => x.Lessons).Include(x => x.Course)).ConfigureAwait(false);
                 if (section == null)
                 {
                     throw new EntityNotFoundException("Section not found");

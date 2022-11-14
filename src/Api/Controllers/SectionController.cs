@@ -1,16 +1,17 @@
 namespace Lingtren.Api.Controllers
 {
     using FluentValidation;
+    using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
-    using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
 
+    [Route("api/course/{identity}/section")]
     public class SectionController : BaseApiController
     {
         private readonly ICourseService _courseService;
@@ -31,8 +32,17 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <returns> the list of <see cref="SectionResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<SearchResult<SectionResponseModel>> SearchAsync([FromQuery] SectionBaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<SectionResponseModel>> SearchAsync(string identity, [FromQuery] SectionBaseSearchCriteria searchCriteria)
         {
+            var course = await _courseService.GetByIdOrSlugAsync(identity,currentUserId:CurrentUser.Id).ConfigureAwait(false);
+            if (course == null)
+            {
+                throw new EntityNotFoundException("Course not found");
+            }
+
+            searchCriteria.CurrentUserId = CurrentUser.Id;
+            searchCriteria.CourseId = course.Id;
+
             var searchResult = await _sectionService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             var response = new SearchResult<SectionResponseModel>
@@ -56,10 +66,10 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the instance of <see cref="SectionRequestModel" /> .</param>
         /// <returns> the instance of <see cref="SectionResponseModel" /> .</returns>
         [HttpPost]
-        public async Task<SectionResponseModel> Create(SectionRequestModel model)
+        public async Task<SectionResponseModel> Create(string identity, SectionRequestModel model)
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var course = await _courseService.GetByIdOrSlugAsync(model.CourseIdentity,currentUserId:CurrentUser.Id).ConfigureAwait(false);
+            var course = await _courseService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
             if (course == null)
             {
                 throw new EntityNotFoundException("Course not found");
@@ -81,10 +91,15 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="identity"> the section id or slug</param>
         /// <returns> the instance of <see cref="SectionResponseModel" /> .</returns>
-        [HttpGet("{identity}")]
-        public async Task<SectionResponseModel> Get(string identity)
+        [HttpGet("{sectionIdentity}")]
+        public async Task<SectionResponseModel> Get(string identity, string sectionIdentity)
         {
-            var model = await _sectionService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            var course = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            if (course == null)
+            {
+                throw new EntityNotFoundException("Course not found");
+            }
+            var model = await _sectionService.GetByIdOrSlugAsync(sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
             return new SectionResponseModel(model);
         }
 
@@ -93,22 +108,22 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="model"> the instance of <see cref="SectionRequestModel" /> .</param>
         /// <returns> the instance of <see cref="SectionResponseModel" /> .</returns>
-        [HttpPatch("{identity}")]
-        public async Task<SectionResponseModel> Update(string identity, SectionRequestModel model)
+        [HttpPatch("{sectionIdentity}")]
+        public async Task<SectionResponseModel> Update(string identity, string sectionIdentity, SectionRequestModel model)
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var course = await _courseService.GetByIdOrSlugAsync(model.CourseIdentity).ConfigureAwait(false);
+
+            var course = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             if (course == null)
             {
                 throw new EntityNotFoundException("Course not found");
             }
-            var entity = await _sectionService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            var entity = await _sectionService.GetByIdOrSlugAsync(sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
 
-            if (course == null)
+            if (entity == null)
             {
                 throw new EntityNotFoundException("Section not found");
             }
-
 
             entity.Name = model.Name;
             entity.CourseId = course.Id;
@@ -125,11 +140,11 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="identity"> the id or slug </param>
         /// <returns> the task complete </returns>
-        [HttpDelete("{identity}")]
-        public async Task<IActionResult> Delete(string identity)
+        [HttpDelete("{sectionIdentity}")]
+        public async Task<IActionResult> Delete(string identity, string sectionIdentity)
         {
-            await _sectionService.DeleteSectionAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok();
+            await _sectionService.DeleteSectionAsync(identity, sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Section removed successfully." });
         }
     }
 }

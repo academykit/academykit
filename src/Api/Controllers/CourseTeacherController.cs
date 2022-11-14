@@ -33,14 +33,14 @@
 
 
         /// <summary>
-        /// Searches the live session moderators.
+        /// Searches the question pool moderators.
         /// </summary>
         /// <param name="criteria">The search criteria</param>
         /// <returns></returns>
         [HttpGet]
         public async Task<SearchResult<CourseTeacherResponseModel>> Search([FromQuery] CourseTeacherSearchCriteria criteria)
         {
-            // live session id is required
+            // question pool id is required
             CommonHelper.ValidateArgumentNotNullOrEmpty(criteria.CourseIdentity, nameof(criteria.CourseIdentity));
             criteria.CurrentUserId = CurrentUser.Id;
             var searchResult = await _courseTeacherService.SearchAsync(criteria).ConfigureAwait(false);
