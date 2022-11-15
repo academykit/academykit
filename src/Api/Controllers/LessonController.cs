@@ -59,14 +59,14 @@ namespace Lingtren.Api.Controllers
         }
 
         ///// <summary>
-        ///// get department by id or slug
+        ///// get lesson by id or slug
         ///// </summary>
-        ///// <param name="identity"> the department id or slug</param>
+        ///// <param name="lessonIdentity"> the department id or slug</param>
         ///// <returns> the instance of <see cref="LessonResponseModel" /> .</returns>
-        //[HttpGet("{identity}")]
-        //public async Task<LessonResponseModel> Get(string identity)
+        //[HttpGet("{lessonIdentity}")]
+        //public async Task<LessonResponseModel> Get(string identity,string lessonIdentity)
         //{
-        //    var model = await _departmentService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
+        //    var model = await _lessonService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
         //    return new LessonResponseModel(model);
         //}
 

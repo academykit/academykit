@@ -48,6 +48,7 @@ namespace Lingtren.Infrastructure.Services
             existing.CourseTags = new List<CourseTag>();
             existing.CourseTags.AddRange(newEntity.CourseTags);
             _unitOfWork.DbContext.Entry(existing).CurrentValues.SetValues(newEntity);
+            existing.Level = null;
             if (existing.CourseTags.Count > 0)
             {
                 await _unitOfWork.GetRepository<CourseTag>().InsertAsync(existing.CourseTags).ConfigureAwait(false);
@@ -132,6 +133,7 @@ namespace Lingtren.Infrastructure.Services
             return query.Include(x => x.User)
                         .Include(x => x.CourseTags)
                         .Include(x => x.Level)
+                        .Include(x => x.Group)
                         .Include(x => x.CourseTeachers);
         }
 
@@ -257,6 +259,45 @@ namespace Lingtren.Infrastructure.Services
                 };
 
                 await _unitOfWork.GetRepository<CourseEnrollment>().InsertAsync(courseEnrollment).ConfigureAwait(false);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            });
+        }
+
+        /// <summary>
+        /// Handle to delete course 
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the task complete</returns>
+        public async Task DeleteCourseAsync(string identity, Guid currentUserId)
+        {
+            await ExecuteAsync(async () =>
+            {
+                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+                if (course == null)
+                {
+                    _logger.LogWarning("Course with identity : {0} not found for user with id : {1}", identity, currentUserId);
+                    throw new EntityNotFoundException("Course not found");
+                }
+                if(course.Status != CourseStatus.Draft)
+                {
+                    _logger.LogWarning("Course with identity : {0} is in {1} status. So, it cannot be removed", identity, course.Status);
+                    throw new EntityNotFoundException("Course with draft status is only allowed to removed.");
+                }
+                if (course.CourseEnrollments.Count > 0)
+                {
+                    _logger.LogWarning("Course with identity : {0} contains enrollments", identity);
+                    throw new EntityNotFoundException("Course contains member enrollments. So, it cannot be removed");
+                }
+
+                var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(predicate: p=> p.CourseId == course.Id).ConfigureAwait(false);
+                var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
+
+                _unitOfWork.GetRepository<Section>().Delete(sections);
+                _unitOfWork.GetRepository<Lesson>().Delete(lessons);
+                _unitOfWork.GetRepository<CourseTag>().Delete(course.CourseTags);
+                _unitOfWork.GetRepository<CourseTeacher>().Delete(course.CourseTeachers);
+                _unitOfWork.GetRepository<Course>().Delete(course);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             });
         }

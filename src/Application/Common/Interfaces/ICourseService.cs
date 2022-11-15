@@ -23,5 +23,13 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="userId"> the user id</param>
 
         Task EnrollmentAsync(string identity, Guid userId);
+
+        /// <summary>
+        /// Handle to delete course 
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the task complete</returns>
+        Task DeleteCourseAsync(string identity, Guid currentUserId);
     }
 }

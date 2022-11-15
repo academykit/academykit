@@ -16,6 +16,7 @@
         public int Duration { get; set; }
         public Guid LevelId { get; set; }
         public string LevelName { get; set; }
+        public IList<CourseTagResponseModel> Tags { get; set; }
         public UserModel User { get; set; }
 
         public CourseResponseModel(Course model)
@@ -32,7 +33,22 @@
             Duration = model.Duration;
             LevelId = model.LevelId;
             LevelName = model.Level?.Name;
+            Tags = new List<CourseTagResponseModel>();
             User = model.User != null ? new UserModel(model.User) : new UserModel();
+            model.CourseTags.ToList().ForEach(item => Tags.Add(new CourseTagResponseModel(item)));
+        }
+    }
+
+    public class CourseTagResponseModel
+    {
+        public Guid Id { get; set; }
+        public Guid TagId { get; set; }
+        public string TagName { get; set; }
+        public CourseTagResponseModel(CourseTag courseTag)
+        {
+            Id = courseTag.Id;
+            TagId = courseTag.TagId;
+            TagName = courseTag.Tag.Name;
         }
     }
 }
