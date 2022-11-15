@@ -5,7 +5,7 @@ namespace Lingtren.Application.Common.Interfaces
     using Lingtren.Domain.Entities;
     using System.Threading.Tasks;
 
-    public interface ILessonService : IGenericService<Lesson, BaseSearchCriteria>
+    public interface ILessonService : IGenericService<Lesson, LessonBaseSearchCriteria>
     {
         /// <summary>
         /// Handle to create lesson
@@ -15,5 +15,23 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
         Task<Lesson> AddAsync(string courseIdentity, LessonRequestModel model, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to get lesson detail
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="currentUserId">the current logged in user</param>
+        /// <returns>the instance of <see cref="Lesson"/></returns>
+        Task<Lesson> GetLessonAsync(string identity, string lessonIdentity, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to delete lesson
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
+        Task DeleteLessonAsync(string identity, string lessonIdentity, Guid currentUserId);
     }
 }

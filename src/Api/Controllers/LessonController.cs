@@ -1,6 +1,7 @@
 namespace Lingtren.Api.Controllers
 {
     using FluentValidation;
+    using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
@@ -26,8 +27,10 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <returns> the list of <see cref="LessonResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<SearchResult<LessonResponseModel>> SearchAsync(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<LessonResponseModel>> SearchAsync(string identity, [FromQuery] LessonBaseSearchCriteria searchCriteria)
         {
+            searchCriteria.CurrentUserId = CurrentUser.Id;
+            searchCriteria.CourseIdentity = identity;
             var searchResult = await _lessonService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             var response = new SearchResult<LessonResponseModel>
@@ -66,7 +69,7 @@ namespace Lingtren.Api.Controllers
         [HttpGet("{lessonIdentity}")]
         public async Task<LessonResponseModel> Get(string identity, string lessonIdentity)
         {
-            var model = await _lessonService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
+            var model = await _lessonService.GetLessonAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
             return new LessonResponseModel(model);
         }
 
@@ -95,19 +98,18 @@ namespace Lingtren.Api.Controllers
         //    return new LessonResponseModel(savedEntity);
         //}
 
-        ///// <summary>
-        ///// delete department api
-        ///// </summary>
-        ///// <param name="identity"> id or slug </param>
-        ///// <returns> the task complete </returns>
-        //[HttpDelete("{identity}")]
-        //public async Task<IActionResult> DeletAsync(string identity)
-        //{
-        //    IsAdmin(CurrentUser.Role);
-
-        //    await _departmentService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-        //    return Ok(new CommonResponseModel() { Success = true, Message = "Department removed successfully." });
-        //}
+        /// <summary>
+        /// delete lesson api
+        /// </summary>
+        /// <param name="identity">course id or slug </param>
+        /// <param name="lessonIdentity">lesson id or slug </param>
+        /// <returns> the task complete </returns>
+        [HttpDelete("{lessonIdentity}")]
+        public async Task<IActionResult> DeletAsync(string identity, string lessonIdentity)
+        {
+            await _lessonService.DeleteLessonAsync(lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Lesson removed successfully." });
+        }
 
         ///// <summary>
         ///// change department status api
