@@ -58,17 +58,17 @@ namespace Lingtren.Api.Controllers
             return new LessonResponseModel(response);
         }
 
-        ///// <summary>
-        ///// get lesson by id or slug
-        ///// </summary>
-        ///// <param name="lessonIdentity"> the department id or slug</param>
-        ///// <returns> the instance of <see cref="LessonResponseModel" /> .</returns>
-        //[HttpGet("{lessonIdentity}")]
-        //public async Task<LessonResponseModel> Get(string identity,string lessonIdentity)
-        //{
-        //    var model = await _lessonService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
-        //    return new LessonResponseModel(model);
-        //}
+        /// <summary>
+        /// get lesson by id or slug
+        /// </summary>
+        /// <param name="lessonIdentity"> the department id or slug</param>
+        /// <returns> the instance of <see cref="LessonResponseModel" /> .</returns>
+        [HttpGet("{lessonIdentity}")]
+        public async Task<LessonResponseModel> Get(string identity, string lessonIdentity)
+        {
+            var model = await _lessonService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
+            return new LessonResponseModel(model);
+        }
 
         ///// <summary>
         ///// update department api

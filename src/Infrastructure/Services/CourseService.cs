@@ -131,7 +131,7 @@ namespace Lingtren.Infrastructure.Services
         protected override IIncludableQueryable<Course, object> IncludeNavigationProperties(IQueryable<Course> query)
         {
             return query.Include(x => x.User)
-                        .Include(x => x.CourseTags)
+                        .Include(x => x.CourseTags).ThenInclude(x => x.Tag)
                         .Include(x => x.Level)
                         .Include(x => x.Group)
                         .Include(x => x.CourseTeachers);
@@ -279,7 +279,7 @@ namespace Lingtren.Infrastructure.Services
                     _logger.LogWarning("Course with identity : {0} not found for user with id : {1}", identity, currentUserId);
                     throw new EntityNotFoundException("Course not found");
                 }
-                if(course.Status != CourseStatus.Draft)
+                if (course.Status != CourseStatus.Draft)
                 {
                     _logger.LogWarning("Course with identity : {0} is in {1} status. So, it cannot be removed", identity, course.Status);
                     throw new EntityNotFoundException("Course with draft status is only allowed to removed.");
@@ -290,7 +290,7 @@ namespace Lingtren.Infrastructure.Services
                     throw new EntityNotFoundException("Course contains member enrollments. So, it cannot be removed");
                 }
 
-                var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(predicate: p=> p.CourseId == course.Id).ConfigureAwait(false);
+                var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
                 var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
 
                 _unitOfWork.GetRepository<Section>().Delete(sections);
