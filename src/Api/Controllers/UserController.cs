@@ -39,6 +39,8 @@
         [HttpGet]
         public async Task<SearchResult<UserResponseModel>> SearchAsync([FromQuery] UserSearchCriteria searchCriteria)
         {
+            IsAdmin(CurrentUser.Role);
+
             var searchResult = await _userService.SearchAsync(searchCriteria, includeAllProperties: false).ConfigureAwait(false);
 
             var response = new SearchResult<UserResponseModel>
