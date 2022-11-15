@@ -34,6 +34,10 @@
         public DbSet<QuestionSetQuestion> QuestionSetQuestions { get; set; }
         public DbSet<QuestionPoolTeacher> QuestionPoolTeachers { get; set; }
         public DbSet<QuestionTag> QuestionTags { get; set; }
+        public DbSet<QuestionSetSubmission> QuestionSetSubmissions { get; set; }
+        public DbSet<QuestionSetSubmissionAnswer> QuestionSetSubmissionAnswers { get; set; }
+        public DbSet<QuestionSetResult> QuestionSetResults { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

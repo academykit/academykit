@@ -22,7 +22,7 @@
         public int Duration { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
-        public bool IsDeleted { get; set; }
+        public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
 
         public QuestionSetResponseModel(QuestionSet model)
@@ -39,7 +39,7 @@
             Duration = model.Duration;
             StartTime = model.StartTime;
             EndTime = model.EndTime;
-            IsDeleted = model.IsDeleted;
+            UpdatedOn = model.UpdatedOn;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
     }

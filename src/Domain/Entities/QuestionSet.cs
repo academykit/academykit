@@ -25,5 +25,7 @@ namespace Lingtren.Domain.Entities
         public User User { get; set; }
         public IList<QuestionSetQuestion> QuestionSetQuestions { get; set; }
         public Lesson Lesson { get; set; }
+        public IList<QuestionSetResult> QuestionSetResults { get; set; }
+        public IList<QuestionSetSubmission> QuestionSetSubmissions { get; set; }
     }
 }
