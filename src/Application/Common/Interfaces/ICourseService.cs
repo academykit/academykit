@@ -1,10 +1,10 @@
 namespace Lingtren.Application.Common.Interfaces
 {
-    using Lingtren.Domain.Entities;
     using Lingtren.Application.Common.Dtos;
-    using System.Threading.Tasks;
-    using System;
+    using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
+    using System;
+    using System.Threading.Tasks;
 
     public interface ICourseService : IGenericService<Course, CourseBaseSearchCriteria>
     {
@@ -16,5 +16,12 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current id</param>
         /// <returns></returns>
         Task ChangeStatusAsync(string identity, CourseStatus status, Guid currentUserId);
+        /// <summary>
+        /// Course Enrollment
+        /// </summary>
+        /// <param name="identity"> course id or slug</param>
+        /// <param name="userId"> the user id</param>
+
+        Task EnrollmentAsync(string identity, Guid userId);
     }
 }

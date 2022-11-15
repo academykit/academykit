@@ -55,6 +55,11 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.HasMany(x => x.QuestionPoolQuestions).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.QuestionSetQuestions).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.QuestionPoolTeachers).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.QuestionSetResults).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.QuestionSetSubmissions).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.QuestionSetSubmissionAnswers).WithOne(x => x.User).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.CourseEnrollments).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.WatchHistories).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

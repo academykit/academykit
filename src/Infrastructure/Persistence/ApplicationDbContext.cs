@@ -37,7 +37,8 @@
         public DbSet<QuestionSetSubmission> QuestionSetSubmissions { get; set; }
         public DbSet<QuestionSetSubmissionAnswer> QuestionSetSubmissionAnswers { get; set; }
         public DbSet<QuestionSetResult> QuestionSetResults { get; set; }
-
+        public DbSet<CourseEnrollment> CourseEnrollments { get; set; }
+        public DbSet<WatchHistory> WatchHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

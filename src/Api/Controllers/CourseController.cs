@@ -35,6 +35,7 @@ namespace Lingtren.Api.Controllers
         [HttpGet]
         public async Task<SearchResult<CourseResponseModel>> SearchAsync([FromQuery] CourseBaseSearchCriteria searchCriteria)
         {
+            searchCriteria.CurrentUserId = CurrentUser.Id;
             var searchResult = await _courseService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             var response = new SearchResult<CourseResponseModel>
@@ -193,6 +194,17 @@ namespace Lingtren.Api.Controllers
             }
             await _courseService.ChangeStatusAsync(identity, status, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Course status changed successfully." });
+        }
+
+        /// <summary>
+        /// enroll course api
+        /// </summary>
+        /// <param name="identity"> the course id or slug.</param>
+        [HttpPost("{identity}/enroll")]
+        public async Task<IActionResult> Enroll(string identity)
+        {
+            await _courseService.EnrollmentAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = "User enrolled in the course successfully." });
         }
     }
 }

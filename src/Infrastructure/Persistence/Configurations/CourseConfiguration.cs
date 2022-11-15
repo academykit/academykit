@@ -1,5 +1,3 @@
-using System;
-using System.Reflection.Metadata;
 namespace Lingtren.Infrastructure.Persistence.Configurations
 {
     using Lingtren.Domain.Entities;
@@ -28,6 +26,8 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.HasMany(x => x.Lessons).WithOne(x => x.Course).HasForeignKey(x => x.CourseId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.CourseTeachers).WithOne(x => x.Course).HasForeignKey(x => x.CourseId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.CourseTags).WithOne(x => x.Course).HasForeignKey(x => x.CourseId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.WatchHistories).WithOne(x => x.Course).HasForeignKey(x => x.CourseId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x => x.CourseEnrollments).WithOne(x => x.Course).HasForeignKey(x => x.CourseId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

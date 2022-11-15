@@ -48,6 +48,11 @@
         public IList<QuestionSetQuestion> QuestionSetQuestions { get; set; }
         public IList<QuestionPoolQuestion> QuestionPoolQuestions { get; set; }
         public IList<QuestionPoolTeacher> QuestionPoolTeachers { get; set; }
+        public IList<QuestionSetSubmission> QuestionSetSubmissions { get; set; }
+        public IList<QuestionSetSubmissionAnswer> QuestionSetSubmissionAnswers { get; set; }
+        public IList<QuestionSetResult> QuestionSetResults { get; set; }
+        public IList<CourseEnrollment> CourseEnrollments { get; set; }
+        public IList<WatchHistory> WatchHistories { get; set; }
 
         /// <summary>
         /// Get or set full name

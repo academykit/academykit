@@ -4,7 +4,7 @@
 
     public class QuestionSetResult : AuditableEntity
     {
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         public Guid QuestionSetId { get; set; }
         public QuestionSet QuestionSet { get; set; }
         public Guid QuestionSetSubmissionId { get; set; }

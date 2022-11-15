@@ -63,13 +63,49 @@ namespace Lingtren.Infrastructure.Services
         /// <returns>The updated predicate with applied filters.</returns>
         protected override Expression<Func<Course, bool>> ConstructQueryConditions(Expression<Func<Course, bool>> predicate, CourseBaseSearchCriteria criteria)
         {
+            if (criteria.Status.HasValue)
+            {
+                predicate = predicate.And(p => p.Status.Equals(criteria.Status.Value));
+            }
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
             }
 
-            return predicate;
+            if (criteria.CurrentUserId == default)
+            {
+                return predicate.And(x => x.Status == CourseStatus.Published);
+            }
+
+            if (criteria.EnrollmentStatus?.Count > 0)
+            {
+                var enrollmentStatusPredicate = PredicateBuilder.New<Course>();
+                foreach (var enrollmentStatus in criteria.EnrollmentStatus)
+                {
+                    switch (enrollmentStatus)
+                    {
+                        case CourseEnrollmentStatus.Enrolled:
+                            enrollmentStatusPredicate = enrollmentStatusPredicate.Or(p => p.CourseEnrollments.Any(e => e.UserId == criteria.CurrentUserId));
+                            break;
+                        case CourseEnrollmentStatus.NotEnrolled:
+                            enrollmentStatusPredicate = enrollmentStatusPredicate.Or(p => !p.CourseEnrollments.Any(e => e.UserId == criteria.CurrentUserId));
+                            break;
+                        case CourseEnrollmentStatus.Host:
+                            enrollmentStatusPredicate = enrollmentStatusPredicate.Or(p => p.CreatedBy == criteria.CurrentUserId);
+                            break;
+                        case CourseEnrollmentStatus.Moderator:
+                            enrollmentStatusPredicate = enrollmentStatusPredicate.Or(p => p.CourseTeachers.Any(e => e.UserId == criteria.CurrentUserId));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                predicate = predicate.And(enrollmentStatusPredicate);
+            }
+
+            return predicate.And(x => x.CreatedBy == criteria.CurrentUserId
+            || (x.CreatedBy != criteria.CurrentUserId && x.Status.Equals(CourseStatus.Published)));
         }
 
         /// <summary>
@@ -176,6 +212,53 @@ namespace Lingtren.Infrastructure.Services
             course.UpdatedOn = DateTime.UtcNow;
             _unitOfWork.GetRepository<Course>().Update(course);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Course Enrollment
+        /// </summary>
+        /// <param name="identity"> course id or slug</param>
+        /// <param name="userId"> the user id</param>
+
+        public async Task EnrollmentAsync(string identity, Guid userId)
+        {
+            await ExecuteAsync(async () =>
+            {
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
+                    predicate: x => x.Id == userId,
+                    include: p => p.Include(x => x.CourseEnrollments)).ConfigureAwait(false);
+                CommonHelper.CheckFoundEntity(user);
+
+                var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(
+                    predicate: x => x.Id.ToString() == identity && x.Slug == identity,
+                    include: src => src.Include(x => x.User).Include(x => x.CourseEnrollments)
+                    ).ConfigureAwait(false);
+                CommonHelper.CheckFoundEntity(course);
+
+                if (course.CourseEnrollments.Any(p => p.UserId == userId
+                            && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)))
+                {
+                    _logger.LogWarning("User with userId: {userId} is already enrolled in the course with id: {courseId}", userId, course.Id);
+                    throw new ArgumentException("You are already enrolled in this course");
+                }
+
+                var currentTimeStamp = DateTime.UtcNow;
+                CourseEnrollment courseEnrollment = new CourseEnrollment()
+                {
+                    Id = Guid.NewGuid(),
+                    CourseId = course.Id,
+                    EnrollmentDate = currentTimeStamp,
+                    CreatedBy = userId,
+                    CreatedOn = currentTimeStamp,
+                    UserId = userId,
+                    UpdatedBy = userId,
+                    UpdatedOn = currentTimeStamp,
+                    EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Enrolled,
+                };
+
+                await _unitOfWork.GetRepository<CourseEnrollment>().InsertAsync(courseEnrollment).ConfigureAwait(false);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            });
         }
     }
 }
