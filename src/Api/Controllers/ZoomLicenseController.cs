@@ -30,6 +30,7 @@
         [HttpGet]
         public async Task<SearchResult<ZoomLicenseResponseModel>> SearchAsync([FromQuery] ZoomLicenseBaseSearchCriteria searchCriteria)
         {
+            IsAdmin(CurrentUser.Role);
             var searchResult = await _zoomLicenseService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             var response = new SearchResult<ZoomLicenseResponseModel>
@@ -55,6 +56,7 @@
         [HttpGet("{id}")]
         public async Task<ZoomLicenseResponseModel> Get(Guid id)
         {
+            IsAdmin(CurrentUser.Role);
             var model = await _zoomLicenseService.GetAsync(id).ConfigureAwait(false);
             return new ZoomLicenseResponseModel(model);
         }

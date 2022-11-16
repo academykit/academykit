@@ -47,11 +47,8 @@ namespace Lingtren.Api.Controllers
         [HttpGet]
         public async Task<GeneralSettingResponseModel> Get()
         {
-            if (CurrentUser.Role != UserRole.Admin)
-            {
-                _logger.LogWarning("User with id : {id} is not admin to access general setting", CurrentUser.Id);
-                throw new ForbiddenException("Only user with admin role is allowed to view general setting");
-            }
+            IsAdmin(CurrentUser.Role);
+           
             var model = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return new GeneralSettingResponseModel(model);
         }
@@ -65,11 +62,7 @@ namespace Lingtren.Api.Controllers
         [HttpPut("{id}")]
         public async Task<GeneralSettingResponseModel> UpdateSMTPSetting(Guid id, GeneralSettingRequestModel model)
         {
-            if (CurrentUser.Role != UserRole.Admin)
-            {
-                _logger.LogWarning("User with Id : {userId} is not allowed to edit general setting with Id : {generalSettingId}", CurrentUser.Id, id);
-                throw new ForbiddenException("Only user with admin role is allowed to update general setting");
-            }
+            IsAdmin(CurrentUser.Role);
 
             await _generalSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _generalSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
@@ -105,11 +98,8 @@ namespace Lingtren.Api.Controllers
         [HttpGet("zoom")]
         public async Task<ZoomSettingResponseModel> GetZoomSetting()
         {
-            if (CurrentUser.Role != UserRole.Admin)
-            {
-                _logger.LogWarning("User with id : {id} is not admin to access zoom setting", CurrentUser.Id);
-                throw new ForbiddenException("Only user with admin role is allowed to view zoom setting");
-            }
+            IsAdmin(CurrentUser.Role);
+
             var model = await _zoomSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return new ZoomSettingResponseModel(model);
         }
@@ -123,11 +113,7 @@ namespace Lingtren.Api.Controllers
         [HttpPut("zoom/{id}")]
         public async Task<ZoomSettingResponseModel> UpdateZoomSetting(Guid id, ZoomSettingRequestModel model)
         {
-            if (CurrentUser.Role != UserRole.Admin)
-            {
-                _logger.LogWarning("User with Id : {userId} is not allowed to edit zoom setting with Id : {zoomSettingId}", CurrentUser.Id, id);
-                throw new ForbiddenException("Only user with admin role is allowed to update zoom setting");
-            }
+            IsAdmin(CurrentUser.Role);
 
             await _zoomSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _zoomSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
@@ -162,11 +148,7 @@ namespace Lingtren.Api.Controllers
         [HttpGet("smtp")]
         public async Task<SMTPSettingResponseModel> GetSMTPSetting()
         {
-            if (CurrentUser.Role != UserRole.Admin)
-            {
-                _logger.LogWarning("User with id : {id} is not admin to access smtp setting", CurrentUser.Id);
-                throw new ForbiddenException("Only user with admin role is allowed to view smtp setting");
-            }
+            IsAdmin(CurrentUser.Role);
             var model = await _smtpSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return new SMTPSettingResponseModel(model);
         }
@@ -180,11 +162,7 @@ namespace Lingtren.Api.Controllers
         [HttpPut("smtp/{id}")]
         public async Task<SMTPSettingResponseModel> UpdateSMTPSetting(Guid id, SMTPSettingRequestModel model)
         {
-            if (CurrentUser.Role != UserRole.Admin)
-            {
-                _logger.LogWarning("User with Id : {userId} is not allowed to edit smtp setting with Id : {smtpSettingId}", CurrentUser.Id, id);
-                throw new ForbiddenException("Only user with admin role is allowed to update smtp setting");
-            }
+            IsAdmin(CurrentUser.Role);
 
             await _smtpSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _smtpSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
