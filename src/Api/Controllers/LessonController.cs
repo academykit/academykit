@@ -107,7 +107,7 @@ namespace Lingtren.Api.Controllers
         [HttpDelete("{lessonIdentity}")]
         public async Task<IActionResult> DeletAsync(string identity, string lessonIdentity)
         {
-            await _lessonService.DeleteLessonAsync(identity,lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
+            await _lessonService.DeleteLessonAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Lesson removed successfully." });
         }
 
