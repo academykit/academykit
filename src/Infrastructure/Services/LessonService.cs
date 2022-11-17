@@ -157,7 +157,28 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         public async Task DeleteLessonAsync(string identity, string lessonIdentity, Guid currentUserId)
         {
+            var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+            if (course == null)
+            {
+                _logger.LogWarning("DeleteLessonAsync(): Course with identity : {0} not found for user with id :{1}.", identity, currentUserId);
+                throw new EntityNotFoundException("Course was not found");
+            }
 
+            var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                predicate: p => (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity) && p.CourseId == course.Id
+                ).ConfigureAwait(false);
+            if (lesson == null)
+            {
+                _logger.LogWarning("DeleteLessonAsync(): Lesson with identity : {0} was not found for user with id : {1} and having course with id : {2}",
+                    lessonIdentity, currentUserId, course.Id);
+                throw new EntityNotFoundException("Lesson was not found");
+            }
+
+            if (lesson.Type == LessonType.RecordedVideo)
+            {
+                _logger.LogWarning("DeleteLessonAsync(): Lesson with id : {0} has type : {1}", lesson.Id, lesson.Type);
+                throw new EntityNotFoundException($"Lesson with status {lesson.Type} cannot be delete");
+            }
         }
 
         /// <summary>
