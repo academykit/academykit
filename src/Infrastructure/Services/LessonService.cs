@@ -177,8 +177,49 @@ namespace Lingtren.Infrastructure.Services
             if (lesson.Type == LessonType.RecordedVideo)
             {
                 _logger.LogWarning("DeleteLessonAsync(): Lesson with id : {0} has type : {1}", lesson.Id, lesson.Type);
-                throw new EntityNotFoundException($"Lesson with status {lesson.Type} cannot be delete");
+                throw new ForbiddenException($"Lesson with type {lesson.Type} cannot be delete");
             }
+
+            if (lesson.Type == LessonType.Exam)
+            {
+                var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id == lesson.QuestionSetId,
+                    include: src => src.Include(x => x.QuestionSetQuestions)).ConfigureAwait(false);
+                if (questionSet == null)
+                {
+                    _logger.LogWarning("DeleteLessonAsync(): Lesson with id:{0} and type: {1} doesnot contain question set with id : {2}",
+                                        lesson.Id, lesson.Type, lesson.QuestionSetId);
+                    throw new EntityNotFoundException($"Question set not found for lesson with type: {lesson.Type}");
+                }
+
+                var hasAnyAttempt = await _unitOfWork.GetRepository<QuestionSetSubmission>().ExistsAsync(
+                    predicate: p => p.QuestionSetId == lesson.QuestionSetId).ConfigureAwait(false);
+                if (hasAnyAttempt)
+                {
+                    _logger.LogWarning("DeleteLessonAsync(): Lesson with id: {0} and question set with id: {1} having type: {2} contains exam submission",
+                                        lesson.Id, lesson.QuestionSetId, lesson.Type);
+                    throw new ForbiddenException($"Lesson with type {lesson.Type} contains exam submission. So, it cannot be delete");
+                }
+
+                _unitOfWork.GetRepository<QuestionSetQuestion>().Delete(questionSet.QuestionSetQuestions);
+                _unitOfWork.GetRepository<QuestionSet>().Delete(questionSet);
+            }
+
+            if (lesson.Type == LessonType.LiveClass)
+            {
+                var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id == lesson.MeetingId).ConfigureAwait(false);
+                if (meeting == null)
+                {
+                    _logger.LogWarning("DeleteLessonAsync(): Lesson with id:{0} and type: {1} doesnot contain metting with id : {2}",
+                                       lesson.Id, lesson.Type, lesson.MeetingId);
+                    throw new EntityNotFoundException($"Meeting not found for lesson with type: {lesson.Type}");
+                }
+            }
+
+            _unitOfWork.GetRepository<Lesson>().Delete(lesson);
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
         }
 
         /// <summary>

@@ -57,6 +57,8 @@
         public IList<AssignmentAttachment> AssignmentAttachments { get; set; }
         public IList<AssignmentQuestion> AssignmentQuestions { get; set; }
         public IList<AssignmentMCQSubmission> AssignmentMCQSubmissions { get; set; }
+        public IList<QuestionTag> QuestionTags { get; set; }
+
 
         /// <summary>
         /// Get or set full name
