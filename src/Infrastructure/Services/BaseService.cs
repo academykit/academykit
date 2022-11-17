@@ -187,7 +187,10 @@
             {
                 return true;
             }
-            var isCourseMember = course.Group.GroupMembers.Any(x => x.UserId == currentUserId);
+            
+            var isCourseMember =await _unitOfWork.GetRepository<Group>().ExistsAsync(
+                predicate: p=> p.Courses.Any(x=>x.Id == course.Id) && p.GroupMembers.Any(x=>x.GroupId==course.GroupId)).ConfigureAwait(false);
+            
             return await Task.FromResult(isCourseMember);
         }
 

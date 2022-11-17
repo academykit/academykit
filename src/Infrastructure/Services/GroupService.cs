@@ -33,6 +33,7 @@
         protected override async Task CreatePreHookAsync(Group entity)
         {
             entity.Slug = CommonHelper.GetEntityTitleSlug<Group>(_unitOfWork, (slug) => q => q.Slug == slug, entity.Name);
+            await _unitOfWork.GetRepository<GroupMember>().InsertAsync(entity.GroupMembers).ConfigureAwait(false);
             await Task.FromResult(0);
         }
 

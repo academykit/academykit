@@ -114,7 +114,7 @@
             try
             {
                 var html = $"Dear {firstName},<br><br>";
-                html += $"Your account has been created in Vurilo Team. <br> Your Login Password is <b><u>{password}</u></b>.<br><br>";
+                html += $"Your account has been created in Vurilo Team. <br> Your Login Password is <b><u>{password}</u></b><br><br>";
                 html += _footerEmail;
 
                 var mail = new EmailRequestDto

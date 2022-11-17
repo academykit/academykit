@@ -9,7 +9,6 @@
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using LinqKit;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class GroupController : BaseApiController
@@ -69,9 +68,23 @@
                 Name = model.Name,
                 IsActive = true,
                 CreatedBy = CurrentUser.Id,
-                CreatedOn = DateTime.UtcNow
+                CreatedOn = currentTimeStamp,
+                UpdatedBy = CurrentUser.Id,
+                UpdatedOn = currentTimeStamp,
+                GroupMembers = new List<GroupMember>()
             };
 
+            entity.GroupMembers.Add(new GroupMember()
+            {
+                Id= Guid.NewGuid(),
+                GroupId = entity.Id,
+                UserId = CurrentUser.Id,
+                IsActive= true,
+                CreatedBy = CurrentUser.Id,
+                CreatedOn = currentTimeStamp,
+                UpdatedBy = CurrentUser.Id,
+                UpdatedOn = currentTimeStamp,
+            });
             var response = await _groupService.CreateAsync(entity).ConfigureAwait(false);
             return new GroupResponseModel(response);
         }
@@ -120,7 +133,7 @@
         /// <exception cref="EntityNotFoundException"></exception>
 
         [HttpGet("{identity}/members")]
-        public async Task<SearchResult<GroupMemberResponseModel>> SearchGroupMembers(string identity,[FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<GroupMemberResponseModel>> SearchGroupMembers(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
         {
             var group = await _groupService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
             if (group == null)
@@ -192,7 +205,7 @@
         public async Task<IActionResult> RemoveMember(string identity, Guid id)
         {
             await _groupService.RemoveMemberAsync(identity, id, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Member removed successfully."});
+            return Ok(new CommonResponseModel() { Success = true, Message = "Member removed successfully." });
         }
     }
 }
