@@ -11,6 +11,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Linq.Expressions;
 
     public class QuestionPoolTeacherService : BaseGenericService<QuestionPoolTeacher, QuestionPoolTeacherBaseSearchCriteria>, IQuestionPoolTeacherService
@@ -108,7 +109,18 @@
         /// <returns></returns>
         protected override async Task CheckDeletePermissionsAsync(QuestionPoolTeacher teacher, Guid currentUserId)
         {
-            await ValidateAndGetQuestionPool(currentUserId, questionPoolIdentity: teacher.QuestionPoolId.ToString(), validateForModify: true).ConfigureAwait(false);
+            if (teacher.UserId == currentUserId)
+            {
+                _logger.LogWarning("User with id : {userId} cannot remove ownself from question pool teacher with pool id : {poolId}", currentUserId, teacher.QuestionPoolId);
+                throw new ForbiddenException("User cannot be removed themselves");
+            }
+
+            var questionPool = await ValidateAndGetQuestionPool(currentUserId, questionPoolIdentity: teacher.QuestionPoolId.ToString(), validateForModify: true).ConfigureAwait(false);
+            if (questionPool.CreatedBy == teacher.UserId)
+            {
+                _logger.LogWarning("QuestionPool with Id {0} creator User Id {1} can't be delete from questionPool teacher.", questionPool.Id, teacher.UserId);
+                throw new ForbiddenException("Question pool author cannot be removed");
+            }
         }
 
         /// <summary>
@@ -126,8 +138,13 @@
             var questionPool = await ValidateAndGetQuestionPool(entity.CreatedBy, questionPoolIdentity: entity.QuestionPoolId.ToString(), validateForModify: true).ConfigureAwait(false);
             if (questionPool.CreatedBy == entity.UserId)
             {
-                _logger.LogWarning($"questionPool with Id {questionPool.Id} creator User Id {entity.UserId} can't be questionPool teacher.");
-                throw new ForbiddenException();
+                _logger.LogWarning("QuestionPool with Id : {0} creator User Id : {1} can't be questionPool teacher.", questionPool.Id, entity.UserId);
+                throw new ForbiddenException("Question pool author cannot be added");
+            }
+            if (questionPool.QuestionPoolTeachers.Any(p => p.UserId == entity.UserId))
+            {
+                _logger.LogWarning("User with Id {0} is already question pool teacher of question pool with Id  : {1}.", entity.UserId, questionPool.Id);
+                throw new ForbiddenException("User is already found as course teacher");
             }
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == entity.UserId).ConfigureAwait(false);
             CommonHelper.CheckFoundEntity(user);

@@ -35,7 +35,20 @@
         /// <returns></returns>
         protected override async Task CheckDeletePermissionsAsync(CourseTeacher teacher, Guid currentUserId)
         {
-            await ValidateAndGetCourse(currentUserId, courseIdentity: teacher.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
+            
+
+            if (teacher.UserId == currentUserId)
+            {
+                _logger.LogWarning("User with id : {0} cannot remove ownself from course teacher with course id : {1}", currentUserId, teacher.CourseId);
+                throw new ForbiddenException("User cannot be removed themselves");
+            }
+
+            var course = await ValidateAndGetCourse(currentUserId, courseIdentity: teacher.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
+            if (course.CreatedBy == teacher.UserId)
+            {
+                _logger.LogWarning("Course with Id {0} creator User Id {1} can't be delete from course teacher.", course.Id, teacher.UserId);
+                throw new ForbiddenException("Course author cannot be removed");
+            }
         }
 
         /// <summary>
@@ -53,20 +66,20 @@
             var course = await ValidateAndGetCourse(entity.CreatedBy, courseIdentity: entity.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
             if (course.CreatedBy == entity.UserId)
             {
-                _logger.LogWarning($"course with Id {course.Id} creator User Id {entity.UserId} can't be course teacher.");
-                throw new ForbiddenException();
+                _logger.LogWarning("course with Id {0} creator User Id {1} can't be course teacher.", course.Id, entity.UserId);
+                throw new ForbiddenException("Course author cannot be added");
             }
             if (course.CourseTeachers.Any(p => p.UserId == entity.UserId))
             {
-                _logger.LogWarning($"User with Id {entity.UserId} is already course teacher of course with Id {course.Id}.");
-                throw new ForbiddenException();
+                _logger.LogWarning("User with Id {0} is already course teacher of course with Id {1}.", entity.UserId, course.Id);
+                throw new ForbiddenException("User is already found as course teacher");
             }
             if (course.GroupId.HasValue)
             {
                 var canAccess = await ValidateUserCanAccessGroupCourse(course, entity.UserId).ConfigureAwait(false);
                 if (!canAccess)
                 {
-                    _logger.LogWarning($"User with Id {entity.UserId} can't access course with Id {course.Id}.");
+                    _logger.LogWarning("User with Id {0} can't access course with Id {1}.", entity.UserId, course.Id);
                     throw new ForbiddenException("Unauthorized user to added as teacher in group course.");
                 }
             }
