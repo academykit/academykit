@@ -47,8 +47,6 @@ namespace Lingtren.Api.Controllers
         [HttpGet]
         public async Task<GeneralSettingResponseModel> Get()
         {
-            IsAdmin(CurrentUser.Role);
-           
             var model = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return new GeneralSettingResponseModel(model);
         }
