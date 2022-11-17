@@ -64,6 +64,16 @@
             }
         }
 
+        /// <summary>
+        /// If entity needs to support the get by slug or id then has to override this method.
+        /// </summary>
+        /// <param name="identity">The id or slug</param>
+        /// <returns>The expression to filter by slug or slug</returns>
+        protected override Expression<Func<QuestionPoolTeacher, bool>> PredicateForIdOrSlug(string identity)
+        {
+            return p => p.Id.ToString() == identity;
+        }
+
 
         #region  Private Region
 

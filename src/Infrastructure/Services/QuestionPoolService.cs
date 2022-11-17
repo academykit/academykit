@@ -61,7 +61,7 @@
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
             }
-            return predicate;
+            return predicate.And(p=>p.CreatedBy == criteria.CurrentUserId || p.QuestionPoolTeachers.Any(x=>x.UserId == criteria.CurrentUserId));
         }
 
         /// <summary>

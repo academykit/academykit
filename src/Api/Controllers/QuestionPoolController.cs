@@ -30,6 +30,8 @@
         public async Task<SearchResult<QuestionPoolResponseModel>> SearchAsync([FromQuery] BaseSearchCriteria searchCriteria)
         {
             IsTeacherAdmin(CurrentUser.Role);
+
+            searchCriteria.CurrentUserId = CurrentUser.Id;
             var searchResult = await _questionPoolService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             var response = new SearchResult<QuestionPoolResponseModel>
