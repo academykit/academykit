@@ -120,7 +120,7 @@ namespace Lingtren.Api.Controllers
         public async Task<CourseResponseModel> Get(string identity)
         {
             var model = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return new CourseResponseModel(model);
+            return new CourseResponseModel(model,fetchSection:true);
         }
 
         /// <summary>

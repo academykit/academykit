@@ -17,9 +17,10 @@
         public Guid LevelId { get; set; }
         public string LevelName { get; set; }
         public IList<CourseTagResponseModel> Tags { get; set; }
+        public IList<SectionResponseModel> Sections { get; set; }
         public UserModel User { get; set; }
 
-        public CourseResponseModel(Course model)
+        public CourseResponseModel(Course model, bool fetchSection = false)
         {
             Id = model.Id;
             Slug = model.Slug;
@@ -34,8 +35,13 @@
             LevelId = model.LevelId;
             LevelName = model.Level?.Name;
             Tags = new List<CourseTagResponseModel>();
+            Sections = new List<SectionResponseModel>();
             User = model.User != null ? new UserModel(model.User) : new UserModel();
             model.CourseTags.ToList().ForEach(item => Tags.Add(new CourseTagResponseModel(item)));
+            if (fetchSection)
+            {
+                model.Sections.ToList().ForEach(item => Sections.Add(new SectionResponseModel(item,fetchLesson:true)));
+            }
         }
     }
 

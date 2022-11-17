@@ -192,6 +192,18 @@ namespace Lingtren.Infrastructure.Services
                 }
             }
         }
+
+        /// <summary>
+        /// Handel to populate live session retrieved entity
+        /// </summary>
+        /// <param name="entity">the instance of <see cref="LiveSession"/></param>
+        /// <returns></returns>
+        protected override async Task PopulateRetrievedEntity(Course entity)
+        {
+            var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(predicate: p => p.CourseId == entity.Id,
+                include:src=>src.Include(x=>x.Lessons).Include(x=>x.User)).ConfigureAwait(false);
+            entity.Sections = sections;
+        }
         #endregion Protected Methods
 
         /// <summary>

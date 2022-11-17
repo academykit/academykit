@@ -33,8 +33,12 @@ namespace Lingtren.Infrastructure.Services
         protected override Expression<Func<Lesson, bool>> ConstructQueryConditions(Expression<Func<Lesson, bool>> predicate, LessonBaseSearchCriteria criteria)
         {
             CommonHelper.ValidateArgumentNotNullOrEmpty(criteria.CourseIdentity, nameof(criteria.CourseIdentity));
+            CommonHelper.ValidateArgumentNotNullOrEmpty(criteria.SectionIdentity, nameof(criteria.SectionIdentity));
             var course = ValidateAndGetCourse(criteria.CurrentUserId, criteria.CourseIdentity).Result;
-            predicate = predicate.And(p => p.CourseId == course.Id);
+            var section = _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
+                predicate: p => p.CourseId == course.Id && (p.Id.ToString() == criteria.SectionIdentity || p.Slug == criteria.SectionIdentity)).Result;
+
+            predicate = predicate.And(p => p.CourseId == course.Id && p.SectionId == section.Id);
             return predicate;
         }
 

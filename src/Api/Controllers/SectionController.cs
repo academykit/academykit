@@ -100,7 +100,7 @@ namespace Lingtren.Api.Controllers
                 throw new EntityNotFoundException("Course not found");
             }
             var model = await _sectionService.GetByIdOrSlugAsync(sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
-            return new SectionResponseModel(model);
+            return new SectionResponseModel(model,fetchLesson:true);
         }
 
         /// <summary>
