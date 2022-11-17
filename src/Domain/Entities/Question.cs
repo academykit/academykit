@@ -14,5 +14,6 @@ namespace Lingtren.Domain.Entities
         public IList<QuestionPoolQuestion> QuestionPoolQuestions { get; set; }
         public IList<QuestionSetQuestion> QuestionSetQuestions { get; set; }
         public IList<QuestionTag> QuestionTags { get; set; }
+        public IList<AssignmentQuestion> AssignmentQuestions { get; set; }
     }
 }

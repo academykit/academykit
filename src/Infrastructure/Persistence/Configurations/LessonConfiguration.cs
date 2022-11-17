@@ -32,6 +32,8 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.UpdatedOn).HasColumnName("updated_on").HasColumnType("DATETIME").IsRequired(false);
             builder.HasMany(x => x.WatchHistories).WithOne(x => x.Lesson).HasForeignKey(x => x.LessonId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.CourseEnrollments).WithOne(x => x.Lesson).HasForeignKey(x => x.CurrentLessonId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.Assignments).WithOne(x => x.Lesson).HasForeignKey(x => x.LessonId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.Recordings).WithOne(x => x.Lesson).HasForeignKey(x => x.LessonId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

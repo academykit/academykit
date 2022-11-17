@@ -53,6 +53,10 @@
         public IList<QuestionSetResult> QuestionSetResults { get; set; }
         public IList<CourseEnrollment> CourseEnrollments { get; set; }
         public IList<WatchHistory> WatchHistories { get; set; }
+        public IList<Assignment> Assignments { get; set; }
+        public IList<AssignmentAttachment> AssignmentAttachments { get; set; }
+        public IList<AssignmentQuestion> AssignmentQuestions { get; set; }
+        public IList<AssignmentMCQSubmission> AssignmentMCQSubmissions { get; set; }
 
         /// <summary>
         /// Get or set full name
