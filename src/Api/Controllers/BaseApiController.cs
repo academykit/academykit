@@ -6,7 +6,6 @@
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using System.Data;
 
     [ApiVersion("1.0")]
     [Route("api/[controller]")]

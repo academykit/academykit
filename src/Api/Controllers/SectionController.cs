@@ -34,7 +34,7 @@ namespace Lingtren.Api.Controllers
         [HttpGet]
         public async Task<SearchResult<SectionResponseModel>> SearchAsync(string identity, [FromQuery] SectionBaseSearchCriteria searchCriteria)
         {
-            var course = await _courseService.GetByIdOrSlugAsync(identity,currentUserId:CurrentUser.Id).ConfigureAwait(false);
+            var course = await _courseService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
             if (course == null)
             {
                 throw new EntityNotFoundException("Course not found");
@@ -100,7 +100,7 @@ namespace Lingtren.Api.Controllers
                 throw new EntityNotFoundException("Course not found");
             }
             var model = await _sectionService.GetByIdOrSlugAsync(sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
-            return new SectionResponseModel(model,fetchLesson:true);
+            return new SectionResponseModel(model, fetchLesson: true);
         }
 
         /// <summary>

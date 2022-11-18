@@ -28,6 +28,7 @@
         public LessonResponseModel(Lesson model)
         {
             Id = model.Id;
+            Name = model.Name;
             Slug = model.Slug;
             Description = model.Description;
             VideoUrl = model.VideoUrl;

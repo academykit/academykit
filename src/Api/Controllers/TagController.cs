@@ -5,7 +5,6 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using LinqKit;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
     using System.Threading.Tasks;

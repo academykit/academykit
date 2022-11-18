@@ -73,7 +73,7 @@
 
             var course = await _courseService.GetByIdOrSlugAsync(model.CourseIdentity, CurrentUser.Id).ConfigureAwait(false);
             var user = await _userService.GetUserByEmailAsync(model.Email).ConfigureAwait(false);
-            
+
             if (user == null)
             {
                 throw new EntityNotFoundException("User not found");

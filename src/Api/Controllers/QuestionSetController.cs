@@ -1,6 +1,5 @@
 ﻿namespace Lingtren.Api.Controllers
 {
-    using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;

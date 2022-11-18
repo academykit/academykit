@@ -76,10 +76,10 @@
 
             entity.GroupMembers.Add(new GroupMember()
             {
-                Id= Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 GroupId = entity.Id,
                 UserId = CurrentUser.Id,
-                IsActive= true,
+                IsActive = true,
                 CreatedBy = CurrentUser.Id,
                 CreatedOn = currentTimeStamp,
                 UpdatedBy = CurrentUser.Id,

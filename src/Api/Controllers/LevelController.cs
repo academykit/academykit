@@ -3,7 +3,6 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class LevelController : BaseApiController
