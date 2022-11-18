@@ -62,6 +62,34 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
+        /// <summary>
+        /// Handle to upload the video file
+        /// </summary>
+        /// <param name="file"> the instance of <see cref="file" /> .</param>
+        /// <returns> the file url </returns>
+        public async Task<string> UploadVideo(IFormFile file)
+        {
+            try
+            {
+                var key = Guid.NewGuid().ToString() + "_" + string.Concat(file.FileName.Where(c => !Char.IsWhiteSpace(c)));
+                var transferUtility = new TransferUtility(s3Client);
+                var request = new TransferUtilityUploadRequest
+                {
+                    BucketName = this.imageBucket,
+                    Key = key,
+                    ContentType = file.ContentType,
+                    InputStream = file.OpenReadStream(),
+                };
+                await transferUtility.UploadAsync(request);
+                return $"{cloudFront}/{key}";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
 
         /// <summary>
         /// handle to convert file to byte
