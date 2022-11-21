@@ -41,9 +41,9 @@
         public DbSet<WatchHistory> WatchHistories { get; set; }
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<AssignmentAttachment> AssignmentAttachments { get; set; }
-        public DbSet<AssignmentQuestion> AssignmentQuestions { get; set; }
         public DbSet<Recording> Recordings { get; set; }
         public DbSet<AssignmentMCQSubmission> AssignmentMCQSubmissions { get; set; }
+        public DbSet<AssignmentQuestionOption> AssignmentQuestionOptions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

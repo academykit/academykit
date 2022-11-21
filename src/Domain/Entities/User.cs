@@ -55,9 +55,9 @@
         public IList<WatchHistory> WatchHistories { get; set; }
         public IList<Assignment> Assignments { get; set; }
         public IList<AssignmentAttachment> AssignmentAttachments { get; set; }
-        public IList<AssignmentQuestion> AssignmentQuestions { get; set; }
         public IList<AssignmentMCQSubmission> AssignmentMCQSubmissions { get; set; }
         public IList<QuestionTag> QuestionTags { get; set; }
+        public IList<AssignmentQuestionOption> AssignmentQuestionOptions { get; set; }
 
 
         /// <summary>

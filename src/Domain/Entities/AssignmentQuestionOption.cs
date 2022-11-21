@@ -2,13 +2,13 @@ namespace Lingtren.Domain.Entities
 {
     using Lingtren.Domain.Common;
 
-    public class AssignmentMCQSubmission : AuditableEntity
+    public class AssignmentQuestionOption : AuditableEntity
     {
         public Guid AssignmentId { get; set; }
         public Assignment Assignment { get; set; }
-        public Guid UserId { get; set; }
-        public User User { get; set; }
+        public string Option { get; set; }
         public bool IsCorrect { get; set; }
-        public string SelectedOption { get; set; }
+        public int Order { get; set; }
+        public User User { get; set; }
     }
 }

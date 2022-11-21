@@ -22,7 +22,6 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.HasMany(x => x.QuestionOptions).WithOne(x => x.Question).HasForeignKey(x => x.QuestionId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.QuestionPoolQuestions).WithOne(x => x.Question).HasForeignKey(x => x.QuestionId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.QuestionSetQuestions).WithOne(x => x.Question).HasForeignKey(x => x.QuestionId).OnDelete(DeleteBehavior.NoAction); 
-            builder.HasMany(x => x.AssignmentQuestions).WithOne(x => x.Question).HasForeignKey(x => x.QuestionId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
