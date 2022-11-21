@@ -109,8 +109,14 @@ namespace Lingtren.Infrastructure.Services
                 throw new EntityNotFoundException("Course not found");
             }
             var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
-                predicate: p => p.Id.ToString() == model.SectionIdentity || p.Slug == model.SectionIdentity).ConfigureAwait(false);
-
+                predicate: p => p.CourseId == course.Id && 
+                            p.Id.ToString() == model.SectionIdentity || p.Slug == model.SectionIdentity).ConfigureAwait(false);
+            if (section == null)
+            {
+                _logger.LogWarning("Section with identity: {identity} not found for user with id:{id} and course with id: {courseId}",
+                                        courseIdentity, currentUserId,course.Id);
+                throw new EntityNotFoundException("Course not found");
+            }
             var currentTimeStamp = DateTime.UtcNow;
 
             var lesson = new Lesson
