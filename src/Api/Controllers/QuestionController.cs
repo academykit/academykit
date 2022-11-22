@@ -36,10 +36,11 @@
         /// <returns>The paginated search result.</returns>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<SearchResult<QuestionResponseModel>> SearchAsync([FromQuery] QuestionBaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<QuestionResponseModel>> SearchAsync(string identity,[FromQuery] QuestionBaseSearchCriteria searchCriteria)
         {
-            CommonHelper.ValidateArgumentNotNullOrEmpty(searchCriteria.PoolIdentity, nameof(searchCriteria.PoolIdentity));
+            CommonHelper.ValidateArgumentNotNullOrEmpty(identity, nameof(identity));
             searchCriteria.CurrentUserId = CurrentUser.Id;
+            searchCriteria.PoolIdentity = identity;
             var searchResult = await _questionService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             var response = new SearchResult<QuestionResponseModel>
@@ -138,7 +139,7 @@
                 throw new EntityNotFoundException("Question pool not found");
             }
 
-            await _questionService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            await _questionService.DeleteAsync(id.ToString(), CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Question removed successfully." });
         }
 
