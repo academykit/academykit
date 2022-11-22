@@ -54,7 +54,7 @@
         {
             Id = courseTag.Id;
             TagId = courseTag.TagId;
-            TagName = courseTag.Tag.Name;
+            TagName = courseTag.Tag?.Name;
         }
     }
 }

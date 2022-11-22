@@ -1,6 +1,7 @@
 namespace Lingtren.Application.Common.Interfaces
 {
     using Lingtren.Application.Common.Dtos;
+    using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using System;
@@ -31,5 +32,14 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the task complete</returns>
         Task DeleteCourseAsync(string identity, Guid currentUserId);
+        
+        /// <summary>
+        /// Handle to update course
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="model">the instance of <see cref="CourseRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns></returns>
+        Task<Course> UpdateAsync(string identity, CourseRequestModel model, Guid currentUserId);
     }
 }

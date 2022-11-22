@@ -133,36 +133,7 @@ namespace Lingtren.Api.Controllers
         public async Task<CourseResponseModel> UpdateAsync(string identity, CourseRequestModel model)
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            var currentTimeStamp = DateTime.UtcNow;
-
-            existing.Id = existing.Id;
-            existing.Name = model.Name;
-            existing.Language = model.Language;
-            existing.GroupId = model.GroupId;
-            existing.LevelId = model.LevelId;
-            existing.Duration = model.Duration;
-            existing.Description = model.Description;
-            existing.ThumbnailUrl = model.ThumbnailUrl;
-            existing.UpdatedBy = CurrentUser.Id;
-            existing.UpdatedOn = currentTimeStamp;
-            existing.CourseTags = new List<CourseTag>();
-
-            foreach (var tagId in model.TagIds)
-            {
-                existing.CourseTags.Add(new CourseTag
-                {
-                    Id = Guid.NewGuid(),
-                    TagId = tagId,
-                    CourseId = existing.Id,
-                    CreatedOn = currentTimeStamp,
-                    CreatedBy = CurrentUser.Id,
-                    UpdatedOn = currentTimeStamp,
-                    UpdatedBy = CurrentUser.Id,
-                });
-            }
-
-            var savedEntity = await _courseService.UpdateAsync(existing).ConfigureAwait(false);
+            var savedEntity = await _courseService.UpdateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
             return new CourseResponseModel(savedEntity);
         }
 

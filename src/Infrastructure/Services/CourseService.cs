@@ -3,6 +3,7 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
@@ -31,29 +32,6 @@ namespace Lingtren.Infrastructure.Services
             await _unitOfWork.GetRepository<CourseTag>().InsertAsync(entity.CourseTags).ConfigureAwait(false);
             await _unitOfWork.GetRepository<CourseTeacher>().InsertAsync(entity.CourseTeachers).ConfigureAwait(false);
             await Task.FromResult(0);
-        }
-
-        /// <summary>
-        /// Updates the <paramref name="existing"/> entity according to <paramref name="newEntity"/> entity.
-        /// </summary>
-        /// <remarks>Override in child services to update navigation properties.</remarks>
-        /// <param name="existing">The existing entity.</param>
-        /// <param name="newEntity">The new entity.</param>
-        protected override async Task UpdateEntityFieldsAsync(Course existing, Course newEntity)
-        {
-            if (existing.CourseTags.Count > 0)
-            {
-                _unitOfWork.GetRepository<CourseTag>().Delete(existing.CourseTags);
-            }
-            existing.CourseTags = new List<CourseTag>();
-            existing.CourseTags.AddRange(newEntity.CourseTags);
-            _unitOfWork.DbContext.Entry(existing).CurrentValues.SetValues(newEntity);
-            existing.Level = null;
-            if (existing.CourseTags.Count > 0)
-            {
-                await _unitOfWork.GetRepository<CourseTag>().InsertAsync(existing.CourseTags).ConfigureAwait(false);
-            }
-            _unitOfWork.GetRepository<Course>().Update(existing);
         }
 
         /// <summary>
@@ -201,10 +179,63 @@ namespace Lingtren.Infrastructure.Services
         protected override async Task PopulateRetrievedEntity(Course entity)
         {
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(predicate: p => p.CourseId == entity.Id,
-                include:src=>src.Include(x=>x.Lessons).Include(x=>x.User)).ConfigureAwait(false);
+                include: src => src.Include(x => x.Lessons).Include(x => x.User)).ConfigureAwait(false);
             entity.Sections = sections;
         }
         #endregion Protected Methods
+
+
+        /// <summary>
+        /// Handle to update course
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="model">the instance of <see cref="CourseRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns></returns>
+        public async Task<Course> UpdateAsync(string identity, CourseRequestModel model, Guid currentUserId)
+        {
+            var existing = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+            var currentTimeStamp = DateTime.UtcNow;
+
+            existing.Id = existing.Id;
+            existing.Name = model.Name;
+            existing.Language = model.Language;
+            existing.GroupId = model.GroupId;
+            existing.LevelId = model.LevelId;
+            existing.Duration = model.Duration;
+            existing.Description = model.Description;
+            existing.ThumbnailUrl = model.ThumbnailUrl;
+            existing.UpdatedBy = currentUserId;
+            existing.UpdatedOn = currentTimeStamp;
+
+            var newCourseTags = new List<CourseTag>();
+
+            foreach (var tagId in model.TagIds)
+            {
+                newCourseTags.Add(new CourseTag
+                {
+                    Id = Guid.NewGuid(),
+                    TagId = tagId,
+                    CourseId = existing.Id,
+                    CreatedOn = currentTimeStamp,
+                    CreatedBy = currentUserId,
+                    UpdatedOn = currentTimeStamp,
+                    UpdatedBy = currentUserId,
+                });
+            }
+
+            if (existing.CourseTags.Count > 0)
+            {
+                _unitOfWork.GetRepository<CourseTag>().Delete(existing.CourseTags);
+            }
+            if (newCourseTags.Count > 0)
+            {
+                await _unitOfWork.GetRepository<CourseTag>().InsertAsync(newCourseTags).ConfigureAwait(false);
+            }
+            _unitOfWork.GetRepository<Course>().Update(existing);
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            return await GetByIdOrSlugAsync(identity,currentUserId).ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Handle to change course status
