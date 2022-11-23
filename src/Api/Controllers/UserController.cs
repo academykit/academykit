@@ -81,6 +81,7 @@
                 Email = model.Email,
                 MobileNumber = model.MobileNumber,
                 Bio = model.Bio,
+                ImageUrl = model.ImageUrl,
                 PublicUrls = model.PublicUrls,
                 IsActive = true,
                 Profession = model.Profession,
@@ -138,6 +139,7 @@
             existing.MobileNumber = model.MobileNumber;
             existing.Bio = model.Bio;
             existing.PublicUrls = model.PublicUrls;
+            existing.ImageUrl = model.ImageUrl;
             existing.Profession = model.Profession;
             existing.Role = model.Role;
             existing.UpdatedBy = CurrentUser.Id;
