@@ -23,7 +23,7 @@
         public Guid SectionId { get; set; }
         public string SectionName { get; set; }
         public Guid? MeetingId { get; set; }
-        public string MeetingName { get; set; }
+        public Guid? QuestionSetId { get; set; }
         public UserModel User { get; set; }
         public LessonResponseModel(Lesson model)
         {
@@ -46,6 +46,7 @@
             SectionId = model.SectionId;
             SectionName = model.Section?.Name;
             MeetingId = model.MeetingId;
+            QuestionSetId = model.QuestionSetId;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
     }
