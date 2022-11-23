@@ -38,6 +38,7 @@
             IsDeleted = model.IsDeleted;
             IsPreview = model.IsPreview;
             IsMandatory = model.IsMandatory;
+            Type = model.Type;
             IsDeleted = model.IsDeleted;
             Status = model.Status;
             CourseId = model.CourseId;

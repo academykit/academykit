@@ -262,6 +262,7 @@ namespace Lingtren.Infrastructure.Services
             };
             lesson.Duration = model.QuestionSet.Duration;
             lesson.QuestionSetId = lesson.QuestionSet.Id;
+            lesson.Name = lesson.QuestionSet.Name;
 
             await _unitOfWork.GetRepository<QuestionSet>().InsertAsync(lesson.QuestionSet).ConfigureAwait(false);
         }
@@ -285,7 +286,5 @@ namespace Lingtren.Infrastructure.Services
 
             await _unitOfWork.GetRepository<Meeting>().InsertAsync(lesson.Meeting).ConfigureAwait(false);
         }
-
-
     }
 }

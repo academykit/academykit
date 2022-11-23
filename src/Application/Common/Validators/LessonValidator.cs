@@ -8,7 +8,8 @@
         public LessonValidator()
         {
             RuleFor(x => x.SectionIdentity).NotNull().NotEmpty().WithMessage("Section identity is required");
-            RuleFor(x => x.Name).NotNull().NotEmpty().WithMessage("Lesson name is required");
+            RuleFor(x => x.Name).NotNull().NotEmpty().When(x => x.Type != LessonType.Exam)
+                                    .WithMessage($"Lesson name is required");
             RuleFor(x => x.Type).NotNull().NotEmpty().WithMessage("Lesson type is required").IsInEnum().WithMessage("Invalid lesson type");
             RuleFor(x => x.DocumentUrl).NotNull().NotEmpty().When(x => x.Type == LessonType.Document)
                                     .WithMessage("Document is required for lesson type is document");

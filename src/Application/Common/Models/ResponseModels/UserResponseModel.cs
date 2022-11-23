@@ -14,14 +14,11 @@
         public string Profession { get; set; }
         public string Address { get; set; }
         public string Bio { get; set; }
+        public string ImageUrl { get; set; }
         public string PublicUrls { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedOn { get; set; }
         public string FullName { get; set; }
-        public UserResponseModel()
-        {
-
-        }
         public UserResponseModel(User user)
         {
             Id = user.Id;
@@ -34,6 +31,7 @@
             Profession = user.Profession;
             Address = user.Address;
             Bio = user.Bio;
+            ImageUrl = user.ImageUrl;
             PublicUrls = user.PublicUrls;
             IsActive = user.IsActive;
             CreatedOn = user.CreatedOn;
