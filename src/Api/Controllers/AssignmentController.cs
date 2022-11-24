@@ -54,6 +54,8 @@
         [HttpPost]
         public async Task<AssignmentResponseModel> CreateAsync(AssignmentRequestModel model)
         {
+            IsTeacherAdmin(CurrentUser.Role);
+
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
             var entity = new Assignment
@@ -133,22 +135,23 @@
         [HttpPut("{identity}")]
         public async Task<AssignmentResponseModel> UpdateAsync(string identity, AssignmentRequestModel model)
         {
-            IsAdmin(CurrentUser.Role);
+            IsTeacherAdmin(CurrentUser.Role);
 
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _assignmentService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            var currentTimeStamp = DateTime.UtcNow;
+            //await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            //var existing = await _assignmentService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            //var currentTimeStamp = DateTime.UtcNow;
 
-            existing.Id = existing.Id;
-            existing.Name = model.Name;
-            existing.Hint = model.Hint;
-            existing.LessonId = model.LessonId;
-            existing.Type = model.Type;
-            existing.Description = model.Description;
-            existing.UpdatedBy = CurrentUser.Id;
-            existing.UpdatedOn = currentTimeStamp;
+            //existing.Id = existing.Id;
+            //existing.Name = model.Name;
+            //existing.Hint = model.Hint;
+            //existing.LessonId = model.LessonId;
+            //existing.Type = model.Type;
+            //existing.Description = model.Description;
+            //existing.UpdatedBy = CurrentUser.Id;
+            //existing.UpdatedOn = currentTimeStamp;
 
-            var savedEntity = await _assignmentService.UpdateAsync(existing).ConfigureAwait(false);
+            var savedEntity = await _assignmentService.UpdateAsync(identity,model,CurrentUser.Id).ConfigureAwait(false);
             return new AssignmentResponseModel(savedEntity);
         }
 

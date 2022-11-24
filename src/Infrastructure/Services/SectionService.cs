@@ -157,7 +157,7 @@ namespace Lingtren.Infrastructure.Services
                 predicate: p => p.Id != entity.Id && p.CourseId ==entity.CourseId && p.Name.ToLower() == entity.Name.ToLower() && !p.IsDeleted).ConfigureAwait(false);
             if (sectionExist)
             {
-                _logger.LogWarning("Duplicate section name : {name} is found for the department with id : {id}", entity.Name, entity.Id);
+                _logger.LogWarning("Duplicate section name : {name} is found for the section with id : {id}", entity.Name, entity.Id);
                 throw new ServiceException("Duplicate section name is found");
             }
         }
