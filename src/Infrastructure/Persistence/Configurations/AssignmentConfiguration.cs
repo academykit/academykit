@@ -23,6 +23,6 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.HasMany(x => x.AssignmentAttachments).WithOne(x => x.Assignment).HasForeignKey(x => x.AssignmentId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.AssignmentMCQSubmissions).WithOne(x => x.Assignment).HasForeignKey(x => x.AssignmentId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.AssignmentQuestionOptions).WithOne(x => x.Assignment).HasForeignKey(x => x.AssignmentId).OnDelete(DeleteBehavior.NoAction);
-        }   
+        }
     }
 }

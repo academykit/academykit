@@ -15,7 +15,6 @@
             IUnitOfWork unitOfWork,
             ILogger<QuestionSetService> logger) : base(unitOfWork, logger)
         {
-
         }
 
         /// <summary>

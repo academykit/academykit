@@ -467,4 +467,3 @@
         void ChangeEntityState(TEntity entity, EntityState state);
     }
 }
-

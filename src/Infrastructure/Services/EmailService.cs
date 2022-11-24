@@ -30,7 +30,7 @@
         {
             try
             {
-                string filePath =Path.Combine(_hostingEnvironment.WebRootPath, Path.Combine("Templates", "DefaultTemplate.html"));
+                string filePath = Path.Combine(_hostingEnvironment.WebRootPath, Path.Combine("Templates", "DefaultTemplate.html"));
                 using StreamReader str = new(filePath);
                 string htmlBody = str.ReadToEnd();
 
@@ -78,7 +78,6 @@
         /// <param name="firstName">the first name of the receiver</param>
         /// <param name="resetToken">the reset token</param>
         /// <returns></returns>
-
         public async Task SendForgetPasswordEmail(string emailAddress, string firstName, string resetToken)
         {
             try
@@ -108,7 +107,6 @@
         /// <param name="firstName">the first name of the receiver</param>
         /// <param name="password">the login password of the receiver</param>
         /// <returns></returns>
-
         public async Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password)
         {
             try

@@ -39,9 +39,8 @@ namespace Lingtren.Api.Controllers
         #region general settings
 
         /// <summary>
-        /// get general  setting by id
+        /// get general setting
         /// </summary>
-        /// <param name="id"> the general setting id</param>
         /// <returns> the instance of <see cref="GeneralSettingResponseModel" /> .</returns>
         [HttpGet]
         public async Task<GeneralSettingResponseModel> Get()
@@ -89,7 +88,7 @@ namespace Lingtren.Api.Controllers
         #region zoom settings
 
         /// <summary>
-        /// get zoom  setting by id
+        /// get zoom setting
         /// </summary>
         /// <returns> the instance of <see cref="ZoomSettingResponseModel" /> .</returns>
         [HttpGet("zoom")]
@@ -138,9 +137,8 @@ namespace Lingtren.Api.Controllers
         #region smtp settings
 
         /// <summary>
-        /// get smtp  setting by id
+        /// get smtp setting
         /// </summary>
-        /// <param name="id"> the smtp setting id</param>
         /// <returns> the instance of <see cref="SMTPSettingResponseModel" /> .</returns>
         [HttpGet("smtp")]
         public async Task<SMTPSettingResponseModel> GetSMTPSetting()
@@ -187,7 +185,5 @@ namespace Lingtren.Api.Controllers
         }
 
         #endregion smtp settings
-
-
     }
 }

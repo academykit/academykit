@@ -40,7 +40,7 @@
             catch (Exception ex)
 #pragma warning restore CA1031 // Do not catch general exception types
             {
-                await this.HandleExceptionAsync(context, ex, logger).ConfigureAwait(false);
+                await HandleExceptionAsync(context, ex, logger).ConfigureAwait(false);
             }
         }
 
@@ -50,18 +50,16 @@
         /// <param name="context">The current http context.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="logger">The logger instance.</param>
-        private async Task HandleExceptionAsync(HttpContext context, Exception exception,
+        private static async Task HandleExceptionAsync(HttpContext context, Exception exception,
             ILogger<ExceptionHandlingMiddleware> logger)
         {
-            var statusCode = default(HttpStatusCode);
-
-            object message = null;
-
             var isNotDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != Environments.Development;
 
+            HttpStatusCode statusCode;
+            object message;
             switch (exception)
             {
-                case SecurityException security:
+                case SecurityException:
                     statusCode = HttpStatusCode.Forbidden;
 
                     message = new ApiError
@@ -111,8 +109,6 @@
                         Message = serviceError.Message
                     };
                     break;
-
-                case TaskCanceledException taskCanceled:
                 default:
                     statusCode = HttpStatusCode.InternalServerError;
 
@@ -133,7 +129,7 @@
             }
 
             logger.LogError("EXCEPTION HANDLING {statusCode} | {exception}", statusCode, exception);
-            DefaultContractResolver contractResolver = new DefaultContractResolver
+            DefaultContractResolver contractResolver = new()
             {
                 NamingStrategy = new CamelCaseNamingStrategy()
             };
@@ -149,5 +145,4 @@
             await context.Response.WriteAsync(result, Encoding.UTF8).ConfigureAwait(false);
         }
     }
-
 }

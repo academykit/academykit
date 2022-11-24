@@ -59,7 +59,6 @@
         public IList<QuestionTag> QuestionTags { get; set; }
         public IList<AssignmentQuestionOption> AssignmentQuestionOptions { get; set; }
 
-
         /// <summary>
         /// Get or set full name
         /// </summary>

@@ -14,7 +14,6 @@
             IUnitOfWork unitOfWork,
             ILogger<ZoomSettingService> logger) : base(unitOfWork, logger)
         {
-
         }
         /// <summary>
         /// Includes the navigation properties loading for the entity.

@@ -15,7 +15,7 @@
         /// <summary>
         /// Represents the JSON serialize settings.
         /// </summary>
-        public static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+        public static readonly JsonSerializerSettings SerializerSettings = new()
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
@@ -57,7 +57,6 @@
             var email = claimsPrincipal.GetClaim(ClaimTypes.Email, isRequired: false);
             var mobileNumber = claimsPrincipal.GetClaim("mobile_number", isRequired: false);
             var role = claimsPrincipal.GetClaim(ClaimTypes.Role, isRequired: true);
-
 
             return new CurrentUser { Id = Guid.Parse(userId), Name = userName, Email = email, MobileNumber = mobileNumber, Role = Enum.Parse<UserRole>(role) };
         }

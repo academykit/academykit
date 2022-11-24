@@ -132,7 +132,7 @@
         }
 
         /// <summary>
-        /// Validate user and get courses 
+        /// Validate user and get courses
         /// </summary>
         /// <param name="currentUserId">the current user id</param>
         /// <param name="courseIdentity">the course id or slug</param>
@@ -151,17 +151,16 @@
                 include: s => s.Include(x => x.CourseTeachers)
                                 .Include(x => x.CourseEnrollments)
                                 .Include(x => x.CourseTags)).ConfigureAwait(false);
-                                
+
             CommonHelper.CheckFoundEntity(course);
 
-            if(course.GroupId != default)
+            if (course.GroupId != default)
             {
                 course.Group = new Group();
                 course.Group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == course.GroupId,
-                    include: src=>src.Include(x=>x.GroupMembers)).ConfigureAwait(false);
+                    include: src => src.Include(x => x.GroupMembers)).ConfigureAwait(false);
             }
-           
 
             // if current user is the creator he can modify/access the course
             if (course.CreatedBy.Equals(currentUserId) || course.CourseTeachers.Any(x => x.UserId == currentUserId))
@@ -187,18 +186,18 @@
             {
                 return true;
             }
-            
-            var isCourseMember =await _unitOfWork.GetRepository<Group>().ExistsAsync(
-                predicate: p=> p.Courses.Any(x=>x.Id == course.Id) && p.GroupMembers.Any(x=>x.GroupId==course.GroupId)).ConfigureAwait(false);
-            
+            var isCourseMember = await _unitOfWork.GetRepository<Group>().ExistsAsync(
+                predicate: p => p.Courses.Any(x => x.Id == course.Id)
+                            && p.GroupMembers.Any(x => x.GroupId == course.GroupId && x.UserId == currentUserId && x.IsActive)).ConfigureAwait(false);
+
             return await Task.FromResult(isCourseMember);
         }
 
         /// <summary>
-        /// Validate user and get courses 
+        /// Validate user and get courses
         /// </summary>
         /// <param name="currentUserId">the current user id</param>
-        /// <param name="courseIdentity">the course id or slug</param>
+        /// <param name="questionPoolIdentity">the question pool id or slug</param>
         /// <param name="validateForModify"></param>
         /// <returns></returns>
         /// <exception cref="ForbiddenException"></exception>

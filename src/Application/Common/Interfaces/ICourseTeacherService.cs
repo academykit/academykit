@@ -6,5 +6,4 @@
     public interface ICourseTeacherService : IGenericService<CourseTeacher, CourseTeacherSearchCriteria>
     {
     }
-
 }

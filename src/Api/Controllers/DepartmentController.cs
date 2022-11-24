@@ -115,7 +115,7 @@
         /// <param name="identity"> id or slug </param>
         /// <returns> the task complete </returns>
         [HttpDelete("{identity}")]
-        public async Task<IActionResult> DeletAsync(string identity)
+        public async Task<IActionResult> DeleteAsync(string identity)
         {
             IsAdmin(CurrentUser.Role);
 

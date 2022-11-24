@@ -10,7 +10,6 @@
     /// </summary>
     public static class SlugExtensions
     {
-
         /// <summary>
         ///  Handles to removes all accents from the string
         /// </summary>
@@ -55,4 +54,3 @@
         }
     }
 }
-

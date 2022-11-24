@@ -37,7 +37,6 @@
             _jwt = jwt.Value;
         }
 
-
         #region Account Services
 
         /// <summary>
@@ -241,7 +240,6 @@
         /// <param name="hashedPasswordWithSalt">the hashed password</param>
         /// <param name="password">the password</param>
         /// <returns></returns>
-
         public bool VerifyPassword(string hashedPasswordWithSalt, string password)
         {
             // retrieve both salt and password from 'hashedPasswordWithSalt'
@@ -280,7 +278,6 @@
                 _logger.LogError(ex, "An error occurred while attempting to verify reset token.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to verify reset token.");
             }
-
         }
 
         /// <summary>
@@ -313,14 +310,12 @@
                 _unitOfWork.GetRepository<User>().Update(user);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return user.PasswordChangeToken;
-
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to verify reset token.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to verify reset token.");
             }
-
         }
 
         /// <summary>
@@ -330,7 +325,7 @@
         /// <returns></returns>
         public async Task<string> GenerateRandomPassword(int length)
         {
-            Random random = new Random();
+            Random random = new();
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var password = new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
@@ -374,7 +369,6 @@
             await Task.FromResult(0);
         }
 
-
         /// <summary>
         /// Construct query condition according to search criteria
         /// </summary>
@@ -383,7 +377,6 @@
         /// <returns></returns>
         protected override Expression<Func<User, bool>> ConstructQueryConditions(Expression<Func<User, bool>> predicate, UserSearchCriteria criteria)
         {
-
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
@@ -450,7 +443,6 @@
         private async Task<RefreshToken> GetUserRefreshToken(string token)
         {
             return await _refreshTokenService.GetByValue(token).ConfigureAwait(false);
-
         }
         private async Task<User?> GetUserFromRefreshToken(string token)
         {
@@ -491,8 +483,8 @@
 
             var token = new JwtSecurityToken(_jwt.Issuer,
               _jwt.Audience,
-              expires: DateTime.Now.AddMinutes(allowedMinutes),
               claims: claims,
+              expires: DateTime.Now.AddMinutes(allowedMinutes),
               signingCredentials: signingCredentials);
 
             return await Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
@@ -518,4 +510,3 @@
         #endregion Private Methods
     }
 }
-

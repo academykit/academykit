@@ -19,7 +19,6 @@
         public QuestionPoolTeacherService(IUnitOfWork unitOfWork,
             ILogger<QuestionPoolTeacherService> logger) : base(unitOfWork, logger)
         {
-
         }
 
         /// <summary>
@@ -60,8 +59,8 @@
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, "An error occured while attempting to assign role to question pool");
-                throw ex is ServiceException ? ex : new ServiceException("An error occured while attempting to assign role to question pool");
+                _logger.LogError(ex, "An error occurred while attempting to assign role to question pool");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to assign role to question pool");
             }
         }
 
@@ -75,7 +74,6 @@
             return p => p.Id.ToString() == identity;
         }
 
-
         #region  Private Region
 
         /// <summary>
@@ -84,21 +82,16 @@
         /// <param name="question"> the instance of <see cref="QuestionPool" /> .</param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the boolean value </returns>
-        private bool ValidateQuestionPoolMaintainer(QuestionPool question, Guid currentUserId)
+        private static bool ValidateQuestionPoolMaintainer(QuestionPool question, Guid currentUserId)
         {
             if (question.CreatedBy == currentUserId)
             {
                 return true;
             }
             var currentUser = question?.QuestionPoolTeachers.FirstOrDefault(x => x.UserId == currentUserId && x.Role == PoolRole.Author);
-            if (currentUser != null)
-            {
-                return true;
-            }
-            return false;
+            return currentUser != null;
         }
         #endregion
-
 
         #region Protected Region
         /// <summary>
@@ -111,14 +104,14 @@
         {
             if (teacher.UserId == currentUserId)
             {
-                _logger.LogWarning("User with id : {userId} cannot remove ownself from question pool teacher with pool id : {poolId}", currentUserId, teacher.QuestionPoolId);
+                _logger.LogWarning("User with id : {userId} cannot remove own-self from question pool teacher with pool id : {poolId}", currentUserId, teacher.QuestionPoolId);
                 throw new ForbiddenException("User cannot be removed themselves");
             }
 
             var questionPool = await ValidateAndGetQuestionPool(currentUserId, questionPoolIdentity: teacher.QuestionPoolId.ToString(), validateForModify: true).ConfigureAwait(false);
             if (questionPool.CreatedBy == teacher.UserId)
             {
-                _logger.LogWarning("QuestionPool with Id {0} creator User Id {1} can't be delete from questionPool teacher.", questionPool.Id, teacher.UserId);
+                _logger.LogWarning("QuestionPool with Id {id} creator User Id {userId} can't be delete from questionPool teacher.", questionPool.Id, teacher.UserId);
                 throw new ForbiddenException("Question pool author cannot be removed");
             }
         }
@@ -134,16 +127,15 @@
         /// <param name="entity">The current entity.</param>
         protected override async Task CreatePreHookAsync(QuestionPoolTeacher entity)
         {
-
             var questionPool = await ValidateAndGetQuestionPool(entity.CreatedBy, questionPoolIdentity: entity.QuestionPoolId.ToString(), validateForModify: true).ConfigureAwait(false);
             if (questionPool.CreatedBy == entity.UserId)
             {
-                _logger.LogWarning("QuestionPool with Id : {0} creator User Id : {1} can't be questionPool teacher.", questionPool.Id, entity.UserId);
+                _logger.LogWarning("QuestionPool with Id : {id} creator User Id : {userId} can't be questionPool teacher.", questionPool.Id, entity.UserId);
                 throw new ForbiddenException("Question pool author cannot be added");
             }
             if (questionPool.QuestionPoolTeachers.Any(p => p.UserId == entity.UserId))
             {
-                _logger.LogWarning("User with Id {0} is already question pool teacher of question pool with Id  : {1}.", entity.UserId, questionPool.Id);
+                _logger.LogWarning("User with Id {userId} is already question pool teacher of question pool with Id  : {id}.", entity.UserId, questionPool.Id);
                 throw new ForbiddenException("User is already found as course teacher");
             }
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == entity.UserId).ConfigureAwait(false);

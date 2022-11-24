@@ -38,8 +38,7 @@ namespace Lingtren.Infrastructure.Services
             var section = _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
                 predicate: p => p.CourseId == course.Id && (p.Id.ToString() == criteria.SectionIdentity || p.Slug == criteria.SectionIdentity)).Result;
 
-            predicate = predicate.And(p => p.CourseId == course.Id && p.SectionId == section.Id && !p.IsDeleted);
-            return predicate;
+            return predicate.And(p => p.CourseId == course.Id && p.SectionId == section.Id && !p.IsDeleted);
         }
 
         /// <summary>
@@ -63,7 +62,6 @@ namespace Lingtren.Infrastructure.Services
         }
 
         #endregion Protected Region
-
 
         /// <summary>
         /// Handle to get lesson detail
@@ -112,7 +110,7 @@ namespace Lingtren.Infrastructure.Services
                 }
                 var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
                     predicate: p => p.CourseId == course.Id &&
-                                p.Id.ToString() == model.SectionIdentity || p.Slug == model.SectionIdentity).ConfigureAwait(false);
+                                (p.Id.ToString() == model.SectionIdentity || p.Slug == model.SectionIdentity)).ConfigureAwait(false);
                 if (section == null)
                 {
                     _logger.LogWarning("Section with identity: {identity} not found for user with id:{id} and course with id: {courseId}",
@@ -158,15 +156,15 @@ namespace Lingtren.Infrastructure.Services
                 {
                     await CreateQuestionSetAsync(model, lesson).ConfigureAwait(false);
                 }
-                
+
                 await _unitOfWork.GetRepository<Lesson>().InsertAsync(lesson).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return lesson;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, "An error occured while attempting to create the lesson");
-                throw ex is ServiceException ? ex : new ServiceException("An error occured while attempting to create the lesson");
+                _logger.LogError(ex, "An error occurred while attempting to create the lesson");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to create the lesson");
             }
         }
 

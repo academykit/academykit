@@ -21,7 +21,7 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.UpdatedOn).HasColumnName("updated_on").HasColumnType("DATETIME").IsRequired(false);
             builder.HasMany(x => x.QuestionOptions).WithOne(x => x.Question).HasForeignKey(x => x.QuestionId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.QuestionPoolQuestions).WithOne(x => x.Question).HasForeignKey(x => x.QuestionId).OnDelete(DeleteBehavior.NoAction);
-            builder.HasMany(x => x.QuestionSetQuestions).WithOne(x => x.Question).HasForeignKey(x => x.QuestionId).OnDelete(DeleteBehavior.NoAction); 
+            builder.HasMany(x => x.QuestionSetQuestions).WithOne(x => x.Question).HasForeignKey(x => x.QuestionId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

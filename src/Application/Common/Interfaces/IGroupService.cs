@@ -29,7 +29,6 @@
         /// <exception cref="EntityNotFoundException"></exception>
         Task ChangeMemberStatusAsync(string identity, Guid id, bool enabled, Guid currentUserId);
 
-
         /// <summary>
         /// Handle to remove member from the group
         /// </summary>

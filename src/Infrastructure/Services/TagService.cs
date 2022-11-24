@@ -17,9 +17,7 @@ namespace Lingtren.Infrastructure.Services
         public TagService(IUnitOfWork unitOfWork, ILogger<TagService> logger)
         : base(unitOfWork, logger)
         {
-
         }
-
 
         /// <summary>
         /// Handle to create the tag
@@ -61,7 +59,7 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
-        /// Handle to delete the tag 
+        /// Handle to delete the tag
         /// </summary>
         /// <param name="identity"> the slug or id </param>
         /// <param name="currentUserId"> the current user id </param>
@@ -152,7 +150,6 @@ namespace Lingtren.Infrastructure.Services
         /// <returns>The updated predicate with applied filters.</returns>
         protected override Expression<Func<Tag, bool>> ConstructQueryConditions(Expression<Func<Tag, bool>> predicate, BaseSearchCriteria criteria)
         {
-
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
@@ -185,7 +182,7 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
-        /// Handle to validate the user 
+        /// Handle to validate the user
         /// </summary>
         /// <param name="user"> the instance of <see cref="User"/></param>
         /// <param name="tag"> the instance of <see cref="Tag"/></param>

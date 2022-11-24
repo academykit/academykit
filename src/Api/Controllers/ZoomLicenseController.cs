@@ -117,10 +117,10 @@
         /// <summary>
         /// delete zoomLicense api
         /// </summary>
-        /// <param name="identity"> id or slug </param>
+        /// <param name="id"> the zoom id  </param>
         /// <returns> the task complete </returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletAsync(Guid id)
+        public async Task<IActionResult> DeleteAsync(Guid id)
         {
             IsAdmin(CurrentUser.Role);
 
@@ -131,7 +131,7 @@
         /// <summary>
         /// change zoomLicense status api
         /// </summary>
-        /// <param name="identity">the zoomLicense id or slug</param>
+        /// <param name="id">the zoomLicense id</param>
         /// <param name="enabled">the boolean</param>
         /// <returns>the instance of <see cref="ZoomLicenseResponseModel"/></returns>
         [HttpPatch("{id}/status")]
