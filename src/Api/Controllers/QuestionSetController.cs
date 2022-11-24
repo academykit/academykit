@@ -37,6 +37,5 @@
             await _questionSetService.AddQuestionsAsync(identity, model, CurrentUser.Id);
             return Ok();
         }
-
     }
 }

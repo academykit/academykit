@@ -100,7 +100,6 @@ namespace Lingtren.Infrastructure.Services
             criteria.SortType = SortType.Descending;
         }
 
-
         /// <summary>
         /// Includes the navigation properties loading for the entity.
         /// </summary>
@@ -179,12 +178,11 @@ namespace Lingtren.Infrastructure.Services
         protected override async Task PopulateRetrievedEntity(Course entity)
         {
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(predicate: p => p.CourseId == entity.Id && !p.IsDeleted,
-                include: src => src.Include(x => x.Lessons.Where(x=>!x.IsDeleted))
+                include: src => src.Include(x => x.Lessons.Where(x => !x.IsDeleted))
                                     .Include(x => x.User)).ConfigureAwait(false);
             entity.Sections = sections;
         }
         #endregion Protected Methods
-
 
         /// <summary>
         /// Handle to update course
@@ -235,7 +233,7 @@ namespace Lingtren.Infrastructure.Services
             }
             _unitOfWork.GetRepository<Course>().Update(existing);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-            return await GetByIdOrSlugAsync(identity,currentUserId).ConfigureAwait(false);
+            return await GetByIdOrSlugAsync(identity, currentUserId).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -265,7 +263,6 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="identity"> course id or slug</param>
         /// <param name="userId"> the user id</param>
-
         public async Task EnrollmentAsync(string identity, Guid userId)
         {
             await ExecuteAsync(async () =>
@@ -289,7 +286,7 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var currentTimeStamp = DateTime.UtcNow;
-                CourseEnrollment courseEnrollment = new CourseEnrollment()
+                CourseEnrollment courseEnrollment = new()
                 {
                     Id = Guid.NewGuid(),
                     CourseId = course.Id,
@@ -308,7 +305,7 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
-        /// Handle to delete course 
+        /// Handle to delete course
         /// </summary>
         /// <param name="identity">the course id or slug</param>
         /// <param name="currentUserId">the current logged in user id</param>
@@ -320,17 +317,17 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity : {0} not found for user with id : {1}", identity, currentUserId);
+                    _logger.LogWarning("Course with identity : {identity} not found for user with id : {currentUserId}", identity, currentUserId);
                     throw new EntityNotFoundException("Course not found");
                 }
                 if (course.Status != CourseStatus.Draft)
                 {
-                    _logger.LogWarning("Course with identity : {0} is in {1} status. So, it cannot be removed", identity, course.Status);
+                    _logger.LogWarning("Course with identity : {identity} is in {status} status. So, it cannot be removed", identity, course.Status);
                     throw new EntityNotFoundException("Course with draft status is only allowed to removed.");
                 }
                 if (course.CourseEnrollments.Count > 0)
                 {
-                    _logger.LogWarning("Course with identity : {0} contains enrollments", identity);
+                    _logger.LogWarning("Course with identity : {identity} contains enrollments", identity);
                     throw new EntityNotFoundException("Course contains member enrollments. So, it cannot be removed");
                 }
 

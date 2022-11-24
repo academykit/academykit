@@ -18,9 +18,7 @@
             IUnitOfWork unitOfWork,
             ILogger<QuestionService> logger) : base(unitOfWork, logger)
         {
-
         }
-
 
         #region Protected Region
 
@@ -76,27 +74,6 @@
             return p => p.Id.ToString() == identity;
         }
         #endregion Protected Region
-
-
-        #region Private Methods
-
-        /// <summary>
-        /// Handle to check the question pool teacher
-        /// </summary>
-        /// <param name="entity"> the instance of <see cref="Question" /> .</param>
-        /// <returns> the task complete ˝</returns>
-        private async Task CheckQuestionPoolTeacherAsync(Question entity, Guid userId)
-        {
-            var teacher = await _unitOfWork.GetRepository<QuestionPoolTeacher>().GetFirstOrDefaultAsync(
-                predicate: x => x.Id == entity.Id && x.UserId == userId).ConfigureAwait(false);
-            if (teacher == null)
-            {
-                _logger.LogWarning("Unauthroized user : {0} is not teacher of question pool {1}", entity.CreatedBy, entity.Id);
-                throw new ForbiddenException("Unauthorized user");
-            }
-        }
-
-        #endregion Private Methods
 
         /// <summary>
         /// Handle to add question
@@ -313,7 +290,7 @@
                 if (existing.CreatedBy != currentUserId)
                 {
                     _logger.LogWarning("User with id: {currentUserId} is not allowed to update question with id: {id}", currentUserId, existing.Id);
-                    throw new ForbiddenException("Unathorized user to delete question");
+                    throw new ForbiddenException("Unauthorized user to delete question");
                 }
                 var questionPoolQuestion = await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetFirstOrDefaultAsync(
                     predicate: p => p.QuestionPoolId == questionPool.Id && p.QuestionId == existing.Id).ConfigureAwait(false);
@@ -324,7 +301,7 @@
                 if (checkQuestionSetQuestionExist)
                 {
                     _logger.LogWarning("Question with id: {id} is associated with Question-Set-Questions", existing.Id);
-                    throw new ArgumentException("Question is assiciated with question set");
+                    throw new ArgumentException("Question is associated with question set");
                 }
 
                 _unitOfWork.GetRepository<QuestionPoolQuestion>().Delete(questionPoolQuestion);

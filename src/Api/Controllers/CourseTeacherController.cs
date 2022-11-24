@@ -31,7 +31,6 @@
             _validator = validator;
         }
 
-
         /// <summary>
         /// Searches the question pool moderators.
         /// </summary>

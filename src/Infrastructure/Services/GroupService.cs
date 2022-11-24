@@ -21,7 +21,6 @@
         public GroupService(IUnitOfWork unitOfWork,
             ILogger<GroupService> logger) : base(unitOfWork, logger)
         {
-
         }
 
         /// <summary>
@@ -45,7 +44,6 @@
         /// <returns>The updated predicate with applied filters.</returns>
         protected override Expression<Func<Group, bool>> ConstructQueryConditions(Expression<Func<Group, bool>> predicate, BaseSearchCriteria criteria)
         {
-
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
@@ -68,7 +66,6 @@
             criteria.SortBy = nameof(Group.CreatedOn);
             criteria.SortType = SortType.Descending;
         }
-
 
         /// <summary>
         /// Includes the navigation properties loading for the entity.
@@ -101,7 +98,7 @@
         /// <exception cref="ForbiddenException"></exception>
         public async Task<GroupAddMemberResponseModel> AddMemberAsync(string identity, AddGroupMemberRequestModel model, Guid currentUserId)
         {
-            if (model.Emails.Any(x => default))
+            if (model.Emails.Any(_ => default))
             {
                 _logger.LogInformation("Please enter user email for group with identity : {identity}", identity);
                 throw new ForbiddenException("Please enter user email.");
@@ -113,7 +110,7 @@
 
             var isAdminOrTeacher = await _unitOfWork.GetRepository<User>().ExistsAsync(
                 predicate: p => p.Id == currentUserId && (p.Role == UserRole.Admin || p.Role == UserRole.Teacher)
-                            && p.IsActive == true).ConfigureAwait(false);
+                            && p.IsActive).ConfigureAwait(false);
 
             if (!isAdminOrTeacher)
             {
@@ -128,13 +125,12 @@
 
             var nonUsers = model.Emails.Except(users.Select(x => x.Email)).ToList();
 
-
             var duplicateUsers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(
-                predicate: p => userIds.Contains(p.UserId) && p.IsActive == true,
+                predicate: p => userIds.Contains(p.UserId) && p.IsActive,
                 include: src => src.Include(x => x.User)).ConfigureAwait(false);
 
             var inActiveUsers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(
-                predicate: p => userIds.Contains(p.UserId) && p.IsActive == false,
+                predicate: p => userIds.Contains(p.UserId) && !p.IsActive,
                 include: src => src.Include(x => x.User)).ConfigureAwait(false);
 
             var usersToBeAdded = userIds.Except(duplicateUsers.Select(x => x.UserId))
@@ -199,7 +195,7 @@
             }
             var isAdminOrTeacher = await _unitOfWork.GetRepository<User>().ExistsAsync(
                 predicate: p => p.Id == currentUserId && (p.Role == UserRole.Admin || p.Role == UserRole.Teacher)
-                            && p.IsActive == true).ConfigureAwait(false);
+                            && p.IsActive).ConfigureAwait(false);
             if (!isAdminOrTeacher)
             {
                 _logger.LogWarning("User with userId : {userId} is not admin/teacher to remove member from the group", currentUserId);
@@ -237,7 +233,7 @@
             }
             var isAdminOrTeacher = await _unitOfWork.GetRepository<User>().ExistsAsync(
                 predicate: p => p.Id == currentUserId && (p.Role == UserRole.Admin || p.Role == UserRole.Teacher)
-                            && p.IsActive == true).ConfigureAwait(false);
+                            && p.IsActive).ConfigureAwait(false);
             if (!isAdminOrTeacher)
             {
                 _logger.LogWarning("User with userId : {userId} is not admin/teacher to remove member from the group", currentUserId);

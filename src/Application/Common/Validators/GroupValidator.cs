@@ -6,15 +6,9 @@
     {
         public GroupValidator()
         {
-            RuleSet("Add", () =>
-            {
-                RuleFor(x => x.Name).NotNull().NotEmpty().WithMessage("Name is required");
-            });
+            RuleSet("Add", () => RuleFor(x => x.Name).NotNull().NotEmpty().WithMessage("Name is required"));
 
-            RuleSet("Update", () =>
-            {
-                RuleFor(x => x.Name).NotNull().NotEmpty().WithMessage("Name is required");
-            });
+            RuleSet("Update", () => RuleFor(x => x.Name).NotNull().NotEmpty().WithMessage("Name is required"));
         }
     }
 }

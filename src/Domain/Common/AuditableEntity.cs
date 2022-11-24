@@ -27,7 +27,6 @@
         /// </summary>
         public DateTime? UpdatedOn { get; set; }
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AuditableEntity"/> class.
         /// </summary>

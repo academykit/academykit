@@ -74,9 +74,9 @@
                 AssignmentAttachments = new List<AssignmentAttachment>(),
                 AssignmentQuestionOptions = new List<AssignmentQuestionOption>()
             };
-            if(model.Type == AssignmentType.Subjective && model.FileUrls?.Count > 0)
+            if (model.Type == AssignmentType.Subjective && model.FileUrls?.Count > 0)
             {
-                foreach(var item in model.FileUrls.Select((fileUrl,i)=> new { i,fileUrl}))
+                foreach (var item in model.FileUrls.Select((fileUrl, i) => new { i, fileUrl }))
                 {
                     entity.AssignmentAttachments.Add(new AssignmentAttachment
                     {
@@ -88,7 +88,6 @@
                         CreatedOn = currentTimeStamp,
                         UpdatedBy = CurrentUser.Id,
                         UpdatedOn = currentTimeStamp,
-
                     });
                 }
             }
@@ -136,22 +135,8 @@
         public async Task<AssignmentResponseModel> UpdateAsync(string identity, AssignmentRequestModel model)
         {
             IsTeacherAdmin(CurrentUser.Role);
-
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            //await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            //var existing = await _assignmentService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            //var currentTimeStamp = DateTime.UtcNow;
-
-            //existing.Id = existing.Id;
-            //existing.Name = model.Name;
-            //existing.Hint = model.Hint;
-            //existing.LessonId = model.LessonId;
-            //existing.Type = model.Type;
-            //existing.Description = model.Description;
-            //existing.UpdatedBy = CurrentUser.Id;
-            //existing.UpdatedOn = currentTimeStamp;
-
-            var savedEntity = await _assignmentService.UpdateAsync(identity,model,CurrentUser.Id).ConfigureAwait(false);
+            var savedEntity = await _assignmentService.UpdateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
             return new AssignmentResponseModel(savedEntity);
         }
 
@@ -161,10 +146,9 @@
         /// <param name="identity"> id or slug </param>
         /// <returns> the task complete </returns>
         [HttpDelete("{identity}")]
-        public async Task<IActionResult> DeletAsync(string identity)
+        public async Task<IActionResult> DeleteAsync(string identity)
         {
-            IsAdmin(CurrentUser.Role);
-
+            IsTeacherAdmin(CurrentUser.Role);
             await _assignmentService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Department removed successfully." });
         }

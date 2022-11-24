@@ -37,7 +37,6 @@ namespace Lingtren.Infrastructure.Services
             return predicate.And(p => !p.IsDeleted && p.CourseId == criteria.CourseId);
         }
 
-
         /// <summary>
         /// Includes the navigation properties loading for the entity.
         /// </summary>
@@ -99,7 +98,6 @@ namespace Lingtren.Infrastructure.Services
 
         #endregion Protected Region
 
-
         /// <summary>
         /// Handle to delete the section
         /// </summary>
@@ -154,7 +152,7 @@ namespace Lingtren.Infrastructure.Services
         private async Task CheckDuplicateNameAsync(Section entity)
         {
             var sectionExist = await _unitOfWork.GetRepository<Section>().ExistsAsync(
-                predicate: p => p.Id != entity.Id && p.CourseId ==entity.CourseId && p.Name.ToLower() == entity.Name.ToLower() && !p.IsDeleted).ConfigureAwait(false);
+                predicate: p => p.Id != entity.Id && p.CourseId == entity.CourseId && p.Name.ToLower() == entity.Name.ToLower() && !p.IsDeleted).ConfigureAwait(false);
             if (sectionExist)
             {
                 _logger.LogWarning("Duplicate section name : {name} is found for the section with id : {id}", entity.Name, entity.Id);

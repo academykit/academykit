@@ -136,7 +136,6 @@ namespace Lingtren.Api.Controllers
             return new SectionResponseModel(response);
         }
 
-
         /// <summary>
         /// delete section api
         /// </summary>

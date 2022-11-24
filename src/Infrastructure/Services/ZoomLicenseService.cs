@@ -55,7 +55,6 @@
             criteria.SortType = SortType.Descending;
         }
 
-
         /// <summary>
         /// Includes the navigation properties loading for the entity.
         /// </summary>
@@ -87,16 +86,16 @@
         {
             var data = from zoomLicense in _unitOfWork.DbContext.ZoomLicenses.ToList()
                        join meeting in _unitOfWork.DbContext.Meetings.ToList() on zoomLicense.Id equals meeting.ZoomLicenseId
-                       where meeting.StartDate.HasValue == true && zoomLicense.IsActive ==true &&
+                       where meeting.StartDate.HasValue && zoomLicense.IsActive &&
                        (meeting.StartDate.Value.AddSeconds(meeting.Duration) < startDateTime || meeting.StartDate.Value > startDateTime.AddSeconds(duration))
                        group meeting by zoomLicense into g
                        select new
                        {
-                           Id = g.Key.Id,
-                           HostId = g.Key.HostId,
-                           Capacity = g.Key.Capacity,
-                           LicenseEmail = g.Key.LicenseEmail,
-                           IsActive = g.Key.IsActive,
+                           g.Key.Id,
+                           g.Key.HostId,
+                           g.Key.Capacity,
+                           g.Key.LicenseEmail,
+                           g.Key.IsActive,
                            Count = g.Count()
                        };
             var response = data.Where(x => x.Count < 2).Select(x => new ZoomLicenseResponseModel
@@ -109,6 +108,5 @@
             }).ToList();
             return await Task.FromResult(response);
         }
-
     }
 }

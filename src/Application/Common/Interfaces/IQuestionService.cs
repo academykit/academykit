@@ -24,7 +24,6 @@
         /// <returns></returns>
         Task<Question> UpdateAsync(string poolIdentity, Guid questionId, QuestionRequestModel question, Guid currentUserId);
 
-
         /// <summary>
         /// Handle to delete question
         /// </summary>
@@ -33,6 +32,5 @@
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
         Task DeleteQuestionAsync(string poolIdentity, Guid questionId, Guid currentUserId);
-
     }
 }

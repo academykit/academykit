@@ -17,7 +17,6 @@
         public UserModel User { get; set; }
         public IList<AssignmentAttachmentResponseModel> AssignmentAttachments { get; set; }
         public IList<AssignmentQuestionOptionResponseModel> AssignmentQuestionOptions { get; set; }
-        
         public AssignmentResponseModel(Assignment assignment)
         {
             Id = assignment.Id;
@@ -29,16 +28,16 @@
             Order = assignment.Order;
             IsActive = assignment.IsActive;
             Type = assignment.Type;
-            User = assignment.User != null ? new UserModel(assignment.User): new UserModel();
+            User = assignment.User != null ? new UserModel(assignment.User) : new UserModel();
 
             AssignmentAttachments = new List<AssignmentAttachmentResponseModel>();
-            if(assignment.Type == AssignmentType.Subjective)
+            if (assignment.Type == AssignmentType.Subjective)
             {
                 assignment.AssignmentAttachments?.ToList().ForEach(item => AssignmentAttachments.Add(new AssignmentAttachmentResponseModel(item)));
             }
 
             AssignmentQuestionOptions = new List<AssignmentQuestionOptionResponseModel>();
-            if(assignment.Type == AssignmentType.MCQ)
+            if (assignment.Type == AssignmentType.MCQ)
             {
                 assignment.AssignmentQuestionOptions?.ToList().ForEach(item => AssignmentQuestionOptions.Add(new AssignmentQuestionOptionResponseModel(item)));
             }

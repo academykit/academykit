@@ -195,7 +195,6 @@
                 query = criteria.SortType == SortType.Ascending
                         ? query.OrderBy(criteria.SortBy)
                         : query.OrderByDescending(criteria.SortBy);
-
             }
 
             return query.ToPagedList(criteria.Page, criteria.Size);
@@ -296,10 +295,7 @@
                 query = criteria.SortType == SortType.Ascending
                         ? query.OrderBy(criteria.SortBy)
                         : query.OrderByDescending(criteria.SortBy);
-
             }
-
-
             return query.Select(selector).ToPagedList(criteria.Page, criteria.Size);
         }
 
@@ -351,7 +347,6 @@
                 query = criteria.SortType == SortType.Ascending
                         ? query.OrderBy(criteria.SortBy)
                         : query.OrderByDescending(criteria.SortBy);
-
             }
 
             return query.Select(selector).ToPagedListAsync(criteria.Page, criteria.Size, cancellationToken);
@@ -404,7 +399,6 @@
                 return query.FirstOrDefault();
             }
         }
-
 
         /// <inheritdoc />
         public virtual async Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate = null,
@@ -833,16 +827,6 @@
         }
 
         /// <summary>
-        /// Updates the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        public virtual void UpdateAsync(TEntity entity)
-        {
-            _dbSet.Update(entity);
-
-        }
-
-        /// <summary>
         /// Updates the specified entities.
         /// </summary>
         /// <param name="entities">The entities.</param>
@@ -992,7 +976,6 @@
             {
                 query = query.IgnoreQueryFilters();
             }
-
 
             if (orderBy != null)
             {

@@ -143,7 +143,7 @@ namespace Lingtren.Api.Controllers
         /// <param name="identity"> id or slug </param>
         /// <returns> the task complete </returns>
         [HttpDelete("{identity}")]
-        public async Task<IActionResult> DeletAsync(string identity)
+        public async Task<IActionResult> DeleteAsync(string identity)
         {
             await _courseService.DeleteCourseAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Course removed successfully." });

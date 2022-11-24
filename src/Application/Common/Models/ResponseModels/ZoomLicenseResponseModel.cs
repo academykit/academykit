@@ -21,7 +21,6 @@
         }
         public ZoomLicenseResponseModel()
         {
-
         }
     }
 }

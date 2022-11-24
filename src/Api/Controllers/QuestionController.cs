@@ -36,7 +36,7 @@
         /// <returns>The paginated search result.</returns>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<SearchResult<QuestionResponseModel>> SearchAsync(string identity,[FromQuery] QuestionBaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<QuestionResponseModel>> SearchAsync(string identity, [FromQuery] QuestionBaseSearchCriteria searchCriteria)
         {
             CommonHelper.ValidateArgumentNotNullOrEmpty(identity, nameof(identity));
             searchCriteria.CurrentUserId = CurrentUser.Id;
@@ -57,7 +57,6 @@
              );
             return response;
         }
-
 
         /// <summary>
         /// create question api
@@ -84,7 +83,7 @@
         /// <summary>
         /// get question api
         /// </summary>
-        /// <param name="identity"> the question id or skug</param>
+        /// <param name="identity"> the question id or slug</param>
         /// <returns> the instance of <see cref="QuestionResponseModel" /> .</returns>
         [HttpGet("{id}")]
         public async Task<QuestionResponseModel> Get(string identity, Guid id)
@@ -95,7 +94,7 @@
                 throw new EntityNotFoundException("Question pool not found");
             }
 
-            var model = await _questionService.GetByIdOrSlugAsync(identity, CurrentUser?.Id).ConfigureAwait(false);
+            var model = await _questionService.GetByIdOrSlugAsync(id.ToString(), CurrentUser?.Id).ConfigureAwait(false);
             return new QuestionResponseModel(model);
         }
 
@@ -129,7 +128,7 @@
         /// <param name="identity">the question id or slug </param>
         /// <returns> the task complete </returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletAsync(string identity, Guid id)
+        public async Task<IActionResult> DeleteAsync(string identity, Guid id)
         {
             IsAdmin(CurrentUser.Role);
 

@@ -1,13 +1,27 @@
 {
     "cSpell.words": [
+        "ASPNETCORE",
         "cref",
+        "datatable",
+        "DATETIME",
         "Dtos",
+        "HMACSHA",
         "Includable",
+        "inheritdoc",
         "ISMTP",
         "Lingtren",
+        "Newtonsoft",
+        "officedocument",
+        "openxmlformats",
         "paramref",
+        "passcode",
+        "PRNG",
+        "spreadsheetml",
+        "threadsafety",
+        "tinyint",
         "typeparam",
         "typeparamref",
+        "v'VVV",
         "Vurilo"
     ]
 }

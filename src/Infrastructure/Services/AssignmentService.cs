@@ -18,7 +18,6 @@
             IUnitOfWork unitOfWork,
             ILogger<AssignmentService> logger) : base(unitOfWork, logger)
         {
-
         }
 
         #region Protected Region
@@ -29,7 +28,7 @@
         /// <returns>The expression to filter by slug or slug</returns>
         protected override Expression<Func<Assignment, bool>> PredicateForIdOrSlug(string identity)
         {
-            return p => p.Id.ToString() == identity.ToString();
+            return p => p.Id.ToString() == identity;
         }
 
         /// <summary>
@@ -54,12 +53,12 @@
                 predicate: p => p.Id == entity.LessonId && !p.IsDeleted).ConfigureAwait(false);
             if (lesson == null)
             {
-                _logger.LogWarning("Lesson with id : {0} not found for assigment with id : {1}", entity.LessonId, entity.Id);
+                _logger.LogWarning("Lesson with id : {lessonId} not found for assignment with id : {id}", entity.LessonId, entity.Id);
                 throw new EntityNotFoundException("Lesson not found");
             }
             if (lesson.Type != LessonType.Assignment)
             {
-                _logger.LogWarning("Lesson with id : {0} is of invalid lesson type to create assignment for user with id :{1}", lesson.Id, entity.CreatedBy);
+                _logger.LogWarning("Lesson with id : {lessonId} is of invalid lesson type to create assignment for user with id :{userId}", lesson.Id, entity.CreatedBy);
                 throw new ArgumentException("Invalid lesson type for assignment.");
             }
             await ValidateAndGetCourse(entity.CreatedBy, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
