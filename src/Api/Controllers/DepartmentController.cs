@@ -14,15 +14,12 @@
     {
         private readonly IDepartmentService _departmentService;
         private readonly IValidator<DepartmentRequestModel> _validator;
-        private readonly ILogger<DepartmentController> _logger;
         public DepartmentController(
             IDepartmentService departmentService,
-            IValidator<DepartmentRequestModel> validator,
-            ILogger<DepartmentController> logger)
+            IValidator<DepartmentRequestModel> validator)
         {
             _departmentService = departmentService;
             _validator = validator;
-            _logger = logger;
         }
 
         /// <summary>

@@ -154,7 +154,7 @@ namespace Lingtren.Infrastructure.Services
         private async Task CheckDuplicateNameAsync(Section entity)
         {
             var sectionExist = await _unitOfWork.GetRepository<Section>().ExistsAsync(
-                predicate: p => p.Id != entity.Id && p.Name.ToLower() == entity.Name.ToLower()).ConfigureAwait(false);
+                predicate: p => p.Id != entity.Id && p.Name.ToLower() == entity.Name.ToLower() && !p.IsDeleted).ConfigureAwait(false);
             if (sectionExist)
             {
                 _logger.LogWarning("Duplicate department name : {name} is found for the department with id : {id}", entity.Name, entity.Id);
