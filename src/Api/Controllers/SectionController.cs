@@ -8,6 +8,7 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
+    using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +35,7 @@ namespace Lingtren.Api.Controllers
         [HttpGet]
         public async Task<SearchResult<SectionResponseModel>> SearchAsync(string identity, [FromQuery] SectionBaseSearchCriteria searchCriteria)
         {
+            CommonHelper.ValidateArgumentNotNullOrEmpty(identity, nameof(identity));
             var course = await _courseService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
             if (course == null)
             {

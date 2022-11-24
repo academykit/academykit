@@ -34,7 +34,7 @@ namespace Lingtren.Infrastructure.Services
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
             }
-            return predicate.And(p => !p.IsDeleted);
+            return predicate.And(p => !p.IsDeleted && p.CourseId == criteria.CourseId);
         }
 
 

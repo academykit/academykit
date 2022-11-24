@@ -38,7 +38,7 @@ namespace Lingtren.Infrastructure.Services
             var section = _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
                 predicate: p => p.CourseId == course.Id && (p.Id.ToString() == criteria.SectionIdentity || p.Slug == criteria.SectionIdentity)).Result;
 
-            predicate = predicate.And(p => p.CourseId == course.Id && p.SectionId == section.Id);
+            predicate = predicate.And(p => p.CourseId == course.Id && p.SectionId == section.Id && !p.IsDeleted);
             return predicate;
         }
 
