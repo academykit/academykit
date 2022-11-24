@@ -178,8 +178,9 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         protected override async Task PopulateRetrievedEntity(Course entity)
         {
-            var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(predicate: p => p.CourseId == entity.Id,
-                include: src => src.Include(x => x.Lessons).Include(x => x.User)).ConfigureAwait(false);
+            var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(predicate: p => p.CourseId == entity.Id && !p.IsDeleted,
+                include: src => src.Include(x => x.Lessons.Where(x=>!x.IsDeleted))
+                                    .Include(x => x.User)).ConfigureAwait(false);
             entity.Sections = sections;
         }
         #endregion Protected Methods
