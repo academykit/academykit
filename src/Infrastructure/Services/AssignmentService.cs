@@ -1,8 +1,10 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
     using Lingtren.Application.Common.Dtos;
+    using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Domain.Entities;
+    using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
@@ -49,6 +51,16 @@
         {
             var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                 predicate: p => p.Id == entity.LessonId && !p.IsDeleted).ConfigureAwait(false);
+            if(lesson == null)
+            {
+                _logger.LogWarning("Lesson with id : {0} not found for assigment with id : {1}",entity.LessonId,entity.Id);
+                throw new EntityNotFoundException("Lesson not found");
+            }
+            if(lesson.Type != LessonType.Assignment)
+            {
+                _logger.LogWarning("Lesson with id : {0} is of invalid lesson type to create assignment for user with id :{1}",lesson.Id,entity.CreatedBy);
+                throw new ArgumentException("Invalid lesson type for assignment.");
+            }
             await ValidateAndGetCourse(entity.CreatedBy, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
 
             if (entity.AssignmentQuestionOptions.Count > 0)

@@ -154,11 +154,11 @@ namespace Lingtren.Infrastructure.Services
         private async Task CheckDuplicateNameAsync(Section entity)
         {
             var sectionExist = await _unitOfWork.GetRepository<Section>().ExistsAsync(
-                predicate: p => p.Id != entity.Id && p.Name.ToLower() == entity.Name.ToLower() && !p.IsDeleted).ConfigureAwait(false);
+                predicate: p => p.Id != entity.Id && p.CourseId ==entity.CourseId && p.Name.ToLower() == entity.Name.ToLower() && !p.IsDeleted).ConfigureAwait(false);
             if (sectionExist)
             {
-                _logger.LogWarning("Duplicate department name : {name} is found for the department with id : {id}", entity.Name, entity.Id);
-                throw new ServiceException("Duplicate department name is found");
+                _logger.LogWarning("Duplicate section name : {name} is found for the department with id : {id}", entity.Name, entity.Id);
+                throw new ServiceException("Duplicate section name is found");
             }
         }
 
@@ -185,7 +185,8 @@ namespace Lingtren.Infrastructure.Services
         /// <returns> the int value </returns>
         private async Task<int> LastSectionOrder(Section entity)
         {
-            var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(predicate: x => !x.IsDeleted, orderBy: x => x.OrderByDescending(x => x.Order)).ConfigureAwait(false);
+            var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
+                predicate: x => !x.IsDeleted, orderBy: x => x.OrderByDescending(x => x.Order)).ConfigureAwait(false);
             return section != null ? section.Order++ : 1;
         }
 
