@@ -7,8 +7,8 @@
         public Guid LessonId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Hint { get; set; }
-        public AssignmentType Type { get; set; }
+        public string Hints { get; set; }
+        public QuestionTypeEnum Type { get; set; }
         public IList<string> FileUrls { get; set; }
         public IList<AssignmentQuestionOptionRequestModel> Answers { get; set; }
     }

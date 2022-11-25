@@ -7,12 +7,13 @@
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
+    using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
 
-    public class AssignmentService : BaseGenericService<Assignment, BaseSearchCriteria>, IAssignmentService
+    public class AssignmentService : BaseGenericService<Assignment, AssignmentBaseSearchCriteria>, IAssignmentService
     {
         public AssignmentService(
             IUnitOfWork unitOfWork,
@@ -21,6 +22,63 @@
         }
 
         #region Protected Region
+
+        /// <summary>
+        /// Applies filters to the given query.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="criteria">The search criteria.</param>
+        /// <returns>The updated predicate with applied filters.</returns>
+        protected override Expression<Func<Assignment, bool>> ConstructQueryConditions(Expression<Func<Assignment, bool>> predicate, AssignmentBaseSearchCriteria criteria)
+        {
+            var lesson = _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                predicate: p => p.Id.ToString() == criteria.LessonIdentity || p.Slug == criteria.LessonIdentity).Result;
+
+            if (lesson == null)
+            {
+                _logger.LogWarning("Lesson with identity : {identity} not found for user with id : {id}", criteria.LessonIdentity, criteria.CurrentUserId);
+                throw new EntityNotFoundException("Lesson not found.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(criteria.Search))
+            {
+                var search = criteria.Search.ToLower().Trim();
+                predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
+            }
+
+            return predicate.And(x => x.LessonId == lesson.Id);
+        }
+        /// <summary>
+        /// Check the validations required for delete
+        /// </summary>
+        /// <param name="entity">the instance of <see cref="Assignment"/></param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
+        protected override async Task CheckDeletePermissionsAsync(Assignment entity, Guid currentUserId)
+        {
+            await ValidateAndGetLessonForAssignment(entity).ConfigureAwait(false);
+
+            if (entity.Type == QuestionTypeEnum.MultipleChoice || entity.Type == QuestionTypeEnum.SingleChoice)
+            {
+                var existAssignmentMCQSubmissions = await _unitOfWork.GetRepository<AssignmentMCQSubmission>().ExistsAsync(
+                    predicate: p => p.AssignmentId == entity.Id).ConfigureAwait(false);
+                if (existAssignmentMCQSubmissions)
+                {
+                    _logger.LogWarning("Assignment with id : {id} having type : {type} contains assignment submissions", entity.Id, entity.Type);
+                    throw new ForbiddenException("Assignment contains assignment submissions");
+                }
+            }
+
+            if (entity.Type == QuestionTypeEnum.Subjective)
+            {
+                //TO-DO : Task Check Assignment Submission or not
+            }
+
+            _unitOfWork.GetRepository<AssignmentAttachment>().Delete(entity.AssignmentAttachments);
+            _unitOfWork.GetRepository<AssignmentQuestionOption>().Delete(entity.AssignmentQuestionOptions);
+        }
+
+
         /// <summary>
         /// If entity needs to support the get by slug or id then has to override this method.
         /// </summary>
@@ -49,19 +107,7 @@
         /// </remarks>
         protected override async Task CreatePreHookAsync(Assignment entity)
         {
-            var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
-                predicate: p => p.Id == entity.LessonId && !p.IsDeleted).ConfigureAwait(false);
-            if (lesson == null)
-            {
-                _logger.LogWarning("Lesson with id : {lessonId} not found for assignment with id : {id}", entity.LessonId, entity.Id);
-                throw new EntityNotFoundException("Lesson not found");
-            }
-            if (lesson.Type != LessonType.Assignment)
-            {
-                _logger.LogWarning("Lesson with id : {lessonId} is of invalid lesson type to create assignment for user with id :{userId}", lesson.Id, entity.CreatedBy);
-                throw new ArgumentException("Invalid lesson type for assignment.");
-            }
-            await ValidateAndGetCourse(entity.CreatedBy, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
+            await ValidateAndGetLessonForAssignment(entity).ConfigureAwait(false);
 
             if (entity.AssignmentQuestionOptions.Count > 0)
             {
@@ -73,6 +119,7 @@
             }
             await Task.FromResult(0);
         }
+
 
         /// <summary>
         /// Handel to populate live session retrieved entity
@@ -86,6 +133,35 @@
         }
 
         #endregion Protected Region
+
+        #region Private Region
+
+        /// <summary>
+        /// Handle to validate and get lesson for assignment
+        /// </summary>
+        /// <param name="entity">the instance of <see cref="Assignment"/></param>
+        /// <returns>the instance of <see cref="Lesson"/></returns>
+        /// <exception cref="EntityNotFoundException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        private async Task<Lesson> ValidateAndGetLessonForAssignment(Assignment entity)
+        {
+            var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                            predicate: p => p.Id == entity.LessonId && !p.IsDeleted).ConfigureAwait(false);
+            if (lesson == null)
+            {
+                _logger.LogWarning("Lesson with id : {lessonId} not found for assignment with id : {id}", entity.LessonId, entity.Id);
+                throw new EntityNotFoundException("Lesson not found");
+            }
+            if (lesson.Type != LessonType.Assignment)
+            {
+                _logger.LogWarning("Lesson with id : {lessonId} is of invalid lesson type to create,edit or delete assignment for user with id :{userId}", lesson.Id, entity.CreatedBy);
+                throw new ArgumentException("Invalid lesson type for assignment.");
+            }
+            await ValidateAndGetCourse(entity.CreatedBy, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
+            return lesson;
+        }
+
+        #endregion Private Region
 
         /// <summary>
         /// Handle to update course
@@ -101,7 +177,7 @@
 
             existing.Id = existing.Id;
             existing.Name = model.Name;
-            existing.Hint = model.Hint;
+            existing.Hints = model.Hints;
             existing.LessonId = model.LessonId;
             existing.Type = model.Type;
             existing.Description = model.Description;
@@ -111,7 +187,7 @@
             var assignmentQuestionOptions = new List<AssignmentQuestionOption>();
             var assignmentAttachments = new List<AssignmentAttachment>();
 
-            if (model.Type == AssignmentType.MCQ)
+            if (model.Type == QuestionTypeEnum.SingleChoice || model.Type == QuestionTypeEnum.MultipleChoice)
             {
                 foreach (var item in model.Answers.Select((answer, i) => new { i, answer }))
                 {
@@ -129,7 +205,7 @@
                     });
                 }
             }
-            if (model.Type == AssignmentType.Subjective && model.FileUrls.Count > 0)
+            if ((model.Type == QuestionTypeEnum.SingleChoice || model.Type == QuestionTypeEnum.MultipleChoice) && model.FileUrls.Count > 0)
             {
                 foreach (var item in model.FileUrls.Select((fileUrl, i) => new { i, fileUrl }))
                 {

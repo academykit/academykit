@@ -8,6 +8,7 @@
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
+    using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
 
@@ -27,8 +28,9 @@
         /// </summary>
         /// <returns> the list of <see cref="AssignmentResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<SearchResult<AssignmentResponseModel>> SearchAsync([FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<AssignmentResponseModel>> SearchAsync([FromQuery] AssignmentBaseSearchCriteria searchCriteria)
         {
+            CommonHelper.ValidateArgumentNotNullOrEmpty(searchCriteria.LessonIdentity, nameof(searchCriteria.LessonIdentity));
             var searchResult = await _assignmentService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             var response = new SearchResult<AssignmentResponseModel>
@@ -62,7 +64,7 @@
             {
                 Id = Guid.NewGuid(),
                 Name = model.Name,
-                Hint = model.Hint,
+                Hints = model.Hints,
                 Description = model.Description,
                 LessonId = model.LessonId,
                 Type = model.Type,
@@ -74,7 +76,7 @@
                 AssignmentAttachments = new List<AssignmentAttachment>(),
                 AssignmentQuestionOptions = new List<AssignmentQuestionOption>()
             };
-            if (model.Type == AssignmentType.Subjective && model.FileUrls?.Count > 0)
+            if ((model.Type == QuestionTypeEnum.SingleChoice || model.Type == QuestionTypeEnum.MultipleChoice) && model.FileUrls?.Count > 0)
             {
                 foreach (var item in model.FileUrls.Select((fileUrl, i) => new { i, fileUrl }))
                 {
@@ -91,7 +93,7 @@
                     });
                 }
             }
-            if (model.Type == AssignmentType.MCQ)
+            if (model.Type == QuestionTypeEnum.SingleChoice || model.Type == QuestionTypeEnum.MultipleChoice)
             {
                 foreach (var item in model.Answers.Select((answer, i) => new { i, answer }))
                 {

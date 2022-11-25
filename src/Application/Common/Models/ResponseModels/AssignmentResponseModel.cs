@@ -10,10 +10,10 @@
         public string LessonName { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Hint { get; set; }
+        public string Hints { get; set; }
         public int Order { get; set; }
         public bool IsActive { get; set; }
-        public AssignmentType Type { get; set; }
+        public QuestionTypeEnum Type { get; set; }
         public UserModel User { get; set; }
         public IList<AssignmentAttachmentResponseModel> AssignmentAttachments { get; set; }
         public IList<AssignmentQuestionOptionResponseModel> AssignmentQuestionOptions { get; set; }
@@ -24,20 +24,20 @@
             LessonName = assignment.Lesson?.Name;
             Name = assignment.Name;
             Description = assignment.Description;
-            Hint = assignment.Hint;
+            Hints = assignment.Hints;
             Order = assignment.Order;
             IsActive = assignment.IsActive;
             Type = assignment.Type;
             User = assignment.User != null ? new UserModel(assignment.User) : new UserModel();
 
             AssignmentAttachments = new List<AssignmentAttachmentResponseModel>();
-            if (assignment.Type == AssignmentType.Subjective)
+            if (assignment.Type == QuestionTypeEnum.Subjective)
             {
                 assignment.AssignmentAttachments?.ToList().ForEach(item => AssignmentAttachments.Add(new AssignmentAttachmentResponseModel(item)));
             }
 
             AssignmentQuestionOptions = new List<AssignmentQuestionOptionResponseModel>();
-            if (assignment.Type == AssignmentType.MCQ)
+            if (assignment.Type == QuestionTypeEnum.SingleChoice || assignment.Type == QuestionTypeEnum.MultipleChoice)
             {
                 assignment.AssignmentQuestionOptions?.ToList().ForEach(item => AssignmentQuestionOptions.Add(new AssignmentQuestionOptionResponseModel(item)));
             }
