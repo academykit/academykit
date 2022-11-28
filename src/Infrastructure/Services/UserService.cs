@@ -56,6 +56,13 @@
                 return authenticationModel;
             }
 
+            if(!user.IsActive)
+            {
+                authenticationModel.IsAuthenticated = false;
+                authenticationModel.Message = "Inactive user account";
+                return authenticationModel;
+            }
+
             var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password);
             if (!isUserAuthenticated)
             {
