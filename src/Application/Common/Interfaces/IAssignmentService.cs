@@ -6,7 +6,7 @@
     using System;
     using System.Threading.Tasks;
 
-    public interface IAssignmentService : IGenericService<Assignment, BaseSearchCriteria>
+    public interface IAssignmentService : IGenericService<Assignment, AssignmentBaseSearchCriteria>
     {
         /// <summary>
         /// Handle to update course

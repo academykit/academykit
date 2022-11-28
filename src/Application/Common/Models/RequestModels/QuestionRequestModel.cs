@@ -14,7 +14,7 @@
     }
     public class QuestionOptionRequestModel
     {
-        public string Options { get; set; }
+        public string Option { get; set; }
         public bool IsCorrect { get; set; }
     }
 }

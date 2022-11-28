@@ -50,7 +50,7 @@
                 throw new ForbiddenException("Admin Access");
             }
         }
-        // <summary>
+        /// <summary>
         /// Checks if the user is admin or teacher.
         /// </summary>
         protected void IsTeacherAdmin(UserRole role)

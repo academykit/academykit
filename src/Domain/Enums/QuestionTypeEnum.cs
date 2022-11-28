@@ -2,7 +2,8 @@ namespace Lingtren.Domain.Enums
 {
     public enum QuestionTypeEnum
     {
-        Checkbox = 0,
-        Radio = 1
+        SingleChoice = 1,
+        MultipleChoice = 2,
+        Subjective = 3,
     }
 }
