@@ -4,6 +4,7 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
@@ -12,14 +13,18 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
+    using System;
     using System.Linq.Expressions;
 
     public class LessonService : BaseGenericService<Lesson, LessonBaseSearchCriteria>, ILessonService
     {
+        private readonly IZoomLicenseService _zoomLicenseService;
         public LessonService(
             IUnitOfWork unitOfWork,
-            ILogger<LessonService> logger) : base(unitOfWork, logger)
+            ILogger<LessonService> logger,
+            IZoomLicenseService zoomLicenseService) : base(unitOfWork, logger)
         {
+            _zoomLicenseService = zoomLicenseService;
         }
 
         #region Protected Region
@@ -86,6 +91,7 @@ namespace Lingtren.Infrastructure.Services
                                     .Include(x => x.Section)).ConfigureAwait(false);
             if (lesson == null)
             {
+                _logger.LogWarning("Lesson with identity : {identity} and course with id: {courseId} not found for user with :{id}", identity, course.Id, currentUserId);
                 throw new EntityNotFoundException("Lesson not found");
             }
             return lesson;
@@ -231,7 +237,7 @@ namespace Lingtren.Infrastructure.Services
                     predicate: p => p.Id == lesson.MeetingId).ConfigureAwait(false);
                 if (meeting == null)
                 {
-                    _logger.LogWarning("DeleteLessonAsync(): Lesson with id:{0} and type: {1} doesnot contain metting with id : {2}",
+                    _logger.LogWarning("DeleteLessonAsync(): Lesson with id:{0} and type: {1} doesn't contain meeting with id : {2}",
                                        lesson.Id, lesson.Type, lesson.MeetingId);
                     throw new EntityNotFoundException($"Meeting not found for lesson with type: {lesson.Type}");
                 }
@@ -241,6 +247,101 @@ namespace Lingtren.Infrastructure.Services
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
         }
+
+        /// <summary>
+        /// Handle to join meeting
+        /// </summary>
+        /// <param name="identity">the course identity</param>
+        /// <param name="lessonIdentity">the lesson identity</param>
+        /// <param name="currentUserId">the current logged in user</param>
+        /// <returns></returns>
+        public async Task<MeetingJoinResponseModel> GetJoinMeetingAsync(string identity, string lessonIdentity, Guid currentUserId)
+        {
+            try
+            {
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id == currentUserId && !p.IsActive).ConfigureAwait(false);
+                if (user == null)
+                {
+                    _logger.LogWarning("User with id: {id} not found", currentUserId);
+                    throw new EntityNotFoundException("User not found");
+                }
+
+                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: false).ConfigureAwait(false);
+                if (course == null)
+                {
+                    _logger.LogWarning("Course with identity: {identity} not found for user with id :{id}", identity, currentUserId);
+                    throw new EntityNotFoundException("Course not found");
+                }
+
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                    predicate: p => p.CourseId == course.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),
+                    include: src => src.Include(x => x.User)
+                                        .Include(x => x.Meeting.ZoomLicense)).ConfigureAwait(false);
+                if (lesson == null)
+                {
+                    _logger.LogWarning("Lesson with identity : {identity} and course with id: {courseId} not found for user with :{id}", identity, course.Id, currentUserId);
+                    throw new EntityNotFoundException("Lesson not found");
+                }
+
+                if (lesson.Type != LessonType.LiveClass)
+                {
+                    _logger.LogWarning("Lesson with id : {id} type not match for join meeting", lesson.Id);
+                    throw new ForbiddenException("Lesson type not match for join meeting");
+                }
+
+                if (lesson.Meeting == null)
+                {
+                    _logger.LogWarning("Lesson with id : {id}  meeting not found for join meeting", lesson.Id);
+                    throw new EntityNotFoundException("Meeting not found");
+                }
+
+                if (lesson.Meeting.ZoomLicense == null)
+                {
+                    _logger.LogWarning("Zoom license with id : {id} not found.", lesson.Meeting.ZoomLicenseId);
+                    throw new ServiceException("Zoom license not found");
+                }
+
+                var isModerator = course.CreatedBy == currentUserId || lesson.CreatedBy == currentUserId || course.CourseTeachers.Any(x => x.UserId == currentUserId);
+
+                //validate user is enroll in the course or not
+                if (!isModerator)
+                {
+                    var isMember = course.CourseEnrollments.Any(x => x.UserId == currentUserId && !x.IsDeleted
+                                    && (x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled));
+                    if (!isMember)
+                    {
+                        _logger.LogWarning("User with id : {currentUserId} is invalid user to attend this meeting having lesson with id :{id}", currentUserId, lesson.Id);
+                        throw new ForbiddenException("You are not allowed to access this meeting");
+                    }
+                }
+
+                if (lesson.Meeting.MeetingNumber == default)
+                {
+                    await _zoomLicenseService.CreateZoomMeetingAsync(lesson);
+                }
+
+                var signature = await _zoomLicenseService.GenerateZoomSignatureAsync(lesson.Meeting.MeetingNumber.ToString(), isModerator).ConfigureAwait(false);
+
+                var zak = isModerator ? await _zoomLicenseService.GetZAKAsync(lesson.Meeting.ZoomLicense.HostId).ConfigureAwait(false) : null;
+
+                var response = new MeetingJoinResponseModel();
+                response.RoomName = lesson.Name;
+                response.JwtToken = signature;
+                response.ZAKToken = zak;
+                response.HostId = lesson.Meeting.ZoomLicense.HostId;
+                response.UserName = user.FullName;
+                response.UserEmail = user.Email;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        #region Private Methods
 
         /// <summary>
         /// Handle to  create question set
@@ -294,5 +395,7 @@ namespace Lingtren.Infrastructure.Services
 
             await _unitOfWork.GetRepository<Meeting>().InsertAsync(lesson.Meeting).ConfigureAwait(false);
         }
+
+        #endregion Private Methods
     }
 }

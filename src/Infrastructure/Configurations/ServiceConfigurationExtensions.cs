@@ -42,6 +42,7 @@
             services.AddTransient<IQuestionService, QuestionService>();
             services.AddTransient<IQuestionSetService, QuestionSetService>();
             services.AddTransient<IAssignmentService, AssignmentService>();
+            services.AddTransient<IMeetingService, MeetingService>();
 
             services.AddSingleton<IValidator<LoginRequestModel>, LoginValidator>();
             services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();

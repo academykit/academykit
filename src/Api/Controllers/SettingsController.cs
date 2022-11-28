@@ -123,7 +123,9 @@ namespace Lingtren.Api.Controllers
 
             existing.Id = existing.Id;
             existing.ApiKey = model.ApiKey;
-            existing.SecretKey = model.SecretKey;
+            existing.ApiSecret = model.ApiSecret;
+            existing.SdkKey = model.SdkKey;
+            existing.SdkSecret = model.SdkSecret;
             existing.IsRecordingEnabled = model.IsRecordingEnabled;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
