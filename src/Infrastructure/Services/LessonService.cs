@@ -78,7 +78,10 @@ namespace Lingtren.Infrastructure.Services
                 _logger.LogWarning("Course with identity: {identity} not found for user with :{id}", identity, currentUserId);
                 throw new EntityNotFoundException("Course not found");
             }
-
+            //if (string.IsNullOrWhiteSpace(lessonIdentity))
+            //{
+            //    var currentWatchLesson = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync()
+            //}
             var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                 predicate: p => p.CourseId == course.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),
                 include: src => src.Include(x => x.User)

@@ -25,6 +25,7 @@
         public Guid? MeetingId { get; set; }
         public Guid? QuestionSetId { get; set; }
         public UserModel User { get; set; }
+        public bool IsCompleted { get; set; }
         public LessonResponseModel(Lesson model)
         {
             Id = model.Id;
@@ -48,6 +49,10 @@
             MeetingId = model.MeetingId;
             QuestionSetId = model.QuestionSetId;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
+        }
+        public LessonResponseModel()
+        {
+
         }
     }
 }

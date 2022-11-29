@@ -66,8 +66,8 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="lessonIdentity"> the department id or slug</param>
         /// <returns> the instance of <see cref="LessonResponseModel" /> .</returns>
-        [HttpGet("{lessonIdentity}")]
-        public async Task<LessonResponseModel> Get(string identity, string lessonIdentity)
+        [HttpGet("get")]
+        public async Task<LessonResponseModel> Get(string identity, [FromQuery] string lessonIdentity)
         {
             var model = await _lessonService.GetLessonAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
             return new LessonResponseModel(model);

@@ -4,6 +4,7 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
@@ -70,10 +71,10 @@ namespace Lingtren.Infrastructure.Services
                         case CourseEnrollmentStatus.NotEnrolled:
                             enrollmentStatusPredicate = enrollmentStatusPredicate.Or(p => !p.CourseEnrollments.Any(e => e.UserId == criteria.CurrentUserId));
                             break;
-                        case CourseEnrollmentStatus.Host:
+                        case CourseEnrollmentStatus.Author:
                             enrollmentStatusPredicate = enrollmentStatusPredicate.Or(p => p.CreatedBy == criteria.CurrentUserId);
                             break;
-                        case CourseEnrollmentStatus.Moderator:
+                        case CourseEnrollmentStatus.Teacher:
                             enrollmentStatusPredicate = enrollmentStatusPredicate.Or(p => p.CourseTeachers.Any(e => e.UserId == criteria.CurrentUserId));
                             break;
                         default:
@@ -341,6 +342,156 @@ namespace Lingtren.Infrastructure.Services
                 _unitOfWork.GetRepository<Course>().Delete(course);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             });
+        }
+
+        /// <summary>
+        /// Handle to get user enrollment status in course
+        /// </summary>
+        /// <param name="id">the course id</param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
+        public async Task<CourseEnrollmentStatus> GetUserCourseEnrollmentStatus(Course course, Guid currentUserId, bool fetchMembers = false)
+        {
+            CourseEnrollmentStatus userStatus = CourseEnrollmentStatus.NotEnrolled;
+            if (course.CreatedBy == currentUserId)
+            {
+                return CourseEnrollmentStatus.Author;
+            }
+            else if (course.CourseTeachers.Any(p => p.UserId == currentUserId))
+            {
+                return CourseEnrollmentStatus.Teacher;
+            }
+            var enrolledMember = new CourseEnrollment();
+            if (fetchMembers)
+            {
+                enrolledMember = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(
+                predicate: p => p.CourseId == course.Id && p.UserId == currentUserId && !p.IsDeleted
+                            && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                                || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)).ConfigureAwait(false);
+            }
+            else
+            {
+                enrolledMember = course.CourseEnrollments.FirstOrDefault(p => p.UserId == currentUserId && !p.IsDeleted);
+            }
+
+            if (enrolledMember != null)
+            {
+                switch (enrolledMember.EnrollmentMemberStatus)
+                {
+                    case EnrollmentMemberStatusEnum.Enrolled:
+                        userStatus = CourseEnrollmentStatus.Enrolled;
+                        break;
+                    case EnrollmentMemberStatusEnum.Unenrolled:
+                        userStatus = CourseEnrollmentStatus.NotEnrolled;
+                        break;
+                    case EnrollmentMemberStatusEnum.Completed:
+                        userStatus = CourseEnrollmentStatus.Enrolled;
+                        break;
+                }
+            }
+            return userStatus;
+        }
+
+        /// <summary>
+        /// Handle to get course detail
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the instance of <see cref="CourseResponseModel"/></returns>
+        public async Task<CourseResponseModel> GetDetailAsync(string identity, Guid currentUserId)
+        {
+            try
+            {
+                var course = await ValidateAndGetCourse(currentUserId, identity).ConfigureAwait(false);
+                if (course == null)
+                {
+                    _logger.LogWarning("Course with identity : {identity} not found for user with id : {currentUserId}", identity, currentUserId);
+                    throw new EntityNotFoundException("Course not found");
+                }
+                course.Sections = new List<Section>();
+                course.Sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
+                    predicate: p => p.CourseId == course.Id && !p.IsDeleted,
+                    include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
+
+                var response = new CourseResponseModel
+                {
+                    Id = course.Id,
+                    Slug = course.Slug,
+                    Name = course.Name,
+                    ThumbnailUrl = course.ThumbnailUrl,
+                    Description = course.Description,
+                    Duration = course.Duration,
+                    Language = course.Language,
+                    LevelId = course.LevelId,
+                    GroupId = course.GroupId,
+                    User = course.User != null ? new UserModel(course.User) : new UserModel(),
+                    Status = course.Status,
+                    Sections = new List<SectionResponseModel>(),
+                };
+                if (course.CreatedBy != currentUserId && !course.CourseTeachers.Any(x => x.UserId == currentUserId))
+                {
+                    course.Sections = course.Sections.Where(x => x.Status == CourseStatus.Published && x.Lessons.Any(l => l.Status == CourseStatus.Published)).ToList();
+                }
+                if (course.Sections.Count == 0)
+                {
+                    return response;
+                }
+                var currentUserWatchHistories = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(
+                    predicate: x => currentUserId != default && x.UserId == currentUserId && x.CourseId == course.Id).ConfigureAwait(false);
+                
+                response.Sections = course.Sections.Select(x => new SectionResponseModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Slug = x.Slug,
+                    Order = x.Order,
+                    Description = x.Description,
+                    CourseId = x.CourseId,
+                    Duration = x.Duration,
+                    Lessons = x.Lessons.Select(l => new LessonResponseModel
+                    {
+                        Id = l.Id,
+                        Name = l.Name,
+                        Slug = l.Slug,
+                        Order = l.Order,
+                        Duration = l.Duration,
+                        IsPreview = l.IsPreview,
+                        IsCompleted = currentUserWatchHistories.Any(h => h.LessonId == h.LessonId && h.IsCompleted),
+                    }).OrderBy(x => x.Order).ToList(),
+                }).OrderBy(x => x.Order).ToList();
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to fetch course detail.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch course detail.");
+            }
+
+        }
+
+        private async Task<bool> IsCoursePurchase(Guid currentUserId, Course course)
+        {
+            if (currentUserId == default)
+            {
+                return false;
+            }
+            var validEnrollment = new List<EnrollmentMemberStatusEnum> { EnrollmentMemberStatusEnum.Enrolled, EnrollmentMemberStatusEnum.Completed };
+
+            var foundAsTeacher = course.CourseEnrollments.Any(x => x.UserId.Equals(currentUserId));
+            if (course.CreatedBy == currentUserId || foundAsTeacher)
+            {
+                return true;
+            }
+
+            var foundAsStudent = await _unitOfWork.GetRepository<CourseEnrollment>().ExistsAsync(
+                predicate: x => x.CourseId.Equals(course.Id) && x.UserId == currentUserId && !x.IsDeleted && validEnrollment.Contains(x.EnrollmentMemberStatus)
+                ).ConfigureAwait(false);
+
+            if (foundAsStudent)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
