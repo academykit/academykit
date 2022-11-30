@@ -87,12 +87,28 @@ namespace Lingtren.Infrastructure.Services
                 include: src => src.Include(x => x.User)
                                     .Include(x => x.Course)
                                     .Include(x => x.Section)
-                                    .Include(x=>x.Meeting)
-                                    .Include(x=>x.QuestionSet)
-                                    .Include(x=>x.Assignments)).ConfigureAwait(false);
+                                    ).ConfigureAwait(false);
             if (lesson == null)
             {
                 throw new EntityNotFoundException("Lesson not found");
+            }
+            if (lesson.Type == LessonType.LiveClass)
+            {
+                lesson.Meeting = new Meeting();
+                lesson.Meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id == lesson.MeetingId).ConfigureAwait(false);
+            }
+            if (lesson.Type == LessonType.Exam)
+            {
+                lesson.QuestionSet = new QuestionSet();
+                lesson.QuestionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id == lesson.QuestionSetId).ConfigureAwait(false);
+            }
+            if (lesson.Type == LessonType.Assignment)
+            {
+                lesson.Assignments = new List<Assignment>();
+                lesson.Assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
+                    predicate: p => p.LessonId == lesson.Id).ConfigureAwait(false);
             }
             return lesson;
         }
