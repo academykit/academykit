@@ -86,7 +86,10 @@ namespace Lingtren.Infrastructure.Services
                 predicate: p => p.CourseId == course.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),
                 include: src => src.Include(x => x.User)
                                     .Include(x => x.Course)
-                                    .Include(x => x.Section)).ConfigureAwait(false);
+                                    .Include(x => x.Section)
+                                    .Include(x=>x.Meeting)
+                                    .Include(x=>x.QuestionSet)
+                                    .Include(x=>x.Assignments)).ConfigureAwait(false);
             if (lesson == null)
             {
                 throw new EntityNotFoundException("Lesson not found");

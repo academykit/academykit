@@ -149,7 +149,7 @@
             var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(
                 predicate: predicate,
                 include: s => s.Include(x => x.CourseTeachers)
-                                .Include(x => x.CourseEnrollments)
+                                .Include(x => x.User)
                                 .Include(x => x.CourseTags)).ConfigureAwait(false);
 
             CommonHelper.CheckFoundEntity(course);
@@ -162,6 +162,8 @@
                     include: src => src.Include(x => x.GroupMembers)).ConfigureAwait(false);
             }
 
+            course.CourseEnrollments = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
+                predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
             // if current user is the creator he can modify/access the course
             if (course.CreatedBy.Equals(currentUserId) || course.CourseTeachers.Any(x => x.UserId == currentUserId))
             {

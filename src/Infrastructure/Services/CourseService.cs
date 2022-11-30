@@ -426,6 +426,7 @@ namespace Lingtren.Infrastructure.Services
                     GroupId = course.GroupId,
                     User = course.User != null ? new UserModel(course.User) : new UserModel(),
                     Status = course.Status,
+                    UserStatus = GetUserCourseEnrollmentStatus(course, currentUserId, fetchMembers: true).Result,
                     Sections = new List<SectionResponseModel>(),
                 };
                 if (course.CreatedBy != currentUserId && !course.CourseTeachers.Any(x => x.UserId == currentUserId))
@@ -438,7 +439,7 @@ namespace Lingtren.Infrastructure.Services
                 }
                 var currentUserWatchHistories = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(
                     predicate: x => currentUserId != default && x.UserId == currentUserId && x.CourseId == course.Id).ConfigureAwait(false);
-                
+
                 response.Sections = course.Sections.Select(x => new SectionResponseModel
                 {
                     Id = x.Id,
@@ -454,8 +455,20 @@ namespace Lingtren.Infrastructure.Services
                         Name = l.Name,
                         Slug = l.Slug,
                         Order = l.Order,
+                        CourseId = l.CourseId,
+                        SectionId = l.SectionId,
+                        QuestionSetId = l.QuestionSetId,
+                        MeetingId = l.MeetingId,
+                        DocumentUrl = l.DocumentUrl,
+                        ThumbnailUrl = l.ThumbnailUrl,
+                        Description = l.Description,
+                        Type = l.Type,
+                        Status = l.Status,
                         Duration = l.Duration,
                         IsPreview = l.IsPreview,
+                        IsMandatory = l.IsMandatory,
+                        QuestionSet = l.QuestionSet != null ? new QuestionSetResponseModel(l.QuestionSet) : null,
+                        Meeting  = l.Meeting != null ? new MeetingResponseModel(l.Meeting): null,
                         IsCompleted = currentUserWatchHistories.Any(h => h.LessonId == h.LessonId && h.IsCompleted),
                     }).OrderBy(x => x.Order).ToList(),
                 }).OrderBy(x => x.Order).ToList();
