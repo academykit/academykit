@@ -459,6 +459,7 @@ namespace Lingtren.Infrastructure.Services
                         SectionId = l.SectionId,
                         QuestionSetId = l.QuestionSetId,
                         MeetingId = l.MeetingId,
+                        VideoUrl = l.VideoUrl,
                         DocumentUrl = l.DocumentUrl,
                         ThumbnailUrl = l.ThumbnailUrl,
                         Description = l.Description,
