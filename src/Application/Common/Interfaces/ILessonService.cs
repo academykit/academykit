@@ -33,5 +33,14 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
         Task DeleteLessonAsync(string identity, string lessonIdentity, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to reorder lesson
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="model">the instance of <see cref="LessonReorderRequestModel"/></param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
+        Task ReorderAsync(string identity, LessonReorderRequestModel model, Guid currentUserId);
     }
 }

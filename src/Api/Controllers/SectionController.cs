@@ -147,5 +147,19 @@ namespace Lingtren.Api.Controllers
             await _sectionService.DeleteSectionAsync(identity, sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Section removed successfully." });
         }
+
+        /// <summary>
+        /// section reorder api
+        /// </summary>
+        /// <param name="identity"> the course id or slug</param>
+        /// <param name="Ids"> ids of section.</param>
+        /// <returns> the task complete</returns>
+        [HttpPut("reorder")]
+        public async Task<IActionResult> SectionOrder(string identity, IList<Guid> Ids)
+        {
+            await _sectionService.ReorderAsync(identity, Ids, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Section reorder successfully." });
+        }
+
     }
 }
