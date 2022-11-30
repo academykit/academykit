@@ -42,6 +42,7 @@
             services.AddTransient<IQuestionService, QuestionService>();
             services.AddTransient<IQuestionSetService, QuestionSetService>();
             services.AddTransient<IAssignmentService, AssignmentService>();
+            services.AddTransient<IWatchHistoryService, WatchHistoryService>();
 
             services.AddSingleton<IValidator<LoginRequestModel>, LoginValidator>();
             services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();
@@ -61,6 +62,7 @@
             services.AddSingleton<IValidator<QuestionPoolTeacherRequestModel>, QuestionPoolTeacherValidator>();
             services.AddSingleton<IValidator<QuestionRequestModel>, QuestionValidator>();
             services.AddSingleton<IValidator<AssignmentRequestModel>, AssignmentValidator>();
+            services.AddSingleton<IValidator<WatchHistoryRequestModel>, WatchHistoryValidator>();
 
             return services;
         }

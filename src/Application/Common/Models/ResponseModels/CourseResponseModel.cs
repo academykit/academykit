@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Application.Common.Models.ResponseModels
 {
+    using Lingtren.Application.Common.Dtos;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     public class CourseResponseModel
@@ -19,8 +20,9 @@
         public IList<CourseTagResponseModel> Tags { get; set; }
         public IList<SectionResponseModel> Sections { get; set; }
         public UserModel User { get; set; }
+        public CourseEnrollmentStatus UserStatus { get; set; }
 
-        public CourseResponseModel(Course model, bool fetchSection = false)
+        public CourseResponseModel(Course model, CourseEnrollmentStatus userStatus, bool fetchSection = false)
         {
             Id = model.Id;
             Slug = model.Slug;
@@ -34,6 +36,7 @@
             Duration = model.Duration;
             LevelId = model.LevelId;
             LevelName = model.Level?.Name;
+            UserStatus = userStatus;
             Tags = new List<CourseTagResponseModel>();
             Sections = new List<SectionResponseModel>();
             User = model.User != null ? new UserModel(model.User) : new UserModel();
@@ -42,6 +45,10 @@
             {
                 model.Sections.ToList().ForEach(item => Sections.Add(new SectionResponseModel(item,fetchLesson:true)));
             }
+        }
+        public CourseResponseModel()
+        {
+
         }
     }
 

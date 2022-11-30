@@ -2,6 +2,7 @@ namespace Lingtren.Application.Common.Interfaces
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using System;
@@ -40,5 +41,22 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns></returns>
         Task<Course> UpdateAsync(string identity, CourseRequestModel model, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to get user enrollment status
+        /// </summary>
+        /// <param name="course">the course id</param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <param name="fetchMembers">the bool value for fetch members</param>
+        /// <returns></returns>
+        Task<CourseEnrollmentStatus> GetUserCourseEnrollmentStatus(Course course, Guid currentUserId, bool fetchMembers = false);
+
+        /// <summary>
+        /// Handle to get course detail
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the instance of <see cref="CourseResponseModel"/></returns>
+        Task<CourseResponseModel> GetDetailAsync(string identity, Guid currentUserId);
     }
 }
