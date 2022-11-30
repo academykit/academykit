@@ -103,7 +103,7 @@ namespace Lingtren.Infrastructure.Services
             }
             else
             {
-                lesson = await GetCurrentLesson(currentUserId, course, lesson).ConfigureAwait(false);
+                lesson = await GetCurrentLesson(currentUserId, course).ConfigureAwait(false);
             }
 
             if (lesson.Type == LessonType.LiveClass)
@@ -125,40 +125,6 @@ namespace Lingtren.Infrastructure.Services
                     predicate: p => p.LessonId == lesson.Id).ConfigureAwait(false);
             }
             return lesson;
-        }
-
-        private async Task<Lesson> GetCurrentLesson(Guid currentUserId, Course course, Lesson lesson)
-        {
-            var currentLessonWatched = course.CourseEnrollments.FirstOrDefault(x => x.UserId == currentUserId);
-            var currentLessonId = currentLessonWatched?.CurrentLessonId.ValueOrDefault();
-            if (currentLessonId == default)
-            {
-                var watchHistories = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(
-                   predicate: p => p.CourseId == course.Id && p.UserId == currentUserId).ConfigureAwait(false);
-                if (watchHistories.Count == 0)
-                {
-                    var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
-                        predicate: p => p.CourseId == course.Id && (p.Order == 0 || p.Order == 1),
-                        include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
-                    currentLessonId = section.Lessons.FirstOrDefault(p => p.Order == 0 || p.Order == 1)?.Id;
-                }
-                else
-                {
-                    currentLessonId = watchHistories.OrderByDescending(x => x.UpdatedOn).FirstOrDefault()?.LessonId;
-                }
-            }
-            var currentLesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
-                    predicate: p => p.Id == currentLessonId,
-                    include: src => src.Include(x => x.User)
-                                .Include(x => x.Course)
-                                .Include(x => x.Section)
-                   ).ConfigureAwait(false);
-            if (currentLesson == null)
-            {
-                _logger.LogWarning("Current watch lesson not found for course with id : {courseId} and user with id : {userId}", course.Id, currentUserId);
-                throw new EntityNotFoundException("Current watched lesson not found");
-            }
-            return currentLesson;
         }
 
         /// <summary>
@@ -324,7 +290,7 @@ namespace Lingtren.Infrastructure.Services
             try
             {
                 var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
-                    predicate: p => p.Id == currentUserId && !p.IsActive).ConfigureAwait(false);
+                    predicate: p => p.Id == currentUserId && p.IsActive).ConfigureAwait(false);
                 if (user == null)
                 {
                     _logger.LogWarning("User with id: {id} not found", currentUserId);
@@ -340,8 +306,7 @@ namespace Lingtren.Infrastructure.Services
 
                 var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                     predicate: p => p.CourseId == course.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),
-                    include: src => src.Include(x => x.User)
-                                        .Include(x => x.Meeting.ZoomLicense)).ConfigureAwait(false);
+                    include: src => src.Include(x => x.User)).ConfigureAwait(false);
                 if (lesson == null)
                 {
                     _logger.LogWarning("Lesson with identity : {identity} and course with id: {courseId} not found for user with :{id}", identity, course.Id, currentUserId);
@@ -353,7 +318,8 @@ namespace Lingtren.Infrastructure.Services
                     _logger.LogWarning("Lesson with id : {id} type not match for join meeting", lesson.Id);
                     throw new ForbiddenException("Lesson type not match for join meeting");
                 }
-
+                lesson.Meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id == lesson.MeetingId, include: src => src.Include(x => x.ZoomLicense)).ConfigureAwait(false);
                 if (lesson.Meeting == null)
                 {
                     _logger.LogWarning("Lesson with id : {id}  meeting not found for join meeting", lesson.Id);
@@ -393,7 +359,6 @@ namespace Lingtren.Infrastructure.Services
                 response.RoomName = lesson.Name;
                 response.JwtToken = signature;
                 response.ZAKToken = zak;
-                response.HostId = lesson.Meeting.ZoomLicense.HostId;
                 response.UserName = user.FullName;
                 response.UserEmail = user.Email;
                 return response;
@@ -466,6 +431,47 @@ namespace Lingtren.Infrastructure.Services
         }
 
         #region Private Methods
+
+        /// <summary>
+        /// Handle to get user current watched lesson
+        /// </summary>
+        /// <param name="currentUserId">the current user id</param>
+        /// <param name="course">the instance of <see cref="Course"/> </param>
+        /// <returns></returns>
+        /// <exception cref="EntityNotFoundException"></exception>
+        private async Task<Lesson> GetCurrentLesson(Guid currentUserId, Course course)
+        {
+            var currentLessonWatched = course.CourseEnrollments.FirstOrDefault(x => x.UserId == currentUserId);
+            var currentLessonId = currentLessonWatched?.CurrentLessonId.ValueOrDefault();
+            if (currentLessonId == default)
+            {
+                var watchHistories = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(
+                   predicate: p => p.CourseId == course.Id && p.UserId == currentUserId).ConfigureAwait(false);
+                if (watchHistories.Count == 0)
+                {
+                    var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
+                        predicate: p => p.CourseId == course.Id && (p.Order == 0 || p.Order == 1),
+                        include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
+                    currentLessonId = section.Lessons.FirstOrDefault(p => p.Order == 0 || p.Order == 1)?.Id;
+                }
+                else
+                {
+                    currentLessonId = watchHistories.OrderByDescending(x => x.UpdatedOn).FirstOrDefault()?.LessonId;
+                }
+            }
+            var currentLesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id == currentLessonId,
+                    include: src => src.Include(x => x.User)
+                                .Include(x => x.Course)
+                                .Include(x => x.Section)
+                   ).ConfigureAwait(false);
+            if (currentLesson == null)
+            {
+                _logger.LogWarning("Current watch lesson not found for course with id : {courseId} and user with id : {userId}", course.Id, currentUserId);
+                throw new EntityNotFoundException("Current watched lesson not found");
+            }
+            return currentLesson;
+        }
 
         /// <summary>
         /// Handle to  create question set

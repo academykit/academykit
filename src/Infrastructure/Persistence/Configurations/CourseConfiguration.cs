@@ -11,7 +11,7 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.Slug).HasColumnName("slug").HasColumnType("VARCHAR(250)").HasMaxLength(250).IsRequired();
             builder.Property(x => x.Name).HasColumnName("name").HasColumnType("VARCHAR(250)").HasMaxLength(250).IsRequired();
-            builder.Property(x => x.Description).HasColumnName("description").HasColumnType("VARCHAR(500)").HasMaxLength(500).IsRequired(false);
+            builder.Property(x => x.Description).HasColumnName("description").HasColumnType("VARCHAR(5000)").HasMaxLength(5000).IsRequired(false);
             builder.Property(x => x.GroupId).HasColumnName("group_id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
             builder.Property(x => x.Status).HasColumnName("status");
             builder.Property(x => x.Language).HasColumnName("language");

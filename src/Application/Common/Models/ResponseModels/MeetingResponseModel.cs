@@ -5,7 +5,7 @@
     public class MeetingResponseModel
     {
         public Guid Id { get; set; }
-        public long MeetingNumber { get; set; }
+        public long? MeetingNumber { get; set; }
         public string PassCode { get; set; }
         public Guid ZoomLicenseId { get; set; }
         public int Duration { get; set; }
@@ -37,7 +37,6 @@
         /// Get or set zoom zak token
         /// </summary>
         public string ZAKToken { get; set; }
-        public string HostId { get; set; }
         public string UserEmail { get; set; }
         public string UserName { get; set; }
     }

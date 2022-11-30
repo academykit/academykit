@@ -9,10 +9,10 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
-            builder.Property(x => x.ApiKey).HasColumnName("api_key").HasColumnType("VARCHAR(100)").HasMaxLength(250).IsRequired();
-            builder.Property(x => x.ApiSecret).HasColumnName("api_secret").HasColumnType("VARCHAR(100)").HasMaxLength(250).IsRequired();
-            builder.Property(x => x.SdkKey).HasColumnName("sdk_key").HasColumnType("VARCHAR(100)").HasMaxLength(250).IsRequired();
-            builder.Property(x => x.SdkSecret).HasColumnName("sdk_secret").HasColumnType("VARCHAR(100)").HasMaxLength(250).IsRequired();
+            builder.Property(x => x.ApiKey).HasColumnName("api_key").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
+            builder.Property(x => x.ApiSecret).HasColumnName("api_secret").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
+            builder.Property(x => x.SdkKey).HasColumnName("sdk_key").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
+            builder.Property(x => x.SdkSecret).HasColumnName("sdk_secret").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
             builder.Property(x => x.IsRecordingEnabled).HasColumnName("is_recording_enabled").HasDefaultValue(false);
             builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.CreatedOn).HasColumnName("created_on").IsRequired().HasColumnType("DATETIME");

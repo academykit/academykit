@@ -3,6 +3,7 @@ using System;
 using Lingtren.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221130104119_CourseTableUpdate")]
+    partial class CourseTableUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -984,7 +986,7 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("duration");
 
-                    b.Property<long?>("MeetingNumber")
+                    b.Property<long>("MeetingNumber")
                         .HasColumnType("bigint")
                         .HasColumnName("meeting_number");
 
@@ -1007,7 +1009,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnName("updated_on");
 
                     b.Property<string>("ZoomLicenseId")
-                        .IsRequired()
                         .HasColumnType("VARCHAR(50)")
                         .HasColumnName("zoom_license_id");
 

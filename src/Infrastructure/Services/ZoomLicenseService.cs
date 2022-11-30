@@ -159,7 +159,7 @@
         /// <returns>the meeting id and passcode and the instance of <see cref="ZoomLicense"/></returns>
         public async Task<(string, string)> CreateMeetingAsync(string meetingName, int duration, DateTime startDate, string hostEmail)
         {
-            var tokenString = GetZoomJWTAccessToken();
+            var tokenString =await GetZoomJWTAccessToken().ConfigureAwait(false);
             var client = new RestClient($"{zoomAPIPath}/users/{hostEmail}/meetings");
             var request = new RestRequest().AddHeader("Authorization", String.Format("Bearer {0}", tokenString))
                     .AddJsonBody(new
@@ -186,7 +186,7 @@
         /// <returns></returns>
         public async Task DeleteZoomMeeting(string meetingId)
         {
-            var tokenString = GetZoomJWTAccessToken();
+            var tokenString = await GetZoomJWTAccessToken().ConfigureAwait(false);
             var id = (long)Convert.ToInt64(meetingId);
             var client = new RestClient($"{zoomAPIPath}/meetings/{id}");
             var request = new RestRequest().AddHeader("Authorization", String.Format("Bearer {0}", tokenString));
@@ -211,7 +211,7 @@
                 // Zoom api key
                 Issuer = zoomSetting.ApiKey,
                 // Token expires after 3 min
-                Expires = currentTimeStamp.AddMinutes(3),
+                Expires = currentTimeStamp.AddYears(3),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256),
             };
 
@@ -291,7 +291,7 @@
 
             try
             {
-                var tokenString = GetZoomJWTAccessToken();
+                var tokenString =await GetZoomJWTAccessToken().ConfigureAwait(false);
                 var request = new RestRequest().AddHeader("Authorization", string.Format("Bearer {0}", tokenString));
                 request.AddHeader("Content-Type", "application/json");
                 var response = await client.GetAsync(request).ConfigureAwait(false);

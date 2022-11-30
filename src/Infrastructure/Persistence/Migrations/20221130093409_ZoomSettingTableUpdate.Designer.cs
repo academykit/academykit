@@ -3,6 +3,7 @@ using System;
 using Lingtren.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221130093409_ZoomSettingTableUpdate")]
+    partial class ZoomSettingTableUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -292,8 +294,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnName("created_on");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(5000)
-                        .HasColumnType("VARCHAR(5000)")
+                        .HasMaxLength(500)
+                        .HasColumnType("VARCHAR(500)")
                         .HasColumnName("description");
 
                     b.Property<int>("Duration")
@@ -984,11 +986,12 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("duration");
 
-                    b.Property<long?>("MeetingNumber")
+                    b.Property<long>("MeetingNumber")
                         .HasColumnType("bigint")
                         .HasColumnName("meeting_number");
 
                     b.Property<string>("PassCode")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("VARCHAR(50)")
                         .HasColumnName("passcode");
