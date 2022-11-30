@@ -3,6 +3,7 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
@@ -139,6 +140,57 @@ namespace Lingtren.Infrastructure.Services
             {
                 _logger.LogError(ex.Message, ex);
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handle to reorder section
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="ids">the section ids</param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
+        public async Task ReorderAsync(string identity, IList<Guid> ids, Guid currentUserId)
+        {
+            try
+            {
+                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+                if (course == null)
+                {
+                    _logger.LogWarning("ReorderAsync(): Course with identity : {identity} not found for user with id :{userId}.", identity, currentUserId);
+                    throw new EntityNotFoundException("Course was not found");
+                }
+
+                var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
+                    predicate: p => p.CourseId == course.Id && ids.Contains(p.Id)
+                    ).ConfigureAwait(false);
+
+                var order = 1;
+                var currentTimeStamp = DateTime.UtcNow;
+                var updateEntities = new List<Section>();
+                foreach (var id in ids)
+                {
+                    var section = sections.FirstOrDefault(x => x.Id == id);
+                    if (section != null)
+                    {
+                        section.Order = order;
+                        section.UpdatedBy = currentUserId;
+                        section.UpdatedOn = currentTimeStamp;
+                        updateEntities.Add(section);
+                        order++;
+                    }
+                }
+                if (updateEntities.Count > 0)
+                {
+                    _unitOfWork.GetRepository<Section>().Update(updateEntities);
+                    await _unitOfWork.SaveChangesAsync();
+                }
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to reorder the lessons");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to reorder the lessons");
             }
         }
 

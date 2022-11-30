@@ -66,11 +66,25 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="lessonIdentity"> the department id or slug</param>
         /// <returns> the instance of <see cref="LessonResponseModel" /> .</returns>
-        [HttpGet("get")]
-        public async Task<LessonResponseModel> Get(string identity, [FromQuery] string lessonIdentity)
+        [HttpGet("detail")]
+        public async Task<LessonResponseModel> GetDetail(string identity, [FromQuery] string lessonIdentity)
         {
             var model = await _lessonService.GetLessonAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
             return new LessonResponseModel(model);
+        }
+
+        /// <summary>
+        /// lesson reorder api
+        /// </summary>
+        /// <param name="identity"> the course id or slug</param>
+        /// <param name="model"> the instance of <see cref="LessonReorderRequestModel"/></param>
+        /// <returns> the task complete </returns>
+        [HttpPut("reorder")]
+
+        public async Task<IActionResult> LessonReorder(string identity, LessonReorderRequestModel model)
+        {
+            await _lessonService.ReorderAsync(identity, model, CurrentUser.Id);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Lesson reorder successfully." });
         }
 
         ///// <summary>

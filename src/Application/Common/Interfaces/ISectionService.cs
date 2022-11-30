@@ -2,6 +2,8 @@ namespace Lingtren.Application.Common.Interfaces
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Domain.Entities;
+    using System.Collections.Generic;
+
     public interface ISectionService : IGenericService<Section, SectionBaseSearchCriteria>
     {
         /// <summary>
@@ -12,5 +14,14 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
         Task DeleteSectionAsync(string identity, string sectionIdentity, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to reorder section
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="ids">the section ids</param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
+        Task ReorderAsync(string identity, IList<Guid> ids, Guid currentUserId);
     }
 }
