@@ -90,7 +90,7 @@ namespace Lingtren.Infrastructure.Services
             groupPredicate = PredicateBuilder.New<Course>(x => x.GroupId.HasValue && groupIds.Contains(x.GroupId ?? Guid.Empty));
             groupPredicate = groupPredicate.And(predicate);
 
-            predicate = predicate.And(x=>!x.GroupId.HasValue).Or(groupPredicate);
+            predicate = predicate.And(x => !x.GroupId.HasValue).Or(groupPredicate);
 
             return predicate.And(x => x.CreatedBy == criteria.CurrentUserId
             || (x.CreatedBy != criteria.CurrentUserId && x.Status.Equals(CourseStatus.Published)));
@@ -488,32 +488,6 @@ namespace Lingtren.Infrastructure.Services
                 _logger.LogError(ex, "An error occurred while trying to fetch course detail.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch course detail.");
             }
-
-        }
-
-        private async Task<bool> IsCoursePurchase(Guid currentUserId, Course course)
-        {
-            if (currentUserId == default)
-            {
-                return false;
-            }
-            var validEnrollment = new List<EnrollmentMemberStatusEnum> { EnrollmentMemberStatusEnum.Enrolled, EnrollmentMemberStatusEnum.Completed };
-
-            var foundAsTeacher = course.CourseEnrollments.Any(x => x.UserId.Equals(currentUserId));
-            if (course.CreatedBy == currentUserId || foundAsTeacher)
-            {
-                return true;
-            }
-
-            var foundAsStudent = await _unitOfWork.GetRepository<CourseEnrollment>().ExistsAsync(
-                predicate: x => x.CourseId.Equals(course.Id) && x.UserId == currentUserId && !x.IsDeleted && validEnrollment.Contains(x.EnrollmentMemberStatus)
-                ).ConfigureAwait(false);
-
-            if (foundAsStudent)
-            {
-                return true;
-            }
-            return false;
         }
     }
 }

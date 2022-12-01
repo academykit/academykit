@@ -10,7 +10,6 @@
         {
             RuleFor(x => x.NewPassword).NotNull().NotEmpty().WithMessage("New password is required").Length(6, 20)
                      .Must(pw => HasValidPassword(pw)).WithMessage("Password should contains at least one lowercase, one uppercase, one digit and one symbol");
-            RuleFor(x => x.NewPassword).NotNull().NotEmpty().WithMessage("New password is required").MinimumLength(6);
             RuleFor(x => x.ConfirmPassword).NotNull().NotEmpty().WithMessage("Confirm password is required");
             RuleFor(x => x.NewPassword).Equal(x => x.ConfirmPassword).WithMessage("New password and Confirm password does not matched");
         }

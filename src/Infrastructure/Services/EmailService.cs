@@ -5,6 +5,7 @@
     using Lingtren.Application.Common.Interfaces;
     using MailKit.Net.Smtp;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using MimeKit;
 
@@ -14,16 +15,19 @@
         private readonly ILogger<EmailService> _logger;
         private readonly ISMTPSettingService _smtpSettingService;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly string _appUrl;
 
         public EmailService(
             ILogger<EmailService> logger,
             ISMTPSettingService smtpSettingService,
-            IWebHostEnvironment hostingEnvironment
+            IWebHostEnvironment hostingEnvironment,
+            IConfiguration configuration
             )
         {
             _logger = logger;
             _smtpSettingService = smtpSettingService;
             _hostingEnvironment = hostingEnvironment;
+            _appUrl = configuration.GetSection("AppUrls:App").Value;
         }
 
         public async Task SendMailWithHtmlBodyAsync(EmailRequestDto emailRequestDto)
@@ -119,6 +123,37 @@
                 {
                     To = emailAddress,
                     Subject = "Account Created",
+                    Message = html
+                };
+                await SendMailWithHtmlBodyAsync(mail).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to send change email address mail.");
+            }
+        }
+
+        /// <summary>
+        /// Email for account created and password
+        /// </summary>
+        /// <param name="email">the email address of the receiver</param>
+        /// <param name="firstName">the first name of the receiver</param>
+        /// <param name="token">the jwt token</param>
+        /// <param name="expiredTime">the login password of the receiver</param>
+        /// <returns></returns>
+        public async Task SendChangePasswordMailAsync(string email, string firstName, string token, int expiredTime)
+        {
+            try
+            {
+                var html = $"Dear {firstName},<br><br>";
+                html += @$"Please click the link <u>{_appUrl}/changeEmail?token={token}</u> to change the email for E-learning. 
+                                <br> The link will expire in {expiredTime} mins<br><br>";
+                html += _footerEmail;
+
+                var mail = new EmailRequestDto
+                {
+                    To = email,
+                    Subject = "Change Email",
                     Message = html
                 };
                 await SendMailWithHtmlBodyAsync(mail).ConfigureAwait(false);

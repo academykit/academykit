@@ -87,7 +87,6 @@
         /// </remarks>
         public async Task<WatchHistoryResponseModel> CreateAsync(WatchHistoryRequestModel model, Guid currentUserId)
         {
-
             var course = await ValidateAndGetCourse(currentUserId, model.CourseIdentity, validateForModify: false).ConfigureAwait(false);
             if (course == null)
             {
@@ -193,6 +192,5 @@
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to calculate course completed percentage.");
             }
         }
-
     }
 }

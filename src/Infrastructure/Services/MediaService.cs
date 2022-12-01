@@ -57,8 +57,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying to upload file.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to upload file.");
             }
         }
 
@@ -85,11 +85,10 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying to upload video.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to upload video.");
             }
         }
-
 
         /// <summary>
         /// handle to convert file to byte
@@ -98,10 +97,9 @@ namespace Lingtren.Infrastructure.Services
         /// <returns> task complete </returns>
         private async Task<byte[]> ConvertFileToByte(IFormFile file)
         {
-
             try
             {
-                byte[] fileData = null;
+                byte[]? fileData = null;
                 using (var fileStream = file.OpenReadStream())
                 using (var memoryStream = new MemoryStream())
                 {
@@ -112,8 +110,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                this._logger.LogError(ex, "An error occurred while trying to convert file to byte.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to convert file to byte.");
             }
         }
     }

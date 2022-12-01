@@ -43,12 +43,11 @@
             model.CourseTags.ToList().ForEach(item => Tags.Add(new CourseTagResponseModel(item)));
             if (fetchSection)
             {
-                model.Sections.ToList().ForEach(item => Sections.Add(new SectionResponseModel(item,fetchLesson:true)));
+                model.Sections.ToList().ForEach(item => Sections.Add(new SectionResponseModel(item, fetchLesson: true)));
             }
         }
         public CourseResponseModel()
         {
-
         }
     }
 

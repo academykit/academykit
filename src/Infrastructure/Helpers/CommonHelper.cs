@@ -370,11 +370,5 @@
             }
             return dataTable;
         }
-
-        // Nullable generic implementation
-        public static T ValueOrDefault<T>(this Nullable<T> source) where T : struct
-        {
-            return source ?? default(T);
-        }
     }
 }

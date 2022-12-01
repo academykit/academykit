@@ -70,8 +70,7 @@
         /// <returns>The claim value.</returns>
         public static string? GetClaim(this ClaimsPrincipal claimsPrincipal, string claimType, bool isRequired = false)
         {
-            Claim claim = FindClaim(claimsPrincipal, claimType, isRequired);
-
+            var claim = FindClaim(claimsPrincipal, claimType, isRequired);
             return claim?.Value;
         }
 
@@ -90,8 +89,7 @@
             {
                 return default;
             }
-            var result = Deserialize<T>(claim.Value);
-            return result;
+            return Deserialize<T>(claim.Value);
         }
 
         /// <summary>
@@ -101,7 +99,7 @@
         /// <param name="claimType">Type of the claim.</param>
         /// <param name="isRequired">if set to <c>true</c> [is required].</param>
         /// <returns>Found claim.</returns>
-        private static Claim FindClaim(ClaimsPrincipal claimsPrincipal, string claimType, bool isRequired)
+        private static Claim? FindClaim(ClaimsPrincipal claimsPrincipal, string claimType, bool isRequired)
         {
             var claim = claimsPrincipal.Claims.FirstOrDefault(x => x.Type == claimType);
             if (claim == null && isRequired)

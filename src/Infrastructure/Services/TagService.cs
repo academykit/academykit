@@ -53,8 +53,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying to create tag.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to create tag.");
             }
         }
 
@@ -97,8 +97,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying to delete tag.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to delete tag.");
             }
         }
 
@@ -137,8 +137,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying to update tag.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update tag.");
             }
         }
 
@@ -187,7 +187,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="user"> the instance of <see cref="User"/></param>
         /// <param name="tag"> the instance of <see cref="Tag"/></param>
         /// <returns> the boolean value </returns>
-        private bool ValidateUser(User user, Tag tag)
+        private static bool ValidateUser(User user, Tag tag)
         {
             if (tag.CreatedBy == user.Id)
             {

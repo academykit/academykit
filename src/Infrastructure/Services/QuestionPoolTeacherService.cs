@@ -108,7 +108,7 @@
                 throw new ForbiddenException("User cannot be removed themselves");
             }
 
-            var questionPool = await ValidateAndGetQuestionPool(currentUserId, questionPoolIdentity: teacher.QuestionPoolId.ToString(), validateForModify: true).ConfigureAwait(false);
+            var questionPool = await ValidateAndGetQuestionPool(currentUserId, questionPoolIdentity: teacher.QuestionPoolId.ToString()).ConfigureAwait(false);
             if (questionPool.CreatedBy == teacher.UserId)
             {
                 _logger.LogWarning("QuestionPool with Id {id} creator User Id {userId} can't be delete from questionPool teacher.", questionPool.Id, teacher.UserId);
@@ -127,7 +127,7 @@
         /// <param name="entity">The current entity.</param>
         protected override async Task CreatePreHookAsync(QuestionPoolTeacher entity)
         {
-            var questionPool = await ValidateAndGetQuestionPool(entity.CreatedBy, questionPoolIdentity: entity.QuestionPoolId.ToString(), validateForModify: true).ConfigureAwait(false);
+            var questionPool = await ValidateAndGetQuestionPool(entity.CreatedBy, questionPoolIdentity: entity.QuestionPoolId.ToString()).ConfigureAwait(false);
             if (questionPool.CreatedBy == entity.UserId)
             {
                 _logger.LogWarning("QuestionPool with Id : {id} creator User Id : {userId} can't be questionPool teacher.", questionPool.Id, entity.UserId);

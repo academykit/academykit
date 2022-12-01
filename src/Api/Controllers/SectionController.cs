@@ -160,6 +160,5 @@ namespace Lingtren.Api.Controllers
             await _sectionService.ReorderAsync(identity, Ids, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Section reorder successfully." });
         }
-
     }
 }

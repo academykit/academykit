@@ -86,7 +86,6 @@ namespace Lingtren.Infrastructure.Services
             var lesson = new Lesson();
             if (!string.IsNullOrWhiteSpace(lessonIdentity))
             {
-
                 var requestedLesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                predicate: p => p.CourseId == course.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),
                include: src => src.Include(x => x.User)
@@ -277,7 +276,6 @@ namespace Lingtren.Infrastructure.Services
 
             _unitOfWork.GetRepository<Lesson>().Delete(lesson);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-
         }
 
         /// <summary>
@@ -357,21 +355,24 @@ namespace Lingtren.Infrastructure.Services
 
                 var zak = isModerator ? await _zoomLicenseService.GetZAKAsync(lesson.Meeting.ZoomLicense.HostId).ConfigureAwait(false) : null;
 
-                var response = new MeetingJoinResponseModel();
-                response.RoomName = lesson.Name;
-                response.JwtToken = signature;
-                response.ZAKToken = zak;
-                response.UserName = user.FullName;
-                response.UserEmail = user.Email;
+                var response = new MeetingJoinResponseModel
+                {
+                    RoomName = lesson.Name,
+                    JwtToken = signature,
+                    ZAKToken = zak,
+                    UserName = user.FullName,
+                    UserEmail = user.Email
+                };
                 return response;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying to join live class.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to join live class.");
             }
         }
 
+        /// <summary>
         /// Handle to reorder lesson
         /// </summary>
         /// <param name="identity">the course id or slug</param>
@@ -424,7 +425,6 @@ namespace Lingtren.Infrastructure.Services
                     await _unitOfWork.SaveChangesAsync();
                 }
             }
-
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to reorder the lessons");
@@ -444,7 +444,7 @@ namespace Lingtren.Infrastructure.Services
         private async Task<Lesson> GetCurrentLesson(Guid currentUserId, Course course)
         {
             var currentLessonWatched = course.CourseEnrollments.FirstOrDefault(x => x.UserId == currentUserId);
-            var currentLessonId = currentLessonWatched?.CurrentLessonId.ValueOrDefault();
+            var currentLessonId = currentLessonWatched?.CurrentLessonId;
             if (currentLessonId == default)
             {
                 var watchHistories = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(

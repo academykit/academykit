@@ -137,8 +137,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying to delete section.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to delete section.");
             }
         }
 
@@ -185,7 +185,6 @@ namespace Lingtren.Infrastructure.Services
                     await _unitOfWork.SaveChangesAsync();
                 }
             }
-
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to reorder the lessons");
@@ -222,7 +221,7 @@ namespace Lingtren.Infrastructure.Services
                             x.UserId == userId).ConfigureAwait(false);
             if (teacher == null)
             {
-                _logger.LogWarning("Unauthroized user : {0} is not teacher of course {1}", entity.CreatedBy, entity.CourseId);
+                _logger.LogWarning("Unauthorized user with id : {userId} is not teacher of course with id :{courseId}", entity.CreatedBy, entity.CourseId);
                 throw new ForbiddenException("Unauthorized user");
             }
         }

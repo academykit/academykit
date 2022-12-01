@@ -216,7 +216,7 @@
         public virtual Task<SearchResult<TEntity>> GetPagedListAsync(BaseSearchCriteria criteria, Expression<Func<TEntity, bool>> predicate = null,
                                                            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
                                                            bool disableTracking = true,
-                                                           CancellationToken cancellationToken = default(CancellationToken),
+                                                           CancellationToken cancellationToken = default,
                                                            bool ignoreQueryFilters = false)
         {
             IQueryable<TEntity> query = _dbSet;
@@ -317,7 +317,7 @@
                                                                     Expression<Func<TEntity, bool>> predicate = null,
                                                                     Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
                                                                     bool disableTracking = true,
-                                                                    CancellationToken cancellationToken = default(CancellationToken),
+                                                                    CancellationToken cancellationToken = default,
                                                                     bool ignoreQueryFilters = false)
             where TResult : class
         {
@@ -797,7 +797,7 @@
         /// <param name="entity">The entity to insert.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous insert operation.</returns>
-        public virtual ValueTask<EntityEntry<TEntity>> InsertAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual ValueTask<EntityEntry<TEntity>> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             return _dbSet.AddAsync(entity, cancellationToken);
         }
@@ -815,7 +815,7 @@
         /// <param name="entities">The entities to insert.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous insert operation.</returns>
-        public virtual Task InsertAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default(CancellationToken)) => _dbSet.AddRangeAsync(entities, cancellationToken);
+        public virtual Task InsertAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default) => _dbSet.AddRangeAsync(entities, cancellationToken);
 
         /// <summary>
         /// Updates the specified entity.
@@ -852,7 +852,7 @@
         {
             // using a stub entity to mark for deletion
             var typeInfo = typeof(TEntity).GetTypeInfo();
-            var key = _dbContext.Model.FindEntityType(typeInfo).FindPrimaryKey().Properties.FirstOrDefault();
+            var key = _dbContext.Model?.FindEntityType(typeInfo)?.FindPrimaryKey()?.Properties?.FirstOrDefault();
             var property = typeInfo.GetProperty(key?.Name);
             if (property != null)
             {

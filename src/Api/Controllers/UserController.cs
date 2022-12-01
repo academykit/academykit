@@ -2,13 +2,16 @@
 {
     using Application.Common.Models.ResponseModels;
     using FluentValidation;
+    using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
+    using Lingtren.Infrastructure.Helpers;
     using LinqKit;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class UserController : BaseApiController
@@ -17,18 +20,21 @@
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
         private readonly IValidator<UserRequestModel> _validator;
+        private readonly IValidator<ChangeEmailRequestModel> _changeEmailValidator;
 
         public UserController(
                             ILogger<UserController> logger,
                             IUserService userService,
                             IEmailService emailService,
-                            IValidator<UserRequestModel> validator
+                            IValidator<UserRequestModel> validator,
+                            IValidator<ChangeEmailRequestModel> changeEmailValidator
                            )
         {
             _logger = logger;
             _userService = userService;
             _emailService = emailService;
             _validator = validator;
+            _changeEmailValidator = changeEmailValidator;
         }
 
         /// <summary>
@@ -83,7 +89,7 @@
                 Bio = model.Bio,
                 ImageUrl = model.ImageUrl,
                 PublicUrls = model.PublicUrls,
-                IsActive = true,
+                IsActive = model.IsActive,
                 Profession = model.Profession,
                 Role = model.Role,
                 CreatedBy = CurrentUser.Id,
@@ -135,7 +141,6 @@
             existing.MiddleName = model.MiddleName;
             existing.LastName = model.LastName;
             existing.Address = model.Address;
-            existing.Email = model.Email;
             existing.MobileNumber = model.MobileNumber;
             existing.Bio = model.Bio;
             existing.PublicUrls = model.PublicUrls;
@@ -175,6 +180,51 @@
 
             var savedEntity = await _userService.UpdateAsync(existing, includeProperties: false).ConfigureAwait(false);
             return new UserResponseModel(savedEntity);
+        }
+
+        /// <summary>
+        /// change user status api
+        /// </summary>
+        /// <param name="userId">the user id</param>
+        /// <param name="enabled">the boolean</param>
+        /// <returns>the instance of <see cref="UserResponseModel"/></returns>
+        [HttpPatch("{userId}/changeEmail")]
+        public async Task<UserResponseModel> ChangeEmail(Guid userId, [FromQuery] bool enabled)
+        {
+            IsAdmin(CurrentUser.Role);
+            if (CurrentUser.Id == userId)
+            {
+                _logger.LogWarning("User with userId : {userId} is trying to change status of themselves", userId);
+                throw new ForbiddenException("User cannot change their own status");
+            }
+            var existing = await _userService.GetAsync(userId, CurrentUser.Id, includeAllProperties: false).ConfigureAwait(false);
+
+            var currentTimeStamp = DateTime.UtcNow;
+
+            existing.Id = existing.Id;
+            existing.IsActive = enabled;
+            existing.UpdatedBy = CurrentUser.Id;
+            existing.UpdatedOn = currentTimeStamp;
+
+            var savedEntity = await _userService.UpdateAsync(existing, includeProperties: false).ConfigureAwait(false);
+            return new UserResponseModel(savedEntity);
+        }
+
+        [HttpPut("changeEmailRequest")]
+        public async Task<IActionResult> ChangeEmailRequestAsync(ChangeEmailRequestModel model)
+        {
+            await _changeEmailValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await _userService.ChangeEmailRequestAsync(model).ConfigureAwait(false);
+            return Ok(new CommonResponseModel { Success = true, Message = "Email changed requested successfully." });
+        }
+
+        [AllowAnonymous]
+        [HttpGet("verifyChangeEmail")]
+        public async Task<IActionResult> VerifyChangeEmailAsync([FromQuery] string token)
+        {
+            CommonHelper.ValidateArgumentNotNullOrEmpty(token, nameof(token));
+            await _userService.VerifyChangeEmailAsync(token).ConfigureAwait(false);
+            return Ok(new CommonResponseModel { Success = true, Message = "Email changed successfully." });
         }
     }
 }

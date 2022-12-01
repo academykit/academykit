@@ -204,7 +204,7 @@
         /// <param name="validateForModify"></param>
         /// <returns></returns>
         /// <exception cref="ForbiddenException"></exception>
-        protected async Task<QuestionPool> ValidateAndGetQuestionPool(Guid currentUserId, string questionPoolIdentity, bool validateForModify = true)
+        protected async Task<QuestionPool> ValidateAndGetQuestionPool(Guid currentUserId, string questionPoolIdentity)
         {
             CommonHelper.ValidateArgumentNotNullOrEmpty(questionPoolIdentity, nameof(questionPoolIdentity));
             var predicate = PredicateBuilder.New<QuestionPool>(true);
@@ -230,13 +230,13 @@
         {
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
                 predicate: p => p.Id == userId,
-                include: src=>src.Include(x=>x.GroupMembers)).ConfigureAwait(false);
+                include: src => src.Include(x => x.GroupMembers)).ConfigureAwait(false);
 
             if (user == null)
             {
                 throw new EntityNotFoundException("The user doesn't exits.");
             }
-            return user.GroupMembers.Select(x=>x.GroupId).ToList();
+            return user.GroupMembers.Select(x => x.GroupId).ToList();
         }
     }
 }

@@ -78,7 +78,6 @@
             _unitOfWork.GetRepository<AssignmentQuestionOption>().Delete(entity.AssignmentQuestionOptions);
         }
 
-
         /// <summary>
         /// If entity needs to support the get by slug or id then has to override this method.
         /// </summary>
@@ -119,7 +118,6 @@
             }
             await Task.FromResult(0);
         }
-
 
         /// <summary>
         /// Handel to populate live session retrieved entity

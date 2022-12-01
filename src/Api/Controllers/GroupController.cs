@@ -131,7 +131,6 @@
         /// <param name="searchCriteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns></returns>
         /// <exception cref="EntityNotFoundException"></exception>
-
         [HttpGet("{identity}/members")]
         public async Task<SearchResult<GroupMemberResponseModel>> SearchGroupMembers(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
         {
@@ -140,7 +139,7 @@
             {
                 throw new EntityNotFoundException("Group not found");
             }
-            GroupMemberBaseSearchCriteria criteria = new GroupMemberBaseSearchCriteria
+            GroupMemberBaseSearchCriteria criteria = new()
             {
                 GroupId = group.Id,
                 CurrentUserId = searchCriteria.CurrentUserId,
@@ -200,7 +199,6 @@
         /// <param name="identity">the group id or slug</param>
         /// <param name="id">group member id</param>
         /// <returns></returns>
-
         [HttpDelete("{identity}/removeMember/{id}")]
         public async Task<IActionResult> RemoveMember(string identity, Guid id)
         {

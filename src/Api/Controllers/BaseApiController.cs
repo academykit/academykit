@@ -43,7 +43,7 @@
         /// <summary>
         /// Checks if the user is admin or not.
         /// </summary>
-        protected void IsAdmin(UserRole role)
+        protected static void IsAdmin(UserRole role)
         {
             if (role != UserRole.Admin)
             {
@@ -53,7 +53,7 @@
         /// <summary>
         /// Checks if the user is admin or teacher.
         /// </summary>
-        protected void IsTeacherAdmin(UserRole role)
+        protected static void IsTeacherAdmin(UserRole role)
         {
             if (role != UserRole.Admin && role != UserRole.Teacher)
             {
@@ -64,7 +64,7 @@
         /// <summary>
         /// Checks if the user is teacher or not.
         /// </summary>
-        protected void IsTeacher(UserRole role)
+        protected static void IsTeacher(UserRole role)
         {
             if (role != UserRole.Teacher)
             {

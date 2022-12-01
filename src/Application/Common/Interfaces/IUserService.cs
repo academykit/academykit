@@ -86,5 +86,19 @@
         /// <param name="currentUserId">the current logged in user</param>
         /// <returns></returns>
         Task ChangePasswordAsync(ChangePasswordRequestModel model, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to change user email
+        /// </summary>
+        /// <param name="model">the instance of <see cref="ChangeEmailRequestModel"/></param>
+        /// <returns></returns>
+        Task ChangeEmailRequestAsync(ChangeEmailRequestModel model);
+
+        /// <summary>
+        /// Handle to verify user email change
+        /// </summary>
+        /// <param name="token">the token</param>
+        /// <returns></returns>
+        Task VerifyChangeEmailAsync(string token);
     }
 }

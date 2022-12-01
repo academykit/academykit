@@ -63,6 +63,7 @@
             services.AddSingleton<IValidator<QuestionRequestModel>, QuestionValidator>();
             services.AddSingleton<IValidator<AssignmentRequestModel>, AssignmentValidator>();
             services.AddSingleton<IValidator<WatchHistoryRequestModel>, WatchHistoryValidator>();
+            services.AddSingleton<IValidator<ChangeEmailRequestModel>, ChangeEmailValidator>();
 
             return services;
         }

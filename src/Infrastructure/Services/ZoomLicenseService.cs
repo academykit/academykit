@@ -100,20 +100,20 @@
                         || (startDateTime.AddSeconds(duration * 60) > p.StartDate.Value && startDateTime.AddSeconds(duration * 60) < p.StartDate.Value.AddSeconds(p.Duration)))).ConfigureAwait(false);
 
             var data = from zoomLicense in zoomLicenses
-                         join meeting in meetings on zoomLicense.Id equals meeting.ZoomLicenseId
-                         into zoomMeeting
-                         from m in zoomMeeting.DefaultIfEmpty()
-                         group m by zoomLicense into g
-                         select new
-                         {
-                             g.Key.Id,
-                             g.Key.HostId,
-                             g.Key.Capacity,
-                             g.Key.LicenseEmail,
-                             g.Key.IsActive,
-                             Count = g.Count()
-                         };
-            
+                       join meeting in meetings on zoomLicense.Id equals meeting.ZoomLicenseId
+                       into zoomMeeting
+                       from m in zoomMeeting.DefaultIfEmpty()
+                       group m by zoomLicense into g
+                       select new
+                       {
+                           g.Key.Id,
+                           g.Key.HostId,
+                           g.Key.Capacity,
+                           g.Key.LicenseEmail,
+                           g.Key.IsActive,
+                           Count = g.Count()
+                       };
+
             var response = data.Where(x => x.Count < 2).Select(x => new ZoomLicenseResponseModel
             {
                 Id = x.Id,
@@ -155,7 +155,6 @@
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
 
-
         #region Zoom Api Service
 
         /// <summary>
@@ -180,8 +179,7 @@
                     });
 
             var response = await client.PostAsync(request).ConfigureAwait(false);
-
-            int numericStatusCode = (int)response.StatusCode;
+            _ = (int)response.StatusCode;
             var jObject = JObject.Parse(response.Content);
             var meetingId = (string)jObject["id"];
             var passcode = (string)jObject["password"];
@@ -268,7 +266,6 @@
         /// <param name="secret">the zoom sdk secret</param>
         /// <param name="payload">the instance of <see cref="JwtPayload"/></param>
         /// <returns></returns>
-
         public static string CreateToken(string secret, JwtPayload payload)
         {
             // Create Security key using private key above:
@@ -309,10 +306,9 @@
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while attempting to generate zak token.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to generate zak token.");
             }
-
         }
 
         #endregion Zoom Api Service
