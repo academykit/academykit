@@ -91,20 +91,29 @@
         /// <returns></returns>
         public async Task<IList<ZoomLicenseResponseModel>> GetActiveLicenses(DateTime startDateTime, int duration)
         {
-            var data = from zoomLicense in _unitOfWork.DbContext.ZoomLicenses.ToList()
-                       join meeting in _unitOfWork.DbContext.Meetings.ToList() on zoomLicense.Id equals meeting.ZoomLicenseId
-                       where meeting.StartDate.HasValue && zoomLicense.IsActive &&
-                       (meeting.StartDate.Value.AddSeconds(meeting.Duration) < startDateTime || meeting.StartDate.Value > startDateTime.AddSeconds(duration))
-                       group meeting by zoomLicense into g
-                       select new
-                       {
-                           g.Key.Id,
-                           g.Key.HostId,
-                           g.Key.Capacity,
-                           g.Key.LicenseEmail,
-                           g.Key.IsActive,
-                           Count = g.Count()
-                       };
+            var zoomLicenses = await _unitOfWork.GetRepository<ZoomLicense>().GetAllAsync(
+                predicate: p => p.IsActive).ConfigureAwait(false);
+
+            var meetings = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(
+                predicate: p => p.StartDate.HasValue
+                   && ((startDateTime > p.StartDate.Value && startDateTime < p.StartDate.Value.AddSeconds(p.Duration))
+                        || (startDateTime.AddSeconds(duration * 60) > p.StartDate.Value && startDateTime.AddSeconds(duration * 60) < p.StartDate.Value.AddSeconds(p.Duration)))).ConfigureAwait(false);
+
+            var data = from zoomLicense in zoomLicenses
+                         join meeting in meetings on zoomLicense.Id equals meeting.ZoomLicenseId
+                         into zoomMeeting
+                         from m in zoomMeeting.DefaultIfEmpty()
+                         group m by zoomLicense into g
+                         select new
+                         {
+                             g.Key.Id,
+                             g.Key.HostId,
+                             g.Key.Capacity,
+                             g.Key.LicenseEmail,
+                             g.Key.IsActive,
+                             Count = g.Count()
+                         };
+            
             var response = data.Where(x => x.Count < 2).Select(x => new ZoomLicenseResponseModel
             {
                 Id = x.Id,
@@ -159,7 +168,7 @@
         /// <returns>the meeting id and passcode and the instance of <see cref="ZoomLicense"/></returns>
         public async Task<(string, string)> CreateMeetingAsync(string meetingName, int duration, DateTime startDate, string hostEmail)
         {
-            var tokenString =await GetZoomJWTAccessToken().ConfigureAwait(false);
+            var tokenString = await GetZoomJWTAccessToken().ConfigureAwait(false);
             var client = new RestClient($"{zoomAPIPath}/users/{hostEmail}/meetings");
             var request = new RestRequest().AddHeader("Authorization", String.Format("Bearer {0}", tokenString))
                     .AddJsonBody(new
@@ -291,7 +300,7 @@
 
             try
             {
-                var tokenString =await GetZoomJWTAccessToken().ConfigureAwait(false);
+                var tokenString = await GetZoomJWTAccessToken().ConfigureAwait(false);
                 var request = new RestRequest().AddHeader("Authorization", string.Format("Bearer {0}", tokenString));
                 request.AddHeader("Content-Type", "application/json");
                 var response = await client.GetAsync(request).ConfigureAwait(false);
