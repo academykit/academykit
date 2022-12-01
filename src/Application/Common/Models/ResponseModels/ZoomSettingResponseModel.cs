@@ -6,7 +6,9 @@
     {
         public Guid Id { get; set; }
         public string ApiKey { get; set; }
-        public string SecretKey { get; set; }
+        public string ApiSecret { get; set; }
+        public string SdkKey { get; set; }
+        public string SdkSecret { get; set; }
         public bool IsRecordingEnabled { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
@@ -14,7 +16,9 @@
         {
             Id = model.Id;
             ApiKey = model.ApiKey;
-            SecretKey = model.SecretKey;
+            ApiSecret = model.ApiSecret;
+            SdkKey = model.SdkKey;
+            SdkSecret = model.SdkSecret;
             IsRecordingEnabled = model.IsRecordingEnabled;
             UpdatedOn = model.UpdatedOn;
             User = model.User != null ? new UserModel(model.User) : new UserModel();

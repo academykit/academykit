@@ -2,6 +2,7 @@ namespace Lingtren.Application.Common.Interfaces
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using System.Threading.Tasks;
 
@@ -42,5 +43,13 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
         Task ReorderAsync(string identity, LessonReorderRequestModel model, Guid currentUserId);
+        /// <summary>
+        /// Handle to join meeting
+        /// </summary>
+        /// <param name="identity">the course identity</param>
+        /// <param name="lessonIdentity">the lesson identity</param>
+        /// <param name="currentUserId">the current logged in user</param>
+        /// <returns></returns>
+        Task<MeetingJoinResponseModel> GetJoinMeetingAsync(string identity, string lessonIdentity, Guid currentUserId);
     }
 }

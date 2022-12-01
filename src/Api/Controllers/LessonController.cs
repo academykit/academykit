@@ -125,26 +125,17 @@ namespace Lingtren.Api.Controllers
             return Ok(new CommonResponseModel() { Success = true, Message = "Lesson removed successfully." });
         }
 
-        ///// <summary>
-        ///// change department status api
-        ///// </summary>
-        ///// <param name="identity">the department id or slug</param>
-        ///// <param name="enabled">the boolean</param>
-        ///// <returns>the instance of <see cref="LessonResponseModel"/></returns>
-        //[HttpPatch("{identity}/status")]
-        //public async Task<LessonResponseModel> ChangeStatus(string identity, [FromQuery] bool enabled)
-        //{
-        //    IsAdmin(CurrentUser.Role);
-
-        //    var existing = await _departmentService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-
-        //    existing.Id = existing.Id;
-        //    existing.IsActive = enabled;
-        //    existing.UpdatedBy = CurrentUser.Id;
-        //    existing.UpdatedOn = DateTime.UtcNow;
-
-        //    var savedEntity = await _departmentService.UpdateAsync(existing).ConfigureAwait(false);
-        //    return new LessonResponseModel(savedEntity);
-        //}
+        /// <summary>
+        /// change department status api
+        /// </summary>
+        /// <param name="identity">the department id or slug</param>
+        /// <param name="enabled">the boolean</param>
+        /// <returns>the instance of <see cref="LessonResponseModel"/></returns>
+        [HttpPatch("{lessonIdentity}/join")]
+        public async Task<MeetingJoinResponseModel> Join(string identity, string lessonIdentity)
+        {
+            var response = await _lessonService.GetJoinMeetingAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
+            return response;
+        }
     }
 }
