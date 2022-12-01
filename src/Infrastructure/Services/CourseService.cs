@@ -85,13 +85,13 @@ namespace Lingtren.Infrastructure.Services
                 predicate = predicate.And(enrollmentStatusPredicate);
             }
 
-            predicate = predicate.And(x => !x.GroupId.HasValue);
-
-            var groupPredicate = PredicateBuilder.New<Course>();
+            Expression<Func<Course, bool>> groupPredicate = null;
             var groupIds = GetUserGroupIds(criteria.CurrentUserId).Result;
-            groupPredicate = groupPredicate.And(x => x.GroupId.HasValue && groupIds.Contains(x.GroupId ?? Guid.Empty));
+            groupPredicate = PredicateBuilder.New<Course>(x => x.GroupId.HasValue && groupIds.Contains(x.GroupId ?? Guid.Empty));
+            groupPredicate = groupPredicate.And(predicate);
 
-            predicate = predicate.Or(groupPredicate);
+            predicate = predicate.And(x=>!x.GroupId.HasValue).Or(groupPredicate);
+
             return predicate.And(x => x.CreatedBy == criteria.CurrentUserId
             || (x.CreatedBy != criteria.CurrentUserId && x.Status.Equals(CourseStatus.Published)));
         }
