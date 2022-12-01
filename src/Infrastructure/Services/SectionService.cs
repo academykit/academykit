@@ -3,7 +3,6 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
@@ -236,8 +235,9 @@ namespace Lingtren.Infrastructure.Services
         private async Task<int> LastSectionOrder(Section entity)
         {
             var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
-                predicate: x => !x.IsDeleted, orderBy: x => x.OrderByDescending(x => x.Order)).ConfigureAwait(false);
-            return section != null ? section.Order++ : 1;
+                predicate: x => x.CourseId == entity.CourseId && !x.IsDeleted,
+                orderBy: x => x.OrderByDescending(x => x.Order)).ConfigureAwait(false);
+            return section != null ? section.Order + 1 : 1;
         }
 
         #endregion Private Methods

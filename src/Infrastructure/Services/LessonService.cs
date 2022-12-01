@@ -34,7 +34,7 @@ namespace Lingtren.Infrastructure.Services
         {
             CommonHelper.ValidateArgumentNotNullOrEmpty(criteria.CourseIdentity, nameof(criteria.CourseIdentity));
             CommonHelper.ValidateArgumentNotNullOrEmpty(criteria.SectionIdentity, nameof(criteria.SectionIdentity));
-            var course = ValidateAndGetCourse(criteria.CurrentUserId, criteria.CourseIdentity,validateForModify:false).Result;
+            var course = ValidateAndGetCourse(criteria.CurrentUserId, criteria.CourseIdentity, validateForModify: false).Result;
             var section = _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
                 predicate: p => p.CourseId == course.Id && (p.Id.ToString() == criteria.SectionIdentity || p.Slug == criteria.SectionIdentity)).Result;
 
@@ -219,6 +219,8 @@ namespace Lingtren.Infrastructure.Services
                 {
                     await CreateQuestionSetAsync(model, lesson).ConfigureAwait(false);
                 }
+                var order = await LastLessonOrder(lesson).ConfigureAwait(false);
+                lesson.Order = order;
 
                 await _unitOfWork.GetRepository<Lesson>().InsertAsync(lesson).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -425,6 +427,19 @@ namespace Lingtren.Infrastructure.Services
             lesson.Duration = model.Meeting.MeetingDuration;
 
             await _unitOfWork.GetRepository<Meeting>().InsertAsync(lesson.Meeting).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Handle to get last lesson order number
+        /// </summary>
+        /// <param name="entity"> the instance of <see cref="Lesson" /> .</param>
+        /// <returns> the int value </returns>
+        private async Task<int> LastLessonOrder(Lesson entity)
+        {
+            var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                predicate: x => x.CourseId == entity.CourseId && x.SectionId == entity.SectionId && !x.IsDeleted,
+                orderBy: x => x.OrderByDescending(x => x.Order)).ConfigureAwait(false);
+            return lesson != null ? lesson.Order + 1 : 1;
         }
         #endregion Private Methods
     }
