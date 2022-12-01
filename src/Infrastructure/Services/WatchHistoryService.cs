@@ -75,11 +75,6 @@
         /// <returns></returns>
         protected override async Task CheckDeletePermissionsAsync(WatchHistory course, Guid currentUserId)
         {
-            //if (course.Status != CourseStatus.Draft)
-            //{
-            //    _logger.LogWarning("Course with id : {courseId} cannot be delete having status : {status}", course.Id, course.Status.ToString());
-            //    throw new ForbiddenException("Only draft course can be delete");
-            //}
             await ValidateAndGetCourse(currentUserId, courseIdentity: course.Id.ToString(), validateForModify: true).ConfigureAwait(false);
         }
         #endregion Protected Methods

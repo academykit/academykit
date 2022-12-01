@@ -13,6 +13,7 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
+    using System.Data;
     using System.Linq.Expressions;
 
     public class CourseService : BaseGenericService<Course, CourseBaseSearchCriteria>, ICourseService
@@ -84,6 +85,13 @@ namespace Lingtren.Infrastructure.Services
                 predicate = predicate.And(enrollmentStatusPredicate);
             }
 
+            predicate = predicate.And(x => !x.GroupId.HasValue);
+
+            var groupPredicate = PredicateBuilder.New<Course>();
+            var groupIds = GetUserGroupIds(criteria.CurrentUserId).Result;
+            groupPredicate = groupPredicate.And(x => x.GroupId.HasValue && groupIds.Contains(x.GroupId ?? Guid.Empty));
+
+            predicate = predicate.Or(groupPredicate);
             return predicate.And(x => x.CreatedBy == criteria.CurrentUserId
             || (x.CreatedBy != criteria.CurrentUserId && x.Status.Equals(CourseStatus.Published)));
         }
@@ -402,7 +410,7 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var course = await ValidateAndGetCourse(currentUserId, identity).ConfigureAwait(false);
+                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: false).ConfigureAwait(false);
                 if (course == null)
                 {
                     _logger.LogWarning("Course with identity : {identity} not found for user with id : {currentUserId}", identity, currentUserId);
@@ -469,7 +477,7 @@ namespace Lingtren.Infrastructure.Services
                         IsPreview = l.IsPreview,
                         IsMandatory = l.IsMandatory,
                         QuestionSet = l.QuestionSet != null ? new QuestionSetResponseModel(l.QuestionSet) : null,
-                        Meeting  = l.Meeting != null ? new MeetingResponseModel(l.Meeting): null,
+                        Meeting = l.Meeting != null ? new MeetingResponseModel(l.Meeting) : null,
                         IsCompleted = currentUserWatchHistories.Any(h => h.LessonId == h.LessonId && h.IsCompleted),
                     }).OrderBy(x => x.Order).ToList(),
                 }).OrderBy(x => x.Order).ToList();

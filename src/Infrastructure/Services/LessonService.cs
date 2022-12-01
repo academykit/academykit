@@ -34,7 +34,7 @@ namespace Lingtren.Infrastructure.Services
         {
             CommonHelper.ValidateArgumentNotNullOrEmpty(criteria.CourseIdentity, nameof(criteria.CourseIdentity));
             CommonHelper.ValidateArgumentNotNullOrEmpty(criteria.SectionIdentity, nameof(criteria.SectionIdentity));
-            var course = ValidateAndGetCourse(criteria.CurrentUserId, criteria.CourseIdentity).Result;
+            var course = ValidateAndGetCourse(criteria.CurrentUserId, criteria.CourseIdentity,validateForModify:false).Result;
             var section = _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
                 predicate: p => p.CourseId == course.Id && (p.Id.ToString() == criteria.SectionIdentity || p.Slug == criteria.SectionIdentity)).Result;
 
@@ -72,7 +72,7 @@ namespace Lingtren.Infrastructure.Services
         /// <returns>the instance of <see cref="Lesson"/></returns>
         public async Task<Lesson> GetLessonAsync(string identity, string lessonIdentity, Guid currentUserId)
         {
-            var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+            var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: false).ConfigureAwait(false);
             if (course == null)
             {
                 _logger.LogWarning("Course with identity: {identity} not found for user with :{id}", identity, currentUserId);

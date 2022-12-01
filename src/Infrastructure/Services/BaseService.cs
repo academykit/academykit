@@ -10,6 +10,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using System;
+    using System.Data;
     using System.Threading.Tasks;
 
     public abstract class BaseService
@@ -223,6 +224,19 @@
             }
 
             throw new ForbiddenException("You are not allowed to modify this question pool.");
+        }
+
+        protected async Task<IList<Guid>> GetUserGroupIds(Guid userId)
+        {
+            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
+                predicate: p => p.Id == userId,
+                include: src=>src.Include(x=>x.GroupMembers)).ConfigureAwait(false);
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException("The user doesn't exits.");
+            }
+            return user.GroupMembers.Select(x=>x.GroupId).ToList();
         }
     }
 }
