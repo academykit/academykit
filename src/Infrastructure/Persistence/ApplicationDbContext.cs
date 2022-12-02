@@ -65,7 +65,7 @@
                     UpdatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
                     IsActive = true,
                     HashPassword = "+gURQgHBT1zJz5AljZhAMyaNRFQBVorq5HIlEmhf+ZQ=:BBLvXedGXzdz0ZlypoKQxQ==",  // Admin@123
-                    Role = UserRole.Admin,
+                    Role = UserRole.SuperAdmin,
                 }
             );
             builder.Entity<SMTPSetting>().HasData(

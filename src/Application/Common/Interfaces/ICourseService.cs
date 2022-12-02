@@ -58,5 +58,13 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the instance of <see cref="CourseResponseModel"/></returns>
         Task<CourseResponseModel> GetDetailAsync(string identity, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to search group courses
+        /// </summary>
+        /// <param name="identity">the group id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the paginated search result</returns>
+        Task<SearchResult<Course>> GroupCourseSearchAsync(string identity, BaseSearchCriteria criteria);
     }
 }

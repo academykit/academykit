@@ -6,7 +6,7 @@
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
 
-    public interface IGroupService : IGenericService<Group, BaseSearchCriteria>
+    public interface IGroupService : IGenericService<Group, GroupBaseSearchCriteria>
     {
         /// <summary>
         /// Handle to add member in the group

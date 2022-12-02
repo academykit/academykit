@@ -56,7 +56,7 @@
         [HttpPost]
         public async Task<AssignmentResponseModel> CreateAsync(AssignmentRequestModel model)
         {
-            IsTeacherAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
@@ -136,7 +136,7 @@
         [HttpPut("{identity}")]
         public async Task<AssignmentResponseModel> UpdateAsync(string identity, AssignmentRequestModel model)
         {
-            IsTeacherAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var savedEntity = await _assignmentService.UpdateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
             return new AssignmentResponseModel(savedEntity);
@@ -150,7 +150,7 @@
         [HttpDelete("{identity}")]
         public async Task<IActionResult> DeleteAsync(string identity)
         {
-            IsTeacherAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await _assignmentService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Department removed successfully." });
         }

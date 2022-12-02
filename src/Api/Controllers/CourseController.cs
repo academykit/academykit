@@ -61,7 +61,7 @@ namespace Lingtren.Api.Controllers
         [HttpPost]
         public async Task<CourseResponseModel> CreateAsync(CourseRequestModel model)
         {
-            IsTeacherAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;

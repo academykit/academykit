@@ -51,7 +51,9 @@ namespace Lingtren.Infrastructure.Services
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
+                predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search)
+                 || x.Description.ToLower().Trim().Contains(search) || x.User.LastName.ToLower().Trim().Contains(search)
+                 || x.User.FirstName.ToLower().Trim().Contains(search));
             }
 
             if (criteria.CurrentUserId == default)
@@ -488,6 +490,47 @@ namespace Lingtren.Infrastructure.Services
                 _logger.LogError(ex, "An error occurred while trying to fetch course detail.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch course detail.");
             }
+        }
+
+        /// <summary>
+        /// Handle to search group courses
+        /// </summary>
+        /// <param name="identity">the group id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the paginated search result</returns>
+        public async Task<SearchResult<Course>> GroupCourseSearchAsync(string identity, BaseSearchCriteria criteria)
+        {
+            var predicate = PredicateBuilder.New<Course>(true);
+            var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(
+                predicate: p => p.Id.ToString() == identity || p.Slug == identity).ConfigureAwait(false);
+            if (group == null)
+            {
+                _logger.LogWarning("Group with identity: {identity} not found", identity);
+                throw new EntityNotFoundException("Group not found");
+            }
+            predicate = GroupCourseSearchPredicate(group.Id, predicate, criteria);
+            var course = await _unitOfWork.GetRepository<Course>().GetAllAsync(
+                predicate: predicate,
+                include: src=>src.Include(x=>x.CourseTeachers)
+                                .Include(x=>x.CourseTags)
+                ).ConfigureAwait(false);
+            var result = course.ToIPagedList(criteria.Page, criteria.Size);
+
+            await PopulateRetrievedEntities(result.Items).ConfigureAwait(false);
+            return result;
+        }
+
+        private Expression<Func<Course, bool>> GroupCourseSearchPredicate(Guid groupId, Expression<Func<Course, bool>> predicate, BaseSearchCriteria criteria)
+        {
+            if (!string.IsNullOrWhiteSpace(criteria.Search))
+            {
+                var search = criteria.Search.ToLower().Trim();
+                predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search)
+                 || x.Description.ToLower().Trim().Contains(search) || x.User.LastName.ToLower().Trim().Contains(search)
+                 || x.User.FirstName.ToLower().Trim().Contains(search));
+            }
+            predicate = predicate.And(p => p.GroupId == groupId);
+            return predicate;
         }
     }
 }

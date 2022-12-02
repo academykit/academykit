@@ -67,7 +67,7 @@
         [HttpPost]
         public async Task<QuestionResponseModel> CreateAsync(string identity, QuestionRequestModel model)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
             var questionPool = await _questionPoolService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
             if (questionPool == null)
@@ -107,7 +107,7 @@
         [HttpPut("{id}")]
         public async Task<QuestionResponseModel> UpdateAsync(string identity, Guid id, QuestionRequestModel model)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _questionService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
@@ -130,7 +130,7 @@
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(string identity, Guid id)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
             var questionPool = await _questionPoolService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
             if (questionPool == null)

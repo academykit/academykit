@@ -68,7 +68,7 @@
         /// </summary>
         /// <param name="model"> the instance of <see cref="QuestionPoolTeacherRequestModel" /> .</param>
         /// <returns> the instance of <see cref="QuestionPoolTeacherResponseModel" /> .</returns>
-        [HttpPost()]
+        [HttpPost]
         public async Task<QuestionPoolTeacherResponseModel> Create(QuestionPoolTeacherRequestModel model)
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
@@ -107,7 +107,7 @@
         [HttpPatch("{identity}/status")]
         public async Task<QuestionPoolTeacherResponseModel> ChangeStatus(string identity, [FromQuery] PoolRole role)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
             var statusExists = Enum.IsDefined(typeof(PoolRole), role);
             if (!statusExists)

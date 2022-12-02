@@ -45,7 +45,7 @@
         [HttpGet]
         public async Task<SearchResult<UserResponseModel>> SearchAsync([FromQuery] UserSearchCriteria searchCriteria)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdmin(CurrentUser.Role);
 
             var searchResult = await _userService.SearchAsync(searchCriteria, includeAllProperties: false).ConfigureAwait(false);
 
@@ -72,7 +72,7 @@
         [HttpPost]
         public async Task<UserResponseModel> CreateUser(UserRequestModel model)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdmin(CurrentUser.Role);
 
             var currentTimeStamp = DateTime.UtcNow;
             await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Add").ThrowOnFailures()).ConfigureAwait(false);
@@ -92,6 +92,7 @@
                 IsActive = model.IsActive,
                 Profession = model.Profession,
                 Role = model.Role,
+                DepartmentId = model.DepartmentId,
                 CreatedBy = CurrentUser.Id,
                 CreatedOn = currentTimeStamp,
                 UpdatedBy = CurrentUser.Id,
@@ -127,7 +128,7 @@
         [HttpPut("{userId}")]
         public async Task<UserResponseModel> UpdateUser(Guid userId, UserRequestModel model)
         {
-            if (CurrentUser.Id != userId && CurrentUser.Role != UserRole.Admin)
+            if (CurrentUser.Id != userId && CurrentUser.Role != UserRole.SuperAdmin && CurrentUser.Role != UserRole.Admin)
             {
                 _logger.LogWarning("User with Id : {userId} and role :{role} is not allowed to update user", CurrentUser.Id, CurrentUser.Role.ToString());
                 throw new ForbiddenException("Only same user is allowed to update user or by admin only");
@@ -147,6 +148,7 @@
             existing.ImageUrl = model.ImageUrl;
             existing.Profession = model.Profession;
             existing.Role = model.Role;
+            existing.DepartmentId = model.DepartmentId;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
 
@@ -163,7 +165,7 @@
         [HttpPatch("{userId}/status")]
         public async Task<UserResponseModel> ChangeStatus(Guid userId, [FromQuery] bool enabled)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdmin(CurrentUser.Role);
             if (CurrentUser.Id == userId)
             {
                 _logger.LogWarning("User with userId : {userId} is trying to change status of themselves", userId);
@@ -183,33 +185,10 @@
         }
 
         /// <summary>
-        /// change user status api
+        /// change email request api
         /// </summary>
-        /// <param name="userId">the user id</param>
-        /// <param name="enabled">the boolean</param>
-        /// <returns>the instance of <see cref="UserResponseModel"/></returns>
-        [HttpPatch("{userId}/changeEmail")]
-        public async Task<UserResponseModel> ChangeEmail(Guid userId, [FromQuery] bool enabled)
-        {
-            IsAdmin(CurrentUser.Role);
-            if (CurrentUser.Id == userId)
-            {
-                _logger.LogWarning("User with userId : {userId} is trying to change status of themselves", userId);
-                throw new ForbiddenException("User cannot change their own status");
-            }
-            var existing = await _userService.GetAsync(userId, CurrentUser.Id, includeAllProperties: false).ConfigureAwait(false);
-
-            var currentTimeStamp = DateTime.UtcNow;
-
-            existing.Id = existing.Id;
-            existing.IsActive = enabled;
-            existing.UpdatedBy = CurrentUser.Id;
-            existing.UpdatedOn = currentTimeStamp;
-
-            var savedEntity = await _userService.UpdateAsync(existing, includeProperties: false).ConfigureAwait(false);
-            return new UserResponseModel(savedEntity);
-        }
-
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut("changeEmailRequest")]
         public async Task<IActionResult> ChangeEmailRequestAsync(ChangeEmailRequestModel model)
         {
@@ -218,6 +197,11 @@
             return Ok(new CommonResponseModel { Success = true, Message = "Email changed requested successfully." });
         }
 
+        /// <summary>
+        /// verify change email api
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("verifyChangeEmail")]
         public async Task<IActionResult> VerifyChangeEmailAsync([FromQuery] string token)

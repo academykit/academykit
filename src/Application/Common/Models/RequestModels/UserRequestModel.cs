@@ -15,6 +15,7 @@
         public string Bio { get; set; }
         public string ImageUrl { get; set; }
         public string PublicUrls { get; set; }
+        public Guid? DepartmentId { get; set; }
         public bool IsActive { get; set; }
     }
 }

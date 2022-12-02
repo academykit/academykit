@@ -58,7 +58,7 @@ namespace Lingtren.Api.Controllers
         [HttpPut("{id}")]
         public async Task<GeneralSettingResponseModel> UpdateSMTPSetting(Guid id, GeneralSettingRequestModel model)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdmin(CurrentUser.Role);
 
             await _generalSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _generalSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
@@ -94,7 +94,7 @@ namespace Lingtren.Api.Controllers
         [HttpGet("zoom")]
         public async Task<ZoomSettingResponseModel> GetZoomSetting()
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdmin(CurrentUser.Role);
 
             var model = await _zoomSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return new ZoomSettingResponseModel(model);
@@ -109,7 +109,7 @@ namespace Lingtren.Api.Controllers
         [HttpPut("zoom/{id}")]
         public async Task<ZoomSettingResponseModel> UpdateZoomSetting(Guid id, ZoomSettingRequestModel model)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdmin(CurrentUser.Role);
 
             await _zoomSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _zoomSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
@@ -145,7 +145,7 @@ namespace Lingtren.Api.Controllers
         [HttpGet("smtp")]
         public async Task<SMTPSettingResponseModel> GetSMTPSetting()
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdmin(CurrentUser.Role);
             var model = await _smtpSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return new SMTPSettingResponseModel(model);
         }
@@ -159,7 +159,7 @@ namespace Lingtren.Api.Controllers
         [HttpPut("smtp/{id}")]
         public async Task<SMTPSettingResponseModel> UpdateSMTPSetting(Guid id, SMTPSettingRequestModel model)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdmin(CurrentUser.Role);
 
             await _smtpSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _smtpSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);

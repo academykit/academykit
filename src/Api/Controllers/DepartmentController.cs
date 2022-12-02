@@ -54,7 +54,7 @@
         [HttpPost]
         public async Task<DepartmentResponseModel> CreateAsync(DepartmentRequestModel model)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdmin(CurrentUser.Role);
 
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
@@ -93,7 +93,7 @@
         [HttpPut("{identity}")]
         public async Task<DepartmentResponseModel> UpdateAsync(string identity, DepartmentRequestModel model)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdmin(CurrentUser.Role);
 
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _departmentService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
@@ -117,7 +117,7 @@
         [HttpDelete("{identity}")]
         public async Task<IActionResult> DeleteAsync(string identity)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdmin(CurrentUser.Role);
 
             await _departmentService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Department removed successfully." });
@@ -132,7 +132,7 @@
         [HttpPatch("{identity}/status")]
         public async Task<DepartmentResponseModel> ChangeStatus(string identity, [FromQuery] bool enabled)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdmin(CurrentUser.Role);
 
             var existing = await _departmentService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
 

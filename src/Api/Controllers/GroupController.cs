@@ -8,6 +8,7 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
+    using Lingtren.Infrastructure.Common;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
 
@@ -16,14 +17,20 @@
         private readonly IGroupService _groupService;
         private readonly IGroupMemberService _groupMemberService;
         private readonly IValidator<GroupRequestModel> _validator;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICourseService _courseService;
         public GroupController(
             IGroupService groupService,
             IGroupMemberService groupMemberService,
-            IValidator<GroupRequestModel> validator)
+            IValidator<GroupRequestModel> validator,
+            IUnitOfWork unitOfWork,
+            ICourseService courseService)
         {
             _groupService = groupService;
             _groupMemberService = groupMemberService;
             _validator = validator;
+            _unitOfWork = unitOfWork;
+            _courseService = courseService;
         }
 
         /// <summary>
@@ -32,8 +39,10 @@
         /// <param name="searchCriteria">The group search criteria.</param>
         /// <returns>The paginated search result.</returns>
         [HttpGet]
-        public async Task<SearchResult<GroupResponseModel>> SearchAsync([FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<GroupResponseModel>> SearchAsync([FromQuery] GroupBaseSearchCriteria searchCriteria)
         {
+            searchCriteria.CurrentUserId = CurrentUser.Id;
+            searchCriteria.Role = CurrentUser.Role;
             var searchResult = await _groupService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             var response = new SearchResult<GroupResponseModel>
@@ -46,7 +55,13 @@
             };
 
             searchResult.Items.ForEach(p =>
-                 response.Items.Add(new GroupResponseModel(p))
+                 {
+                     var memberCount = _unitOfWork.GetRepository<GroupMember>().CountAsync(
+                         predicate: x => x.GroupId == p.Id && x.IsActive).Result;
+                     var courseCount = _unitOfWork.GetRepository<Course>().CountAsync(
+                         predicate: x => x.GroupId == p.Id).Result;
+                     response.Items.Add(new GroupResponseModel(p, memberCount, courseCount));
+                 }
              );
             return response;
         }
@@ -98,7 +113,7 @@
         public async Task<GroupResponseModel> Get(string identity)
         {
             Group model = await _groupService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
-            return new GroupResponseModel(model);
+            return new GroupResponseModel(model, memberCount: model.GroupMembers.Count);
         }
 
         /// <summary>
@@ -204,6 +219,32 @@
         {
             await _groupService.RemoveMemberAsync(identity, id, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Member removed successfully." });
+        }
+
+        /// <summary>
+        /// Group member add api
+        /// </summary>
+        /// <param name="identity">the group id or slug</param>
+        /// <param name="model">the instance of <see cref="AddGroupMemberRequestModel"/></param>
+        /// <returns>the instance of <see cref="GroupAddMemberResponseModel"/></returns>
+        [HttpGet("{identity}/courses")]
+        public async Task<SearchResult<CourseResponseModel>> Courses(string identity, [FromQuery]BaseSearchCriteria criteria)
+        {
+            var searchResult = await _courseService.GroupCourseSearchAsync(identity, criteria).ConfigureAwait(false);
+            var response = new SearchResult<CourseResponseModel>
+            {
+                Items = new List<CourseResponseModel>(),
+                CurrentPage = searchResult.CurrentPage,
+                PageSize = searchResult.PageSize,
+                TotalCount = searchResult.TotalCount,
+                TotalPage = searchResult.TotalPage,
+            };
+
+            searchResult.Items.ForEach(p =>
+            {
+                response.Items.Add(new CourseResponseModel(p, _courseService.GetUserCourseEnrollmentStatus(p, CurrentUser.Id, fetchMembers: true).Result));
+            });
+            return response;
         }
     }
 }
