@@ -234,12 +234,7 @@
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
                 predicate: p => p.Id == userId,
                 include: src => src.Include(x => x.GroupMembers)).ConfigureAwait(false);
-
-            if (user == null)
-            {
-                throw new EntityNotFoundException("The user doesn't exits.");
-            }
-            return user.GroupMembers.Select(x => x.GroupId).ToList();
+            return user?.GroupMembers.Select(x => x.GroupId).ToList();
         }
 
         protected async Task<bool> IsSuperAdmin(Guid currentUserId)
@@ -253,10 +248,6 @@
         {
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
                 predicate: p => p.Id == currentUserId && p.IsActive && (p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin)).ConfigureAwait(false);
-            if (user == null)
-            {
-                throw new ForbiddenException("Super Admin or Admin Access");
-            }
             return user != null;
         }
         protected async Task<bool> IsSuperAdminOrAdminOrTrainer(Guid currentUserId)
@@ -270,7 +261,6 @@
         {
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
                 predicate: p => p.Id == currentUserId && p.IsActive && p.Role == UserRole.Trainer).ConfigureAwait(false);
-
             return user != null;
         }
     }

@@ -133,7 +133,8 @@
             try
             {
                 var currentTimeStamp = DateTime.UtcNow;
-                var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(predicate: x => (x.Id.ToString() == identity || x.Slug == identity)).ConfigureAwait(false);
+                var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
+                    predicate: x => (x.Id.ToString() == identity || x.Slug == identity)).ConfigureAwait(false);
                 if (questionSet == null)
                 {
                     _logger.LogWarning("Question set not found with identity: {identity} for user with id : {currentUserId}", identity, currentUserId);
@@ -155,8 +156,8 @@
                     throw new ForbiddenException("User not enrolled in the course");
                 }
 
-                var questionSetSubmissionCount = await _unitOfWork.GetRepository<QuestionSetSubmission>().CountAsync(predicate: p => p.QuestionSetId == questionSet.Id
-                                                                    && p.UserId == currentUserId).ConfigureAwait(false);
+                var questionSetSubmissionCount = await _unitOfWork.GetRepository<QuestionSetSubmission>().CountAsync(
+                    predicate: p => p.QuestionSetId == questionSet.Id && p.UserId == currentUserId).ConfigureAwait(false);
 
                 if (questionSetSubmissionCount >= questionSet.AllowedRetake)
                 {
