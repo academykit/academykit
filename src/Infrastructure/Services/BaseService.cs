@@ -166,7 +166,10 @@
             course.CourseEnrollments = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
                 predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
             // if current user is the creator he can modify/access the course
-            if (course.CreatedBy.Equals(currentUserId) || course.CourseTeachers.Any(x => x.UserId == currentUserId))
+
+            var isSuperAdminOrAdminAccess = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+           
+            if (course.CreatedBy.Equals(currentUserId) || course.CourseTeachers.Any(x => x.UserId == currentUserId) || isSuperAdminOrAdminAccess)
             {
                 return course;
             }

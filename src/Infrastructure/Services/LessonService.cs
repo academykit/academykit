@@ -274,6 +274,11 @@ namespace Lingtren.Infrastructure.Services
                 }
             }
 
+            if(lesson.Type == LessonType.Assignment)
+            {
+
+            }
+
             _unitOfWork.GetRepository<Lesson>().Delete(lesson);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }

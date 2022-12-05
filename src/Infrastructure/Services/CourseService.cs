@@ -86,16 +86,20 @@ namespace Lingtren.Infrastructure.Services
                 }
                 predicate = predicate.And(enrollmentStatusPredicate);
             }
+            var isSuperAdminOrAdmin = IsSuperAdminOrAdmin(criteria.CurrentUserId).Result;
+            Expression<Func<Course, bool>> groupPredicate = PredicateBuilder.New<Course>();
+            if (isSuperAdminOrAdmin)
+            {
+                return predicate;
+            }
 
-            Expression<Func<Course, bool>> groupPredicate = null;
             var groupIds = GetUserGroupIds(criteria.CurrentUserId).Result;
             groupPredicate = PredicateBuilder.New<Course>(x => x.GroupId.HasValue && groupIds.Contains(x.GroupId ?? Guid.Empty));
             groupPredicate = groupPredicate.And(predicate);
-
             predicate = predicate.And(x => !x.GroupId.HasValue).Or(groupPredicate);
-
             return predicate.And(x => x.CreatedBy == criteria.CurrentUserId
-            || (x.CreatedBy != criteria.CurrentUserId && x.Status.Equals(CourseStatus.Published)));
+                        || (x.CreatedBy != criteria.CurrentUserId && x.Status.Equals(CourseStatus.Published)));
+
         }
 
         /// <summary>
@@ -511,8 +515,8 @@ namespace Lingtren.Infrastructure.Services
             predicate = GroupCourseSearchPredicate(group.Id, predicate, criteria);
             var course = await _unitOfWork.GetRepository<Course>().GetAllAsync(
                 predicate: predicate,
-                include: src=>src.Include(x=>x.CourseTeachers)
-                                .Include(x=>x.CourseTags)
+                include: src => src.Include(x => x.CourseTeachers)
+                                .Include(x => x.CourseTags)
                 ).ConfigureAwait(false);
             var result = course.ToIPagedList(criteria.Page, criteria.Size);
 
