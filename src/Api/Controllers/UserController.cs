@@ -148,39 +148,12 @@
             existing.ImageUrl = model.ImageUrl;
             existing.Profession = model.Profession;
             existing.Role = model.Role;
+            existing.IsActive = model.IsActive;
             existing.DepartmentId = model.DepartmentId;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
 
             var savedEntity = await _userService.UpdateAsync(existing, false).ConfigureAwait(false);
-            return new UserResponseModel(savedEntity);
-        }
-
-        /// <summary>
-        /// change user status api
-        /// </summary>
-        /// <param name="userId">the user id</param>
-        /// <param name="enabled">the boolean</param>
-        /// <returns>the instance of <see cref="UserResponseModel"/></returns>
-        [HttpPatch("{userId}/status")]
-        public async Task<UserResponseModel> ChangeStatus(Guid userId, [FromQuery] bool enabled)
-        {
-            IsSuperAdminOrAdmin(CurrentUser.Role);
-            if (CurrentUser.Id == userId)
-            {
-                _logger.LogWarning("User with userId : {userId} is trying to change status of themselves", userId);
-                throw new ForbiddenException("User cannot change their own status");
-            }
-            var existing = await _userService.GetAsync(userId, CurrentUser.Id, includeAllProperties: false).ConfigureAwait(false);
-
-            var currentTimeStamp = DateTime.UtcNow;
-
-            existing.Id = existing.Id;
-            existing.IsActive = enabled;
-            existing.UpdatedBy = CurrentUser.Id;
-            existing.UpdatedOn = currentTimeStamp;
-
-            var savedEntity = await _userService.UpdateAsync(existing, includeProperties: false).ConfigureAwait(false);
             return new UserResponseModel(savedEntity);
         }
 

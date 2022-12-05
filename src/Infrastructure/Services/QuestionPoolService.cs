@@ -116,5 +116,19 @@
             }
         }
         #endregion Private Methods
+
+        /// <summary>
+        /// Handle to question pool question
+        /// </summary>
+        /// <param name="poolIdentity">the question pool id or slug</param>
+        /// <param name="questionId">the question id</param>
+        /// <returns>the instance of <see cref="QuestionPoolQuestion"/></returns>
+        public async Task<QuestionPoolQuestion> GetQuestionPoolQuestion(string poolIdentity, Guid questionId)
+        {
+            var questionPool = await _unitOfWork.GetRepository<QuestionPool>().GetFirstOrDefaultAsync(
+                predicate: p=> p.Id.ToString() == poolIdentity || p.Slug == poolIdentity).ConfigureAwait(false);
+            return await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetFirstOrDefaultAsync(
+                predicate: p => p.QuestionPoolId == questionPool.Id && p.QuestionId == questionId).ConfigureAwait(false);
+        }
     }
 }

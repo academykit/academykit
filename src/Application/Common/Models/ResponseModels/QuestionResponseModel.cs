@@ -6,7 +6,8 @@
     public class QuestionResponseModel
     {
         public Guid Id { get; set; }
-        public Guid QuestionSetQuestionId { get; set; }
+        public Guid? QuestionSetQuestionId { get; set; }
+        public Guid? QuestionPoolQuestionId { get; set; }
         public string Name { get; set; }
         public QuestionTypeEnum Type { get; set; }
         public string Description { get; set; }
@@ -14,10 +15,11 @@
         public UserModel User { get; set; }
         public IList<QuestionOptionResponseModel> QuestionOptions { get; set; }
 
-        public QuestionResponseModel(Question question, bool showCorrectAnswer = false, Guid questionSetQuestionId = default, bool showHints = true)
+        public QuestionResponseModel(Question question, bool showCorrectAnswer = false,Guid? questionPoolQuestionId = null, Guid? questionSetQuestionId = null, bool showHints = true)
         {
             Id = question.Id;
             QuestionSetQuestionId = questionSetQuestionId;
+            QuestionPoolQuestionId = questionPoolQuestionId;
             Name = question.Name;
             Type = question.Type;
             Description = question.Description;

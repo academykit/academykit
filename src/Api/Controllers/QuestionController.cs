@@ -53,8 +53,10 @@
             };
 
             searchResult.Items.ForEach(p =>
-                 response.Items.Add(new QuestionResponseModel(p))
-             );
+            {
+                var questionPoolQuestion = _questionPoolService.GetQuestionPoolQuestion(identity, p.Id).Result;
+                response.Items.Add(new QuestionResponseModel(p, questionPoolQuestionId: questionPoolQuestion?.Id));
+            });
             return response;
         }
 
