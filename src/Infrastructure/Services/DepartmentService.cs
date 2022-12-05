@@ -79,7 +79,6 @@
             criteria.SortType = SortType.Descending;
         }
 
-
         /// <summary>
         /// Includes the navigation properties loading for the entity.
         /// </summary>

@@ -14,7 +14,6 @@
             IUnitOfWork unitOfWork,
             ILogger<GeneralSettingService> logger) : base(unitOfWork, logger)
         {
-
         }
         /// <summary>
         /// Includes the navigation properties loading for the entity.

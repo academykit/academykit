@@ -42,9 +42,10 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(500)")
                         .HasColumnName("description");
 
-                    b.Property<string>("Hint")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<string>("Hints")
+                        .HasMaxLength(250)
+                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnName("hints");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -165,8 +166,8 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("AssignmentId")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("VARCHAR(20)")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
                         .HasColumnName("assignment_id");
 
                     b.Property<string>("CreatedBy")
@@ -201,7 +202,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(50)");
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
@@ -289,8 +292,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnName("created_on");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasMaxLength(5000)
+                        .HasColumnType("VARCHAR(5000)")
                         .HasColumnName("description");
 
                     b.Property<int>("Duration")
@@ -981,12 +984,11 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("duration");
 
-                    b.Property<long>("MeetingNumber")
+                    b.Property<long?>("MeetingNumber")
                         .HasColumnType("bigint")
                         .HasColumnName("meeting_number");
 
                     b.Property<string>("PassCode")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("VARCHAR(50)")
                         .HasColumnName("passcode");
@@ -1110,7 +1112,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("Type")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(0)
+                        .HasDefaultValue(2)
                         .HasColumnName("type");
 
                     b.Property<string>("UpdatedBy")
@@ -1153,7 +1155,7 @@ namespace Infrastructure.Persistence.Migrations
                         .HasDefaultValue(false)
                         .HasColumnName("is_correct");
 
-                    b.Property<string>("Options")
+                    b.Property<string>("Option")
                         .IsRequired()
                         .HasMaxLength(5000)
                         .HasColumnType("varchar(5000)")
@@ -2176,7 +2178,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("Role")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(3)
+                        .HasDefaultValue(4)
                         .HasColumnName("role");
 
                     b.Property<string>("UpdatedBy")
@@ -2380,9 +2382,15 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("ApiKey")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR(100)")
                         .HasColumnName("api_key");
+
+                    b.Property<string>("ApiSecret")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("api_secret");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -2400,11 +2408,17 @@ namespace Infrastructure.Persistence.Migrations
                         .HasDefaultValue(false)
                         .HasColumnName("is_recording_enabled");
 
-                    b.Property<string>("SecretKey")
+                    b.Property<string>("SdkKey")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
-                        .HasColumnName("secret_key");
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("sdk_key");
+
+                    b.Property<string>("SdkSecret")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("sdk_secret");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
@@ -2426,10 +2440,12 @@ namespace Infrastructure.Persistence.Migrations
                         {
                             Id = "f41a902f-fabd-4749-ac28-91137f685cb8",
                             ApiKey = "api_key value",
+                            ApiSecret = "api_secret value",
                             CreatedBy = "30fcd978-f256-4733-840f-759181bc5e63",
                             CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
                             IsRecordingEnabled = false,
-                            SecretKey = "secret key value",
+                            SdkKey = "sdk key value",
+                            SdkSecret = "sdk secret value",
                             UpdatedBy = "30fcd978-f256-4733-840f-759181bc5e63",
                             UpdatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004)
                         });

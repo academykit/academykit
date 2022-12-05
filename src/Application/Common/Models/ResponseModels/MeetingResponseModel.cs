@@ -5,7 +5,7 @@
     public class MeetingResponseModel
     {
         public Guid Id { get; set; }
-        public long MeetingNumber { get; set; }
+        public long? MeetingNumber { get; set; }
         public string PassCode { get; set; }
         public Guid ZoomLicenseId { get; set; }
         public int Duration { get; set; }
@@ -21,5 +21,23 @@
             StartDate = model.StartDate;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
+    }
+
+    public class MeetingJoinResponseModel
+    {
+        public string Slug { get; set; }
+        public string RoomName { get; set; }
+
+        /// <summary>
+        /// Get or set zoom signature jwt token
+        /// </summary>
+        public string JwtToken { get; set; }
+
+        /// <summary>
+        /// Get or set zoom zak token
+        /// </summary>
+        public string ZAKToken { get; set; }
+        public string UserEmail { get; set; }
+        public string UserName { get; set; }
     }
 }

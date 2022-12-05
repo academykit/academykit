@@ -12,7 +12,7 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.Name).HasColumnName("name").HasMaxLength(500).IsRequired();
-            builder.Property(x => x.Type).HasColumnName("type").HasDefaultValue(QuestionTypeEnum.Checkbox);
+            builder.Property(x => x.Type).HasColumnName("type").HasDefaultValue(QuestionTypeEnum.MultipleChoice);
             builder.Property(x => x.Description).HasColumnName("description").HasMaxLength(5000);
             builder.Property(x => x.Hints).HasColumnName("hints").HasMaxLength(5000);
             builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
@@ -21,7 +21,7 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.UpdatedOn).HasColumnName("updated_on").HasColumnType("DATETIME").IsRequired(false);
             builder.HasMany(x => x.QuestionOptions).WithOne(x => x.Question).HasForeignKey(x => x.QuestionId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.QuestionPoolQuestions).WithOne(x => x.Question).HasForeignKey(x => x.QuestionId).OnDelete(DeleteBehavior.NoAction);
-            builder.HasMany(x => x.QuestionSetQuestions).WithOne(x => x.Question).HasForeignKey(x => x.QuestionId).OnDelete(DeleteBehavior.NoAction); 
+            builder.HasMany(x => x.QuestionSetQuestions).WithOne(x => x.Question).HasForeignKey(x => x.QuestionId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

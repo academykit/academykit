@@ -41,34 +41,44 @@
         protected BaseApiController() { }
 
         /// <summary>
-        /// Checks if the user is admin or not.
+        /// Checks if the user is superadmin.
         /// </summary>
-        protected void IsAdmin(UserRole role)
+        protected static void IsSuperAdmin(UserRole role)
         {
-            if (role != UserRole.Admin)
+            if (role != UserRole.SuperAdmin)
             {
-                throw new ForbiddenException("Admin Access");
+                throw new ForbiddenException("SuperAdmin Access");
             }
         }
-        // <summary>
-        /// Checks if the user is admin or teacher.
+        /// <summary>
+        /// Checks if the user is superadmin or admin.
         /// </summary>
-        protected void IsTeacherAdmin(UserRole role)
+        protected static void IsSuperAdminOrAdmin(UserRole role)
         {
-            if (role != UserRole.Admin && role != UserRole.Teacher)
+            if (role != UserRole.SuperAdmin && role != UserRole.Admin)
             {
-                throw new ForbiddenException("Admin or Teacher Access");
+                throw new ForbiddenException("SuperAdmin or Admin Access");
+            }
+        }
+        /// <summary>
+        /// Checks if the user is superadmin or admin or trainer.
+        /// </summary>
+        protected static void IsSuperAdminOrAdminOrTrainer(UserRole role)
+        {
+            if (role != UserRole.SuperAdmin && role != UserRole.Admin && role != UserRole.Trainer)
+            {
+                throw new ForbiddenException("SuperAdmin or Admin or Trainer Access");
             }
         }
 
         /// <summary>
-        /// Checks if the user is teacher or not.
+        /// Checks if the user is trainer.
         /// </summary>
-        protected void IsTeacher(UserRole role)
+        protected static void IsTrainer(UserRole role)
         {
-            if (role != UserRole.Teacher)
+            if (role != UserRole.Trainer)
             {
-                throw new ForbiddenException("Teacher Access");
+                throw new ForbiddenException("Trainer Access");
             }
         }
     }

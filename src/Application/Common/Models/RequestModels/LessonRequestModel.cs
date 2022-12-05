@@ -16,6 +16,5 @@
         public LessonType Type { get; set; }
         public MeetingRequestModel Meeting { get; set; }
         public QuestionSetRequestModel QuestionSet { get; set; }
-
     }
 }

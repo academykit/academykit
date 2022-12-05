@@ -17,9 +17,7 @@ namespace Lingtren.Infrastructure.Services
         public TagService(IUnitOfWork unitOfWork, ILogger<TagService> logger)
         : base(unitOfWork, logger)
         {
-
         }
-
 
         /// <summary>
         /// Handle to create the tag
@@ -55,13 +53,13 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying to create tag.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to create tag.");
             }
         }
 
         /// <summary>
-        /// Handle to delete the tag 
+        /// Handle to delete the tag
         /// </summary>
         /// <param name="identity"> the slug or id </param>
         /// <param name="currentUserId"> the current user id </param>
@@ -99,8 +97,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying to delete tag.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to delete tag.");
             }
         }
 
@@ -139,8 +137,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying to update tag.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update tag.");
             }
         }
 
@@ -152,7 +150,6 @@ namespace Lingtren.Infrastructure.Services
         /// <returns>The updated predicate with applied filters.</returns>
         protected override Expression<Func<Tag, bool>> ConstructQueryConditions(Expression<Func<Tag, bool>> predicate, BaseSearchCriteria criteria)
         {
-
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
@@ -185,12 +182,12 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
-        /// Handle to validate the user 
+        /// Handle to validate the user
         /// </summary>
         /// <param name="user"> the instance of <see cref="User"/></param>
         /// <param name="tag"> the instance of <see cref="Tag"/></param>
         /// <returns> the boolean value </returns>
-        private bool ValidateUser(User user, Tag tag)
+        private static bool ValidateUser(User user, Tag tag)
         {
             if (tag.CreatedBy == user.Id)
             {

@@ -344,13 +344,13 @@
         {
             // creating a data table instance and typed it as our incoming model   
             // as I make it generic, if you want, you can make it the model typed you want.  
-            DataTable dataTable = new DataTable(typeof(T).Name);
+            DataTable dataTable = new(typeof(T).Name);
 
             //Get all the properties of that model  
             PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             // Loop through all the properties              
-            // Adding Column name to our datatable  
+            // Adding Column name to our data-table  
             foreach (PropertyInfo prop in Props)
             {
                 //Setting column names as Property names    
@@ -372,4 +372,3 @@
         }
     }
 }
-

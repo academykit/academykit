@@ -53,4 +53,3 @@ namespace Lingtren.Application.Common.Dtos
         }
     }
 }
-

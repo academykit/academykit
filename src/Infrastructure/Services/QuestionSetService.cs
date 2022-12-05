@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using System.Linq.Expressions;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -9,6 +10,7 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
 
     public class QuestionSetService : BaseGenericService<QuestionSet, BaseSearchCriteria>, IQuestionSetService
@@ -17,7 +19,26 @@
             IUnitOfWork unitOfWork,
             ILogger<QuestionSetService> logger) : base(unitOfWork, logger)
         {
+        }
 
+        /// <summary>
+        /// Includes the navigation properties loading for the entity.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <returns>The updated query.</returns>
+        protected override IIncludableQueryable<QuestionSet, object> IncludeNavigationProperties(IQueryable<QuestionSet> query)
+        {
+            return query.Include(x => x.User);
+        }
+
+        /// <summary>
+        /// If entity needs to support the get by slug or id then has to override this method.
+        /// </summary>
+        /// <param name="identity">The id or slug</param>
+        /// <returns>The expression to filter by slug or slug</returns>
+        protected override Expression<Func<QuestionSet, bool>> PredicateForIdOrSlug(string identity)
+        {
+            return p => p.Id.ToString() == identity || p.Slug == identity;
         }
 
         /// <summary>

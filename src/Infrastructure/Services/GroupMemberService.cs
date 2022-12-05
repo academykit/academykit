@@ -17,7 +17,6 @@
             IUnitOfWork unitOfWork,
             ILogger<GroupMemberService> logger) : base(unitOfWork, logger)
         {
-
         }
 
         /// <summary>
@@ -49,7 +48,6 @@
             criteria.SortBy = nameof(Group.CreatedOn);
             criteria.SortType = SortType.Descending;
         }
-
 
         /// <summary>
         /// Includes the navigation properties loading for the entity.

@@ -3,6 +3,8 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
@@ -11,6 +13,7 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
+    using System.Data;
     using System.Linq.Expressions;
 
     public class CourseService : BaseGenericService<Course, CourseBaseSearchCriteria>, ICourseService
@@ -34,29 +37,6 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
-        /// Updates the <paramref name="existing"/> entity according to <paramref name="newEntity"/> entity.
-        /// </summary>
-        /// <remarks>Override in child services to update navigation properties.</remarks>
-        /// <param name="existing">The existing entity.</param>
-        /// <param name="newEntity">The new entity.</param>
-        protected override async Task UpdateEntityFieldsAsync(Course existing, Course newEntity)
-        {
-            if (existing.CourseTags.Count > 0)
-            {
-                _unitOfWork.GetRepository<CourseTag>().Delete(existing.CourseTags);
-            }
-            existing.CourseTags = new List<CourseTag>();
-            existing.CourseTags.AddRange(newEntity.CourseTags);
-            _unitOfWork.DbContext.Entry(existing).CurrentValues.SetValues(newEntity);
-            existing.Level = null;
-            if (existing.CourseTags.Count > 0)
-            {
-                await _unitOfWork.GetRepository<CourseTag>().InsertAsync(existing.CourseTags).ConfigureAwait(false);
-            }
-            _unitOfWork.GetRepository<Course>().Update(existing);
-        }
-
-        /// <summary>
         /// Applies filters to the given query.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
@@ -71,7 +51,9 @@ namespace Lingtren.Infrastructure.Services
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
+                predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search)
+                 || x.Description.ToLower().Trim().Contains(search) || x.User.LastName.ToLower().Trim().Contains(search)
+                 || x.User.FirstName.ToLower().Trim().Contains(search));
             }
 
             if (criteria.CurrentUserId == default)
@@ -92,10 +74,10 @@ namespace Lingtren.Infrastructure.Services
                         case CourseEnrollmentStatus.NotEnrolled:
                             enrollmentStatusPredicate = enrollmentStatusPredicate.Or(p => !p.CourseEnrollments.Any(e => e.UserId == criteria.CurrentUserId));
                             break;
-                        case CourseEnrollmentStatus.Host:
+                        case CourseEnrollmentStatus.Author:
                             enrollmentStatusPredicate = enrollmentStatusPredicate.Or(p => p.CreatedBy == criteria.CurrentUserId);
                             break;
-                        case CourseEnrollmentStatus.Moderator:
+                        case CourseEnrollmentStatus.Teacher:
                             enrollmentStatusPredicate = enrollmentStatusPredicate.Or(p => p.CourseTeachers.Any(e => e.UserId == criteria.CurrentUserId));
                             break;
                         default:
@@ -104,6 +86,13 @@ namespace Lingtren.Infrastructure.Services
                 }
                 predicate = predicate.And(enrollmentStatusPredicate);
             }
+
+            Expression<Func<Course, bool>> groupPredicate = null;
+            var groupIds = GetUserGroupIds(criteria.CurrentUserId).Result;
+            groupPredicate = PredicateBuilder.New<Course>(x => x.GroupId.HasValue && groupIds.Contains(x.GroupId ?? Guid.Empty));
+            groupPredicate = groupPredicate.And(predicate);
+
+            predicate = predicate.And(x => !x.GroupId.HasValue).Or(groupPredicate);
 
             return predicate.And(x => x.CreatedBy == criteria.CurrentUserId
             || (x.CreatedBy != criteria.CurrentUserId && x.Status.Equals(CourseStatus.Published)));
@@ -121,7 +110,6 @@ namespace Lingtren.Infrastructure.Services
             criteria.SortBy = nameof(Course.CreatedOn);
             criteria.SortType = SortType.Descending;
         }
-
 
         /// <summary>
         /// Includes the navigation properties loading for the entity.
@@ -200,11 +188,64 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         protected override async Task PopulateRetrievedEntity(Course entity)
         {
-            var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(predicate: p => p.CourseId == entity.Id,
-                include:src=>src.Include(x=>x.Lessons).Include(x=>x.User)).ConfigureAwait(false);
+            var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(predicate: p => p.CourseId == entity.Id && !p.IsDeleted,
+                include: src => src.Include(x => x.Lessons.Where(x => !x.IsDeleted))
+                                    .Include(x => x.User)).ConfigureAwait(false);
             entity.Sections = sections;
         }
         #endregion Protected Methods
+
+        /// <summary>
+        /// Handle to update course
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="model">the instance of <see cref="CourseRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns></returns>
+        public async Task<Course> UpdateAsync(string identity, CourseRequestModel model, Guid currentUserId)
+        {
+            var existing = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+            var currentTimeStamp = DateTime.UtcNow;
+
+            existing.Id = existing.Id;
+            existing.Name = model.Name;
+            existing.Language = model.Language;
+            existing.GroupId = model.GroupId;
+            existing.LevelId = model.LevelId;
+            existing.Duration = model.Duration;
+            existing.Description = model.Description;
+            existing.ThumbnailUrl = model.ThumbnailUrl;
+            existing.UpdatedBy = currentUserId;
+            existing.UpdatedOn = currentTimeStamp;
+
+            var newCourseTags = new List<CourseTag>();
+
+            foreach (var tagId in model.TagIds)
+            {
+                newCourseTags.Add(new CourseTag
+                {
+                    Id = Guid.NewGuid(),
+                    TagId = tagId,
+                    CourseId = existing.Id,
+                    CreatedOn = currentTimeStamp,
+                    CreatedBy = currentUserId,
+                    UpdatedOn = currentTimeStamp,
+                    UpdatedBy = currentUserId,
+                });
+            }
+
+            if (existing.CourseTags.Count > 0)
+            {
+                _unitOfWork.GetRepository<CourseTag>().Delete(existing.CourseTags);
+            }
+            if (newCourseTags.Count > 0)
+            {
+                await _unitOfWork.GetRepository<CourseTag>().InsertAsync(newCourseTags).ConfigureAwait(false);
+            }
+            _unitOfWork.GetRepository<Course>().Update(existing);
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            return await GetByIdOrSlugAsync(identity, currentUserId).ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Handle to change course status
@@ -233,7 +274,6 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="identity"> course id or slug</param>
         /// <param name="userId"> the user id</param>
-
         public async Task EnrollmentAsync(string identity, Guid userId)
         {
             await ExecuteAsync(async () =>
@@ -257,7 +297,7 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var currentTimeStamp = DateTime.UtcNow;
-                CourseEnrollment courseEnrollment = new CourseEnrollment()
+                CourseEnrollment courseEnrollment = new()
                 {
                     Id = Guid.NewGuid(),
                     CourseId = course.Id,
@@ -276,7 +316,7 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
-        /// Handle to delete course 
+        /// Handle to delete course
         /// </summary>
         /// <param name="identity">the course id or slug</param>
         /// <param name="currentUserId">the current logged in user id</param>
@@ -288,17 +328,17 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity : {0} not found for user with id : {1}", identity, currentUserId);
+                    _logger.LogWarning("Course with identity : {identity} not found for user with id : {currentUserId}", identity, currentUserId);
                     throw new EntityNotFoundException("Course not found");
                 }
                 if (course.Status != CourseStatus.Draft)
                 {
-                    _logger.LogWarning("Course with identity : {0} is in {1} status. So, it cannot be removed", identity, course.Status);
+                    _logger.LogWarning("Course with identity : {identity} is in {status} status. So, it cannot be removed", identity, course.Status);
                     throw new EntityNotFoundException("Course with draft status is only allowed to removed.");
                 }
                 if (course.CourseEnrollments.Count > 0)
                 {
-                    _logger.LogWarning("Course with identity : {0} contains enrollments", identity);
+                    _logger.LogWarning("Course with identity : {identity} contains enrollments", identity);
                     throw new EntityNotFoundException("Course contains member enrollments. So, it cannot be removed");
                 }
 
@@ -312,6 +352,185 @@ namespace Lingtren.Infrastructure.Services
                 _unitOfWork.GetRepository<Course>().Delete(course);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             });
+        }
+
+        /// <summary>
+        /// Handle to get user enrollment status in course
+        /// </summary>
+        /// <param name="id">the course id</param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
+        public async Task<CourseEnrollmentStatus> GetUserCourseEnrollmentStatus(Course course, Guid currentUserId, bool fetchMembers = false)
+        {
+            CourseEnrollmentStatus userStatus = CourseEnrollmentStatus.NotEnrolled;
+            if (course.CreatedBy == currentUserId)
+            {
+                return CourseEnrollmentStatus.Author;
+            }
+            else if (course.CourseTeachers.Any(p => p.UserId == currentUserId))
+            {
+                return CourseEnrollmentStatus.Teacher;
+            }
+            var enrolledMember = new CourseEnrollment();
+            if (fetchMembers)
+            {
+                enrolledMember = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(
+                predicate: p => p.CourseId == course.Id && p.UserId == currentUserId && !p.IsDeleted
+                            && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                                || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)).ConfigureAwait(false);
+            }
+            else
+            {
+                enrolledMember = course.CourseEnrollments.FirstOrDefault(p => p.UserId == currentUserId && !p.IsDeleted);
+            }
+
+            if (enrolledMember != null)
+            {
+                switch (enrolledMember.EnrollmentMemberStatus)
+                {
+                    case EnrollmentMemberStatusEnum.Enrolled:
+                        userStatus = CourseEnrollmentStatus.Enrolled;
+                        break;
+                    case EnrollmentMemberStatusEnum.Unenrolled:
+                        userStatus = CourseEnrollmentStatus.NotEnrolled;
+                        break;
+                    case EnrollmentMemberStatusEnum.Completed:
+                        userStatus = CourseEnrollmentStatus.Enrolled;
+                        break;
+                }
+            }
+            return userStatus;
+        }
+
+        /// <summary>
+        /// Handle to get course detail
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the instance of <see cref="CourseResponseModel"/></returns>
+        public async Task<CourseResponseModel> GetDetailAsync(string identity, Guid currentUserId)
+        {
+            try
+            {
+                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: false).ConfigureAwait(false);
+                if (course == null)
+                {
+                    _logger.LogWarning("Course with identity : {identity} not found for user with id : {currentUserId}", identity, currentUserId);
+                    throw new EntityNotFoundException("Course not found");
+                }
+                course.Sections = new List<Section>();
+                course.Sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
+                    predicate: p => p.CourseId == course.Id && !p.IsDeleted,
+                    include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
+
+                var response = new CourseResponseModel
+                {
+                    Id = course.Id,
+                    Slug = course.Slug,
+                    Name = course.Name,
+                    ThumbnailUrl = course.ThumbnailUrl,
+                    Description = course.Description,
+                    Duration = course.Duration,
+                    Language = course.Language,
+                    LevelId = course.LevelId,
+                    GroupId = course.GroupId,
+                    User = course.User != null ? new UserModel(course.User) : new UserModel(),
+                    Status = course.Status,
+                    UserStatus = GetUserCourseEnrollmentStatus(course, currentUserId, fetchMembers: true).Result,
+                    Sections = new List<SectionResponseModel>(),
+                };
+                if (course.CreatedBy != currentUserId && !course.CourseTeachers.Any(x => x.UserId == currentUserId))
+                {
+                    course.Sections = course.Sections.Where(x => x.Status == CourseStatus.Published && x.Lessons.Any(l => l.Status == CourseStatus.Published)).ToList();
+                }
+                if (course.Sections.Count == 0)
+                {
+                    return response;
+                }
+                var currentUserWatchHistories = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(
+                    predicate: x => currentUserId != default && x.UserId == currentUserId && x.CourseId == course.Id).ConfigureAwait(false);
+
+                response.Sections = course.Sections.Select(x => new SectionResponseModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Slug = x.Slug,
+                    Order = x.Order,
+                    Description = x.Description,
+                    CourseId = x.CourseId,
+                    Duration = x.Duration,
+                    Lessons = x.Lessons.Select(l => new LessonResponseModel
+                    {
+                        Id = l.Id,
+                        Name = l.Name,
+                        Slug = l.Slug,
+                        Order = l.Order,
+                        CourseId = l.CourseId,
+                        SectionId = l.SectionId,
+                        QuestionSetId = l.QuestionSetId,
+                        MeetingId = l.MeetingId,
+                        VideoUrl = l.VideoUrl,
+                        DocumentUrl = l.DocumentUrl,
+                        ThumbnailUrl = l.ThumbnailUrl,
+                        Description = l.Description,
+                        Type = l.Type,
+                        Status = l.Status,
+                        Duration = l.Duration,
+                        IsPreview = l.IsPreview,
+                        IsMandatory = l.IsMandatory,
+                        QuestionSet = l.QuestionSet != null ? new QuestionSetResponseModel(l.QuestionSet) : null,
+                        Meeting = l.Meeting != null ? new MeetingResponseModel(l.Meeting) : null,
+                        IsCompleted = currentUserWatchHistories.Any(h => h.LessonId == h.LessonId && h.IsCompleted),
+                    }).OrderBy(x => x.Order).ToList(),
+                }).OrderBy(x => x.Order).ToList();
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to fetch course detail.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch course detail.");
+            }
+        }
+
+        /// <summary>
+        /// Handle to search group courses
+        /// </summary>
+        /// <param name="identity">the group id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the paginated search result</returns>
+        public async Task<SearchResult<Course>> GroupCourseSearchAsync(string identity, BaseSearchCriteria criteria)
+        {
+            var predicate = PredicateBuilder.New<Course>(true);
+            var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(
+                predicate: p => p.Id.ToString() == identity || p.Slug == identity).ConfigureAwait(false);
+            if (group == null)
+            {
+                _logger.LogWarning("Group with identity: {identity} not found", identity);
+                throw new EntityNotFoundException("Group not found");
+            }
+            predicate = GroupCourseSearchPredicate(group.Id, predicate, criteria);
+            var course = await _unitOfWork.GetRepository<Course>().GetAllAsync(
+                predicate: predicate,
+                include: src=>src.Include(x=>x.CourseTeachers)
+                                .Include(x=>x.CourseTags)
+                ).ConfigureAwait(false);
+            var result = course.ToIPagedList(criteria.Page, criteria.Size);
+
+            await PopulateRetrievedEntities(result.Items).ConfigureAwait(false);
+            return result;
+        }
+
+        private Expression<Func<Course, bool>> GroupCourseSearchPredicate(Guid groupId, Expression<Func<Course, bool>> predicate, BaseSearchCriteria criteria)
+        {
+            if (!string.IsNullOrWhiteSpace(criteria.Search))
+            {
+                var search = criteria.Search.ToLower().Trim();
+                predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search)
+                 || x.Description.ToLower().Trim().Contains(search) || x.User.LastName.ToLower().Trim().Contains(search)
+                 || x.User.FirstName.ToLower().Trim().Contains(search));
+            }
+            predicate = predicate.And(p => p.GroupId == groupId);
+            return predicate;
         }
     }
 }

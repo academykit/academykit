@@ -13,7 +13,6 @@ namespace Lingtren.Api.Controllers
             _levelService = levelService;
         }
 
-
         /// <summary>
         /// get level api
         /// </summary>

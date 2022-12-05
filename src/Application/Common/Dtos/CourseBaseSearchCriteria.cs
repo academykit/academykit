@@ -16,9 +16,9 @@ namespace Lingtren.Application.Common.Dtos
     /// </summary>
     public enum CourseEnrollmentStatus
     {
-        Host = 1,
+        Author = 1,
         Enrolled = 2,
         NotEnrolled = 3,
-        Moderator = 4,
+        Teacher = 4,
     }
 }

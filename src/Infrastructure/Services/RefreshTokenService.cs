@@ -22,7 +22,7 @@
         {
             try
             {
-                return await _unitOfWork.GetRepository<RefreshToken>().GetAllAsync(predicate: p => p.UserId == userId && p.IsActive == true).ConfigureAwait(false);
+                return await _unitOfWork.GetRepository<RefreshToken>().GetAllAsync(predicate: p => p.UserId == userId && p.IsActive).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -40,7 +40,7 @@
         {
             try
             {
-                return await _unitOfWork.GetRepository<RefreshToken>().GetFirstOrDefaultAsync(predicate: p => p.Token == token && p.IsActive == true).ConfigureAwait(false);
+                return await _unitOfWork.GetRepository<RefreshToken>().GetFirstOrDefaultAsync(predicate: p => p.Token == token && p.IsActive).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

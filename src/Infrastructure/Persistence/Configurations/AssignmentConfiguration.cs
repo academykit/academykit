@@ -14,6 +14,7 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Name).HasColumnName("name").HasColumnType("VARCHAR(250)").HasMaxLength(250).IsRequired(false);
             builder.Property(x => x.Description).HasColumnName("description").HasColumnType("VARCHAR(500)").HasMaxLength(500).IsRequired(false);
             builder.Property(x => x.Order).HasColumnName("order").HasDefaultValue(0);
+            builder.Property(x => x.Hints).HasColumnName("hints").HasColumnType("VARCHAR(250)").HasMaxLength(250).IsRequired(false);
             builder.Property(x => x.IsActive).HasColumnName("is_active").HasDefaultValue(false);
             builder.Property(x => x.Type).HasColumnName("type");
             builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
@@ -23,6 +24,6 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.HasMany(x => x.AssignmentAttachments).WithOne(x => x.Assignment).HasForeignKey(x => x.AssignmentId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.AssignmentMCQSubmissions).WithOne(x => x.Assignment).HasForeignKey(x => x.AssignmentId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.AssignmentQuestionOptions).WithOne(x => x.Assignment).HasForeignKey(x => x.AssignmentId).OnDelete(DeleteBehavior.NoAction);
-        }   
+        }
     }
 }

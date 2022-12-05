@@ -8,6 +8,7 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
+    using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +35,7 @@ namespace Lingtren.Api.Controllers
         [HttpGet]
         public async Task<SearchResult<SectionResponseModel>> SearchAsync(string identity, [FromQuery] SectionBaseSearchCriteria searchCriteria)
         {
+            CommonHelper.ValidateArgumentNotNullOrEmpty(identity, nameof(identity));
             var course = await _courseService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
             if (course == null)
             {
@@ -134,7 +136,6 @@ namespace Lingtren.Api.Controllers
             return new SectionResponseModel(response);
         }
 
-
         /// <summary>
         /// delete section api
         /// </summary>
@@ -145,6 +146,19 @@ namespace Lingtren.Api.Controllers
         {
             await _sectionService.DeleteSectionAsync(identity, sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Section removed successfully." });
+        }
+
+        /// <summary>
+        /// section reorder api
+        /// </summary>
+        /// <param name="identity"> the course id or slug</param>
+        /// <param name="Ids"> ids of section.</param>
+        /// <returns> the task complete</returns>
+        [HttpPut("reorder")]
+        public async Task<IActionResult> SectionOrder(string identity, IList<Guid> Ids)
+        {
+            await _sectionService.ReorderAsync(identity, Ids, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Section reorder successfully." });
         }
     }
 }

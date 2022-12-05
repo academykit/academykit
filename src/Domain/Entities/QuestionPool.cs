@@ -9,6 +9,5 @@ namespace Lingtren.Domain.Entities
         public User User { get; set; }
         public IList<QuestionPoolQuestion> QuestionPoolQuestions { get; set; }
         public IList<QuestionPoolTeacher> QuestionPoolTeachers { get; set; }
-
     }
 }

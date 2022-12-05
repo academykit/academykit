@@ -9,10 +9,10 @@ namespace Lingtren.Domain.Entities
         public Lesson Lesson { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Hint { get; set; }
+        public string Hints { get; set; }
         public int Order { get; set; }
         public bool IsActive { get; set; }
-        public AssignmentType Type { get; set; }
+        public QuestionTypeEnum Type { get; set; }
         public User User { get; set; }
         public IList<AssignmentAttachment> AssignmentAttachments { get; set; }
         public IList<AssignmentMCQSubmission> AssignmentMCQSubmissions { get; set; }

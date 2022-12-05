@@ -29,7 +29,7 @@
         [HttpGet]
         public async Task<SearchResult<QuestionPoolResponseModel>> SearchAsync([FromQuery] BaseSearchCriteria searchCriteria)
         {
-            IsTeacherAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
             searchCriteria.CurrentUserId = CurrentUser.Id;
             var searchResult = await _questionPoolService.SearchAsync(searchCriteria).ConfigureAwait(false);
@@ -57,7 +57,7 @@
         [HttpPost]
         public async Task<QuestionPoolResponseModel> CreateAsync(QuestionPoolRequestModel model)
         {
-            IsTeacherAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
             var entity = new QuestionPool
@@ -93,7 +93,7 @@
         [HttpGet("{identity}")]
         public async Task<QuestionPoolResponseModel> Get(string identity)
         {
-            IsTeacherAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             var model = await _questionPoolService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
             return new QuestionPoolResponseModel(model);
         }
@@ -107,7 +107,7 @@
         [HttpPut("{identity}")]
         public async Task<QuestionPoolResponseModel> UpdateAsync(string identity, QuestionPoolRequestModel model)
         {
-            IsTeacherAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _questionPoolService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
@@ -127,9 +127,9 @@
         /// <param name="identity"> id or slug </param>
         /// <returns> the task complete </returns>
         [HttpDelete("{identity}")]
-        public async Task<IActionResult> DeletAsync(string identity)
+        public async Task<IActionResult> DeleteAsync(string identity)
         {
-            IsTeacherAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await _questionPoolService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "QuestionPool removed successfully." });
         }

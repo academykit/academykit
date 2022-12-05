@@ -6,7 +6,7 @@
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
 
-    public interface IGroupService : IGenericService<Group, BaseSearchCriteria>
+    public interface IGroupService : IGenericService<Group, GroupBaseSearchCriteria>
     {
         /// <summary>
         /// Handle to add member in the group
@@ -28,7 +28,6 @@
         /// <returns></returns>
         /// <exception cref="EntityNotFoundException"></exception>
         Task ChangeMemberStatusAsync(string identity, Guid id, bool enabled, Guid currentUserId);
-
 
         /// <summary>
         /// Handle to remove member from the group

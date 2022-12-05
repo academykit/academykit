@@ -2,13 +2,16 @@
 {
     using Application.Common.Models.ResponseModels;
     using FluentValidation;
+    using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
+    using Lingtren.Infrastructure.Helpers;
     using LinqKit;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class UserController : BaseApiController
@@ -17,18 +20,21 @@
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
         private readonly IValidator<UserRequestModel> _validator;
+        private readonly IValidator<ChangeEmailRequestModel> _changeEmailValidator;
 
         public UserController(
                             ILogger<UserController> logger,
                             IUserService userService,
                             IEmailService emailService,
-                            IValidator<UserRequestModel> validator
+                            IValidator<UserRequestModel> validator,
+                            IValidator<ChangeEmailRequestModel> changeEmailValidator
                            )
         {
             _logger = logger;
             _userService = userService;
             _emailService = emailService;
             _validator = validator;
+            _changeEmailValidator = changeEmailValidator;
         }
 
         /// <summary>
@@ -39,7 +45,7 @@
         [HttpGet]
         public async Task<SearchResult<UserResponseModel>> SearchAsync([FromQuery] UserSearchCriteria searchCriteria)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdmin(CurrentUser.Role);
 
             var searchResult = await _userService.SearchAsync(searchCriteria, includeAllProperties: false).ConfigureAwait(false);
 
@@ -66,7 +72,7 @@
         [HttpPost]
         public async Task<UserResponseModel> CreateUser(UserRequestModel model)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdmin(CurrentUser.Role);
 
             var currentTimeStamp = DateTime.UtcNow;
             await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Add").ThrowOnFailures()).ConfigureAwait(false);
@@ -81,10 +87,12 @@
                 Email = model.Email,
                 MobileNumber = model.MobileNumber,
                 Bio = model.Bio,
+                ImageUrl = model.ImageUrl,
                 PublicUrls = model.PublicUrls,
-                IsActive = true,
+                IsActive = model.IsActive,
                 Profession = model.Profession,
                 Role = model.Role,
+                DepartmentId = model.DepartmentId,
                 CreatedBy = CurrentUser.Id,
                 CreatedOn = currentTimeStamp,
                 UpdatedBy = CurrentUser.Id,
@@ -120,7 +128,7 @@
         [HttpPut("{userId}")]
         public async Task<UserResponseModel> UpdateUser(Guid userId, UserRequestModel model)
         {
-            if (CurrentUser.Id != userId && CurrentUser.Role != UserRole.Admin)
+            if (CurrentUser.Id != userId && CurrentUser.Role != UserRole.SuperAdmin && CurrentUser.Role != UserRole.Admin)
             {
                 _logger.LogWarning("User with Id : {userId} and role :{role} is not allowed to update user", CurrentUser.Id, CurrentUser.Role.ToString());
                 throw new ForbiddenException("Only same user is allowed to update user or by admin only");
@@ -134,12 +142,13 @@
             existing.MiddleName = model.MiddleName;
             existing.LastName = model.LastName;
             existing.Address = model.Address;
-            existing.Email = model.Email;
             existing.MobileNumber = model.MobileNumber;
             existing.Bio = model.Bio;
             existing.PublicUrls = model.PublicUrls;
+            existing.ImageUrl = model.ImageUrl;
             existing.Profession = model.Profession;
             existing.Role = model.Role;
+            existing.DepartmentId = model.DepartmentId;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
 
@@ -156,7 +165,7 @@
         [HttpPatch("{userId}/status")]
         public async Task<UserResponseModel> ChangeStatus(Guid userId, [FromQuery] bool enabled)
         {
-            IsAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdmin(CurrentUser.Role);
             if (CurrentUser.Id == userId)
             {
                 _logger.LogWarning("User with userId : {userId} is trying to change status of themselves", userId);
@@ -173,6 +182,33 @@
 
             var savedEntity = await _userService.UpdateAsync(existing, includeProperties: false).ConfigureAwait(false);
             return new UserResponseModel(savedEntity);
+        }
+
+        /// <summary>
+        /// change email request api
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("changeEmailRequest")]
+        public async Task<IActionResult> ChangeEmailRequestAsync(ChangeEmailRequestModel model)
+        {
+            await _changeEmailValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await _userService.ChangeEmailRequestAsync(model).ConfigureAwait(false);
+            return Ok(new CommonResponseModel { Success = true, Message = "Email changed requested successfully." });
+        }
+
+        /// <summary>
+        /// verify change email api
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet("verifyChangeEmail")]
+        public async Task<IActionResult> VerifyChangeEmailAsync([FromQuery] string token)
+        {
+            CommonHelper.ValidateArgumentNotNullOrEmpty(token, nameof(token));
+            await _userService.VerifyChangeEmailAsync(token).ConfigureAwait(false);
+            return Ok(new CommonResponseModel { Success = true, Message = "Email changed successfully." });
         }
     }
 }

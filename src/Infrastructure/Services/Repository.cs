@@ -195,7 +195,6 @@
                 query = criteria.SortType == SortType.Ascending
                         ? query.OrderBy(criteria.SortBy)
                         : query.OrderByDescending(criteria.SortBy);
-
             }
 
             return query.ToPagedList(criteria.Page, criteria.Size);
@@ -217,7 +216,7 @@
         public virtual Task<SearchResult<TEntity>> GetPagedListAsync(BaseSearchCriteria criteria, Expression<Func<TEntity, bool>> predicate = null,
                                                            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
                                                            bool disableTracking = true,
-                                                           CancellationToken cancellationToken = default(CancellationToken),
+                                                           CancellationToken cancellationToken = default,
                                                            bool ignoreQueryFilters = false)
         {
             IQueryable<TEntity> query = _dbSet;
@@ -296,10 +295,7 @@
                 query = criteria.SortType == SortType.Ascending
                         ? query.OrderBy(criteria.SortBy)
                         : query.OrderByDescending(criteria.SortBy);
-
             }
-
-
             return query.Select(selector).ToPagedList(criteria.Page, criteria.Size);
         }
 
@@ -321,7 +317,7 @@
                                                                     Expression<Func<TEntity, bool>> predicate = null,
                                                                     Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
                                                                     bool disableTracking = true,
-                                                                    CancellationToken cancellationToken = default(CancellationToken),
+                                                                    CancellationToken cancellationToken = default,
                                                                     bool ignoreQueryFilters = false)
             where TResult : class
         {
@@ -351,7 +347,6 @@
                 query = criteria.SortType == SortType.Ascending
                         ? query.OrderBy(criteria.SortBy)
                         : query.OrderByDescending(criteria.SortBy);
-
             }
 
             return query.Select(selector).ToPagedListAsync(criteria.Page, criteria.Size, cancellationToken);
@@ -404,7 +399,6 @@
                 return query.FirstOrDefault();
             }
         }
-
 
         /// <inheritdoc />
         public virtual async Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate = null,
@@ -803,7 +797,7 @@
         /// <param name="entity">The entity to insert.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous insert operation.</returns>
-        public virtual ValueTask<EntityEntry<TEntity>> InsertAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual ValueTask<EntityEntry<TEntity>> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             return _dbSet.AddAsync(entity, cancellationToken);
         }
@@ -821,7 +815,7 @@
         /// <param name="entities">The entities to insert.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous insert operation.</returns>
-        public virtual Task InsertAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default(CancellationToken)) => _dbSet.AddRangeAsync(entities, cancellationToken);
+        public virtual Task InsertAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default) => _dbSet.AddRangeAsync(entities, cancellationToken);
 
         /// <summary>
         /// Updates the specified entity.
@@ -830,16 +824,6 @@
         public virtual void Update(TEntity entity)
         {
             _dbSet.Update(entity);
-        }
-
-        /// <summary>
-        /// Updates the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        public virtual void UpdateAsync(TEntity entity)
-        {
-            _dbSet.Update(entity);
-
         }
 
         /// <summary>
@@ -868,7 +852,7 @@
         {
             // using a stub entity to mark for deletion
             var typeInfo = typeof(TEntity).GetTypeInfo();
-            var key = _dbContext.Model.FindEntityType(typeInfo).FindPrimaryKey().Properties.FirstOrDefault();
+            var key = _dbContext.Model?.FindEntityType(typeInfo)?.FindPrimaryKey()?.Properties?.FirstOrDefault();
             var property = typeInfo.GetProperty(key?.Name);
             if (property != null)
             {
@@ -992,7 +976,6 @@
             {
                 query = query.IgnoreQueryFilters();
             }
-
 
             if (orderBy != null)
             {

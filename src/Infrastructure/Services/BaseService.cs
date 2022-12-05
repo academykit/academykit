@@ -10,6 +10,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using System;
+    using System.Data;
     using System.Threading.Tasks;
 
     public abstract class BaseService
@@ -132,7 +133,7 @@
         }
 
         /// <summary>
-        /// Validate user and get courses 
+        /// Validate user and get courses
         /// </summary>
         /// <param name="currentUserId">the current user id</param>
         /// <param name="courseIdentity">the course id or slug</param>
@@ -149,20 +150,21 @@
             var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(
                 predicate: predicate,
                 include: s => s.Include(x => x.CourseTeachers)
-                                .Include(x => x.CourseEnrollments)
+                                .Include(x => x.User)
                                 .Include(x => x.CourseTags)).ConfigureAwait(false);
-                                
+
             CommonHelper.CheckFoundEntity(course);
 
-            if(course.GroupId != default)
+            if (course.GroupId != default)
             {
                 course.Group = new Group();
                 course.Group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == course.GroupId,
-                    include: src=>src.Include(x=>x.GroupMembers)).ConfigureAwait(false);
+                    include: src => src.Include(x => x.GroupMembers)).ConfigureAwait(false);
             }
-           
 
+            course.CourseEnrollments = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
+                predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
             // if current user is the creator he can modify/access the course
             if (course.CreatedBy.Equals(currentUserId) || course.CourseTeachers.Any(x => x.UserId == currentUserId))
             {
@@ -187,22 +189,22 @@
             {
                 return true;
             }
-            
-            var isCourseMember =await _unitOfWork.GetRepository<Group>().ExistsAsync(
-                predicate: p=> p.Courses.Any(x=>x.Id == course.Id) && p.GroupMembers.Any(x=>x.GroupId==course.GroupId)).ConfigureAwait(false);
-            
+            var isCourseMember = await _unitOfWork.GetRepository<Group>().ExistsAsync(
+                predicate: p => p.Courses.Any(x => x.Id == course.Id)
+                            && p.GroupMembers.Any(x => x.GroupId == course.GroupId && x.UserId == currentUserId && x.IsActive)).ConfigureAwait(false);
+
             return await Task.FromResult(isCourseMember);
         }
 
         /// <summary>
-        /// Validate user and get courses 
+        /// Validate user and get courses
         /// </summary>
         /// <param name="currentUserId">the current user id</param>
-        /// <param name="courseIdentity">the course id or slug</param>
+        /// <param name="questionPoolIdentity">the question pool id or slug</param>
         /// <param name="validateForModify"></param>
         /// <returns></returns>
         /// <exception cref="ForbiddenException"></exception>
-        protected async Task<QuestionPool> ValidateAndGetQuestionPool(Guid currentUserId, string questionPoolIdentity, bool validateForModify = true)
+        protected async Task<QuestionPool> ValidateAndGetQuestionPool(Guid currentUserId, string questionPoolIdentity)
         {
             CommonHelper.ValidateArgumentNotNullOrEmpty(questionPoolIdentity, nameof(questionPoolIdentity));
             var predicate = PredicateBuilder.New<QuestionPool>(true);
@@ -222,6 +224,51 @@
             }
 
             throw new ForbiddenException("You are not allowed to modify this question pool.");
+        }
+
+        protected async Task<IList<Guid>> GetUserGroupIds(Guid userId)
+        {
+            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
+                predicate: p => p.Id == userId,
+                include: src => src.Include(x => x.GroupMembers)).ConfigureAwait(false);
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException("The user doesn't exits.");
+            }
+            return user.GroupMembers.Select(x => x.GroupId).ToList();
+        }
+
+        protected async Task<bool> IsSuperAdmin(Guid currentUserId)
+        {
+            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
+                predicate: p => p.Id == currentUserId && p.IsActive && p.Role == UserRole.SuperAdmin).ConfigureAwait(false);
+
+            return user != null;
+        }
+        protected async Task<bool> IsSuperAdminOrAdmin(Guid currentUserId)
+        {
+            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
+                predicate: p => p.Id == currentUserId && p.IsActive && (p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin)).ConfigureAwait(false);
+            if (user == null)
+            {
+                throw new ForbiddenException("Super Admin or Admin Access");
+            }
+            return user != null;
+        }
+        protected async Task<bool> IsSuperAdminOrAdminOrTrainer(Guid currentUserId)
+        {
+            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
+                predicate: p => p.Id == currentUserId && p.IsActive
+                           && (p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin || p.Role == UserRole.Trainer)).ConfigureAwait(false);
+            return user != null;
+        }
+        protected async Task<bool> IsTrainer(Guid currentUserId)
+        {
+            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
+                predicate: p => p.Id == currentUserId && p.IsActive && p.Role == UserRole.Trainer).ConfigureAwait(false);
+
+            return user != null;
         }
     }
 }

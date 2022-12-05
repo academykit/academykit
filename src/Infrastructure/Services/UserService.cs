@@ -10,6 +10,7 @@
     using Lingtren.Infrastructure.Configurations;
     using LinqKit;
     using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
@@ -25,18 +26,22 @@
         private readonly IEmailService _emailService;
         private readonly IRefreshTokenService _refreshTokenService;
         private readonly JWT _jwt;
+        private readonly string _changeEmailEncryptionKey;
+        private readonly int _changeEmailTokenExpiry;
 
         public UserService(IUnitOfWork unitOfWork,
             ILogger<UserService> logger,
             IEmailService emailService,
             IRefreshTokenService refreshTokenService,
-            IOptions<JWT> jwt) : base(unitOfWork, logger)
+            IOptions<JWT> jwt,
+            IConfiguration configuration) : base(unitOfWork, logger)
         {
             _emailService = emailService;
             _refreshTokenService = refreshTokenService;
             _jwt = jwt.Value;
+            _changeEmailEncryptionKey = configuration.GetSection("ChangeEmail:EncryptionKey").Value;
+            _changeEmailTokenExpiry = int.Parse(configuration.GetSection("ChangeEmail:ExpireInMinutes").Value);
         }
-
 
         #region Account Services
 
@@ -54,6 +59,13 @@
             {
                 authenticationModel.IsAuthenticated = false;
                 authenticationModel.Message = "Account not registered.";
+                return authenticationModel;
+            }
+
+            if (!user.IsActive)
+            {
+                authenticationModel.IsAuthenticated = false;
+                authenticationModel.Message = "Inactive user account";
                 return authenticationModel;
             }
 
@@ -241,7 +253,6 @@
         /// <param name="hashedPasswordWithSalt">the hashed password</param>
         /// <param name="password">the password</param>
         /// <returns></returns>
-
         public bool VerifyPassword(string hashedPasswordWithSalt, string password)
         {
             // retrieve both salt and password from 'hashedPasswordWithSalt'
@@ -280,7 +291,6 @@
                 _logger.LogError(ex, "An error occurred while attempting to verify reset token.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to verify reset token.");
             }
-
         }
 
         /// <summary>
@@ -313,14 +323,12 @@
                 _unitOfWork.GetRepository<User>().Update(user);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return user.PasswordChangeToken;
-
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to verify reset token.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to verify reset token.");
             }
-
         }
 
         /// <summary>
@@ -330,7 +338,7 @@
         /// <returns></returns>
         public async Task<string> GenerateRandomPassword(int length)
         {
-            Random random = new Random();
+            Random random = new();
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var password = new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
@@ -358,6 +366,111 @@
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handle to change user email
+        /// </summary>
+        /// <param name="model">the instance of <see cref="ChangeEmailRequestModel"/></param>
+        /// <returns></returns>
+        public async Task ChangeEmailRequestAsync(ChangeEmailRequestModel model)
+        {
+            var user = await GetUserByEmailAsync(model.OldEmail).ConfigureAwait(false);
+            if (user == null)
+            {
+                _logger.LogWarning("User with email : {email} not found", model.OldEmail);
+                throw new ForbiddenException($"User not found with email : {model.OldEmail}.");
+            }
+            var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password);
+            if (!isUserAuthenticated)
+            {
+                _logger.LogWarning("User with id : {userId} password not matched for email change", user.Id);
+                throw new ForbiddenException("User password not matched.");
+            }
+            var token = GenerateChangeEmailToken(model.OldEmail, model.NewEmail);
+            await _emailService.SendChangePasswordMailAsync(model.NewEmail, user.FirstName, token, _changeEmailTokenExpiry).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Handle to verify user email change
+        /// </summary>
+        /// <param name="token">the token</param>
+        /// <returns></returns>
+        public async Task VerifyChangeEmailAsync(string token)
+        {
+            var currentTimeStamp = DateTime.UtcNow;
+            var (oldEmail, newEmail) = VerifyEmailChangeToken(token, currentTimeStamp);
+            if (string.IsNullOrWhiteSpace(oldEmail) || string.IsNullOrWhiteSpace(newEmail))
+            {
+                _logger.LogWarning("Old email or new email is null or empty for verify change email");
+                throw new ForbiddenException("Old email or new email cannot be null or empty");
+            }
+            var user = await GetUserByEmailAsync(oldEmail).ConfigureAwait(false);
+            if (user == null)
+            {
+                _logger.LogWarning("User with email : {email} not found", oldEmail);
+                throw new ForbiddenException($"User not found with email : {newEmail}.");
+            }
+            user.Email = newEmail;
+            user.UpdatedOn = currentTimeStamp;
+
+            _unitOfWork.GetRepository<User>().Update(user);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Handle to generate change email jwt token
+        /// </summary>
+        /// <param name="oldEmail">the old email</param>
+        /// <param name="newEmail">the new email for change requested</param>
+        /// <returns>the jwt token</returns>
+        public string GenerateChangeEmailToken(string oldEmail, string newEmail)
+        {
+            byte[] securityKey = Encoding.UTF8.GetBytes(_changeEmailEncryptionKey);
+            var symmetricSecurityKey = new SymmetricSecurityKey(securityKey);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Claims = new Dictionary<string, object>()
+                {
+                    {"oldEmail",oldEmail },
+                    {"newEmail",newEmail},
+                },
+                Expires = DateTime.UtcNow.AddMinutes(_changeEmailTokenExpiry),
+                SigningCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256Signature)
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(securityToken);
+        }
+
+        /// <summary>
+        /// Verify email change token
+        /// </summary>
+        /// <param name="token">the email change token</param>
+        /// <param name="currentTimeStamp">the current time stamp</param>
+        /// <returns>the old email and new email</returns>
+        private (string?, string?) VerifyEmailChangeToken(string token, DateTime currentTimeStamp)
+        {
+            byte[] securityKey = Encoding.UTF8.GetBytes(_changeEmailEncryptionKey);
+            var validationParameters = new TokenValidationParameters
+            {
+                RequireExpirationTime = true,
+                RequireSignedTokens = true,
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateLifetime = false,
+                IssuerSigningKey = new SymmetricSecurityKey(securityKey)
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, validationParameters, out var security);
+            var oldEmail = principal.Claims?.FirstOrDefault(x => x.Type == "oldEmail")?.Value;
+            var newEmail = principal.Claims?.FirstOrDefault(x => x.Type == "newEmail")?.Value;
+            var tokenExpiry = security.ValidTo;
+            if (tokenExpiry < currentTimeStamp)
+            {
+                throw new ForbiddenException("Change email token has already expired. Please resend change email request");
+            }
+            return (oldEmail, newEmail);
+        }
         #endregion Account Services
 
         #region Protected Methods
@@ -374,7 +487,6 @@
             await Task.FromResult(0);
         }
 
-
         /// <summary>
         /// Construct query condition according to search criteria
         /// </summary>
@@ -383,7 +495,6 @@
         /// <returns></returns>
         protected override Expression<Func<User, bool>> ConstructQueryConditions(Expression<Func<User, bool>> predicate, UserSearchCriteria criteria)
         {
-
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
@@ -450,7 +561,6 @@
         private async Task<RefreshToken> GetUserRefreshToken(string token)
         {
             return await _refreshTokenService.GetByValue(token).ConfigureAwait(false);
-
         }
         private async Task<User?> GetUserFromRefreshToken(string token)
         {
@@ -491,8 +601,8 @@
 
             var token = new JwtSecurityToken(_jwt.Issuer,
               _jwt.Audience,
-              expires: DateTime.Now.AddMinutes(allowedMinutes),
               claims: claims,
+              expires: DateTime.UtcNow.AddMinutes(allowedMinutes),
               signingCredentials: signingCredentials);
 
             return await Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
@@ -518,4 +628,3 @@
         #endregion Private Methods
     }
 }
-

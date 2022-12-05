@@ -66,11 +66,25 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="lessonIdentity"> the department id or slug</param>
         /// <returns> the instance of <see cref="LessonResponseModel" /> .</returns>
-        [HttpGet("{lessonIdentity}")]
-        public async Task<LessonResponseModel> Get(string identity, string lessonIdentity)
+        [HttpGet("detail")]
+        public async Task<LessonResponseModel> GetDetail(string identity, [FromQuery] string lessonIdentity)
         {
             var model = await _lessonService.GetLessonAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
             return new LessonResponseModel(model);
+        }
+
+        /// <summary>
+        /// lesson reorder api
+        /// </summary>
+        /// <param name="identity"> the course id or slug</param>
+        /// <param name="model"> the instance of <see cref="LessonReorderRequestModel"/></param>
+        /// <returns> the task complete </returns>
+        [HttpPut("reorder")]
+
+        public async Task<IActionResult> LessonReorder(string identity, LessonReorderRequestModel model)
+        {
+            await _lessonService.ReorderAsync(identity, model, CurrentUser.Id);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Lesson reorder successfully." });
         }
 
         ///// <summary>
@@ -105,32 +119,23 @@ namespace Lingtren.Api.Controllers
         /// <param name="lessonIdentity">lesson id or slug </param>
         /// <returns> the task complete </returns>
         [HttpDelete("{lessonIdentity}")]
-        public async Task<IActionResult> DeletAsync(string identity, string lessonIdentity)
+        public async Task<IActionResult> DeleteAsync(string identity, string lessonIdentity)
         {
             await _lessonService.DeleteLessonAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Lesson removed successfully." });
         }
 
-        ///// <summary>
-        ///// change department status api
-        ///// </summary>
-        ///// <param name="identity">the department id or slug</param>
-        ///// <param name="enabled">the boolean</param>
-        ///// <returns>the instance of <see cref="LessonResponseModel"/></returns>
-        //[HttpPatch("{identity}/status")]
-        //public async Task<LessonResponseModel> ChangeStatus(string identity, [FromQuery] bool enabled)
-        //{
-        //    IsAdmin(CurrentUser.Role);
-
-        //    var existing = await _departmentService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-
-        //    existing.Id = existing.Id;
-        //    existing.IsActive = enabled;
-        //    existing.UpdatedBy = CurrentUser.Id;
-        //    existing.UpdatedOn = DateTime.UtcNow;
-
-        //    var savedEntity = await _departmentService.UpdateAsync(existing).ConfigureAwait(false);
-        //    return new LessonResponseModel(savedEntity);
-        //}
+        /// <summary>
+        /// change department status api
+        /// </summary>
+        /// <param name="identity">the department id or slug</param>
+        /// <param name="enabled">the boolean</param>
+        /// <returns>the instance of <see cref="LessonResponseModel"/></returns>
+        [HttpPatch("{lessonIdentity}/join")]
+        public async Task<MeetingJoinResponseModel> Join(string identity, string lessonIdentity)
+        {
+            var response = await _lessonService.GetJoinMeetingAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
+            return response;
+        }
     }
 }

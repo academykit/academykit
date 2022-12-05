@@ -34,9 +34,8 @@ namespace Lingtren.Infrastructure.Services
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
             }
-            return predicate.And(p => !p.IsDeleted);
+            return predicate.And(p => !p.IsDeleted && p.CourseId == criteria.CourseId);
         }
-
 
         /// <summary>
         /// Includes the navigation properties loading for the entity.
@@ -99,7 +98,6 @@ namespace Lingtren.Infrastructure.Services
 
         #endregion Protected Region
 
-
         /// <summary>
         /// Handle to delete the section
         /// </summary>
@@ -139,8 +137,58 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying to delete section.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to delete section.");
+            }
+        }
+
+        /// <summary>
+        /// Handle to reorder section
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="ids">the section ids</param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
+        public async Task ReorderAsync(string identity, IList<Guid> ids, Guid currentUserId)
+        {
+            try
+            {
+                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+                if (course == null)
+                {
+                    _logger.LogWarning("ReorderAsync(): Course with identity : {identity} not found for user with id :{userId}.", identity, currentUserId);
+                    throw new EntityNotFoundException("Course was not found");
+                }
+
+                var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
+                    predicate: p => p.CourseId == course.Id && ids.Contains(p.Id)
+                    ).ConfigureAwait(false);
+
+                var order = 1;
+                var currentTimeStamp = DateTime.UtcNow;
+                var updateEntities = new List<Section>();
+                foreach (var id in ids)
+                {
+                    var section = sections.FirstOrDefault(x => x.Id == id);
+                    if (section != null)
+                    {
+                        section.Order = order;
+                        section.UpdatedBy = currentUserId;
+                        section.UpdatedOn = currentTimeStamp;
+                        updateEntities.Add(section);
+                        order++;
+                    }
+                }
+                if (updateEntities.Count > 0)
+                {
+                    _unitOfWork.GetRepository<Section>().Update(updateEntities);
+                    await _unitOfWork.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to reorder the lessons");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to reorder the lessons");
             }
         }
 
@@ -154,11 +202,11 @@ namespace Lingtren.Infrastructure.Services
         private async Task CheckDuplicateNameAsync(Section entity)
         {
             var sectionExist = await _unitOfWork.GetRepository<Section>().ExistsAsync(
-                predicate: p => p.Id != entity.Id && p.Name.ToLower() == entity.Name.ToLower()).ConfigureAwait(false);
+                predicate: p => p.Id != entity.Id && p.CourseId == entity.CourseId && p.Name.ToLower() == entity.Name.ToLower() && !p.IsDeleted).ConfigureAwait(false);
             if (sectionExist)
             {
-                _logger.LogWarning("Duplicate department name : {name} is found for the department with id : {id}", entity.Name, entity.Id);
-                throw new ServiceException("Duplicate department name is found");
+                _logger.LogWarning("Duplicate section name : {name} is found for the section with id : {id}", entity.Name, entity.Id);
+                throw new ServiceException("Duplicate section name is found");
             }
         }
 
@@ -173,7 +221,7 @@ namespace Lingtren.Infrastructure.Services
                             x.UserId == userId).ConfigureAwait(false);
             if (teacher == null)
             {
-                _logger.LogWarning("Unauthroized user : {0} is not teacher of course {1}", entity.CreatedBy, entity.CourseId);
+                _logger.LogWarning("Unauthorized user with id : {userId} is not teacher of course with id :{courseId}", entity.CreatedBy, entity.CourseId);
                 throw new ForbiddenException("Unauthorized user");
             }
         }
@@ -185,8 +233,10 @@ namespace Lingtren.Infrastructure.Services
         /// <returns> the int value </returns>
         private async Task<int> LastSectionOrder(Section entity)
         {
-            var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(predicate: x => !x.IsDeleted, orderBy: x => x.OrderByDescending(x => x.Order)).ConfigureAwait(false);
-            return section != null ? section.Order++ : 1;
+            var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
+                predicate: x => x.CourseId == entity.CourseId && !x.IsDeleted,
+                orderBy: x => x.OrderByDescending(x => x.Order)).ConfigureAwait(false);
+            return section != null ? section.Order + 1 : 1;
         }
 
         #endregion Private Methods

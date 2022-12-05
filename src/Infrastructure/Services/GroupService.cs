@@ -16,12 +16,11 @@
     using System.Linq.Expressions;
     using System.Net;
 
-    public class GroupService : BaseGenericService<Group, BaseSearchCriteria>, IGroupService
+    public class GroupService : BaseGenericService<Group, GroupBaseSearchCriteria>, IGroupService
     {
         public GroupService(IUnitOfWork unitOfWork,
             ILogger<GroupService> logger) : base(unitOfWork, logger)
         {
-
         }
 
         /// <summary>
@@ -43,16 +42,18 @@
         /// <param name="predicate">The predicate.</param>
         /// <param name="criteria">The search criteria.</param>
         /// <returns>The updated predicate with applied filters.</returns>
-        protected override Expression<Func<Group, bool>> ConstructQueryConditions(Expression<Func<Group, bool>> predicate, BaseSearchCriteria criteria)
+        protected override Expression<Func<Group, bool>> ConstructQueryConditions(Expression<Func<Group, bool>> predicate, GroupBaseSearchCriteria criteria)
         {
-
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search)
                  || x.User.FirstName.ToLower().Trim().Contains(search));
             }
-
+            if (criteria.Role != UserRole.SuperAdmin && criteria.Role != UserRole.Admin)
+            {
+                predicate = predicate.And(p => p.GroupMembers.Any(x => x.UserId == criteria.CurrentUserId));
+            }
             return predicate;
         }
 
@@ -63,12 +64,11 @@
         /// <remarks>
         /// All thrown exceptions will be propagated to caller method.
         /// </remarks>
-        protected override void SetDefaultSortOption(BaseSearchCriteria criteria)
+        protected override void SetDefaultSortOption(GroupBaseSearchCriteria criteria)
         {
             criteria.SortBy = nameof(Group.CreatedOn);
             criteria.SortType = SortType.Descending;
         }
-
 
         /// <summary>
         /// Includes the navigation properties loading for the entity.
@@ -101,83 +101,87 @@
         /// <exception cref="ForbiddenException"></exception>
         public async Task<GroupAddMemberResponseModel> AddMemberAsync(string identity, AddGroupMemberRequestModel model, Guid currentUserId)
         {
-            if (model.Emails.Any(x => default))
+            return await ExecuteWithResultAsync(async () =>
             {
-                _logger.LogInformation("Please enter user email for group with identity : {identity}", identity);
-                throw new ForbiddenException("Please enter user email.");
-            }
-            var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(
-                predicate: p => p.Slug.ToLower().Equals(identity) || p.Id.ToString().Equals(identity)).ConfigureAwait(false);
 
-            CommonHelper.CheckFoundEntity(group);
-
-            var isAdminOrTeacher = await _unitOfWork.GetRepository<User>().ExistsAsync(
-                predicate: p => p.Id == currentUserId && (p.Role == UserRole.Admin || p.Role == UserRole.Teacher)
-                            && p.IsActive == true).ConfigureAwait(false);
-
-            if (!isAdminOrTeacher)
-            {
-                _logger.LogWarning("User with userId : {userId} is not admin/teacher to add member in the group", currentUserId);
-                throw new ForbiddenException("Only user with admin or teacher role is allowed to add member in the group.");
-            }
-
-            var users = await _unitOfWork.GetRepository<User>().GetAllAsync(
-                predicate: p => model.Emails.Contains(p.Email)).ConfigureAwait(false);
-
-            var userIds = users.Select(x => x.Id).ToList();
-
-            var nonUsers = model.Emails.Except(users.Select(x => x.Email)).ToList();
-
-
-            var duplicateUsers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(
-                predicate: p => userIds.Contains(p.UserId) && p.IsActive == true,
-                include: src => src.Include(x => x.User)).ConfigureAwait(false);
-
-            var inActiveUsers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(
-                predicate: p => userIds.Contains(p.UserId) && p.IsActive == false,
-                include: src => src.Include(x => x.User)).ConfigureAwait(false);
-
-            var usersToBeAdded = userIds.Except(duplicateUsers.Select(x => x.UserId))
-                                              .Except(inActiveUsers.Select(x => x.UserId));
-
-            var groupMembers = new List<GroupMember>();
-            var currentTimeStamp = DateTime.UtcNow;
-            foreach (var userId in usersToBeAdded)
-            {
-                groupMembers.Add(new GroupMember()
+                if (model.Emails.Any(_ => default))
                 {
-                    Id = Guid.NewGuid(),
-                    UserId = userId,
-                    GroupId = group.Id,
-                    IsActive = true,
-                    CreatedBy = currentUserId,
-                    CreatedOn = currentTimeStamp,
-                    UpdatedBy = currentUserId,
-                    UpdatedOn = currentTimeStamp
-                });
-            }
-            await _unitOfWork.GetRepository<GroupMember>().InsertAsync(groupMembers).ConfigureAwait(false);
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                    _logger.LogInformation("Please enter user email for group with identity : {identity}", identity);
+                    throw new ForbiddenException("Please enter user email.");
+                }
+                var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Slug.ToLower().Equals(identity) || p.Id.ToString().Equals(identity)).ConfigureAwait(false);
 
-            var result = new GroupAddMemberResponseModel();
-            if (duplicateUsers.Count > 0)
-            {
-                result.HttpStatusCode = HttpStatusCode.PartialContent;
-                result.Message += $"{string.Join(',', duplicateUsers.Select(x => x.User.FirstName))} already exist in group member.";
-            }
-            if (inActiveUsers.Count > 0)
-            {
-                result.HttpStatusCode = HttpStatusCode.PartialContent;
-                result.Message += $" & {string.Join(',', inActiveUsers.Select(x => x.User.FirstName))} already exist as inactive group member.";
-                result.Message = result.Message.TrimStart(' ', '&');
-            }
-            if (nonUsers.Count > 0)
-            {
-                result.HttpStatusCode = HttpStatusCode.PartialContent;
-                result.Message += $" & {string.Join(',', nonUsers.Select(x => x))} is not a users in the system";
-                result.Message = result.Message.TrimStart(' ', '&');
-            }
-            return result;
+                CommonHelper.CheckFoundEntity(group);
+
+                var isAdminOrTeacher = await _unitOfWork.GetRepository<User>().ExistsAsync(
+                    predicate: p => p.Id == currentUserId && (p.Role == UserRole.Admin || p.Role == UserRole.Trainer)
+                                && p.IsActive).ConfigureAwait(false);
+
+                var isAccess = await IsSuperAdminOrAdminOrTrainer(currentUserId).ConfigureAwait(false);
+                if (!isAccess)
+                {
+                    _logger.LogWarning("User with userId : {userId} is not admin/teacher to add member in the group", currentUserId);
+                    throw new ForbiddenException("Only user with superadmin or admin or trainer role is allowed to add member in the group.");
+                }
+
+                var users = await _unitOfWork.GetRepository<User>().GetAllAsync(
+                    predicate: p => model.Emails.Contains(p.Email)).ConfigureAwait(false);
+
+                var userIds = users.Select(x => x.Id).ToList();
+
+                var nonUsers = model.Emails.Except(users.Select(x => x.Email)).ToList();
+
+                var duplicateUsers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(
+                    predicate: p => p.GroupId == group.Id && userIds.Contains(p.UserId) && p.IsActive,
+                    include: src => src.Include(x => x.User)).ConfigureAwait(false);
+
+                var inActiveUsers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(
+                    predicate: p => p.GroupId == group.Id && userIds.Contains(p.UserId) && !p.IsActive,
+                    include: src => src.Include(x => x.User)).ConfigureAwait(false);
+
+                var usersToBeAdded = userIds.Except(duplicateUsers.Select(x => x.UserId))
+                                                  .Except(inActiveUsers.Select(x => x.UserId));
+
+                var groupMembers = new List<GroupMember>();
+                var currentTimeStamp = DateTime.UtcNow;
+                foreach (var userId in usersToBeAdded)
+                {
+                    groupMembers.Add(new GroupMember()
+                    {
+                        Id = Guid.NewGuid(),
+                        UserId = userId,
+                        GroupId = group.Id,
+                        IsActive = true,
+                        CreatedBy = currentUserId,
+                        CreatedOn = currentTimeStamp,
+                        UpdatedBy = currentUserId,
+                        UpdatedOn = currentTimeStamp
+                    });
+                }
+                await _unitOfWork.GetRepository<GroupMember>().InsertAsync(groupMembers).ConfigureAwait(false);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+                var result = new GroupAddMemberResponseModel();
+                if (duplicateUsers.Count > 0)
+                {
+                    result.HttpStatusCode = HttpStatusCode.PartialContent;
+                    result.Message += $"{string.Join(',', duplicateUsers.Select(x => x.User.FirstName))} already exist in group member.";
+                }
+                if (inActiveUsers.Count > 0)
+                {
+                    result.HttpStatusCode = HttpStatusCode.PartialContent;
+                    result.Message += $" & {string.Join(',', inActiveUsers.Select(x => x.User.FirstName))} already exist as inactive group member.";
+                    result.Message = result.Message.TrimStart(' ', '&');
+                }
+                if (nonUsers.Count > 0)
+                {
+                    result.HttpStatusCode = HttpStatusCode.PartialContent;
+                    result.Message += $" & {string.Join(',', nonUsers.Select(x => x))} is not a users in the system";
+                    result.Message = result.Message.TrimStart(' ', '&');
+                }
+                return result;
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -197,13 +201,11 @@
                 _logger.LogWarning("Group not found with identity : {identity}", identity);
                 throw new EntityNotFoundException("Group not found");
             }
-            var isAdminOrTeacher = await _unitOfWork.GetRepository<User>().ExistsAsync(
-                predicate: p => p.Id == currentUserId && (p.Role == UserRole.Admin || p.Role == UserRole.Teacher)
-                            && p.IsActive == true).ConfigureAwait(false);
-            if (!isAdminOrTeacher)
+            var isAccess = await IsSuperAdminOrAdminOrTrainer(currentUserId).ConfigureAwait(false);
+            if (!isAccess)
             {
                 _logger.LogWarning("User with userId : {userId} is not admin/teacher to remove member from the group", currentUserId);
-                throw new ForbiddenException("Only user with admin or teacher role is allowed to remove member from the group.");
+                throw new ForbiddenException("Only user with superadmin or admin or trainer role is allowed to remove member from the group.");
             }
             var groupMember = await _unitOfWork.GetRepository<GroupMember>().GetFirstOrDefaultAsync(
                 predicate: p => p.GroupId == group.Id && p.Id == id).ConfigureAwait(false);
@@ -235,13 +237,11 @@
                 _logger.LogWarning("Group not found with identity : {identity}", identity);
                 throw new EntityNotFoundException("Group not found");
             }
-            var isAdminOrTeacher = await _unitOfWork.GetRepository<User>().ExistsAsync(
-                predicate: p => p.Id == currentUserId && (p.Role == UserRole.Admin || p.Role == UserRole.Teacher)
-                            && p.IsActive == true).ConfigureAwait(false);
-            if (!isAdminOrTeacher)
+            var isAccess = await IsSuperAdminOrAdminOrTrainer(currentUserId).ConfigureAwait(false);
+            if (!isAccess)
             {
                 _logger.LogWarning("User with userId : {userId} is not admin/teacher to remove member from the group", currentUserId);
-                throw new ForbiddenException("Only user with admin or teacher role is allowed to remove member from the group.");
+                throw new ForbiddenException("Only user with superadmin or admin or trainer role is allowed to remove member from the group.");
             }
             var groupMember = await _unitOfWork.GetRepository<GroupMember>().GetFirstOrDefaultAsync(
                 predicate: p => p.GroupId == group.Id && p.Id == id).ConfigureAwait(false);

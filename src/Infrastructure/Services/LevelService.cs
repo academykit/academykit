@@ -1,6 +1,5 @@
 namespace Lingtren.Infrastructure.Services
 {
-
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
@@ -12,7 +11,6 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
-    using LinqKit;
     using Microsoft.Extensions.Logging;
     public class LevelService : BaseGenericService<Level, BaseSearchCriteria>, ILevelService
     {
@@ -58,8 +56,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying to create level.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to create level.");
             }
         }
 
@@ -104,8 +102,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying to update level");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update level");
             }
         }
 
@@ -140,8 +138,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying to delete level.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to delete level.");
             }
         }
 
@@ -158,8 +156,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying to fetch levels.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch levels.");
             }
         }
 
@@ -191,8 +189,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while trying to validate user is admin or not");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to validate user is admin or not");
             }
         }
 

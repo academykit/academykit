@@ -32,7 +32,7 @@
         [HttpGet]
         public async Task<UserResponseModel> GetUser()
         {
-            var user = await _userService.GetAsync(CurrentUser.Id);
+            var user = await _userService.GetAsync(CurrentUser.Id,includeAllProperties:false);
             return new UserResponseModel(user);
         }
 

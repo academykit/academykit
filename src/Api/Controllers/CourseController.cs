@@ -48,7 +48,7 @@ namespace Lingtren.Api.Controllers
             };
 
             searchResult.Items.ForEach(p =>
-                 response.Items.Add(new CourseResponseModel(p))
+                 response.Items.Add(new CourseResponseModel(p, _courseService.GetUserCourseEnrollmentStatus(p, CurrentUser.Id, fetchMembers: true).Result))
              );
             return response;
         }
@@ -61,7 +61,7 @@ namespace Lingtren.Api.Controllers
         [HttpPost]
         public async Task<CourseResponseModel> CreateAsync(CourseRequestModel model)
         {
-            IsTeacherAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
@@ -108,7 +108,8 @@ namespace Lingtren.Api.Controllers
             });
 
             var response = await _courseService.CreateAsync(entity).ConfigureAwait(false);
-            return new CourseResponseModel(response);
+            var userStatus = await _courseService.GetUserCourseEnrollmentStatus(response, CurrentUser.Id).ConfigureAwait(false);
+            return new CourseResponseModel(response, userStatus);
         }
 
         /// <summary>
@@ -119,8 +120,7 @@ namespace Lingtren.Api.Controllers
         [HttpGet("{identity}")]
         public async Task<CourseResponseModel> Get(string identity)
         {
-            var model = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return new CourseResponseModel(model, fetchSection: true);
+            return await _courseService.GetDetailAsync(identity, CurrentUser.Id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -133,37 +133,9 @@ namespace Lingtren.Api.Controllers
         public async Task<CourseResponseModel> UpdateAsync(string identity, CourseRequestModel model)
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            var currentTimeStamp = DateTime.UtcNow;
-
-            existing.Id = existing.Id;
-            existing.Name = model.Name;
-            existing.Language = model.Language;
-            existing.GroupId = model.GroupId;
-            existing.LevelId = model.LevelId;
-            existing.Duration = model.Duration;
-            existing.Description = model.Description;
-            existing.ThumbnailUrl = model.ThumbnailUrl;
-            existing.UpdatedBy = CurrentUser.Id;
-            existing.UpdatedOn = currentTimeStamp;
-            existing.CourseTags = new List<CourseTag>();
-
-            foreach (var tagId in model.TagIds)
-            {
-                existing.CourseTags.Add(new CourseTag
-                {
-                    Id = Guid.NewGuid(),
-                    TagId = tagId,
-                    CourseId = existing.Id,
-                    CreatedOn = currentTimeStamp,
-                    CreatedBy = CurrentUser.Id,
-                    UpdatedOn = currentTimeStamp,
-                    UpdatedBy = CurrentUser.Id,
-                });
-            }
-
-            var savedEntity = await _courseService.UpdateAsync(existing).ConfigureAwait(false);
-            return new CourseResponseModel(savedEntity);
+            var savedEntity = await _courseService.UpdateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
+            var userStatus = await _courseService.GetUserCourseEnrollmentStatus(savedEntity, CurrentUser.Id).ConfigureAwait(false);
+            return new CourseResponseModel(savedEntity, userStatus);
         }
 
         /// <summary>
@@ -172,7 +144,7 @@ namespace Lingtren.Api.Controllers
         /// <param name="identity"> id or slug </param>
         /// <returns> the task complete </returns>
         [HttpDelete("{identity}")]
-        public async Task<IActionResult> DeletAsync(string identity)
+        public async Task<IActionResult> DeleteAsync(string identity)
         {
             await _courseService.DeleteCourseAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Course removed successfully." });

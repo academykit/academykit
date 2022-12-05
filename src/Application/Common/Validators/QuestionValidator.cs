@@ -14,7 +14,7 @@
             RuleFor(x => x.Answers).NotNull().WithMessage("Option is required.");
             RuleFor(x => x.Answers).Must(x => x.Count >= 2).WithMessage("Option should be more than one.");
             RuleFor(x => x.Answers).Must(a => a.Any(b => b.IsCorrect)).WithMessage("At least one option should be provided as correct.");
-            RuleFor(x => x.Answers.Count(a => a.IsCorrect)).LessThanOrEqualTo(1).When(x => x.Type == QuestionTypeEnum.Radio)
+            RuleFor(x => x.Answers.Count(a => a.IsCorrect)).LessThanOrEqualTo(1).When(x => x.Type == QuestionTypeEnum.SingleChoice)
                                             .WithMessage("Question type with single choice can have only one option correct.");
             RuleForEach(x => x.Answers).SetValidator(new QuestionOptionValidator());
         }
@@ -24,8 +24,8 @@
     {
         public QuestionOptionValidator()
         {
-            RuleFor(x => x.Options).MaximumLength(5000).WithMessage("Option length must be less than or equal to 5000 characters");
-            RuleFor(x => x.Options).NotEmpty().NotNull().WithMessage("Question option is required.");
+            RuleFor(x => x.Option).MaximumLength(5000).WithMessage("Option length must be less than or equal to 5000 characters");
+            RuleFor(x => x.Option).NotEmpty().NotNull().WithMessage("Question option is required.");
         }
     }
 }
