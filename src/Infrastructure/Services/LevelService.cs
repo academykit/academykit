@@ -29,7 +29,7 @@ namespace Lingtren.Infrastructure.Services
             try
             {
                 var levelName = name.TrimStart().TrimEnd();
-                var isAdmin = await ValidateIsAdminAsync(currentUserId).ConfigureAwait(false);
+                var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (!isAdmin)
                 {
                     throw new ForbiddenException("Unauthorized user");
@@ -73,7 +73,7 @@ namespace Lingtren.Infrastructure.Services
             try
             {
                 var levelName = name.TrimStart().TrimEnd();
-                var isAdmin = await ValidateIsAdminAsync(currentUserId).ConfigureAwait(false);
+                var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (!isAdmin)
                 {
                     throw new ForbiddenException("Unauthorized user");
@@ -117,7 +117,7 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var isAdmin = await ValidateIsAdminAsync(currentUserId).ConfigureAwait(false);
+                var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (!isAdmin)
                 {
                     throw new ForbiddenException("Unauthorized user");
@@ -170,30 +170,5 @@ namespace Lingtren.Infrastructure.Services
         {
             return p => p.Id.ToString() == identity || p.Slug == identity;
         }
-
-        #region  private method
-
-        /// <summary>
-        /// Handle to validate user  is admin
-        /// </summary>
-        /// <param name="userId"> the user id  </param>
-        /// <returns> the boolean value</returns>
-        private async Task<bool> ValidateIsAdminAsync(Guid userId)
-        {
-            try
-            {
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: x => x.Id == userId &&
-                            x.Role == UserRole.Admin).ConfigureAwait(false);
-
-                return user != default;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while trying to validate user is admin or not");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to validate user is admin or not");
-            }
-        }
-
-        #endregion
     }
 }
