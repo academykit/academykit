@@ -17,6 +17,13 @@
         Task AddQuestionsAsync(string identity, QuestionSetAddQuestionRequestModel model, Guid currentUserId);
 
         /// <summary>
+        /// Handle to set exam start time
+        /// </summary>
+        /// <param name="identity">the question set id or slug</param>
+        /// <param name="currentUserId">the current user id</param>
+        Task<QuestionSetSubmissionResponseModel> StartExam(string identity, Guid currentUserId);
+
+        /// <summary>
         /// Handle to update answer submission
         /// </summary>
         /// <param name="identity">the question set id or slug</param>

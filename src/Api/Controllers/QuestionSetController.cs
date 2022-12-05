@@ -39,13 +39,13 @@
             return Ok();
         }
 
-        ///// <summary>
-        ///// Handle to set start time
-        ///// </summary>
-        ///// <param name="identity"></param>
-        ///// <returns>the instance of <see cref="QuestionSetSubmissionResponseModel"/></returns>
-        //[HttpPost("{identity}/startExam")]
-        //public async Task<QuestionSetSubmissionResponseModel> StartExam(string identity) => await _questionSetService.StartExam(identity, CurrentUser.Id).ConfigureAwait(false);
+        /// <summary>
+        /// Handle to set start time
+        /// </summary>
+        /// <param name="identity"></param>
+        /// <returns>the instance of <see cref="QuestionSetSubmissionResponseModel"/></returns>
+        [HttpPost("{identity}/startExam")]
+        public async Task<QuestionSetSubmissionResponseModel> StartExam(string identity) => await _questionSetService.StartExam(identity, CurrentUser.Id).ConfigureAwait(false);
 
         /// <summary>
         /// Answer Submission

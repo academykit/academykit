@@ -9,6 +9,7 @@
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
+    using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
@@ -122,105 +123,95 @@
             }
         }
 
+        /// <summary>
+        /// Handle to set exam start time
+        /// </summary>
+        /// <param name="identity">the question set id or slug</param>
+        /// <param name="currentUserId">the current user id</param>
+        public async Task<QuestionSetSubmissionResponseModel> StartExam(string identity, Guid currentUserId)
+        {
+            try
+            {
+                var currentTimeStamp = DateTime.UtcNow;
+                var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(predicate: x => (x.Id.ToString() == identity || x.Slug == identity)).ConfigureAwait(false);
+                if (questionSet == null)
+                {
+                    _logger.LogWarning("Question set not found with identity: {identity} for user with id : {currentUserId}", identity, currentUserId);
+                    throw new EntityNotFoundException("Question set not found");
+                }
 
-        ///// <summary>
-        ///// Handle to set exam start time
-        ///// </summary>
-        ///// <param name="identity">the question set id or slug</param>
-        ///// <param name="currentUserId">the current user id</param>
-        //public async Task<QuestionSetSubmissionResponseModel> StartExam(string identity, Guid currentUserId)
-        //{
-        //    try
-        //    {
-        //        var currentTimeStamp = DateTime.UtcNow;
-        //        var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(predicate: x => (x.Id.ToString() == identity || x.Slug == identity)).ConfigureAwait(false);
-        //        if (questionSet == null)
-        //        {
-        //            _logger.LogWarning("Question set not found with identity: {identity} for user with id : {currentUserId}", identity, currentUserId);
-        //            throw new EntityNotFoundException("Question set not found");
-        //        }
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                    predicate: p => p.QuestionSetId == questionSet.Id,
+                    include: src => src.Include(x => x.Course)).ConfigureAwait(false);
 
-        //        var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
-        //            predicate: p=> p.QuestionSetId == questionSet.Id,
-        //            include: src=>src.Include(x=>x.Course)).ConfigureAwait(false);
+                var isEnrolled = await _unitOfWork.GetRepository<CourseEnrollment>().ExistsAsync(
+                    predicate: p => p.CourseId == lesson.CourseId && p.UserId == currentUserId && !p.IsDeleted
+                            && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Unenrolled)
+                            ).ConfigureAwait(false);
+                if (!isEnrolled)
+                {
+                    _logger.LogWarning("User with id:{currentUserId} has not enrolled in course with id: {courseId} and question set id with id: {questionSetId}."
+                                                , currentUserId, lesson.CourseId, questionSet.Id);
+                    throw new ForbiddenException("User not enrolled in the course");
+                }
 
-        //        var isEnrolled = await _unitOfWork.GetRepository<QuestionSetEnrollment>().ExistsAsync(predicate: p => p.EnrolledSubjectId == questionSet.Id
-        //                                                            && p.UserId == currentUserId && !p.IsDeleted
-        //                                                            && p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled).ConfigureAwait(false);
-        //        if (!isEnrolled)
-        //        {
-        //            _logger.LogWarning("User with Id {currentUserId} has not enrolled Question Set with Id {questionSetId}.", currentUserId, questionSet.Id);
-        //            throw new ForbiddenException(_localizer.GetString("ForbiddenException"));
-        //        }
+                var questionSetSubmissionCount = await _unitOfWork.GetRepository<QuestionSetSubmission>().CountAsync(predicate: p => p.QuestionSetId == questionSet.Id
+                                                                    && p.UserId == currentUserId).ConfigureAwait(false);
 
-        //        var questionSetSubmissionCount = await _unitOfWork.GetRepository<QuestionSetSubmission>().CountAsync(predicate: p => p.QuestionSetId == questionSet.Id
-        //                                                            && p.UserId == currentUserId).ConfigureAwait(false);
+                if (questionSetSubmissionCount >= questionSet.AllowedRetake)
+                {
+                    _logger.LogWarning("User with Id {currentUserId} has already taken exam of Question Set with Id {questionSetId}.", currentUserId, questionSet.Id);
+                    throw new ForbiddenException("Exam already taken");
+                }
+                if (questionSet.EndTime.HasValue && questionSet.EndTime != default && questionSet.EndTime < currentTimeStamp)
+                {
+                    _logger.LogWarning("Question set with id: {questionSetId} has been finished.", questionSet.Id);
+                    throw new ForbiddenException("Exam already finished");
+                }
 
-        //        if (questionSetSubmissionCount >= questionSet.AllowedRetake)
-        //        {
-        //            _logger.LogWarning("User with Id {currentUserId} has already taken exam of Question Set with Id {questionSetId}.", currentUserId, questionSet.Id);
-        //            throw new ForbiddenException(_localizer.GetString("ExamAlreadyTaken"));
-        //        }
+                var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
+                    predicate: p => p.QuestionSetId == questionSet.Id,
+                    orderBy: o => o.OrderBy(a => a.Order),
+                    include: src => src.Include(x => x.QuestionPoolQuestion.Question.QuestionOptions.OrderBy(o => o.Order))).ConfigureAwait(false);
 
-        //        if (questionSet.StartTime > currentTimeStamp)
-        //        {
-        //            var dateDiff = new DateDiff(currentTimeStamp, questionSet.StartTime);
-        //            _logger.LogWarning("Question set with id: {questionSetId} will start after {dateDiff}", questionSet.Id, dateDiff.ToString());
-        //            throw new ForbiddenException("The exam will start after " + dateDiff.ToString());
-        //        }
-        //        if (questionSet.EndTime < currentTimeStamp)
-        //        {
-        //            if (questionSet.Status != QuestionSetStatus.Completed)
-        //            {
-        //                questionSet = await ChangeStatusToComplete(currentUserId, currentTimeStamp, questionSet).ConfigureAwait(false);
-        //            }
-        //            _logger.LogWarning("Question set with id: {questionSetId} has been finished.", questionSet.Id);
-        //            throw new ForbiddenException(_localizer.GetString("ExamEnded"));
-        //        }
+                var questionSetSubmission = new QuestionSetSubmission
+                {
+                    Id = Guid.NewGuid(),
+                    StartTime = currentTimeStamp,
+                    QuestionSetId = questionSet.Id,
+                    UserId = currentUserId,
+                    CreatedBy = currentUserId,
+                    CreatedOn = currentTimeStamp,
+                    UpdatedBy = currentUserId,
+                    UpdatedOn = currentTimeStamp,
+                };
 
-        //        var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(predicate: p => p.QuestionSetId == questionSet.Id,
-        //                                            include: src => src.Include(x => x.QuestionPoolQuestion.Question.QuestionOptions.OrderBy(o => o.Order)),
-        //                                            orderBy: o => o.OrderBy(a => a.Order)).ConfigureAwait(false);
+                var duration = questionSet.StartTime == default
+                                || currentTimeStamp.AddSeconds(questionSet.Duration) < Convert.ToDateTime(questionSet.EndTime) ?
+                                questionSet.Duration :
+                                Convert.ToInt32((Convert.ToDateTime(questionSet.EndTime) - currentTimeStamp).TotalSeconds);
 
-        //        var questionSetSubmission = new QuestionSetSubmission
-        //        {
-        //            Id = Guid.NewGuid(),
-        //            StartTime = currentTimeStamp,
-        //            QuestionSetId = questionSet.Id,
-        //            UserId = currentUserId,
-        //            CreatedBy = currentUserId,
-        //            CreatedOn = currentTimeStamp,
-        //            UpdatedBy = currentUserId,
-        //            UpdatedOn = currentTimeStamp,
-        //        };
-
-        //        var duration = questionSet.StartTime == default
-        //                        || currentTimeStamp.AddSeconds(questionSet.Duration) < Convert.ToDateTime(questionSet.EndTime) ?
-        //                        questionSet.Duration :
-        //                        Convert.ToInt32((Convert.ToDateTime(questionSet.EndTime) - currentTimeStamp).TotalSeconds);
-
-        //        var response = new QuestionSetSubmissionResponseModel
-        //        {
-        //            Id = questionSetSubmission.Id,
-        //            StartDateTime = Convert.ToDateTime(questionSetSubmission.StartTime),
-        //            Duration = duration,
-        //            Name = questionSet.Name,
-        //            Description = questionSet.Description,
-        //            Questions = new List<QuestionNewResponseModel>()
-        //        };
-        //        questionSetQuestions.ForEach(x => response.Questions.Add(new QuestionNewResponseModel(x.QuestionPoolQuestion.Question, questionSetQuestionId: x.Id, showHints: false)));
-        //        await _unitOfWork.GetRepository<QuestionSetSubmission>().InsertAsync(questionSetSubmission).ConfigureAwait(false);
-        //        await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-        //        return response;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _unitOfWork.Dispose();
-        //        _logger.LogError(ex, "An error occurred while attempting to start exam.");
-        //        throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to start exam.");
-        //    }
-        //}
-
+                var response = new QuestionSetSubmissionResponseModel
+                {
+                    Id = questionSetSubmission.Id,
+                    StartDateTime = Convert.ToDateTime(questionSetSubmission.StartTime),
+                    Duration = duration,
+                    Name = questionSet.Name,
+                    Description = questionSet.Description,
+                    Questions = new List<QuestionResponseModel>()
+                };
+                questionSetQuestions.ForEach(x => response.Questions.Add(new QuestionResponseModel(x.QuestionPoolQuestion.Question, questionSetQuestionId: x.Id, showHints: false)));
+                await _unitOfWork.GetRepository<QuestionSetSubmission>().InsertAsync(questionSetSubmission).ConfigureAwait(false);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _unitOfWork.Dispose();
+                _logger.LogError(ex, "An error occurred while attempting to start exam.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to start exam.");
+            }
+        }
 
         /// <summary>
         /// Handle to update answer submission
@@ -261,17 +252,25 @@
                 if (questionSetSubmissionAnswerCount > 0)
                 {
                     _logger.LogWarning("Question set submission with id: {questionSetSubmissionId} already contains answers for user with id: {currentUserId}", questionSetSubmissionId, currentUserId);
-                    isSubmissionError = true;
-                    questionSetSubmission.SubmissionErrorMessage += " Exam already submitted.";
+                    throw new ForbiddenException("Exam already submitted.");
+                }
+
+                var answerSubmissionCount = await _unitOfWork.GetRepository<QuestionSetSubmission>().CountAsync(
+                    predicate: p => p.UserId == currentUserId && p.QuestionSetId == questionSet.Id && p.EndTime != default
+                    ).ConfigureAwait(false);
+                if (questionSet.AllowedRetake != 0 && answerSubmissionCount >= questionSet.AllowedRetake)
+                {
+                    _logger.LogWarning("Maximum attempt / submission count reached for user with id : {userId} for question-set with id : {questionSetId}", currentUserId, questionSet.Id);
+                    throw new ForbiddenException("Exam already submitted.");
                 }
 
                 var questionSetQuestionIds = answers.ToList().ConvertAll(x => x.QuestionSetQuestionId);
                 var intersectCount = questionSetQuestions.Select(x => x.Id).IntersectBy(questionSetQuestionIds, y => y).Count();
                 if (intersectCount != questionSetQuestions.Count)
                 {
-                    _logger.LogWarning("User with id: {currentUserId} doesnot submit all question for question set submission with id: {questionSetSubmissionId}", currentUserId, questionSetSubmissionId);
+                    _logger.LogWarning("User with id: {currentUserId} doesn't submit all question for question set submission with id: {questionSetSubmissionId}", currentUserId, questionSetSubmissionId);
                     isSubmissionError = true;
-                    questionSetSubmission.SubmissionErrorMessage += " Exam submission question doesnot match with question set question.";
+                    questionSetSubmission.SubmissionErrorMessage += " Exam submission question doesn't match with question set question.";
                 }
 
                 if (questionSet.Duration != 0 && currentTimeStamp.AddSeconds(-30) > questionSet.EndTime)
@@ -344,6 +343,5 @@
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to submit the exam.");
             }
         }
-
     }
 }
