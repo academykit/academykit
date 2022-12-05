@@ -488,7 +488,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 Id = Guid.NewGuid(),
                 Name = lesson.Name,
-                Slug = string.Concat(lesson.Slug, "-", lesson.Id.ToString().AsSpan(0, 5)),
+                Slug = lesson.Slug,
                 ThumbnailUrl = lesson.ThumbnailUrl,
                 Description = lesson.Description,
                 NegativeMarking = lesson.QuestionSet.NegativeMarking,
