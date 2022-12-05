@@ -266,10 +266,31 @@ namespace Lingtren.Infrastructure.Services
                 _logger.LogWarning("Course with id : {courseId} cannot be changed to same status by User with id {userId}", course.Id, currentUserId);
                 throw new ForbiddenException("Course cannot be changed to same status");
             }
+            var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
+                predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
+            var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(
+               predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
+            var currentTimeStamp = DateTime.UtcNow;
+
+            sections.ForEach(x =>
+            {
+                x.Status = status;
+                x.UpdatedBy = currentUserId;
+                x.UpdatedOn = currentTimeStamp;
+            });
+            lessons.ForEach(x =>
+            {
+                x.Status = status;
+                x.UpdatedBy = currentUserId;
+                x.UpdatedOn = currentTimeStamp;
+            });
+
             course.Status = status;
             course.UpdatedBy = currentUserId;
-            course.UpdatedOn = DateTime.UtcNow;
+            course.UpdatedOn = currentTimeStamp;
             _unitOfWork.GetRepository<Course>().Update(course);
+            _unitOfWork.GetRepository<Section>().Update(sections);
+            _unitOfWork.GetRepository<Lesson>().Update(lessons);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
 
