@@ -289,12 +289,16 @@ namespace Lingtren.Infrastructure.Services
 
                 var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(
                     predicate: x => x.Id.ToString() == identity || x.Slug == identity,
-                    include: src => src.Include(x => x.User).Include(x => x.CourseEnrollments)
+                    include: src => src.Include(x => x.User)
                     ).ConfigureAwait(false);
                 CommonHelper.CheckFoundEntity(course);
 
-                if (course.CourseEnrollments.Any(p => p.UserId == userId
-                            && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)))
+                var existCourseEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().ExistsAsync(
+                            p => p.CourseId == course.Id && p.UserId == userId && !p.IsDeleted
+                             && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)
+                                ).ConfigureAwait(false);
+
+                if (existCourseEnrollment)
                 {
                     _logger.LogWarning("User with userId: {userId} is already enrolled in the course with id: {courseId}", userId, course.Id);
                     throw new ArgumentException("You are already enrolled in this course");

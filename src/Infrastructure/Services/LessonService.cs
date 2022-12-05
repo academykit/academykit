@@ -274,8 +274,21 @@ namespace Lingtren.Infrastructure.Services
                 }
             }
 
-            if(lesson.Type == LessonType.Assignment)
+            if (lesson.Type == LessonType.Assignment)
             {
+                var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
+                    predicate: p => p.LessonId == lesson.Id,
+                    include: src => src.Include(x => x.AssignmentAttachments)
+                                    .Include(x => x.AssignmentQuestionOptions)
+                                    .Include(x => x.AssignmentMCQSubmissions)).ConfigureAwait(false);
+                var assignmentIds = assignments.Select(x => x.Id).ToList();
+
+
+
+                //var assignmentAttachments = await _unitOfWork.Get
+                //var assignmentAttachments = await _unitOfWork.GetRepository<AssignmentAttachment>().GetAllAsync(
+                //    predicate: p=> ).ConfigureAwait(false);
+                //var 
 
             }
 
@@ -457,9 +470,10 @@ namespace Lingtren.Infrastructure.Services
                 if (watchHistories.Count == 0)
                 {
                     var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
-                        predicate: p => p.CourseId == course.Id && (p.Order == 0 || p.Order == 1),
+                        predicate: p => p.CourseId == course.Id,
+                        orderBy:o => o.OrderByDescending(x=>x.Order),
                         include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
-                    currentLessonId = section.Lessons.FirstOrDefault(p => p.Order == 0 || p.Order == 1)?.Id;
+                    currentLessonId = section.Lessons.OrderByDescending(x => x.Order).FirstOrDefault()?.Id;
                 }
                 else
                 {
