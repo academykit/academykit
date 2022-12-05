@@ -288,7 +288,7 @@ namespace Lingtren.Infrastructure.Services
                 CommonHelper.CheckFoundEntity(user);
 
                 var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(
-                    predicate: x => x.Id.ToString() == identity && x.Slug == identity,
+                    predicate: x => x.Id.ToString() == identity || x.Slug == identity,
                     include: src => src.Include(x => x.User).Include(x => x.CourseEnrollments)
                     ).ConfigureAwait(false);
                 CommonHelper.CheckFoundEntity(course);
