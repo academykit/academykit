@@ -10,6 +10,8 @@
         public User User { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+        public bool IsSubmissionError { get; set; }
+        public string SubmissionErrorMessage { get; set; }
         public IList<QuestionSetResult> QuestionSetResults { get; set; }
         public IList<QuestionSetSubmissionAnswer> QuestionSetSubmissionAnswers { get; set; }
     }

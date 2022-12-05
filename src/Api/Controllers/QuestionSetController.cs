@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Api.Controllers
 {
+    using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
@@ -36,6 +37,28 @@
             }
             await _questionSetService.AddQuestionsAsync(identity, model, CurrentUser.Id);
             return Ok();
+        }
+
+        /// <summary>
+        /// Handle to set start time
+        /// </summary>
+        /// <param name="identity"></param>
+        /// <returns>the instance of <see cref="QuestionSetSubmissionResponseModel"/></returns>
+        [HttpPost("{identity}/startExam")]
+        public async Task<QuestionSetSubmissionResponseModel> StartExam(string identity) => await _questionSetService.StartExam(identity, CurrentUser.Id).ConfigureAwait(false);
+
+        /// <summary>
+        /// Answer Submission
+        /// </summary>
+        /// <param name="identity">the question set id or slug</param>
+        /// <param name="questionSetSubmissionId">the question set submission id</param>
+        /// <param name="answers">the list of answer</param>
+        /// <returns>the instance of <see cref="AssignmentResponseModel"/></returns>
+        [HttpPost("{identity}/submission/{questionSetSubmissionId}")]
+        public async Task<IActionResult> AnswerSubmission(string identity, Guid questionSetSubmissionId, IList<AnswerSubmissionRequestModel> answers)
+        {
+            await _questionSetService.AnswerSubmission(identity, questionSetSubmissionId, answers, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new { statusCode = 200, message = "Question set answer submitted successfully" });
         }
     }
 }
