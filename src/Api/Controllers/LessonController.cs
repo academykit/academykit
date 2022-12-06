@@ -93,7 +93,7 @@ namespace Lingtren.Api.Controllers
         /// <param name="identity"> id or slug </param>
         /// <param name="model"> the instance of <see cref="LessonRequestModel" />. </param>
         /// <returns> the instance of <see cref="LessonResponseModel" /> .</returns>
-        [HttpPut("{identity}")]
+        [HttpPut]
         public async Task<LessonResponseModel> UpdateAsync(string identity, LessonRequestModel model)
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
