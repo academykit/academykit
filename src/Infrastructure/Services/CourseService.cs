@@ -58,7 +58,7 @@ namespace Lingtren.Infrastructure.Services
 
             if (criteria.CurrentUserId == default)
             {
-                return predicate.And(x => x.Status == CourseStatus.Published);
+                return predicate.And(x => x.IsUpdate || x.Status == CourseStatus.Published);
             }
 
             if (criteria.EnrollmentStatus?.Count > 0)
@@ -98,7 +98,7 @@ namespace Lingtren.Infrastructure.Services
             groupPredicate = groupPredicate.And(predicate);
             predicate = predicate.And(x => !x.GroupId.HasValue).Or(groupPredicate);
             return predicate.And(x => x.CreatedBy == criteria.CurrentUserId
-                        || (x.CreatedBy != criteria.CurrentUserId && x.Status.Equals(CourseStatus.Published)));
+                        || (x.CreatedBy != criteria.CurrentUserId && (x.IsUpdate || x.Status.Equals(CourseStatus.Published))));
 
         }
 
@@ -171,7 +171,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 return;
             }
-            if (entityToReturn.Status != CourseStatus.Published)
+            if (!entityToReturn.IsUpdate && entityToReturn.Status != CourseStatus.Published)
             {
                 throw new EntityNotFoundException("The course could not be found");
             }
@@ -266,11 +266,39 @@ namespace Lingtren.Infrastructure.Services
                 _logger.LogWarning("Course with id : {courseId} cannot be changed to same status by User with id {userId}", course.Id, currentUserId);
                 throw new ForbiddenException("Course cannot be changed to same status");
             }
+
+            if ((course.Status == CourseStatus.Draft && (status == CourseStatus.Published || status == CourseStatus.Rejected))
+                || (course.Status == CourseStatus.Published && (status == CourseStatus.Review || status == CourseStatus.Rejected))
+                || (course.Status == CourseStatus.Rejected && status == CourseStatus.Published))
+            {
+                _logger.LogWarning("Course with id: {id} cannot be changed from {status} status to {changeStatus} status", course.Id, course.Status, status);
+                throw new ForbiddenException($"Course with status: {course.Status} cannot be changed to {status} status");
+            }
+
+            var isSuperAdminOrAdminAccess = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+            if (!isSuperAdminOrAdminAccess && (status == CourseStatus.Published || status == CourseStatus.Rejected))
+            {
+                _logger.LogWarning("User with id: {userId} is unauthorized user to change course with id: {id} status from {status} to {changeStatus}",
+                    currentUserId, course.Id, course.Status, status);
+                throw new ForbiddenException($"Unauthorized user to change course status to {status}");
+            }
+
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
                 predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
             var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(
                predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
+
             var currentTimeStamp = DateTime.UtcNow;
+
+            if (course.IsUpdate)
+            {
+                sections = sections.Where(x => x.Status != CourseStatus.Published).ToList();
+                lessons = lessons.Where(x => x.Status != CourseStatus.Published).ToList();
+            }
+
+            course.Status = status;
+            course.UpdatedBy = currentUserId;
+            course.UpdatedOn = currentTimeStamp;
 
             sections.ForEach(x =>
             {
@@ -285,12 +313,32 @@ namespace Lingtren.Infrastructure.Services
                 x.UpdatedOn = currentTimeStamp;
             });
 
-            course.Status = status;
-            course.UpdatedBy = currentUserId;
-            course.UpdatedOn = currentTimeStamp;
-            _unitOfWork.GetRepository<Course>().Update(course);
             _unitOfWork.GetRepository<Section>().Update(sections);
             _unitOfWork.GetRepository<Lesson>().Update(lessons);
+            _unitOfWork.GetRepository<Course>().Update(course);
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Handle to update course status
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns></returns>
+        public async Task UpdateCourseStatusAsync(string identity, Guid currentUserId)
+        {
+            var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+            if (course == null)
+            {
+                _logger.LogWarning("Course with identity: {identity} not found for user with id: {userId}", identity, currentUserId);
+                throw new ForbiddenException("Course not found");
+            }
+            course.IsUpdate = true;
+            course.Status = CourseStatus.Draft;
+            course.UpdatedBy = currentUserId;
+            course.UpdatedOn = DateTime.UtcNow;
+
+            _unitOfWork.GetRepository<Course>().Update(course);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
 
@@ -549,6 +597,14 @@ namespace Lingtren.Infrastructure.Services
             return result;
         }
 
+        #region Private Methods
+        /// <summary>
+        /// Course group search predicate
+        /// </summary>
+        /// <param name="groupId">the group id</param>
+        /// <param name="predicate">the course predicate expression</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns></returns>
         private Expression<Func<Course, bool>> GroupCourseSearchPredicate(Guid groupId, Expression<Func<Course, bool>> predicate, BaseSearchCriteria criteria)
         {
             if (!string.IsNullOrWhiteSpace(criteria.Search))
@@ -561,5 +617,7 @@ namespace Lingtren.Infrastructure.Services
             predicate = predicate.And(p => p.GroupId == groupId);
             return predicate;
         }
+
+        #endregion Private Methods
     }
 }

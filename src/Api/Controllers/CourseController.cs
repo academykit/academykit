@@ -155,6 +155,18 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="identity"> id or slug </param>
         /// <returns> the task complete </returns>
+        [HttpPatch("{identity}/updateCourse")]
+        public async Task<IActionResult> UpdateCourse(string identity)
+        {
+            await _courseService.UpdateCourseStatusAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Course updated successfully." });
+        }
+
+        /// <summary>
+        /// change course status api
+        /// </summary>
+        /// <param name="identity"> id or slug </param>
+        /// <returns> the task complete </returns>
         [HttpPatch("{identity}/status")]
         public async Task<IActionResult> ChangeStatus(string identity, [FromQuery] CourseStatus status)
         {

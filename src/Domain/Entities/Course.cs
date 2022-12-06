@@ -14,6 +14,7 @@ namespace Lingtren.Domain.Entities
         public Language Language { get; set; }
         public string ThumbnailUrl { get; set; }
         public int Duration { get; set; }
+        public bool IsUpdate { get; set; }
         public Guid LevelId { get; set; }
         public Level Level { get; set; }
         public User User { get; set; }

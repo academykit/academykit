@@ -168,7 +168,7 @@
             // if current user is the creator he can modify/access the course
 
             var isSuperAdminOrAdminAccess = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
-           
+
             if (course.CreatedBy.Equals(currentUserId) || course.CourseTeachers.Any(x => x.UserId == currentUserId) || isSuperAdminOrAdminAccess)
             {
                 return course;
@@ -177,7 +177,7 @@
             if (!validateForModify)
             {
                 var canAccess = await ValidateUserCanAccessGroupCourse(course, currentUserId).ConfigureAwait(false);
-                if (canAccess && course.Status == CourseStatus.Published)
+                if (canAccess && (course.IsUpdate || course.Status == CourseStatus.Published))
                 {
                     return course;
                 }
