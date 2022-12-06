@@ -19,12 +19,15 @@ namespace Lingtren.Infrastructure.Services
     public class LessonService : BaseGenericService<Lesson, LessonBaseSearchCriteria>, ILessonService
     {
         private readonly IZoomLicenseService _zoomLicenseService;
+        private readonly IZoomSettingService _zoomSettingService;
         public LessonService(
             IUnitOfWork unitOfWork,
             ILogger<LessonService> logger,
-            IZoomLicenseService zoomLicenseService) : base(unitOfWork, logger)
+            IZoomLicenseService zoomLicenseService,
+            IZoomSettingService zoomSettingService) : base(unitOfWork, logger)
         {
             _zoomLicenseService = zoomLicenseService;
+            _zoomSettingService = zoomSettingService;
         }
 
         #region Protected Region
@@ -464,6 +467,13 @@ namespace Lingtren.Infrastructure.Services
                         throw new ForbiddenException("You are not allowed to access this meeting");
                     }
                 }
+                
+                var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
+                if (zoomSetting == null)
+                {
+                    _logger.LogWarning("GetJoinMeetingAsync(): Zoom setting not found for user with id: {id}", currentUserId);
+                    throw new ServiceException("Zoom setting not found");
+                }
 
                 if (lesson.Meeting.MeetingNumber == default)
                 {
@@ -471,7 +481,6 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var signature = await _zoomLicenseService.GenerateZoomSignatureAsync(lesson.Meeting.MeetingNumber.ToString(), isModerator).ConfigureAwait(false);
-
                 var zak = isModerator ? await _zoomLicenseService.GetZAKAsync(lesson.Meeting.ZoomLicense.HostId).ConfigureAwait(false) : null;
 
                 var response = new MeetingJoinResponseModel
@@ -480,7 +489,8 @@ namespace Lingtren.Infrastructure.Services
                     JwtToken = signature,
                     ZAKToken = zak,
                     UserName = user.FullName,
-                    UserEmail = user.Email
+                    UserEmail = user.Email,
+                    SdkKey = zoomSetting.SdkKey
                 };
                 return response;
             }
