@@ -238,8 +238,7 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var existingLesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
-                    predicate: p => p.CourseId == course.Id && p.SectionId == section.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),
-                    include: src => src.Include(x => x.Meeting).Include(x => x.QuestionSet)
+                    predicate: p => p.CourseId == course.Id && p.SectionId == section.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity)
                     ).ConfigureAwait(false);
                 if (existingLesson == null)
                 {
@@ -277,11 +276,17 @@ namespace Lingtren.Infrastructure.Services
                 }
                 if (existingLesson.Type == LessonType.LiveClass)
                 {
+                    existingLesson.Meeting = new Meeting();
+                    existingLesson.Meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(
+                        predicate: p => p.Id == existingLesson.MeetingId).ConfigureAwait(false);
                     existingLesson.Duration = model.Meeting.MeetingDuration;
                     await UpdateMeetingAsync(model, existingLesson).ConfigureAwait(false);
                 }
                 if (existingLesson.Type == LessonType.Exam)
                 {
+                    existingLesson.QuestionSet = new QuestionSet();
+                    existingLesson.QuestionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
+                        predicate: p => p.Id == existingLesson.QuestionSetId).ConfigureAwait(false);
                     existingLesson.Duration = model.QuestionSet.Duration;
                     await UpdateQuestionSetAsync(model, existingLesson).ConfigureAwait(false);
                 }
