@@ -665,7 +665,7 @@ namespace Lingtren.Infrastructure.Services
             existingLesson.QuestionSet.UpdatedBy = existingLesson.UpdatedBy;
             existingLesson.QuestionSet.UpdatedOn = existingLesson.UpdatedOn;
 
-            _unitOfWork.GetRepository<QuestionSet>().InsertAsync(existingLesson.QuestionSet).ConfigureAwait(false);
+            _unitOfWork.GetRepository<QuestionSet>().Update(existingLesson.QuestionSet);
             return Task.CompletedTask;
         }
 
@@ -692,7 +692,7 @@ namespace Lingtren.Infrastructure.Services
             lesson.MeetingId = lesson.Meeting.Id;
             lesson.Duration = model.Meeting.MeetingDuration;
 
-            await _unitOfWork.GetRepository<Meeting>().InsertAsync(lesson.Meeting).ConfigureAwait(false);
+            _unitOfWork.GetRepository<Meeting>().Update(lesson.Meeting);
         }
 
         /// <summary>
