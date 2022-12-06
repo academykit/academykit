@@ -211,18 +211,19 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Handle to update lesson
         /// </summary>
-        /// <param name="courseIdentity">the course id or slug</param>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
         /// <param name="model">the instance of <see cref="LessonRequestModel"/></param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
-        public async Task<Lesson> UpdateAsync(string courseIdentity, LessonRequestModel model, Guid currentUserId)
+        public async Task<Lesson> UpdateAsync(string identity, string lessonIdentity, LessonRequestModel model, Guid currentUserId)
         {
             try
             {
-                var course = await ValidateAndGetCourse(currentUserId, courseIdentity, validateForModify: true).ConfigureAwait(false);
+                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity: {identity} not found for user with :{id}", courseIdentity, currentUserId);
+                    _logger.LogWarning("Course with identity: {identity} not found for user with :{id}", identity, currentUserId);
                     throw new EntityNotFoundException("Course not found");
                 }
 
@@ -232,18 +233,18 @@ namespace Lingtren.Infrastructure.Services
                 if (section == null)
                 {
                     _logger.LogWarning("Section with identity: {identity} not found for user with id:{id} and course with id: {courseId}",
-                                            courseIdentity, currentUserId, course.Id);
+                                            identity, currentUserId, course.Id);
                     throw new EntityNotFoundException("Course not found");
                 }
 
                 var existingLesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
-                    predicate: p => p.CourseId == course.Id && p.SectionId == section.Id && (p.Id.ToString() == model.LessonIdentity || p.Slug == model.LessonIdentity),
+                    predicate: p => p.CourseId == course.Id && p.SectionId == section.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),
                     include: src => src.Include(x => x.Meeting).Include(x => x.QuestionSet)
                     ).ConfigureAwait(false);
                 if (existingLesson == null)
                 {
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id} and course with id: {courseId} and section with id: {sectionId}",
-                                            model.LessonIdentity, currentUserId, course.Id, section.Id);
+                                            lessonIdentity, currentUserId, course.Id, section.Id);
                     throw new EntityNotFoundException("Lesson not found");
                 }
 
@@ -467,7 +468,7 @@ namespace Lingtren.Infrastructure.Services
                         throw new ForbiddenException("You are not allowed to access this meeting");
                     }
                 }
-                
+
                 var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
                 if (zoomSetting == null)
                 {

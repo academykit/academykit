@@ -4,10 +4,20 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface IAssignmentService : IGenericService<Assignment, AssignmentBaseSearchCriteria>
     {
+        ///// <summary>
+        ///// Handle to submit assignments by the user
+        ///// </summary>
+        ///// <param name="identity"></param>
+        ///// <param name="model"></param>
+        ///// <param name="id"></param>
+        ///// <returns></returns>
+        //Task AssignmentSubmissionAsync(string identity, IList<AssignmentSubmissionRequestModel> model, Guid id);
+
         /// <summary>
         /// Handle to update course
         /// </summary>

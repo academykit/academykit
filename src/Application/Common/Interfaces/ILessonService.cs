@@ -56,10 +56,11 @@ namespace Lingtren.Application.Common.Interfaces
         /// <summary>
         /// Handle to update lesson
         /// </summary>
-        /// <param name="identity">the lesson id or slug</param>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
         /// <param name="model">the instance of <see cref="LessonRequestModel"/></param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
-        Task<Lesson> UpdateAsync(string identity, LessonRequestModel model, Guid currentUserId);
+        Task<Lesson> UpdateAsync(string identity,string lessonIdentity, LessonRequestModel model, Guid currentUserId);
     }
 }
