@@ -206,6 +206,94 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
+        /// Handle to update lesson
+        /// </summary>
+        /// <param name="courseIdentity">the course id or slug</param>
+        /// <param name="model">the instance of <see cref="LessonRequestModel"/></param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
+        public async Task<Lesson> UpdateAsync(string courseIdentity, LessonRequestModel model, Guid currentUserId)
+        {
+            try
+            {
+                var course = await ValidateAndGetCourse(currentUserId, courseIdentity, validateForModify: true).ConfigureAwait(false);
+                if (course == null)
+                {
+                    _logger.LogWarning("Course with identity: {identity} not found for user with :{id}", courseIdentity, currentUserId);
+                    throw new EntityNotFoundException("Course not found");
+                }
+
+                var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
+                    predicate: p => p.CourseId == course.Id && (p.Id.ToString() == model.SectionIdentity || p.Slug == model.SectionIdentity)
+                    ).ConfigureAwait(false);
+                if (section == null)
+                {
+                    _logger.LogWarning("Section with identity: {identity} not found for user with id:{id} and course with id: {courseId}",
+                                            courseIdentity, currentUserId, course.Id);
+                    throw new EntityNotFoundException("Course not found");
+                }
+
+                var existingLesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                    predicate: p => p.CourseId == course.Id && p.SectionId == section.Id && (p.Id.ToString() == model.LessonIdentity || p.Slug == model.LessonIdentity),
+                    include: src => src.Include(x => x.Meeting).Include(x => x.QuestionSet)
+                    ).ConfigureAwait(false);
+                if (existingLesson == null)
+                {
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id} and course with id: {courseId} and section with id: {sectionId}",
+                                            model.LessonIdentity, currentUserId, course.Id, section.Id);
+                    throw new EntityNotFoundException("Lesson not found");
+                }
+
+                if (model.Type != existingLesson.Type)
+                {
+                    _logger.LogWarning("Lesson type not matched for lesson with id: {id}", existingLesson.Id);
+                    throw new ForbiddenException("Lesson type not matched.");
+                }
+                var currentTimeStamp = DateTime.UtcNow;
+
+                existingLesson.Name = model.Name;
+                existingLesson.Description = model.Description;
+                existingLesson.ThumbnailUrl = model.ThumbnailUrl;
+                existingLesson.IsPreview = model.IsPreview;
+                existingLesson.IsMandatory = model.IsMandatory;
+                existingLesson.UpdatedBy = currentUserId;
+                existingLesson.UpdatedOn = currentTimeStamp;
+
+                if (existingLesson.Type == LessonType.Exam)
+                {
+                    existingLesson.Name = model.QuestionSet.Name;
+                }
+                if (existingLesson.Type == LessonType.Document)
+                {
+                    existingLesson.DocumentUrl = model.DocumentUrl;
+                }
+                if (existingLesson.Type == LessonType.Video)
+                {
+                    existingLesson.VideoUrl = model.VideoUrl;
+                }
+                if (existingLesson.Type == LessonType.LiveClass)
+                {
+                    existingLesson.Duration = model.Meeting.MeetingDuration;
+                    await UpdateMeetingAsync(model, existingLesson).ConfigureAwait(false);
+                }
+                if (existingLesson.Type == LessonType.Exam)
+                {
+                    existingLesson.Duration = model.QuestionSet.Duration;
+                    await UpdateQuestionSetAsync(model, existingLesson).ConfigureAwait(false);
+                }
+
+                _unitOfWork.GetRepository<Lesson>().Update(existingLesson);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                return existingLesson;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to update the lesson information");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to update the lesson information");
+            }
+        }
+
+        /// <summary>
         /// Handle to delete lesson
         /// </summary>
         /// <param name="identity">the course id or slug</param>
@@ -304,9 +392,9 @@ namespace Lingtren.Infrastructure.Services
 
                 _unitOfWork.GetRepository<Lesson>().Delete(lesson);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-            }).ConfigureAwait(false); 
+            }).ConfigureAwait(false);
 
-            
+
         }
 
         /// <summary>
@@ -541,6 +629,31 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
+        /// Handle to update question set
+        /// </summary>
+        /// <param name="model">the instance of <see cref="LessonRequestModel"/></param>
+        /// <param name="existingLesson">the instance of <see cref="Lesson"/></param>
+        /// <returns></returns>
+        private Task UpdateQuestionSetAsync(LessonRequestModel model, Lesson existingLesson)
+        {
+            existingLesson.QuestionSet.Name = existingLesson.Name;
+            existingLesson.QuestionSet.ThumbnailUrl = existingLesson.ThumbnailUrl;
+            existingLesson.QuestionSet.Description = existingLesson.Description;
+            existingLesson.QuestionSet.NegativeMarking = model.QuestionSet.NegativeMarking;
+            existingLesson.QuestionSet.QuestionMarking = model.QuestionSet.QuestionMarking;
+            existingLesson.QuestionSet.PassingWeightage = model.QuestionSet.PassingWeightage;
+            existingLesson.QuestionSet.AllowedRetake = model.QuestionSet.AllowedRetake;
+            existingLesson.QuestionSet.StartTime = model.QuestionSet.StartTime;
+            existingLesson.QuestionSet.EndTime = model.QuestionSet.EndTime;
+            existingLesson.QuestionSet.Duration = model.QuestionSet.Duration;
+            existingLesson.QuestionSet.UpdatedBy = existingLesson.UpdatedBy;
+            existingLesson.QuestionSet.UpdatedOn = existingLesson.UpdatedOn;
+
+            _unitOfWork.GetRepository<QuestionSet>().InsertAsync(existingLesson.QuestionSet).ConfigureAwait(false);
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
         /// Handle to create meeting
         /// </summary>
         /// <param name="model">the instance of <see cref="LessonRequestModel"/></param>
@@ -564,6 +677,25 @@ namespace Lingtren.Infrastructure.Services
             lesson.Duration = model.Meeting.MeetingDuration;
 
             await _unitOfWork.GetRepository<Meeting>().InsertAsync(lesson.Meeting).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Handle to update meeting 
+        /// </summary>
+        /// <param name="model">the instance of <see cref="LessonRequestModel"/></param>
+        /// <param name="existingLesson">the instance of <see cref="Lesson"/></param>
+        /// <returns></returns>
+        private Task UpdateMeetingAsync(LessonRequestModel model, Lesson existingLesson)
+        {
+            existingLesson.Meeting.Id = Guid.NewGuid();
+            existingLesson.Meeting.StartDate = model.Meeting.MeetingStartDate;
+            existingLesson.Meeting.ZoomLicenseId = model.Meeting.ZoomLicenseId.Value;
+            existingLesson.Meeting.Duration = model.Meeting.MeetingDuration;
+            existingLesson.Meeting.UpdatedBy = existingLesson.UpdatedBy;
+            existingLesson.Meeting.UpdatedOn = existingLesson.UpdatedOn;
+
+            _unitOfWork.GetRepository<Meeting>().Update(existingLesson.Meeting);
+            return Task.CompletedTask;
         }
 
         /// <summary>

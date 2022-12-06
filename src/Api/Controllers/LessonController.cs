@@ -87,30 +87,19 @@ namespace Lingtren.Api.Controllers
             return Ok(new CommonResponseModel() { Success = true, Message = "Lesson reorder successfully." });
         }
 
-        ///// <summary>
-        ///// update department api
-        ///// </summary>
-        ///// <param name="identity"> id or slug </param>
-        ///// <param name="model"> the instance of <see cref="LessonRequestModel" />. </param>
-        ///// <returns> the instance of <see cref="LessonResponseModel" /> .</returns>
-        //[HttpPut("{identity}")]
-        //public async Task<LessonResponseModel> UpdateAsync(string identity, LessonRequestModel model)
-        //{
-        //    IsAdmin(CurrentUser.Role);
-
-        //    await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-        //    var existing = await _departmentService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-        //    var currentTimeStamp = DateTime.UtcNow;
-
-        //    existing.Id = existing.Id;
-        //    existing.Name = model.Name;
-        //    existing.IsActive = model.IsActive;
-        //    existing.UpdatedBy = CurrentUser.Id;
-        //    existing.UpdatedOn = currentTimeStamp;
-
-        //    var savedEntity = await _departmentService.UpdateAsync(existing).ConfigureAwait(false);
-        //    return new LessonResponseModel(savedEntity);
-        //}
+        /// <summary>
+        /// update department api
+        /// </summary>
+        /// <param name="identity"> id or slug </param>
+        /// <param name="model"> the instance of <see cref="LessonRequestModel" />. </param>
+        /// <returns> the instance of <see cref="LessonResponseModel" /> .</returns>
+        [HttpPut("{identity}")]
+        public async Task<LessonResponseModel> UpdateAsync(string identity, LessonRequestModel model)
+        {
+            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            var response = await _lessonService.UpdateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
+            return new LessonResponseModel(response);
+        }
 
         /// <summary>
         /// delete lesson api
@@ -126,12 +115,12 @@ namespace Lingtren.Api.Controllers
         }
 
         /// <summary>
-        /// change department status api
+        /// live class join api
         /// </summary>
         /// <param name="identity">the department id or slug</param>
         /// <param name="enabled">the boolean</param>
         /// <returns>the instance of <see cref="LessonResponseModel"/></returns>
-        [HttpPatch("{lessonIdentity}/join")]
+        [HttpGet("{lessonIdentity}/join")]
         public async Task<MeetingJoinResponseModel> Join(string identity, string lessonIdentity)
         {
             var response = await _lessonService.GetJoinMeetingAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);

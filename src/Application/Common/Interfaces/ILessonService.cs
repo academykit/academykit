@@ -43,6 +43,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
         Task ReorderAsync(string identity, LessonReorderRequestModel model, Guid currentUserId);
+
         /// <summary>
         /// Handle to join meeting
         /// </summary>
@@ -51,5 +52,14 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current logged in user</param>
         /// <returns></returns>
         Task<MeetingJoinResponseModel> GetJoinMeetingAsync(string identity, string lessonIdentity, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to update lesson
+        /// </summary>
+        /// <param name="identity">the lesson id or slug</param>
+        /// <param name="model">the instance of <see cref="LessonRequestModel"/></param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
+        Task<Lesson> UpdateAsync(string identity, LessonRequestModel model, Guid currentUserId);
     }
 }

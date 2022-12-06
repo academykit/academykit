@@ -5,6 +5,7 @@
     public class LessonRequestModel
     {
         public string SectionIdentity { get; set; }
+        public string LessonIdentity { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string VideoUrl { get; set; }
