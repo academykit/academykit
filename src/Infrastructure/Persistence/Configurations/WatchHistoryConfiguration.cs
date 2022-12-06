@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persistence.Configurations
+namespace Lingtren.Infrastructure.Persistence.Configurations
 {
     public class WatchHistoryConfiguration : IEntityTypeConfiguration<WatchHistory>
     {

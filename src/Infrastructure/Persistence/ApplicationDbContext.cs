@@ -42,8 +42,10 @@
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<AssignmentAttachment> AssignmentAttachments { get; set; }
         public DbSet<Recording> Recordings { get; set; }
-        public DbSet<AssignmentMCQSubmission> AssignmentMCQSubmissions { get; set; }
+        public DbSet<AssignmentSubmission> AssignmentSubmissions { get; set; }
         public DbSet<AssignmentQuestionOption> AssignmentQuestionOptions { get; set; }
+        public DbSet<AssignmentSubmissionAttachment> AssignmentSubmissionAttachments { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -93,7 +95,7 @@
                     ApiKey = "api_key value",
                     ApiSecret = "api_secret value",
                     SdkKey = "sdk key value",
-                    SdkSecret= "sdk secret value",
+                    SdkSecret = "sdk secret value",
                     IsRecordingEnabled = false,
                     CreatedBy = userId,
                     CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),

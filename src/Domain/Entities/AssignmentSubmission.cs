@@ -2,7 +2,7 @@ namespace Lingtren.Domain.Entities
 {
     using Lingtren.Domain.Common;
 
-    public class AssignmentMCQSubmission : AuditableEntity
+    public class AssignmentSubmission : AuditableEntity
     {
         public Guid AssignmentId { get; set; }
         public Assignment Assignment { get; set; }
@@ -10,5 +10,7 @@ namespace Lingtren.Domain.Entities
         public User User { get; set; }
         public bool IsCorrect { get; set; }
         public string SelectedOption { get; set; }
+        public string Answer { get; set; }
+        public IList<AssignmentSubmissionAttachment> AssignmentSubmissionAttachments { get; set; }
     }
 }

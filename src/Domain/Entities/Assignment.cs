@@ -15,7 +15,7 @@ namespace Lingtren.Domain.Entities
         public QuestionTypeEnum Type { get; set; }
         public User User { get; set; }
         public IList<AssignmentAttachment> AssignmentAttachments { get; set; }
-        public IList<AssignmentMCQSubmission> AssignmentMCQSubmissions { get; set; }
+        public IList<AssignmentSubmission> AssignmentSubmissions { get; set; }
         public IList<AssignmentQuestionOption> AssignmentQuestionOptions { get; set; }
     }
 }

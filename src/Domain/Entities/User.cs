@@ -55,9 +55,10 @@
         public IList<WatchHistory> WatchHistories { get; set; }
         public IList<Assignment> Assignments { get; set; }
         public IList<AssignmentAttachment> AssignmentAttachments { get; set; }
-        public IList<AssignmentMCQSubmission> AssignmentMCQSubmissions { get; set; }
+        public IList<AssignmentSubmission> AssignmentSubmissions { get; set; }
         public IList<QuestionTag> QuestionTags { get; set; }
         public IList<AssignmentQuestionOption> AssignmentQuestionOptions { get; set; }
+        public IList<AssignmentSubmissionAttachment> AssignmentSubmissionAttachments { get; set; }
 
         /// <summary>
         /// Get or set full name

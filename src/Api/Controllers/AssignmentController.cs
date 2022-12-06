@@ -23,6 +23,7 @@
             _assignmentService = assignmentService;
             _validator = validator;
         }
+
         /// <summary>
         /// get assignment api
         /// </summary>
@@ -76,7 +77,7 @@
                 AssignmentAttachments = new List<AssignmentAttachment>(),
                 AssignmentQuestionOptions = new List<AssignmentQuestionOption>()
             };
-            if ((model.Type == QuestionTypeEnum.SingleChoice || model.Type == QuestionTypeEnum.MultipleChoice) && model.FileUrls?.Count > 0)
+            if (model.Type == QuestionTypeEnum.Subjective && model.FileUrls?.Count > 0)
             {
                 foreach (var item in model.FileUrls.Select((fileUrl, i) => new { i, fileUrl }))
                 {

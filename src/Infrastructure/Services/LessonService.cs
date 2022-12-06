@@ -370,9 +370,9 @@ namespace Lingtren.Infrastructure.Services
                         predicate: p => p.LessonId == lesson.Id).ConfigureAwait(false);
                     var assignmentIds = assignments.Select(x => x.Id).ToList();
 
-                    var assignmentMCQSubmissions = await _unitOfWork.GetRepository<AssignmentMCQSubmission>().GetAllAsync(
+                    var assignmentSubmissions = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(
                         predicate: p => assignmentIds.Contains(p.AssignmentId)).ConfigureAwait(false);
-                    if (assignmentMCQSubmissions.Count > 0)
+                    if (assignmentSubmissions.Count > 0)
                     {
                         _logger.LogWarning("DeleteLessonAsync(): Lesson with id:{lessonId} and type: {type} contains assignmentSubmissions",
                                            lesson.Id, lesson.Type);

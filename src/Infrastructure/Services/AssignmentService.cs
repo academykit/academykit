@@ -60,9 +60,9 @@
 
             if (entity.Type == QuestionTypeEnum.MultipleChoice || entity.Type == QuestionTypeEnum.SingleChoice)
             {
-                var existAssignmentMCQSubmissions = await _unitOfWork.GetRepository<AssignmentMCQSubmission>().ExistsAsync(
+                var assignmentSubmissions = await _unitOfWork.GetRepository<AssignmentSubmission>().ExistsAsync(
                     predicate: p => p.AssignmentId == entity.Id).ConfigureAwait(false);
-                if (existAssignmentMCQSubmissions)
+                if (assignmentSubmissions)
                 {
                     _logger.LogWarning("Assignment with id : {id} having type : {type} contains assignment submissions", entity.Id, entity.Type);
                     throw new ForbiddenException("Assignment contains assignment submissions");
