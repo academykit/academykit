@@ -16,6 +16,8 @@
         public string Bio { get; set; }
         public string ImageUrl { get; set; }
         public string PublicUrls { get; set; }
+        public Guid? DepartmentId { get; set; }
+        public string DepartmentName { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedOn { get; set; }
         public string FullName { get; set; }
@@ -36,6 +38,8 @@
             IsActive = user.IsActive;
             CreatedOn = user.CreatedOn;
             FullName = user.FullName;
+            DepartmentId = user.DepartmentId;
+            DepartmentName = user.Department?.Name;
         }
     }
 }

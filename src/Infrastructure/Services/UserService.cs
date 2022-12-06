@@ -10,6 +10,8 @@
     using Lingtren.Infrastructure.Configurations;
     using LinqKit;
     using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
@@ -525,6 +527,16 @@
         {
             criteria.SortBy = nameof(User.CreatedOn);
             criteria.SortType = SortType.Descending;
+        }
+
+        /// <summary>
+        /// Includes the navigation properties loading for the entity.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <returns>The updated query.</returns>
+        protected override IIncludableQueryable<User, object> IncludeNavigationProperties(IQueryable<User> query)
+        {
+            return query.Include(x => x.Department);
         }
         #endregion Protected Methods
 

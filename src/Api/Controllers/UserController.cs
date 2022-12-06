@@ -47,7 +47,7 @@
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
 
-            var searchResult = await _userService.SearchAsync(searchCriteria, includeAllProperties: false).ConfigureAwait(false);
+            var searchResult = await _userService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             var response = new SearchResult<UserResponseModel>
             {
@@ -102,7 +102,7 @@
             var password = await _userService.GenerateRandomPassword(8).ConfigureAwait(false);
             entity.HashPassword = _userService.HashPassword(password);
 
-            var response = await _userService.CreateAsync(entity, includeProperties: false).ConfigureAwait(false);
+            var response = await _userService.CreateAsync(entity).ConfigureAwait(false);
             await _emailService.SendUserCreatedPasswordEmail(entity.Email, entity.FullName, password).ConfigureAwait(false);
             return new UserResponseModel(response);
         }
@@ -115,7 +115,7 @@
         [HttpGet("{userId}")]
         public async Task<UserResponseModel> Get(Guid userId)
         {
-            User model = await _userService.GetAsync(userId, includeAllProperties: false).ConfigureAwait(false);
+            User model = await _userService.GetAsync(userId).ConfigureAwait(false);
             return new UserResponseModel(model);
         }
 
@@ -153,7 +153,7 @@
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
 
-            var savedEntity = await _userService.UpdateAsync(existing, false).ConfigureAwait(false);
+            var savedEntity = await _userService.UpdateAsync(existing).ConfigureAwait(false);
             return new UserResponseModel(savedEntity);
         }
 
