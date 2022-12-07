@@ -6,7 +6,7 @@
     {
         public Guid Id { get; set; }
         public long? MeetingNumber { get; set; }
-        public string PassCode { get; set; }
+        public string Passcode { get; set; }
         public Guid ZoomLicenseId { get; set; }
         public int Duration { get; set; }
         public DateTime? StartDate { get; set; }
@@ -16,7 +16,7 @@
             Id = model.Id;
             ZoomLicenseId = model.ZoomLicenseId;
             MeetingNumber = showPasscode ? model.MeetingNumber : 0;
-            PassCode = showPasscode ? model.PassCode : string.Empty;
+            Passcode = showPasscode ? model.Passcode : string.Empty;
             Duration = model.Duration;
             StartDate = model.StartDate;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
@@ -37,8 +37,8 @@
         /// Get or set zoom zak token
         /// </summary>
         public string ZAKToken { get; set; }
-        public string UserEmail { get; set; }
-        public string UserName { get; set; }
         public string SdkKey { get; set; }
+        public long? MeetingId { get; set; }
+        public string Passcode { get; set; }
     }
 }

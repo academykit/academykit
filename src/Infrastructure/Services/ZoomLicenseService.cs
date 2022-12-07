@@ -135,23 +135,11 @@
         public async Task CreateZoomMeetingAsync(Lesson lesson)
         {
             var currentTimeStamp = DateTime.UtcNow;
-
-            var (meetingId, passcode) = await CreateMeetingAsync(lesson.Name, lesson.Meeting.Duration,
-                                                                    currentTimeStamp, lesson.Meeting.ZoomLicense.LicenseEmail).ConfigureAwait(false);
+            var (meetingId, passcode) = await CreateMeetingAsync(lesson.Name, lesson.Meeting.Duration, currentTimeStamp, lesson.Meeting.ZoomLicense.LicenseEmail).ConfigureAwait(false);
 
             lesson.Meeting.MeetingNumber = long.Parse(meetingId);
-            lesson.Meeting.PassCode = passcode;
-
-            //var roomMeeting = new RoomMeeting
-            //{
-            //    Id = Guid.NewGuid(),
-            //    RoomId = room.Id,
-            //    MeetingId = Convert.ToInt64(meetingId),
-            //    CreatedOn = currentTimeStamp
-            //};
-
+            lesson.Meeting.Passcode = passcode;
             _unitOfWork.GetRepository<Meeting>().Update(lesson.Meeting);
-            //await _unitOfWork.GetRepository<RoomMeeting>().InsertAsync(roomMeeting).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
 

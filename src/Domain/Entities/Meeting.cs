@@ -4,7 +4,7 @@ namespace Lingtren.Domain.Entities
     public class Meeting : AuditableEntity
     {
         public long? MeetingNumber { get; set; }
-        public string PassCode { get; set; }
+        public string Passcode { get; set; }
         public Guid ZoomLicenseId { get; set; }
         public int Duration { get; set; }
         public ZoomLicense ZoomLicense { get; set; }

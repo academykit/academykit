@@ -496,9 +496,9 @@ namespace Lingtren.Infrastructure.Services
                     RoomName = lesson.Name,
                     JwtToken = signature,
                     ZAKToken = zak,
-                    UserName = user.FullName,
-                    UserEmail = user.Email,
-                    SdkKey = zoomSetting.SdkKey
+                    SdkKey = zoomSetting.SdkKey,
+                    MeetingId = lesson.Meeting?.MeetingNumber,
+                    Passcode = lesson.Meeting?.Passcode,
                 };
                 return response;
             }
