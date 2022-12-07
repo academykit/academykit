@@ -188,10 +188,12 @@ namespace Lingtren.Infrastructure.Services
                 }
                 if (lesson.Type == LessonType.LiveClass)
                 {
+                    lesson.Duration = model.Meeting.MeetingDuration * 60; //convert duration from minutes to seconds;
                     await CreateMeetingAsync(model, lesson).ConfigureAwait(false);
                 }
                 if (lesson.Type == LessonType.Exam)
                 {
+                    lesson.Duration = lesson.QuestionSet.Duration * 60; //convert duration from minutes to seconds;
                     await CreateQuestionSetAsync(model, lesson).ConfigureAwait(false);
                 }
                 var order = await LastLessonOrder(lesson).ConfigureAwait(false);
@@ -279,7 +281,7 @@ namespace Lingtren.Infrastructure.Services
                     existingLesson.Meeting = new Meeting();
                     existingLesson.Meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(
                         predicate: p => p.Id == existingLesson.MeetingId).ConfigureAwait(false);
-                    existingLesson.Duration = model.Meeting.MeetingDuration;
+                    existingLesson.Duration = model.Meeting.MeetingDuration * 60; //convert duration from minutes to seconds;
                     await UpdateMeetingAsync(model, existingLesson).ConfigureAwait(false);
                 }
                 if (existingLesson.Type == LessonType.Exam)
@@ -287,7 +289,7 @@ namespace Lingtren.Infrastructure.Services
                     existingLesson.QuestionSet = new QuestionSet();
                     existingLesson.QuestionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
                         predicate: p => p.Id == existingLesson.QuestionSetId).ConfigureAwait(false);
-                    existingLesson.Duration = model.QuestionSet.Duration;
+                    existingLesson.Duration = model.QuestionSet.Duration * 60; //convert duration from minutes to seconds;
                     await UpdateQuestionSetAsync(model, existingLesson).ConfigureAwait(false);
                 }
 
@@ -626,20 +628,20 @@ namespace Lingtren.Infrastructure.Services
                 Name = lesson.Name,
                 Slug = lesson.Slug,
                 ThumbnailUrl = lesson.ThumbnailUrl,
-                Description = lesson.Description,
+                Description = model.QuestionSet.Description,
                 NegativeMarking = model.QuestionSet.NegativeMarking,
                 QuestionMarking = model.QuestionSet.QuestionMarking,
                 PassingWeightage = model.QuestionSet.PassingWeightage,
                 AllowedRetake = model.QuestionSet.AllowedRetake,
                 StartTime = model.QuestionSet.StartTime,
                 EndTime = model.QuestionSet.EndTime,
-                Duration = model.QuestionSet.Duration,
+                Duration = model.QuestionSet.Duration * 60, //convert duration from minutes to seconds;
                 CreatedBy = lesson.CreatedBy,
                 CreatedOn = lesson.CreatedOn,
                 UpdatedBy = lesson.UpdatedBy,
                 UpdatedOn = lesson.UpdatedOn
             };
-            lesson.Duration = model.QuestionSet.Duration;
+
             lesson.QuestionSetId = lesson.QuestionSet.Id;
             await _unitOfWork.GetRepository<QuestionSet>().InsertAsync(lesson.QuestionSet).ConfigureAwait(false);
         }
@@ -654,14 +656,14 @@ namespace Lingtren.Infrastructure.Services
         {
             existingLesson.QuestionSet.Name = existingLesson.Name;
             existingLesson.QuestionSet.ThumbnailUrl = existingLesson.ThumbnailUrl;
-            existingLesson.QuestionSet.Description = existingLesson.Description;
+            existingLesson.QuestionSet.Description = model.QuestionSet.Description;
             existingLesson.QuestionSet.NegativeMarking = model.QuestionSet.NegativeMarking;
             existingLesson.QuestionSet.QuestionMarking = model.QuestionSet.QuestionMarking;
             existingLesson.QuestionSet.PassingWeightage = model.QuestionSet.PassingWeightage;
             existingLesson.QuestionSet.AllowedRetake = model.QuestionSet.AllowedRetake;
             existingLesson.QuestionSet.StartTime = model.QuestionSet.StartTime;
             existingLesson.QuestionSet.EndTime = model.QuestionSet.EndTime;
-            existingLesson.QuestionSet.Duration = model.QuestionSet.Duration;
+            existingLesson.QuestionSet.Duration = model.QuestionSet.Duration * 60; //convert duration from minutes to seconds;
             existingLesson.QuestionSet.UpdatedBy = existingLesson.UpdatedBy;
             existingLesson.QuestionSet.UpdatedOn = existingLesson.UpdatedOn;
 
@@ -683,7 +685,7 @@ namespace Lingtren.Infrastructure.Services
                 Id = Guid.NewGuid(),
                 StartDate = model.Meeting.MeetingStartDate,
                 ZoomLicenseId = model.Meeting.ZoomLicenseId.Value,
-                Duration = model.Meeting.MeetingDuration,
+                Duration = model.Meeting.MeetingDuration * 60, //convert duration from minutes to seconds;
                 CreatedBy = lesson.CreatedBy,
                 CreatedOn = lesson.CreatedOn,
                 UpdatedBy = lesson.UpdatedBy,
@@ -706,7 +708,7 @@ namespace Lingtren.Infrastructure.Services
             existingLesson.Meeting.Id = Guid.NewGuid();
             existingLesson.Meeting.StartDate = model.Meeting.MeetingStartDate;
             existingLesson.Meeting.ZoomLicenseId = model.Meeting.ZoomLicenseId.Value;
-            existingLesson.Meeting.Duration = model.Meeting.MeetingDuration;
+            existingLesson.Meeting.Duration = model.Meeting.MeetingDuration * 60; //convert duration from minutes to seconds;
             existingLesson.Meeting.UpdatedBy = existingLesson.UpdatedBy;
             existingLesson.Meeting.UpdatedOn = existingLesson.UpdatedOn;
 
