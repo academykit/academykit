@@ -694,7 +694,7 @@ namespace Lingtren.Infrastructure.Services
             lesson.MeetingId = lesson.Meeting.Id;
             lesson.Duration = model.Meeting.MeetingDuration;
 
-            _unitOfWork.GetRepository<Meeting>().Update(lesson.Meeting);
+            await _unitOfWork.GetRepository<Meeting>().InsertAsync(lesson.Meeting).ConfigureAwait(false);
             return;
         }
 
