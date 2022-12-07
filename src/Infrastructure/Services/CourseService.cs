@@ -620,5 +620,88 @@ namespace Lingtren.Infrastructure.Services
         }
 
         #endregion Private Methods
+
+        #region Statistics
+
+        /// <summary>
+        /// Handle to fetch course lesson statistics
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="currentUserId">the current user id or slug</param>
+        /// <returns></returns>
+        public async Task<IList<LessonStatisticsResponseModel>> LessonStatistics(string identity, Guid currentUserId)
+        {
+            try
+            {
+                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+                var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(
+                    predicate: p => p.CourseId == course.Id,
+                    include: src => src.Include(x => x.Section)
+                    ).ConfigureAwait(false);
+
+                var response = new List<LessonStatisticsResponseModel>();
+
+                lessons.ForEach(x => response.Add(new LessonStatisticsResponseModel
+                {
+                    Id = x.Id,
+                    Slug = x.Slug,
+                    Name = x.Name,
+                    CourseId = course.Id,
+                    CourseSlug = course.Slug,
+                    CourseName = course.Name,
+                    SectionId = x.SectionId,
+                    SectionSlug = x.Section?.Slug,
+                    SectionName = x.Section?.Name,
+                    IsMandantory = x.IsMandatory,
+                    EnrolledStudent = course.CourseEnrollments.Count,
+                    LessonWatched = _unitOfWork.GetRepository<WatchHistory>().CountAsync(predicate: p => p.LessonId == x.Id && p.IsCompleted).Result
+                }));
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to fetch course lesson statistics.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch course lesson statistics.");
+            }
+        }
+
+        /// <summary>
+        /// Handle to fetch student course statistics report
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns></returns>
+        public async Task<IList<StudentCourseStatisticsResponseModel>> StudentStatistics(string identity, Guid currentUserId)
+        {
+            try
+            {
+                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+
+                var enrollments = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
+                predicate: p => p.CourseId == course.Id
+                    && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed),
+                include: src => src.Include(x => x.Lesson).Include(x => x.User)).ConfigureAwait(false);
+
+                var response = new List<StudentCourseStatisticsResponseModel>();
+
+                enrollments.ForEach(x => response.Add(new StudentCourseStatisticsResponseModel
+                {
+                    UserId = x.UserId,
+                    FullName = x.User?.FullName,
+                    LessonId = x.CurrentLessonId,
+                    LessonSlug = x.Lesson?.Slug,
+                    LessonName = x.Lesson?.Name,
+                    Percentage = x.Percentage
+                }));
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to fetch course student statistics.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch course student statistics.");
+            }
+        }
+
+        #endregion Statistics
     }
 }

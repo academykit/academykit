@@ -190,5 +190,19 @@ namespace Lingtren.Api.Controllers
             await _courseService.EnrollmentAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "User enrolled in the course successfully." });
         }
+
+        /// <summary>
+        /// Course Lesson statistics api
+        /// </summary>
+        /// <param name="identity"> the course id or slug.</param>
+        [HttpGet("{identity}/lessonStatistics")]
+        public async Task<IList<LessonStatisticsResponseModel>> LessonStatistics(string identity) => await _courseService.LessonStatistics(identity, CurrentUser.Id).ConfigureAwait(false);
+
+        /// <summary>
+        /// Course student statistics api
+        /// </summary>
+        /// <param name="identity"> the course id or slug.</param>
+        [HttpGet("{identity}/studentStatistics")]
+        public async Task<IList<StudentCourseStatisticsResponseModel>> StudentStatistics(string identity) => await _courseService.StudentStatistics(identity, CurrentUser.Id).ConfigureAwait(false);
     }
 }
