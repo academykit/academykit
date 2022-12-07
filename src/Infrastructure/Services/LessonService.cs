@@ -279,16 +279,14 @@ namespace Lingtren.Infrastructure.Services
                 if (existingLesson.Type == LessonType.LiveClass)
                 {
                     existingLesson.Meeting = new Meeting();
-                    existingLesson.Meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(
-                        predicate: p => p.Id == existingLesson.MeetingId).ConfigureAwait(false);
+                    existingLesson.Meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.Id == existingLesson.MeetingId).ConfigureAwait(false);
                     existingLesson.Duration = model.Meeting.MeetingDuration * 60; //convert duration from minutes to seconds;
                     await UpdateMeetingAsync(model, existingLesson).ConfigureAwait(false);
                 }
                 if (existingLesson.Type == LessonType.Exam)
                 {
                     existingLesson.QuestionSet = new QuestionSet();
-                    existingLesson.QuestionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
-                        predicate: p => p.Id == existingLesson.QuestionSetId).ConfigureAwait(false);
+                    existingLesson.QuestionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(predicate: p => p.Id == existingLesson.QuestionSetId).ConfigureAwait(false);
                     existingLesson.Duration = model.QuestionSet.Duration * 60; //convert duration from minutes to seconds;
                     await UpdateQuestionSetAsync(model, existingLesson).ConfigureAwait(false);
                 }
@@ -652,7 +650,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="model">the instance of <see cref="LessonRequestModel"/></param>
         /// <param name="existingLesson">the instance of <see cref="Lesson"/></param>
         /// <returns></returns>
-        private Task UpdateQuestionSetAsync(LessonRequestModel model, Lesson existingLesson)
+        private async Task UpdateQuestionSetAsync(LessonRequestModel model, Lesson existingLesson)
         {
             existingLesson.QuestionSet.Name = existingLesson.Name;
             existingLesson.QuestionSet.ThumbnailUrl = existingLesson.ThumbnailUrl;
@@ -668,7 +666,7 @@ namespace Lingtren.Infrastructure.Services
             existingLesson.QuestionSet.UpdatedOn = existingLesson.UpdatedOn;
 
             _unitOfWork.GetRepository<QuestionSet>().Update(existingLesson.QuestionSet);
-            return Task.CompletedTask;
+            await Task.FromResult(0);
         }
 
         /// <summary>
@@ -695,7 +693,6 @@ namespace Lingtren.Infrastructure.Services
             lesson.Duration = model.Meeting.MeetingDuration;
 
             await _unitOfWork.GetRepository<Meeting>().InsertAsync(lesson.Meeting).ConfigureAwait(false);
-            return;
         }
 
         /// <summary>
@@ -706,7 +703,6 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         private async Task UpdateMeetingAsync(LessonRequestModel model, Lesson existingLesson)
         {
-            existingLesson.Meeting.Id = Guid.NewGuid();
             existingLesson.Meeting.StartDate = model.Meeting.MeetingStartDate;
             existingLesson.Meeting.ZoomLicenseId = model.Meeting.ZoomLicenseId.Value;
             existingLesson.Meeting.Duration = model.Meeting.MeetingDuration * 60; //convert duration from minutes to seconds;
@@ -714,7 +710,7 @@ namespace Lingtren.Infrastructure.Services
             existingLesson.Meeting.UpdatedOn = existingLesson.UpdatedOn;
 
             _unitOfWork.GetRepository<Meeting>().Update(existingLesson.Meeting);
-            return;
+            await Task.FromResult(0);
         }
 
         /// <summary>
