@@ -9,15 +9,6 @@
 
     public interface IAssignmentService : IGenericService<Assignment, AssignmentBaseSearchCriteria>
     {
-        ///// <summary>
-        ///// Handle to submit assignments by the user
-        ///// </summary>
-        ///// <param name="identity"></param>
-        ///// <param name="model"></param>
-        ///// <param name="id"></param>
-        ///// <returns></returns>
-        //Task AssignmentSubmissionAsync(string identity, IList<AssignmentSubmissionRequestModel> model, Guid id);
-
         /// <summary>
         /// Handle to update course
         /// </summary>
@@ -26,5 +17,14 @@
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
         Task<Assignment> UpdateAsync(string identity, AssignmentRequestModel model, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to submit assignments by the user
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="model">the list of <see cref="AssignmentSubmissionRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user</param>
+        /// <returns></returns>
+        Task AssignmentSubmissionAsync(string lessonIdentity, IList<AssignmentSubmissionRequestModel> model, Guid currentUserId);
     }
 }

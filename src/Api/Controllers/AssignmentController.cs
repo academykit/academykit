@@ -153,7 +153,19 @@
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await _assignmentService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Department removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "Assignment removed successfully." });
+        }
+
+        /// <summary>
+        /// assignment submission api
+        /// </summary>
+        /// <param name="identity"> id or slug </param>
+        /// <returns> the task complete </returns>
+        [HttpPost("{lessonIdentity}/submissions")]
+        public async Task<IActionResult> SubmissionAsync(string lessonIdentity, IList<AssignmentSubmissionRequestModel> model)
+        {
+            await _assignmentService.AssignmentSubmissionAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Assignment Submitted Successfully." });
         }
     }
 }

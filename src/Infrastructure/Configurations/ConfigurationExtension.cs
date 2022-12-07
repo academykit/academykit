@@ -1,6 +1,5 @@
 ﻿namespace Lingtren.Infrastructure.Configurations
 {
-    using Lingtren.Infrastructure.Configurations;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -52,7 +51,7 @@
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Vurilo Auth Api",
+                    Title = "Standalone Auth Api",
                     Version = "v1"
                 });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()

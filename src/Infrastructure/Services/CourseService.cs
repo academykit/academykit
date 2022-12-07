@@ -518,7 +518,8 @@ namespace Lingtren.Infrastructure.Services
                 };
                 if (course.CreatedBy != currentUserId && !course.CourseTeachers.Any(x => x.UserId == currentUserId))
                 {
-                    course.Sections = course.Sections.Where(x => x.Status == CourseStatus.Published && x.Lessons.Any(l => l.Status == CourseStatus.Published)).ToList();
+                    course.Sections = course.Sections.Where(x => x.Status == CourseStatus.Published).ToList();
+                    course.Sections.ForEach(x => x.Lessons = x.Lessons.Where(x => x.Status == CourseStatus.Published).ToList());
                 }
                 if (course.Sections.Count == 0)
                 {

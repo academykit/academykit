@@ -11,6 +11,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
+    using System.Linq;
     using System.Linq.Expressions;
 
     public class AssignmentService : BaseGenericService<Assignment, AssignmentBaseSearchCriteria>, IAssignmentService
@@ -170,75 +171,184 @@
         /// <returns></returns>
         public async Task<Assignment> UpdateAsync(string identity, AssignmentRequestModel model, Guid currentUserId)
         {
-            var existing = await GetByIdOrSlugAsync(identity, currentUserId).ConfigureAwait(false);
+            try
+            {
+                var existing = await GetByIdOrSlugAsync(identity, currentUserId).ConfigureAwait(false);
+                var currentTimeStamp = DateTime.UtcNow;
+
+                existing.Id = existing.Id;
+                existing.Name = model.Name;
+                existing.Hints = model.Hints;
+                existing.LessonId = model.LessonId;
+                existing.Type = model.Type;
+                existing.Description = model.Description;
+                existing.UpdatedBy = currentUserId;
+                existing.UpdatedOn = currentTimeStamp;
+
+                var assignmentQuestionOptions = new List<AssignmentQuestionOption>();
+                var assignmentAttachments = new List<AssignmentAttachment>();
+
+                if (model.Type == QuestionTypeEnum.SingleChoice || model.Type == QuestionTypeEnum.MultipleChoice)
+                {
+                    foreach (var item in model.Answers.Select((answer, i) => new { i, answer }))
+                    {
+                        assignmentQuestionOptions.Add(new AssignmentQuestionOption
+                        {
+                            Id = Guid.NewGuid(),
+                            AssignmentId = existing.Id,
+                            Order = item.i + 1,
+                            Option = item.answer.Option,
+                            IsCorrect = item.answer.IsCorrect,
+                            CreatedBy = currentUserId,
+                            CreatedOn = currentTimeStamp,
+                            UpdatedBy = currentUserId,
+                            UpdatedOn = currentTimeStamp,
+                        });
+                    }
+                }
+                if ((model.Type == QuestionTypeEnum.SingleChoice || model.Type == QuestionTypeEnum.MultipleChoice) && model.FileUrls.Count > 0)
+                {
+                    foreach (var item in model.FileUrls.Select((fileUrl, i) => new { i, fileUrl }))
+                    {
+                        assignmentAttachments.Add(new AssignmentAttachment
+                        {
+                            Id = Guid.NewGuid(),
+                            AssignmentId = existing.Id,
+                            FileUrl = item.fileUrl,
+                            Order = item.i + 1,
+                            CreatedBy = currentUserId,
+                            CreatedOn = currentTimeStamp,
+                            UpdatedBy = currentUserId,
+                            UpdatedOn = currentTimeStamp,
+                        });
+                    }
+                }
+                if (existing.AssignmentAttachments.Count > 0)
+                {
+                    _unitOfWork.GetRepository<AssignmentAttachment>().Delete(existing.AssignmentAttachments);
+                }
+                if (existing.AssignmentQuestionOptions.Count > 0)
+                {
+                    _unitOfWork.GetRepository<AssignmentQuestionOption>().Delete(existing.AssignmentQuestionOptions);
+                }
+                if (assignmentAttachments.Count > 0)
+                {
+                    await _unitOfWork.GetRepository<AssignmentAttachment>().InsertAsync(assignmentAttachments).ConfigureAwait(false);
+                }
+                if (assignmentQuestionOptions.Count > 0)
+                {
+                    await _unitOfWork.GetRepository<AssignmentQuestionOption>().InsertAsync(assignmentQuestionOptions).ConfigureAwait(false);
+                }
+                _unitOfWork.GetRepository<Assignment>().Update(existing);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                return existing;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to update assignment.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update assignment.");
+            }
+        }
+
+        /// <summary>
+        /// Handle to submit assignments by the user
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="models">the list of <see cref="AssignmentSubmissionRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user</param>
+        /// <returns></returns>
+        public async Task AssignmentSubmissionAsync(string lessonIdentity, IList<AssignmentSubmissionRequestModel> models, Guid currentUserId)
+        {
+            try
+            {
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity).ConfigureAwait(false);
+                if (lesson == null)
+                {
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", lessonIdentity, currentUserId);
+                    throw new EntityNotFoundException("Lesson not found");
+                }
+                if (lesson.Status != CourseStatus.Published)
+                {
+                    _logger.LogWarning("Lesson with id: {id} not published for user with id: {id}", lesson.Id, currentUserId);
+                    throw new EntityNotFoundException("Lesson not published");
+                }
+                await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString()).ConfigureAwait(false);
+
+                if (lesson.Type != LessonType.Assignment)
+                {
+                    _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}",
+                                        lesson.Id, currentUserId);
+                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+                }
+
+                var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
+                    predicate: p => p.LessonId == lesson.Id && p.IsActive,
+                    include: src => src.Include(x => x.AssignmentQuestionOptions)).ConfigureAwait(false);
+
+                var assignmentSubmissions = new List<AssignmentSubmission>();
+                foreach (var item in models)
+                {
+                    await InsertAssignmentSubmission(currentUserId, assignments, item).ConfigureAwait(false);
+                }
+                await _unitOfWork.GetRepository<AssignmentSubmission>().InsertAsync(assignmentSubmissions).ConfigureAwait(false);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to submit the assignment.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to submit the assignment.");
+            }
+        }
+
+        /// <summary>
+        /// Handle to insert assignment submission and attachment details
+        /// </summary>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <param name="assignments">the list of <see cref="Assignment"/></param>
+        /// <param name="item">the instance of <see cref="AssignmentSubmissionRequestModel"/></param>
+        /// <returns></returns>
+        private async Task InsertAssignmentSubmission(Guid currentUserId, IList<Assignment> assignments, AssignmentSubmissionRequestModel item)
+        {
             var currentTimeStamp = DateTime.UtcNow;
-
-            existing.Id = existing.Id;
-            existing.Name = model.Name;
-            existing.Hints = model.Hints;
-            existing.LessonId = model.LessonId;
-            existing.Type = model.Type;
-            existing.Description = model.Description;
-            existing.UpdatedBy = currentUserId;
-            existing.UpdatedOn = currentTimeStamp;
-
-            var assignmentQuestionOptions = new List<AssignmentQuestionOption>();
-            var assignmentAttachments = new List<AssignmentAttachment>();
-
-            if (model.Type == QuestionTypeEnum.SingleChoice || model.Type == QuestionTypeEnum.MultipleChoice)
+            var assignment = assignments.FirstOrDefault(x => x.Id == item.AssignmentId);
+            if (assignment != null)
             {
-                foreach (var item in model.Answers.Select((answer, i) => new { i, answer }))
+                var assignmentSubmission = new AssignmentSubmission
                 {
-                    assignmentQuestionOptions.Add(new AssignmentQuestionOption
+                    Id = Guid.NewGuid(),
+                    AssignmentId = assignment.Id,
+                    UserId = currentUserId,
+                    CreatedBy = currentUserId,
+                    CreatedOn = currentTimeStamp,
+                    UpdatedBy = currentUserId,
+                    UpdatedOn = currentTimeStamp,
+                    AssignmentSubmissionAttachments = new List<AssignmentSubmissionAttachment>(),
+                };
+                if (assignment.Type == QuestionTypeEnum.SingleChoice || assignment.Type == QuestionTypeEnum.MultipleChoice)
+                {
+                    var answerIds = assignment.AssignmentQuestionOptions?.Where(x => x.IsCorrect).Select(x => x.Id);
+                    bool? isCorrect = answerIds?.OrderBy(x => x).ToList().SequenceEqual(item.SelectedOption.OrderBy(x => x).ToList());
+
+                    assignmentSubmission.IsCorrect = isCorrect ?? false;
+                    assignmentSubmission.SelectedOption = string.Join(",", item.SelectedOption);
+                }
+                if (assignment.Type == QuestionTypeEnum.Subjective)
+                {
+                    item.AttachmentUrls.ForEach(attachment => assignmentSubmission.AssignmentSubmissionAttachments.Add(new AssignmentSubmissionAttachment
                     {
                         Id = Guid.NewGuid(),
-                        AssignmentId = existing.Id,
-                        Order = item.i + 1,
-                        Option = item.answer.Option,
-                        IsCorrect = item.answer.IsCorrect,
+                        AssignmentSubmissionId = assignmentSubmission.Id,
+                        FileUrl = attachment,
                         CreatedBy = currentUserId,
                         CreatedOn = currentTimeStamp,
                         UpdatedBy = currentUserId,
                         UpdatedOn = currentTimeStamp,
-                    });
+                    }));
+
+                    await _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().InsertAsync(assignmentSubmission.AssignmentSubmissionAttachments).ConfigureAwait(false);
                 }
             }
-            if ((model.Type == QuestionTypeEnum.SingleChoice || model.Type == QuestionTypeEnum.MultipleChoice) && model.FileUrls.Count > 0)
-            {
-                foreach (var item in model.FileUrls.Select((fileUrl, i) => new { i, fileUrl }))
-                {
-                    assignmentAttachments.Add(new AssignmentAttachment
-                    {
-                        Id = Guid.NewGuid(),
-                        AssignmentId = existing.Id,
-                        FileUrl = item.fileUrl,
-                        Order = item.i + 1,
-                        CreatedBy = currentUserId,
-                        CreatedOn = currentTimeStamp,
-                        UpdatedBy = currentUserId,
-                        UpdatedOn = currentTimeStamp,
-                    });
-                }
-            }
-            if (existing.AssignmentAttachments.Count > 0)
-            {
-                _unitOfWork.GetRepository<AssignmentAttachment>().Delete(existing.AssignmentAttachments);
-            }
-            if (existing.AssignmentQuestionOptions.Count > 0)
-            {
-                _unitOfWork.GetRepository<AssignmentQuestionOption>().Delete(existing.AssignmentQuestionOptions);
-            }
-            if (assignmentAttachments.Count > 0)
-            {
-                await _unitOfWork.GetRepository<AssignmentAttachment>().InsertAsync(assignmentAttachments).ConfigureAwait(false);
-            }
-            if (assignmentQuestionOptions.Count > 0)
-            {
-                await _unitOfWork.GetRepository<AssignmentQuestionOption>().InsertAsync(assignmentQuestionOptions).ConfigureAwait(false);
-            }
-            _unitOfWork.GetRepository<Assignment>().Update(existing);
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-            return existing;
         }
     }
 }
