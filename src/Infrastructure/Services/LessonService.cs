@@ -193,7 +193,7 @@ namespace Lingtren.Infrastructure.Services
                 }
                 if (lesson.Type == LessonType.Exam)
                 {
-                    lesson.Duration = lesson.QuestionSet.Duration * 60; //convert duration from minutes to seconds;
+                    lesson.Duration = model.QuestionSet.Duration * 60; //convert duration from minutes to seconds;
                     await CreateQuestionSetAsync(model, lesson).ConfigureAwait(false);
                 }
                 var order = await LastLessonOrder(lesson).ConfigureAwait(false);
@@ -695,6 +695,7 @@ namespace Lingtren.Infrastructure.Services
             lesson.Duration = model.Meeting.MeetingDuration;
 
             _unitOfWork.GetRepository<Meeting>().Update(lesson.Meeting);
+            return;
         }
 
         /// <summary>
@@ -703,7 +704,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="model">the instance of <see cref="LessonRequestModel"/></param>
         /// <param name="existingLesson">the instance of <see cref="Lesson"/></param>
         /// <returns></returns>
-        private Task UpdateMeetingAsync(LessonRequestModel model, Lesson existingLesson)
+        private async Task UpdateMeetingAsync(LessonRequestModel model, Lesson existingLesson)
         {
             existingLesson.Meeting.Id = Guid.NewGuid();
             existingLesson.Meeting.StartDate = model.Meeting.MeetingStartDate;
@@ -713,7 +714,7 @@ namespace Lingtren.Infrastructure.Services
             existingLesson.Meeting.UpdatedOn = existingLesson.UpdatedOn;
 
             _unitOfWork.GetRepository<Meeting>().Update(existingLesson.Meeting);
-            return Task.CompletedTask;
+            return;
         }
 
         /// <summary>
