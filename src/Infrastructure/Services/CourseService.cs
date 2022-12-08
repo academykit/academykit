@@ -673,29 +673,48 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="identity">the course id or slug</param>
         /// <param name="currentUserId">the current logged in user id</param>
-        /// <returns></returns>
-        public async Task<IList<StudentCourseStatisticsResponseModel>> StudentStatistics(string identity, Guid currentUserId)
+        /// <returns>the search result</returns>
+        public async Task<SearchResult<StudentCourseStatisticsResponseModel>> StudentStatistics(string identity, Guid currentUserId, BaseSearchCriteria criteria)
         {
             try
             {
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
 
+                var predicate = PredicateBuilder.New<CourseEnrollment>(true);
+                predicate = predicate.And(p => p.CourseId == course.Id);
+                predicate = predicate.And(p => p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed);
+
+                if (!string.IsNullOrWhiteSpace(criteria.Search))
+                {
+                    var search = criteria.Search.ToLower().Trim();
+                    predicate = predicate.And(x => x.User.LastName.ToLower().Trim().Contains(search) || x.User.FirstName.ToLower().Trim().Contains(search));
+                }
+
                 var enrollments = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
-                predicate: p => p.CourseId == course.Id
-                    && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed),
+                predicate: predicate,
                 include: src => src.Include(x => x.Lesson).Include(x => x.User)).ConfigureAwait(false);
 
-                var response = new List<StudentCourseStatisticsResponseModel>();
+                var searchResult = enrollments.ToIPagedList(criteria.Page, criteria.Size);
 
-                enrollments.ForEach(x => response.Add(new StudentCourseStatisticsResponseModel
+                var response = new SearchResult<StudentCourseStatisticsResponseModel>
                 {
-                    UserId = x.UserId,
-                    FullName = x.User?.FullName,
-                    LessonId = x.CurrentLessonId,
-                    LessonSlug = x.Lesson?.Slug,
-                    LessonName = x.Lesson?.Name,
-                    Percentage = x.Percentage
-                }));
+                    Items = new List<StudentCourseStatisticsResponseModel>(),
+                    CurrentPage = searchResult.CurrentPage,
+                    PageSize = searchResult.PageSize,
+                    TotalCount = searchResult.TotalCount,
+                    TotalPage = searchResult.TotalPage,
+                };
+
+                searchResult.Items.ForEach(p =>
+                     response.Items.Add(new StudentCourseStatisticsResponseModel
+                     {
+                         UserId = p.UserId,
+                         FullName = p.User?.FullName,
+                         LessonId = p.CurrentLessonId,
+                         LessonSlug = p.Lesson?.Slug,
+                         LessonName = p.Lesson?.Name,
+                         Percentage = p.Percentage
+                     }));
                 return response;
             }
             catch (Exception ex)
