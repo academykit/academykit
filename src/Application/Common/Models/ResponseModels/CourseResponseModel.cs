@@ -18,6 +18,7 @@
         public Guid LevelId { get; set; }
         public string LevelName { get; set; }
         public CourseEnrollmentStatus UserStatus { get; set; }
+        public DateTime CreatedOn { get; set; }
         public IList<CourseTagResponseModel> Tags { get; set; }
         public UserModel User { get; set; }
         public IList<SectionResponseModel> Sections { get; set; }
@@ -37,6 +38,7 @@
             LevelId = model.LevelId;
             LevelName = model.Level?.Name;
             UserStatus = userStatus;
+            CreatedOn = model.CreatedOn;
             Tags = new List<CourseTagResponseModel>();
             Sections = new List<SectionResponseModel>();
             User = model.User != null ? new UserModel(model.User) : new UserModel();

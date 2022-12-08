@@ -166,8 +166,10 @@ namespace Lingtren.Infrastructure.Services
                 _logger.LogWarning("CurrentUserId is required");
                 throw new ForbiddenException("CurrentUserId is required");
             }
-            // for creator and course teacher return if exists
-            if (entityToReturn.CreatedBy == CurrentUserId || entityToReturn.CourseTeachers.Any(x => x.UserId == CurrentUserId))
+
+            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(CurrentUserId.Value).ConfigureAwait(false);
+            // for creator and course teacher and superadmin and admin return if exists
+            if (entityToReturn.CreatedBy == CurrentUserId || isSuperAdminOrAdmin || entityToReturn.CourseTeachers.Any(x => x.UserId == CurrentUserId))
             {
                 return;
             }
@@ -516,7 +518,8 @@ namespace Lingtren.Infrastructure.Services
                     UserStatus = GetUserCourseEnrollmentStatus(course, currentUserId, fetchMembers: true).Result,
                     Sections = new List<SectionResponseModel>(),
                 };
-                if (course.CreatedBy != currentUserId && !course.CourseTeachers.Any(x => x.UserId == currentUserId))
+                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+                if (course.CreatedBy != currentUserId && !course.CourseTeachers.Any(x => x.UserId == currentUserId) && !isSuperAdminOrAdmin)
                 {
                     course.Sections = course.Sections.Where(x => x.Status == CourseStatus.Published).ToList();
                     course.Sections.ForEach(x => x.Lessons = x.Lessons.Where(x => x.Status == CourseStatus.Published).ToList());

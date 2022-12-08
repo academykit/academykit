@@ -168,6 +168,7 @@ namespace Lingtren.Infrastructure.Services
                     IsPreview = model.IsPreview,
                     IsMandatory = model.IsMandatory,
                     SectionId = section.Id,
+                    Status = CourseStatus.Draft,
                     CreatedBy = currentUserId,
                     CreatedOn = currentTimeStamp,
                     UpdatedBy = currentUserId,

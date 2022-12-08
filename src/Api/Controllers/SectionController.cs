@@ -8,6 +8,7 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
+    using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
@@ -80,6 +81,7 @@ namespace Lingtren.Api.Controllers
             {
                 Id = Guid.NewGuid(),
                 Name = model.Name,
+                Status = CourseStatus.Draft,
                 CourseId = course.Id,
                 CreatedBy = CurrentUser.Id,
                 CreatedOn = DateTime.UtcNow

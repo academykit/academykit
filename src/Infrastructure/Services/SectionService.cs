@@ -65,7 +65,6 @@ namespace Lingtren.Infrastructure.Services
         /// </remarks>
         protected override async Task CreatePreHookAsync(Section entity)
         {
-            await CheckCourseTeacherAsync(entity, entity.CreatedBy).ConfigureAwait(false);
             await CheckDuplicateNameAsync(entity).ConfigureAwait(false);
             var order = await LastSectionOrder(entity).ConfigureAwait(false);
             entity.Order = order;
@@ -81,7 +80,6 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="newEntity">The new entity.</param>
         protected override async Task UpdateEntityFieldsAsync(Section existing, Section newEntity)
         {
-            await CheckCourseTeacherAsync(newEntity, newEntity.UpdatedBy.Value).ConfigureAwait(false);
             await CheckDuplicateNameAsync(newEntity).ConfigureAwait(false);
             _unitOfWork.GetRepository<Section>().Update(newEntity);
         }
@@ -117,7 +115,6 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new EntityNotFoundException("Section not found");
                 }
-                await CheckCourseTeacherAsync(section, currentUserId).ConfigureAwait(false);
                 if (section.Status == CourseStatus.Published || section.Course.Status == CourseStatus.Published)
                 {
                     throw new ForbiddenException("Course section is published.");
@@ -207,22 +204,6 @@ namespace Lingtren.Infrastructure.Services
             {
                 _logger.LogWarning("Duplicate section name : {name} is found for the section with id : {id}", entity.Name, entity.Id);
                 throw new ServiceException("Duplicate section name is found");
-            }
-        }
-
-        /// <summary>
-        /// Handle to check the course teacher
-        /// </summary>
-        /// <param name="entity"> the instance of <see cref="Section" /> .</param>
-        /// <returns> the task complete ˝</returns>
-        private async Task CheckCourseTeacherAsync(Section entity, Guid userId)
-        {
-            var teacher = await _unitOfWork.GetRepository<CourseTeacher>().GetFirstOrDefaultAsync(predicate: x => x.CourseId == entity.CourseId &&
-                            x.UserId == userId).ConfigureAwait(false);
-            if (teacher == null)
-            {
-                _logger.LogWarning("Unauthorized user with id : {userId} is not teacher of course with id :{courseId}", entity.CreatedBy, entity.CourseId);
-                throw new ForbiddenException("Unauthorized user");
             }
         }
 
