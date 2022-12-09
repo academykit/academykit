@@ -333,7 +333,7 @@
                     assignmentSubmission.IsCorrect = isCorrect ?? false;
                     assignmentSubmission.SelectedOption = string.Join(",", item.SelectedOption);
                 }
-                if (assignment.Type == QuestionTypeEnum.Subjective)
+                if (assignment.Type == QuestionTypeEnum.Subjective && assignmentSubmission.AssignmentSubmissionAttachments.Count > 0)
                 {
                     item.AttachmentUrls.ForEach(attachment => assignmentSubmission.AssignmentSubmissionAttachments.Add(new AssignmentSubmissionAttachment
                     {
