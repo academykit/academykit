@@ -273,7 +273,7 @@
                     _logger.LogWarning("Lesson with id: {id} not published for user with id: {id}", lesson.Id, currentUserId);
                     throw new EntityNotFoundException("Lesson not published");
                 }
-                await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString()).ConfigureAwait(false);
+                await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
 
                 if (lesson.Type != LessonType.Assignment)
                 {
