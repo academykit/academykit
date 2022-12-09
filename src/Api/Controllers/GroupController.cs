@@ -75,7 +75,7 @@
         public async Task<GroupResponseModel> CreateGroup(GroupRequestModel model)
         {
             var currentTimeStamp = DateTime.UtcNow;
-            await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Add").ThrowOnFailures()).ConfigureAwait(false);
+            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
 
             var entity = new Group()
             {
@@ -125,7 +125,7 @@
         [HttpPut("{identity}")]
         public async Task<GroupResponseModel> UpdateGroup(string identity, GroupRequestModel model)
         {
-            await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Update").ThrowOnFailures()).ConfigureAwait(false);
+            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
 

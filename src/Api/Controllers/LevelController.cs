@@ -1,5 +1,6 @@
 namespace Lingtren.Api.Controllers
 {
+    using FluentValidation;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
@@ -8,9 +9,13 @@ namespace Lingtren.Api.Controllers
     public class LevelController : BaseApiController
     {
         private readonly ILevelService _levelService;
-        public LevelController(ILevelService levelService)
+        private readonly IValidator<LevelRequestModel> _validator;
+        public LevelController(
+            ILevelService levelService,
+            IValidator<LevelRequestModel> validator)
         {
             _levelService = levelService;
+            _validator = validator;
         }
 
         /// <summary>
@@ -32,6 +37,7 @@ namespace Lingtren.Api.Controllers
         [HttpPost]
         public async Task<LevelResponseModel> CreateLevel(LevelRequestModel model)
         {
+            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var response = await _levelService.CreateLevelAsync(model.Name, CurrentUser.Id).ConfigureAwait(false);
             return new LevelResponseModel(response);
         }
@@ -45,6 +51,7 @@ namespace Lingtren.Api.Controllers
         [HttpPut("{identity}")]
         public async Task<LevelResponseModel> UpdateLevel(string identity, LevelRequestModel model)
         {
+            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var response = await _levelService.UpdateLevelAsync(identity, model.Name, CurrentUser.Id).ConfigureAwait(false);
             return new LevelResponseModel(response);
         }

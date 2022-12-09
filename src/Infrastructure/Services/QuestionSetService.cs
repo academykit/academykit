@@ -1,6 +1,5 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
-    using System.Linq.Expressions;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -13,6 +12,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
+    using System.Linq.Expressions;
 
     public class QuestionSetService : BaseGenericService<QuestionSet, BaseSearchCriteria>, IQuestionSetService
     {
@@ -342,6 +342,279 @@
                 _unitOfWork.Dispose();
                 _logger.LogError(ex, "An error occurred while attempting to submit the exam.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to submit the exam.");
+            }
+        }
+
+        /// <summary>
+        /// Handles to fetch result of a particular question set
+        /// </summary>
+        /// <param name="identity">the question set id or slug </param>
+        /// <param name="currentUserId"></param>
+        /// <returns>the instance of <see cref="QuestionSetResultResponseModel"</returns>
+        public async Task<SearchResult<QuestionSetResultResponseModel>> GetResults(BaseSearchCriteria searchCriteria, string identity, Guid currentUserId)
+        {
+            try
+            {
+                var currentTimeStamp = DateTime.UtcNow;
+                var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id.ToString() == identity || p.Slug == identity,
+                    include: src => src.Include(x => x.Lesson)).ConfigureAwait(false);
+
+                if (questionSet == null)
+                {
+                    _logger.LogWarning("Question set not found with identity: {identity}", identity);
+                    throw new EntityNotFoundException("Question set not found");
+                }
+
+                var course = await ValidateAndGetCourse(currentUserId, questionSet.Lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
+
+                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+
+                var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
+
+                var predicate = PredicateBuilder.New<QuestionSetResult>(true);
+                predicate = predicate.And(p => p.QuestionSetId == questionSet.Id);
+
+                if (questionSet.CreatedBy != currentUserId && !isSuperAdminOrAdmin && !isTeacher)
+                {
+                    predicate = predicate.And(p => p.UserId == currentUserId);
+                }
+                if (!string.IsNullOrWhiteSpace(searchCriteria.Search))
+                {
+                    var search = searchCriteria.Search.ToLower().Trim();
+                    predicate = predicate.And(x => x.User.LastName.ToLower().Trim().Contains(search)
+                     || x.User.FirstName.ToLower().Trim().Contains(search));
+                }
+
+                var query = await _unitOfWork.GetRepository<QuestionSetResult>().GetAllAsync(predicate: predicate, include: src => src.Include(x => x.User)).ConfigureAwait(false);
+
+                var result = query.GroupBy(x => x.UserId).Select(x => new QuestionSetResult
+                {
+                    Id = x.FirstOrDefault(a => a.CreatedOn == x.Max(b => b.CreatedOn)).Id,
+                    QuestionSetId = questionSet.Id,
+                    UserId = x.FirstOrDefault(a => a.CreatedOn == x.Max(b => b.CreatedOn)).UserId,
+                    TotalMark = x.FirstOrDefault(a => a.CreatedOn == x.Max(b => b.CreatedOn)).TotalMark,
+                    NegativeMark = x.FirstOrDefault(a => a.CreatedOn == x.Max(b => b.CreatedOn)).NegativeMark,
+                    User = x.FirstOrDefault(a => a.CreatedOn == x.Max(b => b.CreatedOn)).User,
+                    CreatedOn = x.Max(a => a.CreatedOn),
+                }).ToList();
+
+                var paginatedResult = result.ToIPagedList(searchCriteria.Page, searchCriteria.Size);
+                var response = new SearchResult<QuestionSetResultResponseModel>
+                {
+                    Items = new List<QuestionSetResultResponseModel>(),
+                    CurrentPage = paginatedResult.CurrentPage,
+                    PageSize = paginatedResult.PageSize,
+                    TotalCount = paginatedResult.TotalCount,
+                    TotalPage = paginatedResult.TotalPage,
+                };
+                paginatedResult.Items.ForEach(res => response.Items.Add(new QuestionSetResultResponseModel
+                {
+                    Id = res.Id,
+                    QuestionSetId = res.QuestionSetId,
+                    ObtainedMarks = (res.TotalMark - res.NegativeMark) > 0 ? (res.TotalMark - res.NegativeMark) : 0,
+                    User = new UserModel
+                    {
+                        Id = (Guid)res.User?.Id,
+                        FullName = res.User?.FullName,
+                        Email = res.User?.Email,
+                        ImageUrl = res.User.ImageUrl,
+                    }
+                }));
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to retrieving the results.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to retrieving the results.");
+            }
+        }
+
+        /// <summary>
+        /// Handles to fetch result of a particular student result
+        /// </summary>
+        /// <param name="identity">the question set id or slug </param>
+        /// <param name="userId">the student user id </param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns>the instance of <see cref="StudentResultResponseModel"</returns>
+        public async Task<StudentResultResponseModel> GetStudentResult(string identity, Guid userId, Guid currentUserId)
+        {
+            try
+            {
+                var currentTimeStamp = DateTime.UtcNow;
+                var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
+                   predicate: p => p.Id.ToString() == identity || p.Slug == identity,
+                   include: src => src.Include(x => x.Lesson)).ConfigureAwait(false);
+
+                if (questionSet == null)
+                {
+                    _logger.LogWarning("Question set not found with identity: {identity}", identity);
+                    throw new EntityNotFoundException("Question set not found");
+                }
+
+                var course = await ValidateAndGetCourse(currentUserId, questionSet.Lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
+
+                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+
+                var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
+
+                var predicate = PredicateBuilder.New<QuestionSetSubmission>(true);
+                predicate = predicate.And(p => p.QuestionSetId == questionSet.Id);
+                predicate = predicate.And(p => p.UserId == userId);
+                predicate = predicate.And(p => p.EndTime != default);
+                predicate = predicate.And(p => p.QuestionSetSubmissionAnswers.Any(x => x.QuestionSetSubmissionId == p.Id));
+                predicate = predicate.And(p => p.QuestionSetResults.Any(x => x.QuestionSetSubmissionId == p.Id));
+
+                var questionSetSubmissions = await _unitOfWork.GetRepository<QuestionSetSubmission>().GetAllAsync(
+                    predicate: predicate,
+                    include: src => src.Include(x => x.User).Include(x => x.QuestionSetResults)).ConfigureAwait(false);
+
+                if (questionSetSubmissions.Count == 0)
+                {
+                    return new StudentResultResponseModel();
+                }
+                var user = questionSetSubmissions.FirstOrDefault()?.User;
+                var response = new StudentResultResponseModel
+                {
+                    AttemptCount = questionSetSubmissions.Count,
+                    User = new UserModel
+                    {
+                        Id = (Guid)user?.Id,
+                        FullName = user?.FullName,
+                        Email = user?.Email,
+                        ImageUrl = user?.ImageUrl,
+                    },
+                    QuestionSetSubmissions = new List<QuestionSetResultDetailModel>()
+                };
+
+                questionSetSubmissions.ForEach(res => response.QuestionSetSubmissions.Add(new QuestionSetResultDetailModel
+                {
+                    QuestionSetSubmissionId = res.Id,
+                    SubmissionDate = res.EndTime != default ? res.EndTime : res.StartTime != default ? res.StartTime : res.CreatedOn,
+                    TotalMarks = res.QuestionSetResults.Count > 0 ? res.QuestionSetResults.FirstOrDefault().TotalMark.ToString() : "",
+                    NegativeMarks = res.QuestionSetResults.Count > 0 ? res.QuestionSetResults.FirstOrDefault().NegativeMark.ToString() : "",
+                    ObtainedMarks = res.QuestionSetResults.Count > 0 ? ((res.QuestionSetResults.FirstOrDefault().TotalMark - res.QuestionSetResults.FirstOrDefault().NegativeMark)
+                       > 0 ? (res.QuestionSetResults.FirstOrDefault().TotalMark - res.QuestionSetResults.FirstOrDefault().NegativeMark) : 0).ToString() : "",
+                    Duration = questionSet.Duration != 0 ? TimeSpan.FromSeconds(questionSet.Duration).ToString(@"hh\:mm\:ss") : string.Empty,
+                    CompleteDuration = questionSet.Duration == 0 || res.EndTime == default ? string.Empty :
+                                               TimeSpan.FromSeconds((Convert.ToDateTime(res.StartTime)
+                                                                   - Convert.ToDateTime(res.EndTime)).TotalSeconds).ToString(@"hh\:mm\:ss"),
+                }));
+                response.QuestionSetSubmissions = response.QuestionSetSubmissions.OrderByDescending(x => x.SubmissionDate).ToList();
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to retrieving the student result.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to retrieving the student result.");
+            }
+        }
+
+        /// <summary>
+        /// Get result detail of question set submission
+        /// </summary>
+        /// <param name="identity">the question set id or slug</param>
+        /// <param name="questionSetSubmissionId">the question set submission id</param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns>the instance of <see cref="QuestionSetUserResultResponseModel"</returns>
+        public async Task<QuestionSetUserResultResponseModel> GetResultDetail(string identity, Guid questionSetSubmissionId, Guid currentUserId)
+        {
+            try
+            {
+                var currentTimeStamp = DateTime.UtcNow;
+                var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
+                   predicate: p => p.Id.ToString() == identity || p.Slug == identity,
+                   include: src => src.Include(x => x.Lesson)).ConfigureAwait(false);
+
+                if (questionSet == null)
+                {
+                    _logger.LogWarning("Question set not found with identity: {identity}", identity);
+                    throw new EntityNotFoundException("Question set not found");
+                }
+
+                var course = await ValidateAndGetCourse(currentUserId, questionSet.Lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
+
+                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+
+                var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
+
+                var predicate = PredicateBuilder.New<QuestionSetResult>(true);
+                predicate = predicate.And(p => p.QuestionSetId == questionSet.Id && p.QuestionSetSubmissionId == questionSetSubmissionId);
+                var questionSetResult = await _unitOfWork.GetRepository<QuestionSetResult>().GetFirstOrDefaultAsync(predicate: predicate,
+                                                                            include: src => src.Include(x => x.User)).ConfigureAwait(false);
+                if (questionSetResult == null)
+                {
+                    _logger.LogWarning("Question set result not found for user with id: {currentUserId} and question-set-id: {questionSetId}", currentUserId, questionSet.Id);
+                    throw new EntityNotFoundException("Exam result not found");
+                }
+                var questionSetSubmission = await _unitOfWork.GetRepository<QuestionSetSubmission>().GetFirstOrDefaultAsync(predicate: p => p.Id == questionSetSubmissionId
+                                                                            && p.QuestionSetId == questionSet.Id).ConfigureAwait(false);
+                if (questionSetSubmission == null)
+                {
+                    _logger.LogWarning("Question set submission not found with id: {questionSetSubmissionId} for user id: {currentUserId}", questionSetSubmission, currentUserId);
+                    throw new EntityNotFoundException("Exam submission not found");
+                }
+                var questionSetSubmissionAnswers = await _unitOfWork.GetRepository<QuestionSetSubmissionAnswer>().GetAllAsync(predicate: p => p.QuestionSetSubmissionId == questionSetSubmissionId,
+                                                            include: src => src.Include(x => x.QuestionSetQuestion.QuestionPoolQuestion.Question.QuestionOptions)).ConfigureAwait(false);
+
+                var ObtainedMarks = questionSetResult.TotalMark - questionSetResult.NegativeMark;
+                var resultMark = ObtainedMarks > 0 ? ObtainedMarks : 0;
+                var responseModel = new QuestionSetUserResultResponseModel()
+                {
+                    QuestionSetSubmissionId = questionSetSubmissionId,
+                    Name = questionSet.Name,
+                    Description = questionSet.Description,
+                    ThumbnailUrl = questionSet.ThumbnailUrl,
+                    TotalMarks = Math.Round(questionSet.QuestionMarking * questionSetSubmissionAnswers.Count, 4).ToString(),
+                    NegativeMarks = questionSetResult.NegativeMark.ToString(),
+                    ObtainedMarks = (resultMark).ToString(),
+                    SubmissionDate = questionSetSubmission?.EndTime ?? questionSetSubmission?.StartTime ?? questionSetSubmission.CreatedOn,
+                    Duration = questionSet.Duration != 0 ? TimeSpan.FromSeconds(questionSet.Duration).ToString(@"hh\:mm\:ss") : string.Empty,
+                    CompleteDuration = questionSet.Duration == 0 || questionSetSubmission.EndTime == default ? string.Empty :
+                                                                TimeSpan.FromSeconds((Convert.ToDateTime(questionSetSubmission?.EndTime)
+                                                                            - Convert.ToDateTime(questionSetSubmission?.StartTime)).TotalSeconds).ToString(@"hh\:mm\:ss"),
+                    User = new UserModel
+                    {
+                        Id = (Guid)(questionSetResult?.User?.Id),
+                        Email = questionSetResult?.User?.Email,
+                        FullName = questionSetResult?.User?.FullName,
+                        ImageUrl = questionSetResult?.User?.ImageUrl,
+                    },
+                    Results = new List<QuestionSetAnswerResultModel>()
+                };
+
+                foreach (var item in questionSetSubmissionAnswers)
+                {
+                    var result = new QuestionSetAnswerResultModel
+                    {
+                        Id = item.QuestionSetQuestion.QuestionPoolQuestion.Question.Id,
+                        Name = item.QuestionSetQuestion.QuestionPoolQuestion.Question?.Name,
+                        Hints = item.QuestionSetQuestion.QuestionPoolQuestion.Question?.Hints,
+                        Description = item.QuestionSetQuestion.QuestionPoolQuestion.Question?.Description,
+                        Type = item.QuestionSetQuestion.QuestionPoolQuestion.Question.Type,
+                        IsCorrect = item.IsCorrect,
+                        Options = new List<QuestionResultOption>(),
+                        OrderNumber = item.QuestionSetQuestion.Order
+                    };
+
+                    var selectedAnsIds = !string.IsNullOrWhiteSpace(item.SelectedAnswers) ? item.SelectedAnswers.Split(",").Select(Guid.Parse).ToList() : new List<Guid>();
+                    item.QuestionSetQuestion.QuestionPoolQuestion.Question?.QuestionOptions.OrderBy(o => o.Order).ForEach(opt => result.Options.Add(new QuestionResultOption
+                    {
+                        Id = opt.Id,
+                        Value = opt.Option,
+                        IsCorrect = opt.IsCorrect,
+                        IsSelected = selectedAnsIds.Contains(opt.Id)
+                    }));
+
+                    responseModel.Results.Add(result);
+                }
+                responseModel.Results = responseModel.Results.OrderBy(x => x.OrderNumber).ToList();
+                return responseModel;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting result details.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while getting result details.");
             }
         }
     }

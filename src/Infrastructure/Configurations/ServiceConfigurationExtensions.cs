@@ -19,6 +19,8 @@
             (configuration.GetConnectionString("DefaultConnection"), MySqlServerVersion.LatestSupportedServerVersion),
             ServiceLifetime.Scoped);
 
+            #region Service DI
+
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRefreshTokenService, RefreshTokenService>();
@@ -44,6 +46,10 @@
             services.AddTransient<IAssignmentService, AssignmentService>();
             services.AddTransient<IWatchHistoryService, WatchHistoryService>();
 
+            #endregion Service DI
+
+            #region Validator DI
+
             services.AddSingleton<IValidator<LoginRequestModel>, LoginValidator>();
             services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();
             services.AddSingleton<IValidator<GroupRequestModel>, GroupValidator>();
@@ -64,6 +70,9 @@
             services.AddSingleton<IValidator<AssignmentRequestModel>, AssignmentValidator>();
             services.AddSingleton<IValidator<WatchHistoryRequestModel>, WatchHistoryValidator>();
             services.AddSingleton<IValidator<ChangeEmailRequestModel>, ChangeEmailValidator>();
+            services.AddSingleton<IValidator<LevelRequestModel>, LevelValidator>();
+
+            #endregion Validator DI
 
             return services;
         }

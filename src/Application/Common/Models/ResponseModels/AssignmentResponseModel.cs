@@ -17,14 +17,14 @@
         public UserModel User { get; set; }
         public IList<AssignmentAttachmentResponseModel> AssignmentAttachments { get; set; }
         public IList<AssignmentQuestionOptionResponseModel> AssignmentQuestionOptions { get; set; }
-        public AssignmentResponseModel(Assignment assignment)
+        public AssignmentResponseModel(Assignment assignment, bool showHints = false, bool showCorrect = false)
         {
             Id = assignment.Id;
             LessonId = assignment.LessonId;
             LessonName = assignment.Lesson?.Name;
             Name = assignment.Name;
             Description = assignment.Description;
-            Hints = assignment.Hints;
+            Hints = showHints ? assignment.Hints : null;
             Order = assignment.Order;
             IsActive = assignment.IsActive;
             Type = assignment.Type;
@@ -39,7 +39,7 @@
             AssignmentQuestionOptions = new List<AssignmentQuestionOptionResponseModel>();
             if (assignment.Type == QuestionTypeEnum.SingleChoice || assignment.Type == QuestionTypeEnum.MultipleChoice)
             {
-                assignment.AssignmentQuestionOptions?.ToList().ForEach(item => AssignmentQuestionOptions.Add(new AssignmentQuestionOptionResponseModel(item)));
+                assignment.AssignmentQuestionOptions?.ToList().ForEach(item => AssignmentQuestionOptions.Add(new AssignmentQuestionOptionResponseModel(item,showCorrect)));
             }
         }
     }

@@ -11,7 +11,7 @@
             builder.Property(x => x.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.AssignmentSubmissionId).HasColumnName("assignment_submission_id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.Name).HasColumnName("name").HasColumnType("VARCHAR(250)").HasMaxLength(250).IsRequired();
-            builder.Property(x => x.FileUrl).HasColumnName("file_url").HasColumnType("VARCHAR(200)").HasMaxLength(200).IsRequired();
+            builder.Property(x => x.FileUrl).HasColumnName("file_url").HasColumnType("VARCHAR(500)").HasMaxLength(500).IsRequired();
             builder.Property(x => x.MimeType).HasColumnName("mime_type").HasColumnType("VARCHAR(50)").IsRequired(false);
             builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.CreatedOn).HasColumnName("created_on").IsRequired().HasColumnType("DATETIME");

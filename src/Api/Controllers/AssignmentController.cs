@@ -8,6 +8,7 @@
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
+    using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
@@ -16,12 +17,15 @@
     {
         private readonly IAssignmentService _assignmentService;
         private readonly IValidator<AssignmentRequestModel> _validator;
+        private readonly IUnitOfWork _unitOfWork;
         public AssignmentController(
             IAssignmentService assignmentService,
-            IValidator<AssignmentRequestModel> validator)
+            IValidator<AssignmentRequestModel> validator,
+            IUnitOfWork unitOfWork)
         {
             _assignmentService = assignmentService;
             _validator = validator;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -32,7 +36,19 @@
         public async Task<SearchResult<AssignmentResponseModel>> SearchAsync([FromQuery] AssignmentBaseSearchCriteria searchCriteria)
         {
             CommonHelper.ValidateArgumentNotNullOrEmpty(searchCriteria.LessonIdentity, nameof(searchCriteria.LessonIdentity));
+
             var searchResult = await _assignmentService.SearchAsync(searchCriteria).ConfigureAwait(false);
+
+            var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                predicate: p => p.Id.ToString() == searchCriteria.LessonIdentity || p.Slug == searchCriteria.LessonIdentity
+                ).ConfigureAwait(false);
+
+            var isTeacher = await _unitOfWork.GetRepository<CourseTeacher>().ExistsAsync(
+                predicate: p => p.CourseId == lesson.CourseId && p.UserId == CurrentUser.Id).ConfigureAwait(false);
+            var isSuperAdminOrAdmin = await _unitOfWork.GetRepository<User>().ExistsAsync(
+                predicate: p => p.Id == CurrentUser.Id && (p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin)).ConfigureAwait(false);
+
+            var showCorrectAndHints = isTeacher || isSuperAdminOrAdmin;
 
             var response = new SearchResult<AssignmentResponseModel>
             {
@@ -44,7 +60,7 @@
             };
 
             searchResult.Items.ForEach(p =>
-                 response.Items.Add(new AssignmentResponseModel(p))
+                 response.Items.Add(new AssignmentResponseModel(p, showHints: showCorrectAndHints, showCorrect: showCorrectAndHints))
              );
             return response;
         }
@@ -113,7 +129,7 @@
                 }
             }
             var response = await _assignmentService.CreateAsync(entity).ConfigureAwait(false);
-            return new AssignmentResponseModel(response);
+            return new AssignmentResponseModel(response, showHints: true, showCorrect: true);
         }
 
         /// <summary>
@@ -125,7 +141,7 @@
         public async Task<AssignmentResponseModel> Get(string identity)
         {
             var model = await _assignmentService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
-            return new AssignmentResponseModel(model);
+            return new AssignmentResponseModel(model, showHints: true, showCorrect: true);
         }
 
         /// <summary>
@@ -140,7 +156,7 @@
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var savedEntity = await _assignmentService.UpdateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
-            return new AssignmentResponseModel(savedEntity);
+            return new AssignmentResponseModel(savedEntity, showHints: true, showCorrect: true);
         }
 
         /// <summary>

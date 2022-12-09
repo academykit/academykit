@@ -18,10 +18,10 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Role).HasColumnName("role").HasDefaultValue(UserRole.Trainee);
             builder.Property(x => x.ImageUrl).HasColumnName("image_url").HasColumnType("VARCHAR(250)").HasMaxLength(250).IsRequired(false);
             builder.Property(x => x.Profession).HasColumnName("profession").HasColumnType("VARCHAR(200)").HasMaxLength(200).IsRequired(false);
-            builder.Property(x => x.Address).HasColumnName("address").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
+            builder.Property(x => x.Address).HasColumnName("address").HasColumnType("VARCHAR(200)").HasMaxLength(200).IsRequired(false);
             builder.Property(x => x.Bio).HasColumnName("bio").HasColumnType("VARCHAR(500)").HasMaxLength(500).IsRequired(false);
             builder.Property(x => x.HashPassword).HasColumnName("hash_password").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
-            builder.Property(x => x.PublicUrls).HasColumnName("public_urls").HasColumnType("VARCHAR(200)").HasMaxLength(200).IsRequired(false);
+            builder.Property(x => x.PublicUrls).HasColumnName("public_urls").HasColumnType("VARCHAR(2000)").HasMaxLength(2000).IsRequired(false);
             builder.Property(x => x.IsActive).HasColumnName("is_active").HasDefaultValue(false);
             builder.Property(x => x.PasswordResetToken).HasColumnName("password_reset_token").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
             builder.Property(x => x.PasswordChangeToken).HasColumnName("password_change_token").HasColumnType("VARCHAR(500)").HasMaxLength(500).IsRequired(false);

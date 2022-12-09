@@ -9,14 +9,14 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
-            builder.Property(x => x.Slug).HasColumnName("slug").HasColumnType("VARCHAR(250)").HasMaxLength(250).IsRequired();
+            builder.Property(x => x.Slug).HasColumnName("slug").HasColumnType("VARCHAR(270)").HasMaxLength(270).IsRequired();
             builder.Property(x => x.Name).HasColumnName("name").HasColumnType("VARCHAR(250)").HasMaxLength(250).IsRequired();
             builder.Property(x => x.Description).HasColumnName("description").HasColumnType("VARCHAR(5000)").HasMaxLength(5000).IsRequired(false);
             builder.Property(x => x.GroupId).HasColumnName("group_id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
             builder.Property(x => x.Status).HasColumnName("status");
             builder.Property(x => x.IsUpdate).HasColumnName("is_update").HasDefaultValue(false);
             builder.Property(x => x.Language).HasColumnName("language");
-            builder.Property(x => x.ThumbnailUrl).HasColumnName("thumbnail_url").HasColumnType("VARCHAR(250)").HasMaxLength(250).IsRequired(false);
+            builder.Property(x => x.ThumbnailUrl).HasColumnName("thumbnail_url").HasColumnType("VARCHAR(500)").HasMaxLength(500).IsRequired(false);
             builder.Property(x => x.Duration).HasColumnName("duration");
             builder.Property(x => x.LevelId).HasColumnName("level_id").HasColumnType("VARCHAR(50)").IsRequired();
             builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();

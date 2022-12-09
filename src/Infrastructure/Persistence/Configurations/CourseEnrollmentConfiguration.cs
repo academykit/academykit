@@ -15,7 +15,7 @@
             builder.Property(x => x.CurrentLessonWatched).HasColumnName("current_lesson_watched");
             builder.Property(x => x.Percentage).HasColumnName("percentage").HasDefaultValue(0).IsRequired();
             builder.Property(x => x.EnrollmentMemberStatus).HasColumnName("status").IsRequired();
-            builder.Property(x => x.ActivityReason).HasColumnName("activity_reason").HasColumnType("VARCHAR(5000)").HasMaxLength(5000).IsRequired(false);
+            builder.Property(x => x.ActivityReason).HasColumnName("activity_reason").HasColumnType("VARCHAR(1000)").HasMaxLength(1000).IsRequired(false);
             builder.Property(x => x.EnrollmentDate).HasColumnName("enrollment_date").HasColumnType("DATETIME").IsRequired(true);
             builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.CreatedOn).HasColumnName("created_on").IsRequired().HasColumnType("DATETIME");

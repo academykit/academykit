@@ -31,5 +31,32 @@
         /// <param name="answers">the list of <see cref="AnswerSubmissionRequestModel" /></param>
         /// <param name="currentUserId">the current user id</param>
         Task AnswerSubmission(string identity, Guid questionSetSubmissionId, IList<AnswerSubmissionRequestModel> answers, Guid currentUserId);
+
+        /// <summary>
+        /// Handles to fetch result of a particular question set
+        /// </summary>
+        /// <param name="identity">the question set id or slug </param>
+        /// <param name="currentUserId"></param>
+        /// <returns>the instance of <see cref="QuestionSetResultResponseModel"</returns>
+        Task<SearchResult<QuestionSetResultResponseModel>> GetResults(BaseSearchCriteria searchCriteria, string identity, Guid currentUserId);
+
+        /// <summary>
+        /// Handles to fetch result of a particular student result
+        /// </summary>
+        /// <param name="identity">the question set id or slug </param>
+        /// <param name="userId">the student user id </param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns>the instance of <see cref="StudentResultResponseModel"</returns>
+        Task<StudentResultResponseModel> GetStudentResult(string identity, Guid userId, Guid currentUserId);
+
+        /// <summary>
+        /// Get result detail of question set submission
+        /// </summary>
+        /// <param name="identity">the question set id or slug</param>
+        /// <param name="questionSetSubmissionId">the question set submission id</param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns>the instance of <see cref="QuestionSetUserResultResponseModel"</returns>
+        Task<QuestionSetUserResultResponseModel> GetResultDetail(string identity, Guid questionSetSubmissionId, Guid currentUserId);
+
     }
 }
