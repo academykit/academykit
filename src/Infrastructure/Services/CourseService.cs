@@ -562,6 +562,7 @@ namespace Lingtren.Infrastructure.Services
                         QuestionSet = l.QuestionSet != null ? new QuestionSetResponseModel(l.QuestionSet) : null,
                         Meeting = l.Meeting != null ? new MeetingResponseModel(l.Meeting) : null,
                         IsCompleted = currentUserWatchHistories.Any(h => h.LessonId == h.LessonId && h.IsCompleted),
+                        IsPassed = currentUserWatchHistories.Any(h => h.LessonId == h.LessonId && h.IsPassed),
                     }).OrderBy(x => x.Order).ToList(),
                 }).OrderBy(x => x.Order).ToList();
                 return response;

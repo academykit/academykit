@@ -26,6 +26,7 @@
         public Guid? QuestionSetId { get; set; }
         public UserModel User { get; set; }
         public bool IsCompleted { get; set; }
+        public bool IsPassed { get; set; }
         public MeetingResponseModel? Meeting { get; set; }
         public QuestionSetResponseModel? QuestionSet { get; set; }
 

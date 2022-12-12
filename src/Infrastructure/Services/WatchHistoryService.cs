@@ -101,12 +101,17 @@
                 throw new EntityNotFoundException("Lesson not found");
             }
 
-            var isComplete = false;
+            var isCompleted = false;
+            var isPassed = false;
             var currentTimeStamp = DateTime.UtcNow;
             var response = new WatchHistory();
             if (model.WatchedPercentage == 100)
             {
-                isComplete = true;
+                isCompleted = true;
+                if (lesson.Type != LessonType.Assignment && lesson.Type != LessonType.Exam)
+                {
+                    isPassed = true;
+                }
             }
 
             var history = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
@@ -114,7 +119,7 @@
 
             if (history != null)
             {
-                history.IsCompleted = isComplete;
+                history.IsCompleted = isCompleted;
                 history.UpdatedOn = currentTimeStamp;
                 history.UpdatedBy = currentUserId;
                 _unitOfWork.GetRepository<WatchHistory>().Update(history);
@@ -128,7 +133,8 @@
                     CourseId = course.Id,
                     LessonId = lesson.Id,
                     UserId = currentUserId,
-                    IsCompleted = isComplete,
+                    IsCompleted = isCompleted,
+                    IsPassed = isPassed,
                     CreatedOn = currentTimeStamp,
                     CreatedBy = currentUserId,
                     UpdatedOn = currentTimeStamp,

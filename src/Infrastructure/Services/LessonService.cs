@@ -108,6 +108,29 @@ namespace Lingtren.Infrastructure.Services
                 lesson = await GetCurrentLesson(currentUserId, course).ConfigureAwait(false);
             }
 
+            var userCompletedWatchHistories = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(
+                predicate: p => p.UserId == currentUserId && p.CourseId == lesson.CourseId && p.IsCompleted && p.IsPassed
+                ).ConfigureAwait(false);
+
+            var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
+                predicate: p => p.CourseId == lesson.CourseId,
+                include: src => src.Include(x => x.Lessons),
+                orderBy: o => o.OrderBy(x => x.Order)
+                ).ConfigureAwait(false);
+
+            var lessons = new List<Lesson>();
+            lessons = sections.SelectMany(x => x.Lessons.OrderBy(x => x.Order)).ToList();
+
+            var currentIndex = lessons.FindIndex(x => x.Id == lesson.Id);
+            var orderLessons = lessons.GetRange(0, currentIndex).Where(x => x.IsMandatory);
+
+            var containMandatoryLesson = orderLessons.Select(x => x.Id).Except(userCompletedWatchHistories.Select(x => x.LessonId));
+            if (containMandatoryLesson.Count() > 0)
+            {
+                _logger.LogWarning("User with id: {userId} needs to view other mandatory lesson before viewing current lesson with id: {lessonId}", currentUserId, lesson.Id);
+                throw new ForbiddenException("Please complete above remaining mandatory lesson before viewing current lesson.");
+            }
+
             if (lesson.Type == LessonType.LiveClass)
             {
                 lesson.Meeting = new Meeting();
@@ -589,9 +612,9 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
                         predicate: p => p.CourseId == course.Id,
-                        orderBy: o => o.OrderByDescending(x => x.Order),
+                        orderBy: o => o.OrderBy(x => x.Order),
                         include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
-                    currentLessonId = section.Lessons.OrderByDescending(x => x.Order).FirstOrDefault()?.Id;
+                    currentLessonId = section.Lessons.OrderBy(x => x.Order).FirstOrDefault()?.Id;
                 }
                 else
                 {

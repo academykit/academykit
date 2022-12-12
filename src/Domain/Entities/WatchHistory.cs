@@ -11,5 +11,6 @@
         public Guid UserId { get; set; }
         public User User { get; set; }
         public bool IsCompleted { get; set; }
+        public bool IsPassed { get; set; }
     }
 }
