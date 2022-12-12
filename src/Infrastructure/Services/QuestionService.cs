@@ -61,7 +61,7 @@
         /// <returns>The updated query.</returns>
         protected override IIncludableQueryable<Question, object> IncludeNavigationProperties(IQueryable<Question> query)
         {
-            return query.Include(x => x.User);
+            return query.Include(x => x.User).Include(x => x.QuestionOptions).Include(x => x.QuestionTags).ThenInclude(x => x.Tag);
         }
 
         /// <summary>

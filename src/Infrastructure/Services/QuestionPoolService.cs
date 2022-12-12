@@ -84,7 +84,7 @@
         /// <returns>The updated query.</returns>
         protected override IIncludableQueryable<QuestionPool, object> IncludeNavigationProperties(IQueryable<QuestionPool> query)
         {
-            return query.Include(x => x.User);
+            return query.Include(x => x.User).Include(x=>x.QuestionPoolTeachers);
         }
 
         /// <summary>

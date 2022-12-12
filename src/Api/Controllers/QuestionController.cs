@@ -95,9 +95,13 @@
             {
                 throw new EntityNotFoundException("Question pool not found");
             }
-
+            var showCorrectAndHints = false;
+            if (questionPool.CreatedBy == CurrentUser.Id || questionPool.QuestionPoolTeachers.Any(x => x.UserId == CurrentUser.Id))
+            {
+                showCorrectAndHints = true;
+            }
             var model = await _questionService.GetByIdOrSlugAsync(id.ToString(), CurrentUser?.Id).ConfigureAwait(false);
-            return new QuestionResponseModel(model);
+            return new QuestionResponseModel(model, showCorrectAnswer: showCorrectAndHints, showHints: showCorrectAndHints);
         }
 
         /// <summary>
@@ -139,8 +143,7 @@
             {
                 throw new EntityNotFoundException("Question pool not found");
             }
-
-            await _questionService.DeleteAsync(id.ToString(), CurrentUser.Id).ConfigureAwait(false);
+            await _questionService.DeleteQuestionAsync(poolIdentity: identity, questionId: id, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Question removed successfully." });
         }
 
