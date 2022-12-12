@@ -28,7 +28,7 @@
             QuestionOptions = new List<QuestionOptionResponseModel>();
             Tags = new List<QuestionTagResponseModel>();
             User = question.User != null ? new UserModel(question.User) : new UserModel();
-            question.QuestionTags.ToList().ForEach(item => Tags.Add(new QuestionTagResponseModel(item)));
+            question.QuestionTags?.ToList().ForEach(item => Tags.Add(new QuestionTagResponseModel(item)));
             if (question.QuestionOptions?.Count > 0)
             {
                 question.QuestionOptions.ToList().ForEach(x => QuestionOptions.Add(new QuestionOptionResponseModel
