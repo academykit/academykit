@@ -190,8 +190,7 @@
         [HttpPost("{identity}/addMember")]
         public async Task<GroupAddMemberResponseModel> AddMember(string identity, AddGroupMemberRequestModel model)
         {
-            var response = await _groupService.AddMemberAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
-            return response;
+            return await _groupService.AddMemberAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
         }
 
         /// <summary>

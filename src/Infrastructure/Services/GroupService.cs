@@ -130,7 +130,7 @@
 
                 var userIds = users.Select(x => x.Id).ToList();
 
-                var nonUsers = model.Emails.Except(users.Select(x => x.Email)).ToList();
+                var nonUsers = model.Emails.Select(x => x.Trim().ToLower()).ToList().Except(users.Select(x => x.Email.Trim().ToLower())).ToList();
 
                 var duplicateUsers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(
                     predicate: p => p.GroupId == group.Id && userIds.Contains(p.UserId) && p.IsActive,
@@ -141,7 +141,7 @@
                     include: src => src.Include(x => x.User)).ConfigureAwait(false);
 
                 var usersToBeAdded = userIds.Except(duplicateUsers.Select(x => x.UserId))
-                                                  .Except(inActiveUsers.Select(x => x.UserId));
+                                            .Except(inActiveUsers.Select(x => x.UserId));
 
                 var groupMembers = new List<GroupMember>();
                 var currentTimeStamp = DateTime.UtcNow;
@@ -163,22 +163,31 @@
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
                 var result = new GroupAddMemberResponseModel();
-                if (duplicateUsers.Count > 0)
+
+                if (duplicateUsers.Count > 0 || inActiveUsers.Count > 0 || nonUsers.Count > 0)
                 {
                     result.HttpStatusCode = HttpStatusCode.PartialContent;
-                    result.Message += $"{string.Join(',', duplicateUsers.Select(x => x.User.FirstName))} already exist in group member.";
-                }
-                if (inActiveUsers.Count > 0)
-                {
-                    result.HttpStatusCode = HttpStatusCode.PartialContent;
-                    result.Message += $" & {string.Join(',', inActiveUsers.Select(x => x.User.FirstName))} already exist as inactive group member.";
+                    if (duplicateUsers.Count > 0)
+                    {
+                        result.Message += $"{string.Join(',', duplicateUsers.Select(x => x.User.Email))} already exist in group member";
+                    }
+                    if (inActiveUsers.Count > 0)
+                    {
+                        result.Message += $" & {string.Join(',', inActiveUsers.Select(x => x.User.Email))} already exist as inactive group member";
+                    }
+                    if (nonUsers.Count > 0)
+                    {
+                        result.Message += $" & {string.Join(',', nonUsers.Select(x => x))} is not a users in the system";
+                    }
                     result.Message = result.Message.TrimStart(' ', '&');
+                    if (usersToBeAdded.Count() > 0)
+                    {
+                        result.Message += " & Other remaining users added successfully in the group";
+                    }
                 }
-                if (nonUsers.Count > 0)
+                else
                 {
-                    result.HttpStatusCode = HttpStatusCode.PartialContent;
-                    result.Message += $" & {string.Join(',', nonUsers.Select(x => x))} is not a users in the system";
-                    result.Message = result.Message.TrimStart(' ', '&');
+                    result.Message = "Group Member Added Successfully";
                 }
                 return result;
             }).ConfigureAwait(false);

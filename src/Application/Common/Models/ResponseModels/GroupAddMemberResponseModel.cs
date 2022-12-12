@@ -5,6 +5,6 @@
     public class GroupAddMemberResponseModel
     {
         public HttpStatusCode HttpStatusCode { get; set; } = HttpStatusCode.OK;
-        public string Message { get; set; } = "Group Member Added Successfully";
+        public string Message { get; set; }
     }
 }
