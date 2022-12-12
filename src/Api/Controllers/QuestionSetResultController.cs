@@ -39,7 +39,7 @@
         /// <param name="identity">the question set id or slug</param>
         /// <param name="questionSetSubmissionId">the question set submission id</param>
         /// <returns></returns>
-        [HttpGet("{questionSetSubmissionId}")]
+        [HttpGet("{questionSetSubmissionId}/detail")]
         public async Task<QuestionSetUserResultResponseModel> GetResultDetail(string identity, Guid questionSetSubmissionId) => await _questionSetService.GetResultDetail(identity, questionSetSubmissionId, CurrentUser.Id).ConfigureAwait(false);
     }
 }
