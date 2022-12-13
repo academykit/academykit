@@ -27,7 +27,7 @@
         public UserModel User { get; set; }
         public bool IsCompleted { get; set; }
         public bool IsPassed { get; set; }
-        public Guid? NextLessonId { get; set; }
+        public string? NextLessonSlug { get; set; }
         public bool? HasResult { get; set; }
         public MeetingResponseModel? Meeting { get; set; }
         public QuestionSetResponseModel? QuestionSet { get; set; }

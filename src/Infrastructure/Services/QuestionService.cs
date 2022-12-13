@@ -301,7 +301,7 @@
                 if (checkQuestionSetQuestionExist)
                 {
                     _logger.LogWarning("Question with id: {id} is associated with Question-Set-Questions", existing.Id);
-                    throw new ArgumentException("Question is associated with question set");
+                    throw new ForbiddenException("Question is associated with question set");
                 }
 
                 _unitOfWork.GetRepository<QuestionPoolQuestion>().Delete(questionPoolQuestion);

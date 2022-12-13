@@ -161,8 +161,7 @@ namespace Lingtren.Infrastructure.Services
             var nextLessonIndex = currentIndex + 1;
             if ((nextLessonIndex + 1) <= lessons.Count)
             {
-                var nextLessonId = lessons.GetItemByIndex(nextLessonIndex)?.Id;
-                responseModel.NextLessonId = nextLessonId;
+                responseModel.NextLessonSlug = lessons.GetItemByIndex(nextLessonIndex)?.Slug;
             }
             responseModel.HasResult = hasResult;
             return responseModel;
