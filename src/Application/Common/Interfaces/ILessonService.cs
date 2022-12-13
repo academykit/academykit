@@ -23,8 +23,8 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="identity">the course id or slug</param>
         /// <param name="lessonIdentity">the lesson id or slug</param>
         /// <param name="currentUserId">the current logged in user</param>
-        /// <returns>the instance of <see cref="Lesson"/></returns>
-        Task<Lesson> GetLessonAsync(string identity, string lessonIdentity, Guid currentUserId);
+        /// <returns>the instance of <see cref="LessonResponseModel"/></returns>
+        Task<LessonResponseModel> GetLessonAsync(string identity, string lessonIdentity, Guid currentUserId);
 
         /// <summary>
         /// Handle to delete lesson
@@ -61,6 +61,6 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="model">the instance of <see cref="LessonRequestModel"/></param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
-        Task<Lesson> UpdateAsync(string identity,string lessonIdentity, LessonRequestModel model, Guid currentUserId);
+        Task<Lesson> UpdateAsync(string identity, string lessonIdentity, LessonRequestModel model, Guid currentUserId);
     }
 }

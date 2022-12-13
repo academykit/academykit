@@ -1,5 +1,6 @@
 namespace Lingtren.Infrastructure.Services
 {
+    using AngleSharp.Common;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -77,8 +78,8 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="identity">the course id or slug</param>
         /// <param name="lessonIdentity">the lesson id or slug</param>
         /// <param name="currentUserId">the current logged in user</param>
-        /// <returns>the instance of <see cref="Lesson"/></returns>
-        public async Task<Lesson> GetLessonAsync(string identity, string lessonIdentity, Guid currentUserId)
+        /// <returns>the instance of <see cref="LessonResponseModel"/></returns>
+        public async Task<LessonResponseModel> GetLessonAsync(string identity, string lessonIdentity, Guid currentUserId)
         {
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: false).ConfigureAwait(false);
             if (course == null)
@@ -137,19 +138,34 @@ namespace Lingtren.Infrastructure.Services
                 lesson.Meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == lesson.MeetingId).ConfigureAwait(false);
             }
+
+            bool? hasResult = null;
             if (lesson.Type == LessonType.Exam)
             {
                 lesson.QuestionSet = new QuestionSet();
                 lesson.QuestionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == lesson.QuestionSetId).ConfigureAwait(false);
+                var containResults = await _unitOfWork.GetRepository<QuestionSetResult>().ExistsAsync(
+                    predicate: p => p.UserId == currentUserId && p.QuestionSetId == lesson.QuestionSetId
+                    ).ConfigureAwait(false);
+                hasResult = containResults;
             }
+
             if (lesson.Type == LessonType.Assignment)
             {
                 lesson.Assignments = new List<Assignment>();
                 lesson.Assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
                     predicate: p => p.LessonId == lesson.Id).ConfigureAwait(false);
             }
-            return lesson;
+            var responseModel = new LessonResponseModel(lesson);
+            var nextLessonIndex = currentIndex + 1;
+            if ((nextLessonIndex + 1) <= lessons.Count)
+            {
+                var nextLessonId = lessons.GetItemByIndex(nextLessonIndex)?.Id;
+                responseModel.NextLessonId = nextLessonId;
+            }
+            responseModel.HasResult = hasResult;
+            return responseModel;
         }
 
         /// <summary>
@@ -749,6 +765,7 @@ namespace Lingtren.Infrastructure.Services
                 orderBy: x => x.OrderByDescending(x => x.Order)).ConfigureAwait(false);
             return lesson != null ? lesson.Order + 1 : 1;
         }
+
         #endregion Private Methods
     }
 }

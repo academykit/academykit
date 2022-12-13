@@ -13,6 +13,6 @@
         public string SectionName { get; set; }
         public int EnrolledStudent { get; set; }
         public int LessonWatched { get; set; }
-        public bool IsMandantory { get; set; }
+        public bool IsMandatory { get; set; }
     }
 }

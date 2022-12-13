@@ -123,6 +123,8 @@
             }
         }
 
+        #region Start Exam and Submission
+
         /// <summary>
         /// Handle to set exam start time
         /// </summary>
@@ -229,13 +231,13 @@
                 bool isSubmissionError = false;
 
                 var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
-                    predicate: x => (x.Id.ToString() == identity || x.Slug == identity)).ConfigureAwait(false);
+                    predicate: x => x.Id.ToString() == identity || x.Slug == identity,
+                    include: src => src.Include(x => x.Lesson)).ConfigureAwait(false);
                 if (questionSet == null)
                 {
                     _logger.LogWarning("Question set not found with identity: {identity} for user with id : {currentUserId}", identity, currentUserId);
                     throw new EntityNotFoundException("Question set not found");
                 }
-
                 var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id,
                     include: src => src.Include(x => x.QuestionPoolQuestion.Question.QuestionOptions)).ConfigureAwait(false);
@@ -332,6 +334,7 @@
                     await _unitOfWork.GetRepository<QuestionSetResult>().InsertAsync(questionSetResult).ConfigureAwait(false);
                 }
 
+                await InsertWatchHistory(currentUserId, currentTimeStamp, questionSet).ConfigureAwait(false);
                 _unitOfWork.GetRepository<QuestionSetSubmission>().Update(questionSetSubmission);
                 await _unitOfWork.GetRepository<QuestionSetSubmissionAnswer>().InsertAsync(answerSubmissionAnswers).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -344,6 +347,10 @@
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to submit the exam.");
             }
         }
+
+        #endregion Start Exam and Submission
+
+        #region Exam Result Reports
 
         /// <summary>
         /// Handles to fetch result of a particular question set
@@ -617,5 +624,75 @@
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while getting result details.");
             }
         }
+
+        #endregion Exam Result Reports
+
+        #region Private Methods
+
+        /// <summary>
+        /// Handle to insert into watch history
+        /// </summary>
+        /// <param name="currentUserId">the current user id</param>
+        /// <param name="currentTimeStamp">the current date time</param>
+        /// <param name="questionSet">the instance of <see cref="QuestionSet"/></param>
+        /// <returns></returns>
+        private async Task InsertWatchHistory(Guid currentUserId, DateTime currentTimeStamp, QuestionSet questionSet)
+        {
+            var history = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
+                                predicate: p => p.UserId == currentUserId && p.LessonId == questionSet.Lesson.Id && p.CourseId == questionSet.Lesson.CourseId
+                                ).ConfigureAwait(false);
+
+            if (history != null && !history.IsPassed)
+            {
+                history.IsCompleted = true;
+                history.IsPassed = true;
+                history.UpdatedOn = currentTimeStamp;
+                history.UpdatedBy = currentUserId;
+                _unitOfWork.GetRepository<WatchHistory>().Update(history);
+            }
+            else
+            {
+                var watchHistory = new WatchHistory
+                {
+                    Id = Guid.NewGuid(),
+                    CourseId = questionSet.Lesson.CourseId,
+                    LessonId = questionSet.Lesson.Id,
+                    UserId = currentUserId,
+                    CreatedBy = currentUserId,
+                    CreatedOn = currentTimeStamp,
+                    UpdatedBy = currentUserId,
+                    UpdatedOn = currentTimeStamp,
+                    IsCompleted = true,
+                    IsPassed = true,
+                };
+                await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
+            }
+
+            var totalLessonCount = await _unitOfWork.GetRepository<Lesson>().CountAsync(
+                predicate: p => p.CourseId == questionSet.Lesson.CourseId && !p.IsDeleted && p.Status == CourseStatus.Published).ConfigureAwait(false);
+            var completedLessonCount = await _unitOfWork.GetRepository<WatchHistory>().CountAsync(
+                predicate: p => p.CourseId == questionSet.Lesson.CourseId && p.UserId == currentUserId && p.IsCompleted).ConfigureAwait(false);
+            var percentage = (Convert.ToDouble(completedLessonCount) / Convert.ToDouble(totalLessonCount)) * 100;
+
+            var courseEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(
+                predicate: p => p.CourseId == questionSet.Lesson.CourseId && p.UserId == currentUserId
+                                && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)
+                ).ConfigureAwait(false);
+
+            if (courseEnrollment != null)
+            {
+                courseEnrollment.Percentage = Convert.ToInt32(percentage);
+                courseEnrollment.CurrentLessonId = questionSet.Lesson.Id;
+                courseEnrollment.UpdatedBy = currentUserId;
+                courseEnrollment.UpdatedOn = currentTimeStamp;
+                if (percentage == 100)
+                {
+                    courseEnrollment.EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Completed;
+                }
+                _unitOfWork.GetRepository<CourseEnrollment>().Update(courseEnrollment);
+            }
+        }
+
+        #endregion Private Methods
     }
 }

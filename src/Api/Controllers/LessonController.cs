@@ -69,8 +69,7 @@ namespace Lingtren.Api.Controllers
         [HttpGet("detail")]
         public async Task<LessonResponseModel> GetDetail(string identity, [FromQuery] string lessonIdentity)
         {
-            var model = await _lessonService.GetLessonAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
-            return new LessonResponseModel(model);
+            return await _lessonService.GetLessonAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -94,7 +93,7 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the instance of <see cref="LessonRequestModel" />. </param>
         /// <returns> the instance of <see cref="LessonResponseModel" /> .</returns>
         [HttpPut("{lessonIdentity}")]
-        public async Task<LessonResponseModel> UpdateAsync(string identity,string lessonIdentity, LessonRequestModel model)
+        public async Task<LessonResponseModel> UpdateAsync(string identity, string lessonIdentity, LessonRequestModel model)
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var response = await _lessonService.UpdateAsync(identity, lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);

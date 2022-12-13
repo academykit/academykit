@@ -174,6 +174,8 @@
             };
         }
 
+        #region Private Methods
+
         /// <summary>
         ///  Handle to get course completed percentage
         /// </summary>
@@ -198,5 +200,7 @@
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to calculate course completed percentage.");
             }
         }
+
+        #endregion Private Methods
     }
 }
