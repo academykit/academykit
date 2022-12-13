@@ -199,6 +199,25 @@
                     _logger.LogWarning("User with id: {currentUserId} is not allowed to update question with id: {id}", currentUserId, existing.Id);
                     throw new ForbiddenException("Unauthorized user to update the question");
                 }
+
+                var questionPoolQuestion = await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetFirstOrDefaultAsync(
+                    predicate: p => p.QuestionId == existing.Id && p.QuestionPoolId == questionPool.Id).ConfigureAwait(false);
+                if (questionPoolQuestion != null)
+                {
+                    var questionSetIds = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
+                    predicate: p => p.QuestionId == existing.Id || p.QuestionPoolQuestionId == questionPoolQuestion.Id,
+                    selector: s => s.QuestionSetId
+                    ).ConfigureAwait(false);
+
+                    var existQuestionSetSubmissions = await _unitOfWork.GetRepository<QuestionSetSubmission>().ExistsAsync(
+                        predicate: p => questionSetIds.Contains(p.QuestionSetId)
+                        ).ConfigureAwait(false);
+                    if (existQuestionSetSubmissions)
+                    {
+                        _logger.LogWarning("Question with id: {id} cannot be edited such that it is associated with question set", existing.Id);
+                        throw new ForbiddenException("Question is associated with exam submission so it cannot be edited");
+                    }
+                }
                 var currentTimeStamp = DateTime.UtcNow;
 
                 existing.Id = existing.Id;

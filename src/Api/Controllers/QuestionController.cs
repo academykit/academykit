@@ -114,16 +114,7 @@
         public async Task<QuestionResponseModel> UpdateAsync(string identity, Guid id, QuestionRequestModel model)
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
-
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _questionService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            var currentTimeStamp = DateTime.UtcNow;
-
-            existing.Id = existing.Id;
-            existing.Name = model.Name;
-            existing.UpdatedBy = CurrentUser.Id;
-            existing.UpdatedOn = currentTimeStamp;
-
             var savedEntity = await _questionService.UpdateAsync(identity, id, model, CurrentUser.Id).ConfigureAwait(false);
             return new QuestionResponseModel(savedEntity);
         }
