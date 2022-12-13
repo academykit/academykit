@@ -26,7 +26,7 @@
         public string Hints { get; set; }
         public string Attachments { get; set; }
         public QuestionTypeEnum Type { get; set; }
-        public IList<QuestionResultOption> Options { get; set; }
+        public IList<QuestionResultOption> QuestionOptions { get; set; }
         public bool IsCorrect { get; set; }
         public int? OrderNumber { get; set; }
     }

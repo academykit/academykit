@@ -600,12 +600,12 @@
                         Description = item.QuestionSetQuestion.QuestionPoolQuestion.Question?.Description,
                         Type = item.QuestionSetQuestion.QuestionPoolQuestion.Question.Type,
                         IsCorrect = item.IsCorrect,
-                        Options = new List<QuestionResultOption>(),
+                        QuestionOptions = new List<QuestionResultOption>(),
                         OrderNumber = item.QuestionSetQuestion.Order
                     };
 
                     var selectedAnsIds = !string.IsNullOrWhiteSpace(item.SelectedAnswers) ? item.SelectedAnswers.Split(",").Select(Guid.Parse).ToList() : new List<Guid>();
-                    item.QuestionSetQuestion.QuestionPoolQuestion.Question?.QuestionOptions.OrderBy(o => o.Order).ForEach(opt => result.Options.Add(new QuestionResultOption
+                    item.QuestionSetQuestion.QuestionPoolQuestion.Question?.QuestionOptions.OrderBy(o => o.Order).ForEach(opt => result.QuestionOptions.Add(new QuestionResultOption
                     {
                         Id = opt.Id,
                         Value = opt.Option,
