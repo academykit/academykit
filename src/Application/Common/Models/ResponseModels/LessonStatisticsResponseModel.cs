@@ -15,4 +15,14 @@
         public int LessonWatched { get; set; }
         public bool IsMandatory { get; set; }
     }
+
+    public class LessonStudentResponseModel
+    {
+        public Guid LessonId { get; set; }
+        public string LessonSlug { get; set; }
+        public Guid UserId { get; set; }
+        public string FullName { get; set; }
+        public bool IsCompleted { get; set; }
+        public bool IsPassed { get; set; }
+    }
 }

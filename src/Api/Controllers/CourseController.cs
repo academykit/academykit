@@ -199,6 +199,17 @@ namespace Lingtren.Api.Controllers
         public async Task<IList<LessonStatisticsResponseModel>> LessonStatistics(string identity) => await _courseService.LessonStatistics(identity, CurrentUser.Id).ConfigureAwait(false);
 
         /// <summary>
+        /// Course Lesson Student's report api
+        /// </summary>
+        /// <param name="identity"> the course id or slug.</param>
+        [HttpGet("{identity}/lessonStatistics/{lessonIdentity}")]
+        public async Task<SearchResult<LessonStudentResponseModel>> LessonDetailStatistics(string identity, string lessonIdentity, [FromQuery] BaseSearchCriteria searchCriteria)
+        {
+            searchCriteria.CurrentUserId = CurrentUser.Id;
+            return await _courseService.LessonStudentsReport(identity, lessonIdentity, searchCriteria).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Course student statistics api
         /// </summary>
         /// <param name="identity"> the course id or slug.</param>
@@ -206,6 +217,16 @@ namespace Lingtren.Api.Controllers
         public async Task<SearchResult<StudentCourseStatisticsResponseModel>> StudentStatistics(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
         {
             return await _courseService.StudentStatistics(identity, CurrentUser.Id, searchCriteria).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Course student statistics api
+        /// </summary>
+        /// <param name="identity"> the course id or slug.</param>
+        [HttpGet("{identity}/studentStatistics/{userId}")]
+        public async Task<IList<LessonStudentResponseModel>> StudentStatistics(string identity, Guid userId)
+        {
+            return await _courseService.StudentLessonsDetail(identity, userId, CurrentUser.Id).ConfigureAwait(false);
         }
     }
 }

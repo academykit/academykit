@@ -572,9 +572,9 @@
                     Name = questionSet.Name,
                     Description = questionSet.Description,
                     ThumbnailUrl = questionSet.ThumbnailUrl,
-                    TotalMarks = Math.Round(questionSet.QuestionMarking * questionSetSubmissionAnswers.Count, 4).ToString(),
-                    NegativeMarks = questionSetResult.NegativeMark.ToString(),
-                    ObtainedMarks = (resultMark).ToString(),
+                    TotalMarks = Math.Round(questionSet.QuestionMarking * questionSetSubmissionAnswers.Count, 4),
+                    NegativeMarks = questionSetResult.NegativeMark,
+                    ObtainedMarks = resultMark,
                     SubmissionDate = questionSetSubmission?.EndTime ?? questionSetSubmission?.StartTime ?? questionSetSubmission.CreatedOn,
                     Duration = questionSet.Duration != 0 ? TimeSpan.FromSeconds(questionSet.Duration).ToString(@"hh\:mm\:ss") : string.Empty,
                     CompleteDuration = questionSet.Duration == 0 || questionSetSubmission.EndTime == default ? string.Empty :

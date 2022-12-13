@@ -678,6 +678,50 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
+        /// Handle to get lesson students report
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the paginated data</returns>
+        public async Task<SearchResult<LessonStudentResponseModel>> LessonStudentsReport(string identity, string lessonIdentity, BaseSearchCriteria criteria)
+        {
+            var course = await ValidateAndGetCourse(criteria.CurrentUserId, identity, validateForModify: true).ConfigureAwait(false);
+            var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                predicate: p => p.CourseId == course.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),
+                include: src => src.Include(x => x.Section)
+                ).ConfigureAwait(false);
+
+            var watchHistories = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(
+                predicate: p => p.CourseId == course.Id && p.LessonId == lesson.Id,
+                include: src => src.Include(x => x.User)
+                ).ConfigureAwait(false);
+
+            var searchResult = watchHistories.ToIPagedList(criteria.Page, criteria.Size);
+
+            var response = new SearchResult<LessonStudentResponseModel>
+            {
+                Items = new List<LessonStudentResponseModel>(),
+                CurrentPage = searchResult.CurrentPage,
+                PageSize = searchResult.PageSize,
+                TotalCount = searchResult.TotalCount,
+                TotalPage = searchResult.TotalPage,
+            };
+
+            searchResult.Items.ForEach(p =>
+                 response.Items.Add(new LessonStudentResponseModel
+                 {
+                     UserId = p.UserId,
+                     FullName = p.User?.FullName,
+                     LessonId = lesson.Id,
+                     LessonSlug = lesson.Slug,
+                     IsCompleted = p.IsCompleted,
+                     IsPassed = p.IsPassed
+                 }));
+            return response;
+        }
+
+        /// <summary>
         /// Handle to fetch student course statistics report
         /// </summary>
         /// <param name="identity">the course id or slug</param>
@@ -731,6 +775,35 @@ namespace Lingtren.Infrastructure.Services
                 _logger.LogError(ex, "An error occurred while trying to fetch course student statistics.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch course student statistics.");
             }
+        }
+
+        /// <summary>
+        /// Handle to get student lessons detail
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="userId">the student id</param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns>the list of <see cref="LessonStudentResponseModel"/></returns>
+        public async Task<IList<LessonStudentResponseModel>> StudentLessonsDetail(string identity, Guid userId, Guid currentUserId)
+        {
+            var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+            var watchHistories = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(
+                predicate: p => p.CourseId == course.Id && p.UserId == userId,
+                include: src => src.Include(x => x.User).Include(x => x.Lesson)
+                ).ConfigureAwait(false);
+
+            var response = new List<LessonStudentResponseModel>();
+            watchHistories.ForEach(x => response.Add(new LessonStudentResponseModel
+            {
+                UserId = currentUserId,
+                LessonId = x.LessonId,
+                LessonSlug = x.Lesson?.Slug,
+                FullName = x.User.FullName,
+                IsCompleted = x.IsCompleted,
+                IsPassed = x.IsPassed,
+
+            }));
+            return response;
         }
 
         #endregion Statistics

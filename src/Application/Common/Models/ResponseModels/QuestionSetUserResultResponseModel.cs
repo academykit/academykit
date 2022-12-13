@@ -9,9 +9,9 @@
         public string Description { get; set; }
         public string ThumbnailUrl { get; set; }
         public DateTime SubmissionDate { get; set; }
-        public string TotalMarks { get; set; }
-        public string NegativeMarks { get; set; }
-        public string ObtainedMarks { get; set; }
+        public decimal TotalMarks { get; set; }
+        public decimal NegativeMarks { get; set; }
+        public decimal ObtainedMarks { get; set; }
         public UserModel Teacher { get; set; }
         public UserModel User { get; set; }
         public string Duration { get; set; }

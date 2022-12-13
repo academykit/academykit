@@ -84,11 +84,29 @@ namespace Lingtren.Application.Common.Interfaces
         Task<IList<LessonStatisticsResponseModel>> LessonStatistics(string identity, Guid currentUserId);
 
         /// <summary>
+        /// Handle to get lesson students report
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the paginated data</returns>
+        Task<SearchResult<LessonStudentResponseModel>> LessonStudentsReport(string identity, string lessonIdentity, BaseSearchCriteria criteria);
+
+        /// <summary>
         /// Handle to fetch student course statistics report
         /// </summary>
         /// <param name="identity">the course id or slug</param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the search result</returns>
         Task<SearchResult<StudentCourseStatisticsResponseModel>> StudentStatistics(string identity, Guid currentUserId, BaseSearchCriteria criteria);
+
+        /// <summary>
+        /// Handle to get student lessons detail
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="userId">the student id</param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns>the list of <see cref="LessonStudentResponseModel"/></returns>
+        Task<IList<LessonStudentResponseModel>> StudentLessonsDetail(string identity, Guid userId, Guid currentUserId);
     }
 }
