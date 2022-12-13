@@ -502,6 +502,11 @@ namespace Lingtren.Infrastructure.Services
                     predicate: p => p.CourseId == course.Id && !p.IsDeleted,
                     include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
 
+                course.CourseTags = new List<CourseTag>();
+                course.CourseTags = await _unitOfWork.GetRepository<CourseTag>().GetAllAsync(
+                    predicate: p => p.CourseId == course.Id,
+                    include: src => src.Include(x => x.Tag)).ConfigureAwait(false);
+
                 var response = new CourseResponseModel
                 {
                     Id = course.Id,
@@ -517,7 +522,10 @@ namespace Lingtren.Infrastructure.Services
                     Status = course.Status,
                     UserStatus = GetUserCourseEnrollmentStatus(course, currentUserId, fetchMembers: true).Result,
                     Sections = new List<SectionResponseModel>(),
+                    Tags = new List<CourseTagResponseModel>()
                 };
+                course.CourseTags.ToList().ForEach(item => response.Tags.Add(new CourseTagResponseModel(item)));
+
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (course.CreatedBy != currentUserId && !course.CourseTeachers.Any(x => x.UserId == currentUserId) && !isSuperAdminOrAdmin)
                 {

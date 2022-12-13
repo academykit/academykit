@@ -214,7 +214,7 @@
                         ).ConfigureAwait(false);
                     if (existQuestionSetSubmissions)
                     {
-                        _logger.LogWarning("Question with id: {id} cannot be edited such that it is associated with question set", existing.Id);
+                        _logger.LogWarning("Question with id: {id} cannot be edited such that it is associated with exam submission", existing.Id);
                         throw new ForbiddenException("Question is associated with exam submission so it cannot be edited");
                     }
                 }
