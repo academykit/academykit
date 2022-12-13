@@ -174,6 +174,54 @@
             };
         }
 
+        /// <summary>
+        /// Handle to pass student in requested lesson
+        /// </summary>
+        /// <param name="userId">the requested user id</param>
+        /// <param name="model">the instance of <see cref="WatchHistoryRequestModel"/></param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
+        public async Task PassAsync(Guid userId, WatchHistoryRequestModel model, Guid currentUserId)
+        {
+            try
+            {
+                var course = await ValidateAndGetCourse(currentUserId, model.CourseIdentity, validateForModify: true).ConfigureAwait(false);
+                if (course == null)
+                {
+                    _logger.LogWarning("Course with identity: {identity} not found for user with :{id}", model.CourseIdentity, currentUserId);
+                    throw new EntityNotFoundException("Course not found");
+                }
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                    predicate: p => p.CourseId == course.Id && (p.Id.ToString() == model.LessonIdentity || p.Slug == model.LessonIdentity)).ConfigureAwait(false);
+                if (lesson == null)
+                {
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and course with id : {courseId}", model.LessonIdentity, currentUserId, course.Id);
+                    throw new EntityNotFoundException("Lesson not found");
+                }
+
+                var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
+                    predicate: p => p.CourseId == course.Id && p.LessonId == lesson.Id && p.UserId == userId
+                    ).ConfigureAwait(false);
+                if (watchHistory == null)
+                {
+                    _logger.LogWarning("Watch histories not found for user with id: {userId}, course with id: {courseId} and lesson with id: {lessonId}",
+                                        currentUserId, course.Id, lesson.Id);
+                    throw new EntityNotFoundException("Watch history not found");
+                }
+                watchHistory.IsCompleted = true;
+                watchHistory.IsPassed = true;
+                watchHistory.UpdatedBy = currentUserId;
+                watchHistory.UpdatedOn = DateTime.UtcNow;
+                _unitOfWork.GetRepository<WatchHistory>().Update(watchHistory);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to pass the student.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update watch history.");
+            }
+        }
+
         #region Private Methods
 
         /// <summary>
