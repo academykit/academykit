@@ -146,8 +146,8 @@
             try
             {
                 var html = $"Dear {firstName},<br><br>";
-                html += @$"Please click the link <a>{_appUrl}/changeEmail?token={token}</a> to change the email for E-learning. 
-                                <br> The link will expire in {expiredTime} mins<br><br>";
+                html += @$"Please <a href='{_appUrl}/changeEmail?token={token}'> click the link </a> to change the email for E-learning. 
+                                <br> The link will expire in {expiredTime} minute<br><br>";
                 html += _footerEmail;
 
                 var mail = new EmailRequestDto
