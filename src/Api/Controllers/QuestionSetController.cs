@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Api.Controllers
 {
+    using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
@@ -32,7 +33,7 @@
         {
             if (model.QuestionPoolQuestionIds.Count == 0)
             {
-                throw new ArgumentException("At least one question is required");
+                throw new ForbiddenException("At least one question is required");
             }
             await _questionSetService.AddQuestionsAsync(identity, model, CurrentUser.Id);
             return Ok();

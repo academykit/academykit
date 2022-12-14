@@ -147,7 +147,7 @@
             if (lesson.Type != LessonType.Assignment)
             {
                 _logger.LogWarning("Lesson with id : {lessonId} is of invalid lesson type to create,edit or delete assignment for user with id :{userId}", lesson.Id, entity.CreatedBy);
-                throw new ArgumentException("Invalid lesson type for assignment.");
+                throw new ForbiddenException("Invalid lesson type for assignment.");
             }
             await ValidateAndGetCourse(entity.CreatedBy, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
             return lesson;

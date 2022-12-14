@@ -109,6 +109,9 @@ namespace Lingtren.Infrastructure.Services
                 lesson = await GetCurrentLesson(currentUserId, course).ConfigureAwait(false);
             }
 
+            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+            var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
+
             var userCompletedWatchHistories = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(
                 predicate: p => p.UserId == currentUserId && p.CourseId == lesson.CourseId && p.IsCompleted && p.IsPassed
                 ).ConfigureAwait(false);
@@ -126,7 +129,7 @@ namespace Lingtren.Infrastructure.Services
             var orderLessons = lessons.GetRange(0, currentIndex).Where(x => x.IsMandatory);
 
             var containMandatoryLesson = orderLessons.Select(x => x.Id).Except(userCompletedWatchHistories.Select(x => x.LessonId));
-            if (containMandatoryLesson.Count() > 0)
+            if (!isTeacher && !isSuperAdminOrAdmin && containMandatoryLesson.Count() > 0)
             {
                 _logger.LogWarning("User with id: {userId} needs to view other mandatory lesson before viewing current lesson with id: {lessonId}", currentUserId, lesson.Id);
                 throw new ForbiddenException("Please complete above remaining mandatory lesson before viewing current lesson.");

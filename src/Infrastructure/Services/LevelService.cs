@@ -39,7 +39,7 @@ namespace Lingtren.Infrastructure.Services
                           && x.IsActive).ConfigureAwait(false);
                 if (level != default)
                 {
-                    throw new ArgumentException("level already exist");
+                    throw new ForbiddenException("level already exist");
                 }
                 var entity = new Level()
                 {
@@ -90,7 +90,7 @@ namespace Lingtren.Infrastructure.Services
                 var levelNameExist = levels.Any(x => x.Id != level.Id && x.Name.ToLower() == levelName.ToLower());
                 if (levelNameExist)
                 {
-                    throw new ArgumentException("Level name already exist.");
+                    throw new ForbiddenException("Level name already exist.");
                 }
 
                 level.Name = levelName;

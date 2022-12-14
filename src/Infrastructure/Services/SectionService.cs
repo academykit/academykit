@@ -115,14 +115,16 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new EntityNotFoundException("Section not found");
                 }
-                if (section.Status == CourseStatus.Published || section.Course.Status == CourseStatus.Published)
+                if (section.Status == CourseStatus.Published)
                 {
+                    _logger.LogWarning("Section with id: {sectionId} is in published status", section.Id);
                     throw new ForbiddenException("Course section is published.");
                 }
 
                 if (section.Lessons.Any(x => !x.IsDeleted))
                 {
-                    throw new ArgumentException("Course section consist lessons");
+                    _logger.LogWarning("Section with id: {sectionId} consist lessons for delete", section.Id);
+                    throw new ForbiddenException("Course section consist lessons");
                 }
 
                 section.IsDeleted = true;

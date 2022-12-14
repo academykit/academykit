@@ -372,7 +372,7 @@ namespace Lingtren.Infrastructure.Services
                 if (existCourseEnrollment)
                 {
                     _logger.LogWarning("User with userId: {userId} is already enrolled in the course with id: {courseId}", userId, course.Id);
-                    throw new ArgumentException("You are already enrolled in this course");
+                    throw new ForbiddenException("You are already enrolled in this course");
                 }
 
                 var currentTimeStamp = DateTime.UtcNow;

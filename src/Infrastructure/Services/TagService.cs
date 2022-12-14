@@ -125,7 +125,7 @@ namespace Lingtren.Infrastructure.Services
                 var tagNameExist = tags.Any(x => x.Id != tag.Id && x.Name.ToLower() == tagName.ToLower());
                 if (tagNameExist)
                 {
-                    throw new ArgumentException("Tag name already exist");
+                    throw new ForbiddenException("Tag name already exist");
                 }
 
                 tag.Name = tagName;

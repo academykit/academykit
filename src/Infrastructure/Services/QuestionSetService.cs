@@ -74,7 +74,7 @@
                 if (checkQuestionSetSubmission)
                 {
                     _logger.LogWarning("Question set with id: {questionSetId} contains question set submission.", questionSet.Id);
-                    throw new ArgumentException("Question set contains answer submission. So, not allowed to add question in question set.");
+                    throw new ForbiddenException("Question set contains answer submission. So, not allowed to add question in question set.");
                 }
                 var existingQuestionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id).ConfigureAwait(false);
