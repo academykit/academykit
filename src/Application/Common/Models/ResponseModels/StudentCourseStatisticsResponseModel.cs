@@ -9,9 +9,4 @@
         public string LessonSlug { get; set; }
         public string LessonName { get; set; }
     }
-
-    public class StudentLessonsResponseModel
-    {
-
-    }
 }

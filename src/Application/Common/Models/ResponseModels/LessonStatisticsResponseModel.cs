@@ -20,6 +20,7 @@
     {
         public Guid LessonId { get; set; }
         public string LessonSlug { get; set; }
+        public string LessonName { get; set; }
         public Guid UserId { get; set; }
         public string FullName { get; set; }
         public bool IsCompleted { get; set; }

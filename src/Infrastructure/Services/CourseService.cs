@@ -715,6 +715,7 @@ namespace Lingtren.Infrastructure.Services
                      FullName = p.User?.FullName,
                      LessonId = lesson.Id,
                      LessonSlug = lesson.Slug,
+                     LessonName = lesson.Name,
                      IsCompleted = p.IsCompleted,
                      IsPassed = p.IsPassed
                  }));
@@ -798,6 +799,7 @@ namespace Lingtren.Infrastructure.Services
                 UserId = currentUserId,
                 LessonId = x.LessonId,
                 LessonSlug = x.Lesson?.Slug,
+                LessonName = x.Lesson?.Name,
                 FullName = x.User.FullName,
                 IsCompleted = x.IsCompleted,
                 IsPassed = x.IsPassed,
