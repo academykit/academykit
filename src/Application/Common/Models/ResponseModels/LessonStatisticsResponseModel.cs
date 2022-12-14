@@ -1,4 +1,6 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿using Lingtren.Domain.Enums;
+
+namespace Lingtren.Application.Common.Models.ResponseModels
 {
     public class LessonStatisticsResponseModel
     {
@@ -21,9 +23,9 @@
         public Guid LessonId { get; set; }
         public string LessonSlug { get; set; }
         public string LessonName { get; set; }
-        public Guid UserId { get; set; }
-        public string FullName { get; set; }
+        public LessonType LessonType { get; set; }
         public bool IsCompleted { get; set; }
         public bool IsPassed { get; set; }
+        public UserModel User { get; set; }
     }
 }

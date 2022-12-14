@@ -711,11 +711,11 @@ namespace Lingtren.Infrastructure.Services
             searchResult.Items.ForEach(p =>
                  response.Items.Add(new LessonStudentResponseModel
                  {
-                     UserId = p.UserId,
-                     FullName = p.User?.FullName,
+                     User = new UserModel(p.User),
                      LessonId = lesson.Id,
                      LessonSlug = lesson.Slug,
                      LessonName = lesson.Name,
+                     LessonType = lesson.Type,
                      IsCompleted = p.IsCompleted,
                      IsPassed = p.IsPassed
                  }));
@@ -796,14 +796,13 @@ namespace Lingtren.Infrastructure.Services
             var response = new List<LessonStudentResponseModel>();
             watchHistories.ForEach(x => response.Add(new LessonStudentResponseModel
             {
-                UserId = currentUserId,
                 LessonId = x.LessonId,
                 LessonSlug = x.Lesson?.Slug,
                 LessonName = x.Lesson?.Name,
-                FullName = x.User.FullName,
+                LessonType = x.Lesson.Type,
                 IsCompleted = x.IsCompleted,
                 IsPassed = x.IsPassed,
-
+                User = new UserModel(x.User)
             }));
             return response;
         }
