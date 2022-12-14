@@ -10,7 +10,6 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
-    using LinqKit;
     using Microsoft.AspNetCore.Mvc;
 
     public class AssignmentController : BaseApiController
@@ -33,36 +32,11 @@
         /// </summary>
         /// <returns> the list of <see cref="AssignmentResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<SearchResult<AssignmentResponseModel>> SearchAsync([FromQuery] AssignmentBaseSearchCriteria searchCriteria)
+        public async Task<IList<AssignmentResponseModel>> SearchAsync([FromQuery] AssignmentBaseSearchCriteria searchCriteria)
         {
             CommonHelper.ValidateArgumentNotNullOrEmpty(searchCriteria.LessonIdentity, nameof(searchCriteria.LessonIdentity));
-
-            var searchResult = await _assignmentService.SearchAsync(searchCriteria).ConfigureAwait(false);
-
-            var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
-                predicate: p => p.Id.ToString() == searchCriteria.LessonIdentity || p.Slug == searchCriteria.LessonIdentity
-                ).ConfigureAwait(false);
-
-            var isTeacher = await _unitOfWork.GetRepository<CourseTeacher>().ExistsAsync(
-                predicate: p => p.CourseId == lesson.CourseId && p.UserId == CurrentUser.Id).ConfigureAwait(false);
-            var isSuperAdminOrAdmin = await _unitOfWork.GetRepository<User>().ExistsAsync(
-                predicate: p => p.Id == CurrentUser.Id && (p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin)).ConfigureAwait(false);
-
-            var showCorrectAndHints = isTeacher || isSuperAdminOrAdmin;
-
-            var response = new SearchResult<AssignmentResponseModel>
-            {
-                Items = new List<AssignmentResponseModel>(),
-                CurrentPage = searchResult.CurrentPage,
-                PageSize = searchResult.PageSize,
-                TotalCount = searchResult.TotalCount,
-                TotalPage = searchResult.TotalPage,
-            };
-
-            searchResult.Items.ForEach(p =>
-                 response.Items.Add(new AssignmentResponseModel(p, showHints: showCorrectAndHints, showCorrect: showCorrectAndHints))
-             );
-            return response;
+            searchCriteria.CurrentUserId = CurrentUser.Id;
+            return await _assignmentService.SearchAsync(searchCriteria).ConfigureAwait(false);
         }
 
         /// <summary>

@@ -60,20 +60,12 @@
         {
             await ValidateAndGetLessonForAssignment(entity).ConfigureAwait(false);
 
-            if (entity.Type == QuestionTypeEnum.MultipleChoice || entity.Type == QuestionTypeEnum.SingleChoice)
-            {
-                var assignmentSubmissions = await _unitOfWork.GetRepository<AssignmentSubmission>().ExistsAsync(
+            var assignmentSubmissions = await _unitOfWork.GetRepository<AssignmentSubmission>().ExistsAsync(
                     predicate: p => p.AssignmentId == entity.Id).ConfigureAwait(false);
-                if (assignmentSubmissions)
-                {
-                    _logger.LogWarning("Assignment with id : {id} having type : {type} contains assignment submissions", entity.Id, entity.Type);
-                    throw new ForbiddenException("Assignment contains assignment submissions");
-                }
-            }
-
-            if (entity.Type == QuestionTypeEnum.Subjective)
+            if (assignmentSubmissions)
             {
-                //TO-DO : Task Check Assignment Submission or not
+                _logger.LogWarning("Assignment with id : {id} having type : {type} contains assignment submissions", entity.Id, entity.Type);
+                throw new ForbiddenException("Assignment contains assignment submissions");
             }
 
             _unitOfWork.GetRepository<AssignmentAttachment>().Delete(entity.AssignmentAttachments);
@@ -409,5 +401,116 @@
         }
 
         #endregion Private Methods
+
+        /// <summary>
+        /// Handle to search assignment
+        /// </summary>
+        /// <param name="searchCriteria">the instance of <see cref="AssignmentBaseSearchCriteria"/></param>
+        /// <returns></returns>
+        /// <exception cref="EntityNotFoundException"></exception>
+        /// <exception cref="ForbiddenException"></exception>
+
+        public async Task<IList<AssignmentResponseModel>> SearchAsync(AssignmentBaseSearchCriteria searchCriteria)
+        {
+            var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+               predicate: p => p.Id.ToString() == searchCriteria.LessonIdentity || p.Slug == searchCriteria.LessonIdentity
+               ).ConfigureAwait(false);
+
+            if (lesson == null)
+            {
+                _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", searchCriteria.LessonIdentity, searchCriteria.CurrentUserId);
+                throw new EntityNotFoundException("Lesson not found");
+            }
+            if (lesson.Type != LessonType.Assignment)
+            {
+                _logger.LogWarning("Lesson type not matched for assignment fetch for lesson with id: {id} and user with id: {userId}",
+                                    lesson.Id, searchCriteria.CurrentUserId);
+                throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+            }
+
+            var course = await ValidateAndGetCourse(searchCriteria.CurrentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
+
+            var isTeacher = course.CourseTeachers.Any(x => x.UserId == searchCriteria.CurrentUserId);
+            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(searchCriteria.CurrentUserId).ConfigureAwait(false);
+
+            var showCorrectAndHints = isTeacher || isSuperAdminOrAdmin;
+
+            var predicate = PredicateBuilder.New<Assignment>(true);
+            predicate = predicate.And(x => x.LessonId == lesson.Id);
+
+            var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
+                predicate: p => p.LessonId == lesson.Id,
+                include: src => src.Include(x => x.AssignmentAttachments).Include(x => x.AssignmentQuestionOptions)
+                ).ConfigureAwait(false);
+
+            var userAssignments = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(
+                predicate: p => p.LessonId == lesson.Id && searchCriteria.UserId.HasValue && p.UserId == searchCriteria.UserId.Value,
+                include: src => src.Include(x => x.AssignmentSubmissionAttachments).Include(x => x.User)
+                ).ConfigureAwait(false);
+
+            var response = new List<AssignmentResponseModel>();
+
+            foreach (var item in assignments)
+            {
+                MapAssignment(showCorrectAndHints, userAssignments, item, response);
+            }
+            return response;
+        }
+
+        private static void MapAssignment(bool showCorrectAndHints, IList<AssignmentSubmission> userAssignments, Assignment item, IList<AssignmentResponseModel> response)
+        {
+            var userAssignment = userAssignments.FirstOrDefault(x => x.AssignmentId == item.Id);
+            var data = new AssignmentResponseModel
+            {
+                Id = item.Id,
+                LessonId = item.LessonId,
+                Name = item.Name,
+                Description = item.Description,
+                Order = item.Order,
+                Hints = item.Hints,
+                Type = item.Type,
+                IsActive = item.IsActive,
+                User = item.User == null ? new UserModel() : new UserModel(item.User),
+                Student = userAssignment == null ? null : new UserModel(userAssignment.User),
+                Answer = userAssignment == null ? null : userAssignment.Answer,
+                AssignmentAttachments = new List<AssignmentAttachmentResponseModel>(),
+                AssignmentQuestionOptions = new List<AssignmentQuestionOptionResponseModel>(),
+                AssignmentSubmissionAttachments = new List<AssignmentSubmissionAttachmentResponseModel>(),
+            };
+            if (item.Type == QuestionTypeEnum.Subjective)
+            {
+                item.AssignmentAttachments?.ToList().ForEach(x => data.AssignmentAttachments.Add(new AssignmentAttachmentResponseModel(x)));
+            }
+
+            if (item.Type == QuestionTypeEnum.SingleChoice || item.Type == QuestionTypeEnum.MultipleChoice)
+            {
+                var selectedAnsIds = !string.IsNullOrWhiteSpace(userAssignment?.SelectedOption) ?
+                                        userAssignment?.SelectedOption.Split(",").Select(Guid.Parse).ToList() : new List<Guid>();
+                item.AssignmentQuestionOptions?.ToList().ForEach(x =>
+                                data.AssignmentQuestionOptions.Add(new AssignmentQuestionOptionResponseModel()
+                                {
+                                    Id = x.Id,
+                                    AssignmentId = x.AssignmentId,
+                                    AssignmentName = x.Assignment?.Name,
+                                    Option = x.Option,
+                                    IsCorrect = showCorrectAndHints ? x.IsCorrect : null,
+                                    IsSelected = userAssignment != null ? selectedAnsIds?.Contains(x.Id) : null,
+                                    Order = x.Order,
+                                }));
+            }
+
+            if (userAssignment?.AssignmentSubmissionAttachments.Count > 0)
+            {
+                userAssignment.AssignmentSubmissionAttachments.ForEach(x => new AssignmentSubmissionAttachmentResponseModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    MimeType = x.MimeType,
+                    AssignmentSubmissionId = x.AssignmentSubmissionId,
+                    FileUrl = x.FileUrl,
+                });
+            }
+            response.Add(data);
+        }
     }
 }

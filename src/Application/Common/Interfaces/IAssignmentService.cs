@@ -35,5 +35,12 @@
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
         Task<IList<AssignmentSubmissionStudentResponseModel>> GetAssignmentSubmittedStudent(string lessonIdentity, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to search assignment
+        /// </summary>
+        /// <param name="searchCriteria">the instance of <see cref="AssignmentBaseSearchCriteria"/></param>
+        /// <returns></returns>
+        Task<IList<AssignmentResponseModel>> SearchAsync(AssignmentBaseSearchCriteria searchCriteria);
     }
 }

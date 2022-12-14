@@ -15,8 +15,18 @@
         public bool IsActive { get; set; }
         public QuestionTypeEnum Type { get; set; }
         public UserModel User { get; set; }
+        public Guid? AssignmentSubmissionId { get; set; }
+        public string? Answer { get; set; }
+        public UserModel? Student { get; set; }
         public IList<AssignmentAttachmentResponseModel> AssignmentAttachments { get; set; }
+        public IList<AssignmentSubmissionAttachmentResponseModel> AssignmentSubmissionAttachments { get; set; }
         public IList<AssignmentQuestionOptionResponseModel> AssignmentQuestionOptions { get; set; }
+
+        public AssignmentResponseModel()
+        {
+
+        }
+
         public AssignmentResponseModel(Assignment assignment, bool showHints = false, bool showCorrect = false)
         {
             Id = assignment.Id;
@@ -29,7 +39,6 @@
             IsActive = assignment.IsActive;
             Type = assignment.Type;
             User = assignment.User != null ? new UserModel(assignment.User) : new UserModel();
-
             AssignmentAttachments = new List<AssignmentAttachmentResponseModel>();
             if (assignment.Type == QuestionTypeEnum.Subjective)
             {
@@ -39,8 +48,18 @@
             AssignmentQuestionOptions = new List<AssignmentQuestionOptionResponseModel>();
             if (assignment.Type == QuestionTypeEnum.SingleChoice || assignment.Type == QuestionTypeEnum.MultipleChoice)
             {
-                assignment.AssignmentQuestionOptions?.ToList().ForEach(item => AssignmentQuestionOptions.Add(new AssignmentQuestionOptionResponseModel(item,showCorrect)));
+                assignment.AssignmentQuestionOptions?.ToList().ForEach(item => AssignmentQuestionOptions.Add(new AssignmentQuestionOptionResponseModel(item, showCorrect)));
             }
         }
+    }
+
+    public class AssignmentSubmissionAttachmentResponseModel
+    {
+        public Guid Id { get; set; }
+        public Guid AssignmentSubmissionId { get; set; }
+        public string FileUrl { get; set; }
+        public string Name { get; set; }
+        public string MimeType { get; set; }
+        public UserModel User { get; set; }
     }
 }

@@ -9,6 +9,8 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string AssignmentName { get; set; }
         public string Option { get; set; }
         public bool? IsCorrect { get; set; }
+        public bool? IsSelected { get; set; }
+        public string? Answer { get; set; }
         public int Order { get; set; }
         public UserModel User { get; set; }
 
@@ -21,6 +23,10 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             IsCorrect = showCorrect ? model.IsCorrect : null;
             Order = model.Order;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
+        }
+        public AssignmentQuestionOptionResponseModel()
+        {
+
         }
     }
 }
