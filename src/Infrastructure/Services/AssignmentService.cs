@@ -4,6 +4,7 @@
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
@@ -268,19 +269,19 @@
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", lessonIdentity, currentUserId);
                     throw new EntityNotFoundException("Lesson not found");
                 }
-                if (lesson.Status != CourseStatus.Published)
-                {
-                    _logger.LogWarning("Lesson with id: {id} not published for user with id: {id}", lesson.Id, currentUserId);
-                    throw new EntityNotFoundException("Lesson not published");
-                }
-                await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
-
                 if (lesson.Type != LessonType.Assignment)
                 {
                     _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}",
                                         lesson.Id, currentUserId);
                     throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
                 }
+                if (lesson.Status != CourseStatus.Published)
+                {
+                    _logger.LogWarning("Lesson with id: {id} not published for user with id: {id}", lesson.Id, currentUserId);
+                    throw new EntityNotFoundException("Lesson not published");
+                }
+
+                await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
 
                 var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
                     predicate: p => p.LessonId == lesson.Id && p.IsActive,
@@ -289,7 +290,7 @@
                 var assignmentSubmissions = new List<AssignmentSubmission>();
                 foreach (var item in models)
                 {
-                    await InsertAssignmentSubmission(currentUserId, assignments, item).ConfigureAwait(false);
+                    await InsertAssignmentSubmission(currentUserId, lesson.Id, assignments, item).ConfigureAwait(false);
                 }
                 await _unitOfWork.GetRepository<AssignmentSubmission>().InsertAsync(assignmentSubmissions).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -302,13 +303,68 @@
         }
 
         /// <summary>
+        /// Handle to get list of student who has submitted assignment
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
+        public async Task<IList<AssignmentSubmissionStudentResponseModel>> GetAssignmentSubmittedStudent(string lessonIdentity, Guid currentUserId)
+        {
+            try
+            {
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                   predicate: p => p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity).ConfigureAwait(false);
+                if (lesson == null)
+                {
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", lessonIdentity, currentUserId);
+                    throw new EntityNotFoundException("Lesson not found");
+                }
+                if (lesson.Type != LessonType.Assignment)
+                {
+                    _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}",
+                                        lesson.Id, currentUserId);
+                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+                }
+                await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
+
+                var userIds = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(
+                    predicate: p => p.LessonId == lesson.Id,
+                    selector: s => s.UserId
+                    ).ConfigureAwait(false);
+
+                userIds = userIds.Distinct().ToList();
+
+                var users = await _unitOfWork.GetRepository<User>().GetAllAsync(
+                    predicate: p => userIds.Contains(p.Id)
+                    ).ConfigureAwait(false);
+
+                var response = new List<AssignmentSubmissionStudentResponseModel>();
+
+                users.ForEach(x => response.Add(new AssignmentSubmissionStudentResponseModel
+                {
+                    User = new UserModel(x),
+                    LessonId = lesson.Id,
+                    LessonSlug = lesson.Slug
+                }));
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to fetch the student list who has submitted assignment.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch the student list who has submitted assignment.");
+            }
+        }
+
+        #region Private Methods
+
+        /// <summary>
         /// Handle to insert assignment submission and attachment details
         /// </summary>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <param name="assignments">the list of <see cref="Assignment"/></param>
         /// <param name="item">the instance of <see cref="AssignmentSubmissionRequestModel"/></param>
         /// <returns></returns>
-        private async Task InsertAssignmentSubmission(Guid currentUserId, IList<Assignment> assignments, AssignmentSubmissionRequestModel item)
+        private async Task InsertAssignmentSubmission(Guid currentUserId, Guid lessonId, IList<Assignment> assignments, AssignmentSubmissionRequestModel item)
         {
             var currentTimeStamp = DateTime.UtcNow;
             var assignment = assignments.FirstOrDefault(x => x.Id == item.AssignmentId);
@@ -317,6 +373,7 @@
                 var assignmentSubmission = new AssignmentSubmission
                 {
                     Id = Guid.NewGuid(),
+                    LessonId = lessonId,
                     AssignmentId = assignment.Id,
                     UserId = currentUserId,
                     CreatedBy = currentUserId,
@@ -350,5 +407,7 @@
                 }
             }
         }
+
+        #endregion Private Methods
     }
 }

@@ -183,5 +183,14 @@
             await _assignmentService.AssignmentSubmissionAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Assignment Submitted Successfully." });
         }
+
+        /// <summary>
+        /// Get assignment submitted student list api
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <returns></returns>
+        [HttpGet("{lessonIdentity}/users")]
+        public async Task<IList<AssignmentSubmissionStudentResponseModel>> SubmissionAsync(string lessonIdentity) =>
+            await _assignmentService.GetAssignmentSubmittedStudent(lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
     }
 }

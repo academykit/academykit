@@ -2,6 +2,7 @@
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using System;
     using System.Collections.Generic;
@@ -26,5 +27,13 @@
         /// <param name="currentUserId">the current logged in user</param>
         /// <returns></returns>
         Task AssignmentSubmissionAsync(string lessonIdentity, IList<AssignmentSubmissionRequestModel> model, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to get list of student who has submitted assignment
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
+        Task<IList<AssignmentSubmissionStudentResponseModel>> GetAssignmentSubmittedStudent(string lessonIdentity, Guid currentUserId);
     }
 }

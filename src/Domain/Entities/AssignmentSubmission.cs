@@ -4,6 +4,8 @@ namespace Lingtren.Domain.Entities
 
     public class AssignmentSubmission : AuditableEntity
     {
+        public Guid LessonId { get; set; }
+        public Lesson Lesson { get; set; }
         public Guid AssignmentId { get; set; }
         public Assignment Assignment { get; set; }
         public Guid UserId { get; set; }
