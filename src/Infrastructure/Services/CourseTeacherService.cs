@@ -66,6 +66,13 @@
                 _logger.LogWarning("course with Id {courseId} creator User Id {userId} can't be course teacher.", course.Id, entity.UserId);
                 throw new ForbiddenException("Course author cannot be added");
             }
+            var hasAccess = await IsSuperAdminOrAdminOrTrainer(entity.UserId).ConfigureAwait(false);
+            if (!hasAccess)
+            {
+                _logger.LogWarning("User having Id: {userId} with trainee role is not allowed to added as course teacher of course with Id {courseId}.",
+                                            entity.UserId, course.Id);
+                throw new ForbiddenException("User with trainee role is not allowed to add as course teacher");
+            }
             if (course.CourseTeachers.Any(p => p.UserId == entity.UserId))
             {
                 _logger.LogWarning("User with Id {userId} is already course teacher of course with Id {courseId}.", entity.UserId, course.Id);
