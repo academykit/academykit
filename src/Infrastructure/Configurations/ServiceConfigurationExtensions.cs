@@ -45,6 +45,7 @@
             services.AddTransient<IQuestionSetService, QuestionSetService>();
             services.AddTransient<IAssignmentService, AssignmentService>();
             services.AddTransient<IWatchHistoryService, WatchHistoryService>();
+            services.AddTransient<ICommentService, CommentService>();
 
             #endregion Service DI
 
@@ -71,6 +72,7 @@
             services.AddSingleton<IValidator<WatchHistoryRequestModel>, WatchHistoryValidator>();
             services.AddSingleton<IValidator<ChangeEmailRequestModel>, ChangeEmailValidator>();
             services.AddSingleton<IValidator<LevelRequestModel>, LevelValidator>();
+            services.AddSingleton<IValidator<CommentRequestModel>, CommentValidator>();
 
             #endregion Validator DI
 

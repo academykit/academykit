@@ -4,9 +4,9 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
     using Microsoft.EntityFrameworkCore;
     using Lingtren.Domain.Entities;
 
-    public class CommentRepliesConfiguration : IEntityTypeConfiguration<CommentReplay>
+    public class CommentRepliesConfiguration : IEntityTypeConfiguration<CommentReply>
     {
-        public void Configure(EntityTypeBuilder<CommentReplay> builder)
+        public void Configure(EntityTypeBuilder<CommentReply> builder)
         {
              builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();

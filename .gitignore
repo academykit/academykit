@@ -486,3 +486,4 @@ $RECYCLE.BIN/
 /.vs/*
 .vs/lingtren/DesignTimeBuild/.dtbcache.v2
 .vs/lingtren/v17/.suo
+*.v2

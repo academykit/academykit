@@ -1,7 +1,7 @@
 namespace Lingtren.Domain.Entities
 {
     using Lingtren.Domain.Common;
-    public class CommentReplay : AuditableEntity
+    public class CommentReply : AuditableEntity
     {
         public Guid CommentId { get; set; }
         public Comment Comment { get; set; }

@@ -10,6 +10,6 @@ namespace Lingtren.Domain.Entities
         public string Content { get; set; }
         public bool IsDeleted { get; set; }
         public User User{ get; set; }
-        public IList<CommentReplay> CommentReplies { get; set; }
+        public IList<CommentReply> CommentReplies { get; set; }
     }
 }
