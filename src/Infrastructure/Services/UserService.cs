@@ -128,7 +128,7 @@
             {
                 return false;
             }
-            await _refreshTokenService.UpdateAsync(refreshToken);
+            await _refreshTokenService.DeleteAsync(refreshToken);
             return true;
         }
 

@@ -30,5 +30,12 @@
         /// <param name="token">the instance of <see cref="RefreshToken"/></param>
         /// <returns></returns>
         Task UpdateAsync(RefreshToken token);
+
+        /// <summary>
+        /// Handle to delete refresh token
+        /// </summary>
+        /// <param name="token">the instance of <see cref="RefreshToken"/></param>
+        /// <returns></returns>
+        Task DeleteAsync(RefreshToken token);
     }
 }

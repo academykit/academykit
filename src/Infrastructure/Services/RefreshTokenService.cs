@@ -86,5 +86,24 @@
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to update refresh token.");
             }
         }
+
+        /// <summary>
+        /// Handle to delete refresh token
+        /// </summary>
+        /// <param name="token">the instance of <see cref="RefreshToken"/></param>
+        /// <returns></returns>
+        public async Task DeleteAsync(RefreshToken token)
+        {
+            try
+            {
+                _unitOfWork.GetRepository<RefreshToken>().Delete(token);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to update refresh token.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to update refresh token.");
+            }
+        }
     }
 }
