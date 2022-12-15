@@ -45,8 +45,8 @@
         public DbSet<AssignmentSubmission> AssignmentSubmissions { get; set; }
         public DbSet<AssignmentQuestionOption> AssignmentQuestionOptions { get; set; }
         public DbSet<AssignmentSubmissionAttachment> AssignmentSubmissionAttachments { get; set; }
-
-
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<CommentReplay> CommentReplies { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             var userId = new Guid("30fcd978-f256-4733-840f-759181bc5e63");

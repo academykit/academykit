@@ -59,6 +59,8 @@
         public IList<QuestionTag> QuestionTags { get; set; }
         public IList<AssignmentQuestionOption> AssignmentQuestionOptions { get; set; }
         public IList<AssignmentSubmissionAttachment> AssignmentSubmissionAttachments { get; set; }
+        public IList<Comment> Comments { get; set; }
+        public IList<CommentReplay> CommentReplies { get; set; }
 
         /// <summary>
         /// Get or set full name
