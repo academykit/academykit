@@ -68,6 +68,51 @@
         }
 
         /// <summary>
+        /// Handle to search reply 
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="id">the comment id</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the paginated result</returns>
+        public async Task<SearchResult<CommentReplyResponseModel>> SearchReplyAsync(string identity, Guid id, BaseSearchCriteria criteria)
+        {
+            await ValidateAndGetCourse(criteria.CurrentUserId, identity, validateForModify: false).ConfigureAwait(false);
+            var predicate = PredicateBuilder.New<CommentReply>(true);
+            predicate = predicate.And(p => p.CommentId == id);
+
+            var query = _unitOfWork.GetRepository<CommentReply>().GetAll(predicate: predicate, include: src => src.Include(x => x.User));
+            if (criteria.SortBy == null)
+            {
+                criteria.SortBy = nameof(CommentReply.CreatedOn);
+                criteria.SortType = SortType.Descending;
+            }
+            query = criteria.SortType == SortType.Ascending
+                ? query.OrderBy(x => criteria.SortBy)
+                : query.OrderByDescending(x => criteria.SortBy);
+            var result = query.ToList().ToIPagedList(criteria.Page, criteria.Size);
+
+            var response = new SearchResult<CommentReplyResponseModel>
+            {
+                Items = new List<CommentReplyResponseModel>(),
+                CurrentPage = result.CurrentPage,
+                PageSize = result.PageSize,
+                TotalCount = result.TotalCount,
+                TotalPage = result.TotalPage,
+            };
+
+            result.Items.ForEach(p =>
+                 response.Items.Add(new CommentReplyResponseModel()
+                 {
+                     Id = p.Id,
+                     CommentId = p.CommentId,
+                     Content = p.Content,
+                     User = new UserModel(p.User)
+                 })
+             );
+            return response;
+        }
+
+        /// <summary>
         /// Handle to create comment
         /// </summary>
         /// <param name="identity">the course id or slug</param>

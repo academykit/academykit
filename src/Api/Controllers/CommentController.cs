@@ -56,6 +56,17 @@
             return await _commentService.UpdateAsync(identity, id, model, CurrentUser.Id).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// get comment api
+        /// </summary>
+        /// <returns> the list of <see cref="CommentResponseModel" /> .</returns>
+        [HttpGet("{id}")]
+        public async Task<SearchResult<CommentReplyResponseModel>> SearchReplyAsync(string identity, Guid id, [FromQuery] BaseSearchCriteria searchCriteria)
+        {
+            searchCriteria.CurrentUserId = CurrentUser.Id;
+            return await _commentService.SearchReplyAsync(identity,id, searchCriteria).ConfigureAwait(false);
+        }
+
         ///// <summary>
         ///// delete department api
         ///// </summary>
