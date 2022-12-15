@@ -51,9 +51,7 @@ namespace Lingtren.Infrastructure.Services
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search)
-                 || x.Description.ToLower().Trim().Contains(search) || x.User.LastName.ToLower().Trim().Contains(search)
-                 || x.User.FirstName.ToLower().Trim().Contains(search));
+                predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
             }
 
             if (criteria.CurrentUserId == default)
