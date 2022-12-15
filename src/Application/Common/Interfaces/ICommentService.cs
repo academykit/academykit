@@ -36,7 +36,14 @@
         /// <returns>the instance of <see cref="CommentResponseModel"/></returns>
         Task<CommentResponseModel> UpdateAsync(string identity, Guid commentId, CommentRequestModel model, Guid currentUserId);
 
-        //Task DeleteAsync(string identity, Guid id, Guid currentUserId);
+        /// <summary>
+        /// Handle to delete comment
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="id">the comment id</param>
+        /// <param name="currentUserId">the current logged in user</param>
+        /// <returns>the task complete</returns>
+        Task DeleteAsync(string identity, Guid id, Guid currentUserId);
 
         /// <summary>
         /// Handle to search reply 
@@ -67,7 +74,14 @@
         /// <returns>the instance of <see cref="CommentReplyResponseModel"/></returns>
         Task<CommentReplyResponseModel> UpdateReplyAsync(string identity, Guid commentId, Guid replyId, CommentRequestModel model, Guid currentUserId);
 
-
-        //Task DeleteReplyAsync(string identity, Guid id, Guid replyId, Guid currentUserId);
+        /// <summary>
+        /// Handle to delete comment
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="id">the comment id</param>
+        /// <param name="replyId">the comment id</param>
+        /// <param name="currentUserId">the current logged in user</param>
+        /// <returns>the task complete</returns>
+        Task DeleteReplyAsync(string identity, Guid id, Guid replyId, Guid currentUserId);
     }
 }

@@ -57,6 +57,18 @@
         }
 
         /// <summary>
+        /// delete department api
+        /// </summary>
+        /// <param name="identity"> id or slug </param>
+        /// <returns> the task complete </returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAsync(string identity, Guid id)
+        {
+            await _commentService.DeleteAsync(identity, id, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Comment removed successfully." });
+        }
+
+        /// <summary>
         /// get comment api
         /// </summary>
         /// <returns> the list of <see cref="CommentResponseModel" /> .</returns>
@@ -66,18 +78,7 @@
             searchCriteria.CurrentUserId = CurrentUser.Id;
             return await _commentService.SearchReplyAsync(identity,id, searchCriteria).ConfigureAwait(false);
         }
-
-        ///// <summary>
-        ///// delete department api
-        ///// </summary>
-        ///// <param name="identity"> id or slug </param>
-        ///// <returns> the task complete </returns>
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteAsync(string identity, Guid id)
-        //{
-        //    await _commentService.DeleteAsync(identity, id, CurrentUser.Id).ConfigureAwait(false);
-        //    return Ok(new CommonResponseModel() { Success = true, Message = "Comment removed successfully." });
-        //}
+        
 
         /// <summary>
         /// get department by id or slug
@@ -103,19 +104,17 @@
             return await _commentService.UpdateReplyAsync(identity, id, replyId, model, CurrentUser.Id).ConfigureAwait(false);
         }
 
-
-
-        ///// <summary>
-        ///// change department status api
-        ///// </summary>
-        ///// <param name="identity">the department id or slug</param>
-        ///// <param name="enabled">the boolean</param>
-        ///// <returns>the instance of <see cref="DepartmentResponseModel"/></returns>
-        //[HttpDelete("{id}/CommentReply/{replyId}")]
-        //public async Task<IActionResult> DeleteReplyAsync(string identity, Guid id, Guid replyId)
-        //{
-        //    await _commentService.DeleteReplyAsync(identity, id, replyId, CurrentUser.Id).ConfigureAwait(false);
-        //    return Ok(new CommonResponseModel() { Success = true, Message = "Comment reply removed successfully." });
-        //}
+        /// <summary>
+        /// change department status api
+        /// </summary>
+        /// <param name="identity">the department id or slug</param>
+        /// <param name="enabled">the boolean</param>
+        /// <returns>the instance of <see cref="DepartmentResponseModel"/></returns>
+        [HttpDelete("{id}/CommentReply/{replyId}")]
+        public async Task<IActionResult> DeleteReplyAsync(string identity, Guid id, Guid replyId)
+        {
+            await _commentService.DeleteReplyAsync(identity, id, replyId, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Comment reply removed successfully." });
+        }
     }
 }

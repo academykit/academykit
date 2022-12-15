@@ -32,7 +32,7 @@
         {
             var course = await ValidateAndGetCourse(criteria.CurrentUserId, identity, validateForModify: false).ConfigureAwait(false);
             var predicate = PredicateBuilder.New<Comment>(true);
-            predicate = predicate.And(p => p.CourseId == course.Id);
+            predicate = predicate.And(p => p.CourseId == course.Id && !p.IsDeleted);
 
             var query = _unitOfWork.GetRepository<Comment>().GetAll(predicate: predicate, include: src => src.Include(x => x.User));
             if (criteria.SortBy == null)
@@ -61,51 +61,6 @@
                      CourseId = p.CourseId,
                      Content = p.Content,
                      RepliesCount = _unitOfWork.GetRepository<CommentReply>().Count(predicate: x => x.CommentId == p.Id),
-                     User = new UserModel(p.User)
-                 })
-             );
-            return response;
-        }
-
-        /// <summary>
-        /// Handle to search reply 
-        /// </summary>
-        /// <param name="identity">the course id or slug</param>
-        /// <param name="id">the comment id</param>
-        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
-        /// <returns>the paginated result</returns>
-        public async Task<SearchResult<CommentReplyResponseModel>> SearchReplyAsync(string identity, Guid id, BaseSearchCriteria criteria)
-        {
-            await ValidateAndGetCourse(criteria.CurrentUserId, identity, validateForModify: false).ConfigureAwait(false);
-            var predicate = PredicateBuilder.New<CommentReply>(true);
-            predicate = predicate.And(p => p.CommentId == id);
-
-            var query = _unitOfWork.GetRepository<CommentReply>().GetAll(predicate: predicate, include: src => src.Include(x => x.User));
-            if (criteria.SortBy == null)
-            {
-                criteria.SortBy = nameof(CommentReply.CreatedOn);
-                criteria.SortType = SortType.Descending;
-            }
-            query = criteria.SortType == SortType.Ascending
-                ? query.OrderBy(x => criteria.SortBy)
-                : query.OrderByDescending(x => criteria.SortBy);
-            var result = query.ToList().ToIPagedList(criteria.Page, criteria.Size);
-
-            var response = new SearchResult<CommentReplyResponseModel>
-            {
-                Items = new List<CommentReplyResponseModel>(),
-                CurrentPage = result.CurrentPage,
-                PageSize = result.PageSize,
-                TotalCount = result.TotalCount,
-                TotalPage = result.TotalPage,
-            };
-
-            result.Items.ForEach(p =>
-                 response.Items.Add(new CommentReplyResponseModel()
-                 {
-                     Id = p.Id,
-                     CommentId = p.CommentId,
-                     Content = p.Content,
                      User = new UserModel(p.User)
                  })
              );
@@ -161,6 +116,7 @@
         /// <returns>the instance of <see cref="CommentResponseModel"/></returns>
         public async Task<CommentResponseModel> UpdateAsync(string identity, Guid commentId, CommentRequestModel model, Guid currentUserId)
         {
+            await ValidateAndGetCourse(currentUserId, identity, validateForModify: false).ConfigureAwait(false);
             var existing = await GetAsync(commentId, currentUserId).ConfigureAwait(false);
             if (existing == null)
             {
@@ -191,6 +147,88 @@
                     MobileNumber = existing.User?.MobileNumber
                 }
             };
+        }
+
+        /// <summary>
+        /// Handle to delete comment
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="id">the comment id</param>
+        /// <param name="currentUserId">the current logged in user</param>
+        /// <returns>the task complete</returns>
+        public async Task DeleteAsync(string identity, Guid id, Guid currentUserId)
+        {
+            var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: false).ConfigureAwait(false);
+            var comment = await GetAsync(id, currentUserId).ConfigureAwait(false);
+            if (comment == null)
+            {
+                _logger.LogWarning("Comment with id :{id} not found", id);
+                throw new EntityNotFoundException("Comment not found");
+            }
+            var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
+            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+            if (comment.CreatedBy != currentUserId && !isSuperAdminOrAdmin && !isTeacher)
+            {
+                _logger.LogWarning("User with id: {currentUserId} is not authorized user to delete comment with id :{id}", currentUserId, id);
+                throw new ForbiddenException("Unauthorized user to delete comment");
+            }
+            var existReply = await _unitOfWork.GetRepository<CommentReply>().ExistsAsync(p => p.CommentId == comment.Id && !p.IsDeleted).ConfigureAwait(false);
+            if (existReply)
+            {
+                _logger.LogWarning("Comment with id:{commentId} contains replies to remove comment by user with id: {userId}", id, currentUserId);
+                throw new ForbiddenException("Please remove the reply before removing comment.");
+            }
+
+            comment.IsDeleted = true;
+            comment.UpdatedBy = currentUserId;
+            comment.UpdatedOn = DateTime.UtcNow;
+            _unitOfWork.GetRepository<Comment>().Update(comment);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Handle to search reply 
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="id">the comment id</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the paginated result</returns>
+        public async Task<SearchResult<CommentReplyResponseModel>> SearchReplyAsync(string identity, Guid id, BaseSearchCriteria criteria)
+        {
+            await ValidateAndGetCourse(criteria.CurrentUserId, identity, validateForModify: false).ConfigureAwait(false);
+            var predicate = PredicateBuilder.New<CommentReply>(true);
+            predicate = predicate.And(p => p.CommentId == id && !p.IsDeleted);
+
+            var query = _unitOfWork.GetRepository<CommentReply>().GetAll(predicate: predicate, include: src => src.Include(x => x.User));
+            if (criteria.SortBy == null)
+            {
+                criteria.SortBy = nameof(CommentReply.CreatedOn);
+                criteria.SortType = SortType.Descending;
+            }
+            query = criteria.SortType == SortType.Ascending
+                ? query.OrderBy(x => criteria.SortBy)
+                : query.OrderByDescending(x => criteria.SortBy);
+            var result = query.ToList().ToIPagedList(criteria.Page, criteria.Size);
+
+            var response = new SearchResult<CommentReplyResponseModel>
+            {
+                Items = new List<CommentReplyResponseModel>(),
+                CurrentPage = result.CurrentPage,
+                PageSize = result.PageSize,
+                TotalCount = result.TotalCount,
+                TotalPage = result.TotalPage,
+            };
+
+            result.Items.ForEach(p =>
+                 response.Items.Add(new CommentReplyResponseModel()
+                 {
+                     Id = p.Id,
+                     CommentId = p.CommentId,
+                     Content = p.Content,
+                     User = new UserModel(p.User)
+                 })
+             );
+            return response;
         }
 
         /// <summary>
@@ -273,7 +311,7 @@
                 CreatedOn = DateTime.UtcNow,
                 CreatedBy = currentUserId,
             };
-            await _unitOfWork.GetRepository<CommentReply>().InsertAsync(reply).ConfigureAwait(false);
+            _unitOfWork.GetRepository<CommentReply>().Update(reply);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             return new CommentReplyResponseModel
             {
@@ -289,6 +327,40 @@
                     MobileNumber = existing.User?.MobileNumber
                 }
             };
+        }
+
+        /// <summary>
+        /// Handle to delete comment
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="id">the comment id</param>
+        /// <param name="replyId">the comment id</param>
+        /// <param name="currentUserId">the current logged in user</param>
+        /// <returns>the task complete</returns>
+        public async Task DeleteReplyAsync(string identity, Guid id, Guid replyId, Guid currentUserId)
+        {
+            var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: false).ConfigureAwait(false);
+
+            var commentReply = await _unitOfWork.GetRepository<CommentReply>().GetFirstOrDefaultAsync(
+                predicate: p => p.Id == replyId && p.CommentId == id
+                ).ConfigureAwait(false);
+            if (commentReply == null)
+            {
+                _logger.LogWarning("Comment reply with id :{id} and comment with id :{commentId} not found", replyId, id);
+                throw new EntityNotFoundException("Comment reply not found");
+            }
+            var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
+            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+            if (commentReply.CreatedBy != currentUserId && !isSuperAdminOrAdmin && !isTeacher)
+            {
+                _logger.LogWarning("User with id: {currentUserId} is not authorized user to delete comment reply with id :{replyId} having comment with id :{id}", currentUserId, replyId, id);
+                throw new ForbiddenException("Unauthorized user to delete comment reply");
+            }
+            commentReply.IsDeleted = true;
+            commentReply.UpdatedBy = currentUserId;
+            commentReply.UpdatedOn = DateTime.UtcNow;
+            _unitOfWork.GetRepository<CommentReply>().Update(commentReply);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         #region Protected Methods
