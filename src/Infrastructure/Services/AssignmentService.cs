@@ -279,12 +279,22 @@
                     predicate: p => p.LessonId == lesson.Id && p.IsActive,
                     include: src => src.Include(x => x.AssignmentQuestionOptions)).ConfigureAwait(false);
 
-                var assignmentSubmissions = new List<AssignmentSubmission>();
+                var currentTimeStamp = DateTime.UtcNow;
                 foreach (var item in models)
                 {
-                    await InsertAssignmentSubmission(currentUserId, lesson.Id, assignments, item).ConfigureAwait(false);
+                    var assignment = assignments.FirstOrDefault(x => x.Id == item.AssignmentId);
+                    if (assignment != null)
+                    {
+                        if (item.Id != default)
+                        {
+                            await UpdateSubmissionAsync(currentUserId, currentTimeStamp, item, assignment).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            await InsertSubmissionAsync(currentUserId, lesson.Id, currentTimeStamp, item, assignment).ConfigureAwait(false);
+                        }
+                    }
                 }
-                await _unitOfWork.GetRepository<AssignmentSubmission>().InsertAsync(assignmentSubmissions).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -293,6 +303,8 @@
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to submit the assignment.");
             }
         }
+
+
 
         /// <summary>
         /// Handle to get list of student who has submitted assignment
@@ -350,19 +362,22 @@
         #region Private Methods
 
         /// <summary>
-        /// Handle to insert assignment submission and attachment details
+        /// Handle to insert assignment submission
         /// </summary>
-        /// <param name="currentUserId">the current logged in user id</param>
-        /// <param name="assignments">the list of <see cref="Assignment"/></param>
-        /// <param name="item">the instance of <see cref="AssignmentSubmissionRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user</param>
+        /// <param name="lessonId">the lesson id</param>
+        /// <param name="currentTimeStamp">the current time stamp</param>
+        /// <param name="item">the instance of <see cref="AssignmentSubmissionRequestModel"</param>
+        /// <param name="assignment">the instance of <see cref="Assignment"/></param>
         /// <returns></returns>
-        private async Task InsertAssignmentSubmission(Guid currentUserId, Guid lessonId, IList<Assignment> assignments, AssignmentSubmissionRequestModel item)
+        private async Task InsertSubmissionAsync(Guid currentUserId, Guid lessonId, DateTime currentTimeStamp, AssignmentSubmissionRequestModel item, Assignment assignment)
         {
-            var currentTimeStamp = DateTime.UtcNow;
-            var assignment = assignments.FirstOrDefault(x => x.Id == item.AssignmentId);
-            if (assignment != null)
+            var assignmentSubmission = await _unitOfWork.GetRepository<AssignmentSubmission>().GetFirstOrDefaultAsync(
+                                            predicate: p => p.Id == item.Id && p.UserId == currentUserId
+                                            ).ConfigureAwait(false);
+            if (assignmentSubmission == null)
             {
-                var assignmentSubmission = new AssignmentSubmission
+                assignmentSubmission = new AssignmentSubmission
                 {
                     Id = Guid.NewGuid(),
                     LessonId = lessonId,
@@ -372,32 +387,92 @@
                     CreatedOn = currentTimeStamp,
                     UpdatedBy = currentUserId,
                     UpdatedOn = currentTimeStamp,
-                    AssignmentSubmissionAttachments = new List<AssignmentSubmissionAttachment>(),
                 };
-                if (assignment.Type == QuestionTypeEnum.SingleChoice || assignment.Type == QuestionTypeEnum.MultipleChoice)
-                {
-                    var answerIds = assignment.AssignmentQuestionOptions?.Where(x => x.IsCorrect).Select(x => x.Id);
-                    bool? isCorrect = answerIds?.OrderBy(x => x).ToList().SequenceEqual(item.SelectedOption.OrderBy(x => x).ToList());
-
-                    assignmentSubmission.IsCorrect = isCorrect ?? false;
-                    assignmentSubmission.SelectedOption = string.Join(",", item.SelectedOption);
-                }
-                if (assignment.Type == QuestionTypeEnum.Subjective && assignmentSubmission.AssignmentSubmissionAttachments.Count > 0)
-                {
-                    item.AttachmentUrls.ForEach(attachment => assignmentSubmission.AssignmentSubmissionAttachments.Add(new AssignmentSubmissionAttachment
-                    {
-                        Id = Guid.NewGuid(),
-                        AssignmentSubmissionId = assignmentSubmission.Id,
-                        FileUrl = attachment,
-                        CreatedBy = currentUserId,
-                        CreatedOn = currentTimeStamp,
-                        UpdatedBy = currentUserId,
-                        UpdatedOn = currentTimeStamp,
-                    }));
-
-                    await _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().InsertAsync(assignmentSubmission.AssignmentSubmissionAttachments).ConfigureAwait(false);
-                }
             }
+            else
+            {
+                assignmentSubmission.UpdatedOn = currentTimeStamp;
+                assignmentSubmission.UpdatedBy = currentUserId;
+            }
+            if (assignment.Type == QuestionTypeEnum.SingleChoice || assignment.Type == QuestionTypeEnum.MultipleChoice)
+            {
+                var answerIds = assignment.AssignmentQuestionOptions?.Where(x => x.IsCorrect).Select(x => x.Id);
+                bool? isCorrect = answerIds?.OrderBy(x => x).ToList().SequenceEqual(item.SelectedOption.OrderBy(x => x).ToList());
+
+                assignmentSubmission.IsCorrect = isCorrect ?? false;
+                assignmentSubmission.SelectedOption = string.Join(",", item.SelectedOption);
+            }
+            if (assignment.Type == QuestionTypeEnum.Subjective && assignmentSubmission.AssignmentSubmissionAttachments.Count > 0)
+            {
+                assignmentSubmission.Answer = item.Answer;
+                assignmentSubmission.AssignmentSubmissionAttachments = new List<AssignmentSubmissionAttachment>();
+
+                if (item.Id != default)
+                {
+                    var existingAssignmentSubmissionAttachments = await _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().GetAllAsync(
+                   predicate: p => p.AssignmentSubmissionId == item.Id).ConfigureAwait(false);
+
+                    _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().Delete(existingAssignmentSubmissionAttachments);
+                }
+
+                item.AttachmentUrls.ForEach(attachment => assignmentSubmission.AssignmentSubmissionAttachments.Add(new AssignmentSubmissionAttachment
+                {
+                    Id = Guid.NewGuid(),
+                    AssignmentSubmissionId = assignmentSubmission.Id,
+                    FileUrl = attachment,
+                    CreatedBy = currentUserId,
+                    CreatedOn = currentTimeStamp,
+                    UpdatedBy = currentUserId,
+                    UpdatedOn = currentTimeStamp,
+                }));
+
+                await _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().InsertAsync(assignmentSubmission.AssignmentSubmissionAttachments).ConfigureAwait(false);
+            }
+        }
+
+        private async Task UpdateSubmissionAsync(Guid currentUserId, DateTime currentTimeStamp, AssignmentSubmissionRequestModel item, Assignment assignment)
+        {
+            var assignmentSubmission = await _unitOfWork.GetRepository<AssignmentSubmission>().GetFirstOrDefaultAsync(
+                                            predicate: p => p.Id == item.Id && p.UserId == currentUserId
+                                            ).ConfigureAwait(false);
+
+            assignmentSubmission.UpdatedOn = currentTimeStamp;
+            assignmentSubmission.UpdatedBy = currentUserId;
+            if (assignment.Type == QuestionTypeEnum.SingleChoice || assignment.Type == QuestionTypeEnum.MultipleChoice)
+            {
+                var answerIds = assignment.AssignmentQuestionOptions?.Where(x => x.IsCorrect).Select(x => x.Id);
+                bool? isCorrect = answerIds?.OrderBy(x => x).ToList().SequenceEqual(item.SelectedOption.OrderBy(x => x).ToList());
+
+                assignmentSubmission.IsCorrect = isCorrect ?? false;
+                assignmentSubmission.SelectedOption = string.Join(",", item.SelectedOption);
+            }
+            if (assignment.Type == QuestionTypeEnum.Subjective && assignmentSubmission.AssignmentSubmissionAttachments.Count > 0)
+            {
+                assignmentSubmission.Answer = item.Answer;
+                assignmentSubmission.AssignmentSubmissionAttachments = new List<AssignmentSubmissionAttachment>();
+
+                if (item.Id != default)
+                {
+                    var existingAssignmentSubmissionAttachments = await _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().GetAllAsync(
+                   predicate: p => p.AssignmentSubmissionId == item.Id).ConfigureAwait(false);
+
+                    _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().Delete(existingAssignmentSubmissionAttachments);
+                }
+
+                item.AttachmentUrls.ForEach(attachment => assignmentSubmission.AssignmentSubmissionAttachments.Add(new AssignmentSubmissionAttachment
+                {
+                    Id = Guid.NewGuid(),
+                    AssignmentSubmissionId = assignmentSubmission.Id,
+                    FileUrl = attachment,
+                    CreatedBy = currentUserId,
+                    CreatedOn = currentTimeStamp,
+                    UpdatedBy = currentUserId,
+                    UpdatedOn = currentTimeStamp,
+                }));
+
+                await _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().InsertAsync(assignmentSubmission.AssignmentSubmissionAttachments).ConfigureAwait(false);
+            }
+            _unitOfWork.GetRepository<AssignmentSubmission>().Update(assignmentSubmission);
         }
 
         #endregion Private Methods
