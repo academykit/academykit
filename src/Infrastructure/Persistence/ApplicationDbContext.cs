@@ -47,6 +47,7 @@
         public DbSet<AssignmentSubmissionAttachment> AssignmentSubmissionAttachments { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentReply> CommentReplies { get; set; }
+        public DbSet<Setting> Settings { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             var userId = new Guid("30fcd978-f256-4733-840f-759181bc5e63");
@@ -116,6 +117,45 @@
                     CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
                     UpdatedBy = userId,
                     UpdatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
+                }
+            );
+            builder.Entity<Setting>().HasData(
+                new Setting{
+                    Key = "Storage",
+                    Value = nameof(StorageType.AWS)
+                },
+                new Setting{
+                    Key = "AWS_AccessKey",
+                },
+                new Setting{
+                    Key = "AWS_SecretKey",
+                },
+                new Setting{
+                    Key = "AWS_FileBucket",
+                },
+                new Setting{
+                    Key = "AWS_VideoBucket",
+                },
+                new Setting{
+                    Key = "AWS_CloudFront",
+                },
+                new Setting{
+                    Key = "AWS_RegionEndpoint"
+                },
+                new Setting{
+                    Key = "Server_FilePath",
+                },
+                new Setting{
+                    Key = "Server_VideoPath",
+                },
+                new Setting{
+                    Key = "Server_Url",
+                },
+                new Setting{
+                    Key = "Server_UserName",
+                },
+                new Setting{
+                    Key = "Server_Password",
                 }
             );
             base.OnModelCreating(builder);

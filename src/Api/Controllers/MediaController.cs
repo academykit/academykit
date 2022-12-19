@@ -1,7 +1,8 @@
 namespace Lingtren.Api.Controllers
 {
+    using Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Mvc;
 
     public class MediaController : BaseApiController
@@ -11,6 +12,35 @@ namespace Lingtren.Api.Controllers
         {
             _mediaService = mediaService;
         }
+
+        /// <summary>
+        /// update setting api
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="StorageSettingRequestModel" /> .</param>
+        /// <returns> the instance of <see cref="StorageSettingResponseModel" /> . </returns>
+        [HttpPut("setting")]
+        public async Task<StorageSettingResponseModel> Update(StorageSettingRequestModel model)
+        {
+            var response = await _mediaService.StorageUpdateSettingAsync(model, CurrentUser.Id).ConfigureAwait(false);
+            return response;
+        }
+
+        /// <summary>
+        /// get storage setting api
+        /// </summary>
+        /// <returns> the instance of <see cref="StorageSettingResponseModel" /> .</returns>
+        [HttpGet("setting")]
+        public async Task<StorageSettingResponseModel> Setting() => await _mediaService.GetStorageSettingAsync(CurrentUser.Id).ConfigureAwait(false);
+
+        /// <summary>
+        /// get setting value api
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="StorageTypeRequestModel" />.</param>
+        /// <returns> the list of <see cref="SettingValue" /> </returns>
+        [HttpGet("settingvalue")]
+        public async Task<IList<SettingValue>> SettingValue([FromQuery] StorageTypeRequestModel model) =>
+        await _mediaService.GetSettingValuesAsync(model.Type, CurrentUser.Id).ConfigureAwait(false);
+
 
         /// <summary>
         /// upload file api
