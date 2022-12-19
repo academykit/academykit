@@ -651,7 +651,7 @@ namespace Lingtren.Infrastructure.Services
 
                 var response = new List<LessonStatisticsResponseModel>();
 
-                lessons.ForEach(x => response.Add(new LessonStatisticsResponseModel
+                lessons.OrderBy(o => o.Section.Order).ThenBy(o => o.Order).ForEach(x => response.Add(new LessonStatisticsResponseModel
                 {
                     Id = x.Id,
                     Slug = x.Slug,
@@ -690,34 +690,32 @@ namespace Lingtren.Infrastructure.Services
                 include: src => src.Include(x => x.Section)
                 ).ConfigureAwait(false);
 
+            var students = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
+                predicate: p => p.CourseId == course.Id,
+                include: src => src.Include(x => x.User)
+                ).ConfigureAwait(false);
+
             var watchHistories = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(
                 predicate: p => p.CourseId == course.Id && p.LessonId == lesson.Id,
                 include: src => src.Include(x => x.User)
                 ).ConfigureAwait(false);
 
-            var searchResult = watchHistories.ToIPagedList(criteria.Page, criteria.Size);
+            var data = from student in students
+                       join history in watchHistories on student.UserId equals history.UserId
+                       into studentHistory
+                       from m in studentHistory.DefaultIfEmpty()
+                       select new LessonStudentResponseModel
+                       {
+                           User = new UserModel(student.User),
+                           LessonId = lesson.Id,
+                           LessonSlug = lesson.Slug,
+                           LessonName = lesson.Name,
+                           LessonType = lesson.Type,
+                           IsCompleted = m?.IsCompleted,
+                           IsPassed = m?.IsPassed
+                       };
 
-            var response = new SearchResult<LessonStudentResponseModel>
-            {
-                Items = new List<LessonStudentResponseModel>(),
-                CurrentPage = searchResult.CurrentPage,
-                PageSize = searchResult.PageSize,
-                TotalCount = searchResult.TotalCount,
-                TotalPage = searchResult.TotalPage,
-            };
-
-            searchResult.Items.ForEach(p =>
-                 response.Items.Add(new LessonStudentResponseModel
-                 {
-                     User = new UserModel(p.User),
-                     LessonId = lesson.Id,
-                     LessonSlug = lesson.Slug,
-                     LessonName = lesson.Name,
-                     LessonType = lesson.Type,
-                     IsCompleted = p.IsCompleted,
-                     IsPassed = p.IsPassed
-                 }));
-            return response;
+            return data.ToList().ToIPagedList(criteria.Page, criteria.Size);
         }
 
         /// <summary>

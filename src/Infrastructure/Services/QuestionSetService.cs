@@ -149,7 +149,7 @@
 
                 var isEnrolled = await _unitOfWork.GetRepository<CourseEnrollment>().ExistsAsync(
                     predicate: p => p.CourseId == lesson.CourseId && p.UserId == currentUserId && !p.IsDeleted
-                            && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Unenrolled)
+                            && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)
                             ).ConfigureAwait(false);
                 if (!isEnrolled)
                 {
@@ -334,7 +334,7 @@
                     await _unitOfWork.GetRepository<QuestionSetResult>().InsertAsync(questionSetResult).ConfigureAwait(false);
                 }
 
-                await InsertWatchHistory(currentUserId, currentTimeStamp, questionSet).ConfigureAwait(false);
+                await InsertWatchHistory(currentUserId, currentTimeStamp, questionSet, questionSetResult, questionSetQuestions.Count).ConfigureAwait(false);
                 _unitOfWork.GetRepository<QuestionSetSubmission>().Update(questionSetSubmission);
                 await _unitOfWork.GetRepository<QuestionSetSubmissionAnswer>().InsertAsync(answerSubmissionAnswers).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -636,16 +636,16 @@
         /// <param name="currentTimeStamp">the current date time</param>
         /// <param name="questionSet">the instance of <see cref="QuestionSet"/></param>
         /// <returns></returns>
-        private async Task InsertWatchHistory(Guid currentUserId, DateTime currentTimeStamp, QuestionSet questionSet)
+        private async Task InsertWatchHistory(Guid currentUserId, DateTime currentTimeStamp, QuestionSet questionSet, QuestionSetResult result, int totalQuestion)
         {
             var history = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
                                 predicate: p => p.UserId == currentUserId && p.LessonId == questionSet.Lesson.Id && p.CourseId == questionSet.Lesson.CourseId
                                 ).ConfigureAwait(false);
 
-            if (history != null && !history.IsPassed)
+            if (history != null)
             {
                 history.IsCompleted = true;
-                history.IsPassed = true;
+                history.IsPassed = history.IsPassed ? history.IsPassed : (result.TotalMark - result.NegativeMark) / totalQuestion >= questionSet.PassingWeightage;
                 history.UpdatedOn = currentTimeStamp;
                 history.UpdatedBy = currentUserId;
                 _unitOfWork.GetRepository<WatchHistory>().Update(history);
@@ -663,7 +663,7 @@
                     UpdatedBy = currentUserId,
                     UpdatedOn = currentTimeStamp,
                     IsCompleted = true,
-                    IsPassed = true,
+                    IsPassed = (result.TotalMark - result.NegativeMark) / totalQuestion >= questionSet.PassingWeightage,
                 };
                 await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
             }
