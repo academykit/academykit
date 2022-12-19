@@ -381,6 +381,12 @@
                 _logger.LogWarning("User with email : {email} not found", model.OldEmail);
                 throw new ForbiddenException($"User not found with email : {model.OldEmail}.");
             }
+            var newUser = await GetUserByEmailAsync(model.NewEmail).ConfigureAwait(false);
+            if (newUser != null)
+            {
+                _logger.LogWarning("User with new email : {email} found in the system", model.NewEmail);
+                throw new ForbiddenException($"User found with new email : {model.NewEmail}.");
+            }
             var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password);
             if (!isUserAuthenticated)
             {

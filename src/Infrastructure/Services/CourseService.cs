@@ -269,7 +269,8 @@ namespace Lingtren.Infrastructure.Services
 
             if ((course.Status == CourseStatus.Draft && (status == CourseStatus.Published || status == CourseStatus.Rejected))
                 || (course.Status == CourseStatus.Published && (status == CourseStatus.Review || status == CourseStatus.Rejected))
-                || (course.Status == CourseStatus.Rejected && status == CourseStatus.Published))
+                || (course.Status == CourseStatus.Rejected && status == CourseStatus.Published)
+                || (course.Status != CourseStatus.Published && status == CourseStatus.Completed))
             {
                 _logger.LogWarning("Course with id: {id} cannot be changed from {status} status to {changeStatus} status", course.Id, course.Status, status);
                 throw new ForbiddenException($"Course with status: {course.Status} cannot be changed to {status} status");
@@ -361,6 +362,12 @@ namespace Lingtren.Infrastructure.Services
                     include: src => src.Include(x => x.User)
                     ).ConfigureAwait(false);
                 CommonHelper.CheckFoundEntity(course);
+
+                if (course.Status == CourseStatus.Completed)
+                {
+                    _logger.LogWarning("Course with id :{id} is in {status} status for enrollment", course.Id, course.Status);
+                    throw new ForbiddenException($"Cannot enrolled in the course having {course.Status} status");
+                }
 
                 var existCourseEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().ExistsAsync(
                             p => p.CourseId == course.Id && p.UserId == userId && !p.IsDeleted

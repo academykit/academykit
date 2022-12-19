@@ -147,6 +147,13 @@
                     predicate: p => p.QuestionSetId == questionSet.Id,
                     include: src => src.Include(x => x.Course)).ConfigureAwait(false);
 
+                if (lesson.Course.Status == CourseStatus.Completed)
+                {
+                    _logger.LogWarning("Course with id : {courseId} is in {status} status to start exam for the user with id: {userId}",
+                        lesson.Course.Id, lesson.Course.Status, currentUserId);
+                    throw new ForbiddenException($"Cannot give exam to the course having {lesson.Course.Status} status");
+                }
+
                 var isEnrolled = await _unitOfWork.GetRepository<CourseEnrollment>().ExistsAsync(
                     predicate: p => p.CourseId == lesson.CourseId && p.UserId == currentUserId && !p.IsDeleted
                             && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)
