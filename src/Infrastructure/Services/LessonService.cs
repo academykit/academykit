@@ -632,7 +632,7 @@ namespace Lingtren.Infrastructure.Services
                         predicate: p => p.CourseId == course.Id,
                         orderBy: o => o.OrderBy(x => x.Order),
                         include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
-                    currentLessonId = section.Lessons.OrderBy(x => x.Order).FirstOrDefault()?.Id;
+                    currentLessonId = section?.Lessons?.OrderBy(x => x.Order).FirstOrDefault()?.Id;
                 }
                 else
                 {

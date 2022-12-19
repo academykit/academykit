@@ -645,7 +645,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(
-                    predicate: p => p.CourseId == course.Id,
+                    predicate: p => p.CourseId == course.Id && !p.IsDeleted && !p.Section.IsDeleted,
                     include: src => src.Include(x => x.Section)
                     ).ConfigureAwait(false);
 
