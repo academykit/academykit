@@ -269,11 +269,17 @@
                 }
                 if (lesson.Status != CourseStatus.Published)
                 {
-                    _logger.LogWarning("Lesson with id: {id} not published for user with id: {id}", lesson.Id, currentUserId);
+                    _logger.LogWarning("Lesson with id: {id} not published for user with id: {userId}", lesson.Id, currentUserId);
                     throw new EntityNotFoundException("Lesson not published");
                 }
 
                 var course = await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
+                if (lesson.Course.Status == CourseStatus.Completed)
+                {
+                    _logger.LogWarning("Course with id : {courseId} is in {status} status to give assignment for the user with id: {userId}",
+                        course.Id, course.Status, currentUserId);
+                    throw new ForbiddenException($"Cannot submit assignment to the course having {course.Status} status");
+                }
                 if (course.CourseTeachers.Any(x => x.UserId == currentUserId))
                 {
                     _logger.LogWarning("User with id: {userId} is a teacher of the course with id: {courseId} and lesson with id: {lessonId} to submit the assignment",

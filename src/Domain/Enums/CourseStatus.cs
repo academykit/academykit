@@ -6,6 +6,7 @@ namespace Lingtren.Domain.Enums
         Review = 2,
         Published = 3,
         Archived = 4,
-        Rejected = 5
+        Rejected = 5,
+        Completed = 6
     }
 }
