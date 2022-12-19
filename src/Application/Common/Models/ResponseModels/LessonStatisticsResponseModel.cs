@@ -24,8 +24,8 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string LessonSlug { get; set; }
         public string LessonName { get; set; }
         public LessonType LessonType { get; set; }
-        public bool IsCompleted { get; set; }
-        public bool IsPassed { get; set; }
+        public bool? IsCompleted { get; set; }
+        public bool? IsPassed { get; set; }
         public UserModel User { get; set; }
     }
 }

@@ -16,6 +16,17 @@
             RuleFor(x => x.VideoUrl).NotNull().NotEmpty().When(x => x.Type == LessonType.Video || x.Type == LessonType.RecordedVideo)
                                     .WithMessage("Video is required for lesson type is video or recorded video");
             RuleFor(x => x.Description).MaximumLength(5000).WithMessage("Name length must be less than or equal to 5000 characters");
+            RuleFor(x => x.QuestionSet).SetValidator(new QuestionSetValidator())
+                                         .When(x => x.Type == LessonType.Exam);
+        }
+    }
+
+    public class QuestionSetValidator : AbstractValidator<QuestionSetRequestModel>
+    {
+        public QuestionSetValidator()
+        {
+            RuleFor(x => x.QuestionMarking).NotNull().NotEmpty().WithMessage("Question marking is required.");
+            RuleFor(x => x.Description).MaximumLength(5000).WithMessage("Description length must be less than or equal to 5000 characters.");
         }
     }
 }
