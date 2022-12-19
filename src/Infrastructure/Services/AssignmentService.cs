@@ -273,7 +273,13 @@
                     throw new EntityNotFoundException("Lesson not published");
                 }
 
-                await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
+                var course = await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
+                if (course.CourseTeachers.Any(x => x.UserId == currentUserId))
+                {
+                    _logger.LogWarning("User with id: {userId} is a teacher of the course with id: {courseId} and lesson with id: {lessonId} to submit the assignment",
+                        currentUserId, course.Id, lesson.Id);
+                    throw new ForbiddenException("Course teacher cannot submit the assignment");
+                }
 
                 var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
                     predicate: p => p.LessonId == lesson.Id && p.IsActive,
@@ -373,8 +379,8 @@
         private async Task InsertSubmissionAsync(Guid currentUserId, Guid lessonId, DateTime currentTimeStamp, AssignmentSubmissionRequestModel item, Assignment assignment)
         {
             var assignmentSubmission = await _unitOfWork.GetRepository<AssignmentSubmission>().GetFirstOrDefaultAsync(
-                                            predicate: p => p.Id == item.Id && p.UserId == currentUserId
-                                            ).ConfigureAwait(false);
+                predicate: p => p.Id == item.Id && p.UserId == currentUserId
+                ).ConfigureAwait(false);
             if (assignmentSubmission == null)
             {
                 assignmentSubmission = new AssignmentSubmission
@@ -402,7 +408,7 @@
                 assignmentSubmission.IsCorrect = isCorrect ?? false;
                 assignmentSubmission.SelectedOption = string.Join(",", item.SelectedOption);
             }
-            if (assignment.Type == QuestionTypeEnum.Subjective && assignmentSubmission.AssignmentSubmissionAttachments.Count > 0)
+            if (assignment.Type == QuestionTypeEnum.Subjective)
             {
                 assignmentSubmission.Answer = item.Answer;
                 assignmentSubmission.AssignmentSubmissionAttachments = new List<AssignmentSubmissionAttachment>();
@@ -415,7 +421,7 @@
                     _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().Delete(existingAssignmentSubmissionAttachments);
                 }
 
-                item.AttachmentUrls.ForEach(attachment => assignmentSubmission.AssignmentSubmissionAttachments.Add(new AssignmentSubmissionAttachment
+                item.AttachmentUrls?.ForEach(attachment => assignmentSubmission.AssignmentSubmissionAttachments.Add(new AssignmentSubmissionAttachment
                 {
                     Id = Guid.NewGuid(),
                     AssignmentSubmissionId = assignmentSubmission.Id,
@@ -459,7 +465,7 @@
                     _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().Delete(existingAssignmentSubmissionAttachments);
                 }
 
-                item.AttachmentUrls.ForEach(attachment => assignmentSubmission.AssignmentSubmissionAttachments.Add(new AssignmentSubmissionAttachment
+                item.AttachmentUrls?.ForEach(attachment => assignmentSubmission.AssignmentSubmissionAttachments.Add(new AssignmentSubmissionAttachment
                 {
                     Id = Guid.NewGuid(),
                     AssignmentSubmissionId = assignmentSubmission.Id,
