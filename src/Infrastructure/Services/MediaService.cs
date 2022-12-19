@@ -22,28 +22,23 @@ namespace Lingtren.Infrastructure.Services
         private readonly string cloudFront;
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.APSouth1;
         private readonly AmazonS3Client s3Client;
+        private readonly IFileServerService _fileServerService;
+        private readonly IAmazonService _amazonService;
 
         public MediaService(IUnitOfWork unitOfWork,
-        ILogger<MediaService> logger,IConfiguration configuration) : base(unitOfWork, logger)
+        ILogger<MediaService> logger,IConfiguration configuration,
+        IFileServerService fileServerService,IAmazonService amazonService) 
+        : base(unitOfWork, logger)
         {
-              accessKey = _configuration["Amazon:AccessKey"];
+            _configuration = configuration;
+            accessKey = _configuration["Amazon:AccessKey"];
             secretAccessKey = _configuration["Amazon:SecretAccessKey"];
             imageBucket = _configuration["Amazon:ImageBucket"];
             cloudFront = _configuration["Amazon:CloudFront"];
             s3Client = new AmazonS3Client(accessKey, secretAccessKey, bucketRegion);
+            _amazonService = amazonService;
+            _fileServerService = fileServerService;
         }
-
-        // public MediaService(ILogger<MediaService> logger,
-        //  IConfiguration configuration)
-        // {
-        //     _logger = logger;
-        //     _configuration = configuration;
-        //     accessKey = _configuration["Amazon:AccessKey"];
-        //     secretAccessKey = _configuration["Amazon:SecretAccessKey"];
-        //     imageBucket = _configuration["Amazon:ImageBucket"];
-        //     cloudFront = _configuration["Amazon:CloudFront"];
-        //     s3Client = new AmazonS3Client(accessKey, secretAccessKey, bucketRegion);
-        // }
 
         /// <summary>
         /// Handle to update storage setting
@@ -61,7 +56,7 @@ namespace Lingtren.Infrastructure.Services
                 var selectedStorage = settings.FirstOrDefault(x => x.Key == "Storage");
                 if (selectedStorage != null)
                 {
-                    selectedStorage.Value = nameof(model.Type);
+                    selectedStorage.Value =model.Type.ToString();
                     newSettings.Add(selectedStorage);
                 }
 
@@ -102,6 +97,7 @@ namespace Lingtren.Infrastructure.Services
                 var setting = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: x => x.Key == "Storage").ConfigureAwait(false);
                 if (setting != null)
                 {
+                    response.Type = Enum.Parse<StorageType>(setting.Value);
                     response.Values = await GetStorageTypeValue(Enum.Parse<StorageType>(setting.Value)).ConfigureAwait(false);
                 }
                 return response;
@@ -125,7 +121,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 await IsSuperAdmin(currentUserId).ConfigureAwait(false);
                 var setting = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: x => x.Key == "Storage"
-                && x.Value == nameof(type)).ConfigureAwait(false);
+                && x.Value == type.ToString()).ConfigureAwait(false);
                 if (setting == null)
                 {
                     throw new EntityNotFoundException("Storage type not found");
