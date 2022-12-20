@@ -74,7 +74,7 @@
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
 
-            if(model.Role == UserRole.Admin)
+            if(model.Role == UserRole.Admin || model.Role == UserRole.SuperAdmin)
             {
                 IsSuperAdmin(CurrentUser.Role);
             }
@@ -152,12 +152,19 @@
             existing.PublicUrls = model.PublicUrls;
             existing.ImageUrl = model.ImageUrl;
             existing.Profession = model.Profession;
-            existing.Role = model.Role;
             existing.IsActive = model.IsActive;
             existing.DepartmentId = model.DepartmentId;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
 
+            if(CurrentUser.Role == UserRole.SuperAdmin || CurrentUser.Role == UserRole.Admin)
+            {
+                if(model.Role == UserRole.Admin || model.Role == UserRole.SuperAdmin)
+                {
+                    IsSuperAdmin(CurrentUser.Role);
+                }
+                existing.Role = model.Role;
+            }
             var savedEntity = await _userService.UpdateAsync(existing).ConfigureAwait(false);
             return new UserResponseModel(savedEntity);
         }
