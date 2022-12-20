@@ -18,9 +18,11 @@
 
     public class GroupService : BaseGenericService<Group, GroupBaseSearchCriteria>, IGroupService
     {
+        private readonly IMediaService _mediaService;
         public GroupService(IUnitOfWork unitOfWork,
-            ILogger<GroupService> logger) : base(unitOfWork, logger)
+            ILogger<GroupService> logger, IMediaService mediaService) : base(unitOfWork, logger)
         {
+            _mediaService = mediaService;
         }
 
         /// <summary>
@@ -261,6 +263,108 @@
             }
             _unitOfWork.GetRepository<GroupMember>().Delete(groupMember);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Handle to upload file in group
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="GroupFileRequestModel" />. </param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the instance of <see cref="GroupFile" /> .</returns>
+        public async Task<GroupFile> UploadGroupFileAsync(GroupFileRequestModel model, Guid currentUserId)
+        {
+            try
+            {
+                await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+                var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == model.GroupIdentity ||
+                             p.Slug.Equals(model.GroupIdentity)).ConfigureAwait(false);
+                if (group == null)
+                {
+                    _logger.LogError($"Group with id {model.GroupIdentity} not found");
+                    throw new EntityNotFoundException("Group not found");
+                }
+                var groupFileDto = await _mediaService.UploadGroupFileAsync(model.File).ConfigureAwait(false);
+                var groupFile = new GroupFile
+                {
+                    Id = Guid.NewGuid(),
+                    Name = model.File.FileName,
+                    Url = groupFileDto.Url,
+                    Key = groupFileDto.Key,
+                    MimeType = model.File.ContentType,
+                    GroupId = group.Id,
+                    CreatedBy = currentUserId,
+                    Size = model.File.Length,
+                    CreatedOn = DateTime.UtcNow
+                };
+                await _unitOfWork.GetRepository<GroupFile>().InsertAsync(groupFile).ConfigureAwait(false);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                return groupFile;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handle to remove group file
+        /// </summary>
+        /// <param name="groupIdentity"> the group id or slug </param>
+        /// <param name="fileId"> the file id</param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the task complete </returns>
+        public async Task RemoveGroupFileAsync(string groupIdentity, Guid fileId, Guid currentUserId)
+        {
+            try
+            {
+                await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+                var file = await _unitOfWork.GetRepository<GroupFile>().GetFirstOrDefaultAsync(predicate: x => x.Id == fileId).ConfigureAwait(false);
+                if (file == null)
+                {
+                    _logger.LogError($"File with id : {fileId} not found");
+                    throw new EntityNotFoundException("File not found");
+                }
+
+                _unitOfWork.GetRepository<GroupFile>().Delete(file);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handle to get group files
+        /// </summary>
+        /// <param name="searchCriteria"> the instance of <see cref="GroupSearchCriteria" /> . </param>
+        /// <returns> the list of <see cref="GroupFile" /> .</returns>
+        public async Task<SearchResult<GroupFile>> GetGroupFilesAsync(GroupFileSearchCriteria searchCriteria)
+        {
+            try
+            {
+                var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(predicate : p => p.Id.ToString() == searchCriteria.GroupIdentity ||
+                p.Slug.Equals(searchCriteria.GroupIdentity)).ConfigureAwait(false);
+                if(group == null)
+                {
+                    _logger.LogError($"Group with identity {searchCriteria.GroupIdentity} not found");
+                    throw new EntityNotFoundException("Group not found");
+                }
+
+                var files = await _unitOfWork.GetRepository<GroupFile>().GetAllAsync(predicate: p => p.GroupId == group.Id).ConfigureAwait(false);
+                if(files.Count != default && string.IsNullOrEmpty(searchCriteria.Search))
+                {
+                    files = files.Where(x => x.Name.ToLower().Trim().Contains(searchCriteria.Search)).ToList();
+                }
+               return files.ToIPagedList(searchCriteria.Page,searchCriteria.Size);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message,ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
         }
     }
 }

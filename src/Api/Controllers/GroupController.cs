@@ -247,5 +247,53 @@
             });
             return response;
         }
+
+        /// <summary>
+        /// upload file api
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="GroupFileRequestModel" /> . </param>
+        /// <returns> the instance of <see cref="GroupFileResponseModel" /> .</returns>
+        [HttpPost("file")]
+        public async Task<GroupFileResponseModel> UploadFile([FromForm]GroupFileRequestModel model)
+        {
+            var response = await _groupService.UploadGroupFileAsync(model,CurrentUser.Id).ConfigureAwait(false);
+            return new GroupFileResponseModel(response);
+        }
+
+        /// <summary>
+        /// get group files api
+        /// </summary>
+        /// <param name="searchCriteria"> the instance of <see cref="GroupFileSearchCriteria" /> . </param>
+        /// <returns> the list of <see cref="GroupFileResponseModel" /> .</returns>
+        [HttpGet("files")]
+        public async Task<SearchResult<GroupFileResponseModel>> Files([FromQuery]GroupFileSearchCriteria searchCriteria)
+        {
+            searchCriteria.CurrentUserId = CurrentUser.Id;
+            var searchResult = await _groupService.GetGroupFilesAsync(searchCriteria).ConfigureAwait(false);
+            var response = new SearchResult<GroupFileResponseModel>
+            {
+                Items = new List<GroupFileResponseModel>(),
+                CurrentPage = searchResult.CurrentPage,
+                PageSize = searchResult.PageSize,
+                TotalCount = searchResult.TotalCount,
+                TotalPage = searchResult.TotalPage,
+            };
+            searchResult.Items.ForEach(p =>
+            response.Items.Add(new GroupFileResponseModel(p)));
+            return response;
+        }
+
+        /// <summary>
+        /// delete group file api
+        /// </summary>
+        /// <param name="identity"> the group id or slug </param>
+        /// <param name="fileId">th file id </param>
+        /// <returns>the task complete </returns>
+        [HttpDelete("{identity}/files/{fileId}")]
+        public async Task<IActionResult> RemoveFile(string identity, Guid fileId)
+        {
+            await _groupService.RemoveGroupFileAsync(identity,fileId,CurrentUser.Id).ConfigureAwait(false);
+            return Ok();
+        }
     }
 }

@@ -141,6 +141,48 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
+         /// <summary>
+        /// Handle to upload group file
+        /// </summary>
+        /// <param name="file"> the instance of <see cref="IFormFile" /> .</param>
+        /// <returns> the instance of <see cref="GroupFileDto" /> .</returns>
+        public async Task<GroupFileDto> UploadGroupFileAsync(IFormFile file)
+        {
+            try
+            {
+                var groupFileDto = new GroupFileDto();
+                  var storage = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: p => p.Key == "Storage").ConfigureAwait(false);
+                if(string.IsNullOrEmpty(storage.Value))
+                {
+                    throw new ArgumentException("Storage setting is not configured");
+                }
+                string url = "";
+                var fileKey = $"{Guid.NewGuid()}_{string.Concat(file.FileName.Where(c => !char.IsWhiteSpace(c)))}";
+                if(Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
+                {
+                    var awsSettings = await GetAwsSettings().ConfigureAwait(false);
+                    var awsDto = new AwsS3FileDto{
+                        Setting = awsSettings,
+                        Key = fileKey,
+                        File = file,
+                        Type = Application.Common.Dtos.MediaType.File
+                    };
+                    url = await _amazonService.SaveFileS3BucketAsync(awsDto).ConfigureAwait(false);
+                }
+                else{
+                    var serverSettings = await GetServerStorageSettings().ConfigureAwait(false);
+                }
+                groupFileDto.Url = url;
+                groupFileDto.Key = fileKey;
+                return groupFileDto;
+            }
+            catch (Exception ex)
+            {
+                
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
         #region private
 
         /// <summary>

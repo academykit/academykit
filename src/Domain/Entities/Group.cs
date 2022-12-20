@@ -10,6 +10,6 @@ namespace Lingtren.Domain.Entities
         public IList<GroupMember> GroupMembers { get; set; }
         public User User { get; set; }
         public IList<Course> Courses { get; set; }
-        public IList<GroupStorage> GroupStorages { get; set; }
+        public IList<GroupFile> GroupFiles { get; set; }
     }
 }
