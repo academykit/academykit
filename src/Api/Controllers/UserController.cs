@@ -74,6 +74,11 @@
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
 
+            if(model.Role == UserRole.Admin)
+            {
+                IsSuperAdmin(CurrentUser.Role);
+            }
+
             var currentTimeStamp = DateTime.UtcNow;
             await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Add").ThrowOnFailures()).ConfigureAwait(false);
 
