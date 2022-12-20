@@ -5,6 +5,7 @@
         public Guid Id { get; set; }
         public Guid CourseId { get; set; }
         public string Content { get; set; }
+        public DateTime CreatedOn { get; set; }
         public int RepliesCount { get; set; }
         public UserModel User { get; set; }
     }
@@ -13,6 +14,7 @@
         public Guid Id { get; set; }
         public Guid CommentId { get; set; }
         public string Content { get; set; }
+        public DateTime CreatedOn { get; set; }
         public UserModel User { get; set; }
     }
 }

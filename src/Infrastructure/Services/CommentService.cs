@@ -60,6 +60,7 @@
                      Id = p.Id,
                      CourseId = p.CourseId,
                      Content = p.Content,
+                     CreatedOn = p.CreatedOn,
                      RepliesCount = _unitOfWork.GetRepository<CommentReply>().Count(predicate: x => x.CommentId == p.Id),
                      User = new UserModel(p.User)
                  })
@@ -95,6 +96,7 @@
                 Id = comment.Id,
                 CourseId = course.Id,
                 Content = comment.Content,
+                CreatedOn = comment.CreatedOn,
                 User = new UserModel
                 {
                     Id = currentUserId,
@@ -138,6 +140,7 @@
                 Id = existing.Id,
                 CourseId = existing.CourseId,
                 Content = existing.Content,
+                CreatedOn = existing.CreatedOn,
                 User = new UserModel
                 {
                     Id = currentUserId,
@@ -225,6 +228,7 @@
                      Id = p.Id,
                      CommentId = p.CommentId,
                      Content = p.Content,
+                     CreatedOn = p.CreatedOn,
                      User = new UserModel(p.User)
                  })
              );
@@ -266,6 +270,7 @@
                 Id = reply.Id,
                 CommentId = commentId,
                 Content = reply.Content,
+                CreatedOn = reply.CreatedOn,
                 User = new UserModel
                 {
                     Id = currentUserId,
@@ -318,6 +323,7 @@
                 Id = reply.Id,
                 CommentId = commentId,
                 Content = reply.Content,
+                CreatedOn = reply.CreatedOn,
                 User = new UserModel
                 {
                     Id = currentUserId,
