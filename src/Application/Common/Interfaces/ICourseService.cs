@@ -116,5 +116,14 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserRole">the current logged in user role</param>
         /// <returns>the instance of <see cref="DashboardResponseModel"/></returns>
         Task<DashboardResponseModel> GetDashboardStats(Guid currentUserId, UserRole currentUserRole);
+
+        /// <summary>
+        /// Handle to get dashboard courses
+        /// </summary>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <param name="currentUserRole">the current logged in user role</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the search result of <see cref="DashboardResponseModel"/></returns>
+        Task<SearchResult<DashboardCourseResponseModel>> GetDashboardCourses(Guid currentUserId, UserRole currentUserRole, BaseSearchCriteria criteria);
     }
 }
