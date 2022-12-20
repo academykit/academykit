@@ -827,38 +827,38 @@ namespace Lingtren.Infrastructure.Services
         public async Task<DashboardResponseModel> GetDashboardStats(Guid currentUserId, UserRole currentUserRole)
         {
             var responseModel = new DashboardResponseModel();
-            var roles = new List<UserRole>() { UserRole.SuperAdmin, UserRole.Admin, UserRole.Trainer };
-            if (roles.Contains(currentUserRole))
+            if (currentUserRole == UserRole.SuperAdmin || currentUserRole == UserRole.Admin)
             {
-                var totalGroups = await _unitOfWork.GetRepository<Group>().CountAsync(
-               predicate: p => p.GroupMembers.Any(x => x.UserId == currentUserId)
-               ).ConfigureAwait(false);
-
-                var totalActiveCourse = await _unitOfWork.GetRepository<Course>().CountAsync(
+                responseModel.TotalUsers = await _unitOfWork.GetRepository<User>().CountAsync().ConfigureAwait(false);
+                responseModel.TotalActiveUsers = await _unitOfWork.GetRepository<User>().CountAsync(predicate: p => p.IsActive).ConfigureAwait(false);
+                responseModel.TotalGroups = await _unitOfWork.GetRepository<Group>().CountAsync(predicate: p => p.IsActive).ConfigureAwait(false);
+                responseModel.TotalTrainers = await _unitOfWork.GetRepository<User>().CountAsync(
+                    predicate: p => p.IsActive && p.Role == UserRole.Trainer).ConfigureAwait(false);
+                responseModel.TotalTrainings = await _unitOfWork.GetRepository<Course>().CountAsync().ConfigureAwait(false);
+            }
+            if (currentUserRole == UserRole.Trainer)
+            {
+                responseModel.TotalGroups = await _unitOfWork.GetRepository<Group>().CountAsync(
+                    predicate: p => p.GroupMembers.Any(x => x.UserId == currentUserId) && p.IsActive
+                    ).ConfigureAwait(false);
+                responseModel.TotalActiveTrainings = await _unitOfWork.GetRepository<Course>().CountAsync(
                     predicate: p => p.CourseTeachers.Any(x => x.UserId == currentUserId) && (p.Status == CourseStatus.Published || p.IsUpdate)
                     ).ConfigureAwait(false);
-
-                var totalCompletedCourse = await _unitOfWork.GetRepository<Course>().CountAsync(
+                responseModel.TotalCompletedTrainings = await _unitOfWork.GetRepository<Course>().CountAsync(
                     predicate: p => p.CourseTeachers.Any(x => x.UserId == currentUserId) && p.Status == CourseStatus.Completed
                     ).ConfigureAwait(false);
-
-                responseModel.TotalGroups = totalGroups;
-                responseModel.TotalActiveCourse = totalActiveCourse;
-                responseModel.TotalCompletedCourse = totalCompletedCourse;
             }
-            else
+            if (currentUserRole == UserRole.Trainee)
             {
-                var userCourseEnrollments = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
-                predicate: p => p.UserId == currentUserId && !p.IsDeleted && p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled
-                ).ConfigureAwait(false);
-
-                var totalEnrolledCourses = userCourseEnrollments?.Count;
-                var totalInProgressCourses = userCourseEnrollments?.Count(x => x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled);
-                var totaalCompletedCourses = userCourseEnrollments?.Count(x => x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed);
-
-                responseModel.TotalEnrolledCourses = Convert.ToInt32(totalEnrolledCourses);
-                responseModel.TotalInProgressCourses = Convert.ToInt32(totalInProgressCourses);
-                responseModel.TotalCompletedCourse = Convert.ToInt32(totaalCompletedCourses);
+                responseModel.TotalEnrolledCourses = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(
+                    predicate: p => p.UserId == currentUserId && !p.IsDeleted && p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled
+                    ).ConfigureAwait(false);
+                responseModel.TotalInProgressCourses = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(
+                    predicate: p => p.UserId == currentUserId && !p.IsDeleted && p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                    ).ConfigureAwait(false);
+                responseModel.TotalCompletedCourses = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(
+                    predicate: p => p.UserId == currentUserId && !p.IsDeleted && p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Completed
+                    ).ConfigureAwait(false);
             }
             return responseModel;
         }
