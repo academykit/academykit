@@ -8,6 +8,7 @@
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
@@ -41,8 +42,8 @@
                 criteria.SortType = SortType.Descending;
             }
             query = criteria.SortType == SortType.Ascending
-                ? query.OrderBy(x => criteria.SortBy)
-                : query.OrderByDescending(x => criteria.SortBy);
+                ? query.OrderBy(criteria.SortBy)
+                : query.OrderByDescending(criteria.SortBy);
             var result = query.ToList().ToIPagedList(criteria.Page, criteria.Size);
 
             var response = new SearchResult<CommentResponseModel>
@@ -209,8 +210,8 @@
                 criteria.SortType = SortType.Descending;
             }
             query = criteria.SortType == SortType.Ascending
-                ? query.OrderBy(x => criteria.SortBy)
-                : query.OrderByDescending(x => criteria.SortBy);
+                ? query.OrderBy(criteria.SortBy)
+                : query.OrderByDescending(criteria.SortBy);
             var result = query.ToList().ToIPagedList(criteria.Page, criteria.Size);
 
             var response = new SearchResult<CommentReplyResponseModel>
