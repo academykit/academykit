@@ -48,6 +48,8 @@
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentReply> CommentReplies { get; set; }
         public DbSet<Setting> Settings { get; set; }
+        public DbSet<GroupStorage> GroupStorages { get; set; }
+        public DbSet<AssignmentReview> AssignmentReviews { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             var userId = new Guid("30fcd978-f256-4733-840f-759181bc5e63");

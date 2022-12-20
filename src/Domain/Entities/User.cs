@@ -61,6 +61,8 @@
         public IList<AssignmentSubmissionAttachment> AssignmentSubmissionAttachments { get; set; }
         public IList<Comment> Comments { get; set; }
         public IList<CommentReply> CommentReplies { get; set; }
+        public IList<GroupStorage> GroupStorages { get; set; }
+        public IList<AssignmentReview> AssignmentReviews { get; set; }
 
         /// <summary>
         /// Get or set full name

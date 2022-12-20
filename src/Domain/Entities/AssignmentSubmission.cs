@@ -14,5 +14,6 @@ namespace Lingtren.Domain.Entities
         public string SelectedOption { get; set; }
         public string Answer { get; set; }
         public IList<AssignmentSubmissionAttachment> AssignmentSubmissionAttachments { get; set; }
+        public IList<AssignmentReview> AssignmentReviews { get; set; }
     }
 }
