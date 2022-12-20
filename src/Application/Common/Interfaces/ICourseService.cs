@@ -108,5 +108,13 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current user id</param>
         /// <returns>the list of <see cref="LessonStudentResponseModel"/></returns>
         Task<IList<LessonStudentResponseModel>> StudentLessonsDetail(string identity, Guid userId, Guid currentUserId);
+
+        // <summary>
+        /// Handle to get dashboard stats
+        /// </summary>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <param name="currentUserRole">the current logged in user role</param>
+        /// <returns>the instance of <see cref="DashboardResponseModel"/></returns>
+        Task<DashboardResponseModel> GetDashboardStats(Guid currentUserId, UserRole currentUserRole);
     }
 }
