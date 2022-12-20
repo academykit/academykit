@@ -73,6 +73,7 @@ namespace Lingtren.Infrastructure.Services
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 var response = new StorageSettingResponseModel();
                 response.Type = Enum.Parse<StorageType>(selectedStorage.Value);
+                response.IsActive = true;
                 response.Values = await GetStorageTypeValue(response.Type).ConfigureAwait(false);
                 return response;
             }
@@ -88,45 +89,26 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the instance of <see cref="StorageSettingResponseModel" /> .</returns>
-        public async Task<StorageSettingResponseModel> GetStorageSettingAsync(Guid currentUserId)
+        public async Task<IList<StorageSettingResponseModel>> GetStorageSettingAsync(Guid currentUserId)
         {
             try
             {
-                var response = new StorageSettingResponseModel();
+                var response = new List<StorageSettingResponseModel>();
                 var keyValues = new List<SettingValue>();
                 var setting = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: x => x.Key == "Storage").ConfigureAwait(false);
-                if (setting != null)
-                {
-                    response.Type = Enum.Parse<StorageType>(setting.Value);
-                    response.Values = await GetStorageTypeValue(Enum.Parse<StorageType>(setting.Value)).ConfigureAwait(false);
-                }
-                return response;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-            }
-        }
 
-        /// <summary>
-        /// Handle to get setting values
-        /// </summary>
-        /// <param name="type"> the instance of <see cref="StorageType" />. </param>
-        /// <param name="currentUserId"> the current user id </param>
-        /// <returns> the list of <see cref="SettingValue" /> .</returns>
-        public async Task<IList<SettingValue>> GetSettingValuesAsync(StorageType type, Guid currentUserId)
-        {
-            try
-            {
-                await IsSuperAdmin(currentUserId).ConfigureAwait(false);
-                var setting = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: x => x.Key == "Storage"
-                && x.Value == type.ToString()).ConfigureAwait(false);
-                if (setting == null)
-                {
-                    throw new EntityNotFoundException("Storage type not found");
-                }
-                return await GetStorageTypeValue(type).ConfigureAwait(false);
+                var awsSetting = new StorageSettingResponseModel();
+                awsSetting.Type = StorageType.AWS;
+                awsSetting.Values = await GetStorageTypeValue(StorageType.AWS).ConfigureAwait(false);
+                awsSetting.IsActive =  Enum.Parse<StorageType>(setting.Value) == StorageType.AWS;
+                response.Add(awsSetting);
+
+                var serverSetting = new StorageSettingResponseModel();
+                serverSetting.Type = StorageType.AWS;
+                serverSetting.Values = await GetStorageTypeValue(StorageType.Server).ConfigureAwait(false);
+                serverSetting.IsActive =  Enum.Parse<StorageType>(setting.Value) == StorageType.Server;
+                response.Add(serverSetting);
+                return response;
             }
             catch (Exception ex)
             {

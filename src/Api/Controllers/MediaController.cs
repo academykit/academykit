@@ -30,17 +30,7 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <returns> the instance of <see cref="StorageSettingResponseModel" /> .</returns>
         [HttpGet("setting")]
-        public async Task<StorageSettingResponseModel> Setting() => await _mediaService.GetStorageSettingAsync(CurrentUser.Id).ConfigureAwait(false);
-
-        /// <summary>
-        /// get setting value api
-        /// </summary>
-        /// <param name="model"> the instance of <see cref="StorageTypeRequestModel" />.</param>
-        /// <returns> the list of <see cref="SettingValue" /> </returns>
-        [HttpGet("settingvalue")]
-        public async Task<IList<SettingValue>> SettingValue([FromQuery] StorageTypeRequestModel model) =>
-        await _mediaService.GetSettingValuesAsync(model.Type, CurrentUser.Id).ConfigureAwait(false);
-
+        public async Task<IList<StorageSettingResponseModel>> Setting() => await _mediaService.GetStorageSettingAsync(CurrentUser.Id).ConfigureAwait(false);
 
         /// <summary>
         /// upload file api

@@ -6,7 +6,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
     public class StorageSettingResponseModel
     {
         public StorageType Type { get; set; }
-
         public IList<SettingValue> Values { get; set; }
+        public bool IsActive { get; set; }
     }
 }
