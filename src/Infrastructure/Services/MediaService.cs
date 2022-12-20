@@ -1,8 +1,7 @@
 namespace Lingtren.Infrastructure.Services
 {
-    using Amazon;
-    using Amazon.S3;
     using Amazon.S3.Transfer;
+    using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
@@ -11,31 +10,17 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     public class MediaService : BaseService, IMediaService
     {
-        private readonly IConfiguration _configuration;
-        private readonly string accessKey;
-        private readonly string secretAccessKey;
-        private readonly string imageBucket;
-        private readonly string cloudFront;
-        private static readonly RegionEndpoint bucketRegion = RegionEndpoint.APSouth1;
-        private readonly AmazonS3Client s3Client;
+
         private readonly IFileServerService _fileServerService;
         private readonly IAmazonService _amazonService;
 
         public MediaService(IUnitOfWork unitOfWork,
-        ILogger<MediaService> logger,IConfiguration configuration,
-        IFileServerService fileServerService,IAmazonService amazonService) 
-        : base(unitOfWork, logger)
+        ILogger<MediaService> logger, IFileServerService fileServerService, 
+        IAmazonService amazonService) : base(unitOfWork, logger)
         {
-            _configuration = configuration;
-            accessKey = _configuration["Amazon:AccessKey"];
-            secretAccessKey = _configuration["Amazon:SecretAccessKey"];
-            imageBucket = _configuration["Amazon:ImageBucket"];
-            cloudFront = _configuration["Amazon:CloudFront"];
-            s3Client = new AmazonS3Client(accessKey, secretAccessKey, bucketRegion);
             _amazonService = amazonService;
             _fileServerService = fileServerService;
         }
@@ -56,7 +41,7 @@ namespace Lingtren.Infrastructure.Services
                 var selectedStorage = settings.FirstOrDefault(x => x.Key == "Storage");
                 if (selectedStorage != null)
                 {
-                    selectedStorage.Value =model.Type.ToString();
+                    selectedStorage.Value = model.Type.ToString();
                     newSettings.Add(selectedStorage);
                 }
 
@@ -140,25 +125,31 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="file"> the instance of <see cref="file" /> .</param>
         /// <returns> the file url </returns>
-        public async Task<string> UploadFile(IFormFile file)
+        public async Task<string> UploadFileAsync(IFormFile file)
         {
             try
             {
-                var key = $"{Guid.NewGuid()}.png";
-                var fileTransferUtility = new TransferUtility(s3Client);
-                var fileData = await this.ConvertFileToByte(file).ConfigureAwait(false);
-                using (var stream = new MemoryStream(fileData))
+                var storage = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: p => p.Key == "Storage").ConfigureAwait(false);
+                if(string.IsNullOrEmpty(storage.Value))
                 {
-                    var request = new TransferUtilityUploadRequest
-                    {
-                        BucketName = this.imageBucket,
-                        Key = key,
-                        ContentType = "image/png",
-                        InputStream = stream
-                    };
-                    await fileTransferUtility.UploadAsync(request).ConfigureAwait(false);
+                    throw new ArgumentException("Storage setting is not configured");
                 }
-                return $"{cloudFront}/{key}";
+                string url = "";
+                var fileKey = $"{Guid.NewGuid()}_{string.Concat(file.FileName.Where(c => !char.IsWhiteSpace(c)))}";
+                if(Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
+                {
+                    var awsSettings = await GetAwsSettings().ConfigureAwait(false);
+                    var awsDto = new AwsS3FileDto{
+                        Setting = awsSettings,
+                        Key = fileKey,
+                        File = file
+                    };
+                    url = await _amazonService.SaveFileS3BucketAsync(awsDto).ConfigureAwait(false);
+                }
+                else{
+                    var serverSettings = await GetServerStorageSettings().ConfigureAwait(false);
+                }
+                return url;
             }
             catch (Exception ex)
             {
@@ -172,21 +163,11 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="file"> the instance of <see cref="file" /> .</param>
         /// <returns> the file url </returns>
-        public async Task<string> UploadVideo(IFormFile file)
+        public async Task<string> UploadVideoAsync(IFormFile file)
         {
             try
             {
-                var key = Guid.NewGuid().ToString() + "_" + string.Concat(file.FileName.Where(c => !Char.IsWhiteSpace(c)));
-                var transferUtility = new TransferUtility(s3Client);
-                var request = new TransferUtilityUploadRequest
-                {
-                    BucketName = this.imageBucket,
-                    Key = key,
-                    ContentType = file.ContentType,
-                    InputStream = file.OpenReadStream(),
-                };
-                await transferUtility.UploadAsync(request);
-                return $"{cloudFront}/{key}";
+              return "Hello";
             }
             catch (Exception ex)
             {
@@ -194,6 +175,8 @@ namespace Lingtren.Infrastructure.Services
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to upload video.");
             }
         }
+
+        #region private
 
         /// <summary>
         /// handle to convert file to byte
@@ -255,5 +238,91 @@ namespace Lingtren.Infrastructure.Services
             }
             return response;
         }
+
+        /// <summary>
+        /// Handle to get aws settings
+        /// </summary>
+        /// <returns> the instance of <see cref="AmazonSettingModel" /> .</returns>
+        private async Task<AmazonSettingModel> GetAwsSettings()
+        {
+            try
+            {
+                var settings = await _unitOfWork.GetRepository<Setting>().GetAllAsync(predicate: x => x.Key.StartsWith("AWS")).ConfigureAwait(false);
+                var accessKey = settings.FirstOrDefault(x => x.Key == "AWS_AccessKey")?.Value;
+                if (string.IsNullOrEmpty(accessKey))
+                {
+                    throw new EntityNotFoundException("Aws Access key not found.");
+                }
+
+                var secretKey = settings.FirstOrDefault(x => x.Key == "AWS_SecretKey")?.Value;
+                if (string.IsNullOrEmpty(secretKey))
+                {
+                    throw new EntityNotFoundException("AWS secret key not found.");
+                }
+
+                var regionEndPoint = settings.FirstOrDefault(x => x.Key == "AWS_RegionEndpoint")?.Value;
+                if (string.IsNullOrEmpty(regionEndPoint))
+                {
+                    throw new EntityNotFoundException("Aws region end point not found.");
+                }
+                var fileBucket = settings.FirstOrDefault(x => x.Key == "AWS_FileBucket")?.Value;
+                var videoBucket = settings.FirstOrDefault(x => x.Key == "AWS_VideoBucket")?.Value;
+                var cloudFront = settings.FirstOrDefault(x => x.Key == "AWS_CloudFront")?.Value;
+                return new AmazonSettingModel
+                {
+                    AccessKey = accessKey,
+                    SecretKey = secretKey,
+                    RegionEndpoint = regionEndPoint,
+                    FileBucket = fileBucket,
+                    VideoBucket = videoBucket,
+                    CloudFront = cloudFront
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handle to get server storage setting dto
+        /// </summary>
+        /// <returns> the instance of <see cref="ServerStorageSettingDto" /> .</returns>
+        private async Task<ServerStorageSettingDto> GetServerStorageSettings()
+        {
+            try
+            {
+                var serverStorage = new ServerStorageSettingDto();
+                var settings = await _unitOfWork.GetRepository<Setting>().GetAllAsync(predicate : x => x.Key.StartsWith("Server")).ConfigureAwait(false);
+                var filePath = settings.FirstOrDefault(x => x.Key == "Server_FilePath")?.Value;
+                if(string.IsNullOrEmpty(filePath))
+                {
+                    throw new EntityNotFoundException("Server Storage file path not found");
+                }
+                var videoPath = settings.FirstOrDefault(x => x.Key == "Server_VideoPath")?.Value;
+                if(string.IsNullOrEmpty(videoPath))
+                {
+                    throw new EntityNotFoundException("Video path not found");
+                }
+
+                var serverUrl = settings.FirstOrDefault(x => x.Key == "Server_Url")?.Value;
+                var  userName = settings.FirstOrDefault(x => x.Key == "Server_UserName")?.Value;
+                var password = settings.FirstOrDefault(x => x.Key == "Server_Password")?.Value;
+
+                serverStorage.FilePath = filePath;
+                serverStorage.VideoPath = videoPath;
+                serverStorage.Url = serverUrl;
+                serverStorage.Username = userName;
+                serverStorage.Password = password;
+                return serverStorage;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message,ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+        #endregion
     }
 }

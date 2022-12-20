@@ -1,59 +1,75 @@
 namespace Lingtren.Infrastructure.Services
 {
     using Amazon.S3;
+    using Amazon.S3.Transfer;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Domain.Entities;
     using Lingtren.Infrastructure.Common;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
 
-    public class AmazonService : BaseService, IAmazonService
+    public class AmazonService : IAmazonService
     {
+        private readonly ILogger<AmazonService> _logger;
 
-        private readonly AmazonS3Client s3Client;
-
-        public AmazonService(IUnitOfWork unitOfWork,
-        ILogger<AmazonService> logger) : base(unitOfWork, logger)
+        public AmazonService(ILogger<AmazonService> logger)
         {
-          
+            _logger = logger;
+        }
+
+        /// <summary>
+        /// Handle to save file to s3 bucket
+        /// </summary>
+        /// <param name="file"> the instance of <see cref="AwsS3FileDto" /> .</param>
+        /// <returns> the file url </returns>
+        public async Task<string> SaveFileS3BucketAsync(AwsS3FileDto dto)
+        {
+            try
+            {
+                var client = new AmazonS3Client(dto.Setting?.AccessKey, dto.Setting?.SecretKey,dto.Setting?.RegionEndpoint);
+                var transferUtility = new TransferUtility(client);
+                var request = new TransferUtilityUploadRequest
+                {
+                    BucketName = dto.Setting?.FileBucket,
+                    Key = dto.Key,
+                    ContentType =dto.File.ContentType,
+                    InputStream = dto.File.OpenReadStream(),
+                };
+                request.BucketName ="dfsdaf";
+                await transferUtility.UploadAsync(request);
+                return $"{dto.Setting?.CloudFront}/{dto.Key}";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handle to save video to s3 bucket
+        /// </summary>
+        /// <param name="dto"> the instance of <see cref="AwsS3FileDto" /> .</param>
+        /// <returns> the video url </returns>
+        public async Task<string> SaveVideoS3BucketAsync(AwsS3FileDto dto)
+        {
+            try
+            {
+                return "hello";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
         }
 
 
         #region  private 
 
-        /// <summary>
-        /// Handle to get aws settings
-        /// </summary>
-        /// <returns> the instance of <see cref="AmazonAccessModel" /> .</returns>
-        private AmazonAccessModel GetAwsSetting()
-        {
-            var awsSetting = new AmazonAccessModel();
-            var settings = _unitOfWork.GetRepository<Setting>().GetAll(predicate: x => x.Key.StartsWith("AWS"));
-            var accessKey = settings.FirstOrDefault(x => x.Key == "AWS_AccessKey")?.Value;
-            //if (string.IsNullOrEmpty(accessKey))
-            //{
-            //    throw new EntityNotFoundException("Aws Access key not found.");
-            //}
-
-            var secretKey = settings.FirstOrDefault(x => x.Key == "AWS_SecretKey")?.Value;
-            //if (string.IsNullOrEmpty(secretKey))
-            //{
-            //    throw new EntityNotFoundException("AWS secret key not found.");
-            //}
-
-            var regionEndPoint = settings.FirstOrDefault(x => x.Key == "AWS_RegionEndpoint")?.Value;
-            //if (string.IsNullOrEmpty(regionEndPoint))
-            //{
-            //    throw new EntityNotFoundException("Aws region end point not found.");
-            //}
-            return new AmazonAccessModel
-            {
-                AccessKey = accessKey,
-                SecretKey = secretKey,
-                RegionEndpoint = regionEndPoint
-            };
-        }
+       
 
         #endregion
     }

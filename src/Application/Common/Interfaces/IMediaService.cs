@@ -12,14 +12,14 @@ namespace Lingtren.Application.Common.Interfaces
         /// </summary>
         /// <param name="file"> the instance of <see cref="file" /> .</param>
         /// <returns> the file url </returns>
-        Task<string> UploadFile(IFormFile file);
+        Task<string> UploadFileAsync(IFormFile file);
 
         /// <summary>
         /// Handle to upload video file
         /// </summary>
         /// <param name="file"> the instance of <see cref="file" /> .</param>
         /// <returns> the file url </returns>
-        Task<string> UploadVideo(IFormFile file);
+        Task<string> UploadVideoAsync(IFormFile file);
 
         /// <summary>
         /// Handle to update storage setting
