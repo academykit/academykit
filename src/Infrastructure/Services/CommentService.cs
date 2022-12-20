@@ -62,7 +62,7 @@
                      CourseId = p.CourseId,
                      Content = p.Content,
                      CreatedOn = p.CreatedOn,
-                     RepliesCount = _unitOfWork.GetRepository<CommentReply>().Count(predicate: x => x.CommentId == p.Id),
+                     RepliesCount = _unitOfWork.GetRepository<CommentReply>().Count(predicate: x => x.CommentId == p.Id && !x.IsDeleted),
                      User = new UserModel(p.User)
                  })
              );
@@ -309,22 +309,18 @@
                     currentUserId, replyId, commentId);
                 throw new ForbiddenException("Unauthorized user to edit comment");
             }
-            var reply = new CommentReply
-            {
-                Id = Guid.NewGuid(),
-                Content = model.Content,
-                CommentId = commentId,
-                CreatedOn = DateTime.UtcNow,
-                CreatedBy = currentUserId,
-            };
-            _unitOfWork.GetRepository<CommentReply>().Update(reply);
+
+            existing.Content = model.Content;
+            existing.UpdatedOn = DateTime.UtcNow;
+            existing.UpdatedBy = currentUserId;
+            _unitOfWork.GetRepository<CommentReply>().Update(existing);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             return new CommentReplyResponseModel
             {
-                Id = reply.Id,
+                Id = existing.Id,
                 CommentId = commentId,
-                Content = reply.Content,
-                CreatedOn = reply.CreatedOn,
+                Content = existing.Content,
+                CreatedOn = existing.CreatedOn,
                 User = new UserModel
                 {
                     Id = currentUserId,
