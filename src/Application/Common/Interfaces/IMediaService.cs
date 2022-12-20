@@ -1,5 +1,6 @@
 namespace Lingtren.Application.Common.Interfaces
 {
+    using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Enums;
@@ -13,6 +14,13 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="model"> the instance of <see cref="MediaRequestModel" /> .</param>
         /// <returns> the file url </returns>
         Task<string> UploadFileAsync(MediaRequestModel model);
+
+        /// <summary>
+        /// Handle to upload group file
+        /// </summary>
+        /// <param name="file"> the instance of <see cref="IFormFile" /> .</param>
+        /// <returns> the instance of <see cref="GroupFileDto" /> .</returns>
+        Task<GroupFileDto> UploadGroupFileAsync(IFormFile file);
 
         /// <summary>
         /// Handle to update storage setting

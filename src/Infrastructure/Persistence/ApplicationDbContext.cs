@@ -48,7 +48,7 @@
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentReply> CommentReplies { get; set; }
         public DbSet<Setting> Settings { get; set; }
-        public DbSet<GroupStorage> GroupStorages { get; set; }
+        public DbSet<GroupFile> GroupFile { get; set; }
         public DbSet<AssignmentReview> AssignmentReviews { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
