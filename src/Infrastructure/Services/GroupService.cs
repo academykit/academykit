@@ -353,8 +353,14 @@
                     throw new EntityNotFoundException("Group not found");
                 }
 
+                var userAccess = await ValidateUserCanAccessGroup(group.Id,searchCriteria.CurrentUserId).ConfigureAwait(false);
+                if(!userAccess)
+                {
+                    throw new ForbiddenException("User can't access the group.");
+                }
+
                 var files = await _unitOfWork.GetRepository<GroupFile>().GetAllAsync(predicate: p => p.GroupId == group.Id).ConfigureAwait(false);
-                if(files.Count != default && string.IsNullOrEmpty(searchCriteria.Search))
+                if(files.Count != default && !string.IsNullOrEmpty(searchCriteria.Search))
                 {
                     files = files.Where(x => x.Name.ToLower().Trim().Contains(searchCriteria.Search)).ToList();
                 }
