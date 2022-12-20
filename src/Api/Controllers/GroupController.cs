@@ -74,6 +74,7 @@
         [HttpPost]
         public async Task<GroupResponseModel> CreateGroup(GroupRequestModel model)
         {
+            IsSuperAdminOrAdmin(CurrentUser.Role);
             var currentTimeStamp = DateTime.UtcNow;
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
 
@@ -125,6 +126,7 @@
         [HttpPut("{identity}")]
         public async Task<GroupResponseModel> UpdateGroup(string identity, GroupRequestModel model)
         {
+            IsSuperAdminOrAdmin(CurrentUser.Role);
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
