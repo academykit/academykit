@@ -274,7 +274,7 @@
                 }
 
                 var course = await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
-                if (lesson.Course.Status == CourseStatus.Completed)
+                if (course.Status == CourseStatus.Completed)
                 {
                     _logger.LogWarning("Course with id : {courseId} is in {status} status to give assignment for the user with id: {userId}",
                         course.Id, course.Status, currentUserId);
@@ -440,6 +440,7 @@
 
                 await _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().InsertAsync(assignmentSubmission.AssignmentSubmissionAttachments).ConfigureAwait(false);
             }
+            await _unitOfWork.GetRepository<AssignmentSubmission>().InsertAsync(assignmentSubmission).ConfigureAwait(false);
         }
 
         private async Task UpdateSubmissionAsync(Guid currentUserId, DateTime currentTimeStamp, AssignmentSubmissionRequestModel item, Assignment assignment)
@@ -519,6 +520,11 @@
 
             var isTeacher = course.CourseTeachers.Any(x => x.UserId == searchCriteria.CurrentUserId);
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(searchCriteria.CurrentUserId).ConfigureAwait(false);
+
+            if (!isTeacher && !isSuperAdminOrAdmin && searchCriteria.UserId == null)
+            {
+                searchCriteria.UserId = searchCriteria.CurrentUserId;
+            }
 
             var showCorrectAndHints = isTeacher || isSuperAdminOrAdmin;
 
