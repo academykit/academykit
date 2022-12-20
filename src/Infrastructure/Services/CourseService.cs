@@ -903,7 +903,7 @@ namespace Lingtren.Infrastructure.Services
                                     predicate: p => p.CourseId == x.Id && !p.IsDeleted
                                     && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
                                         || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed),
-                                    include : src=>src.Include(x=>x.User)).Result;
+                                    include: src => src.Include(x => x.User)).Result;
                     var students = new List<UserModel>();
                     courseEnrollments.ForEach(p => students.Add(new UserModel(p.User)));
                     response.Items.Add(new DashboardCourseResponseModel
@@ -911,6 +911,7 @@ namespace Lingtren.Infrastructure.Services
                         Id = x.Id,
                         Slug = x.Slug,
                         Name = x.Name,
+                        ThumbnailUrl = x.ThumbnailUrl,
                         Students = students,
                         User = new UserModel(x.User),
                     });
@@ -925,6 +926,7 @@ namespace Lingtren.Infrastructure.Services
                         Id = x.Id,
                         Slug = x.Slug,
                         Name = x.Name,
+                        ThumbnailUrl = x.ThumbnailUrl,
                         Percentage = _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(
                                     predicate: p => p.CourseId == x.Id && p.UserId == currentUserId && !p.IsDeleted
                                     && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled

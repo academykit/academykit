@@ -19,6 +19,7 @@
         public Guid Id { get; set; }
         public string Slug { get; set; }
         public string Name { get; set; }
+        public string ThumbnailUrl { get; set; }
         public decimal? Percentage { get; set; }
         public UserModel User { get; set; }
         public IList<UserModel>? Students { get; set; }
