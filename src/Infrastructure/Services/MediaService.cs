@@ -104,7 +104,7 @@ namespace Lingtren.Infrastructure.Services
                 response.Add(awsSetting);
 
                 var serverSetting = new StorageSettingResponseModel();
-                serverSetting.Type = StorageType.AWS;
+                serverSetting.Type = StorageType.Server;
                 serverSetting.Values = await GetStorageTypeValue(StorageType.Server).ConfigureAwait(false);
                 serverSetting.IsActive =  Enum.Parse<StorageType>(setting.Value) == StorageType.Server;
                 response.Add(serverSetting);
