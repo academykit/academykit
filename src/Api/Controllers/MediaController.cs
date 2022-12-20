@@ -37,18 +37,10 @@ namespace Lingtren.Api.Controllers
         /// upload file api
         /// </summary>
         /// <param name="model"> the instance of <see cref="MediaRequestModel" /> .</param>
-        /// <returns> the file url </returns>
-        [HttpPost("file")]
-        public async Task<string> Upload([FromForm] MediaRequestModel model) => await _mediaService.UploadFileAsync(model.File).ConfigureAwait(false);
-
-        /// <summary>
-        /// upload video api
-        /// </summary>
-        /// <param name="model"> the instance of <see cref="MediaRequestModel" /> .</param>
         /// <returns> the video url </returns>
-        [HttpPost("video")]
+        [HttpPost("file")]
         [RequestFormLimits(MultipartBodyLengthLimit = 2147483648)]
         [RequestSizeLimit(2147483648)]
-        public async Task<string> Video([FromForm] MediaRequestModel model) => await _mediaService.UploadVideoAsync(model.File).ConfigureAwait(false);
+        public async Task<string> Video([FromForm] MediaRequestModel model) => await _mediaService.UploadFileAsync(model).ConfigureAwait(false);
     }
 }
