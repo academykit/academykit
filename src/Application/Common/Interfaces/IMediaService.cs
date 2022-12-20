@@ -34,14 +34,6 @@ namespace Lingtren.Application.Common.Interfaces
         /// </summary>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the instance of <see cref="StorageSettingResponseModel" /> .</returns>
-        Task<StorageSettingResponseModel> GetStorageSettingAsync(Guid currentUserId);
-
-        /// <summary>
-        /// Handle to get setting values
-        /// </summary>
-        /// <param name="type"> the instance of <see cref="StorageType" />. </param>
-        /// <param name="currentUserId"> the current user id </param>
-        /// <returns> the list of <see cref="SettingValue" /> .</returns>
-        Task<IList<SettingValue>> GetSettingValuesAsync(StorageType type, Guid currentUserId);
+        Task<IList<StorageSettingResponseModel>> GetStorageSettingAsync(Guid currentUserId);
     }
 }

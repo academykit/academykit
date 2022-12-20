@@ -8,6 +8,7 @@
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
@@ -41,8 +42,8 @@
                 criteria.SortType = SortType.Descending;
             }
             query = criteria.SortType == SortType.Ascending
-                ? query.OrderBy(x => criteria.SortBy)
-                : query.OrderByDescending(x => criteria.SortBy);
+                ? query.OrderBy(criteria.SortBy)
+                : query.OrderByDescending(criteria.SortBy);
             var result = query.ToList().ToIPagedList(criteria.Page, criteria.Size);
 
             var response = new SearchResult<CommentResponseModel>
@@ -60,7 +61,8 @@
                      Id = p.Id,
                      CourseId = p.CourseId,
                      Content = p.Content,
-                     RepliesCount = _unitOfWork.GetRepository<CommentReply>().Count(predicate: x => x.CommentId == p.Id),
+                     CreatedOn = p.CreatedOn,
+                     RepliesCount = _unitOfWork.GetRepository<CommentReply>().Count(predicate: x => x.CommentId == p.Id && !x.IsDeleted),
                      User = new UserModel(p.User)
                  })
              );
@@ -95,6 +97,7 @@
                 Id = comment.Id,
                 CourseId = course.Id,
                 Content = comment.Content,
+                CreatedOn = comment.CreatedOn,
                 User = new UserModel
                 {
                     Id = currentUserId,
@@ -138,6 +141,7 @@
                 Id = existing.Id,
                 CourseId = existing.CourseId,
                 Content = existing.Content,
+                CreatedOn = existing.CreatedOn,
                 User = new UserModel
                 {
                     Id = currentUserId,
@@ -206,8 +210,8 @@
                 criteria.SortType = SortType.Descending;
             }
             query = criteria.SortType == SortType.Ascending
-                ? query.OrderBy(x => criteria.SortBy)
-                : query.OrderByDescending(x => criteria.SortBy);
+                ? query.OrderBy(criteria.SortBy)
+                : query.OrderByDescending(criteria.SortBy);
             var result = query.ToList().ToIPagedList(criteria.Page, criteria.Size);
 
             var response = new SearchResult<CommentReplyResponseModel>
@@ -225,6 +229,7 @@
                      Id = p.Id,
                      CommentId = p.CommentId,
                      Content = p.Content,
+                     CreatedOn = p.CreatedOn,
                      User = new UserModel(p.User)
                  })
              );
@@ -266,6 +271,7 @@
                 Id = reply.Id,
                 CommentId = commentId,
                 Content = reply.Content,
+                CreatedOn = reply.CreatedOn,
                 User = new UserModel
                 {
                     Id = currentUserId,
@@ -303,21 +309,18 @@
                     currentUserId, replyId, commentId);
                 throw new ForbiddenException("Unauthorized user to edit comment");
             }
-            var reply = new CommentReply
-            {
-                Id = Guid.NewGuid(),
-                Content = model.Content,
-                CommentId = commentId,
-                CreatedOn = DateTime.UtcNow,
-                CreatedBy = currentUserId,
-            };
-            _unitOfWork.GetRepository<CommentReply>().Update(reply);
+
+            existing.Content = model.Content;
+            existing.UpdatedOn = DateTime.UtcNow;
+            existing.UpdatedBy = currentUserId;
+            _unitOfWork.GetRepository<CommentReply>().Update(existing);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             return new CommentReplyResponseModel
             {
-                Id = reply.Id,
+                Id = existing.Id,
                 CommentId = commentId,
-                Content = reply.Content,
+                Content = existing.Content,
+                CreatedOn = existing.CreatedOn,
                 User = new UserModel
                 {
                     Id = currentUserId,
