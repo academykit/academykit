@@ -16,8 +16,7 @@ namespace Lingtren.Infrastructure.Services
         public AmazonService(IUnitOfWork unitOfWork,
         ILogger<AmazonService> logger) : base(unitOfWork, logger)
         {
-            var setting = GetAwsSetting();
-            s3Client = new AmazonS3Client(setting.AccessKey, setting.SecretKey, setting.RegionEndpoint);
+          
         }
 
 
@@ -32,22 +31,22 @@ namespace Lingtren.Infrastructure.Services
             var awsSetting = new AmazonAccessModel();
             var settings = _unitOfWork.GetRepository<Setting>().GetAll(predicate: x => x.Key.StartsWith("AWS"));
             var accessKey = settings.FirstOrDefault(x => x.Key == "AWS_AccessKey")?.Value;
-            if (string.IsNullOrEmpty(accessKey))
-            {
-                throw new EntityNotFoundException("Aws Access key not found.");
-            }
+            //if (string.IsNullOrEmpty(accessKey))
+            //{
+            //    throw new EntityNotFoundException("Aws Access key not found.");
+            //}
 
             var secretKey = settings.FirstOrDefault(x => x.Key == "AWS_SecretKey")?.Value;
-            if (string.IsNullOrEmpty(secretKey))
-            {
-                throw new EntityNotFoundException("AWS secret key not found.");
-            }
+            //if (string.IsNullOrEmpty(secretKey))
+            //{
+            //    throw new EntityNotFoundException("AWS secret key not found.");
+            //}
 
             var regionEndPoint = settings.FirstOrDefault(x => x.Key == "AWS_RegionEndpoint")?.Value;
-            if (string.IsNullOrEmpty(regionEndPoint))
-            {
-                throw new EntityNotFoundException("Aws region end point not found.");
-            }
+            //if (string.IsNullOrEmpty(regionEndPoint))
+            //{
+            //    throw new EntityNotFoundException("Aws region end point not found.");
+            //}
             return new AmazonAccessModel
             {
                 AccessKey = accessKey,
