@@ -47,7 +47,7 @@
             services.AddTransient<IWatchHistoryService, WatchHistoryService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IFileServerService, FileServerService>();
-            services.AddTransient<IAmazonService,AmazonService>();
+            services.AddTransient<IAmazonS3Service,AmazonS3Service>();
 
             #endregion Service DI
 
