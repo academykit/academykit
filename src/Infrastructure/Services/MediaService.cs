@@ -15,11 +15,11 @@ namespace Lingtren.Infrastructure.Services
     {
 
         private readonly IFileServerService _fileServerService;
-        private readonly IAmazonService _amazonService;
+        private readonly IAmazonS3Service _amazonService;
 
         public MediaService(IUnitOfWork unitOfWork,
         ILogger<MediaService> logger, IFileServerService fileServerService, 
-        IAmazonService amazonService) : base(unitOfWork, logger)
+        IAmazonS3Service amazonService) : base(unitOfWork, logger)
         {
             _amazonService = amazonService;
             _fileServerService = fileServerService;
@@ -107,7 +107,7 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="file"> the instance of <see cref="file" /> .</param>
         /// <returns> the file url </returns>
-        public async Task<string> UploadFileAsync(IFormFile file)
+        public async Task<string> UploadFileAsync(MediaRequestModel model)
         {
             try
             {
@@ -117,14 +117,15 @@ namespace Lingtren.Infrastructure.Services
                     throw new ArgumentException("Storage setting is not configured");
                 }
                 string url = "";
-                var fileKey = $"{Guid.NewGuid()}_{string.Concat(file.FileName.Where(c => !char.IsWhiteSpace(c)))}";
+                var fileKey = $"{Guid.NewGuid()}_{string.Concat(model.File.FileName.Where(c => !char.IsWhiteSpace(c)))}";
                 if(Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
                 {
                     var awsSettings = await GetAwsSettings().ConfigureAwait(false);
                     var awsDto = new AwsS3FileDto{
                         Setting = awsSettings,
                         Key = fileKey,
-                        File = file
+                        File = model.File,
+                        Type = model.Type
                     };
                     url = await _amazonService.SaveFileS3BucketAsync(awsDto).ConfigureAwait(false);
                 }
@@ -140,50 +141,7 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
-        /// <summary>
-        /// Handle to upload the video file
-        /// </summary>
-        /// <param name="file"> the instance of <see cref="file" /> .</param>
-        /// <returns> the file url </returns>
-        public async Task<string> UploadVideoAsync(IFormFile file)
-        {
-            try
-            {
-              return "Hello";
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while trying to upload video.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to upload video.");
-            }
-        }
-
         #region private
-
-        /// <summary>
-        /// handle to convert file to byte
-        /// </summary>
-        /// <param name="file"> the instance of <see cref="IFormFile" /> .</param>
-        /// <returns> task complete </returns>
-        private async Task<byte[]> ConvertFileToByte(IFormFile file)
-        {
-            try
-            {
-                byte[]? fileData = null;
-                using (var fileStream = file.OpenReadStream())
-                using (var memoryStream = new MemoryStream())
-                {
-                    await fileStream.CopyToAsync(memoryStream).ConfigureAwait(false);
-                    fileData = memoryStream.ToArray();
-                }
-                return fileData;
-            }
-            catch (Exception ex)
-            {
-                this._logger.LogError(ex, "An error occurred while trying to convert file to byte.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to convert file to byte.");
-            }
-        }
 
         /// <summary>
         /// Handle to get storage type value

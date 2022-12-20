@@ -10,16 +10,9 @@ namespace Lingtren.Application.Common.Interfaces
         /// <summary>
         /// Handle to upload the file
         /// </summary>
-        /// <param name="file"> the instance of <see cref="file" /> .</param>
+        /// <param name="model"> the instance of <see cref="MediaRequestModel" /> .</param>
         /// <returns> the file url </returns>
-        Task<string> UploadFileAsync(IFormFile file);
-
-        /// <summary>
-        /// Handle to upload video file
-        /// </summary>
-        /// <param name="file"> the instance of <see cref="file" /> .</param>
-        /// <returns> the file url </returns>
-        Task<string> UploadVideoAsync(IFormFile file);
+        Task<string> UploadFileAsync(MediaRequestModel model);
 
         /// <summary>
         /// Handle to update storage setting

@@ -5,16 +5,13 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Infrastructure.Common;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
 
-    public class AmazonService : IAmazonService
+    public class AmazonS3Service : IAmazonS3Service
     {
-        private readonly ILogger<AmazonService> _logger;
+        private readonly ILogger<AmazonS3Service> _logger;
 
-        public AmazonService(ILogger<AmazonService> logger)
+        public AmazonS3Service(ILogger<AmazonS3Service> logger)
         {
             _logger = logger;
         }
@@ -28,16 +25,16 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var client = new AmazonS3Client(dto.Setting?.AccessKey, dto.Setting?.SecretKey,dto.Setting?.RegionEndpoint);
+                // need to work on region end point
+                var client = new AmazonS3Client(dto.Setting?.AccessKey, dto.Setting?.SecretKey, Amazon.RegionEndpoint.APSouth1);
                 var transferUtility = new TransferUtility(client);
                 var request = new TransferUtilityUploadRequest
                 {
-                    BucketName = dto.Setting?.FileBucket,
                     Key = dto.Key,
                     ContentType =dto.File.ContentType,
                     InputStream = dto.File.OpenReadStream(),
                 };
-                request.BucketName ="dfsdaf";
+                request.BucketName = dto.Type == MediaType.File ? dto.Setting?.FileBucket : dto.Setting?.VideoBucket;
                 await transferUtility.UploadAsync(request);
                 return $"{dto.Setting?.CloudFront}/{dto.Key}";
             }
@@ -47,30 +44,5 @@ namespace Lingtren.Infrastructure.Services
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
-
-        /// <summary>
-        /// Handle to save video to s3 bucket
-        /// </summary>
-        /// <param name="dto"> the instance of <see cref="AwsS3FileDto" /> .</param>
-        /// <returns> the video url </returns>
-        public async Task<string> SaveVideoS3BucketAsync(AwsS3FileDto dto)
-        {
-            try
-            {
-                return "hello";
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-            }
-        }
-
-
-        #region  private 
-
-       
-
-        #endregion
     }
 }
