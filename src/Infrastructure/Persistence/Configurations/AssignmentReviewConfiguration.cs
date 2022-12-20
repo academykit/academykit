@@ -1,24 +1,23 @@
 namespace Lingtren.Infrastructure.Persistence.Configurations
 {
-    using Lingtren.Domain.Entities;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    using Lingtren.Domain.Entities;
 
-    public class GroupConfiguration : IEntityTypeConfiguration<Group>
+    public class AssignmentReviewConfiguration : IEntityTypeConfiguration<AssignmentReview>
     {
-        public void Configure(EntityTypeBuilder<Group> builder)
+        public void Configure(EntityTypeBuilder<AssignmentReview> builder)
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
-            builder.Property(x => x.Slug).HasColumnName("slug").HasColumnType("VARCHAR(270)").HasMaxLength(270).IsRequired();
-            builder.Property(x => x.Name).HasColumnName("name").HasColumnType("VARCHAR(250)").HasMaxLength(250).IsRequired();
-            builder.Property(x => x.IsActive).HasColumnName("is_active").HasDefaultValue(false);
+            builder.Property(x => x.AssignmentSubmissionId).HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
+            builder.Property(x => x.Mark).HasColumnName("mark").IsRequired();
+            builder.Property(x => x.Review).HasColumnName("review").HasMaxLength(500).IsRequired(false);
+            builder.Property(x => x.IsDelete).HasColumnName("is_deleted").HasDefaultValue(false);
             builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.CreatedOn).HasColumnName("created_on").IsRequired().HasColumnType("DATETIME");
             builder.Property(x => x.UpdatedBy).HasColumnName("updated_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
             builder.Property(x => x.UpdatedOn).HasColumnName("updated_on").HasColumnType("DATETIME").IsRequired(false);
-            builder.HasMany(x => x.GroupMembers).WithOne(x => x.Group).HasForeignKey(x => x.GroupId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(x => x.GroupStorages).WithOne(x =>x.Group).HasForeignKey(x =>x.GroupId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
