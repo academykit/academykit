@@ -862,6 +862,79 @@ namespace Lingtren.Infrastructure.Services
             }
             return responseModel;
         }
+
+        /// <summary>
+        /// Handle to get dashboard courses
+        /// </summary>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <param name="currentUserRole">the current logged in user role</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the search result of <see cref="DashboardResponseModel"/></returns>
+        public async Task<SearchResult<DashboardCourseResponseModel>> GetDashboardCourses(Guid currentUserId, UserRole currentUserRole, BaseSearchCriteria criteria)
+        {
+            var predicate = PredicateBuilder.New<Course>(true);
+            if (currentUserRole == UserRole.SuperAdmin || currentUserRole == UserRole.Admin || currentUserRole == UserRole.Trainer)
+            {
+                predicate = predicate.And(p => p.CourseTeachers.Any(x => x.CourseId == p.Id && x.UserId == currentUserId));
+            }
+            if (currentUserRole == UserRole.Trainee)
+            {
+                predicate = predicate.And(p => p.CourseEnrollments.Any(x => x.CourseId == p.Id && x.UserId == currentUserId && !x.IsDeleted &&
+                            (x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)));
+            }
+            var courses = await _unitOfWork.GetRepository<Course>().GetAllAsync(
+                predicate: predicate,
+                include: src => src.Include(x => x.User)
+                ).ConfigureAwait(false);
+            var result = courses.ToIPagedList(criteria.Page, criteria.Size);
+            var response = new SearchResult<DashboardCourseResponseModel>
+            {
+                Items = new List<DashboardCourseResponseModel>(),
+                CurrentPage = result.CurrentPage,
+                PageSize = result.PageSize,
+                TotalCount = result.TotalCount,
+                TotalPage = result.TotalPage,
+            };
+            if (currentUserRole == UserRole.SuperAdmin || currentUserRole == UserRole.Admin || currentUserRole == UserRole.Trainer)
+            {
+                result.Items.ForEach(x =>
+                {
+                    var courseEnrollments = _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
+                                    predicate: p => p.CourseId == x.Id && !p.IsDeleted
+                                    && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                                        || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed),
+                                    include : src=>src.Include(x=>x.User)).Result;
+                    var students = new List<UserModel>();
+                    courseEnrollments.ForEach(p => students.Add(new UserModel(p.User)));
+                    response.Items.Add(new DashboardCourseResponseModel
+                    {
+                        Id = x.Id,
+                        Slug = x.Slug,
+                        Name = x.Name,
+                        Students = students,
+                        User = new UserModel(x.User),
+                    });
+                });
+            }
+            if (currentUserRole == UserRole.Trainee)
+            {
+                result.Items.ForEach(x =>
+                {
+                    response.Items.Add(new DashboardCourseResponseModel
+                    {
+                        Id = x.Id,
+                        Slug = x.Slug,
+                        Name = x.Name,
+                        Percentage = _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(
+                                    predicate: p => p.CourseId == x.Id && p.UserId == currentUserId && !p.IsDeleted
+                                    && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                                        || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)).Result.Percentage,
+                        User = new UserModel(x.User),
+                    });
+                });
+            }
+            return response;
+        }
         #endregion Dashboard
 
     }
