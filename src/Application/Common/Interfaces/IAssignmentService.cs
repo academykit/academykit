@@ -42,5 +42,33 @@
         /// <param name="searchCriteria">the instance of <see cref="AssignmentBaseSearchCriteria"/></param>
         /// <returns></returns>
         Task<IList<AssignmentResponseModel>> SearchAsync(AssignmentBaseSearchCriteria searchCriteria);
+
+        /// <summary>
+        /// Handle to review user assignment
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="model">the instance of <see cref="AssignmentReviewRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns></returns>
+        Task AssignmentReviewAsync(string lessonIdentity, AssignmentReviewRequestModel model, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to update user assignment review
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="id">assignment review id</param>
+        /// <param name="model">the instance of <see cref="AssignmentReviewRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns></returns>
+        Task UpdateAssignmentReviewAsync(string lessonIdentity, Guid id, AssignmentReviewRequestModel model, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to delete assignment review
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="id">the assignment review id</param>
+        /// <param name="currentUserId"></param>
+        /// <returns></returns>
+        Task DeleteReviewAsync(string lessonIdentity, Guid id, Guid currentUserId);
     }
 }

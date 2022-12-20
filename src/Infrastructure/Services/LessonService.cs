@@ -153,12 +153,15 @@ namespace Lingtren.Infrastructure.Services
                     ).ConfigureAwait(false);
                 hasResult = containResults;
             }
-
+            bool? hasReviewedAssignment = null;
             if (lesson.Type == LessonType.Assignment)
             {
                 lesson.Assignments = new List<Assignment>();
                 lesson.Assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
                     predicate: p => p.LessonId == lesson.Id).ConfigureAwait(false);
+                hasReviewedAssignment = await _unitOfWork.GetRepository<AssignmentReview>().ExistsAsync(
+                    predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId && !p.IsDeleted
+                    ).ConfigureAwait(false);
             }
             var responseModel = new LessonResponseModel(lesson);
             var nextLessonIndex = currentIndex + 1;
@@ -167,6 +170,7 @@ namespace Lingtren.Infrastructure.Services
                 responseModel.NextLessonSlug = lessons.GetItemByIndex(nextLessonIndex)?.Slug;
             }
             responseModel.HasResult = hasResult;
+            responseModel.HasReviewedAssignment = hasReviewedAssignment;
             return responseModel;
         }
 

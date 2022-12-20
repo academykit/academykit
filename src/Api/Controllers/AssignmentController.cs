@@ -16,15 +16,16 @@
     {
         private readonly IAssignmentService _assignmentService;
         private readonly IValidator<AssignmentRequestModel> _validator;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IValidator<AssignmentReviewRequestModel> _reviewValidator;
         public AssignmentController(
             IAssignmentService assignmentService,
             IValidator<AssignmentRequestModel> validator,
-            IUnitOfWork unitOfWork)
+            IValidator<AssignmentReviewRequestModel> reviewValidator
+            )
         {
             _assignmentService = assignmentService;
             _validator = validator;
-            _unitOfWork = unitOfWork;
+            _reviewValidator = reviewValidator;
         }
 
         /// <summary>
@@ -149,7 +150,7 @@
         /// <summary>
         /// assignment submission api
         /// </summary>
-        /// <param name="identity"> id or slug </param>
+        /// <param name="identity">lesson id or slug </param>
         /// <returns> the task complete </returns>
         [HttpPost("{lessonIdentity}/submissions")]
         public async Task<IActionResult> SubmissionAsync(string lessonIdentity, IList<AssignmentSubmissionRequestModel> model)
@@ -166,5 +167,46 @@
         [HttpGet("{lessonIdentity}/users")]
         public async Task<IList<AssignmentSubmissionStudentResponseModel>> SubmissionAsync(string lessonIdentity) =>
             await _assignmentService.GetAssignmentSubmittedStudent(lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
+
+        /// <summary>
+        /// assignment review api
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("{lessonIdentity}/review")]
+        public async Task<IActionResult> ReviewAsync(string lessonIdentity, AssignmentReviewRequestModel model)
+        {
+            await _reviewValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await _assignmentService.AssignmentReviewAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Assignment Reviewed Successfully." });
+        }
+
+        /// <summary>
+        /// assignment review api
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("{lessonIdentity}/review/{id}")]
+        public async Task<IActionResult> UpdateReviewAsync(string lessonIdentity, Guid id, AssignmentReviewRequestModel model)
+        {
+            await _reviewValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await _assignmentService.UpdateAssignmentReviewAsync(lessonIdentity, id, model, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Assignment Review Update Successfully." });
+        }
+
+        /// <summary>
+        /// assignment review api
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpDelete("{lessonIdentity}/review/{id}")]
+        public async Task<IActionResult> DeleteReviewAsync(string lessonIdentity, Guid id)
+        {
+            await _assignmentService.DeleteReviewAsync(lessonIdentity, id, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Assignment Review Deleted Successfully." });
+        }
     }
 }

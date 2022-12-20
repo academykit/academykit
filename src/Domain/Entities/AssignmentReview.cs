@@ -4,11 +4,12 @@ namespace Lingtren.Domain.Entities
 
     public class AssignmentReview : AuditableEntity
     {
-        public Guid AssignmentSubmissionId { get; set; }
-        public AssignmentSubmission AssignmentSubmission { get; set; }
+        public Guid LessonId { get; set; }
+        public Lesson Lesson { get; set; }
+        public Guid UserId { get; set; }
+        public User User { get; set; }
         public string Mark { get; set; }
         public string Review { get; set; }
-        public User User { get; set; }
-        public bool IsDelete { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

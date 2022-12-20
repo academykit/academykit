@@ -201,6 +201,13 @@
             return await Task.FromResult(isCourseMember);
         }
 
+        protected async Task<bool> ValidateUserCanAccessGroup(Guid groupId, Guid currentUserId)
+        {
+            var isGroupMember = await _unitOfWork.GetRepository<GroupMember>().ExistsAsync(
+                predicate: p => p.GroupId == groupId && p.UserId == currentUserId && p.IsActive).ConfigureAwait(false);
+            return await Task.FromResult(isGroupMember);
+        }
+
         /// <summary>
         /// Validate user and get courses
         /// </summary>

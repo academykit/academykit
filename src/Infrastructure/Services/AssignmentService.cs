@@ -287,11 +287,26 @@
                     throw new ForbiddenException("Course teacher cannot submit the assignment");
                 }
 
+                var assignmentReviewExist = await _unitOfWork.GetRepository<AssignmentReview>().ExistsAsync(
+                    predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId && !p.IsDeleted
+                    ).ConfigureAwait(false);
+                if (assignmentReviewExist)
+                {
+                    _logger.LogWarning("Assignment review exist for lesson with id: {lessonId} and user with id : {userId}",
+                        lesson.Id, currentUserId);
+                    throw new ForbiddenException("Review has been already given to current assignment");
+                }
+
                 var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
                     predicate: p => p.LessonId == lesson.Id && p.IsActive,
                     include: src => src.Include(x => x.AssignmentQuestionOptions)).ConfigureAwait(false);
 
+                var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
+                    predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
+                    ).ConfigureAwait(false);
+
                 var currentTimeStamp = DateTime.UtcNow;
+
                 foreach (var item in models)
                 {
                     var assignment = assignments.FirstOrDefault(x => x.Id == item.AssignmentId);
@@ -307,6 +322,25 @@
                         }
                     }
                 }
+
+                if (watchHistory == null)
+                {
+                    watchHistory = new WatchHistory
+                    {
+                        Id = Guid.NewGuid(),
+                        LessonId = lesson.Id,
+                        CourseId = lesson.CourseId,
+                        UserId = currentUserId,
+                        IsCompleted = true,
+                        IsPassed = false,
+                        CreatedBy = currentUserId,
+                        CreatedOn = currentTimeStamp,
+                        UpdatedBy = currentUserId,
+                        UpdatedOn = currentTimeStamp,
+                    };
+                    await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
+                }
+
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -315,8 +349,6 @@
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to submit the assignment.");
             }
         }
-
-
 
         /// <summary>
         /// Handle to get list of student who has submitted assignment
@@ -368,6 +400,216 @@
             {
                 _logger.LogError(ex, "An error occurred while trying to fetch the student list who has submitted assignment.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch the student list who has submitted assignment.");
+            }
+        }
+
+        /// <summary>
+        /// Handle to review user assignment
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="model">the instance of <see cref="AssignmentReviewRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns></returns>
+        public async Task AssignmentReviewAsync(string lessonIdentity, AssignmentReviewRequestModel model, Guid currentUserId)
+        {
+            try
+            {
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                   predicate: p => p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity).ConfigureAwait(false);
+                if (lesson == null)
+                {
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", lessonIdentity, currentUserId);
+                    throw new EntityNotFoundException("Lesson not found");
+                }
+                if (lesson.Type != LessonType.Assignment)
+                {
+                    _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}",
+                                        lesson.Id, currentUserId);
+                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+                }
+                await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
+
+                var currentTimeStamp = DateTime.UtcNow;
+                var assignmentReview = new AssignmentReview
+                {
+                    Id = Guid.NewGuid(),
+                    LessonId = lesson.Id,
+                    Mark = model.Marks,
+                    Review = model.Review,
+                    UserId = model.UserId,
+                    CreatedBy = currentUserId,
+                    CreatedOn = currentTimeStamp,
+                    UpdatedBy = currentUserId,
+                    UpdatedOn = currentTimeStamp,
+                };
+                var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
+                   predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
+                   ).ConfigureAwait(false);
+                if (watchHistory != null)
+                {
+                    watchHistory.IsPassed = model.IsPassed;
+                    _unitOfWork.GetRepository<WatchHistory>().Update(watchHistory);
+                }
+                else
+                {
+                    watchHistory = new WatchHistory
+                    {
+                        Id = Guid.NewGuid(),
+                        LessonId = lesson.Id,
+                        CourseId = lesson.CourseId,
+                        UserId = model.UserId,
+                        IsCompleted = true,
+                        IsPassed = model.IsPassed,
+                        CreatedBy = currentUserId,
+                        CreatedOn = currentTimeStamp,
+                        UpdatedBy = currentUserId,
+                        UpdatedOn = currentTimeStamp,
+                    };
+                    await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
+                }
+                await _unitOfWork.GetRepository<AssignmentReview>().InsertAsync(assignmentReview).ConfigureAwait(false);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to submit assignment review.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to submit assignment review.");
+            }
+        }
+
+        /// <summary>
+        /// Handle to update user assignment review
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="id">assignment review id</param>
+        /// <param name="model">the instance of <see cref="AssignmentReviewRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns></returns>
+        public async Task UpdateAssignmentReviewAsync(string lessonIdentity, Guid id, AssignmentReviewRequestModel model, Guid currentUserId)
+        {
+            try
+            {
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                   predicate: p => p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity).ConfigureAwait(false);
+                if (lesson == null)
+                {
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", lessonIdentity, currentUserId);
+                    throw new EntityNotFoundException("Lesson not found");
+                }
+                if (lesson.Type != LessonType.Assignment)
+                {
+                    _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}",
+                                        lesson.Id, currentUserId);
+                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+                }
+                await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
+
+                var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id == id && p.LessonId == lesson.Id && p.UserId == currentUserId && !p.IsDeleted
+                    ).ConfigureAwait(false);
+                if (assignmentReview == null)
+                {
+                    _logger.LogWarning("Assignment review with id: {id} not found for user with id: {userId} and lesson with id: {lessonId}",
+                                    id, currentUserId, lesson.Id);
+                    throw new EntityNotFoundException("Assignment Review not found");
+                }
+                var currentTimeStamp = DateTime.UtcNow;
+
+                assignmentReview.Mark = model.Marks;
+                assignmentReview.Review = model.Review;
+                assignmentReview.UpdatedBy = currentUserId;
+                assignmentReview.UpdatedOn = currentTimeStamp;
+
+                var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
+                   predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
+                   ).ConfigureAwait(false);
+                if (watchHistory != null)
+                {
+                    watchHistory.IsPassed = model.IsPassed;
+                    _unitOfWork.GetRepository<WatchHistory>().Update(watchHistory);
+                }
+                else
+                {
+                    watchHistory = new WatchHistory
+                    {
+                        Id = Guid.NewGuid(),
+                        LessonId = lesson.Id,
+                        CourseId = lesson.CourseId,
+                        UserId = model.UserId,
+                        IsCompleted = true,
+                        IsPassed = model.IsPassed,
+                        CreatedBy = currentUserId,
+                        CreatedOn = currentTimeStamp,
+                        UpdatedBy = currentUserId,
+                        UpdatedOn = currentTimeStamp,
+                    };
+                    await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
+                }
+                _unitOfWork.GetRepository<AssignmentReview>().Update(assignmentReview);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to update assignment review.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update assignment review.");
+            }
+        }
+
+        /// <summary>
+        /// Handle to delete assignment review
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="id">the assignment review id</param>
+        /// <param name="currentUserId"></param>
+        /// <returns></returns>
+        public async Task DeleteReviewAsync(string lessonIdentity, Guid id, Guid currentUserId)
+        {
+            try
+            {
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                   predicate: p => p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity).ConfigureAwait(false);
+                if (lesson == null)
+                {
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", lessonIdentity, currentUserId);
+                    throw new EntityNotFoundException("Lesson not found");
+                }
+                if (lesson.Type != LessonType.Assignment)
+                {
+                    _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}",
+                                        lesson.Id, currentUserId);
+                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+                }
+                await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
+
+                var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetFirstOrDefaultAsync(
+                       predicate: p => p.Id == id && p.LessonId == lesson.Id && p.UserId == currentUserId && !p.IsDeleted
+                       ).ConfigureAwait(false);
+                if (assignmentReview == null)
+                {
+                    _logger.LogWarning("Assignment review with id: {id} not found for user with id: {userId} and lesson with id: {lessonId}",
+                                    id, currentUserId, lesson.Id);
+                    throw new EntityNotFoundException("Assignment Review not found");
+                }
+
+                var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
+                       predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
+                       ).ConfigureAwait(false);
+                if (watchHistory != null)
+                {
+                    _unitOfWork.GetRepository<WatchHistory>().Delete(watchHistory);
+                }
+
+                assignmentReview.IsDeleted = true;
+                assignmentReview.UpdatedBy = currentUserId;
+                assignmentReview.UpdatedOn = DateTime.Now;
+                _unitOfWork.GetRepository<AssignmentReview>().Update(assignmentReview);
+
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to delete assignment review.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to delete assignment review.");
             }
         }
 
