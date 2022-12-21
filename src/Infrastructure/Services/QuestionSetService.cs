@@ -63,7 +63,8 @@
                     throw new EntityNotFoundException("Question set not found");
                 }
                 var isCourseTeacher = questionSet.Lesson.Course.CourseTeachers.Any(x => x.UserId == currentUserId);
-                if (questionSet.CreatedBy != currentUserId && !isCourseTeacher)
+                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+                if (questionSet.CreatedBy != currentUserId && !isCourseTeacher && !isSuperAdminOrAdmin)
                 {
                     _logger.LogWarning("User with userId: {userId} is unauthorized user to add questions in question set with id : {id}", currentUserId, questionSet.Id);
                     throw new EntityNotFoundException("Unauthorized user to add questions in question set");
@@ -142,7 +143,8 @@
                 throw new EntityNotFoundException("Question set not found");
             }
             var isCourseTeacher = questionSet.Lesson.Course.CourseTeachers.Any(x => x.UserId == currentUserId);
-            if (questionSet.CreatedBy != currentUserId && !isCourseTeacher)
+            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+            if (questionSet.CreatedBy != currentUserId && !isCourseTeacher && !isSuperAdminOrAdmin)
             {
                 _logger.LogWarning("User with userId: {userId} is unauthorized user to get questions in question set with id : {id}", currentUserId, questionSet.Id);
                 throw new EntityNotFoundException("Unauthorized user to get questions in question set");

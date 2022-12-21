@@ -468,7 +468,7 @@ namespace Lingtren.Infrastructure.Services
             }
             else
             {
-                enrolledMember = course.CourseEnrollments.FirstOrDefault(p => p.UserId == currentUserId && !p.IsDeleted);
+                enrolledMember = course.CourseEnrollments?.FirstOrDefault(p => p.UserId == currentUserId && !p.IsDeleted);
             }
 
             if (enrolledMember != null)
