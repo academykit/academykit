@@ -210,7 +210,6 @@ namespace Lingtren.Infrastructure.Services
                     Description = model.Description,
                     ThumbnailUrl = model.ThumbnailUrl,
                     Type = model.Type,
-                    IsPreview = model.IsPreview,
                     IsMandatory = model.IsMandatory,
                     SectionId = section.Id,
                     Status = CourseStatus.Draft,
@@ -305,7 +304,6 @@ namespace Lingtren.Infrastructure.Services
                 existingLesson.Name = model.Name;
                 existingLesson.Description = model.Description;
                 existingLesson.ThumbnailUrl = model.ThumbnailUrl;
-                existingLesson.IsPreview = model.IsPreview;
                 existingLesson.IsMandatory = model.IsMandatory;
                 existingLesson.UpdatedBy = currentUserId;
                 existingLesson.UpdatedOn = currentTimeStamp;
