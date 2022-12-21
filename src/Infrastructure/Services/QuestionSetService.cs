@@ -188,13 +188,13 @@
                     throw new EntityNotFoundException("Question set not found");
                 }
 
-                if (questionSet.StartTime <= currentTimeStamp)
+                if (currentTimeStamp  <= questionSet.StartTime)
                 {
                     _logger.LogWarning("Question set with identity: {identity} has not started yet for user with id : {currentUserId}", identity, currentUserId);
                     throw new ForbiddenException("Question set has not started yet.");
                 }
 
-                if (questionSet.EndTime >= currentTimeStamp)
+                if (currentTimeStamp >= questionSet.EndTime)
                 {
                     _logger.LogWarning("Question set with identity: {identity} has ended for user with id : {currentUserId}", identity, currentUserId);
                     throw new ForbiddenException("Question set has ended.");
