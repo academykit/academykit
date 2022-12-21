@@ -90,13 +90,13 @@ namespace Lingtren.Infrastructure.Services
             {
                 return predicate;
             }
-            
+
             Expression<Func<Course, bool>> groupPredicate = PredicateBuilder.New<Course>();
             var groupIds = GetUserGroupIds(criteria.CurrentUserId).Result;
             groupPredicate = PredicateBuilder.New<Course>(x => x.GroupId.HasValue && groupIds.Contains(x.GroupId ?? Guid.Empty));
             groupPredicate = groupPredicate.And(predicate);
             predicate = predicate.And(x => !x.GroupId.HasValue).Or(groupPredicate);
-            return predicate.And(x => x.CreatedBy == criteria.CurrentUserId || x.CourseTeachers.Any(p=>p.UserId == criteria.CurrentUserId)
+            return predicate.And(x => x.CreatedBy == criteria.CurrentUserId || x.CourseTeachers.Any(p => p.UserId == criteria.CurrentUserId)
                         || (x.CreatedBy != criteria.CurrentUserId && (x.IsUpdate || x.Status.Equals(CourseStatus.Published))));
 
         }
@@ -835,7 +835,8 @@ namespace Lingtren.Infrastructure.Services
                 responseModel.TotalGroups = await _unitOfWork.GetRepository<Group>().CountAsync(predicate: p => p.IsActive).ConfigureAwait(false);
                 responseModel.TotalTrainers = await _unitOfWork.GetRepository<User>().CountAsync(
                     predicate: p => p.IsActive && p.Role == UserRole.Trainer).ConfigureAwait(false);
-                responseModel.TotalTrainings = await _unitOfWork.GetRepository<Course>().CountAsync().ConfigureAwait(false);
+                responseModel.TotalTrainings = await _unitOfWork.GetRepository<Course>().CountAsync(
+                    predicate:p => p.Status == CourseStatus.Published || p.Status == CourseStatus.Completed || p.IsUpdate).ConfigureAwait(false);
             }
             if (currentUserRole == UserRole.Trainer)
             {
