@@ -13,7 +13,6 @@
         public string DocumentUrl { get; set; }
         public int Order { get; set; }
         public int Duration { get; set; }
-        public bool IsPreview { get; set; }
         public bool IsMandatory { get; set; }
         public LessonType Type { get; set; }
         public bool IsDeleted { get; set; }
@@ -44,7 +43,6 @@
             DocumentUrl = model.DocumentUrl;
             Order = model.Order;
             IsDeleted = model.IsDeleted;
-            IsPreview = model.IsPreview;
             IsMandatory = model.IsMandatory;
             Type = model.Type;
             IsDeleted = model.IsDeleted;

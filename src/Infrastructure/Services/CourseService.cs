@@ -573,7 +573,6 @@ namespace Lingtren.Infrastructure.Services
                         Type = l.Type,
                         Status = l.Status,
                         Duration = l.Duration,
-                        IsPreview = l.IsPreview,
                         IsMandatory = l.IsMandatory,
                         QuestionSet = l.QuestionSet != null ? new QuestionSetResponseModel(l.QuestionSet) : null,
                         Meeting = l.Meeting != null ? new MeetingResponseModel(l.Meeting) : null,

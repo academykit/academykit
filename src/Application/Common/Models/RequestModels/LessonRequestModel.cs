@@ -11,7 +11,6 @@
         public string ThumbnailUrl { get; set; }
         public string DocumentUrl { get; set; }
         public int Order { get; set; }
-        public bool IsPreview { get; set; }
         public bool IsMandatory { get; set; }
         public LessonType Type { get; set; }
         public MeetingRequestModel Meeting { get; set; }
