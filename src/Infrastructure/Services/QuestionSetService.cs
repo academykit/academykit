@@ -123,6 +123,49 @@
             }
         }
 
+        /// <summary>
+        /// Handle to get question list
+        /// </summary>
+        /// <param name="identity">question set id or slug</param>
+        /// <param name="currentUserId">current logged in user id</param>
+        /// <returns>the list of <see cref="QuestionPoolQuestionResponseModel"/></returns>
+        /// <exception cref="EntityNotFoundException"></exception>
+        public async Task<IList<QuestionResponseModel>> GetQuestions(string identity, Guid currentUserId)
+        {
+            var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id.ToString() == identity || p.Slug == identity,
+                    include: src => src.Include(x => x.Lesson.Course.CourseTeachers)).ConfigureAwait(false);
+
+            if (questionSet == null)
+            {
+                _logger.LogWarning("Question set not found with identity: {identity}.", identity);
+                throw new EntityNotFoundException("Question set not found");
+            }
+            var isCourseTeacher = questionSet.Lesson.Course.CourseTeachers.Any(x => x.UserId == currentUserId);
+            if (questionSet.CreatedBy != currentUserId && !isCourseTeacher)
+            {
+                _logger.LogWarning("User with userId: {userId} is unauthorized user to get questions in question set with id : {id}", currentUserId, questionSet.Id);
+                throw new EntityNotFoundException("Unauthorized user to get questions in question set");
+            }
+            IList<QuestionResponseModel> questionsLists = new List<QuestionResponseModel>();
+            var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
+                predicate: p => p.QuestionSetId == questionSet.Id,
+                orderBy: o => o.OrderBy(x => x.Order),
+                include: src => src.Include(x => x.QuestionPoolQuestion)).ConfigureAwait(false);
+
+            var responseModels = new List<QuestionResponseModel>();
+            foreach (var questionSetQuestion in questionSetQuestions)
+            {
+                var question = await _unitOfWork.GetRepository<Question>().GetFirstOrDefaultAsync(predicate: p => p.Id == questionSetQuestion.QuestionPoolQuestion.QuestionId,
+                                                                    include: src => src.Include(x => x.QuestionPoolQuestions).Include(x => x.QuestionOptions)
+                                                                    .Include(x => x.QuestionTags).ThenInclude(x => x.Tag)).ConfigureAwait(false);
+                responseModels.Add(new QuestionResponseModel(question, questionPoolQuestionId: questionSetQuestion.QuestionPoolQuestion.Id,
+                                                                             questionSetQuestionId: questionSetQuestion.Id));
+            }
+            return responseModels;
+        }
+
+
         #region Start Exam and Submission
 
         /// <summary>

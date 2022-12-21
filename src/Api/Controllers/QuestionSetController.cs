@@ -40,6 +40,16 @@
         }
 
         /// <summary>
+        /// Get question list
+        /// </summary>
+        /// <param name="identity"> the question id or  slug</param>
+        /// <returns>the instance of <see cref="QuestionResponseModel"/></returns>
+        [HttpGet("{identity}/questions")]
+        public async Task<IList<QuestionResponseModel>> GetQuestions(string identity)
+                    => await _questionSetService.GetQuestions(identity, CurrentUser.Id).ConfigureAwait(false);
+
+
+        /// <summary>
         /// Handle to set start time
         /// </summary>
         /// <param name="identity"></param>

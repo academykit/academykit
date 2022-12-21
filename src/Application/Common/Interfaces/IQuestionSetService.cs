@@ -17,6 +17,15 @@
         Task AddQuestionsAsync(string identity, QuestionSetAddQuestionRequestModel model, Guid currentUserId);
 
         /// <summary>
+        /// Handle to get question list
+        /// </summary>
+        /// <param name="identity">question set id or slug</param>
+        /// <param name="currentUserId">current logged in user id</param>
+        /// <returns>the list of <see cref="QuestionPoolQuestionResponseModel"/></returns>
+        /// <exception cref="EntityNotFoundException"></exception>
+        Task<IList<QuestionResponseModel>> GetQuestions(string identity, Guid currentUserId);
+
+        /// <summary>
         /// Handle to set exam start time
         /// </summary>
         /// <param name="identity">the question set id or slug</param>
