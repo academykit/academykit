@@ -638,6 +638,7 @@ namespace Lingtren.Infrastructure.Services
                  || x.User.FirstName.ToLower().Trim().Contains(search));
             }
             predicate = predicate.And(p => p.GroupId == groupId);
+            predicate = predicate.And(p => p.Status == CourseStatus.Published || p.Status == CourseStatus.Completed || p.IsUpdate);
             return predicate;
         }
 

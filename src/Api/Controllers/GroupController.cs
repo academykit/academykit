@@ -8,9 +8,11 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
+    using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
+    using MimeKit.Encodings;
 
     public class GroupController : BaseApiController
     {
@@ -59,7 +61,7 @@
                      var memberCount = _unitOfWork.GetRepository<GroupMember>().CountAsync(
                          predicate: x => x.GroupId == p.Id && x.IsActive).Result;
                      var courseCount = _unitOfWork.GetRepository<Course>().CountAsync(
-                         predicate: x => x.GroupId == p.Id).Result;
+                         predicate: x => x.GroupId == p.Id && (x.Status == CourseStatus.Published || x.Status == CourseStatus.Completed || x.IsUpdate)).Result;
                      response.Items.Add(new GroupResponseModel(p, memberCount, courseCount));
                  }
              );
