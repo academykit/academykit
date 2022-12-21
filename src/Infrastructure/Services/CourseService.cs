@@ -84,18 +84,19 @@ namespace Lingtren.Infrastructure.Services
                 }
                 predicate = predicate.And(enrollmentStatusPredicate);
             }
+
             var isSuperAdminOrAdmin = IsSuperAdminOrAdmin(criteria.CurrentUserId).Result;
-            Expression<Func<Course, bool>> groupPredicate = PredicateBuilder.New<Course>();
             if (isSuperAdminOrAdmin)
             {
                 return predicate;
             }
-
+            
+            Expression<Func<Course, bool>> groupPredicate = PredicateBuilder.New<Course>();
             var groupIds = GetUserGroupIds(criteria.CurrentUserId).Result;
             groupPredicate = PredicateBuilder.New<Course>(x => x.GroupId.HasValue && groupIds.Contains(x.GroupId ?? Guid.Empty));
             groupPredicate = groupPredicate.And(predicate);
             predicate = predicate.And(x => !x.GroupId.HasValue).Or(groupPredicate);
-            return predicate.And(x => x.CreatedBy == criteria.CurrentUserId
+            return predicate.And(x => x.CreatedBy == criteria.CurrentUserId || x.CourseTeachers.Any(p=>p.UserId == criteria.CurrentUserId)
                         || (x.CreatedBy != criteria.CurrentUserId && (x.IsUpdate || x.Status.Equals(CourseStatus.Published))));
 
         }
