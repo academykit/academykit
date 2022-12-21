@@ -186,6 +186,18 @@
                     throw new EntityNotFoundException("Question set not found");
                 }
 
+                if (questionSet.StartTime <= currentTimeStamp)
+                {
+                    _logger.LogWarning("Question set with identity: {identity} has not started yet for user with id : {currentUserId}", identity, currentUserId);
+                    throw new ForbiddenException("Question set has not started yet.");
+                }
+
+                if (questionSet.EndTime >= currentTimeStamp)
+                {
+                    _logger.LogWarning("Question set with identity: {identity} has ended for user with id : {currentUserId}", identity, currentUserId);
+                    throw new ForbiddenException("Question set has ended.");
+                }
+
                 var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id,
                     include: src => src.Include(x => x.Course)).ConfigureAwait(false);

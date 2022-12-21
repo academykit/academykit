@@ -27,6 +27,7 @@
         {
             RuleFor(x => x.QuestionMarking).NotNull().NotEmpty().WithMessage("Question marking is required.");
             RuleFor(x => x.Description).MaximumLength(5000).WithMessage("Description length must be less than or equal to 5000 characters.");
+            RuleFor(x=>x).Must(x => x.EndTime != default && x.StartTime != default && x.EndTime > x.StartTime).WithMessage("EndTime must be greater than StartTime");
         }
     }
 }
