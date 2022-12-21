@@ -74,9 +74,10 @@
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
 
-            if(model.Role == UserRole.Admin || model.Role == UserRole.SuperAdmin)
+            if((model.Role == UserRole.Admin || model.Role == UserRole.SuperAdmin) && CurrentUser.Role != UserRole.SuperAdmin)
             {
-                IsSuperAdmin(CurrentUser.Role);
+                _logger.LogWarning("{CurrentUser.Role} cannot create user of {model.Role}",CurrentUser.Role,model.Role);
+                throw new ForbiddenException($"{CurrentUser.Role} cannot create user of {model.Role}");
             }
 
             var currentTimeStamp = DateTime.UtcNow;
