@@ -146,7 +146,7 @@
             try
             {
                 var html = $"Dear {firstName},<br><br>";
-                html += @$"Please <a href='{_appUrl}/changeEmail?token={token}'> <u>Click here</u></a> to change the email for E-learning. 
+                html += @$"Please <a href='{_appUrl}/changeEmail?token={token}'> <u  style='color:blue;'>Click here</u></a> to change the email for E-learning. 
                                 <br> The link will expire in {expiredTime} minute<br><br>";
                 html += _footerEmail;
 

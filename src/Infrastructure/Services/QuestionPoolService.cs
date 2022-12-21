@@ -84,7 +84,7 @@
         /// <returns>The updated query.</returns>
         protected override IIncludableQueryable<QuestionPool, object> IncludeNavigationProperties(IQueryable<QuestionPool> query)
         {
-            return query.Include(x => x.User).Include(x=>x.QuestionPoolTeachers);
+            return query.Include(x => x.User).Include(x=>x.QuestionPoolTeachers).Include(x=>x.QuestionPoolQuestions);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@
         private async Task CheckDuplicateQuestionPoolNameAsync(QuestionPool entity)
         {
             var QuestionPoolExist = await _unitOfWork.GetRepository<QuestionPool>().ExistsAsync(
-                predicate: p => p.Id != entity.Id && p.Name.ToLower() == entity.Name.ToLower()).ConfigureAwait(false);
+                predicate: p => p.Id != entity.Id && p.Name.ToLower() == entity.Name.ToLower() && p.CreatedBy == entity.CreatedBy).ConfigureAwait(false);
             if (QuestionPoolExist)
             {
                 _logger.LogWarning("Duplicate QuestionPool name : {name} is found for the QuestionPool with id : {id}", entity.Name, entity.Id);
