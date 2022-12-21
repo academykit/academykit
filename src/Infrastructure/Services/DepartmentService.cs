@@ -98,6 +98,21 @@
         {
             return p => p.Id.ToString() == identity || p.Slug == identity;
         }
+        /// <summary>
+        /// Check if entity could be deleted
+        /// </summary>
+        /// <param name="entityToDelete">The entity being deleted</param>
+        protected override async Task CheckDeletePermissionsAsync(Department entityToDelete, Guid CurrentUserId)
+        {
+            var existUsers = await _unitOfWork.GetRepository<User>().ExistsAsync(
+                predicate: p => p.DepartmentId == entityToDelete.Id
+                ).ConfigureAwait(false);
+            if (existUsers)
+            {
+                _logger.LogWarning("Department with id: {id} contains users so it cannot be delete for user with id: {userId}", entityToDelete.Id, CurrentUserId);
+                throw new ForbiddenException("Department contains users so it cannot be delete.");
+            }
+        }
         #endregion Protected Methods
 
         #region Private Methods
