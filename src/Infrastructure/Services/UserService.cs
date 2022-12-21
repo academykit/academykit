@@ -5,6 +5,7 @@
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Configurations;
@@ -30,6 +31,8 @@
         private readonly JWT _jwt;
         private readonly string _changeEmailEncryptionKey;
         private readonly int _changeEmailTokenExpiry;
+        private readonly string _resendChangeEmailEncryptionKey;
+        private readonly int _resendChangeEmailTokenExpiry;
 
         public UserService(IUnitOfWork unitOfWork,
             ILogger<UserService> logger,
@@ -43,6 +46,8 @@
             _jwt = jwt.Value;
             _changeEmailEncryptionKey = configuration.GetSection("ChangeEmail:EncryptionKey").Value;
             _changeEmailTokenExpiry = int.Parse(configuration.GetSection("ChangeEmail:ExpireInMinutes").Value);
+            _resendChangeEmailEncryptionKey = configuration.GetSection("ResendChangeEmail:EncryptionKey").Value;
+            _resendChangeEmailTokenExpiry = int.Parse(configuration.GetSection("ResendChangeEmail:ExpireInMinutes").Value);
         }
 
         #region Account Services
@@ -372,8 +377,8 @@
         /// Handle to change user email
         /// </summary>
         /// <param name="model">the instance of <see cref="ChangeEmailRequestModel"/></param>
-        /// <returns></returns>
-        public async Task ChangeEmailRequestAsync(ChangeEmailRequestModel model)
+        /// <returns>the instance of <see cref="ChangeEmailResponseModel"/></returns>
+        public async Task<ChangeEmailResponseModel> ChangeEmailRequestAsync(ChangeEmailRequestModel model)
         {
             var user = await GetUserByEmailAsync(model.OldEmail).ConfigureAwait(false);
             if (user == null)
@@ -393,8 +398,36 @@
                 _logger.LogWarning("User with id : {userId} password not matched for email change", user.Id);
                 throw new ForbiddenException("User password not matched.");
             }
-            var token = GenerateChangeEmailToken(model.OldEmail, model.NewEmail);
-            await _emailService.SendChangePasswordMailAsync(model.NewEmail, user.FirstName, token, _changeEmailTokenExpiry).ConfigureAwait(false);
+            var changeEmailToken = GenerateResendAndChangeEmailToken(model.OldEmail, model.NewEmail, _changeEmailEncryptionKey, _changeEmailTokenExpiry);
+            var resendToken = GenerateResendAndChangeEmailToken(model.OldEmail, model.NewEmail, _resendChangeEmailEncryptionKey, _resendChangeEmailTokenExpiry);
+            await _emailService.SendChangePasswordMailAsync(model.NewEmail, user.FirstName, changeEmailToken, _changeEmailTokenExpiry).ConfigureAwait(false);
+            return new ChangeEmailResponseModel() { ResendToken = resendToken };
+        }
+
+        /// <summary>
+        /// Handle to resend change user email
+        /// </summary>
+        /// <param name="token">the resend token</param>
+        /// <returns>the instance of <see cref="ChangeEmailResponseModel"/></returns>
+        public async Task<ChangeEmailResponseModel> ResendChangeEmailRequestAsync(string token)
+        {
+            var currentTimeStamp = DateTime.UtcNow;
+            var (oldEmail, newEmail) = VerifyResendAndEmailChangeToken(token, currentTimeStamp, _resendChangeEmailEncryptionKey);
+            if (string.IsNullOrWhiteSpace(oldEmail) || string.IsNullOrWhiteSpace(newEmail))
+            {
+                _logger.LogWarning("Old email or new email is null or empty for resend change email");
+                throw new ForbiddenException("Old email or new email cannot be null or empty");
+            }
+            var user = await GetUserByEmailAsync(oldEmail).ConfigureAwait(false);
+            if (user == null)
+            {
+                _logger.LogWarning("User with email : {email} not found", oldEmail);
+                throw new ForbiddenException($"User not found with email : {newEmail}.");
+            }
+            var changeEmailToken = GenerateResendAndChangeEmailToken(oldEmail, newEmail, _changeEmailEncryptionKey, _changeEmailTokenExpiry);
+            var resendToken = GenerateResendAndChangeEmailToken(oldEmail, newEmail, _resendChangeEmailEncryptionKey, _resendChangeEmailTokenExpiry);
+            await _emailService.SendChangePasswordMailAsync(newEmail, user.FirstName, changeEmailToken, _changeEmailTokenExpiry).ConfigureAwait(false);
+            return new ChangeEmailResponseModel() { ResendToken = resendToken };
         }
 
         /// <summary>
@@ -405,7 +438,7 @@
         public async Task VerifyChangeEmailAsync(string token)
         {
             var currentTimeStamp = DateTime.UtcNow;
-            var (oldEmail, newEmail) = VerifyEmailChangeToken(token, currentTimeStamp);
+            var (oldEmail, newEmail) = VerifyResendAndEmailChangeToken(token, currentTimeStamp, _changeEmailEncryptionKey);
             if (string.IsNullOrWhiteSpace(oldEmail) || string.IsNullOrWhiteSpace(newEmail))
             {
                 _logger.LogWarning("Old email or new email is null or empty for verify change email");
@@ -430,9 +463,9 @@
         /// <param name="oldEmail">the old email</param>
         /// <param name="newEmail">the new email for change requested</param>
         /// <returns>the jwt token</returns>
-        public string GenerateChangeEmailToken(string oldEmail, string newEmail)
+        public string GenerateResendAndChangeEmailToken(string oldEmail, string newEmail, string encryptionKey, int tokenExpiry)
         {
-            byte[] securityKey = Encoding.UTF8.GetBytes(_changeEmailEncryptionKey);
+            byte[] securityKey = Encoding.UTF8.GetBytes(encryptionKey);
             var symmetricSecurityKey = new SymmetricSecurityKey(securityKey);
 
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -442,7 +475,7 @@
                     {"oldEmail",oldEmail },
                     {"newEmail",newEmail},
                 },
-                Expires = DateTime.UtcNow.AddMinutes(_changeEmailTokenExpiry),
+                Expires = DateTime.UtcNow.AddMinutes(tokenExpiry),
                 SigningCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256Signature)
             };
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -456,28 +489,45 @@
         /// <param name="token">the email change token</param>
         /// <param name="currentTimeStamp">the current time stamp</param>
         /// <returns>the old email and new email</returns>
-        private (string?, string?) VerifyEmailChangeToken(string token, DateTime currentTimeStamp)
+        private (string?, string?) VerifyResendAndEmailChangeToken(string token, DateTime currentTimeStamp, string encryptionKey)
         {
-            byte[] securityKey = Encoding.UTF8.GetBytes(_changeEmailEncryptionKey);
-            var validationParameters = new TokenValidationParameters
+            try
             {
-                RequireExpirationTime = true,
-                RequireSignedTokens = true,
-                ValidateAudience = false,
-                ValidateIssuer = false,
-                ValidateLifetime = false,
-                IssuerSigningKey = new SymmetricSecurityKey(securityKey)
-            };
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(token, validationParameters, out var security);
-            var oldEmail = principal.Claims?.FirstOrDefault(x => x.Type == "oldEmail")?.Value;
-            var newEmail = principal.Claims?.FirstOrDefault(x => x.Type == "newEmail")?.Value;
-            var tokenExpiry = security.ValidTo;
-            if (tokenExpiry < currentTimeStamp)
-            {
-                throw new ForbiddenException("Change email token has already expired. Please resend change email request");
+                byte[] securityKey = Encoding.UTF8.GetBytes(encryptionKey);
+                var validationParameters = new TokenValidationParameters
+                {
+                    RequireExpirationTime = true,
+                    RequireSignedTokens = true,
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ValidateLifetime = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(securityKey)
+                };
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out var security);
+                var oldEmail = principal.Claims?.FirstOrDefault(x => x.Type == "oldEmail")?.Value;
+                var newEmail = principal.Claims?.FirstOrDefault(x => x.Type == "newEmail")?.Value;
+                var tokenExpiry = security.ValidTo;
+                if (tokenExpiry < currentTimeStamp)
+                {
+                    throw new ForbiddenException("Change email token has already expired. Please resend change email request");
+                }
+                return (oldEmail, newEmail);
             }
-            return (oldEmail, newEmail);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to verify change email token.");
+                if (ex is SecurityTokenInvalidSignatureException)
+                {
+                    throw new ForbiddenException("Token signature not properly formatted.");
+                }
+                if (ex is SecurityTokenExpiredException)
+                {
+                    throw new ForbiddenException("Token expired.");
+                }
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to verify change email token.");
+            }
+
         }
         #endregion Account Services
 

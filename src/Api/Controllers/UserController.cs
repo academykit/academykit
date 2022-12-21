@@ -74,9 +74,9 @@
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
 
-            if((model.Role == UserRole.Admin || model.Role == UserRole.SuperAdmin) && CurrentUser.Role != UserRole.SuperAdmin)
+            if ((model.Role == UserRole.Admin || model.Role == UserRole.SuperAdmin) && CurrentUser.Role != UserRole.SuperAdmin)
             {
-                _logger.LogWarning("{CurrentUser.Role} cannot create user of {model.Role}",CurrentUser.Role,model.Role);
+                _logger.LogWarning("{CurrentUser.Role} cannot create user of {model.Role}", CurrentUser.Role, model.Role);
                 throw new ForbiddenException($"{CurrentUser.Role} cannot create user of {model.Role}");
             }
 
@@ -158,9 +158,9 @@
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
 
-            if(CurrentUser.Role == UserRole.SuperAdmin || CurrentUser.Role == UserRole.Admin)
+            if (CurrentUser.Role == UserRole.SuperAdmin || CurrentUser.Role == UserRole.Admin)
             {
-                if(model.Role == UserRole.Admin || model.Role == UserRole.SuperAdmin)
+                if (model.Role == UserRole.Admin || model.Role == UserRole.SuperAdmin)
                 {
                     IsSuperAdmin(CurrentUser.Role);
                 }
@@ -176,11 +176,22 @@
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("changeEmailRequest")]
-        public async Task<IActionResult> ChangeEmailRequestAsync(ChangeEmailRequestModel model)
+        public async Task<ChangeEmailResponseModel> ChangeEmailRequestAsync(ChangeEmailRequestModel model)
         {
             await _changeEmailValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            await _userService.ChangeEmailRequestAsync(model).ConfigureAwait(false);
-            return Ok(new CommonResponseModel { Success = true, Message = "Email changed requested successfully." });
+            return await _userService.ChangeEmailRequestAsync(model).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// change email request api
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("resendChangeEmailRequest")]
+        public async Task<ChangeEmailResponseModel> ResendChangeEmailRequestAsync(ResendChangeEmailRequestModel model)
+        {
+            CommonHelper.ValidateArgumentNotNullOrEmpty(model.Token, nameof(model.Token));
+            return await _userService.ResendChangeEmailRequestAsync(model.Token).ConfigureAwait(false);
         }
 
         /// <summary>

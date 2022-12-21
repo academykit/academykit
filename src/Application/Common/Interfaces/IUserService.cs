@@ -2,6 +2,7 @@
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     public interface IUserService : IGenericService<User, UserSearchCriteria>
     {
@@ -91,8 +92,15 @@
         /// Handle to change user email
         /// </summary>
         /// <param name="model">the instance of <see cref="ChangeEmailRequestModel"/></param>
-        /// <returns></returns>
-        Task ChangeEmailRequestAsync(ChangeEmailRequestModel model);
+        /// <returns>the instance of <see cref="ChangeEmailResponseModel"/></returns>
+        Task<ChangeEmailResponseModel> ChangeEmailRequestAsync(ChangeEmailRequestModel model);
+
+        /// <summary>
+        /// Handle to resend change user email
+        /// </summary>
+        /// <param name="token">the resend token</param>
+        /// <returns>the instance of <see cref="ChangeEmailResponseModel"/></returns>
+        Task<ChangeEmailResponseModel> ResendChangeEmailRequestAsync(string token);
 
         /// <summary>
         /// Handle to verify user email change
