@@ -8,7 +8,6 @@
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
     using Microsoft.AspNetCore.Mvc;
 

@@ -47,7 +47,7 @@
             services.AddTransient<IWatchHistoryService, WatchHistoryService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IFileServerService, FileServerService>();
-            services.AddTransient<IAmazonS3Service,AmazonS3Service>();
+            services.AddTransient<IAmazonS3Service, AmazonS3Service>();
 
             #endregion Service DI
 
@@ -75,6 +75,7 @@
             services.AddSingleton<IValidator<ChangeEmailRequestModel>, ChangeEmailValidator>();
             services.AddSingleton<IValidator<LevelRequestModel>, LevelValidator>();
             services.AddSingleton<IValidator<CommentRequestModel>, CommentValidator>();
+            services.AddSingleton<IValidator<AssignmentReviewRequestModel>, AssignmentReviewValidator>();
 
             #endregion Validator DI
 
