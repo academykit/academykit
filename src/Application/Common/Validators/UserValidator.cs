@@ -18,7 +18,7 @@
                 RuleFor(x => x.MobileNumber).MaximumLength(50).WithMessage("Mobile number length must be less than or equal to 50 characters");
                 RuleFor(x => x.Address).MaximumLength(200).WithMessage("Address length must be less than or equal to 200 characters");
                 RuleFor(x => x.Profession).MaximumLength(200).WithMessage("Profession length must be less than or equal to 200 characters");
-                RuleFor(x => x.Bio).MaximumLength(200).WithMessage("Bio length must be less than or equal to 200 characters");
+                RuleFor(x => x.Bio).MaximumLength(500).WithMessage("Bio length must be less than or equal to 500 characters");
                 RuleFor(x => x.PublicUrls).MaximumLength(200).WithMessage("Public url length must be less than or equal to 2000 characters");
                 RuleFor(x => x.Role).NotNull().NotEmpty().WithMessage("Role is required");
             });

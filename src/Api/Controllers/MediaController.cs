@@ -1,7 +1,7 @@
-using System.Reflection.Emit;
 namespace Lingtren.Api.Controllers
 {
     using Application.Common.Models.RequestModels;
+    using FluentValidation;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Mvc;
@@ -9,9 +9,13 @@ namespace Lingtren.Api.Controllers
     public class MediaController : BaseApiController
     {
         private readonly IMediaService _mediaService;
-        public MediaController(IMediaService mediaService)
+        private readonly IValidator<MediaRequestModel> _validator;
+        public MediaController(
+            IMediaService mediaService,
+            IValidator<MediaRequestModel> validator)
         {
             _mediaService = mediaService;
+            _validator = validator;
         }
 
         /// <summary>
@@ -41,6 +45,10 @@ namespace Lingtren.Api.Controllers
         [HttpPost("file")]
         [RequestFormLimits(MultipartBodyLengthLimit = 2147483648)]
         [RequestSizeLimit(2147483648)]
-        public async Task<string> Video([FromForm] MediaRequestModel model) => await _mediaService.UploadFileAsync(model).ConfigureAwait(false);
+        public async Task<string> Video([FromForm] MediaRequestModel model)
+        {
+            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            return await _mediaService.UploadFileAsync(model).ConfigureAwait(false);
+        }
     }
 }

@@ -6,10 +6,8 @@ namespace Lingtren.Application.Common.Models.RequestModels
 
     public class MediaRequestModel
     {
-        [Required]
         public IFormFile File { get; set; }
 
-        [Required]
         public MediaType Type { get; set; }
     }
 }

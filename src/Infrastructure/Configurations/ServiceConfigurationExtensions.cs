@@ -76,6 +76,7 @@
             services.AddSingleton<IValidator<LevelRequestModel>, LevelValidator>();
             services.AddSingleton<IValidator<CommentRequestModel>, CommentValidator>();
             services.AddSingleton<IValidator<AssignmentReviewRequestModel>, AssignmentReviewValidator>();
+            services.AddSingleton<IValidator<MediaRequestModel>, MediaValidator>();
 
             #endregion Validator DI
 
