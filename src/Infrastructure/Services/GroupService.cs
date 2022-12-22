@@ -156,20 +156,17 @@
                         _logger.LogWarning("Cannot add {role} into group", user.Role);
                         throw new ForbiddenException("Cannot add " + user.Email + " into a group because they are " + user.Role);
                     }
-                    else
+                    groupMembers.Add(new GroupMember()
                     {
-                        groupMembers.Add(new GroupMember()
-                        {
-                            Id = Guid.NewGuid(),
-                            UserId = userId,
-                            GroupId = group.Id,
-                            IsActive = true,
-                            CreatedBy = currentUserId,
-                            CreatedOn = currentTimeStamp,
-                            UpdatedBy = currentUserId,
-                            UpdatedOn = currentTimeStamp
-                        });
-                    }
+                        Id = Guid.NewGuid(),
+                        UserId = userId,
+                        GroupId = group.Id,
+                        IsActive = true,
+                        CreatedBy = currentUserId,
+                        CreatedOn = currentTimeStamp,
+                        UpdatedBy = currentUserId,
+                        UpdatedOn = currentTimeStamp
+                    });
                 }
                 await _unitOfWork.GetRepository<GroupMember>().InsertAsync(groupMembers).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
