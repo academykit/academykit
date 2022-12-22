@@ -1,17 +1,15 @@
-﻿using FluentValidation;
-using Lingtren.Api.Common;
-using Lingtren.Api.Controllers;
-using Lingtren.Application.Common.Dtos;
-using Lingtren.Application.Common.Interfaces;
-using Lingtren.Application.Common.Models.RequestModels;
-using Lingtren.Application.Common.Models.ResponseModels;
-using Lingtren.Domain.Entities;
-using Lingtren.Domain.Enums;
-using Lingtren.Infrastructure.Helpers;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Api.Controllers
+﻿namespace Lingtren.Api.Controllers
 {
+    using FluentValidation;
+    using Lingtren.Api.Common;
+    using Lingtren.Application.Common.Dtos;
+    using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Models.ResponseModels;
+    using Lingtren.Domain.Entities;
+    using Lingtren.Domain.Enums;
+    using Lingtren.Infrastructure.Helpers;
+    using Microsoft.AspNetCore.Mvc;
     public class FeedbackController : BaseApiController
     {
         private readonly IFeedbackService _feedbackService;
