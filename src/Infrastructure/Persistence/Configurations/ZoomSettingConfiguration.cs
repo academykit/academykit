@@ -13,6 +13,8 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.ApiSecret).HasColumnName("api_secret").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
             builder.Property(x => x.SdkKey).HasColumnName("sdk_key").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
             builder.Property(x => x.SdkSecret).HasColumnName("sdk_secret").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
+            builder.Property(x => x.WebHookSecret).HasColumnName("webhook_secret").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired(false);
+            builder.Property(x => x.WebHookVerificationKey).HasColumnName("webhook_verification_key").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired(false);
             builder.Property(x => x.IsRecordingEnabled).HasColumnName("is_recording_enabled").HasDefaultValue(false);
             builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.CreatedOn).HasColumnName("created_on").IsRequired().HasColumnType("DATETIME");

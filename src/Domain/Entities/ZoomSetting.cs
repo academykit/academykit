@@ -7,6 +7,8 @@ namespace Lingtren.Domain.Entities
         public string ApiSecret { get; set; }
         public string SdkKey { get; set; }
         public string SdkSecret { get; set; }
+        public string WebHookSecret { get; set; }
+        public string WebHookVerificationKey { get; set; }
         public bool IsRecordingEnabled { get; set; }
         public User User { get; set; }
     }
