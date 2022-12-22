@@ -19,7 +19,7 @@
         /// </summary>
         /// <returns> the list of <see cref="CourseCertificateResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<SearchResult<CourseCertificateResponseModel>> SearchAsync(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<CourseCertificateResponseModel>> SearchAsync(string identity, [FromQuery] CertificateBaseSearchCriteria searchCriteria)
         {
             return await _courseService.SearchCertificateAsync(identity, searchCriteria, CurrentUser.Id).ConfigureAwait(false);
         }

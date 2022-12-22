@@ -144,10 +144,10 @@ namespace Lingtren.Application.Common.Interfaces
         /// Handle to search certificate
         /// </summary>
         /// <param name="identity">the course id or slug</param>
-        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <param name="criteria">the instance of <see cref="CertificateBaseSearchCriteria"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the paginated result</returns>
-        Task<SearchResult<CourseCertificateResponseModel>> SearchCertificateAsync(string identity, BaseSearchCriteria criteria, Guid currentUserId);
+        Task<SearchResult<CourseCertificateResponseModel>> SearchCertificateAsync(string identity, CertificateBaseSearchCriteria criteria, Guid currentUserId);
 
         #endregion Certificate 
     }

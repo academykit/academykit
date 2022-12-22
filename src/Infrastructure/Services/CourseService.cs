@@ -948,17 +948,23 @@ namespace Lingtren.Infrastructure.Services
         /// Handle to search certificate
         /// </summary>
         /// <param name="identity">the course id or slug</param>
-        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <param name="criteria">the instance of <see cref="CertificateBaseSearchCriteria"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the paginated result</returns>
-        public async Task<SearchResult<CourseCertificateResponseModel>> SearchCertificateAsync(string identity, BaseSearchCriteria criteria, Guid currentUserId)
+        public async Task<SearchResult<CourseCertificateResponseModel>> SearchCertificateAsync(string identity, CertificateBaseSearchCriteria criteria, Guid currentUserId)
         {
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
 
             var predicate = PredicateBuilder.New<CourseEnrollment>(true);
             predicate = predicate.And(p => p.CourseId == course.Id && !p.IsDeleted);
-            predicate = predicate.And(p => p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
-                                            || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed);
+            if (criteria.CompletedCourse)
+            {
+                predicate = predicate.And(p => p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed);
+            }
+            else
+            {
+                predicate = predicate.And(p => p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled);
+            }
 
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
