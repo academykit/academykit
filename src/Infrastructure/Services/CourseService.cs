@@ -859,7 +859,7 @@ namespace Lingtren.Infrastructure.Services
                     predicate: p => p.UserId == currentUserId && !p.IsDeleted && p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
                     ).ConfigureAwait(false);
                 responseModel.TotalCompletedCourses = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(
-                    predicate: p => p.UserId == currentUserId && !p.IsDeleted && p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Completed
+                    predicate: p => p.UserId == currentUserId && !p.IsDeleted && p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
                     ).ConfigureAwait(false);
             }
             return responseModel;
