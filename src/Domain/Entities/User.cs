@@ -63,6 +63,10 @@
         public IList<CommentReply> CommentReplies { get; set; }
         public IList<GroupFile> GroupStorages { get; set; }
         public IList<AssignmentReview> AssignmentReviews { get; set; }
+        public IList<Feedback> Feedbacks { get; set; }
+        public IList<FeedbackQuestionOption> FeedbackQuestionOptions { get; set; }
+        public IList<FeedbackSubmission> FeedbackSubmissions { get; set; }
+
 
         /// <summary>
         /// Get or set full name

@@ -50,6 +50,10 @@
         public DbSet<Setting> Settings { get; set; }
         public DbSet<GroupFile> GroupFile { get; set; }
         public DbSet<AssignmentReview> AssignmentReviews { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<FeedbackQuestionOption> FeedbackQuestionOptions { get; set; }
+        public DbSet<FeedbackSubmission> FeedbackSubmissions { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             var userId = new Guid("30fcd978-f256-4733-840f-759181bc5e63");
@@ -122,41 +126,53 @@
                 }
             );
             builder.Entity<Setting>().HasData(
-                new Setting{
+                new Setting
+                {
                     Key = "Storage",
                     Value = nameof(StorageType.AWS)
                 },
-                new Setting{
+                new Setting
+                {
                     Key = "AWS_AccessKey",
                 },
-                new Setting{
+                new Setting
+                {
                     Key = "AWS_SecretKey",
                 },
-                new Setting{
+                new Setting
+                {
                     Key = "AWS_FileBucket",
                 },
-                new Setting{
+                new Setting
+                {
                     Key = "AWS_VideoBucket",
                 },
-                new Setting{
+                new Setting
+                {
                     Key = "AWS_CloudFront",
                 },
-                new Setting{
+                new Setting
+                {
                     Key = "AWS_RegionEndpoint"
                 },
-                new Setting{
+                new Setting
+                {
                     Key = "Server_FilePath",
                 },
-                new Setting{
+                new Setting
+                {
                     Key = "Server_VideoPath",
                 },
-                new Setting{
+                new Setting
+                {
                     Key = "Server_Url",
                 },
-                new Setting{
+                new Setting
+                {
                     Key = "Server_UserName",
                 },
-                new Setting{
+                new Setting
+                {
                     Key = "Server_Password",
                 }
             );
