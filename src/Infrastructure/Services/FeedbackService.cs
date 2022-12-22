@@ -493,6 +493,7 @@
             var data = new FeedbackResponseModel
             {
                 Id = item.Id,
+                FeedbackSubmissionId = userFeedback?.Id,
                 LessonId = item.LessonId,
                 Name = item.Name,
                 Order = item.Order,
