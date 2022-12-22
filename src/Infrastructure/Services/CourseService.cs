@@ -836,7 +836,7 @@ namespace Lingtren.Infrastructure.Services
                 responseModel.TotalTrainers = await _unitOfWork.GetRepository<User>().CountAsync(
                     predicate: p => p.IsActive && p.Role == UserRole.Trainer).ConfigureAwait(false);
                 responseModel.TotalTrainings = await _unitOfWork.GetRepository<Course>().CountAsync(
-                    predicate:p => p.Status == CourseStatus.Published || p.Status == CourseStatus.Completed || p.IsUpdate).ConfigureAwait(false);
+                    predicate: p => p.Status == CourseStatus.Published || p.Status == CourseStatus.Completed || p.IsUpdate).ConfigureAwait(false);
             }
             if (currentUserRole == UserRole.Trainer)
             {
@@ -942,6 +942,70 @@ namespace Lingtren.Infrastructure.Services
         #endregion Dashboard
 
         #region Certificate
+
+
+        /// <summary>
+        /// Handle to search certificate
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the paginated result</returns>
+        public async Task<SearchResult<CourseCertificateResponseModel>> SearchCertificateAsync(string identity, BaseSearchCriteria criteria, Guid currentUserId)
+        {
+            var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+
+            var predicate = PredicateBuilder.New<CourseEnrollment>(true);
+            predicate = predicate.And(p => p.CourseId == course.Id && !p.IsDeleted);
+            predicate = predicate.And(p => p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                                            || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed);
+
+            if (!string.IsNullOrWhiteSpace(criteria.Search))
+            {
+                var search = criteria.Search.ToLower().Trim();
+                predicate = predicate.And(x =>
+                    ((x.User.FirstName.Trim() + " " + x.User.MiddleName.Trim()).Trim() + " " + x.User.LastName.Trim()).Trim().Contains(search)
+                        || x.User.Email.ToLower().Trim().Contains(search));
+            }
+
+            var query = _unitOfWork.GetRepository<CourseEnrollment>().GetAll(
+                predicate: predicate,
+                include: src => src.Include(x => x.User).Include(x => x.Course));
+
+            if (criteria.SortBy == null)
+            {
+                criteria.SortBy = nameof(CourseEnrollment.Percentage);
+                criteria.SortType = SortType.Descending;
+            }
+            query = criteria.SortType == SortType.Ascending
+                ? query.OrderBy(criteria.SortBy)
+                : query.OrderByDescending(criteria.SortBy);
+            var result = query.ToList().ToIPagedList(criteria.Page, criteria.Size);
+
+            var response = new SearchResult<CourseCertificateResponseModel>
+            {
+                Items = new List<CourseCertificateResponseModel>(),
+                CurrentPage = result.CurrentPage,
+                PageSize = result.PageSize,
+                TotalCount = result.TotalCount,
+                TotalPage = result.TotalPage,
+            };
+
+            result.Items.ForEach(p =>
+                 response.Items.Add(new CourseCertificateResponseModel()
+                 {
+                     CourseId = p.CourseId,
+                     CourseName = p.Course.Name,
+                     CourseSlug = p.Course.Slug,
+                     CertificateIssuedDate = p.CertificateIssuedDate,
+                     HasCertificateIssued = p.HasCertificateIssued,
+                     CertificateUrl = p.CertificateUrl,
+                     Percentage = p.Percentage,
+                     User = new UserModel(p.User)
+                 })
+             );
+            return response;
+        }
 
         #endregion Certificate
 
