@@ -443,6 +443,27 @@ namespace Lingtren.Infrastructure.Services
                     _unitOfWork.GetRepository<Assignment>().Delete(assignments);
                 }
 
+                if (lesson.Type == LessonType.Feedback)
+                {
+                    var feedbacks = await _unitOfWork.GetRepository<Feedback>().GetAllAsync(
+                        predicate: p => p.LessonId == lesson.Id).ConfigureAwait(false);
+                    var feedbackIds = feedbacks.Select(x => x.Id).ToList();
+
+                    var feedbackSubmissions = await _unitOfWork.GetRepository<FeedbackSubmission>().GetAllAsync(
+                        predicate: p => feedbackIds.Contains(p.FeedbackId)).ConfigureAwait(false);
+                    if (feedbackSubmissions.Count > 0)
+                    {
+                        _logger.LogWarning("DeleteLessonAsync(): Lesson with id:{lessonId} and type: {type} contains feedbackSubmissions",
+                                           lesson.Id, lesson.Type);
+                        throw new EntityNotFoundException($"Feedback contains submission for lesson with type: {lesson.Type}");
+                    }
+                    var feedbackOptions = await _unitOfWork.GetRepository<FeedbackQuestionOption>().GetAllAsync(
+                        predicate: p => feedbackIds.Contains(p.FeedbackId)).ConfigureAwait(false);
+
+                    _unitOfWork.GetRepository<FeedbackQuestionOption>().Delete(feedbackOptions);
+                    _unitOfWork.GetRepository<Feedback>().Delete(feedbacks);
+                }
+
                 _unitOfWork.GetRepository<Lesson>().Delete(lesson);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }).ConfigureAwait(false);

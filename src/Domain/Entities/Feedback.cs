@@ -8,7 +8,6 @@
         public Guid LessonId { get; set; }
         public Lesson Lesson { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
         public int Order { get; set; }
         public bool IsActive { get; set; }
         public FeedbackTypeEnum Type { get; set; }

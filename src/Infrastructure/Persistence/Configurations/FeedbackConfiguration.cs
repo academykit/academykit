@@ -11,7 +11,6 @@
             builder.Property(x => x.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.LessonId).HasColumnName("lesson_id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.Name).HasColumnName("name").HasColumnType("VARCHAR(500)").HasMaxLength(500).IsRequired(false);
-            builder.Property(x => x.Description).HasColumnName("description").HasColumnType("VARCHAR(5000)").HasMaxLength(5000).IsRequired(false);
             builder.Property(x => x.Order).HasColumnName("order").HasDefaultValue(0);
             builder.Property(x => x.IsActive).HasColumnName("is_active").HasDefaultValue(false);
             builder.Property(x => x.Type).HasColumnName("type").IsRequired();

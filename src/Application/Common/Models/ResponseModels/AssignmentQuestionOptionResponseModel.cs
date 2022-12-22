@@ -10,7 +10,6 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string Option { get; set; }
         public bool? IsCorrect { get; set; }
         public bool? IsSelected { get; set; }
-        public string? Answer { get; set; }
         public int Order { get; set; }
         public UserModel User { get; set; }
 

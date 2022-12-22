@@ -48,6 +48,7 @@
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IFileServerService, FileServerService>();
             services.AddTransient<IAmazonS3Service, AmazonS3Service>();
+            services.AddTransient<IFeedbackService, FeedbackService>();
 
             #endregion Service DI
 
@@ -77,6 +78,7 @@
             services.AddSingleton<IValidator<CommentRequestModel>, CommentValidator>();
             services.AddSingleton<IValidator<AssignmentReviewRequestModel>, AssignmentReviewValidator>();
             services.AddSingleton<IValidator<MediaRequestModel>, MediaValidator>();
+            services.AddSingleton<IValidator<FeedbackRequestModel>, FeedbackValidator>();
 
             #endregion Validator DI
 

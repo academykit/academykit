@@ -701,7 +701,7 @@
                 assignmentSubmission.IsCorrect = isCorrect ?? false;
                 assignmentSubmission.SelectedOption = string.Join(",", item.SelectedOption);
             }
-            if (assignment.Type == QuestionTypeEnum.Subjective && assignmentSubmission.AssignmentSubmissionAttachments.Count > 0)
+            if (assignment.Type == QuestionTypeEnum.Subjective)
             {
                 assignmentSubmission.Answer = item.Answer;
                 assignmentSubmission.AssignmentSubmissionAttachments = new List<AssignmentSubmissionAttachment>();
@@ -709,7 +709,7 @@
                 if (item.Id != default)
                 {
                     var existingAssignmentSubmissionAttachments = await _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().GetAllAsync(
-                   predicate: p => p.AssignmentSubmissionId == item.Id).ConfigureAwait(false);
+                    predicate: p => p.AssignmentSubmissionId == item.Id).ConfigureAwait(false);
 
                     _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().Delete(existingAssignmentSubmissionAttachments);
                 }
@@ -807,6 +807,7 @@
                 IsActive = item.IsActive,
                 User = item.User == null ? new UserModel() : new UserModel(item.User),
                 Student = userAssignment == null ? null : new UserModel(userAssignment.User),
+                AssignmentSubmissionId = userAssignment?.Id,
                 Answer = userAssignment == null ? null : userAssignment.Answer,
                 AssignmentAttachments = new List<AssignmentAttachmentResponseModel>(),
                 AssignmentQuestionOptions = new List<AssignmentQuestionOptionResponseModel>(),
