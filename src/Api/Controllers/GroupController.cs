@@ -91,18 +91,6 @@
                 UpdatedOn = currentTimeStamp,
                 GroupMembers = new List<GroupMember>()
             };
-
-            entity.GroupMembers.Add(new GroupMember()
-            {
-                Id = Guid.NewGuid(),
-                GroupId = entity.Id,
-                UserId = CurrentUser.Id,
-                IsActive = true,
-                CreatedBy = CurrentUser.Id,
-                CreatedOn = currentTimeStamp,
-                UpdatedBy = CurrentUser.Id,
-                UpdatedOn = currentTimeStamp,
-            });
             var response = await _groupService.CreateAsync(entity).ConfigureAwait(false);
             return new GroupResponseModel(response);
         }

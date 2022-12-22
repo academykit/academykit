@@ -15,6 +15,7 @@
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
     using System.Net;
+    using System.Runtime.InteropServices;
 
     public class GroupService : BaseGenericService<Group, GroupBaseSearchCriteria>, IGroupService
     {
@@ -149,6 +150,12 @@
                 var currentTimeStamp = DateTime.UtcNow;
                 foreach (var userId in usersToBeAdded)
                 {
+                    var user = await _unitOfWork.GetRepository<User>().FindAsync(userId);
+                    if(user.Role == UserRole.SuperAdmin || user.Role == UserRole.Admin)
+                    {
+                        _logger.LogWarning("Cannot add {role} into group", user.Role);
+                        throw new ForbiddenException("Cannot add " + user.Email + " into a group because they are " + user.Role);
+                    }
                     groupMembers.Add(new GroupMember()
                     {
                         Id = Guid.NewGuid(),
