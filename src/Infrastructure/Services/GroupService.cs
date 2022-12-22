@@ -15,6 +15,7 @@
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
     using System.Net;
+    using System.Runtime.InteropServices;
 
     public class GroupService : BaseGenericService<Group, GroupBaseSearchCriteria>, IGroupService
     {
@@ -149,17 +150,26 @@
                 var currentTimeStamp = DateTime.UtcNow;
                 foreach (var userId in usersToBeAdded)
                 {
-                    groupMembers.Add(new GroupMember()
+                    var user = await _unitOfWork.GetRepository<User>().FindAsync(userId);
+                    if(user.Role == UserRole.SuperAdmin || user.Role == UserRole.Admin)
                     {
-                        Id = Guid.NewGuid(),
-                        UserId = userId,
-                        GroupId = group.Id,
-                        IsActive = true,
-                        CreatedBy = currentUserId,
-                        CreatedOn = currentTimeStamp,
-                        UpdatedBy = currentUserId,
-                        UpdatedOn = currentTimeStamp
-                    });
+                        _logger.LogWarning("Cannot add {role} into group", user.Role);
+                        throw new ForbiddenException("Cannot add " + user.Email + " into a group because they are " + user.Role);
+                    }
+                    else
+                    {
+                        groupMembers.Add(new GroupMember()
+                        {
+                            Id = Guid.NewGuid(),
+                            UserId = userId,
+                            GroupId = group.Id,
+                            IsActive = true,
+                            CreatedBy = currentUserId,
+                            CreatedOn = currentTimeStamp,
+                            UpdatedBy = currentUserId,
+                            UpdatedOn = currentTimeStamp
+                        });
+                    }
                 }
                 await _unitOfWork.GetRepository<GroupMember>().InsertAsync(groupMembers).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
