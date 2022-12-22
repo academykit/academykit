@@ -1,11 +1,13 @@
 namespace Lingtren.Infrastructure.Services
 {
+    using System.Net.Http.Headers;
     using Amazon.S3.Transfer;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
+    using Lingtren.Domain.Common;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
@@ -18,7 +20,7 @@ namespace Lingtren.Infrastructure.Services
         private readonly IAmazonS3Service _amazonService;
 
         public MediaService(IUnitOfWork unitOfWork,
-        ILogger<MediaService> logger, IFileServerService fileServerService, 
+        ILogger<MediaService> logger, IFileServerService fileServerService,
         IAmazonS3Service amazonService) : base(unitOfWork, logger)
         {
             _amazonService = amazonService;
@@ -85,13 +87,13 @@ namespace Lingtren.Infrastructure.Services
                 var awsSetting = new StorageSettingResponseModel();
                 awsSetting.Type = StorageType.AWS;
                 awsSetting.Values = await GetStorageTypeValue(StorageType.AWS).ConfigureAwait(false);
-                awsSetting.IsActive =  Enum.Parse<StorageType>(setting.Value) == StorageType.AWS;
+                awsSetting.IsActive = Enum.Parse<StorageType>(setting.Value) == StorageType.AWS;
                 response.Add(awsSetting);
 
                 var serverSetting = new StorageSettingResponseModel();
                 serverSetting.Type = StorageType.Server;
                 serverSetting.Values = await GetStorageTypeValue(StorageType.Server).ConfigureAwait(false);
-                serverSetting.IsActive =  Enum.Parse<StorageType>(setting.Value) == StorageType.Server;
+                serverSetting.IsActive = Enum.Parse<StorageType>(setting.Value) == StorageType.Server;
                 response.Add(serverSetting);
                 return response;
             }
@@ -112,16 +114,17 @@ namespace Lingtren.Infrastructure.Services
             try
             {
                 var storage = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: p => p.Key == "Storage").ConfigureAwait(false);
-                if(string.IsNullOrEmpty(storage.Value))
+                if (string.IsNullOrEmpty(storage.Value))
                 {
                     throw new ArgumentException("Storage setting is not configured");
                 }
                 string url = "";
                 var fileKey = $"{Guid.NewGuid()}_{string.Concat(model.File.FileName.Where(c => !char.IsWhiteSpace(c)))}";
-                if(Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
+                if (Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
                 {
                     var awsSettings = await GetAwsSettings().ConfigureAwait(false);
-                    var awsDto = new AwsS3FileDto{
+                    var awsDto = new AwsS3FileDto
+                    {
                         Setting = awsSettings,
                         Key = fileKey,
                         File = model.File,
@@ -129,7 +132,8 @@ namespace Lingtren.Infrastructure.Services
                     };
                     url = await _amazonService.SaveFileS3BucketAsync(awsDto).ConfigureAwait(false);
                 }
-                else{
+                else
+                {
                     var serverSettings = await GetServerStorageSettings().ConfigureAwait(false);
                 }
                 return url;
@@ -141,7 +145,7 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
-         /// <summary>
+        /// <summary>
         /// Handle to upload group file
         /// </summary>
         /// <param name="file"> the instance of <see cref="IFormFile" /> .</param>
@@ -151,17 +155,18 @@ namespace Lingtren.Infrastructure.Services
             try
             {
                 var groupFileDto = new GroupFileDto();
-                  var storage = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: p => p.Key == "Storage").ConfigureAwait(false);
-                if(string.IsNullOrEmpty(storage.Value))
+                var storage = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: p => p.Key == "Storage").ConfigureAwait(false);
+                if (string.IsNullOrEmpty(storage.Value))
                 {
                     throw new ArgumentException("Storage setting is not configured");
                 }
                 string url = "";
                 var fileKey = $"{Guid.NewGuid()}_{string.Concat(file.FileName.Where(c => !char.IsWhiteSpace(c)))}";
-                if(Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
+                if (Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
                 {
                     var awsSettings = await GetAwsSettings().ConfigureAwait(false);
-                    var awsDto = new AwsS3FileDto{
+                    var awsDto = new AwsS3FileDto
+                    {
                         Setting = awsSettings,
                         Key = fileKey,
                         File = file,
@@ -169,7 +174,8 @@ namespace Lingtren.Infrastructure.Services
                     };
                     url = await _amazonService.SaveFileS3BucketAsync(awsDto).ConfigureAwait(false);
                 }
-                else{
+                else
+                {
                     var serverSettings = await GetServerStorageSettings().ConfigureAwait(false);
                 }
                 groupFileDto.Url = url;
@@ -178,7 +184,61 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handle to upload the recording file
+        /// </summary>
+        /// <param name="fileUrl"> the file url </param>
+        /// <param name="downloadToken"> the download token </param>
+        /// <returns> the instance of <see cref="MediaFileDto" /> .</returns>
+        public async Task<MediaFileDto> UploadRecordingFileAsync(string fileUrl, string downloadToken)
+        {
+            try
+            {
+                var fileDto = new MediaFileDto();
+                  var storage = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: p => p.Key == "Storage").ConfigureAwait(false);
+                if (string.IsNullOrEmpty(storage.Value))
+                {
+                    throw new ArgumentException("Storage setting is not configured");
+                }
+
+                var filePath = Path.Combine(Path.GetTempPath(),$"{Guid.NewGuid()}.mp4");
+                using(var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",$"{downloadToken}");
+                    await client.DownloadFileTaskAsync(new Uri(fileUrl),filePath).ConfigureAwait(false);
+                }
+
+                var key = $"{Guid.NewGuid()}.mp4";
+                string url = "";
+                if (Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
+                {
+                    var awsSettings = await GetAwsSettings().ConfigureAwait(false);
+                    var awsDto = new AwsS3FileDto
+                    {
+                        Setting = awsSettings,
+                        Key = key,
+                        FilePath = filePath,
+                        Type = Application.Common.Dtos.MediaType.Video
+                    };
+                    url = await _amazonService.SaveFileS3BucketAsync(awsDto).ConfigureAwait(false);
+                    DeleteFilePath(filePath);
+                }
+                else
+                {
+                    var serverSettings = await GetServerStorageSettings().ConfigureAwait(false);
+                }
+                fileDto.Key = key;
+                fileDto.Url = url;
+                return fileDto;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
@@ -276,20 +336,20 @@ namespace Lingtren.Infrastructure.Services
             try
             {
                 var serverStorage = new ServerStorageSettingDto();
-                var settings = await _unitOfWork.GetRepository<Setting>().GetAllAsync(predicate : x => x.Key.StartsWith("Server")).ConfigureAwait(false);
+                var settings = await _unitOfWork.GetRepository<Setting>().GetAllAsync(predicate: x => x.Key.StartsWith("Server")).ConfigureAwait(false);
                 var filePath = settings.FirstOrDefault(x => x.Key == "Server_FilePath")?.Value;
-                if(string.IsNullOrEmpty(filePath))
+                if (string.IsNullOrEmpty(filePath))
                 {
                     throw new EntityNotFoundException("Server Storage file path not found");
                 }
                 var videoPath = settings.FirstOrDefault(x => x.Key == "Server_VideoPath")?.Value;
-                if(string.IsNullOrEmpty(videoPath))
+                if (string.IsNullOrEmpty(videoPath))
                 {
                     throw new EntityNotFoundException("Video path not found");
                 }
 
                 var serverUrl = settings.FirstOrDefault(x => x.Key == "Server_Url")?.Value;
-                var  userName = settings.FirstOrDefault(x => x.Key == "Server_UserName")?.Value;
+                var userName = settings.FirstOrDefault(x => x.Key == "Server_UserName")?.Value;
                 var password = settings.FirstOrDefault(x => x.Key == "Server_Password")?.Value;
 
                 serverStorage.FilePath = filePath;
@@ -301,8 +361,20 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message,ex);
+                _logger.LogError(ex.Message, ex);
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handle to delete the file path
+        /// </summary>
+        /// <param name="filePath"> the file path h</param>
+        private void DeleteFilePath(string filePath)
+        {
+            if(File.Exists(filePath))
+            {
+                File.Delete(filePath);
             }
         }
         #endregion

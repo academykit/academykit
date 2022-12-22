@@ -1,4 +1,5 @@
-﻿using Lingtren.Infrastructure.Configurations;
+﻿using Hangfire;
+using Lingtren.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,7 +42,7 @@ app.UseCors(x => x
               .AllowAnyHeader()
               .SetIsOriginAllowed(_ => true) // allow any origin
               .AllowCredentials());
-
+app.UseHangfireDashboard("/jobs");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
