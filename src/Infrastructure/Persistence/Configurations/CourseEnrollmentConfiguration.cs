@@ -1,8 +1,8 @@
 ﻿namespace Lingtren.Infrastructure.Persistence.Configurations
 {
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using Microsoft.EntityFrameworkCore;
     using Lingtren.Domain.Entities;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
     public class CourseEnrollmentConfiguration : IEntityTypeConfiguration<CourseEnrollment>
     {
         public void Configure(EntityTypeBuilder<CourseEnrollment> builder)
@@ -24,6 +24,9 @@
             builder.Property(x => x.IsDeleted).HasColumnName("is_deleted").HasColumnType("BIT").HasDefaultValue(false);
             builder.Property(x => x.DeletedBy).HasColumnName("deleted_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
             builder.Property(x => x.DeletedOn).HasColumnName("deleted_on").HasColumnType("DATETIME").IsRequired(false);
+            builder.Property(x => x.HasCertificateIssued).HasColumnName("has_certificate_issued").IsRequired(false);
+            builder.Property(x => x.CertificateUrl).HasColumnName("certificate_url").HasColumnType("VARCHAR(500)").HasMaxLength(500).IsRequired(false);
+            builder.Property(x => x.CertificateIssuedDate).HasColumnName("certificate_issued_date").HasColumnType("DATETIME").IsRequired(false);
         }
     }
 }

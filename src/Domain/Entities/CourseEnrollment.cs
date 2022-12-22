@@ -19,5 +19,8 @@
         public bool IsDeleted { get; set; }
         public string DeletedBy { get; set; }
         public DateTime? DeletedOn { get; set; }
+        public bool? HasCertificateIssued { get; set; }
+        public string CertificateUrl { get; set; }
+        public DateTime? CertificateIssuedDate { get; set; }
     }
 }

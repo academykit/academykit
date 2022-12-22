@@ -941,5 +941,9 @@ namespace Lingtren.Infrastructure.Services
         }
         #endregion Dashboard
 
+        #region Certificate
+
+        #endregion Certificate
+
     }
 }

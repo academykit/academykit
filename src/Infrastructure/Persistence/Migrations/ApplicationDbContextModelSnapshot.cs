@@ -617,6 +617,15 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(1000)")
                         .HasColumnName("activity_reason");
 
+                    b.Property<DateTime?>("CertificateIssuedDate")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("certificate_issued_date");
+
+                    b.Property<string>("CertificateUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnName("certificate_url");
+
                     b.Property<string>("CourseId")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -658,6 +667,10 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("EnrollmentMemberStatus")
                         .HasColumnType("int")
                         .HasColumnName("status");
+
+                    b.Property<bool?>("HasCertificateIssued")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("has_certificate_issued");
 
                     b.Property<ulong>("IsDeleted")
                         .ValueGeneratedOnAdd()
