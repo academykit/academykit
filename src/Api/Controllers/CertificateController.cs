@@ -2,6 +2,7 @@
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Mvc;
 
@@ -23,5 +24,12 @@
         {
             return await _courseService.SearchCertificateAsync(identity, searchCriteria, CurrentUser.Id).ConfigureAwait(false);
         }
+
+        [HttpPost]
+        public async Task<IList<CourseCertificateResponseModel>> IssueCertificateAsync(string identity, CertificateIssueRequestModel model)
+        {
+            return await _courseService.IssueCertificateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
+        }
+
     }
 }
