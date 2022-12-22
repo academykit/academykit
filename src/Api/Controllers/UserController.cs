@@ -160,7 +160,7 @@
 
             if (CurrentUser.Role == UserRole.SuperAdmin || CurrentUser.Role == UserRole.Admin)
             {
-                if (model.Role == UserRole.Admin || model.Role == UserRole.SuperAdmin)
+                if ((model.Role == UserRole.Admin || model.Role == UserRole.SuperAdmin) && existing.Id != CurrentUser.Id)
                 {
                     IsSuperAdmin(CurrentUser.Role);
                 }
