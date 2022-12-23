@@ -157,6 +157,19 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the list of <see cref="CourseCertificateResponseModel"/></returns>
         Task<IList<CourseCertificateResponseModel>> IssueCertificateAsync(string identity, CertificateIssueRequestModel model, Guid currentUserId);
+        /// <summary>
+        /// Upload Signature
+        /// </summary>
+        /// <param name="model">the signature rerquest model<see cref="SignatureFileRequestModel"/></param>
+        /// <param name="currentUserId">the Guid of current user</param>
+        /// <returns>an instance of <see cref="SignatureResponseModel"/></returns>
+        Task<IList<SignatureResponseModel>> UploadSignatureImageFile(SignatureRequestModel model, Guid currentUserId);
+        /// <summary>
+        /// Retrieve Signatures
+        /// </summary>
+        /// <param name="model">the signature rerquest model<see cref="SignatureFileRequestModel"/></param>
+        /// <returns>List of <see cref="SignatureResponseModel"/></returns>
+        Task<IList<SignatureResponseModel>> GetSignatureImageFiles(string courseIdentity, Guid currentUserId);
 
         #endregion Certificate 
     }
