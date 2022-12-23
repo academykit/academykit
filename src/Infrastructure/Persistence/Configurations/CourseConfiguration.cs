@@ -29,6 +29,7 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.HasMany(x => x.CourseTags).WithOne(x => x.Course).HasForeignKey(x => x.CourseId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.WatchHistories).WithOne(x => x.Course).HasForeignKey(x => x.CourseId).OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(x => x.CourseEnrollments).WithOne(x => x.Course).HasForeignKey(x => x.CourseId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x => x.Signatures).WithOne(x => x.Course).HasForeignKey(x => x.CourseId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

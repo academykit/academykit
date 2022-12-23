@@ -24,5 +24,6 @@ namespace Lingtren.Domain.Entities
         public IList<CourseTag> CourseTags { get; set; }
         public IList<WatchHistory> WatchHistories { get; set; }
         public IList<CourseEnrollment> CourseEnrollments { get; set; }
+        public IList<Signature> Signatures { get; set; }
     }
 }

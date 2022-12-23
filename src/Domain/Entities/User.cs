@@ -66,7 +66,7 @@
         public IList<Feedback> Feedbacks { get; set; }
         public IList<FeedbackQuestionOption> FeedbackQuestionOptions { get; set; }
         public IList<FeedbackSubmission> FeedbackSubmissions { get; set; }
-
+        public IList<Signature> Signatures { get; set; }
 
         /// <summary>
         /// Get or set full name
