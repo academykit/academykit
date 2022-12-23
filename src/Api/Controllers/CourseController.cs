@@ -243,6 +243,10 @@ namespace Lingtren.Api.Controllers
             return await _courseService.UploadSignatureImageFile(model, CurrentUser.Id);
         }
 
+        /// <summary>
+        /// Course Certificate Signature URL
+        /// </summary>
+        /// <param name="identity"> the course id or slug.</param>
         [HttpGet("{identity}/signature")]
         public async Task<IList<SignatureResponseModel>> Signature(string identity)
         {

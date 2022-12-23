@@ -1115,7 +1115,8 @@ namespace Lingtren.Infrastructure.Services
         /// Upload Signature
         /// </summary>
         /// <param name="model">the signature rerquest model<see cref="SignatureRequestModel"/></param>
-        /// <returns></returns>
+        /// <param name="currentUserId">the Guid of current user</param>
+        /// <returns>an instance of <see cref="SignatureResponseModel"/></returns>
         public async Task<SignatureResponseModel> UploadSignatureImageFile(SignatureRequestModel model, Guid currentUserId)
         {
             var course = await GetByIdOrSlugAsync(model.CourseIdentity, currentUserId).ConfigureAwait(false);
@@ -1153,6 +1154,11 @@ namespace Lingtren.Infrastructure.Services
             return signatureResponseModel;
 
         }
+        /// <summary>
+        /// Retrieve Signatures
+        /// </summary>
+        /// <param name="model">the signature rerquest model<see cref="SignatureRequestModel"/></param>
+        /// <returns>List of <see cref="SignatureResponseModel"/></returns>
         public async Task<IList<SignatureResponseModel>> GetSignatureImageFiles(string courseIdentity, Guid currentUserId)
         {
             var course = await GetByIdOrSlugAsync(courseIdentity, currentUserId).ConfigureAwait(false);
