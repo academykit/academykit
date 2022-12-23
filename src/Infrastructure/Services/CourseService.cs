@@ -1114,50 +1114,59 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Upload Signature
         /// </summary>
-        /// <param name="model">the signature rerquest model<see cref="SignatureRequestModel"/></param>
+        /// <param name="model">the signature rerquest model<see cref="SignatureFileRequestModel"/></param>
         /// <param name="currentUserId">the Guid of current user</param>
         /// <returns>an instance of <see cref="SignatureResponseModel"/></returns>
-        public async Task<SignatureResponseModel> UploadSignatureImageFile(SignatureRequestModel model, Guid currentUserId)
+        public async Task<IList<SignatureResponseModel>> UploadSignatureImageFile(SignatureRequestModel model, Guid currentUserId)
         {
             var course = await GetByIdOrSlugAsync(model.CourseIdentity, currentUserId).ConfigureAwait(false);
             if (course == null)
             {
                 throw new EntityNotFoundException("Can not find the specified course");
             }
-            var mediafile = new MediaRequestModel
+            var signatureList = new List<Signature>();
+
+            foreach(var item in model.signatureList)
             {
-                File = model.File,
-                Type = MediaType.File
-            };
-            var url =  await _mediaService.UploadFileAsync(mediafile).ConfigureAwait(false);
-            Signature signature = new Signature
+                Signature signature = new Signature
+                {
+                    Id = Guid.NewGuid(),
+                    FullName = item.PersonName,
+                    Designation = item.Designation,
+                    CourseId = course.Id,
+                    FileUrl = item.FileURL,
+                    CreatedOn = DateTime.UtcNow,
+                    CreatedBy = currentUserId
+                };
+                signatureList.Add(signature);
+            }
+            try
             {
-                Id = Guid.NewGuid(),
-                FileUrl = url,
-                FullName = model.PersonName,
-                Designation = model.Designation,
-                CourseId = course.Id,
+                _unitOfWork.GetRepository<Signature>().InsertAsync(signatureList);
+                _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError("Exception occured while saving data.");
+            }
+            
+            var response = signatureList.Select(x => new SignatureResponseModel
+            {
+                Id = x.Id,
+                CourseIdentity = course.Slug,
+                Designation = x.Designation,
+                PersonName = x.FullName,
+                SignatureURL = x.FileUrl,
+                CreatedBy= currentUserId,
                 CreatedOn = DateTime.UtcNow,
-                CreatedBy = currentUserId
-            };
 
-            _unitOfWork.GetRepository<Signature>().InsertAsync(signature);
-            _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-
-            SignatureResponseModel signatureResponseModel = new SignatureResponseModel
-            {
-                CourseIdentity = model.CourseIdentity,
-                Designation = model.Designation,
-                PersonName = model.PersonName,
-                SignatureURL = url
-            };
-            return signatureResponseModel;
-
+            }).ToList();
+            return response;
         }
         /// <summary>
         /// Retrieve Signatures
         /// </summary>
-        /// <param name="model">the signature rerquest model<see cref="SignatureRequestModel"/></param>
+        /// <param name="model">the signature rerquest model<see cref="SignatureFileRequestModel"/></param>
         /// <returns>List of <see cref="SignatureResponseModel"/></returns>
         public async Task<IList<SignatureResponseModel>> GetSignatureImageFiles(string courseIdentity, Guid currentUserId)
         {

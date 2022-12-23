@@ -160,14 +160,14 @@ namespace Lingtren.Application.Common.Interfaces
         /// <summary>
         /// Upload Signature
         /// </summary>
-        /// <param name="model">the signature rerquest model<see cref="SignatureRequestModel"/></param>
+        /// <param name="model">the signature rerquest model<see cref="SignatureFileRequestModel"/></param>
         /// <param name="currentUserId">the Guid of current user</param>
         /// <returns>an instance of <see cref="SignatureResponseModel"/></returns>
-        Task<SignatureResponseModel> UploadSignatureImageFile(SignatureRequestModel model, Guid currentUserId);
+        Task<IList<SignatureResponseModel>> UploadSignatureImageFile(SignatureRequestModel model, Guid currentUserId);
         /// <summary>
         /// Retrieve Signatures
         /// </summary>
-        /// <param name="model">the signature rerquest model<see cref="SignatureRequestModel"/></param>
+        /// <param name="model">the signature rerquest model<see cref="SignatureFileRequestModel"/></param>
         /// <returns>List of <see cref="SignatureResponseModel"/></returns>
         Task<IList<SignatureResponseModel>> GetSignatureImageFiles(string courseIdentity, Guid currentUserId);
 
