@@ -157,19 +157,22 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the list of <see cref="CourseCertificateResponseModel"/></returns>
         Task<IList<CourseCertificateResponseModel>> IssueCertificateAsync(string identity, CertificateIssueRequestModel model, Guid currentUserId);
+       
         /// <summary>
-        /// Upload Signature
+        /// Handle to upload the signature
         /// </summary>
-        /// <param name="model">the signature rerquest model<see cref="SignatureFileRequestModel"/></param>
-        /// <param name="currentUserId">the Guid of current user</param>
-        /// <returns>an instance of <see cref="SignatureResponseModel"/></returns>
-        Task<IList<SignatureResponseModel>> UploadSignatureImageFile(SignatureRequestModel model, Guid currentUserId);
+        /// <param name="model"> the instance of <see cref="SignatureRequestModel" />.</param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the list of <see cref="SignatureResponseModel" /> .</returns>
+        Task<IList<SignatureResponseModel>> UploadSignatureAsync(SignatureRequestModel model, Guid currentUserId);
+       
         /// <summary>
-        /// Retrieve Signatures
+        /// Handle to get signature
         /// </summary>
-        /// <param name="model">the signature rerquest model<see cref="SignatureFileRequestModel"/></param>
-        /// <returns>List of <see cref="SignatureResponseModel"/></returns>
-        Task<IList<SignatureResponseModel>> GetSignatureImageFiles(string courseIdentity, Guid currentUserId);
+        /// <param name="courseIdentity"> the course id or slug </param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the list of <see cref="SignatureResponseModel" /> . </returns>
+        Task<IList<SignatureResponseModel>> GetSignatureAsync(string courseIdentity, Guid currentUserId);
 
         #endregion Certificate 
     }

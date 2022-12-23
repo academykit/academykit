@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lingtren.Application.Common.Models.RequestModels
+﻿namespace Lingtren.Application.Common.Models.RequestModels
 {
+    using System.ComponentModel.DataAnnotations;
     public class SignatureRequestModel
     {
+        [Required]
         public string CourseIdentity { get; set; }
-        public IList<SignatureFileRequestModel> signatureList { get; set; }
+
+        [Required]
+        public IList<SignatureFileRequestModel> Signatures { get; set; }
     }
 }

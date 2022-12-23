@@ -233,24 +233,24 @@ namespace Lingtren.Api.Controllers
         }
 
         /// <summary>
-        /// Course Certificate Signature URL
+        /// course author signature api
         /// </summary>
         /// <param name="identity"> the course id or slug.</param>
-        /// <param name="signatureURL"> the authorized signature url</param>
+        /// <param name="signatureURL"> the instance of <see cref="SignatureRequestModel" /> .</param>
         [HttpPost("signature")]
         public async Task<IList<SignatureResponseModel>> Signature(SignatureRequestModel model)
         {
-            return await _courseService.UploadSignatureImageFile(model, CurrentUser.Id);
+            var response = await _courseService.UploadSignatureAsync(model, CurrentUser.Id);
+            return response;
         }
 
         /// <summary>
-        /// Course Certificate Signature URL
+        /// get course signature api
         /// </summary>
         /// <param name="identity"> the course id or slug.</param>
         [HttpGet("{identity}/signature")]
-        public async Task<IList<SignatureResponseModel>> Signature(string identity)
-        {
-            return await _courseService.GetSignatureImageFiles(identity, CurrentUser.Id).ConfigureAwait(false);
-        }
+        public async Task<IList<SignatureResponseModel>> Signature(string identity) =>
+        await _courseService.GetSignatureAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+
     }
 }
