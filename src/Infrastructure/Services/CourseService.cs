@@ -1122,7 +1122,7 @@ namespace Lingtren.Infrastructure.Services
             var course = await GetByIdOrSlugAsync(model.CourseIdentity, currentUserId).ConfigureAwait(false);
             if (course == null)
             {
-                throw new EntityNotFoundException("Cannot find the specified course");
+                throw new EntityNotFoundException("Can not find the specified course");
             }
             var mediafile = new MediaRequestModel
             {
@@ -1142,7 +1142,7 @@ namespace Lingtren.Infrastructure.Services
             };
 
             _unitOfWork.GetRepository<Signature>().InsertAsync(signature);
-            _unitOfWork.SaveChanges();
+            _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
             SignatureResponseModel signatureResponseModel = new SignatureResponseModel
             {
@@ -1164,22 +1164,20 @@ namespace Lingtren.Infrastructure.Services
             var course = await GetByIdOrSlugAsync(courseIdentity, currentUserId).ConfigureAwait(false);
             if (course == null)
             {
-                throw new EntityNotFoundException("Cannot find the specified course");
+                throw new EntityNotFoundException("Can not find the specified course");
             }
-            var signatureList = _unitOfWork.GetRepository<Signature>().GetAll(predicate: p => p.CourseId == course.Id).ToList();
-            var response = new List<SignatureResponseModel>();
-            foreach(var signature in signatureList)
+            var signatureList =await _unitOfWork.GetRepository<Signature>().GetAllAsync(predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
+            var response = signatureList.Select(x => new SignatureResponseModel
             {
-                SignatureResponseModel responseModel = new SignatureResponseModel
-                {
-                    CourseIdentity = courseIdentity,
-                    Designation = signature.Designation,
-                    PersonName =   signature.FullName,
-                    SignatureURL = signature.FileUrl,
+                Id = x.Id,
+                CourseIdentity = courseIdentity,
+                Designation = x.Designation,
+                PersonName = x.FullName,
+                SignatureURL = x.FileUrl,
+                CreatedBy = x.CreatedBy,
+                CreatedOn = x.CreatedOn
+            }).ToList();
 
-                };
-                response.Add(responseModel);
-            };
             return response;
         }
         #endregion Certificate

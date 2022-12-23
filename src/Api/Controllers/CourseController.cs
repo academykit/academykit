@@ -237,8 +237,8 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="identity"> the course id or slug.</param>
         /// <param name="signatureURL"> the authorized signature url</param>
-        [HttpPost("{identity}/signature")]
-        public async Task<SignatureResponseModel> Signature([FromQuery] SignatureRequestModel model)
+        [HttpPost("signature")]
+        public async Task<SignatureResponseModel> Signature([FromForm] SignatureRequestModel model)
         {
             return await _courseService.UploadSignatureImageFile(model, CurrentUser.Id);
         }
