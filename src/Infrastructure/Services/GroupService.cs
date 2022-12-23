@@ -15,6 +15,7 @@
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
     using System.Net;
+    using System.Runtime.InteropServices;
 
     public class GroupService : BaseGenericService<Group, GroupBaseSearchCriteria>, IGroupService
     {
@@ -141,9 +142,13 @@
                 var inActiveUsers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(
                     predicate: p => p.GroupId == group.Id && userIds.Contains(p.UserId) && !p.IsActive,
                     include: src => src.Include(x => x.User)).ConfigureAwait(false);
+               
+                var adminAndSuperAdmin = await _unitOfWork.GetRepository<User>().GetAllAsync(
+                    predicate: p => (p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin) && model.Emails.Contains(p.Email)).ConfigureAwait(false);
 
                 var usersToBeAdded = userIds.Except(duplicateUsers.Select(x => x.UserId))
-                                            .Except(inActiveUsers.Select(x => x.UserId));
+                                            .Except(inActiveUsers.Select(x => x.UserId))
+                                            .Except(adminAndSuperAdmin.Select(x => x.Id));
 
                 var groupMembers = new List<GroupMember>();
                 var currentTimeStamp = DateTime.UtcNow;
@@ -166,7 +171,7 @@
 
                 var result = new GroupAddMemberResponseModel();
 
-                if (duplicateUsers.Count > 0 || inActiveUsers.Count > 0 || nonUsers.Count > 0)
+                if (duplicateUsers.Count > 0 || inActiveUsers.Count > 0 || nonUsers.Count > 0 || adminAndSuperAdmin.Count > 0)
                 {
                     result.HttpStatusCode = HttpStatusCode.PartialContent;
                     if (duplicateUsers.Count > 0)
@@ -180,6 +185,10 @@
                     if (nonUsers.Count > 0)
                     {
                         result.Message += $" & {string.Join(',', nonUsers.Select(x => x))} is not a users in the system";
+                    }
+                    if(adminAndSuperAdmin.Count > 0)
+                    {
+                        result.Message += $" & {string.Join(',', adminAndSuperAdmin.Select(x => x.Email))} is a {string.Join(',', adminAndSuperAdmin.Select(x => x.Role))} in the system";
                     }
                     result.Message = result.Message.TrimStart(' ', '&');
                     if (usersToBeAdded.Count() > 0)

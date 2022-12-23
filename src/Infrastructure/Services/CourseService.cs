@@ -10,16 +10,28 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
     using LinqKit;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using RestSharp;
     using System.Data;
+    using System.IO;
     using System.Linq.Expressions;
 
     public class CourseService : BaseGenericService<Course, CourseBaseSearchCriteria>, ICourseService
     {
-        public CourseService(IUnitOfWork unitOfWork, ILogger<CourseService> logger) : base(unitOfWork, logger)
+        private readonly string imageApi;
+        private readonly IMediaService _mediaService;
+        public CourseService(
+            IUnitOfWork unitOfWork,
+            ILogger<CourseService> logger,
+            IConfiguration configuration,
+            IMediaService mediaService) : base(unitOfWork, logger)
         {
+            imageApi = configuration.GetSection("AppUrls:ImageApi").Value;
+            _mediaService = mediaService;
         }
         #region Protected Methods
         /// <summary>
@@ -836,7 +848,7 @@ namespace Lingtren.Infrastructure.Services
                 responseModel.TotalTrainers = await _unitOfWork.GetRepository<User>().CountAsync(
                     predicate: p => p.IsActive && p.Role == UserRole.Trainer).ConfigureAwait(false);
                 responseModel.TotalTrainings = await _unitOfWork.GetRepository<Course>().CountAsync(
-                    predicate:p => p.Status == CourseStatus.Published || p.Status == CourseStatus.Completed || p.IsUpdate).ConfigureAwait(false);
+                    predicate: p => p.Status == CourseStatus.Published || p.Status == CourseStatus.Completed || p.IsUpdate).ConfigureAwait(false);
             }
             if (currentUserRole == UserRole.Trainer)
             {
@@ -943,6 +955,161 @@ namespace Lingtren.Infrastructure.Services
 
         #region Certificate
 
+
+        /// <summary>
+        /// Handle to search certificate
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="criteria">the instance of <see cref="CertificateBaseSearchCriteria"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the paginated result</returns>
+        public async Task<SearchResult<CourseCertificateResponseModel>> SearchCertificateAsync(string identity, CertificateBaseSearchCriteria criteria, Guid currentUserId)
+        {
+            var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+
+            var predicate = PredicateBuilder.New<CourseEnrollment>(true);
+            predicate = predicate.And(p => p.CourseId == course.Id && !p.IsDeleted);
+            if (criteria.CompletedCourse)
+            {
+                predicate = predicate.And(p => p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed);
+            }
+            else
+            {
+                predicate = predicate.And(p => p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled);
+            }
+
+            if (!string.IsNullOrWhiteSpace(criteria.Search))
+            {
+                var search = criteria.Search.ToLower().Trim();
+                predicate = predicate.And(x =>
+                    ((x.User.FirstName.Trim() + " " + x.User.MiddleName.Trim()).Trim() + " " + x.User.LastName.Trim()).Trim().Contains(search)
+                        || x.User.Email.ToLower().Trim().Contains(search));
+            }
+
+            var query = _unitOfWork.GetRepository<CourseEnrollment>().GetAll(
+                predicate: predicate,
+                include: src => src.Include(x => x.User));
+
+            if (criteria.SortBy == null)
+            {
+                criteria.SortBy = nameof(CourseEnrollment.Percentage);
+                criteria.SortType = SortType.Descending;
+            }
+            query = criteria.SortType == SortType.Ascending
+                ? query.OrderBy(criteria.SortBy)
+                : query.OrderByDescending(criteria.SortBy);
+            var result = query.ToList().ToIPagedList(criteria.Page, criteria.Size);
+
+            var response = new SearchResult<CourseCertificateResponseModel>
+            {
+                Items = new List<CourseCertificateResponseModel>(),
+                CurrentPage = result.CurrentPage,
+                PageSize = result.PageSize,
+                TotalCount = result.TotalCount,
+                TotalPage = result.TotalPage,
+            };
+
+            result.Items.ForEach(p =>
+                 response.Items.Add(new CourseCertificateResponseModel()
+                 {
+                     CourseId = course.Id,
+                     CourseName = course.Name,
+                     CourseSlug = course.Slug,
+                     CertificateIssuedDate = p.CertificateIssuedDate,
+                     HasCertificateIssued = p.HasCertificateIssued,
+                     CertificateUrl = p.CertificateUrl,
+                     Percentage = p.Percentage,
+                     User = new UserModel(p.User)
+                 })
+             );
+            return response;
+        }
+
+        /// <summary>
+        /// Handle to issue the certificate
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="model">the instance of <see cref="CertificateIssueRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the list of <see cref="CourseCertificateResponseModel"/></returns>
+        public async Task<IList<CourseCertificateResponseModel>> IssueCertificateAsync(string identity, CertificateIssueRequestModel model, Guid currentUserId)
+        {
+            try
+            {
+                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+
+                var predicate = PredicateBuilder.New<CourseEnrollment>(true);
+                predicate = predicate.And(p => p.CourseId == course.Id && !p.IsDeleted && p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled);
+                if (!model.IssueAll)
+                {
+                    predicate = predicate.And(p => model.UserIds.Contains(p.UserId));
+                }
+                predicate = predicate.And(p => p.HasCertificateIssued != true);
+
+                var results = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
+                    predicate: predicate,
+                    include: src => src.Include(x => x.User)
+                    ).ConfigureAwait(false);
+                var currentTimeStamp = DateTime.UtcNow;
+                var response = new List<CourseCertificateResponseModel>();
+                foreach (var item in results)
+                {
+                    item.CertificateUrl = await GetImageFile(item, course.Name).ConfigureAwait(false);
+                    item.CertificateIssuedDate = currentTimeStamp;
+                    item.HasCertificateIssued = true;
+                    response.Add(new CourseCertificateResponseModel
+                    {
+                        CourseId = course.Id,
+                        CourseName = course.Name,
+                        CourseSlug = course.Slug,
+                        CertificateIssuedDate = item.CertificateIssuedDate,
+                        HasCertificateIssued = item.HasCertificateIssued,
+                        CertificateUrl = item.CertificateUrl,
+                        Percentage = item.Percentage,
+                        User = new UserModel(item.User)
+                    });
+                }
+                _unitOfWork.GetRepository<CourseEnrollment>().Update(results);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to issued the course certificate.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to issued the course certificate.");
+            }
+
+        }
+
+        /// <summary>
+        /// Create zoom meeting
+        /// </summary>
+        /// <param name="meetingName">the meeting name</param>
+        /// <param name="duration">the duration</param>
+        /// <param name="startDate">the start date</param>
+        /// <param name="hostEmail">the host email</param>
+        /// <returns>the meeting id and passcode and the instance of <see cref="ZoomLicense"/></returns>
+        private async Task<string> GetImageFile(CourseEnrollment courseEnrollment, string courseName)
+        {
+            var client = new RestClient($"{imageApi}");
+            var request = new RestRequest().AddHeader("Accept", "application/json")
+                    .AddJsonBody(new
+                    {
+                        name = courseEnrollment.User.FullName,
+                        training = courseName,
+                        authors = new[] { new { name = "Aryan Phuyal",
+                            position = "Managing Director" },
+                                new  {
+                                    name = "Alina KC",
+                            position = "Trainer"
+                          } }
+                    });
+            var response = await client.PostAsync(request).ConfigureAwait(false);
+            var fileName = string.Join("_", courseEnrollment.User.FirstName, courseName);
+            MemoryStream ms = new MemoryStream(response.RawBytes);
+            var file = new FormFile(ms, 0, response.RawBytes.Length, fileName, fileName);
+            return await _mediaService.UploadFileAsync(new MediaRequestModel { File = file, Type = MediaType.File }).ConfigureAwait(false);
+        }
         #endregion Certificate
 
     }

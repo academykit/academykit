@@ -12,7 +12,6 @@
     using Lingtren.Infrastructure.Common;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
-    using MimeKit.Encodings;
 
     public class GroupController : BaseApiController
     {
@@ -91,18 +90,6 @@
                 UpdatedOn = currentTimeStamp,
                 GroupMembers = new List<GroupMember>()
             };
-
-            entity.GroupMembers.Add(new GroupMember()
-            {
-                Id = Guid.NewGuid(),
-                GroupId = entity.Id,
-                UserId = CurrentUser.Id,
-                IsActive = true,
-                CreatedBy = CurrentUser.Id,
-                CreatedOn = currentTimeStamp,
-                UpdatedBy = CurrentUser.Id,
-                UpdatedOn = currentTimeStamp,
-            });
             var response = await _groupService.CreateAsync(entity).ConfigureAwait(false);
             return new GroupResponseModel(response);
         }
@@ -186,6 +173,42 @@
         }
 
         /// <summary>
+        /// api that searches non members of group
+        /// </summary>
+        /// <param name="identity">the group id or slug</param>
+        /// <param name="searchCriteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns></returns>
+        /// <exception cref="EntityNotFoundException"></exception>
+        [HttpGet("{identity}/notMembers")]
+        public async Task<SearchResult<UserModel>> SearchNotGroupMembers(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
+        {
+            var group = await _groupService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
+            if (group == null)
+            {
+                throw new EntityNotFoundException("Group not found");
+            }
+            var predicate = PredicateBuilder.New<User>(true);
+            if (!string.IsNullOrWhiteSpace(searchCriteria.Search))
+            {
+                var search = searchCriteria.Search.Trim().ToLower();
+                predicate = predicate.And(p => p.FirstName.Contains(search) || p.Email.Contains(search));
+            }
+            predicate = predicate.And(p => !(p.Groups.Select(x => x.Name).Contains(identity)) && !(p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin) && (p.IsActive == true));
+            var users = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate).ConfigureAwait(false);
+            var result =  users.ToIPagedList(searchCriteria.Page,searchCriteria.Size);
+            var response = new SearchResult<UserModel>
+            {
+                Items = new List<UserModel>(),
+                CurrentPage = result.CurrentPage,
+                PageSize = result.PageSize,
+                TotalCount = result.TotalCount,
+                TotalPage = result.TotalPage
+            };
+            result.Items.ForEach(x => response.Items.Add(new UserModel(x)));
+            return response;
+        }
+
+        /// <summary>
         /// Group member add api
         /// </summary>
         /// <param name="identity">the group id or slug</param>
@@ -231,7 +254,7 @@
         /// <param name="model">the instance of <see cref="AddGroupMemberRequestModel"/></param>
         /// <returns>the instance of <see cref="GroupAddMemberResponseModel"/></returns>
         [HttpGet("{identity}/courses")]
-        public async Task<SearchResult<CourseResponseModel>> Courses(string identity, [FromQuery]BaseSearchCriteria criteria)
+        public async Task<SearchResult<CourseResponseModel>> Courses(string identity, [FromQuery] BaseSearchCriteria criteria)
         {
             var searchResult = await _courseService.GroupCourseSearchAsync(identity, criteria).ConfigureAwait(false);
             var response = new SearchResult<CourseResponseModel>
@@ -256,9 +279,9 @@
         /// <param name="model"> the instance of <see cref="GroupFileRequestModel" /> . </param>
         /// <returns> the instance of <see cref="GroupFileResponseModel" /> .</returns>
         [HttpPost("file")]
-        public async Task<GroupFileResponseModel> UploadFile([FromForm]GroupFileRequestModel model)
+        public async Task<GroupFileResponseModel> UploadFile([FromForm] GroupFileRequestModel model)
         {
-            var response = await _groupService.UploadGroupFileAsync(model,CurrentUser.Id).ConfigureAwait(false);
+            var response = await _groupService.UploadGroupFileAsync(model, CurrentUser.Id).ConfigureAwait(false);
             return new GroupFileResponseModel(response);
         }
 
@@ -268,7 +291,7 @@
         /// <param name="searchCriteria"> the instance of <see cref="GroupFileSearchCriteria" /> . </param>
         /// <returns> the list of <see cref="GroupFileResponseModel" /> .</returns>
         [HttpGet("files")]
-        public async Task<SearchResult<GroupFileResponseModel>> Files([FromQuery]GroupFileSearchCriteria searchCriteria)
+        public async Task<SearchResult<GroupFileResponseModel>> Files([FromQuery] GroupFileSearchCriteria searchCriteria)
         {
             searchCriteria.CurrentUserId = CurrentUser.Id;
             var searchResult = await _groupService.GetGroupFilesAsync(searchCriteria).ConfigureAwait(false);
@@ -294,7 +317,7 @@
         [HttpDelete("{identity}/files/{fileId}")]
         public async Task<IActionResult> RemoveFile(string identity, Guid fileId)
         {
-            await _groupService.RemoveGroupFileAsync(identity,fileId,CurrentUser.Id).ConfigureAwait(false);
+            await _groupService.RemoveGroupFileAsync(identity, fileId, CurrentUser.Id).ConfigureAwait(false);
             return Ok();
         }
     }

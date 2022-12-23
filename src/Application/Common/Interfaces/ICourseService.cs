@@ -10,6 +10,8 @@ namespace Lingtren.Application.Common.Interfaces
 
     public interface ICourseService : IGenericService<Course, CourseBaseSearchCriteria>
     {
+        #region Course CRUD
+
         /// <summary>
         /// Handle to change course status
         /// </summary>
@@ -75,6 +77,10 @@ namespace Lingtren.Application.Common.Interfaces
         /// <returns></returns>
         Task UpdateCourseStatusAsync(string identity, Guid currentUserId);
 
+        #endregion Course CRUD
+
+        #region Statistics
+
         /// <summary>
         /// Handle to fetch course lesson statistics
         /// </summary>
@@ -109,6 +115,10 @@ namespace Lingtren.Application.Common.Interfaces
         /// <returns>the list of <see cref="LessonStudentResponseModel"/></returns>
         Task<IList<LessonStudentResponseModel>> StudentLessonsDetail(string identity, Guid userId, Guid currentUserId);
 
+        #endregion Statistics
+
+        #region Dashboard
+
         // <summary>
         /// Handle to get dashboard stats
         /// </summary>
@@ -125,5 +135,29 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the search result of <see cref="DashboardResponseModel"/></returns>
         Task<SearchResult<DashboardCourseResponseModel>> GetDashboardCourses(Guid currentUserId, UserRole currentUserRole, BaseSearchCriteria criteria);
+
+        #endregion Dashboard
+
+        #region Certificate
+
+        /// <summary>
+        /// Handle to search certificate
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="criteria">the instance of <see cref="CertificateBaseSearchCriteria"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the paginated result</returns>
+        Task<SearchResult<CourseCertificateResponseModel>> SearchCertificateAsync(string identity, CertificateBaseSearchCriteria criteria, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to issue the certificate
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="model">the instance of <see cref="CertificateIssueRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the list of <see cref="CourseCertificateResponseModel"/></returns>
+        Task<IList<CourseCertificateResponseModel>> IssueCertificateAsync(string identity, CertificateIssueRequestModel model, Guid currentUserId);
+
+        #endregion Certificate 
     }
 }

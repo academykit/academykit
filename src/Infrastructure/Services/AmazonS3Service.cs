@@ -31,8 +31,8 @@ namespace Lingtren.Infrastructure.Services
                 var request = new TransferUtilityUploadRequest
                 {
                     Key = dto.Key,
-                    ContentType ="video/mp4",
-                    FilePath = dto.FilePath
+                    ContentType =dto.File.ContentType,
+                    InputStream = dto.File.OpenReadStream(),
                 };
                 request.BucketName = dto.Type == MediaType.File ? dto.Setting?.FileBucket : dto.Setting?.VideoBucket;
                 await transferUtility.UploadAsync(request);

@@ -390,7 +390,7 @@
             if (newUser != null)
             {
                 _logger.LogWarning("User with new email : {email} found in the system", model.NewEmail);
-                throw new ForbiddenException($"User found with new email : {model.NewEmail}.");
+                throw new ForbiddenException($"This new email address( {model.NewEmail} already exist in another account.");
             }
             var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password);
             if (!isUserAuthenticated)
