@@ -1,5 +1,6 @@
 namespace Lingtren.Api.Controllers
 {
+    using Application.Common.Models.RequestModels;
     using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
@@ -229,6 +230,23 @@ namespace Lingtren.Api.Controllers
         public async Task<IList<LessonStudentResponseModel>> StudentStatistics(string identity, Guid userId)
         {
             return await _courseService.StudentLessonsDetail(identity, userId, CurrentUser.Id).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Course Certificate Signature URL
+        /// </summary>
+        /// <param name="identity"> the course id or slug.</param>
+        /// <param name="signatureURL"> the authorized signature url</param>
+        [HttpPost("{identity}/signature")]
+        public async Task<SignatureResponseModel> Signature([FromQuery] SignatureRequestModel model)
+        {
+            return await _courseService.UploadSignatureImageFile(model, CurrentUser.Id);
+        }
+
+        [HttpGet("{identity}/signature")]
+        public async Task<IList<SignatureResponseModel>> Signature(string identity)
+        {
+            return await _courseService.GetSignatureImageFiles(identity, CurrentUser.Id).ConfigureAwait(false);
         }
     }
 }

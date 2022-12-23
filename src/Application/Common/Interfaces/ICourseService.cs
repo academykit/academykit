@@ -158,6 +158,10 @@ namespace Lingtren.Application.Common.Interfaces
         /// <returns>the list of <see cref="CourseCertificateResponseModel"/></returns>
         Task<IList<CourseCertificateResponseModel>> IssueCertificateAsync(string identity, CertificateIssueRequestModel model, Guid currentUserId);
 
+        Task<SignatureResponseModel> UploadSignatureImageFile(SignatureRequestModel model, Guid currentUserId);
+
+        Task<IList<SignatureResponseModel>> GetSignatureImageFiles(string courseIdentity, Guid currentUserId);
+
         #endregion Certificate 
     }
 }

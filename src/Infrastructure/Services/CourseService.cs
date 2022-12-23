@@ -1110,6 +1110,72 @@ namespace Lingtren.Infrastructure.Services
             var file = new FormFile(ms, 0, response.RawBytes.Length, fileName, fileName);
             return await _mediaService.UploadFileAsync(new MediaRequestModel { File = file, Type = MediaType.File }).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Upload Signature
+        /// </summary>
+        /// <param name="model">the signature rerquest model<see cref="SignatureRequestModel"/></param>
+        /// <returns></returns>
+        public async Task<SignatureResponseModel> UploadSignatureImageFile(SignatureRequestModel model, Guid currentUserId)
+        {
+            var course = await GetByIdOrSlugAsync(model.CourseIdentity, currentUserId).ConfigureAwait(false);
+            if (course == null)
+            {
+                throw new EntityNotFoundException("Cannot find the specified course");
+            }
+            var mediafile = new MediaRequestModel
+            {
+                File = model.File,
+                Type = MediaType.File
+            };
+            var url =  await _mediaService.UploadFileAsync(mediafile).ConfigureAwait(false);
+            Signature signature = new Signature
+            {
+                Id = Guid.NewGuid(),
+                FileUrl = url,
+                FullName = model.PersonName,
+                Designation = model.Designation,
+                CourseId = course.Id,
+                CreatedOn = DateTime.UtcNow,
+                CreatedBy = currentUserId
+            };
+
+            _unitOfWork.GetRepository<Signature>().InsertAsync(signature);
+            _unitOfWork.SaveChanges();
+
+            SignatureResponseModel signatureResponseModel = new SignatureResponseModel
+            {
+                CourseIdentity = model.CourseIdentity,
+                Designation = model.Designation,
+                PersonName = model.PersonName,
+                SignatureURL = url
+            };
+            return signatureResponseModel;
+
+        }
+        public async Task<IList<SignatureResponseModel>> GetSignatureImageFiles(string courseIdentity, Guid currentUserId)
+        {
+            var course = await GetByIdOrSlugAsync(courseIdentity, currentUserId).ConfigureAwait(false);
+            if (course == null)
+            {
+                throw new EntityNotFoundException("Cannot find the specified course");
+            }
+            var signatureList = _unitOfWork.GetRepository<Signature>().GetAll(predicate: p => p.CourseId == course.Id).ToList();
+            var response = new List<SignatureResponseModel>();
+            foreach(var signature in signatureList)
+            {
+                SignatureResponseModel responseModel = new SignatureResponseModel
+                {
+                    CourseIdentity = courseIdentity,
+                    Designation = signature.Designation,
+                    PersonName =   signature.FullName,
+                    SignatureURL = signature.FileUrl,
+
+                };
+                response.Add(responseModel);
+            };
+            return response;
+        }
         #endregion Certificate
 
     }
