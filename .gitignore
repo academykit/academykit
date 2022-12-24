@@ -487,3 +487,6 @@ $RECYCLE.BIN/
 .vs/lingtren/DesignTimeBuild/.dtbcache.v2
 .vs/lingtren/v17/.suo
 *.v2
+.vs/lingtren/config/applicationhost.config
+.vs/lingtren/DesignTimeBuild/.dtbcache.v2
+.vs/lingtren/v17/.suo

@@ -15,7 +15,6 @@
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
     using System.Net;
-    using System.Runtime.InteropServices;
 
     public class GroupService : BaseGenericService<Group, GroupBaseSearchCriteria>, IGroupService
     {
@@ -142,7 +141,7 @@
                 var inActiveUsers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(
                     predicate: p => p.GroupId == group.Id && userIds.Contains(p.UserId) && !p.IsActive,
                     include: src => src.Include(x => x.User)).ConfigureAwait(false);
-               
+
                 var adminAndSuperAdmin = await _unitOfWork.GetRepository<User>().GetAllAsync(
                     predicate: p => (p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin) && model.Emails.Contains(p.Email)).ConfigureAwait(false);
 
@@ -186,7 +185,7 @@
                     {
                         result.Message += $" & {string.Join(',', nonUsers.Select(x => x))} is not a users in the system";
                     }
-                    if(adminAndSuperAdmin.Count > 0)
+                    if (adminAndSuperAdmin.Count > 0)
                     {
                         result.Message += $" & {string.Join(',', adminAndSuperAdmin.Select(x => x.Email))} is a {string.Join(',', adminAndSuperAdmin.Select(x => x.Role))} in the system";
                     }
@@ -284,14 +283,23 @@
         {
             try
             {
-                await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == model.GroupIdentity ||
                              p.Slug.Equals(model.GroupIdentity)).ConfigureAwait(false);
                 if (group == null)
                 {
-                    _logger.LogError($"Group with id {model.GroupIdentity} not found");
+                    _logger.LogWarning("Group with identity: {identity} not found", model.GroupIdentity);
                     throw new EntityNotFoundException("Group not found");
                 }
+
+                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+                var isGroupTeacher = await IsGroupTeacher(group.Id, currentUserId).ConfigureAwait(false);
+
+                if (!isSuperAdminOrAdmin && !isGroupTeacher)
+                {
+                    _logger.LogWarning("User with id: {userId} is not superadmin or admin or teacher for the group with id :{groupId}", currentUserId, group.Id);
+                    throw new ForbiddenException("Unauthorized user to create an attachment in the group.");
+                }
+
                 var groupFileDto = await _mediaService.UploadGroupFileAsync(model.File).ConfigureAwait(false);
                 var groupFile = new GroupFile
                 {
@@ -311,10 +319,12 @@
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occured while trying to upload the file in the group.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occured while trying to upload the file in the group.");
             }
         }
+
+
 
         /// <summary>
         /// Handle to remove group file
@@ -327,12 +337,29 @@
         {
             try
             {
-                await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
-                var file = await _unitOfWork.GetRepository<GroupFile>().GetFirstOrDefaultAsync(predicate: x => x.Id == fileId).ConfigureAwait(false);
+                var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id.ToString() == groupIdentity || p.Slug == groupIdentity
+                    ).ConfigureAwait(false);
+                if (group == null)
+                {
+                    _logger.LogWarning("Group with identity : {identity} not found", groupIdentity);
+                    throw new EntityNotFoundException("Group not found");
+                }
+
+                var file = await _unitOfWork.GetRepository<GroupFile>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id == fileId && p.GroupId == group.Id
+                    ).ConfigureAwait(false);
                 if (file == null)
                 {
-                    _logger.LogError($"File with id : {fileId} not found");
+                    _logger.LogWarning("File with id : {fileId} not found for group with id: {groupId}", fileId, group.Id);
                     throw new EntityNotFoundException("File not found");
+                }
+
+                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+                if (file.CreatedBy != currentUserId && !isSuperAdminOrAdmin)
+                {
+                    _logger.LogWarning("User with id: {userId} is not authorized user to remove file from the group with id : {groupId}", currentUserId, group.Id);
+                    throw new ForbiddenException("Unauthorized user to remove the file from the group");
                 }
 
                 _unitOfWork.GetRepository<GroupFile>().Delete(file);
@@ -340,8 +367,8 @@
             }
             catch (Exception ex)
             {
-
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occured while trying to remove the file from group.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occured while trying to remove the file from group.");
             }
         }
 
@@ -354,32 +381,53 @@
         {
             try
             {
-                var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(predicate : p => p.Id.ToString() == searchCriteria.GroupIdentity ||
-                p.Slug.Equals(searchCriteria.GroupIdentity)).ConfigureAwait(false);
-                if(group == null)
+                var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id.ToString() == searchCriteria.GroupIdentity || p.Slug.Equals(searchCriteria.GroupIdentity)
+                    ).ConfigureAwait(false);
+                if (group == null)
                 {
-                    _logger.LogError($"Group with identity {searchCriteria.GroupIdentity} not found");
+                    _logger.LogWarning("Group with identity: {identity} not found", searchCriteria.GroupIdentity);
                     throw new EntityNotFoundException("Group not found");
                 }
 
-                var userAccess = await ValidateUserCanAccessGroup(group.Id,searchCriteria.CurrentUserId).ConfigureAwait(false);
-                if(!userAccess)
+                var userAccess = await ValidateUserCanAccessGroup(group.Id, searchCriteria.CurrentUserId).ConfigureAwait(false);
+                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(searchCriteria.CurrentUserId).ConfigureAwait(false);
+                if (!userAccess && !isSuperAdminOrAdmin)
                 {
+                    _logger.LogWarning("User with id: {userId} is not authorized user to access the group with id: {groupId}", searchCriteria.CurrentUserId, group.Id);
                     throw new ForbiddenException("User can't access the group.");
                 }
 
-                var files = await _unitOfWork.GetRepository<GroupFile>().GetAllAsync(predicate: p => p.GroupId == group.Id).ConfigureAwait(false);
-                if(files.Count != default && !string.IsNullOrEmpty(searchCriteria.Search))
+                var files = await _unitOfWork.GetRepository<GroupFile>().GetAllAsync(
+                    predicate: p => p.GroupId == group.Id,
+                    include: src => src.Include(x => x.User)).ConfigureAwait(false);
+                if (files.Count != default && !string.IsNullOrEmpty(searchCriteria.Search))
                 {
                     files = files.Where(x => x.Name.ToLower().Trim().Contains(searchCriteria.Search)).ToList();
                 }
-               return files.ToIPagedList(searchCriteria.Page,searchCriteria.Size);
+
+                return files.ToIPagedList(searchCriteria.Page, searchCriteria.Size);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message,ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occured while trying to fetch the group files.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occured while trying to fetch the group files.");
             }
+        }
+
+        /// <summary>
+        /// Handle to get whether user is group member or not with teacher role
+        /// </summary>
+        /// <param name="groupId">the group id</param>
+        /// <param name="currentUserId">the current user idz</param>
+        /// <returns>the boolean true or false</returns>
+        private async Task<bool> IsGroupTeacher(Guid groupId, Guid currentUserId)
+        {
+            var groupMember = await _unitOfWork.GetRepository<GroupMember>().GetFirstOrDefaultAsync(
+               predicate: p => p.GroupId == groupId && p.UserId == currentUserId && p.IsActive,
+               include: src => src.Include(x => x.User)
+               ).ConfigureAwait(false);
+            return groupMember?.User.Role == UserRole.Trainer;
         }
     }
 }
