@@ -16,6 +16,7 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using RestSharp;
+    using System.Collections;
     using System.Data;
     using System.IO;
     using System.Linq.Expressions;
@@ -1037,6 +1038,10 @@ namespace Lingtren.Infrastructure.Services
             try
             {
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+                course.Signatures = new List<Signature>();
+                course.Signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
+                    predicate: p => p.CourseId == course.Id
+                    ).ConfigureAwait(false);
 
                 var predicate = PredicateBuilder.New<CourseEnrollment>(true);
                 predicate = predicate.And(p => p.CourseId == course.Id && !p.IsDeleted && p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled);
@@ -1054,7 +1059,7 @@ namespace Lingtren.Infrastructure.Services
                 var response = new List<CourseCertificateResponseModel>();
                 foreach (var item in results)
                 {
-                    item.CertificateUrl = await GetImageFile(item, course.Name).ConfigureAwait(false);
+                    item.CertificateUrl = await GetImageFile(course, item).ConfigureAwait(false);
                     item.CertificateIssuedDate = currentTimeStamp;
                     item.HasCertificateIssued = true;
                     response.Add(new CourseCertificateResponseModel
@@ -1089,23 +1094,31 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="startDate">the start date</param>
         /// <param name="hostEmail">the host email</param>
         /// <returns>the meeting id and passcode and the instance of <see cref="ZoomLicense"/></returns>
-        private async Task<string> GetImageFile(CourseEnrollment courseEnrollment, string courseName)
+        private async Task<string> GetImageFile(Course course, CourseEnrollment courseEnrollment)
         {
             var client = new RestClient($"{imageApi}");
+            var authors = new ArrayList();
+            foreach (var item in course.Signatures)
+            {
+                authors.Add(new
+                {
+                    name = item.FullName,
+                    position = item.Designation,
+                    signatureUrl = item.FileUrl
+                });
+            }
             var request = new RestRequest().AddHeader("Accept", "application/json")
                     .AddJsonBody(new
                     {
                         name = courseEnrollment.User.FullName,
-                        training = courseName,
-                        authors = new[] { new { name = "Aryan Phuyal",
-                            position = "Managing Director" },
-                                new  {
-                                    name = "Alina KC",
-                            position = "Trainer"
-                          } }
+                        training = course.Name,
+                        startDate = course.CreatedOn,
+                        endDate = course.UpdatedOn,
+                        authors = authors,
                     });
+
             var response = await client.PostAsync(request).ConfigureAwait(false);
-            var fileName = string.Join("_", courseEnrollment.User.FirstName, courseName);
+            var fileName = string.Join("_", courseEnrollment.User.FirstName, course.Name);
             MemoryStream ms = new MemoryStream(response.RawBytes);
             var file = new FormFile(ms, 0, response.RawBytes.Length, fileName, fileName);
             return await _mediaService.UploadFileAsync(new MediaRequestModel { File = file, Type = MediaType.File }).ConfigureAwait(false);
@@ -1168,7 +1181,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="courseIdentity"> the course id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the list of <see cref="SignatureResponseModel" /> . </returns>
-       public async Task<IList<SignatureResponseModel>> GetSignatureAsync(string courseIdentity, Guid currentUserId)
+        public async Task<IList<SignatureResponseModel>> GetSignatureAsync(string courseIdentity, Guid currentUserId)
         {
             try
             {
