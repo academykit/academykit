@@ -8,7 +8,7 @@
         {
             RuleFor(x => x.UserId).NotEmpty().NotNull().WithMessage("User id is required.");
             RuleFor(x => x.Marks).NotEmpty().NotNull().WithMessage("Marks is required.");
-            RuleFor(x => x.Review).MaximumLength(500).WithMessage("Review length should be less or equal than 500.");
+            RuleFor(x => x.Review).MaximumLength(500).WithMessage("Review length should be less than or equal to 500.");
         }
     }
 }
