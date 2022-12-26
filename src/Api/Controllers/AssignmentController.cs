@@ -159,13 +159,14 @@
         }
 
         /// <summary>
-        /// Get assignment submitted student list api
+        /// Get assignment submitted student api
         /// </summary>
         /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="userId">the user id</param>
         /// <returns></returns>
-        [HttpGet("{lessonIdentity}/users")]
-        public async Task<IList<AssignmentSubmissionStudentResponseModel>> SubmissionAsync(string lessonIdentity) =>
-            await _assignmentService.GetAssignmentSubmittedStudent(lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
+        [HttpGet("{lessonIdentity}/user/{userId}")]
+        public async Task<AssignmentSubmissionStudentResponseModel> SubmissionAsync(string lessonIdentity, Guid userId) =>
+            await _assignmentService.GetStudentSubmittedAssignment(lessonIdentity, userId, CurrentUser.Id).ConfigureAwait(false);
 
         /// <summary>
         /// assignment review api

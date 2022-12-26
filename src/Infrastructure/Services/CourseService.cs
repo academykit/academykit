@@ -966,7 +966,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="criteria">the instance of <see cref="CertificateBaseSearchCriteria"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the paginated result</returns>
-        public async Task<SearchResult<CourseCertificateResponseModel>> SearchCertificateAsync(string identity, CertificateBaseSearchCriteria criteria, Guid currentUserId)
+        public async Task<SearchResult<CourseCertificateIssuedResponseModel>> SearchCertificateAsync(string identity, CertificateBaseSearchCriteria criteria, Guid currentUserId)
         {
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
 
@@ -1003,9 +1003,9 @@ namespace Lingtren.Infrastructure.Services
                 : query.OrderByDescending(criteria.SortBy);
             var result = query.ToList().ToIPagedList(criteria.Page, criteria.Size);
 
-            var response = new SearchResult<CourseCertificateResponseModel>
+            var response = new SearchResult<CourseCertificateIssuedResponseModel>
             {
-                Items = new List<CourseCertificateResponseModel>(),
+                Items = new List<CourseCertificateIssuedResponseModel>(),
                 CurrentPage = result.CurrentPage,
                 PageSize = result.PageSize,
                 TotalCount = result.TotalCount,
@@ -1013,7 +1013,7 @@ namespace Lingtren.Infrastructure.Services
             };
 
             result.Items.ForEach(p =>
-                 response.Items.Add(new CourseCertificateResponseModel()
+                 response.Items.Add(new CourseCertificateIssuedResponseModel()
                  {
                      CourseId = course.Id,
                      CourseName = course.Name,
@@ -1034,8 +1034,8 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="identity">the course id or slug</param>
         /// <param name="model">the instance of <see cref="CertificateIssueRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
-        /// <returns>the list of <see cref="CourseCertificateResponseModel"/></returns>
-        public async Task<IList<CourseCertificateResponseModel>> IssueCertificateAsync(string identity, CertificateIssueRequestModel model, Guid currentUserId)
+        /// <returns>the list of <see cref="CourseCertificateIssuedResponseModel"/></returns>
+        public async Task<IList<CourseCertificateIssuedResponseModel>> IssueCertificateAsync(string identity, CertificateIssueRequestModel model, Guid currentUserId)
         {
             try
             {
@@ -1058,13 +1058,13 @@ namespace Lingtren.Infrastructure.Services
                     include: src => src.Include(x => x.User)
                     ).ConfigureAwait(false);
                 var currentTimeStamp = DateTime.UtcNow;
-                var response = new List<CourseCertificateResponseModel>();
+                var response = new List<CourseCertificateIssuedResponseModel>();
                 foreach (var item in results)
                 {
                     item.CertificateUrl = await GetImageFile(course, item).ConfigureAwait(false);
                     item.CertificateIssuedDate = currentTimeStamp;
                     item.HasCertificateIssued = true;
-                    response.Add(new CourseCertificateResponseModel
+                    response.Add(new CourseCertificateIssuedResponseModel
                     {
                         CourseId = course.Id,
                         CourseName = course.Name,
@@ -1176,7 +1176,8 @@ namespace Lingtren.Infrastructure.Services
                     _logger.LogWarning("Course with identity: {identity} not found", identity);
                     throw new EntityNotFoundException("Course not found");
                 }
-                var countSignature = await _unitOfWork.GetRepository<Signature>().CountAsync().ConfigureAwait(false);
+                var countSignature = await _unitOfWork.GetRepository<Signature>().CountAsync(
+                    predicate: p=>p.CourseId == course.Id).ConfigureAwait(false);
                 if (countSignature >= 3)
                 {
                     _logger.LogWarning("Course with id: {id} cannot have more than 3 signatures for user with id: {userId}", course.Id, currentUserId);
@@ -1286,6 +1287,57 @@ namespace Lingtren.Infrastructure.Services
                 _logger.LogError(ex, "An error occurred while trying to update signature in the course.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update signature in the course.");
             }
+        }
+
+        /// <summary>
+        /// Handle to insert course certificate detail
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="model">the instance of <see cref="CourseCertificateRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns></returns>
+        public async Task<CourseCertificateResponseModel> InsertCertificateDetail(string identity, CourseCertificateRequestModel model, Guid currentUserId)
+        {
+            var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+            if (course == null)
+            {
+                _logger.LogWarning("Course with identity: {identity} not found", identity);
+                throw new EntityNotFoundException("Course not found");
+            }
+            var currentTimeStamp = DateTime.UtcNow;
+            var courseCertificate = new CourseCertificate();
+            if (model.Id.HasValue)
+            {
+                courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id == model.Id.Value
+                    ).ConfigureAwait(false);
+                courseCertificate.Title = model.Title;
+                courseCertificate.EventStartDate = model.EventStartDate;
+                courseCertificate.EventEndDate = model.EventEndDate;
+                courseCertificate.UpdatedBy = currentUserId;
+                courseCertificate.UpdatedOn = currentTimeStamp;
+
+                _unitOfWork.GetRepository<CourseCertificate>().Update(courseCertificate);
+            }
+            else
+            {
+                courseCertificate = new CourseCertificate
+                {
+                    Id = Guid.NewGuid(),
+                    CourseId = course.Id,
+                    Title = model.Title,
+                    EventStartDate = model.EventStartDate,
+                    EventEndDate = model.EventEndDate,
+                    CreatedBy = currentUserId,
+                    CreatedOn = currentTimeStamp,
+                    UpdatedBy = currentUserId,
+                    UpdatedOn = currentTimeStamp,
+                };
+
+                await _unitOfWork.GetRepository<CourseCertificate>().InsertAsync(courseCertificate).ConfigureAwait(false);
+            }
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            return new CourseCertificateResponseModel(courseCertificate);
         }
 
         #endregion Signature

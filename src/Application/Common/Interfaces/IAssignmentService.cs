@@ -29,12 +29,13 @@
         Task AssignmentSubmissionAsync(string lessonIdentity, IList<AssignmentSubmissionRequestModel> model, Guid currentUserId);
 
         /// <summary>
-        /// Handle to get list of student who has submitted assignment
+        /// Handle to fetch student submitted assignment
         /// </summary>
         /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="userId">the user id</param>
         /// <param name="currentUserId">the current user id</param>
-        /// <returns></returns>
-        Task<IList<AssignmentSubmissionStudentResponseModel>> GetAssignmentSubmittedStudent(string lessonIdentity, Guid currentUserId);
+        /// <returns>the instance of <see cref="AssignmentSubmissionStudentResponseModel"/></returns>
+        Task<AssignmentSubmissionStudentResponseModel> GetStudentSubmittedAssignment(string lessonIdentity, Guid userId, Guid currentUserId);
 
         /// <summary>
         /// Handle to search assignment

@@ -24,32 +24,7 @@
         }
 
         #region Protected Region
-
-        /// <summary>
-        /// Applies filters to the given query.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="criteria">The search criteria.</param>
-        /// <returns>The updated predicate with applied filters.</returns>
-        protected override Expression<Func<Assignment, bool>> ConstructQueryConditions(Expression<Func<Assignment, bool>> predicate, AssignmentBaseSearchCriteria criteria)
-        {
-            var lesson = _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
-                predicate: p => p.Id.ToString() == criteria.LessonIdentity || p.Slug == criteria.LessonIdentity).Result;
-
-            if (lesson == null)
-            {
-                _logger.LogWarning("Lesson with identity : {identity} not found for user with id : {id}", criteria.LessonIdentity, criteria.CurrentUserId);
-                throw new EntityNotFoundException("Lesson not found.");
-            }
-
-            if (!string.IsNullOrWhiteSpace(criteria.Search))
-            {
-                var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
-            }
-
-            return predicate.And(x => x.LessonId == lesson.Id);
-        }
+       
         /// <summary>
         /// Check the validations required for delete
         /// </summary>
@@ -351,12 +326,13 @@
         }
 
         /// <summary>
-        /// Handle to get list of student who has submitted assignment
+        /// Handle to fetch student submitted assignment
         /// </summary>
         /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="userId">the user id</param>
         /// <param name="currentUserId">the current user id</param>
-        /// <returns></returns>
-        public async Task<IList<AssignmentSubmissionStudentResponseModel>> GetAssignmentSubmittedStudent(string lessonIdentity, Guid currentUserId)
+        /// <returns>the instance of <see cref="AssignmentSubmissionStudentResponseModel"/></returns>
+        public async Task<AssignmentSubmissionStudentResponseModel> GetStudentSubmittedAssignment(string lessonIdentity, Guid userId, Guid currentUserId)
         {
             try
             {
@@ -375,31 +351,52 @@
                 }
                 await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
 
-                var userIds = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(
+                var predicate = PredicateBuilder.New<Assignment>(true);
+                predicate = predicate.And(x => x.LessonId == lesson.Id);
+
+                var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
                     predicate: p => p.LessonId == lesson.Id,
-                    selector: s => s.UserId
+                    include: src => src.Include(x => x.AssignmentAttachments).Include(x => x.AssignmentQuestionOptions)
                     ).ConfigureAwait(false);
 
-                userIds = userIds.Distinct().ToList();
-
-                var users = await _unitOfWork.GetRepository<User>().GetAllAsync(
-                    predicate: p => userIds.Contains(p.Id)
+                var userAssignments = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(
+                    predicate: p => p.LessonId == lesson.Id && p.UserId == userId,
+                    include: src => src.Include(x => x.AssignmentSubmissionAttachments).Include(x => x.User)
                     ).ConfigureAwait(false);
 
-                var response = new List<AssignmentSubmissionStudentResponseModel>();
+                var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetFirstOrDefaultAsync(
+                    predicate: p => p.LessonId == lesson.Id && p.UserId == userId,
+                    include: src => src.Include(x => x.User)
+                    ).ConfigureAwait(false);
 
-                users.ForEach(x => response.Add(new AssignmentSubmissionStudentResponseModel
+                var response = new AssignmentSubmissionStudentResponseModel();
+                if (assignmentReview != null)
                 {
-                    User = new UserModel(x),
-                    LessonId = lesson.Id,
-                    LessonSlug = lesson.Slug
-                }));
+                    var teacher = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
+                        predicate: p => p.Id == assignmentReview.CreatedBy
+                        ).ConfigureAwait(false);
+                    response.AssignmentReview = new AssignmentReviewResponseModel
+                    {
+                        Id = assignmentReview.Id,
+                        LessonId = assignmentReview.LessonId,
+                        Mark = assignmentReview.Mark,
+                        Review = assignmentReview.Review,
+                        UserId = assignmentReview.UserId,
+                        User = new UserModel(assignmentReview.User),
+                        Teacher = teacher != null ? new UserModel(teacher) : null
+                    };
+                }
+                response.Assignments = new List<AssignmentResponseModel>();
+                foreach (var item in assignments)
+                {
+                    MapAssignment(true, userAssignments, item, response.Assignments);
+                }
                 return response;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to fetch the student list who has submitted assignment.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch the student list who has submitted assignment.");
+                _logger.LogError(ex, "An error occurred while trying to fetch the student submitted assignment.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch the student submitted assignment.");
             }
         }
 
@@ -781,6 +778,10 @@
             var userAssignments = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(
                 predicate: p => p.LessonId == lesson.Id && searchCriteria.UserId.HasValue && p.UserId == searchCriteria.UserId.Value,
                 include: src => src.Include(x => x.AssignmentSubmissionAttachments).Include(x => x.User)
+                ).ConfigureAwait(false);
+
+            var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetFirstOrDefaultAsync(
+                predicate: p => p.LessonId == lesson.Id && searchCriteria.UserId.HasValue && p.UserId == searchCriteria.UserId.Value
                 ).ConfigureAwait(false);
 
             var response = new List<AssignmentResponseModel>();

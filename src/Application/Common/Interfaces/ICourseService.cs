@@ -147,7 +147,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="criteria">the instance of <see cref="CertificateBaseSearchCriteria"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the paginated result</returns>
-        Task<SearchResult<CourseCertificateResponseModel>> SearchCertificateAsync(string identity, CertificateBaseSearchCriteria criteria, Guid currentUserId);
+        Task<SearchResult<CourseCertificateIssuedResponseModel>> SearchCertificateAsync(string identity, CertificateBaseSearchCriteria criteria, Guid currentUserId);
 
         /// <summary>
         /// Handle to issue the certificate
@@ -156,7 +156,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="model">the instance of <see cref="CertificateIssueRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the list of <see cref="CourseCertificateResponseModel"/></returns>
-        Task<IList<CourseCertificateResponseModel>> IssueCertificateAsync(string identity, CertificateIssueRequestModel model, Guid currentUserId);
+        Task<IList<CourseCertificateIssuedResponseModel>> IssueCertificateAsync(string identity, CertificateIssueRequestModel model, Guid currentUserId);
 
         #endregion Certificate 
 
@@ -198,6 +198,15 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the task complete</returns>
         Task DeleteSignatureAsync(string identity, Guid id, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to insert course certificate detail
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="model">the instance of <see cref="CourseCertificateRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns></returns>
+        Task<CourseCertificateResponseModel> InsertCertificateDetail(string identity, CourseCertificateRequestModel model, Guid currentUserId);
 
         #endregion Signature
     }
