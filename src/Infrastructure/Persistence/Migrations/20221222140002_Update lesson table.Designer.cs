@@ -3,6 +3,7 @@ using System;
 using Lingtren.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221222140002_Update lesson table")]
+    partial class Updatelessontable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2523,66 +2525,6 @@ namespace Infrastructure.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Lingtren.Domain.Entities.Signature", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("id");
-
-                    b.Property<string>("CourseId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("course_id");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("created_by");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("created_on");
-
-                    b.Property<string>("Designation")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("designation");
-
-                    b.Property<string>("FileUrl")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
-                        .HasColumnName("file_url");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("full_name");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("updated_by");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("updated_on");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.ToTable("Signature");
-                });
-
             modelBuilder.Entity("Lingtren.Domain.Entities.SMTPSetting", b =>
                 {
                     b.Property<string>("Id")
@@ -3881,25 +3823,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Lingtren.Domain.Entities.Signature", b =>
-                {
-                    b.HasOne("Lingtren.Domain.Entities.Course", "Course")
-                        .WithMany("Signatures")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Lingtren.Domain.Entities.User", "User")
-                        .WithMany("Signatures")
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Lingtren.Domain.Entities.SMTPSetting", b =>
                 {
                     b.HasOne("Lingtren.Domain.Entities.User", "User")
@@ -4022,8 +3945,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Lessons");
 
                     b.Navigation("Sections");
-
-                    b.Navigation("Signatures");
 
                     b.Navigation("WatchHistories");
                 });
@@ -4206,8 +4127,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("SMTPSettings");
 
                     b.Navigation("Sections");
-
-                    b.Navigation("Signatures");
 
                     b.Navigation("Tags");
 

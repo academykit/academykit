@@ -8,5 +8,6 @@ namespace Lingtren.Application.Common.Dtos
         public AmazonSettingModel Setting { get; set; }
         public IFormFile File { get; set; }
         public MediaType Type { get; set; }
+        public string FilePath { get; set; }
     }
 }

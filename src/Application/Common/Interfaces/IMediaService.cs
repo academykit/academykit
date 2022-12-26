@@ -3,7 +3,6 @@ namespace Lingtren.Application.Common.Interfaces
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Enums;
     using Microsoft.AspNetCore.Http;
 
     public interface IMediaService
@@ -36,5 +35,13 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the instance of <see cref="StorageSettingResponseModel" /> .</returns>
         Task<IList<StorageSettingResponseModel>> GetStorageSettingAsync(Guid currentUserId);
+
+        /// <summary>
+        /// Handle to upload the recording file
+        /// </summary>
+        /// <param name="fileUrl"> the file url </param>
+        /// <param name="downloadToken"> the download token </param>
+        /// <returns> the instance of <see cref="MediaFileDto" /> .</returns>
+        Task<MediaFileDto> UploadRecordingFileAsync(string fileUrl, string downloadToken);
     }
 }

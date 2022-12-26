@@ -5,5 +5,6 @@
 
     public interface IZoomSettingService : IGenericService<ZoomSetting, BaseSearchCriteria>
     {
+        
     }
 }
