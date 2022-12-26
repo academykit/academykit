@@ -157,23 +157,48 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the list of <see cref="CourseCertificateResponseModel"/></returns>
         Task<IList<CourseCertificateResponseModel>> IssueCertificateAsync(string identity, CertificateIssueRequestModel model, Guid currentUserId);
-       
-        /// <summary>
-        /// Handle to upload the signature
-        /// </summary>
-        /// <param name="model"> the instance of <see cref="SignatureRequestModel" />.</param>
-        /// <param name="currentUserId"> the current user id </param>
-        /// <returns> the list of <see cref="SignatureResponseModel" /> .</returns>
-        Task<IList<SignatureResponseModel>> UploadSignatureAsync(SignatureRequestModel model, Guid currentUserId);
-       
+
+        #endregion Certificate 
+
+        #region Signature
+
         /// <summary>
         /// Handle to get signature
         /// </summary>
-        /// <param name="courseIdentity"> the course id or slug </param>
+        /// <param name="identity"> the course id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the list of <see cref="SignatureResponseModel" /> . </returns>
-        Task<IList<SignatureResponseModel>> GetSignatureAsync(string courseIdentity, Guid currentUserId);
+        Task<IList<SignatureResponseModel>> GetAllSignatureAsync(string identity, Guid currentUserId);
 
-        #endregion Certificate 
+        /// <summary>
+        /// Handle to upload signature
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="model">the instance of <see cref="SignatureRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the instance of <see cref="SignatureResponseModel"/></returns>
+        Task<SignatureResponseModel> InsertSignatureAsync(string identity, SignatureRequestModel model, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to update signature
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="id">the signature id</param>
+        /// <param name="model">the instance of <see cref="SignatureRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the instance of <see cref="SignatureResponseModel"/></returns>
+        Task<SignatureResponseModel> UpdateSignatureAsync(string identity, Guid id, SignatureRequestModel model, Guid currentUserId);
+
+
+        /// <summary>
+        /// Handle to delete signature
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="id">the signature id</param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the task complete</returns>
+        Task DeleteSignatureAsync(string identity, Guid id, Guid currentUserId);
+
+        #endregion Signature
     }
 }

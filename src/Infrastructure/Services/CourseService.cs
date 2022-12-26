@@ -1124,84 +1124,30 @@ namespace Lingtren.Infrastructure.Services
             return await _mediaService.UploadFileAsync(new MediaRequestModel { File = file, Type = MediaType.File }).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Handle to upload the signature
-        /// </summary>
-        /// <param name="model"> the instance of <see cref="SignatureRequestModel" />.</param>
-        /// <param name="currentUserId"> the current user id </param>
-        /// <returns> the list of <see cref="SignatureResponseModel" /> .</returns>
-        public async Task<IList<SignatureResponseModel>> UploadSignatureAsync(SignatureRequestModel model, Guid currentUserId)
-        {
-            try
-            {
-                var course = await GetByIdOrSlugAsync(model.CourseIdentity, currentUserId).ConfigureAwait(false);
-                if (course == null)
-                {
-                    throw new EntityNotFoundException("Course not found");
-                }
-                var signatureList = new List<Signature>();
-                foreach (var signature in model.Signatures)
-                {
-                    var entity = new Signature
-                    {
-                        Id = Guid.NewGuid(),
-                        FullName = signature.FullName,
-                        Designation = signature.Designation,
-                        CourseId = course.Id,
-                        FileUrl = signature.FileURL,
-                        CreatedOn = DateTime.UtcNow,
-                        CreatedBy = currentUserId
-                    };
-                    signatureList.Add(entity);
-                }
-                await _unitOfWork.GetRepository<Signature>().InsertAsync(signatureList).ConfigureAwait(false);
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                var response = signatureList.Select(x => new SignatureResponseModel
-                {
-                    Id = x.Id,
-                    CourseId = x.CourseId,
-                    FullName = x.FullName,
-                    Designation = x.Designation,
-                    SignatureURL = x.FileUrl,
-                    CreatedOn = x.CreatedOn,
-                    UpdatedOn = x.UpdatedOn
-                }).ToList();
-                return response;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-            }
-        }
+        #endregion Certificate
+
+        #region Signature
 
         /// <summary>
         /// Handle to get signature
         /// </summary>
-        /// <param name="courseIdentity"> the course id or slug </param>
+        /// <param name="identity"> the course id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the list of <see cref="SignatureResponseModel" /> . </returns>
-        public async Task<IList<SignatureResponseModel>> GetSignatureAsync(string courseIdentity, Guid currentUserId)
+        public async Task<IList<SignatureResponseModel>> GetAllSignatureAsync(string identity, Guid currentUserId)
         {
             try
             {
-                var course = await GetByIdOrSlugAsync(courseIdentity, currentUserId).ConfigureAwait(false);
+                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
+                    _logger.LogWarning("Course with identity: {identity} not found", identity);
                     throw new EntityNotFoundException("Course not found");
                 }
 
                 var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(predicate: x => x.CourseId == course.Id).ConfigureAwait(false);
-                var response = signatures.Select(x => new SignatureResponseModel
-                {
-                    Id = x.Id,
-                    CourseId = x.CourseId,
-                    FullName = x.FullName,
-                    SignatureURL = x.FileUrl,
-                    Designation = x.Designation,
-                    CreatedOn = x.CreatedOn,
-                    UpdatedOn = x.UpdatedOn
-                }).ToList();
+                var response = new List<SignatureResponseModel>();
+                signatures.ForEach(x => response.Add(new SignatureResponseModel(x)));
                 return response;
             }
             catch (Exception ex)
@@ -1210,7 +1156,136 @@ namespace Lingtren.Infrastructure.Services
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
-        #endregion Certificate
 
+        /// <summary>
+        /// Handle to upload signature
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="model">the instance of <see cref="SignatureRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the instance of <see cref="SignatureResponseModel"/></returns>
+        public async Task<SignatureResponseModel> InsertSignatureAsync(string identity, SignatureRequestModel model, Guid currentUserId)
+        {
+            try
+            {
+                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+                if (course == null)
+                {
+                    _logger.LogWarning("Course with identity: {identity} not found", identity);
+                    throw new EntityNotFoundException("Course not found");
+                }
+                var countSignature = await _unitOfWork.GetRepository<Signature>().CountAsync().ConfigureAwait(false);
+                if (countSignature >= 3)
+                {
+                    _logger.LogWarning("Course with id: {id} cannot have more than 3 signatures for user with id: {userId}", course.Id, currentUserId);
+                    throw new ForbiddenException("At most 3 signatures are only allowed");
+                }
+                var currentTimeStamp = DateTime.UtcNow;
+                var signature = new Signature
+                {
+                    Id = Guid.NewGuid(),
+                    FullName = model.FullName,
+                    Designation = model.Designation,
+                    CourseId = course.Id,
+                    FileUrl = model.FileURL,
+                    CreatedOn = currentTimeStamp,
+                    CreatedBy = currentUserId,
+                    UpdatedOn = currentTimeStamp,
+                    UpdatedBy = currentUserId
+                };
+                await _unitOfWork.GetRepository<Signature>().InsertAsync(signature).ConfigureAwait(false);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                var response = new SignatureResponseModel(signature);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to upload signature in the course.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to upload signature in the course.");
+            }
+        }
+
+        /// <summary>
+        /// Handle to update signature
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="id">the signature id</param>
+        /// <param name="model">the instance of <see cref="SignatureRequestModel"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the instance of <see cref="SignatureResponseModel"/></returns>
+        public async Task<SignatureResponseModel> UpdateSignatureAsync(string identity, Guid id, SignatureRequestModel model, Guid currentUserId)
+        {
+            try
+            {
+                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+                if (course == null)
+                {
+                    _logger.LogWarning("Course with identity: {identity} not found", identity);
+                    throw new EntityNotFoundException("Course not found");
+                }
+                var signature = await _unitOfWork.GetRepository<Signature>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id == id && p.CourseId == course.Id
+                    ).ConfigureAwait(false);
+                if (signature == null)
+                {
+                    _logger.LogWarning("Signature with id: {id} and courseId : {courseId} not found", id, course.Id);
+                    throw new EntityNotFoundException("Signature not found");
+                }
+                var currentTimeStamp = DateTime.UtcNow;
+
+                signature.FullName = model.FullName;
+                signature.Designation = model.Designation;
+                signature.FileUrl = model.FileURL;
+                signature.UpdatedOn = currentTimeStamp;
+                signature.UpdatedBy = currentUserId;
+
+                _unitOfWork.GetRepository<Signature>().Update(signature);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                var response = new SignatureResponseModel(signature);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to update signature in the course.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update signature in the course.");
+            }
+        }
+
+        /// <summary>
+        /// Handle to delete signature
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="id">the signature id</param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns>the task complete</returns>
+        public async Task DeleteSignatureAsync(string identity, Guid id, Guid currentUserId)
+        {
+            try
+            {
+                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+                if (course == null)
+                {
+                    _logger.LogWarning("Course with identity: {identity} not found", identity);
+                    throw new EntityNotFoundException("Course not found");
+                }
+                var signature = await _unitOfWork.GetRepository<Signature>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id == id && p.CourseId == course.Id
+                    ).ConfigureAwait(false);
+                if (signature == null)
+                {
+                    _logger.LogWarning("Signature with id: {id} and courseId : {courseId} not found", id, course.Id);
+                    throw new EntityNotFoundException("Signature not found");
+                }
+                _unitOfWork.GetRepository<Signature>().Delete(signature);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to update signature in the course.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update signature in the course.");
+            }
+        }
+
+        #endregion Signature
     }
 }
