@@ -1044,6 +1044,20 @@ namespace Lingtren.Infrastructure.Services
                 course.Signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
                     predicate: p => p.CourseId == course.Id
                     ).ConfigureAwait(false);
+                if (course.Signatures.Count == 0)
+                {
+                    _logger.LogWarning("At least one trainer signature detail is required for course with id :{courseId}", course.Id);
+                    throw new EntityNotFoundException("At least one trainer signature detail is required");
+                }
+                course.CourseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
+                     predicate: p => p.CourseId == course.Id
+                     ).ConfigureAwait(false);
+
+                if (course.CourseCertificate == null)
+                {
+                    _logger.LogWarning("Certificate detail information not found for course with id :{courseId}", course.Id);
+                    throw new EntityNotFoundException("Certificate detail information not found");
+                }
 
                 var predicate = PredicateBuilder.New<CourseEnrollment>(true);
                 predicate = predicate.And(p => p.CourseId == course.Id && !p.IsDeleted && p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled);
@@ -1057,6 +1071,8 @@ namespace Lingtren.Infrastructure.Services
                     predicate: predicate,
                     include: src => src.Include(x => x.User)
                     ).ConfigureAwait(false);
+
+
                 var currentTimeStamp = DateTime.UtcNow;
                 var response = new List<CourseCertificateIssuedResponseModel>();
                 foreach (var item in results)
@@ -1113,14 +1129,14 @@ namespace Lingtren.Infrastructure.Services
                     .AddJsonBody(new
                     {
                         name = courseEnrollment.User.FullName,
-                        training = course.Name,
-                        startDate = course.CreatedOn,
-                        endDate = course.UpdatedOn,
+                        training = course.CourseCertificate.Title,
+                        startDate = course.CourseCertificate.EventStartDate,
+                        endDate = course.CourseCertificate.EventEndDate,
                         authors = authors,
                     });
 
             var response = await client.PostAsync(request).ConfigureAwait(false);
-            var fileName = string.Join("_", courseEnrollment.User.FirstName, course.Name);
+            var fileName = string.Join("_", courseEnrollment.User.FirstName, course.CourseCertificate.Title);
             MemoryStream ms = new MemoryStream(response.RawBytes);
             var file = new FormFile(ms, 0, response.RawBytes.Length, fileName, fileName);
             return await _mediaService.UploadFileAsync(new MediaRequestModel { File = file, Type = MediaType.File }).ConfigureAwait(false);
@@ -1177,7 +1193,7 @@ namespace Lingtren.Infrastructure.Services
                     throw new EntityNotFoundException("Course not found");
                 }
                 var countSignature = await _unitOfWork.GetRepository<Signature>().CountAsync(
-                    predicate: p=>p.CourseId == course.Id).ConfigureAwait(false);
+                    predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
                 if (countSignature >= 3)
                 {
                     _logger.LogWarning("Course with id: {id} cannot have more than 3 signatures for user with id: {userId}", course.Id, currentUserId);
@@ -1337,6 +1353,26 @@ namespace Lingtren.Infrastructure.Services
                 await _unitOfWork.GetRepository<CourseCertificate>().InsertAsync(courseCertificate).ConfigureAwait(false);
             }
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            return new CourseCertificateResponseModel(courseCertificate);
+        }
+
+        /// <summary>
+        /// Handle to get certificate detail information
+        /// </summary>
+        /// <param name="identity">the course id or slug </param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns></returns>
+        public async Task<CourseCertificateResponseModel> GetCertificateDetailAsync(string identity, Guid currentUserId)
+        {
+            var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+            if (course == null)
+            {
+                _logger.LogWarning("Course with identity: {identity} not found", identity);
+                throw new EntityNotFoundException("Course not found");
+            }
+            var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
+                predicate: p => p.CourseId == course.Id
+                ).ConfigureAwait(false);
             return new CourseCertificateResponseModel(courseCertificate);
         }
 

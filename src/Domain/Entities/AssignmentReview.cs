@@ -8,7 +8,7 @@ namespace Lingtren.Domain.Entities
         public Lesson Lesson { get; set; }
         public Guid UserId { get; set; }
         public User User { get; set; }
-        public string Mark { get; set; }
+        public decimal Mark { get; set; }
         public string Review { get; set; }
         public bool IsDeleted { get; set; }
     }

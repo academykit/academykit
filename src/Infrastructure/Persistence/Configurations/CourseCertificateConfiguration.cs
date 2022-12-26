@@ -9,6 +9,7 @@
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
+            builder.Property(x => x.Title).HasColumnName("title").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
             builder.Property(x => x.CourseId).HasColumnName("course_id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.EventStartDate).HasColumnName("event_start_date").HasColumnType("DATETIME").IsRequired();
             builder.Property(x => x.EventEndDate).HasColumnName("event_end_date").HasColumnType("DATETIME").IsRequired();

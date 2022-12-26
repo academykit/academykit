@@ -208,6 +208,14 @@ namespace Lingtren.Application.Common.Interfaces
         /// <returns></returns>
         Task<CourseCertificateResponseModel> InsertCertificateDetail(string identity, CourseCertificateRequestModel model, Guid currentUserId);
 
+        /// <summary>
+        /// Handle to get certificate detail information
+        /// </summary>
+        /// <param name="identity">the course id or slug </param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns></returns>
+        Task<CourseCertificateResponseModel> GetCertificateDetailAsync(string identity, Guid currentUserId);
+
         #endregion Signature
     }
 }

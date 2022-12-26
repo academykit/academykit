@@ -97,6 +97,7 @@
             services.AddSingleton<IValidator<MediaRequestModel>, MediaValidator>();
             services.AddSingleton<IValidator<FeedbackRequestModel>, FeedbackValidator>();
             services.AddSingleton<IValidator<SignatureRequestModel>, SignatureValidator>();
+            services.AddSingleton<IValidator<CourseCertificateRequestModel>, CourseCertificateValidator>();
 
             #endregion Validator DI
 

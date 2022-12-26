@@ -24,7 +24,7 @@
         }
 
         #region Protected Region
-       
+
         /// <summary>
         /// Check the validations required for delete
         /// </summary>
@@ -368,8 +368,14 @@
                     predicate: p => p.LessonId == lesson.Id && p.UserId == userId,
                     include: src => src.Include(x => x.User)
                     ).ConfigureAwait(false);
-
-                var response = new AssignmentSubmissionStudentResponseModel();
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p=>p.Id == currentUserId).ConfigureAwait(false);
+                var response = new AssignmentSubmissionStudentResponseModel
+                {
+                    LessonId = lesson.Id,
+                    LessonSlug = lesson.Slug,
+                    User = user != null ? new UserModel(user) : null,
+                    Assignments = new List<AssignmentResponseModel>()
+                };
                 if (assignmentReview != null)
                 {
                     var teacher = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
@@ -386,7 +392,6 @@
                         Teacher = teacher != null ? new UserModel(teacher) : null
                     };
                 }
-                response.Assignments = new List<AssignmentResponseModel>();
                 foreach (var item in assignments)
                 {
                     MapAssignment(true, userAssignments, item, response.Assignments);
@@ -736,7 +741,6 @@
         /// <returns></returns>
         /// <exception cref="EntityNotFoundException"></exception>
         /// <exception cref="ForbiddenException"></exception>
-
         public async Task<IList<AssignmentResponseModel>> SearchAsync(AssignmentBaseSearchCriteria searchCriteria)
         {
             var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
@@ -793,6 +797,13 @@
             return response;
         }
 
+        /// <summary>
+        /// Handle to map assignment
+        /// </summary>
+        /// <param name="showCorrectAndHints">the boolean value</param>
+        /// <param name="userAssignments">the list of <see cref="AssignmentSubmission"/></param>
+        /// <param name="item">the instance of <see cref="Assignment"/></param>
+        /// <param name="response">the list of <see cref="AssignmentResponseModel"/></param>
         private static void MapAssignment(bool showCorrectAndHints, IList<AssignmentSubmission> userAssignments, Assignment item, IList<AssignmentResponseModel> response)
         {
             var userAssignment = userAssignments.FirstOrDefault(x => x.AssignmentId == item.Id);
