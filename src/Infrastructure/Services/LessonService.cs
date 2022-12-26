@@ -1,3 +1,4 @@
+using System.Data.Common;
 namespace Lingtren.Infrastructure.Services
 {
     using AngleSharp.Common;
@@ -227,10 +228,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     lesson.DocumentUrl = model.DocumentUrl;
                 }
-                if (lesson.Type == LessonType.Video)
-                {
-                    lesson.VideoUrl = model.VideoUrl;
-                }
+
                 if (lesson.Type == LessonType.LiveClass)
                 {
                     lesson.Duration = model.Meeting.MeetingDuration * 60; //convert duration from minutes to seconds;
@@ -241,9 +239,22 @@ namespace Lingtren.Infrastructure.Services
                     lesson.Duration = model.QuestionSet.Duration * 60; //convert duration from minutes to seconds;
                     await CreateQuestionSetAsync(model, lesson).ConfigureAwait(false);
                 }
+
+                if (lesson.Type == LessonType.Video)
+                {
+                    lesson.VideoUrl = model.VideoUrl;
+                    var videoQueue = new VideoQueue
+                    {
+                        Id = Guid.NewGuid(),
+                        LessonId = lesson.Id,
+                        VideoUrl = lesson.VideoUrl,
+                        Status = VideoStatus.Queue,
+                        CreatedOn = DateTime.UtcNow
+                    };
+                    await _unitOfWork.GetRepository<VideoQueue>().InsertAsync(videoQueue).ConfigureAwait(false);
+                }
                 var order = await LastLessonOrder(lesson).ConfigureAwait(false);
                 lesson.Order = order;
-
                 await _unitOfWork.GetRepository<Lesson>().InsertAsync(lesson).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return lesson;

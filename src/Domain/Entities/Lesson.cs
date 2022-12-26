@@ -26,7 +26,6 @@ namespace Lingtren.Domain.Entities
         public QuestionSet QuestionSet { get; set; }
         public User User { get; set; }
         public string VideoKey { get; set; }
-        public bool VideoConverted { get; set; }
         public IList<WatchHistory> WatchHistories { get; set; }
         public IList<CourseEnrollment> CourseEnrollments { get; set; }
         public IList<Assignment> Assignments { get; set; }

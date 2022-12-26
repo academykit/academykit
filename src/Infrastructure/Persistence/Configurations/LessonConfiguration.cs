@@ -22,7 +22,6 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.ThumbnailUrl).HasColumnName("thumbnail_url").HasColumnType("VARCHAR(500)").HasMaxLength(500).IsRequired(false);
             builder.Property(x => x.IsDeleted).HasColumnName("is_deleted").HasDefaultValue(false);
             builder.Property(x => x.VideoKey).HasColumnName("video_key").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired(false);
-            builder.Property(x => x.VideoConverted).HasColumnName("video_converted").HasDefaultValue(false);
             builder.Property(x => x.CourseId).HasColumnName("course_id").HasColumnType("VARCHAR(50)").IsRequired();
             builder.Property(x => x.SectionId).HasColumnName("section_id").HasColumnType("VARCHAR(50)").IsRequired();
             builder.Property(x => x.MeetingId).HasColumnName("meeting_id").HasColumnType("VARCHAR(50)").IsRequired(false);
