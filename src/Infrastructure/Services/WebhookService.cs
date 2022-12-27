@@ -40,7 +40,7 @@ namespace Lingtren.Infrastructure.Services
 
                 if (dto.Payload.Object.Recording_files.Count == default)
                 {
-                    _logger.LogWarning($"No recording files");
+                    _logger.LogWarning("No recording files");
                     return;
                 }
 
@@ -69,9 +69,9 @@ namespace Lingtren.Infrastructure.Services
                 var lessons = new List<Lesson>();
                 var recordingFileDtos = new List<RecordingFileDto>();
                 int order = 1;
-                foreach(var file in recordingFile)
+                foreach (var file in recordingFile)
                 {
-                    var mediaFile = await _mediaService.UploadRecordingFileAsync(file.Download_url,dto.Download_token).ConfigureAwait(false);
+                    var mediaFile = await _mediaService.UploadRecordingFileAsync(file.Download_url, dto.Download_token).ConfigureAwait(false);
                     var recording = new RecordingFileDto
                     {
                         Name = $"{meeting.Lesson.Name} Part {order}",
@@ -82,8 +82,8 @@ namespace Lingtren.Infrastructure.Services
                     recordingFileDtos.Add(recording);
                     order++;
                 }
-                
-                if(recordingFileDtos.Count > 1)
+
+                if (recordingFileDtos.Count > 1)
                 {
                     var lessonOrder = meeting.Lesson.Order + 1;
                     var firstRecording = recordingFileDtos.FirstOrDefault(x => x.Order == 1);
@@ -91,10 +91,11 @@ namespace Lingtren.Infrastructure.Services
                     meeting.Lesson.VideoUrl = firstRecording.VideoUrl;
                     recordingFileDtos.Remove(firstRecording);
                     var recordings = recordingFileDtos.OrderBy(x => x.Order).ToList();
-                    foreach(var fileDto in recordings)
+                    foreach (var fileDto in recordings)
                     {
                         var slug = "hello";
-                        var lesson = new Lesson{
+                        var lesson = new Lesson
+                        {
                             Id = Guid.NewGuid(),
                             Name = fileDto.Name,
                             Type = LessonType.RecordedVideo,
@@ -112,7 +113,9 @@ namespace Lingtren.Infrastructure.Services
                     }
                     _unitOfWork.GetRepository<Lesson>().Update(meeting.Lesson);
                     await _unitOfWork.GetRepository<Lesson>().InsertAsync(lessons).ConfigureAwait(false);
-                }else{
+                }
+                else
+                {
                     var videoFile = recordingFileDtos.FirstOrDefault();
                     meeting.Lesson.Type = LessonType.RecordedVideo;
                     meeting.Lesson.VideoUrl = videoFile.VideoUrl;

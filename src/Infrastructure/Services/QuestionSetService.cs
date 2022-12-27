@@ -167,7 +167,6 @@
             return responseModels;
         }
 
-
         #region Start Exam and Submission
 
         /// <summary>
@@ -181,14 +180,14 @@
             {
                 var currentTimeStamp = DateTime.UtcNow;
                 var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
-                    predicate: x => (x.Id.ToString() == identity || x.Slug == identity)).ConfigureAwait(false);
+                    predicate: x => x.Id.ToString() == identity || x.Slug == identity).ConfigureAwait(false);
                 if (questionSet == null)
                 {
                     _logger.LogWarning("Question set not found with identity: {identity} for user with id : {currentUserId}", identity, currentUserId);
                     throw new EntityNotFoundException("Question set not found");
                 }
 
-                if (currentTimeStamp  <= questionSet.StartTime)
+                if (currentTimeStamp <= questionSet.StartTime)
                 {
                     _logger.LogWarning("Question set with identity: {identity} has not started yet for user with id : {currentUserId}", identity, currentUserId);
                     throw new ForbiddenException("Question set has not started yet.");

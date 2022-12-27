@@ -189,7 +189,6 @@ namespace Lingtren.Application.Common.Interfaces
         /// <returns>the instance of <see cref="SignatureResponseModel"/></returns>
         Task<SignatureResponseModel> UpdateSignatureAsync(string identity, Guid id, SignatureRequestModel model, Guid currentUserId);
 
-
         /// <summary>
         /// Handle to delete signature
         /// </summary>

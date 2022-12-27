@@ -20,7 +20,6 @@
         public CommentService(IUnitOfWork unitOfWork,
             ILogger<CommentService> logger) : base(unitOfWork, logger)
         {
-
         }
 
         /// <summary>
@@ -191,7 +190,7 @@
         }
 
         /// <summary>
-        /// Handle to search reply 
+        /// Handle to search reply
         /// </summary>
         /// <param name="identity">the course id or slug</param>
         /// <param name="id">the comment id</param>

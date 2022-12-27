@@ -32,6 +32,5 @@ namespace Lingtren.Domain.Entities
         public IList<AssignmentSubmission> AssignmentSubmissions { get; set; }
         public IList<Recording> Recordings { get; set; }
         public IList<AssignmentReview> AssignmentReviews { get; set; }
-
     }
 }

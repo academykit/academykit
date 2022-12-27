@@ -205,9 +205,8 @@
                 if (questionPoolQuestion != null)
                 {
                     var questionSetIds = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
-                    predicate: p => p.QuestionId == existing.Id || p.QuestionPoolQuestionId == questionPoolQuestion.Id,
-                    selector: s => s.QuestionSetId
-                    ).ConfigureAwait(false);
+                    selector: s => s.QuestionSetId,
+                    predicate: p => p.QuestionId == existing.Id || p.QuestionPoolQuestionId == questionPoolQuestion.Id).ConfigureAwait(false);
 
                     var existQuestionSetSubmissions = await _unitOfWork.GetRepository<QuestionSetSubmission>().ExistsAsync(
                         predicate: p => questionSetIds.Contains(p.QuestionSetId)

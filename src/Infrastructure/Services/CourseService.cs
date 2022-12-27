@@ -111,7 +111,6 @@ namespace Lingtren.Infrastructure.Services
             predicate = predicate.And(x => !x.GroupId.HasValue).Or(groupPredicate);
             return predicate.And(x => x.CreatedBy == criteria.CurrentUserId || x.CourseTeachers.Any(p => p.UserId == criteria.CurrentUserId)
                         || (x.CreatedBy != criteria.CurrentUserId && (x.IsUpdate || x.Status.Equals(CourseStatus.Published))));
-
         }
 
         /// <summary>
@@ -180,7 +179,7 @@ namespace Lingtren.Infrastructure.Services
             }
 
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(CurrentUserId.Value).ConfigureAwait(false);
-            // for creator and course teacher and superadmin and admin return if exists
+            // for creator and course teacher and super-admin and admin return if exists
             if (entityToReturn.CreatedBy == CurrentUserId || isSuperAdminOrAdmin || entityToReturn.CourseTeachers.Any(x => x.UserId == CurrentUserId))
             {
                 return;
@@ -640,7 +639,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="predicate">the course predicate expression</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns></returns>
-        private Expression<Func<Course, bool>> GroupCourseSearchPredicate(Guid groupId, Expression<Func<Course, bool>> predicate, BaseSearchCriteria criteria)
+        private static Expression<Func<Course, bool>> GroupCourseSearchPredicate(Guid groupId, Expression<Func<Course, bool>> predicate, BaseSearchCriteria criteria)
         {
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
@@ -960,7 +959,6 @@ namespace Lingtren.Infrastructure.Services
 
         #region Certificate
 
-
         /// <summary>
         /// Handle to search certificate
         /// </summary>
@@ -1074,7 +1072,6 @@ namespace Lingtren.Infrastructure.Services
                     include: src => src.Include(x => x.User)
                     ).ConfigureAwait(false);
 
-
                 var currentTimeStamp = DateTime.UtcNow;
                 var response = new List<CourseCertificateIssuedResponseModel>();
                 foreach (var item in results)
@@ -1103,7 +1100,6 @@ namespace Lingtren.Infrastructure.Services
                 _logger.LogError(ex, "An error occurred while trying to issued the course certificate.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to issued the course certificate.");
             }
-
         }
 
         /// <summary>
@@ -1134,12 +1130,12 @@ namespace Lingtren.Infrastructure.Services
                         training = certificate?.Title,
                         startDate = certificate?.EventStartDate,
                         endDate = certificate?.EventEndDate,
-                        authors = authors,
+                        authors,
                     });
 
             var response = await client.PostAsync(request).ConfigureAwait(false);
             var fileName = string.Join("-", fullName.AsSpan(0, 5).ToString(), certificate?.Title.AsSpan(0, 5).ToString());
-            MemoryStream ms = new MemoryStream(response.RawBytes);
+            MemoryStream ms = new(response.RawBytes);
             var file = new FormFile(ms, 0, response.RawBytes.Length, fileName, fileName);
             return await _mediaService.UploadFileAsync(new MediaRequestModel { File = file, Type = MediaType.File }).ConfigureAwait(false);
         }
@@ -1172,8 +1168,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(ex, "An error occurred while trying fetch the course signature.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying fetch the course signature.");
             }
         }
 

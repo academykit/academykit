@@ -19,5 +19,4 @@
             UpdatedOn = model.UpdatedOn ?? model.CreatedOn;
         }
     }
-
 }

@@ -65,6 +65,5 @@
         {
             return await _courseService.IssueCertificateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
         }
-
     }
 }

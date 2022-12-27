@@ -841,7 +841,7 @@
                 User = item.User == null ? new UserModel() : new UserModel(item.User),
                 Student = userAssignment == null ? null : new UserModel(userAssignment.User),
                 AssignmentSubmissionId = userAssignment?.Id,
-                Answer = userAssignment == null ? null : userAssignment.Answer,
+                Answer = userAssignment?.Answer,
                 AssignmentAttachments = new List<AssignmentAttachmentResponseModel>(),
                 AssignmentQuestionOptions = new List<AssignmentQuestionOptionResponseModel>(),
                 AssignmentSubmissionAttachments = new List<AssignmentSubmissionAttachmentResponseModel>(),
@@ -870,13 +870,16 @@
 
             if (userAssignment?.AssignmentSubmissionAttachments.Count > 0)
             {
-                userAssignment.AssignmentSubmissionAttachments.ForEach(x => new AssignmentSubmissionAttachmentResponseModel
+                userAssignment.AssignmentSubmissionAttachments.ForEach(x =>
                 {
-                    Id = x.Id,
-                    Name = x.Name,
-                    MimeType = x.MimeType,
-                    AssignmentSubmissionId = x.AssignmentSubmissionId,
-                    FileUrl = x.FileUrl,
+                    _ = new AssignmentSubmissionAttachmentResponseModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        MimeType = x.MimeType,
+                        AssignmentSubmissionId = x.AssignmentSubmissionId,
+                        FileUrl = x.FileUrl,
+                    };
                 });
             }
             response.Add(data);

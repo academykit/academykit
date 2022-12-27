@@ -69,7 +69,6 @@
         public IList<Signature> Signatures { get; set; }
         public IList<CourseCertificate> CourseCertificates { get; set; }
 
-
         /// <summary>
         /// Get or set full name
         /// </summary>

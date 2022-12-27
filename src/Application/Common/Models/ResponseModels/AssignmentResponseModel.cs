@@ -24,7 +24,6 @@
 
         public AssignmentResponseModel()
         {
-
         }
 
         public AssignmentResponseModel(Assignment assignment, bool showHints = false, bool showCorrect = false)

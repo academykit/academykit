@@ -21,7 +21,6 @@ namespace Lingtren.Application.Common.Models.ResponseModels
 
         public FeedbackResponseModel()
         {
-
         }
 
         public FeedbackResponseModel(Feedback feedback)

@@ -274,11 +274,11 @@
             return handler.WriteToken(secToken);
         }
 
-        //// <summary>
+        /// <summary>
         /// Get zoom ZAK Token
         /// </summary>
         /// <param name="hostId">the zoom host id</param>
-        /// <returns></returns>
+        /// <returns>the zak token</returns>
         public async Task<string> GetZAKAsync(string hostId)
         {
             var client = new RestClient($"{zoomAPIPath}/users/{hostId}/token?type=zak");

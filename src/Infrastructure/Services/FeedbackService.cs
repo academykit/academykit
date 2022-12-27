@@ -172,9 +172,8 @@
                 await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
 
                 var userIds = await _unitOfWork.GetRepository<FeedbackSubmission>().GetAllAsync(
-                    predicate: p => p.LessonId == lesson.Id,
-                    selector: s => s.UserId
-                    ).ConfigureAwait(false);
+                    selector: s => s.UserId,
+                    predicate: p => p.LessonId == lesson.Id).ConfigureAwait(false);
 
                 userIds = userIds.Distinct().ToList();
 
@@ -433,10 +432,7 @@
         /// Handle to search feedback
         /// </summary>
         /// <param name="searchCriteria">the instance of <see cref="FeedbackBaseSearchCriteria"/></param>
-        /// <returns></returns>
-        /// <exception cref="EntityNotFoundException"></exception>
-        /// <exception cref="ForbiddenException"></exception>
-
+        /// <returns>the list of <see cref="FeedbackResponseModel"/></returns>
         public async Task<IList<FeedbackResponseModel>> SearchAsync(FeedbackBaseSearchCriteria searchCriteria)
         {
             var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
@@ -501,8 +497,8 @@
                 IsActive = item.IsActive,
                 User = item.User == null ? new UserModel() : new UserModel(item.User),
                 Student = userFeedback == null ? null : new UserModel(userFeedback.User),
-                Answer = userFeedback == null ? null : userFeedback.Answer,
-                Rating = userFeedback == null ? null : userFeedback.Rating,
+                Answer = userFeedback?.Answer,
+                Rating = userFeedback?.Rating,
                 FeedbackQuestionOptions = new List<FeedbackQuestionOptionResponseModel>(),
             };
 

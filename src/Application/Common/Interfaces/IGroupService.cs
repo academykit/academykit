@@ -39,7 +39,7 @@
         /// <exception cref="EntityNotFoundException"></exception>
         Task RemoveMemberAsync(string identity, Guid id, Guid currentUserId);
 
-         /// <summary>
+        /// <summary>
         /// Handle to upload file in group
         /// </summary>
         /// <param name="model"> the instance of <see cref="GroupFileRequestModel" />. </param>
@@ -54,8 +54,8 @@
         /// <param name="fileId"> the file id</param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
-        Task RemoveGroupFileAsync(string groupIdentity,Guid fileId, Guid currentUserId);
-        
+        Task RemoveGroupFileAsync(string groupIdentity, Guid fileId, Guid currentUserId);
+
         /// <summary>
         /// Handle to get group files
         /// </summary>

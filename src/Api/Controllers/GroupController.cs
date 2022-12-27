@@ -193,9 +193,9 @@
                 var search = searchCriteria.Search.Trim().ToLower();
                 predicate = predicate.And(p => p.FirstName.Contains(search) || p.Email.Contains(search));
             }
-            predicate = predicate.And(p => !(p.Groups.Select(x => x.Name).Contains(identity)) && !(p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin) && (p.IsActive == true));
+            predicate = predicate.And(p => !p.Groups.Select(x => x.Name).Contains(identity) && !(p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin) && p.IsActive);
             var users = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate).ConfigureAwait(false);
-            var result =  users.ToIPagedList(searchCriteria.Page,searchCriteria.Size);
+            var result = users.ToIPagedList(searchCriteria.Page, searchCriteria.Size);
             var response = new SearchResult<UserModel>
             {
                 Items = new List<UserModel>(),
