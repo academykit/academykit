@@ -694,5 +694,38 @@
         }
 
         #endregion Private Methods
+
+        /// <summary>
+        /// Handle to fetch users detail
+        /// </summary>
+        /// <param name="userId">the user id</param>
+        /// <returns>the instance of <see cref="UserResponseModel"/></returns>
+        public async Task<UserResponseModel> GetDetailAsync(Guid userId)
+        {
+            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
+                predicate: p => p.Id == userId,
+                include: src => src.Include(x => x.Department)
+                ).ConfigureAwait(false);
+
+            var userCertificates = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
+                predicate: p => p.UserId == userId && p.HasCertificateIssued.HasValue && p.HasCertificateIssued.Value,
+                include: src => src.Include(x => x.Course)
+                ).ConfigureAwait(false);
+
+            var response = new UserResponseModel(user);
+            foreach (var item in userCertificates)
+            {
+                response.Certificates.Add(new CourseCertificateIssuedResponseModel
+                {
+                    CourseId = item.CourseId,
+                    CourseName = item.Course.Name,
+                    CourseSlug = item.Course.Slug,
+                    HasCertificateIssued = item.HasCertificateIssued,
+                    CertificateIssuedDate = item.CertificateIssuedDate,
+                    CertificateUrl = item.CertificateUrl,
+                });
+            }
+            return response;
+        }
     }
 }

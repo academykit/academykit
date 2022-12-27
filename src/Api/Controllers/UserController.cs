@@ -121,8 +121,7 @@
         [HttpGet("{userId}")]
         public async Task<UserResponseModel> Get(Guid userId)
         {
-            User model = await _userService.GetAsync(userId).ConfigureAwait(false);
-            return new UserResponseModel(model);
+            return await _userService.GetDetailAsync(userId).ConfigureAwait(false);
         }
 
         /// <summary>

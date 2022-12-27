@@ -9,6 +9,7 @@
         public Course Course { get; set; }
         public DateTime EventStartDate { get; set; }
         public DateTime EventEndDate { get; set; }
+        public User User { get; set; }
 
     }
 }

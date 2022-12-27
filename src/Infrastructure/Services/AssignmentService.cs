@@ -354,7 +354,7 @@
                                         lesson.Id, currentUserId);
                     throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
                 }
-                var course = await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
+                var course = await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
 
                 var predicate = PredicateBuilder.New<Assignment>(true);
                 predicate = predicate.And(x => x.LessonId == lesson.Id);

@@ -108,5 +108,12 @@
         /// <param name="token">the token</param>
         /// <returns></returns>
         Task VerifyChangeEmailAsync(string token);
+
+        /// <summary>
+        /// Handle to fetch users detail
+        /// </summary>
+        /// <param name="userId">the user id</param>
+        /// <returns>the instance of <see cref="UserResponseModel"/></returns>
+        Task<UserResponseModel> GetDetailAsync(Guid userId);
     }
 }

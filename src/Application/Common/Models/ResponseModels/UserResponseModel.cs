@@ -21,6 +21,7 @@
         public bool IsActive { get; set; }
         public DateTime CreatedOn { get; set; }
         public string FullName { get; set; }
+        public IList<CourseCertificateIssuedResponseModel> Certificates { get; set; } = new List<CourseCertificateIssuedResponseModel>();
         public UserResponseModel(User user)
         {
             Id = user.Id;

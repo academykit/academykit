@@ -67,6 +67,8 @@
         public IList<FeedbackQuestionOption> FeedbackQuestionOptions { get; set; }
         public IList<FeedbackSubmission> FeedbackSubmissions { get; set; }
         public IList<Signature> Signatures { get; set; }
+        public IList<CourseCertificate> CourseCertificates { get; set; }
+
 
         /// <summary>
         /// Get or set full name

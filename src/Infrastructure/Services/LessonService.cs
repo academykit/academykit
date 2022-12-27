@@ -161,7 +161,8 @@ namespace Lingtren.Infrastructure.Services
                 lesson.Assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
                     predicate: p => p.LessonId == lesson.Id).ConfigureAwait(false);
                 var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetFirstOrDefaultAsync(
-                    predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId && !p.IsDeleted
+                    predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId && !p.IsDeleted,
+                    include: src => src.Include(x => x.User)
                     ).ConfigureAwait(false);
                 if (assignmentReview != null)
                 {
@@ -172,14 +173,16 @@ namespace Lingtren.Infrastructure.Services
                     review = new AssignmentReviewResponseModel()
                     {
                         Id = assignmentReview.Id,
+                        UserId = assignmentReview.UserId,
                         LessonId = assignmentReview.LessonId,
                         Mark = assignmentReview.Mark,
                         Review = assignmentReview.Review,
+                        User = new UserModel(assignmentReview.User),
                         Teacher = new UserModel(teacher)
                     };
                 }
-
             }
+
             var responseModel = new LessonResponseModel(lesson);
             var nextLessonIndex = currentIndex + 1;
             if ((nextLessonIndex + 1) <= lessons.Count)
