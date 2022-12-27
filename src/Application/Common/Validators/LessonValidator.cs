@@ -18,6 +18,8 @@
             RuleFor(x => x.Description).MaximumLength(5000).WithMessage("Name length must be less than or equal to 5000 characters");
             RuleFor(x => x.QuestionSet).SetValidator(new QuestionSetValidator())
                                          .When(x => x.Type == LessonType.Exam);
+            RuleFor(x => x.Meeting).SetValidator(new MeetingValidator())
+                                         .When(x => x.Type == LessonType.LiveClass);
         }
     }
 
@@ -27,7 +29,17 @@
         {
             RuleFor(x => x.QuestionMarking).NotNull().NotEmpty().WithMessage("Question marking is required.");
             RuleFor(x => x.Description).MaximumLength(5000).WithMessage("Description length must be less than or equal to 5000 characters.");
-            RuleFor(x=>x).Must(x => x.EndTime != default && x.StartTime != default && x.EndTime > x.StartTime).WithMessage("EndTime must be greater than StartTime");
+            RuleFor(x => x).Must(x => x.EndTime != default && x.StartTime != default && x.EndTime > x.StartTime).WithMessage("EndTime must be greater than StartTime");
+        }
+    }
+    public class MeetingValidator : AbstractValidator<MeetingRequestModel>
+    {
+        public MeetingValidator()
+        {
+            RuleFor(x => x.ZoomLicenseId).NotNull().NotEmpty().WithMessage("Please select zoom license.");
+            RuleFor(x => x.MeetingStartDate).NotNull().NotEmpty().WithMessage("Meeting start date is required");
+            RuleFor(x => x.MeetingDuration).NotNull().NotEmpty().WithMessage("Meeting duration is required")
+                        .LessThanOrEqualTo(3599).WithMessage("Meeting duration cannot be greater than or equal to 3600 minutes.");
         }
     }
 }
