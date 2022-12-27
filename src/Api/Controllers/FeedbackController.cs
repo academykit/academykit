@@ -141,6 +141,5 @@
         [HttpGet("{lessonIdentity}/users")]
         public async Task<IList<FeedbackSubmissionStudentResponseModel>> SubmissionAsync(string lessonIdentity) =>
             await _feedbackService.GetFeedbackSubmittedStudent(lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
-
     }
 }

@@ -76,9 +76,8 @@
         public async Task<SearchResult<CommentReplyResponseModel>> SearchReplyAsync(string identity, Guid id, [FromQuery] BaseSearchCriteria searchCriteria)
         {
             searchCriteria.CurrentUserId = CurrentUser.Id;
-            return await _commentService.SearchReplyAsync(identity,id, searchCriteria).ConfigureAwait(false);
+            return await _commentService.SearchReplyAsync(identity, id, searchCriteria).ConfigureAwait(false);
         }
-        
 
         /// <summary>
         /// get department by id or slug

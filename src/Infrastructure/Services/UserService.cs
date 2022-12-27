@@ -463,7 +463,7 @@
         /// <param name="oldEmail">the old email</param>
         /// <param name="newEmail">the new email for change requested</param>
         /// <returns>the jwt token</returns>
-        public string GenerateResendAndChangeEmailToken(string oldEmail, string newEmail, string encryptionKey, int tokenExpiry)
+        public static string GenerateResendAndChangeEmailToken(string oldEmail, string newEmail, string encryptionKey, int tokenExpiry)
         {
             byte[] securityKey = Encoding.UTF8.GetBytes(encryptionKey);
             var symmetricSecurityKey = new SymmetricSecurityKey(securityKey);
@@ -527,7 +527,6 @@
                 }
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to verify change email token.");
             }
-
         }
         #endregion Account Services
 

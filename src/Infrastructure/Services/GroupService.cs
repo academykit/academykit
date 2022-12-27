@@ -105,7 +105,6 @@
         {
             return await ExecuteWithResultAsync(async () =>
             {
-
                 if (model.Emails.Any(_ => default))
                 {
                     _logger.LogInformation("Please enter user email for group with identity : {identity}", identity);
@@ -124,7 +123,7 @@
                 if (!isAccess)
                 {
                     _logger.LogWarning("User with userId : {userId} is not admin/teacher to add member in the group", currentUserId);
-                    throw new ForbiddenException("Only user with superadmin or admin or trainer role is allowed to add member in the group.");
+                    throw new ForbiddenException("Only user with super-admin or admin or trainer role is allowed to add member in the group.");
                 }
 
                 var users = await _unitOfWork.GetRepository<User>().GetAllAsync(
@@ -190,7 +189,7 @@
                         result.Message += $" & {string.Join(',', adminAndSuperAdmin.Select(x => x.Email))} is a {string.Join(',', adminAndSuperAdmin.Select(x => x.Role))} in the system";
                     }
                     result.Message = result.Message.TrimStart(' ', '&');
-                    if (usersToBeAdded.Count() > 0)
+                    if (usersToBeAdded.Any())
                     {
                         result.Message += " & Other remaining users added successfully in the group";
                     }
@@ -224,7 +223,7 @@
             if (!isAccess)
             {
                 _logger.LogWarning("User with userId : {userId} is not admin/teacher to remove member from the group", currentUserId);
-                throw new ForbiddenException("Only user with superadmin or admin or trainer role is allowed to remove member from the group.");
+                throw new ForbiddenException("Only user with super-admin or admin or trainer role is allowed to remove member from the group.");
             }
             var groupMember = await _unitOfWork.GetRepository<GroupMember>().GetFirstOrDefaultAsync(
                 predicate: p => p.GroupId == group.Id && p.Id == id).ConfigureAwait(false);
@@ -260,7 +259,7 @@
             if (!isAccess)
             {
                 _logger.LogWarning("User with userId : {userId} is not admin/teacher to remove member from the group", currentUserId);
-                throw new ForbiddenException("Only user with superadmin or admin or trainer role is allowed to remove member from the group.");
+                throw new ForbiddenException("Only user with super-admin or admin or trainer role is allowed to remove member from the group.");
             }
             var groupMember = await _unitOfWork.GetRepository<GroupMember>().GetFirstOrDefaultAsync(
                 predicate: p => p.GroupId == group.Id && p.Id == id).ConfigureAwait(false);
@@ -296,7 +295,7 @@
 
                 if (!isSuperAdminOrAdmin && !isGroupTeacher)
                 {
-                    _logger.LogWarning("User with id: {userId} is not superadmin or admin or teacher for the group with id :{groupId}", currentUserId, group.Id);
+                    _logger.LogWarning("User with id: {userId} is not super-admin or admin or teacher for the group with id :{groupId}", currentUserId, group.Id);
                     throw new ForbiddenException("Unauthorized user to create an attachment in the group.");
                 }
 
@@ -319,12 +318,10 @@
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured while trying to upload the file in the group.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occured while trying to upload the file in the group.");
+                _logger.LogError(ex, "An error occurred while trying to upload the file in the group.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to upload the file in the group.");
             }
         }
-
-
 
         /// <summary>
         /// Handle to remove group file
@@ -367,8 +364,8 @@
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured while trying to remove the file from group.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occured while trying to remove the file from group.");
+                _logger.LogError(ex, "An error occurred while trying to remove the file from group.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to remove the file from group.");
             }
         }
 
@@ -410,8 +407,8 @@
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured while trying to fetch the group files.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occured while trying to fetch the group files.");
+                _logger.LogError(ex, "An error occurred while trying to fetch the group files.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch the group files.");
             }
         }
 

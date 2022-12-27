@@ -118,9 +118,8 @@ namespace Lingtren.Infrastructure.Services
 
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
                 predicate: p => p.CourseId == lesson.CourseId,
-                include: src => src.Include(x => x.Lessons),
-                orderBy: o => o.OrderBy(x => x.Order)
-                ).ConfigureAwait(false);
+                orderBy: o => o.OrderBy(x => x.Order),
+                include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
 
             var lessons = new List<Lesson>();
             lessons = sections.SelectMany(x => x.Lessons.OrderBy(x => x.Order)).ToList();
@@ -129,7 +128,7 @@ namespace Lingtren.Infrastructure.Services
             var orderLessons = lessons.GetRange(0, currentIndex).Where(x => x.IsMandatory);
 
             var containMandatoryLesson = orderLessons.Select(x => x.Id).Except(userCompletedWatchHistories.Select(x => x.LessonId));
-            if (!isTeacher && !isSuperAdminOrAdmin && containMandatoryLesson.Count() > 0)
+            if (!isTeacher && !isSuperAdminOrAdmin && containMandatoryLesson.Any())
             {
                 _logger.LogWarning("User with id: {userId} needs to view other mandatory lesson before viewing current lesson with id: {lessonId}", currentUserId, lesson.Id);
                 throw new ForbiddenException("Please complete above remaining mandatory lesson before viewing current lesson.");
@@ -498,8 +497,6 @@ namespace Lingtren.Infrastructure.Services
                 _unitOfWork.GetRepository<Lesson>().Delete(lesson);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }).ConfigureAwait(false);
-
-
         }
 
         /// <summary>
@@ -792,7 +789,7 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
-        /// Handle to update meeting 
+        /// Handle to update meeting
         /// </summary>
         /// <param name="model">the instance of <see cref="LessonRequestModel"/></param>
         /// <param name="existingLesson">the instance of <see cref="Lesson"/></param>

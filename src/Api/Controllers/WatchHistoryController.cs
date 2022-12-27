@@ -32,11 +32,10 @@
         }
 
         /// <summary>
-        /// 
+        /// api to pass student in current lesson
         /// </summary>
         /// <param name="userId">the user id</param>
         /// <param name="model">the instance of <see cref="WatchHistoryRequestModel"/></param>
-        /// <returns></returns>
         [HttpPatch("pass/{userId}")]
         public async Task<CommonResponseModel> Pass(Guid userId, WatchHistoryRequestModel model)
         {

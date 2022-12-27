@@ -46,7 +46,7 @@
         Task DeleteAsync(string identity, Guid id, Guid currentUserId);
 
         /// <summary>
-        /// Handle to search reply 
+        /// Handle to search reply
         /// </summary>
         /// <param name="identity">the course id or slug</param>
         /// <param name="id">the comment id</param>

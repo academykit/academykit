@@ -41,7 +41,7 @@ namespace Lingtren.Infrastructure.Services
 
                 if (dto.Payload.Object.Recording_files.Count == default)
                 {
-                    _logger.LogWarning($"No recording files");
+                    _logger.LogWarning("No recording files");
                     return;
                 }
 
@@ -70,9 +70,9 @@ namespace Lingtren.Infrastructure.Services
                 var lessons = new List<Lesson>();
                 var recordingFileDtos = new List<RecordingFileDto>();
                 int order = 1;
-                foreach(var file in recordingFile)
+                foreach (var file in recordingFile)
                 {
-                    var mediaFile = await _mediaService.UploadRecordingFileAsync(file.Download_url,dto.Download_token).ConfigureAwait(false);
+                    var mediaFile = await _mediaService.UploadRecordingFileAsync(file.Download_url, dto.Download_token).ConfigureAwait(false);
                     var recording = new RecordingFileDto
                     {
                         Name = $"{meeting.Lesson.Name} Part {order}",
@@ -83,8 +83,8 @@ namespace Lingtren.Infrastructure.Services
                     recordingFileDtos.Add(recording);
                     order++;
                 }
-                
-                if(recordingFileDtos.Count > 1)
+
+                if (recordingFileDtos.Count > 1)
                 {
                     var sectionLessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.SectionId ==
                                          meeting.Lesson.SectionId).ConfigureAwait(false);
@@ -116,7 +116,7 @@ namespace Lingtren.Infrastructure.Services
                     });
                     recordingFileDtos.Remove(firstRecording);
                     var recordings = recordingFileDtos.OrderBy(x => x.Order).ToList();
-                    foreach(var fileDto in recordings)
+                    foreach (var fileDto in recordings)
                     {
                         var slug = CommonHelper.GetEntityTitleSlug<Lesson>(_unitOfWork, (slug) => q => q.Slug == slug, fileDto.Name);
                         var lesson = new Lesson{

@@ -6,5 +6,3 @@ namespace Lingtren.Application.Common.Models.RequestModels
         public string Value { get; set; }
     }
 }
-
-

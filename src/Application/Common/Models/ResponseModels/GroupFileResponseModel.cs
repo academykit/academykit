@@ -15,7 +15,6 @@ namespace Lingtren.Application.Common.Models.ResponseModels
 
         public GroupFileResponseModel()
         {
-
         }
 
         public GroupFileResponseModel(GroupFile groupFile)

@@ -66,6 +66,5 @@
         /// <param name="currentUserId">the current user id</param>
         /// <returns>the instance of <see cref="QuestionSetUserResultResponseModel"</returns>
         Task<QuestionSetUserResultResponseModel> GetResultDetail(string identity, Guid questionSetSubmissionId, Guid currentUserId);
-
     }
 }

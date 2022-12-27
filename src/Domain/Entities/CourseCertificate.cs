@@ -11,6 +11,5 @@
         public DateTime EventEndDate { get; set; }
         public string SampleUrl { get; set; }
         public User User { get; set; }
-
     }
 }

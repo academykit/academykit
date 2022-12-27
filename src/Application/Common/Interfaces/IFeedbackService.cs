@@ -39,10 +39,7 @@
         /// Handle to search feedback
         /// </summary>
         /// <param name="searchCriteria">the instance of <see cref="FeedbackBaseSearchCriteria"/></param>
-        /// <returns></returns>
-        /// <exception cref="EntityNotFoundException"></exception>
-        /// <exception cref="ForbiddenException"></exception>
-
+        /// <returns>the list of <see cref="FeedbackResponseModel"/></returns>
         Task<IList<FeedbackResponseModel>> SearchAsync(FeedbackBaseSearchCriteria searchCriteria);
     }
 }

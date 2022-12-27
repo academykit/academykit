@@ -48,7 +48,6 @@
         public async Task<IList<QuestionResponseModel>> GetQuestions(string identity)
                     => await _questionSetService.GetQuestions(identity, CurrentUser.Id).ConfigureAwait(false);
 
-
         /// <summary>
         /// Handle to set start time
         /// </summary>
