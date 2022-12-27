@@ -34,10 +34,10 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                //if (context == null)
-                //{
-                //    throw new ArgumentException("Context not found");
-                //}
+                if (context == null)
+                {
+                    throw new ArgumentException("Context not found");
+                }
 
                 if (dto.Payload.Object.Recording_files.Count == default)
                 {
