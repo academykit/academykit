@@ -1,10 +1,13 @@
 ﻿namespace Lingtren.Application.Common.Models.ResponseModels
 {
+    using Lingtren.Application.Common.Dtos;
+
     public class AssignmentSubmissionStudentResponseModel
     {
         public UserModel? User { get; set; }
         public Guid LessonId { get; set; }
         public string LessonSlug { get; set; }
+        public CourseEnrollmentStatus UserStatus { get; set; }
         public AssignmentReviewResponseModel AssignmentReview { get; set; }
         public IList<AssignmentResponseModel> Assignments { get; set; }
     }

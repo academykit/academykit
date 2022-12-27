@@ -17,10 +17,13 @@
 
     public class AssignmentService : BaseGenericService<Assignment, AssignmentBaseSearchCriteria>, IAssignmentService
     {
+        private readonly ICourseService _courseService;
         public AssignmentService(
             IUnitOfWork unitOfWork,
-            ILogger<AssignmentService> logger) : base(unitOfWork, logger)
+            ILogger<AssignmentService> logger,
+            ICourseService courseService) : base(unitOfWork, logger)
         {
+            _courseService = courseService;
         }
 
         #region Protected Region
@@ -129,6 +132,8 @@
         }
 
         #endregion Private Region
+
+        #region Public Methods
 
         /// <summary>
         /// Handle to update course
@@ -349,7 +354,7 @@
                                         lesson.Id, currentUserId);
                     throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
                 }
-                await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
+                var course = await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
 
                 var predicate = PredicateBuilder.New<Assignment>(true);
                 predicate = predicate.And(x => x.LessonId == lesson.Id);
@@ -368,7 +373,8 @@
                     predicate: p => p.LessonId == lesson.Id && p.UserId == userId,
                     include: src => src.Include(x => x.User)
                     ).ConfigureAwait(false);
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p=>p.Id == currentUserId).ConfigureAwait(false);
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == currentUserId).ConfigureAwait(false);
+
                 var response = new AssignmentSubmissionStudentResponseModel
                 {
                     LessonId = lesson.Id,
@@ -392,6 +398,9 @@
                         Teacher = teacher != null ? new UserModel(teacher) : null
                     };
                 }
+
+                response.UserStatus = await _courseService.GetUserCourseEnrollmentStatus(course, currentUserId, fetchMembers: true).ConfigureAwait(false);
+
                 foreach (var item in assignments)
                 {
                     MapAssignment(true, userAssignments, item, response.Assignments);
@@ -404,6 +413,73 @@
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch the student submitted assignment.");
             }
         }
+
+        /// <summary>
+        /// Handle to search assignment
+        /// </summary>
+        /// <param name="searchCriteria">the instance of <see cref="AssignmentBaseSearchCriteria"/></param>
+        /// <returns></returns>
+        /// <exception cref="EntityNotFoundException"></exception>
+        /// <exception cref="ForbiddenException"></exception>
+        public async Task<IList<AssignmentResponseModel>> SearchAsync(AssignmentBaseSearchCriteria searchCriteria)
+        {
+            var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+               predicate: p => p.Id.ToString() == searchCriteria.LessonIdentity || p.Slug == searchCriteria.LessonIdentity
+               ).ConfigureAwait(false);
+
+            if (lesson == null)
+            {
+                _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", searchCriteria.LessonIdentity, searchCriteria.CurrentUserId);
+                throw new EntityNotFoundException("Lesson not found");
+            }
+            if (lesson.Type != LessonType.Assignment)
+            {
+                _logger.LogWarning("Lesson type not matched for assignment fetch for lesson with id: {id} and user with id: {userId}",
+                                    lesson.Id, searchCriteria.CurrentUserId);
+                throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+            }
+
+            var course = await ValidateAndGetCourse(searchCriteria.CurrentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
+
+            var isTeacher = course.CourseTeachers.Any(x => x.UserId == searchCriteria.CurrentUserId);
+            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(searchCriteria.CurrentUserId).ConfigureAwait(false);
+
+            if (!isTeacher && !isSuperAdminOrAdmin && searchCriteria.UserId == null)
+            {
+                searchCriteria.UserId = searchCriteria.CurrentUserId;
+            }
+
+            var showCorrectAndHints = isTeacher || isSuperAdminOrAdmin;
+
+            var predicate = PredicateBuilder.New<Assignment>(true);
+            predicate = predicate.And(x => x.LessonId == lesson.Id);
+
+            var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
+                predicate: p => p.LessonId == lesson.Id,
+                include: src => src.Include(x => x.AssignmentAttachments).Include(x => x.AssignmentQuestionOptions)
+                ).ConfigureAwait(false);
+
+            var userAssignments = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(
+                predicate: p => p.LessonId == lesson.Id && searchCriteria.UserId.HasValue && p.UserId == searchCriteria.UserId.Value,
+                include: src => src.Include(x => x.AssignmentSubmissionAttachments).Include(x => x.User)
+                ).ConfigureAwait(false);
+
+            var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetFirstOrDefaultAsync(
+                predicate: p => p.LessonId == lesson.Id && searchCriteria.UserId.HasValue && p.UserId == searchCriteria.UserId.Value
+                ).ConfigureAwait(false);
+
+            var response = new List<AssignmentResponseModel>();
+
+            foreach (var item in assignments)
+            {
+                MapAssignment(showCorrectAndHints, userAssignments, item, response);
+            }
+            return response;
+        }
+
+        #endregion Public Methods
+
+        #region Assignment Review
 
         /// <summary>
         /// Handle to review user assignment
@@ -615,6 +691,8 @@
             }
         }
 
+        #endregion Assignment Review
+
         #region Private Methods
 
         /// <summary>
@@ -687,6 +765,14 @@
             await _unitOfWork.GetRepository<AssignmentSubmission>().InsertAsync(assignmentSubmission).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handle to update assignment submission
+        /// </summary>
+        /// <param name="currentUserId">the current logged in user</param>
+        /// <param name="currentTimeStamp">the current time stamp</param>
+        /// <param name="item">the instance of <see cref="AssignmentSubmissionRequestModel"/></param>
+        /// <param name="assignment">the instance of <see cref="Assignment"/></param>
+        /// <returns></returns>
         private async Task UpdateSubmissionAsync(Guid currentUserId, DateTime currentTimeStamp, AssignmentSubmissionRequestModel item, Assignment assignment)
         {
             var assignmentSubmission = await _unitOfWork.GetRepository<AssignmentSubmission>().GetFirstOrDefaultAsync(
@@ -730,71 +816,6 @@
                 await _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().InsertAsync(assignmentSubmission.AssignmentSubmissionAttachments).ConfigureAwait(false);
             }
             _unitOfWork.GetRepository<AssignmentSubmission>().Update(assignmentSubmission);
-        }
-
-        #endregion Private Methods
-
-        /// <summary>
-        /// Handle to search assignment
-        /// </summary>
-        /// <param name="searchCriteria">the instance of <see cref="AssignmentBaseSearchCriteria"/></param>
-        /// <returns></returns>
-        /// <exception cref="EntityNotFoundException"></exception>
-        /// <exception cref="ForbiddenException"></exception>
-        public async Task<IList<AssignmentResponseModel>> SearchAsync(AssignmentBaseSearchCriteria searchCriteria)
-        {
-            var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
-               predicate: p => p.Id.ToString() == searchCriteria.LessonIdentity || p.Slug == searchCriteria.LessonIdentity
-               ).ConfigureAwait(false);
-
-            if (lesson == null)
-            {
-                _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", searchCriteria.LessonIdentity, searchCriteria.CurrentUserId);
-                throw new EntityNotFoundException("Lesson not found");
-            }
-            if (lesson.Type != LessonType.Assignment)
-            {
-                _logger.LogWarning("Lesson type not matched for assignment fetch for lesson with id: {id} and user with id: {userId}",
-                                    lesson.Id, searchCriteria.CurrentUserId);
-                throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
-            }
-
-            var course = await ValidateAndGetCourse(searchCriteria.CurrentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
-
-            var isTeacher = course.CourseTeachers.Any(x => x.UserId == searchCriteria.CurrentUserId);
-            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(searchCriteria.CurrentUserId).ConfigureAwait(false);
-
-            if (!isTeacher && !isSuperAdminOrAdmin && searchCriteria.UserId == null)
-            {
-                searchCriteria.UserId = searchCriteria.CurrentUserId;
-            }
-
-            var showCorrectAndHints = isTeacher || isSuperAdminOrAdmin;
-
-            var predicate = PredicateBuilder.New<Assignment>(true);
-            predicate = predicate.And(x => x.LessonId == lesson.Id);
-
-            var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
-                predicate: p => p.LessonId == lesson.Id,
-                include: src => src.Include(x => x.AssignmentAttachments).Include(x => x.AssignmentQuestionOptions)
-                ).ConfigureAwait(false);
-
-            var userAssignments = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(
-                predicate: p => p.LessonId == lesson.Id && searchCriteria.UserId.HasValue && p.UserId == searchCriteria.UserId.Value,
-                include: src => src.Include(x => x.AssignmentSubmissionAttachments).Include(x => x.User)
-                ).ConfigureAwait(false);
-
-            var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetFirstOrDefaultAsync(
-                predicate: p => p.LessonId == lesson.Id && searchCriteria.UserId.HasValue && p.UserId == searchCriteria.UserId.Value
-                ).ConfigureAwait(false);
-
-            var response = new List<AssignmentResponseModel>();
-
-            foreach (var item in assignments)
-            {
-                MapAssignment(showCorrectAndHints, userAssignments, item, response);
-            }
-            return response;
         }
 
         /// <summary>
@@ -860,5 +881,8 @@
             }
             response.Add(data);
         }
+
+        #endregion Private Methods
+
     }
 }
