@@ -31,6 +31,7 @@
         public bool? HasReviewedAssignment { get; set; }
         public MeetingResponseModel? Meeting { get; set; }
         public QuestionSetResponseModel? QuestionSet { get; set; }
+        public AssignmentReviewResponseModel? AssignmentReview { get; set; }
 
         public LessonResponseModel(Lesson model)
         {

@@ -198,21 +198,36 @@
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and course with id : {courseId}", model.LessonIdentity, currentUserId, course.Id);
                     throw new EntityNotFoundException("Lesson not found");
                 }
-
+                var currentTimeStamp = DateTime.UtcNow;
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
                     predicate: p => p.CourseId == course.Id && p.LessonId == lesson.Id && p.UserId == userId
                     ).ConfigureAwait(false);
                 if (watchHistory == null)
                 {
-                    _logger.LogWarning("Watch histories not found for user with id: {userId}, course with id: {courseId} and lesson with id: {lessonId}",
-                                        currentUserId, course.Id, lesson.Id);
-                    throw new EntityNotFoundException("Watch history not found");
+                    watchHistory = new WatchHistory
+                    {
+                        Id = Guid.NewGuid(),
+                        CourseId = course.Id,
+                        LessonId = lesson.Id,
+                        UserId = userId,
+                        IsCompleted = false,
+                        IsPassed = true,
+                        CreatedBy = currentUserId,
+                        CreatedOn = currentTimeStamp,
+                        UpdatedBy = currentUserId,
+                        UpdatedOn = currentTimeStamp
+                    };
+                    await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
                 }
-                watchHistory.IsCompleted = true;
-                watchHistory.IsPassed = true;
-                watchHistory.UpdatedBy = currentUserId;
-                watchHistory.UpdatedOn = DateTime.UtcNow;
-                _unitOfWork.GetRepository<WatchHistory>().Update(watchHistory);
+                else
+                {
+                    watchHistory.IsCompleted = true;
+                    watchHistory.IsPassed = true;
+                    watchHistory.UpdatedBy = currentUserId;
+                    watchHistory.UpdatedOn = DateTime.UtcNow;
+                    _unitOfWork.GetRepository<WatchHistory>().Update(watchHistory);
+                }
+
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception ex)

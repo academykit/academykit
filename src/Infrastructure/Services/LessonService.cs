@@ -1,4 +1,3 @@
-using System.Data.Common;
 namespace Lingtren.Infrastructure.Services
 {
     using AngleSharp.Common;
@@ -155,14 +154,31 @@ namespace Lingtren.Infrastructure.Services
                 hasResult = containResults;
             }
             bool? hasReviewedAssignment = null;
+            AssignmentReviewResponseModel? review = null;
             if (lesson.Type == LessonType.Assignment)
             {
                 lesson.Assignments = new List<Assignment>();
                 lesson.Assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
                     predicate: p => p.LessonId == lesson.Id).ConfigureAwait(false);
-                hasReviewedAssignment = await _unitOfWork.GetRepository<AssignmentReview>().ExistsAsync(
+                var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetFirstOrDefaultAsync(
                     predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId && !p.IsDeleted
                     ).ConfigureAwait(false);
+                if (assignmentReview != null)
+                {
+                    hasReviewedAssignment = true;
+                    var teacher = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
+                        predicate: p => p.Id == assignmentReview.CreatedBy
+                        ).ConfigureAwait(false);
+                    review = new AssignmentReviewResponseModel()
+                    {
+                        Id = assignmentReview.Id,
+                        LessonId = assignmentReview.LessonId,
+                        Mark = assignmentReview.Mark,
+                        Review = assignmentReview.Review,
+                        Teacher = new UserModel(teacher)
+                    };
+                }
+
             }
             var responseModel = new LessonResponseModel(lesson);
             var nextLessonIndex = currentIndex + 1;
@@ -172,6 +188,7 @@ namespace Lingtren.Infrastructure.Services
             }
             responseModel.HasResult = hasResult;
             responseModel.HasReviewedAssignment = hasReviewedAssignment;
+            responseModel.AssignmentReview = review;
             return responseModel;
         }
 

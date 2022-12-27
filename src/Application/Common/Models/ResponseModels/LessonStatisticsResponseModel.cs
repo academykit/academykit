@@ -27,6 +27,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public Guid? QuestionSetId { get; set; }
         public bool? IsCompleted { get; set; }
         public bool? IsPassed { get; set; }
+        public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
     }
 }

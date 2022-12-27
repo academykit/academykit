@@ -738,7 +738,8 @@ namespace Lingtren.Infrastructure.Services
                            LessonType = lesson.Type,
                            QuestionSetId = lesson.Type == LessonType.Exam ? lesson.QuestionSetId : null,
                            IsCompleted = m?.IsCompleted,
-                           IsPassed = m?.IsPassed
+                           IsPassed = m?.IsPassed,
+                           UpdatedOn = m?.UpdatedOn ?? m?.CreatedOn,
                        };
 
             return data.ToList().ToIPagedList(criteria.Page, criteria.Size);
@@ -825,6 +826,7 @@ namespace Lingtren.Infrastructure.Services
                 QuestionSetId = x.Lesson.Type == LessonType.Exam ? x.Lesson?.QuestionSetId : null,
                 IsCompleted = x.IsCompleted,
                 IsPassed = x.IsPassed,
+                UpdatedOn = x.UpdatedOn ?? x.CreatedOn,
                 User = new UserModel(x.User)
             }));
             return response;
