@@ -170,5 +170,102 @@ namespace Lingtren.Infrastructure.Services
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
+
+         /// <summary>
+        /// Handle to save record of participant join meeting
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="ZoomPayLoadDto" /> .</param>
+        /// <returns> the task complete </returns>
+        public async Task ParticipantJoinMeetingAsync(ZoomPayLoadDto model)
+        {
+            try
+            {
+                var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: x => x.MeetingNumber.ToString() == model.Payload.Object.Id).ConfigureAwait(false);
+
+                if (meeting == default)
+                {
+                    _logger.LogWarning("Meeting id : {id} not found.", model.Payload.Object.Id);
+                    return;
+                }
+
+
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p =>
+                             p.Id.ToString() == model.Payload.Object.Participant.Customer_Key).ConfigureAwait(false);
+
+                if (user == default)
+                {
+                    _logger.LogWarning("User with id : {id} not found", model.Payload.Object.Participant.Customer_Key);
+                    return;
+                }
+
+                var meetingReport = new MeetingReport{
+                    Id = Guid.NewGuid(),
+                    MeetingId = meeting.Id,
+                    UserId = user.Id,
+                    StartTime = DateTime.Parse(model.Payload.Object.Start_Time),
+                    JoinTime = DateTime.Parse(model.Payload.Object.Participant.Join_Time),
+                    CreatedOn = DateTime.UtcNow
+                };
+                await _unitOfWork.GetRepository<MeetingReport>().InsertAsync(meetingReport).ConfigureAwait(false);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to save participant session join record.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to save participant session join record.");
+            }
+        }
+
+        /// <summary>
+        /// Handle to save record of participant leave meeting
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="ZoomPayLoadDto" /> .</param>
+        /// <returns> the task complete </returns>
+        public async Task ParticipantLeaveMeetingAsync(ZoomPayLoadDto model)
+        {
+            try
+            {
+                var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: x => x.MeetingNumber.ToString() == model.Payload.Object.Id).ConfigureAwait(false);
+
+                if (meeting == default)
+                {
+                    _logger.LogWarning("Meeting id : {id} not found.", model.Payload.Object.Id);
+                    return;
+                }
+
+
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p =>
+                             p.Id.ToString() == model.Payload.Object.Participant.Customer_Key).ConfigureAwait(false);
+
+                if (user == default)
+                {
+                    _logger.LogWarning("User with id : {id} not found", model.Payload.Object.Participant.Customer_Key);
+                    return;
+                }
+
+                var report = await _unitOfWork.GetRepository<MeetingReport>().GetFirstOrDefaultAsync(
+                    predicate: p => p.UserId == user.Id && p.MeetingId == meeting.Id
+                            && p.StartTime == DateTime.Parse(model.Payload.Object.Start_Time)
+                            && p.LeftTime == default).ConfigureAwait(false);
+                if (report == default)
+                {
+                    _logger.LogWarning("Meeting Report not found for user with id : {userId} and meeting with id : {id}",
+                                        user.Id, meeting.Id);
+                    return;
+                }
+                var LeftTime = DateTime.Parse(model.Payload.Object.Participant.Leave_Time);
+                var duration = LeftTime.Subtract(report.JoinTime);
+                report.Duration = duration;
+                report.LeftTime = LeftTime;
+                report.UpdatedOn = DateTime.UtcNow;
+                _unitOfWork.GetRepository<MeetingReport>().Update(report);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to save participant left record");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to save participant left record");
+            }
+        }
     }
 }

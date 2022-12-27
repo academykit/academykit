@@ -44,5 +44,51 @@ namespace Lingtren.Api.Controllers
             }
             return Ok();
         }
+
+         /// <summary>
+        /// join meeting event api
+        /// </summary>
+        [HttpPost("joinmeeting")]
+        [AllowAnonymous]
+        public async Task<IActionResult> JoinMeeting()
+        {
+            var headers = Request.Headers;
+            var authorizationKey = headers["authorization"];
+             var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync();
+            if(!authorizationKey.Equals(zoomSetting.WebHookVerificationKey))
+            {
+                throw new ForbiddenException($"Requested AuthorizationKey {authorizationKey} not matched.");
+            }
+            using (var stream = new StreamReader(Request.Body))
+            {
+                var reader = await stream.ReadToEndAsync();
+                var model = JsonConvert.DeserializeObject<ZoomPayLoadDto>(reader);
+                await _webhookService.ParticipantJoinMeetingAsync(model).ConfigureAwait(false);
+            }
+            return Ok();
+        }
+
+        /// <summary>
+        /// left meeting event api
+        /// </summary>
+        [HttpPost("leftmeeting")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LeftMeeting()
+        {
+            var headers = Request.Headers;
+            var authorizationKey = headers["authorization"];
+             var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync();
+            if(!authorizationKey.Equals(zoomSetting.WebHookVerificationKey))
+            {
+                throw new ForbiddenException($"Requested AuthorizationKey {authorizationKey} not matched.");
+            }
+            using (var stream = new StreamReader(Request.Body))
+            {
+                var reader = await stream.ReadToEndAsync();
+                var model = JsonConvert.DeserializeObject<ZoomPayLoadDto>(reader);
+                await _webhookService.ParticipantLeaveMeetingAsync(model).ConfigureAwait(false);
+            }
+            return Ok();
+        }
     }
 }
