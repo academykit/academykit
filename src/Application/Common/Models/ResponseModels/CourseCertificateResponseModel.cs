@@ -21,6 +21,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string Title { get; set; }
         public DateTime EventStartDate { get; set; }
         public DateTime EventEndDate { get; set; }
+        public string SampleUrl { get; set; }
         public CourseCertificateResponseModel(CourseCertificate model)
         {
             Id = model.Id;
@@ -28,6 +29,11 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             Title = model.Title;
             EventStartDate = model.EventStartDate;
             EventEndDate = model.EventEndDate;
+            SampleUrl = model.SampleUrl;
+        }
+        public CourseCertificateResponseModel()
+        {
+
         }
     }
 }

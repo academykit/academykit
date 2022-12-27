@@ -56,7 +56,7 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the  instance of <see cref="GeneralSettingRequestModel" /> .</param>
         /// <returns> the instance of <see cref="GeneralSettingResponseModel" /> .</returns>
         [HttpPut("{id}")]
-        public async Task<GeneralSettingResponseModel> UpdateSMTPSetting(Guid id, GeneralSettingRequestModel model)
+        public async Task<GeneralSettingResponseModel> UpdateGeneralSettings(Guid id, GeneralSettingRequestModel model)
         {
             IsSuperAdmin(CurrentUser.Role);
 

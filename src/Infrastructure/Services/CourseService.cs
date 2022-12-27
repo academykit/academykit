@@ -1079,7 +1079,7 @@ namespace Lingtren.Infrastructure.Services
                 var response = new List<CourseCertificateIssuedResponseModel>();
                 foreach (var item in results)
                 {
-                    item.CertificateUrl = await GetImageFile(course, item).ConfigureAwait(false);
+                    item.CertificateUrl = await GetImageFile(course.CourseCertificate, item.User.FullName, course.Signatures).ConfigureAwait(false);
                     item.CertificateIssuedDate = currentTimeStamp;
                     item.HasCertificateIssued = true;
                     response.Add(new CourseCertificateIssuedResponseModel
@@ -1114,11 +1114,11 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="startDate">the start date</param>
         /// <param name="hostEmail">the host email</param>
         /// <returns>the meeting id and passcode and the instance of <see cref="ZoomLicense"/></returns>
-        private async Task<string> GetImageFile(Course course, CourseEnrollment courseEnrollment)
+        private async Task<string> GetImageFile(CourseCertificate? certificate, string fullName, IList<Signature> signatures)
         {
             var client = new RestClient($"{imageApi}");
             var authors = new ArrayList();
-            foreach (var item in course.Signatures)
+            foreach (var item in signatures)
             {
                 authors.Add(new
                 {
@@ -1130,15 +1130,15 @@ namespace Lingtren.Infrastructure.Services
             var request = new RestRequest().AddHeader("Accept", "application/json")
                     .AddJsonBody(new
                     {
-                        name = courseEnrollment.User.FullName,
-                        training = course.CourseCertificate.Title,
-                        startDate = course.CourseCertificate.EventStartDate,
-                        endDate = course.CourseCertificate.EventEndDate,
+                        name = fullName,
+                        training = certificate?.Title,
+                        startDate = certificate?.EventStartDate,
+                        endDate = certificate?.EventEndDate,
                         authors = authors,
                     });
 
             var response = await client.PostAsync(request).ConfigureAwait(false);
-            var fileName = string.Join("_", courseEnrollment.User.FirstName, course.CourseCertificate.Title);
+            var fileName = string.Join("-", fullName.AsSpan(0, 5).ToString(), certificate?.Title.AsSpan(0, 5).ToString());
             MemoryStream ms = new MemoryStream(response.RawBytes);
             var file = new FormFile(ms, 0, response.RawBytes.Length, fileName, fileName);
             return await _mediaService.UploadFileAsync(new MediaRequestModel { File = file, Type = MediaType.File }).ConfigureAwait(false);
@@ -1194,9 +1194,9 @@ namespace Lingtren.Infrastructure.Services
                     _logger.LogWarning("Course with identity: {identity} not found", identity);
                     throw new EntityNotFoundException("Course not found");
                 }
-                var countSignature = await _unitOfWork.GetRepository<Signature>().CountAsync(
+                var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
                     predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
-                if (countSignature >= 3)
+                if (signatures.Count >= 3)
                 {
                     _logger.LogWarning("Course with id: {id} cannot have more than 3 signatures for user with id: {userId}", course.Id, currentUserId);
                     throw new ForbiddenException("At most 3 signatures are only allowed");
@@ -1214,6 +1214,22 @@ namespace Lingtren.Infrastructure.Services
                     UpdatedOn = currentTimeStamp,
                     UpdatedBy = currentUserId
                 };
+
+                var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
+                    predicate: p => p.CourseId == course.Id
+                    ).ConfigureAwait(false);
+                if (courseCertificate != null)
+                {
+                    var sampleSignatures = new List<Signature>();
+                    sampleSignatures.AddRange(signatures);
+                    sampleSignatures.Add(signature);
+
+                    courseCertificate.SampleUrl = await GetImageFile(courseCertificate, "User Name", sampleSignatures).ConfigureAwait(false);
+                    courseCertificate.UpdatedBy = currentUserId;
+                    courseCertificate.UpdatedOn = currentTimeStamp;
+
+                    _unitOfWork.GetRepository<CourseCertificate>().Update(courseCertificate);
+                }
                 await _unitOfWork.GetRepository<Signature>().InsertAsync(signature).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 var response = new SignatureResponseModel(signature);
@@ -1260,6 +1276,25 @@ namespace Lingtren.Infrastructure.Services
                 signature.UpdatedOn = currentTimeStamp;
                 signature.UpdatedBy = currentUserId;
 
+                var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
+                    predicate: p => p.CourseId == course.Id
+                    ).ConfigureAwait(false);
+                if (courseCertificate != null)
+                {
+                    var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
+                        predicate: p => p.CourseId == course.Id && p.Id != id).ConfigureAwait(false);
+
+                    var sampleSignatures = new List<Signature>();
+                    sampleSignatures.AddRange(signatures);
+                    sampleSignatures.Add(signature);
+
+                    courseCertificate.SampleUrl = await GetImageFile(courseCertificate, "User Name", sampleSignatures).ConfigureAwait(false);
+                    courseCertificate.UpdatedBy = currentUserId;
+                    courseCertificate.UpdatedOn = currentTimeStamp;
+
+                    _unitOfWork.GetRepository<CourseCertificate>().Update(courseCertificate);
+                }
+
                 _unitOfWork.GetRepository<Signature>().Update(signature);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 var response = new SignatureResponseModel(signature);
@@ -1297,6 +1332,22 @@ namespace Lingtren.Infrastructure.Services
                     _logger.LogWarning("Signature with id: {id} and courseId : {courseId} not found", id, course.Id);
                     throw new EntityNotFoundException("Signature not found");
                 }
+
+                var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
+                    predicate: p => p.CourseId == course.Id
+                    ).ConfigureAwait(false);
+                if (courseCertificate != null)
+                {
+                    var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
+                        predicate: p => p.CourseId == course.Id && p.Id != id).ConfigureAwait(false);
+
+                    courseCertificate.SampleUrl = await GetImageFile(courseCertificate, "User Name", signatures).ConfigureAwait(false);
+                    courseCertificate.UpdatedBy = currentUserId;
+                    courseCertificate.UpdatedOn = DateTime.UtcNow;
+
+                    _unitOfWork.GetRepository<CourseCertificate>().Update(courseCertificate);
+                }
+
                 _unitOfWork.GetRepository<Signature>().Delete(signature);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
@@ -1322,6 +1373,8 @@ namespace Lingtren.Infrastructure.Services
                 _logger.LogWarning("Course with identity: {identity} not found", identity);
                 throw new EntityNotFoundException("Course not found");
             }
+            var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
+                       predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
             var courseCertificate = new CourseCertificate();
             if (model.Id.HasValue)
@@ -1334,6 +1387,7 @@ namespace Lingtren.Infrastructure.Services
                 courseCertificate.EventEndDate = model.EventEndDate;
                 courseCertificate.UpdatedBy = currentUserId;
                 courseCertificate.UpdatedOn = currentTimeStamp;
+                courseCertificate.SampleUrl = await GetImageFile(courseCertificate, "User Name", signatures).ConfigureAwait(false);
 
                 _unitOfWork.GetRepository<CourseCertificate>().Update(courseCertificate);
             }
@@ -1351,7 +1405,7 @@ namespace Lingtren.Infrastructure.Services
                     UpdatedBy = currentUserId,
                     UpdatedOn = currentTimeStamp,
                 };
-
+                courseCertificate.SampleUrl = await GetImageFile(courseCertificate, "User Name", signatures).ConfigureAwait(false);
                 await _unitOfWork.GetRepository<CourseCertificate>().InsertAsync(courseCertificate).ConfigureAwait(false);
             }
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -1375,7 +1429,8 @@ namespace Lingtren.Infrastructure.Services
             var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
                 predicate: p => p.CourseId == course.Id
                 ).ConfigureAwait(false);
-            return new CourseCertificateResponseModel(courseCertificate);
+
+            return courseCertificate == null ? new CourseCertificateResponseModel() : new CourseCertificateResponseModel(courseCertificate);
         }
 
         #endregion Signature

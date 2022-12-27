@@ -1,4 +1,6 @@
 
+using Microsoft.AspNetCore.Http;
+
 namespace Lingtren.Application.Common.Models.RequestModels
 {
     public class GeneralSettingRequestModel
