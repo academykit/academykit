@@ -583,7 +583,7 @@
                 await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
 
                 var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetFirstOrDefaultAsync(
-                    predicate: p => p.Id == id && p.LessonId == lesson.Id && p.UserId == currentUserId && !p.IsDeleted
+                    predicate: p => p.Id == id && p.LessonId == lesson.Id && p.UserId == model.UserId && !p.IsDeleted
                     ).ConfigureAwait(false);
                 if (assignmentReview == null)
                 {
