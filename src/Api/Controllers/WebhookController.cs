@@ -26,22 +26,24 @@ namespace Lingtren.Api.Controllers
         /// <returns>the task complete </returns>
         [HttpPost("zoomrecording")]
         [AllowAnonymous]
-        public async Task<IActionResult> ZoomRecording()
+        public async Task<IActionResult> ZoomRecording(ZoomRecordPayloadDto dto)
         {
-            var header = Request.Headers;
-            var authorizationKey = header["authorization"];
-            var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync();
-            if(!authorizationKey.Equals(zoomSetting.WebHookVerificationKey))
-            {
-                throw new ForbiddenException($"Requested AuthorizationKey {authorizationKey} not matched.");
-            }
+            // var header = Request.Headers;
+            // var authorizationKey = header["authorization"];
+            // var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync();
+            // if(!authorizationKey.Equals(zoomSetting.WebHookVerificationKey))
+            // {
+            //     throw new ForbiddenException($"Requested AuthorizationKey {authorizationKey} not matched.");
+            // }
 
-            using(var stream = new StreamReader(Request.Body))
-            {
-                var reader = await stream.ReadToEndAsync();
-                var model = JsonConvert.DeserializeObject<ZoomRecordPayloadDto>(reader);
-                BackgroundJob.Enqueue<IWebhookService>(job => job.UploadZoomRecordingAsync(model,null));
-            }
+            // using(var stream = new StreamReader(Request.Body))
+            // {
+            //     var reader = await stream.ReadToEndAsync();
+            //     var model = JsonConvert.DeserializeObject<ZoomRecordPayloadDto>(reader);
+            //     BackgroundJob.Enqueue<IWebhookService>(job => job.UploadZoomRecordingAsync(model,null));
+            // }
+            _webhookService.UploadZoomRecordingAsync(dto, null);
+         //    BackgroundJob.Enqueue<IWebhookService>(job => job.UploadZoomRecordingAsync(dto,null));
             return Ok();
         }
     }

@@ -243,7 +243,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     lesson.Name = model.QuestionSet.Name;
                 }
-                lesson.Slug = CommonHelper.GetEntityTitleSlug<Course>(_unitOfWork, (slug) => q => q.Slug == slug, lesson.Name);
+                lesson.Slug = CommonHelper.GetEntityTitleSlug<Lesson>(_unitOfWork, (slug) => q => q.Slug == slug, lesson.Name);
                 if (lesson.Type == LessonType.Document)
                 {
                     lesson.DocumentUrl = model.DocumentUrl;

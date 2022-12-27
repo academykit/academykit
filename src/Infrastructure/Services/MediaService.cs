@@ -225,7 +225,7 @@ namespace Lingtren.Infrastructure.Services
                         FilePath = filePath,
                         Type = Application.Common.Dtos.MediaType.Video
                     };
-                    url = await _amazonService.SaveFileS3BucketAsync(awsDto).ConfigureAwait(false);
+                    url = await _amazonService.SaveRecordingFileS3BucketAsync(awsDto).ConfigureAwait(false);
                     DeleteFilePath(filePath);
                 }
                 else

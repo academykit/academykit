@@ -11,6 +11,7 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.Extensions.Logging;
     using Microsoft.EntityFrameworkCore;
     using Lingtren.Domain.Enums;
+    using Lingtren.Infrastructure.Helpers;
 
     public class WebhookService : BaseService, IWebhookService
     {
@@ -33,10 +34,10 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                if (context == null)
-                {
-                    throw new ArgumentException("Context not found");
-                }
+                //if (context == null)
+                //{
+                //    throw new ArgumentException("Context not found");
+                //}
 
                 if (dto.Payload.Object.Recording_files.Count == default)
                 {
@@ -85,15 +86,39 @@ namespace Lingtren.Infrastructure.Services
                 
                 if(recordingFileDtos.Count > 1)
                 {
+                    var sectionLessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.SectionId ==
+                                         meeting.Lesson.SectionId).ConfigureAwait(false);
+                    var lessonOrderList = sectionLessons.Where(x => x.Order > meeting.Lesson.Order).ToList();
+                    if(lessonOrderList.Count != default)
+                    {
+                        var reoderNo = recordingFileDtos.Count - 1;
+                        var reorderLessons = new List<Lesson>();
+                        foreach(var lessonorder in lessonOrderList)
+                        {
+                            lessonorder.Order = lessonorder.Order + reoderNo;
+                            reorderLessons.Add(lessonorder);
+                        }
+                        _unitOfWork.GetRepository<Lesson>().Update(reorderLessons);
+                    }
+
+                    var videoQueues = new List<VideoQueue>();
                     var lessonOrder = meeting.Lesson.Order + 1;
                     var firstRecording = recordingFileDtos.FirstOrDefault(x => x.Order == 1);
                     meeting.Lesson.Type = LessonType.RecordedVideo;
                     meeting.Lesson.VideoUrl = firstRecording.VideoUrl;
+                    videoQueues.Add(new VideoQueue
+                    {
+                        Id = Guid.NewGuid(),
+                        VideoUrl = meeting.Lesson.VideoUrl,
+                        Status = VideoStatus.Queue,
+                        CreatedOn = DateTime.UtcNow,
+                        LessonId = meeting.Lesson.Id
+                    });
                     recordingFileDtos.Remove(firstRecording);
                     var recordings = recordingFileDtos.OrderBy(x => x.Order).ToList();
                     foreach(var fileDto in recordings)
                     {
-                        var slug = "hello";
+                        var slug = CommonHelper.GetEntityTitleSlug<Lesson>(_unitOfWork, (slug) => q => q.Slug == slug, fileDto.Name);
                         var lesson = new Lesson{
                             Id = Guid.NewGuid(),
                             Name = fileDto.Name,
@@ -107,16 +132,35 @@ namespace Lingtren.Infrastructure.Services
                             CreatedBy = meeting.Lesson.CreatedBy,
                             CreatedOn = DateTime.UtcNow
                         };
+                      
+                        var fileQueue = new VideoQueue {
+                            Id = Guid.NewGuid(),
+                            LessonId = lesson.Id,
+                            VideoUrl = lesson.VideoUrl,
+                            CreatedOn = DateTime.UtcNow,
+                            Status = VideoStatus.Queue
+                        };
                         lessons.Add(lesson);
+                        videoQueues.Add(fileQueue);
                         lessonOrder++;
                     }
                     _unitOfWork.GetRepository<Lesson>().Update(meeting.Lesson);
                     await _unitOfWork.GetRepository<Lesson>().InsertAsync(lessons).ConfigureAwait(false);
+                    await _unitOfWork.GetRepository<VideoQueue>().InsertAsync(videoQueues).ConfigureAwait(false);
                 }else{
                     var videoFile = recordingFileDtos.FirstOrDefault();
                     meeting.Lesson.Type = LessonType.RecordedVideo;
                     meeting.Lesson.VideoUrl = videoFile.VideoUrl;
+                    var lessonVideoQueue = new VideoQueue
+                    {
+                        Id = Guid.NewGuid(),
+                        VideoUrl = meeting.Lesson.VideoUrl,
+                        LessonId = meeting.Lesson.Id,
+                        Status = VideoStatus.Queue,
+                        CreatedOn = DateTime.UtcNow
+                    };
                     _unitOfWork.GetRepository<Lesson>().Update(meeting.Lesson);
+                    await _unitOfWork.GetRepository<VideoQueue>().InsertAsync(lessonVideoQueue).ConfigureAwait(false);
                 }
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
