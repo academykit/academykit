@@ -25,6 +25,8 @@
             _mediaService = mediaService;
         }
 
+        #region Protected Region
+
         /// <summary>
         /// This is called before entity is saved to DB.
         /// </summary>
@@ -92,6 +94,30 @@
         {
             return p => p.Id.ToString() == identity || p.Slug == identity;
         }
+
+        /// <summary>
+        /// Check if entity could be accessed by current user
+        /// </summary>
+        /// <param name="entityToReturn">The entity being returned</param>
+        protected override async Task CheckGetPermissionsAsync(Group entityToReturn, Guid? CurrentUserId = null)
+        {
+            if (!CurrentUserId.HasValue)
+            {
+                _logger.LogWarning("CurrentUserId is required");
+                throw new ForbiddenException("CurrentUserId is required");
+            }
+            var userAccess = await ValidateUserCanAccessGroup(entityToReturn.Id, CurrentUserId.Value).ConfigureAwait(false);
+            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(CurrentUserId.Value).ConfigureAwait(false);
+            if (!userAccess && !isSuperAdminOrAdmin)
+            {
+                _logger.LogWarning("User with id: {userId} is not authorized user to access the group with id: {groupId}", CurrentUserId.Value, entityToReturn.Id);
+                throw new ForbiddenException("User can't access the group.");
+            }
+
+        }
+        #endregion Protected Region
+
+        #region Group Member
 
         /// <summary>
         /// Handle to add member in the group
@@ -272,6 +298,10 @@
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
 
+        #endregion Group Member
+
+        #region Group File
+
         /// <summary>
         /// Handle to upload file in group
         /// </summary>
@@ -412,11 +442,15 @@
             }
         }
 
+        #endregion Group File
+
+        #region Private Methods
+
         /// <summary>
         /// Handle to get whether user is group member or not with teacher role
         /// </summary>
         /// <param name="groupId">the group id</param>
-        /// <param name="currentUserId">the current user idz</param>
+        /// <param name="currentUserId">the current user id</param>
         /// <returns>the boolean true or false</returns>
         private async Task<bool> IsGroupTeacher(Guid groupId, Guid currentUserId)
         {
@@ -426,5 +460,7 @@
                ).ConfigureAwait(false);
             return groupMember?.User.Role == UserRole.Trainer;
         }
+
+        #endregion Private Methods
     }
 }

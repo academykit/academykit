@@ -102,7 +102,7 @@
         [HttpGet("{identity}")]
         public async Task<GroupResponseModel> Get(string identity)
         {
-            Group model = await _groupService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
+            Group model = await _groupService.GetByIdOrSlugAsync(identity,CurrentUser.Id).ConfigureAwait(false);
             return new GroupResponseModel(model, memberCount: model.GroupMembers.Count);
         }
 
@@ -140,7 +140,7 @@
         [HttpGet("{identity}/members")]
         public async Task<SearchResult<GroupMemberResponseModel>> SearchGroupMembers(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
         {
-            var group = await _groupService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
+            var group = await _groupService.GetByIdOrSlugAsync(identity,CurrentUser.Id).ConfigureAwait(false);
             if (group == null)
             {
                 throw new EntityNotFoundException("Group not found");
@@ -182,7 +182,7 @@
         [HttpGet("{identity}/notMembers")]
         public async Task<SearchResult<UserModel>> SearchNotGroupMembers(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
         {
-            var group = await _groupService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
+            var group = await _groupService.GetByIdOrSlugAsync(identity,CurrentUser.Id).ConfigureAwait(false);
             if (group == null)
             {
                 throw new EntityNotFoundException("Group not found");

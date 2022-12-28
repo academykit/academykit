@@ -617,6 +617,15 @@ namespace Lingtren.Infrastructure.Services
                 _logger.LogWarning("Group with identity: {identity} not found", identity);
                 throw new EntityNotFoundException("Group not found");
             }
+
+            var userAccess = await ValidateUserCanAccessGroup(group.Id, criteria.CurrentUserId).ConfigureAwait(false);
+            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(criteria.CurrentUserId).ConfigureAwait(false);
+            if (!userAccess && !isSuperAdminOrAdmin)
+            {
+                _logger.LogWarning("User with id: {userId} is not authorized user to access the group with id: {groupId}", criteria.CurrentUserId, group.Id);
+                throw new ForbiddenException("User can't access the group.");
+            }
+
             predicate = GroupCourseSearchPredicate(group.Id, predicate, criteria);
             var course = await _unitOfWork.GetRepository<Course>().GetAllAsync(
                 predicate: predicate,
