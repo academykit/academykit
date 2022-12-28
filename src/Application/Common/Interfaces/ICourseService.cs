@@ -213,7 +213,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="identity">the course id or slug </param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns></returns>
-        Task<CourseCertificateResponseModel> GetCertificateDetailAsync(string identity, Guid currentUserId);
+        Task<CourseCertificateResponseModel?> GetCertificateDetailAsync(string identity, Guid currentUserId);
 
         #endregion Signature
     }

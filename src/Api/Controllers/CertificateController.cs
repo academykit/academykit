@@ -26,7 +26,7 @@
         /// </summary>
         /// <returns> the list of <see cref="CourseCertificateResponseModel" /> .</returns>
         [HttpGet("detail")]
-        public async Task<CourseCertificateResponseModel> GetDetail(string identity)
+        public async Task<CourseCertificateResponseModel?> GetDetail(string identity)
         {
             return await _courseService.GetCertificateDetailAsync(identity, CurrentUser.Id).ConfigureAwait(false);
         }

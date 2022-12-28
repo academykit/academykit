@@ -1414,7 +1414,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="identity">the course id or slug </param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns></returns>
-        public async Task<CourseCertificateResponseModel> GetCertificateDetailAsync(string identity, Guid currentUserId)
+        public async Task<CourseCertificateResponseModel?> GetCertificateDetailAsync(string identity, Guid currentUserId)
         {
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
             if (course == null)
@@ -1426,7 +1426,7 @@ namespace Lingtren.Infrastructure.Services
                 predicate: p => p.CourseId == course.Id
                 ).ConfigureAwait(false);
 
-            return courseCertificate == null ? new CourseCertificateResponseModel() : new CourseCertificateResponseModel(courseCertificate);
+            return courseCertificate == null ? null : new CourseCertificateResponseModel(courseCertificate);
         }
 
         #endregion Signature
