@@ -41,14 +41,13 @@
         public DbSet<WatchHistory> WatchHistories { get; set; }
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<AssignmentAttachment> AssignmentAttachments { get; set; }
-        public DbSet<Recording> Recordings { get; set; }
         public DbSet<AssignmentSubmission> AssignmentSubmissions { get; set; }
         public DbSet<AssignmentQuestionOption> AssignmentQuestionOptions { get; set; }
         public DbSet<AssignmentSubmissionAttachment> AssignmentSubmissionAttachments { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentReply> CommentReplies { get; set; }
         public DbSet<Setting> Settings { get; set; }
-        public DbSet<GroupFile> GroupFile { get; set; }
+        public DbSet<GroupFile> GroupFiles { get; set; }
         public DbSet<AssignmentReview> AssignmentReviews { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<FeedbackQuestionOption> FeedbackQuestionOptions { get; set; }
