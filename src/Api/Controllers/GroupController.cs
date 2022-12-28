@@ -256,6 +256,7 @@
         [HttpGet("{identity}/courses")]
         public async Task<SearchResult<CourseResponseModel>> Courses(string identity, [FromQuery] BaseSearchCriteria criteria)
         {
+            criteria.CurrentUserId = CurrentUser.Id;
             var searchResult = await _courseService.GroupCourseSearchAsync(identity, criteria).ConfigureAwait(false);
             var response = new SearchResult<CourseResponseModel>
             {
