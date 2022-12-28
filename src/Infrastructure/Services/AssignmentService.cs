@@ -80,6 +80,11 @@
         {
             await ValidateAndGetLessonForAssignment(entity).ConfigureAwait(false);
 
+            var order = await _unitOfWork.GetRepository<Assignment>().MaxAsync(
+                predicate: p => p.LessonId == entity.LessonId && p.IsActive,
+                selector: x => (int?)x.Order
+                ).ConfigureAwait(false);
+            entity.Order = order == null ? 1 : order.Value + 1;
             if (entity.AssignmentQuestionOptions.Count > 0)
             {
                 await _unitOfWork.GetRepository<AssignmentQuestionOption>().InsertAsync(entity.AssignmentQuestionOptions).ConfigureAwait(false);
@@ -855,7 +860,7 @@
             {
                 var selectedAnsIds = !string.IsNullOrWhiteSpace(userAssignment?.SelectedOption) ?
                                         userAssignment?.SelectedOption.Split(",").Select(Guid.Parse).ToList() : new List<Guid>();
-                item.AssignmentQuestionOptions?.ToList().ForEach(x =>
+                item.AssignmentQuestionOptions?.OrderBy(x=>x.Order).ToList().ForEach(x =>
                                 data.AssignmentQuestionOptions.Add(new AssignmentQuestionOptionResponseModel()
                                 {
                                     Id = x.Id,
