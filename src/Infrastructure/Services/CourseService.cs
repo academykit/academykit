@@ -110,7 +110,7 @@ namespace Lingtren.Infrastructure.Services
             groupPredicate = groupPredicate.And(predicate);
             predicate = predicate.And(x => !x.GroupId.HasValue).Or(groupPredicate);
             return predicate.And(x => x.CreatedBy == criteria.CurrentUserId || x.CourseTeachers.Any(p => p.UserId == criteria.CurrentUserId)
-                        || (x.CreatedBy != criteria.CurrentUserId && (x.IsUpdate || x.Status.Equals(CourseStatus.Published))));
+                        || (x.CreatedBy != criteria.CurrentUserId && (x.IsUpdate || x.Status.Equals(CourseStatus.Published) || x.Status.Equals(CourseStatus.Completed))));
         }
 
         /// <summary>
@@ -549,8 +549,8 @@ namespace Lingtren.Infrastructure.Services
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (course.CreatedBy != currentUserId && !course.CourseTeachers.Any(x => x.UserId == currentUserId) && !isSuperAdminOrAdmin)
                 {
-                    course.Sections = course.Sections.Where(x => x.Status == CourseStatus.Published).ToList();
-                    course.Sections.ForEach(x => x.Lessons = x.Lessons.Where(x => x.Status == CourseStatus.Published).ToList());
+                    course.Sections = course.Sections.Where(x => x.Status == CourseStatus.Published || x.Status == CourseStatus.Completed).ToList();
+                    course.Sections.ForEach(x => x.Lessons = x.Lessons.Where(x => x.Status == CourseStatus.Published || x.Status == CourseStatus.Completed).ToList());
                 }
                 if (course.Sections.Count == 0)
                 {
