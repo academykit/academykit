@@ -78,7 +78,13 @@
 
             if (user == null)
             {
+                _logger.LogWarning("User with email: {email} not found while adding user in pool creator with poolId: {poolId}", model.Email, questionPool.Id);
                 throw new EntityNotFoundException("User not found");
+            }
+            if (user.Role == UserRole.Trainee)
+            {
+                _logger.LogWarning("User with id: {id} having role: {role} cannot added as exam pool creator with poolId: {poolId}", user.Id, user.Role, questionPool.Id);
+                throw new EntityNotFoundException($"User with {user.Role} role is not allowed to add as exam pool creator");
             }
 
             var currentTimeStamp = DateTime.UtcNow;
