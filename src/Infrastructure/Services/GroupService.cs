@@ -200,24 +200,24 @@
                     result.HttpStatusCode = HttpStatusCode.PartialContent;
                     if (duplicateUsers.Count > 0)
                     {
-                        result.Message += $"{string.Join(',', duplicateUsers.Select(x => x.User.Email))} already exist in group member";
+                        result.Message += $"Already as group member : {string.Join(", ", duplicateUsers.Select(x => x.User.Email))} {Environment.NewLine} ";
                     }
                     if (inActiveUsers.Count > 0)
                     {
-                        result.Message += $" & {string.Join(',', inActiveUsers.Select(x => x.User.Email))} already exist as inactive group member";
+                        result.Message += $"Inactive group member : {string.Join(", ", inActiveUsers.Select(x => x.User.Email))} {Environment.NewLine} ";
                     }
                     if (nonUsers.Count > 0)
                     {
-                        result.Message += $" & {string.Join(',', nonUsers.Select(x => x))} is not a users in the system";
+                        result.Message += $"Not a system user : {string.Join(", ", nonUsers.Select(x => x))} {Environment.NewLine} ";
                     }
                     if (adminAndSuperAdmin.Count > 0)
                     {
-                        result.Message += $" & {string.Join(',', adminAndSuperAdmin.Select(x => x.Email))} is a {string.Join(',', adminAndSuperAdmin.Select(x => x.Role))} in the system";
+                        result.Message += $"System superadmin or admin : {string.Join(", ", adminAndSuperAdmin.Select(x => x.Email))} {Environment.NewLine} ";
                     }
                     result.Message = result.Message.TrimStart(' ', '&');
                     if (usersToBeAdded.Any())
                     {
-                        result.Message += " & Other remaining users added successfully in the group";
+                        result.Message += " & Other remaining users are added successfully in the group";
                     }
                 }
                 else
@@ -275,7 +275,7 @@
         /// <exception cref="EntityNotFoundException"></exception>
         public async Task RemoveMemberAsync(string identity, Guid id, Guid currentUserId)
         {
-            var group = await GetByIdOrSlugAsync(identity,currentUserId).ConfigureAwait(false);
+            var group = await GetByIdOrSlugAsync(identity, currentUserId).ConfigureAwait(false);
             if (group == null)
             {
                 _logger.LogWarning("Group not found with identity : {identity}", identity);
