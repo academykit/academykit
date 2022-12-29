@@ -199,6 +199,15 @@ namespace Lingtren.Api.Controllers
         public async Task<IList<LessonStatisticsResponseModel>> LessonStatistics(string identity) => await _courseService.LessonStatistics(identity, CurrentUser.Id).ConfigureAwait(false);
 
         /// <summary>
+        /// get course statistics api
+        /// </summary>
+        /// <param name="identity"> the course id or slug </param>
+        /// <returns> the instance of <see cref="CourseStatisticsResponseModel" /> ></returns>
+        [HttpGet("{identity}/statistics")]
+        public async Task<CourseStatisticsResponseModel> Statistics(string identity) => await _courseService.GetCourseStatisticsAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+
+
+        /// <summary>
         /// Course Lesson Student's report api
         /// </summary>
         /// <param name="identity"> the course id or slug.</param>

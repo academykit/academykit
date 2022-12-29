@@ -667,6 +667,38 @@ namespace Lingtren.Infrastructure.Services
         #region Statistics
 
         /// <summary>
+        /// Handle to get course statistics 
+        /// </summary>
+        /// <param name="identity"> the course id or slug </param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the instance of <see cref="CourseStatisticsResponseModel" /> . </returns>
+        public async Task<CourseStatisticsResponseModel> GetCourseStatisticsAsync(string identity, Guid currentUserId)
+        {
+            try
+            {
+                var response = new CourseStatisticsResponseModel();
+              var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+              var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate:p => p.CourseId == course.Id &&
+              !p.IsDeleted && (p.Status == CourseStatus.Published || p.Status == CourseStatus.Completed)).ConfigureAwait(false);
+              response.TotalTeachers = course.CourseTeachers.Count;
+              response.TotalLessons = lessons.Count;
+              response.TotalMeetings = lessons.Count(x => (x.Type == LessonType.LiveClass || x.Type == LessonType.RecordedVideo) && x.MeetingId != null);
+              response.TotalLectures = lessons.Count(x => x.Type == LessonType.Video || x.Type == LessonType.RecordedVideo);
+              response.TotalExams = lessons.Count(x => x.Type == LessonType.Exam);
+              response.TotalAssignments = lessons.Count(x => x.Type == LessonType.Assignment);
+              response.TotalDocuments = lessons.Count(x => x.Type == LessonType.Document);
+             response.TotalEnrollments = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(predicate: p => p.CourseId == course.Id && 
+             (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed));
+              return response;
+            }
+            catch (Exception ex) 
+            {
+                 _logger.LogError(ex, "An error occurred while trying to fetch course  statistics.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch course  statistics.");
+            }
+        }
+
+        /// <summary>
         /// Handle to fetch course lesson statistics
         /// </summary>
         /// <param name="identity">the course id or slug</param>

@@ -90,6 +90,14 @@ namespace Lingtren.Application.Common.Interfaces
         Task<IList<LessonStatisticsResponseModel>> LessonStatistics(string identity, Guid currentUserId);
 
         /// <summary>
+        /// Handle to get course statistics 
+        /// </summary>
+        /// <param name="identity"> the course id or slug </param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the instance of <see cref="CourseStatisticsResponseModel" /> . </returns>
+        Task<CourseStatisticsResponseModel> GetCourseStatisticsAsync(string identity, Guid currentUserId);
+
+        /// <summary>
         /// Handle to get lesson students report
         /// </summary>
         /// <param name="identity">the course id or slug</param>
