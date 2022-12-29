@@ -40,5 +40,6 @@
         public string SdkKey { get; set; }
         public long? MeetingId { get; set; }
         public string Passcode { get; set; }
+        public UserModel User { get; set; }
     }
 }

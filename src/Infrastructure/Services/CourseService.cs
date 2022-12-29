@@ -1137,8 +1137,8 @@ namespace Lingtren.Infrastructure.Services
                     {
                         name = fullName,
                         training = certificate?.Title,
-                        startDate = certificate?.EventStartDate,
-                        endDate = certificate?.EventEndDate,
+                        startDate = certificate?.EventStartDate.ToShortDateString(),
+                        endDate = certificate?.EventEndDate.ToShortDateString(),
                         authors,
                     });
 
