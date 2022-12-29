@@ -1143,7 +1143,7 @@ namespace Lingtren.Infrastructure.Services
                     });
 
             var response = await client.PostAsync(request).ConfigureAwait(false);
-            var fileName = string.Join("-", fullName.AsSpan(0, 5).ToString(), certificate?.Title.AsSpan(0, 5).ToString());
+            var fileName = certificate?.Title ?? "certificate";
             MemoryStream ms = new(response.RawBytes);
             var file = new FormFile(ms, 0, response.RawBytes.Length, fileName, fileName);
             return await _mediaService.UploadFileAsync(new MediaRequestModel { File = file, Type = MediaType.File }).ConfigureAwait(false);
