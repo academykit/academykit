@@ -275,7 +275,7 @@
         /// <exception cref="EntityNotFoundException"></exception>
         public async Task RemoveMemberAsync(string identity, Guid id, Guid currentUserId)
         {
-            var group = await GetByIdOrSlugAsync(identity).ConfigureAwait(false);
+            var group = await GetByIdOrSlugAsync(identity,currentUserId).ConfigureAwait(false);
             if (group == null)
             {
                 _logger.LogWarning("Group not found with identity : {identity}", identity);
