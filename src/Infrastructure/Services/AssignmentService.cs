@@ -184,7 +184,7 @@
                         });
                     }
                 }
-                if ((model.Type == QuestionTypeEnum.SingleChoice || model.Type == QuestionTypeEnum.MultipleChoice) && model.FileUrls.Count > 0)
+                if (model.Type == QuestionTypeEnum.Subjective && model.FileUrls?.Count > 0)
                 {
                     foreach (var item in model.FileUrls.Select((fileUrl, i) => new { i, fileUrl }))
                     {
