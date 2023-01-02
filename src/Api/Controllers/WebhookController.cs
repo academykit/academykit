@@ -32,18 +32,27 @@ namespace Lingtren.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ZoomRecording()
         {
-            var header = Request.Headers;
-            var authorizationKey = header["authorization"];
             var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync();
-            if (!authorizationKey.Equals(zoomSetting.WebHookVerificationKey))
-            {
-                throw new ForbiddenException($"Requested AuthorizationKey {authorizationKey} not matched.");
-            }
-
             using (var stream = new StreamReader(Request.Body))
             {
                 var reader = await stream.ReadToEndAsync();
                 var model = JsonConvert.DeserializeObject<ZoomRecordPayloadDto>(reader);
+                 if (model.Event.Equals("endpoint.url_validation"))
+                {
+                    var plainToken = model.Payload.PlainToken;
+                    ASCIIEncoding encoding = new ASCIIEncoding();
+                    byte[] keyBytes = encoding.GetBytes(zoomSetting.WebHookSecret);
+                    byte[] messageBytes = encoding.GetBytes(plainToken);
+                    System.Security.Cryptography.HMACSHA256 cryptographer = new System.Security.Cryptography.HMACSHA256(keyBytes);
+                    byte[] bytes = cryptographer.ComputeHash(messageBytes);
+                    var hash = BitConverter.ToString(bytes).Replace("-", "").ToLower();
+                    var response = new WebHookResponseModel
+                    {
+                        PlainToken = plainToken,
+                        EncryptedToken = hash
+                    };
+                    return Ok(response);
+                }
                 BackgroundJob.Enqueue<IWebhookService>(job => job.UploadZoomRecordingAsync(model, null));
             }
             return Ok();
