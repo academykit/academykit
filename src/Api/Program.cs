@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using HangfireBasicAuthenticationFilter;
 using Lingtren.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,7 +43,14 @@ app.UseCors(x => x
               .AllowAnyHeader()
               .SetIsOriginAllowed(_ => true) // allow any origin
               .AllowCredentials());
-app.UseHangfireDashboard("/jobs");
+app.UseHangfireDashboard("/jobs", new DashboardOptions
+{
+    Authorization = new[] { new HangfireCustomBasicAuthenticationFilter
+        {
+            User = builder.Configuration.GetSection("Hangfire").GetSection("User").Value,
+            Pass = builder.Configuration.GetSection("Hangfire").GetSection("Password").Value
+        }}
+});
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
