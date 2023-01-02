@@ -581,8 +581,6 @@ namespace Lingtren.Infrastructure.Services
 
                 var signature = await _zoomLicenseService.GenerateZoomSignatureAsync(lesson.Meeting.MeetingNumber.ToString(), isModerator).ConfigureAwait(false);
                 var zak = await _zoomLicenseService.GetZAKAsync(lesson.Meeting.ZoomLicense.HostId).ConfigureAwait(false);
-                
-
                 var response = new MeetingJoinResponseModel
                 {
                     RoomName = lesson.Name,
@@ -600,6 +598,44 @@ namespace Lingtren.Infrastructure.Services
                 _logger.LogError(ex, "An error occurred while trying to join live class.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to join live class.");
             }
+        }
+
+
+        /// <summary>
+        /// Handle to get meeting report 
+        /// </summary>
+        /// <param name="identity"> the lesson identity </param>
+        /// <param name="userId"> the user id </param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the instance of <see cref="MeetingReportResponseModel" /> .</returns>
+        public async Task<MeetingReportResponseModel> GetMeetingReportAsync(string identity,string lessonIdentity,string userId, Guid currentUserId)
+        {
+            var response = new MeetingReportResponseModel();
+            var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+            var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p => (p.Id.ToString() == lessonIdentity || p.Slug.Equals(lessonIdentity)) &&
+            (p.Type == LessonType.LiveClass || p.Type == LessonType.RecordedVideo) && p.MeetingId != null).ConfigureAwait(false);
+            if (lesson == default)
+            {
+                _logger.LogError($"GetMeetingReportAsync() : Lesson with identity : {identity} not found.");
+                throw new EntityNotFoundException("Lesson not found");
+            }
+            var report = await _unitOfWork.GetRepository<MeetingReport>().GetFirstOrDefaultAsync(predicate: p => p.MeetingId == lesson.MeetingId &&
+                          p.UserId.ToString() == userId, include: s => s.Include(x => x.User)).ConfigureAwait(false);
+            if (report == default)
+            {
+                _logger.LogError($"GetMeetingReportAsync() : Meeting report of user with id {userId} not found");
+                throw new EntityNotFoundException("Meeting report not found");
+            }
+            response.UserId = report.UserId;
+            response.Name = $"{report.User?.FirstName} {report.User?.LastName}";
+            response.Email = report.User?.Email;
+            response.MobileNumber = report.User?.MobileNumber;
+            response.Date = report.StartTime;
+            response.JoinedTime = report.JoinTime.ToShortDateString();
+            response.LeftTime =   report.LeftTime.HasValue ? report.LeftTime.Value.ToShortTimeString() : string.Empty;
+            response.LessonId = lesson.Id;
+            report.Duration = report.Duration;
+            return response;
         }
 
         /// <summary>

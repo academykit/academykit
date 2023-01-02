@@ -125,5 +125,18 @@ namespace Lingtren.Api.Controllers
             var response = await _lessonService.GetJoinMeetingAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
             return response;
         }
+
+        /// <summary>
+        /// get user meeting report api
+        /// </summary>
+        /// <param name="identity"> the lesson identity </param>
+        /// <param name="userId"> the user id </param>
+        /// <returns> the instance of <see cref="MeetingReportResponseModel" />. </returns>
+        [HttpGet("{lessonidentity}/meetingreport/{userId}")]
+        public async Task<MeetingReportResponseModel> MeetingReport(string identity,string lessonidentity, string userId)
+        {
+            var report = await _lessonService.GetMeetingReportAsync(identity,lessonidentity,userId,CurrentUser.Id).ConfigureAwait(false);
+            return report;
+        }
     }
 }
