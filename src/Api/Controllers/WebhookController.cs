@@ -32,45 +32,21 @@ namespace Lingtren.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ZoomRecording()
         {
-             _logger.LogWarning("ZoomRecording api called.");
+            var header = Request.Headers;
+            var authorizationKey = header["authorization"];
             var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync();
-            _logger.LogInformation(zoomSetting.ApiSecret);
-            using (var stream = new StreamReader(Request.Body))
+            if(!authorizationKey.Equals(zoomSetting.WebHookVerificationKey))
+            {
+                throw new ForbiddenException($"Requested AuthorizationKey {authorizationKey} not matched.");
+            }
+
+            using(var stream = new StreamReader(Request.Body))
             {
                 var reader = await stream.ReadToEndAsync();
-                _logger.LogWarning(reader);
                 var model = JsonConvert.DeserializeObject<ZoomRecordPayloadDto>(reader);
-                var plainToken = model.Payload.PlainToken;
-                ASCIIEncoding encoding = new ASCIIEncoding();
-                byte[] keyBytes = encoding.GetBytes(zoomSetting.WebHookSecret);
-                byte[] messageBytes = encoding.GetBytes(plainToken);
-                System.Security.Cryptography.HMACSHA256 cryptographer = new System.Security.Cryptography.HMACSHA256(keyBytes);
-                byte[] bytes = cryptographer.ComputeHash(messageBytes);
-                var hash = BitConverter.ToString(bytes).Replace("-", "").ToLower();
-                _logger.LogInformation($"hash token : {hash}");
-                var response = new WebHookResponseModel
-                {
-                    PlainToken = plainToken,
-                    EncryptedToken = hash
-                };
-                return Ok(response);
-
+                BackgroundJob.Enqueue<IWebhookService>(job => job.UploadZoomRecordingAsync(model,null));
             }
-            // var header = Request.Headers;
-            // var authorizationKey = header["authorization"];
-            // var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync();
-            // if(!authorizationKey.Equals(zoomSetting.WebHookVerificationKey))
-            // {
-            //     throw new ForbiddenException($"Requested AuthorizationKey {authorizationKey} not matched.");
-            // }
-
-            // using(var stream = new StreamReader(Request.Body))
-            // {
-            //     var reader = await stream.ReadToEndAsync();
-            //     var model = JsonConvert.DeserializeObject<ZoomRecordPayloadDto>(reader);
-            //     BackgroundJob.Enqueue<IWebhookService>(job => job.UploadZoomRecordingAsync(model,null));
-            // }
-            // return Ok();
+            return Ok();
         }
 
         /// <summary>
@@ -80,47 +56,28 @@ namespace Lingtren.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> JoinMeeting()
         {
-            //  _logger.LogWarning("ZoomRecording api called.");
-            // var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync();
-            // _logger.LogInformation(zoomSetting.ApiSecret);
-            // using (var stream = new StreamReader(Request.Body))
-            // {
-            //     var reader = await stream.ReadToEndAsync();
-            //     _logger.LogWarning(reader);
-            //     var model = JsonConvert.DeserializeObject<ZoomRecordPayloadDto>(reader);
-            //     var plainToken = model.Payload.PlainToken;
-            //     ASCIIEncoding encoding = new ASCIIEncoding();
-            //     byte[] keyBytes = encoding.GetBytes(zoomSetting.WebHookSecret);
-            //     byte[] messageBytes = encoding.GetBytes(plainToken);
-            //     System.Security.Cryptography.HMACSHA256 cryptographer = new System.Security.Cryptography.HMACSHA256(keyBytes);
-            //     byte[] bytes = cryptographer.ComputeHash(messageBytes);
-            //     var hash = BitConverter.ToString(bytes).Replace("-", "").ToLower();
-            //     _logger.LogInformation($"hash token : {hash}");
-            //     var response = new WebHookResponseModel
-            //     {
-            //         PlainToken = plainToken,
-            //         EncryptedToken = hash
-            //     };
-            //     return Ok(response);
-
-            // }
             _logger.LogError("Join even api called");
-            var headers = Request.Headers;
-            var authorizationKey = headers["authorization"];
-            _logger.LogError(authorizationKey);
             var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync();
-            if (!authorizationKey.Equals(zoomSetting.WebHookVerificationKey))
-            {
-                throw new ForbiddenException($"Requested AuthorizationKey {authorizationKey} not matched.");
-            }
             using (var stream = new StreamReader(Request.Body))
             {
                 var reader = await stream.ReadToEndAsync();
                 _logger.LogError(reader.ToString());
                 var model = JsonConvert.DeserializeObject<ZoomPayLoadDto>(reader);
-                await _webhookService.ParticipantJoinMeetingAsync(model).ConfigureAwait(false);
+                var plainToken = model.Payload.PlainToken;
+                 ASCIIEncoding encoding = new ASCIIEncoding();
+                byte[] keyBytes = encoding.GetBytes(zoomSetting.WebHookSecret);
+                byte[] messageBytes = encoding.GetBytes(plainToken);
+                System.Security.Cryptography.HMACSHA256 cryptographer = new System.Security.Cryptography.HMACSHA256(keyBytes);
+                byte[] bytes = cryptographer.ComputeHash(messageBytes);
+                var hash = BitConverter.ToString(bytes).Replace("-", "").ToLower();
+                _logger.LogError(model.Event);
+               // await _webhookService.ParticipantJoinMeetingAsync(model).ConfigureAwait(false);
+                var response = new WebHookResponseModel{
+                    PlainToken = plainToken,
+                    EncryptedToken = hash
+                };
+                return Ok(response);
             }
-            return Ok();
         }
 
         /// <summary>

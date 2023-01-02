@@ -10,6 +10,7 @@ namespace Lingtren.Application.Common.Dtos
     {
         public string Account_Id { get; set; }
         public PayloadObject Object { get; set; }
+        public string PlainToken { get; set; }
     }
 
     public class PayloadObject
