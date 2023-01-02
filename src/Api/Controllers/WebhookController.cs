@@ -62,21 +62,22 @@ namespace Lingtren.Api.Controllers
                 var reader = await stream.ReadToEndAsync();
                 _logger.LogError(reader.ToString());
                 var model = JsonConvert.DeserializeObject<ZoomPayLoadDto>(reader);
-                var plainToken = model.Payload.PlainToken;
-                ASCIIEncoding encoding = new ASCIIEncoding();
-                byte[] keyBytes = encoding.GetBytes(zoomSetting.WebHookSecret);
-                byte[] messageBytes = encoding.GetBytes(plainToken);
-                System.Security.Cryptography.HMACSHA256 cryptographer = new System.Security.Cryptography.HMACSHA256(keyBytes);
-                byte[] bytes = cryptographer.ComputeHash(messageBytes);
-                var hash = BitConverter.ToString(bytes).Replace("-", "").ToLower();
+                // var plainToken = model.Payload.PlainToken;
+                // ASCIIEncoding encoding = new ASCIIEncoding();
+                // byte[] keyBytes = encoding.GetBytes(zoomSetting.WebHookSecret);
+                // byte[] messageBytes = encoding.GetBytes(plainToken);
+                // System.Security.Cryptography.HMACSHA256 cryptographer = new System.Security.Cryptography.HMACSHA256(keyBytes);
+                // byte[] bytes = cryptographer.ComputeHash(messageBytes);
+                // var hash = BitConverter.ToString(bytes).Replace("-", "").ToLower();
                 _logger.LogError(model.Event);
                 await _webhookService.ParticipantJoinMeetingAsync(model).ConfigureAwait(false);
-                var response = new WebHookResponseModel
-                {
-                    PlainToken = plainToken,
-                    EncryptedToken = hash
-                };
-                return Ok(response);
+                // var response = new WebHookResponseModel
+                // {
+                //     PlainToken = plainToken,
+                //     EncryptedToken = hash
+                // };
+                // return Ok(response);
+                return Ok();
             }
         }
 
@@ -93,21 +94,22 @@ namespace Lingtren.Api.Controllers
                 var reader = await stream.ReadToEndAsync();
                 _logger.LogError(reader.ToString());
                 var model = JsonConvert.DeserializeObject<ZoomPayLoadDto>(reader);
-                var plainToken = model.Payload.PlainToken;
-                ASCIIEncoding encoding = new ASCIIEncoding();
-                byte[] keyBytes = encoding.GetBytes(zoomSetting.WebHookSecret);
-                byte[] messageBytes = encoding.GetBytes(plainToken);
-                System.Security.Cryptography.HMACSHA256 cryptographer = new System.Security.Cryptography.HMACSHA256(keyBytes);
-                byte[] bytes = cryptographer.ComputeHash(messageBytes);
-                var hash = BitConverter.ToString(bytes).Replace("-", "").ToLower();
+                // var plainToken = model.Payload.PlainToken;
+                // ASCIIEncoding encoding = new ASCIIEncoding();
+                // byte[] keyBytes = encoding.GetBytes(zoomSetting.WebHookSecret);
+                // byte[] messageBytes = encoding.GetBytes(plainToken);
+                // System.Security.Cryptography.HMACSHA256 cryptographer = new System.Security.Cryptography.HMACSHA256(keyBytes);
+                // byte[] bytes = cryptographer.ComputeHash(messageBytes);
+                // var hash = BitConverter.ToString(bytes).Replace("-", "").ToLower();
                 _logger.LogError(model.Event);
                 await _webhookService.ParticipantLeaveMeetingAsync(model).ConfigureAwait(false);
-                var response = new WebHookResponseModel
-                {
-                    PlainToken = plainToken,
-                    EncryptedToken = hash
-                };
-                return Ok(response);
+                // var response = new WebHookResponseModel
+                // {
+                //     PlainToken = plainToken,
+                //     EncryptedToken = hash
+                // };
+                // return Ok(response);
+                return Ok();
             }
         }
     }
