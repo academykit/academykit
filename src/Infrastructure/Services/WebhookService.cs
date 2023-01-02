@@ -1,3 +1,4 @@
+using System;
 namespace Lingtren.Infrastructure.Services
 {
     using System;
@@ -89,11 +90,11 @@ namespace Lingtren.Infrastructure.Services
                     var sectionLessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.SectionId ==
                                          meeting.Lesson.SectionId).ConfigureAwait(false);
                     var lessonOrderList = sectionLessons.Where(x => x.Order > meeting.Lesson.Order).ToList();
-                    if(lessonOrderList.Count != default)
+                    if (lessonOrderList.Count != default)
                     {
                         var reoderNo = recordingFileDtos.Count - 1;
                         var reorderLessons = new List<Lesson>();
-                        foreach(var lessonorder in lessonOrderList)
+                        foreach (var lessonorder in lessonOrderList)
                         {
                             lessonorder.Order = lessonorder.Order + reoderNo;
                             reorderLessons.Add(lessonorder);
@@ -119,7 +120,8 @@ namespace Lingtren.Infrastructure.Services
                     foreach (var fileDto in recordings)
                     {
                         var slug = CommonHelper.GetEntityTitleSlug<Lesson>(_unitOfWork, (slug) => q => q.Slug == slug, fileDto.Name);
-                        var lesson = new Lesson{
+                        var lesson = new Lesson
+                        {
                             Id = Guid.NewGuid(),
                             Name = fileDto.Name,
                             Type = LessonType.RecordedVideo,
@@ -132,8 +134,9 @@ namespace Lingtren.Infrastructure.Services
                             CreatedBy = meeting.Lesson.CreatedBy,
                             CreatedOn = DateTime.UtcNow
                         };
-                      
-                        var fileQueue = new VideoQueue {
+
+                        var fileQueue = new VideoQueue
+                        {
                             Id = Guid.NewGuid(),
                             LessonId = lesson.Id,
                             VideoUrl = lesson.VideoUrl,
@@ -147,7 +150,9 @@ namespace Lingtren.Infrastructure.Services
                     _unitOfWork.GetRepository<Lesson>().Update(meeting.Lesson);
                     await _unitOfWork.GetRepository<Lesson>().InsertAsync(lessons).ConfigureAwait(false);
                     await _unitOfWork.GetRepository<VideoQueue>().InsertAsync(videoQueues).ConfigureAwait(false);
-                }else{
+                }
+                else
+                {
                     var videoFile = recordingFileDtos.FirstOrDefault();
                     meeting.Lesson.Type = LessonType.RecordedVideo;
                     meeting.Lesson.VideoUrl = videoFile.VideoUrl;
@@ -171,7 +176,7 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
-         /// <summary>
+        /// <summary>
         /// Handle to save record of participant join meeting
         /// </summary>
         /// <param name="model"> the instance of <see cref="ZoomPayLoadDto" /> .</param>
@@ -188,7 +193,6 @@ namespace Lingtren.Infrastructure.Services
                     return;
                 }
 
-
                 var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p =>
                              p.Id.ToString() == model.Payload.Object.Participant.Customer_Key).ConfigureAwait(false);
 
@@ -198,7 +202,26 @@ namespace Lingtren.Infrastructure.Services
                     return;
                 }
 
-                var meetingReport = new MeetingReport{
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p => p.MeetingId == meeting.Id ||
+                            (p.Type == LessonType.LiveClass || p.Type == LessonType.RecordedVideo)).ConfigureAwait(false);
+
+                if (lesson != default)
+                {
+                    var watchHistory = new WatchHistory
+                    {
+                        Id = Guid.NewGuid(),
+                        CourseId = lesson.CourseId,
+                        LessonId = lesson.Id,
+                        UserId = user.Id,
+                        IsCompleted = false,
+                        CreatedBy = user.Id,
+                        CreatedOn = DateTime.UtcNow
+                    };
+                    await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
+                }
+
+                var meetingReport = new MeetingReport
+                {
                     Id = Guid.NewGuid(),
                     MeetingId = meeting.Id,
                     UserId = user.Id,
