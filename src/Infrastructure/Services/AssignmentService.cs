@@ -378,6 +378,11 @@
                     predicate: p => p.LessonId == lesson.Id && p.UserId == userId,
                     include: src => src.Include(x => x.User)
                     ).ConfigureAwait(false);
+
+                var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
+                    predicate: p => p.LessonId == lesson.Id && p.UserId == userId
+                    ).ConfigureAwait(false);
+
                 var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == currentUserId).ConfigureAwait(false);
 
                 var response = new AssignmentSubmissionStudentResponseModel
@@ -398,6 +403,8 @@
                         LessonId = assignmentReview.LessonId,
                         Mark = assignmentReview.Mark,
                         Review = assignmentReview.Review,
+                        IsCompleted = watchHistory?.IsCompleted,
+                        IsPassed = watchHistory?.IsPassed,
                         UserId = assignmentReview.UserId,
                         User = new UserModel(assignmentReview.User),
                         Teacher = teacher != null ? new UserModel(teacher) : null
@@ -860,7 +867,7 @@
             {
                 var selectedAnsIds = !string.IsNullOrWhiteSpace(userAssignment?.SelectedOption) ?
                                         userAssignment?.SelectedOption.Split(",").Select(Guid.Parse).ToList() : new List<Guid>();
-                item.AssignmentQuestionOptions?.OrderBy(x=>x.Order).ToList().ForEach(x =>
+                item.AssignmentQuestionOptions?.OrderBy(x => x.Order).ToList().ForEach(x =>
                                 data.AssignmentQuestionOptions.Add(new AssignmentQuestionOptionResponseModel()
                                 {
                                     Id = x.Id,
