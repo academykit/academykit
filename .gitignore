@@ -483,4 +483,10 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 
-
+/.vs/*
+.vs/lingtren/DesignTimeBuild/.dtbcache.v2
+.vs/lingtren/v17/.suo
+*.v2
+.vs/lingtren/config/applicationhost.config
+.vs/lingtren/DesignTimeBuild/.dtbcache.v2
+.vs/lingtren/v17/.suo

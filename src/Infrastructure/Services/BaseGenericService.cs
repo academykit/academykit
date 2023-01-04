@@ -1,9 +1,5 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
-    using System;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Threading.Tasks;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -11,11 +7,13 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
-    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore.Query;
-    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// This abstract class is a base for all <see cref="IGenericService{T,S}"/> service implementations. It
@@ -39,8 +37,8 @@
         /// <param name="unitOfWork">The unit of work</param>
         /// <param name="logger">The logger</param>
         /// <param name="localizer">The localization</param>
-        protected BaseGenericService(IUnitOfWork unitOfWork, ILogger logger, IStringLocalizer<ExceptionLocalizer> localizer)
-            : base(unitOfWork, logger, localizer)
+        protected BaseGenericService(IUnitOfWork unitOfWork, ILogger logger)
+            : base(unitOfWork, logger)
         {
         }
 
@@ -50,7 +48,7 @@
         ///
         /// <param name="entity">The entity to create.</param>
         /// <returns>The created entity.</returns>
-        public async Task<T> CreateAsync(T entity)
+        public async Task<T> CreateAsync(T entity, bool includeProperties = true)
         {
             return await ExecuteWithResultAsync(async () =>
             {
@@ -69,7 +67,7 @@
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
                 // load entity again to return all fields populated, because child entities may contain just Ids
-                T entityRetrievedFromDb = await Get(entity.Id, true).ConfigureAwait(false);
+                T entityRetrievedFromDb = await Get(entity.Id, includeProperties).ConfigureAwait(false);
 
                 await CreatePostHookAsync(entityRetrievedFromDb).ConfigureAwait(false);
 
@@ -96,13 +94,13 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public async Task<T> UpdateAsync(T entity)
+        public async Task<T> UpdateAsync(T entity, bool includeProperties = true)
         {
             return await ExecuteWithResult(async () =>
             {
                 CommonHelper.ValidateArgumentNotNull(entity, nameof(entity));
 
-                T existing = await Get(entity.Id, true).ConfigureAwait(false);
+                T existing = await Get(entity.Id, includeProperties).ConfigureAwait(false);
 
                 // get existing child entities from DB, otherwise new entities will be created in database
                 await ResolveChildEntitiesAsync(entity).ConfigureAwait(false);
@@ -119,7 +117,7 @@
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
                 // load entity again to return all fields populated, because child entities may contain just Ids
-                return await Get(entity.Id, true).ConfigureAwait(false);
+                return await Get(entity.Id, includeProperties).ConfigureAwait(false);
             }).ConfigureAwait(false);
         }
 
@@ -142,11 +140,11 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public async Task<T> GetAsync(Guid id, string currentUserId = null)
+        public async Task<T> GetAsync(Guid id, Guid? currentUserId = null, bool includeProperties = true)
         {
             return await ExecuteWithResult(async () =>
             {
-                T entity = await Get(id, true).ConfigureAwait(false);
+                T entity = await Get(id, includeProperties).ConfigureAwait(false);
                 await PopulateRetrievedEntity(entity).ConfigureAwait(false);
                 await CheckGetPermissionsAsync(entity, currentUserId).ConfigureAwait(false);
                 return entity;
@@ -154,10 +152,10 @@
         }
 
         /// <summary>
-        /// Retrieves entity with the given slug.
+        /// Retrieves entity with the given slug or id.
         /// </summary>
         ///
-        /// <param name="slug">The slug of the entity to retrieve.</param>
+        /// <param name="identity">The slug of the entity to retrieve.</param>
         /// <returns>The retrieved entity.</returns>
         ///
         /// <exception cref="ArgumentException">
@@ -172,24 +170,12 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public async Task<T> GetBySlugAsync(string slug, string currentUserId = null)
-        {
-            return await ExecuteWithResult(async () =>
-            {
-                CommonHelper.ValidateArgumentNotNullOrEmpty(slug, nameof(slug));
-                T entity = await Get(PredicateForSlug(slug), true).ConfigureAwait(false);
-                await PopulateRetrievedEntity(entity).ConfigureAwait(false);
-                await CheckGetPermissionsAsync(entity, currentUserId).ConfigureAwait(false);
-                return entity;
-            }).ConfigureAwait(false);
-        }
-
-        public async Task<T> GetByIdOrSlug(string identity, string currentUserId = null)
+        public async Task<T> GetByIdOrSlugAsync(string identity, Guid? currentUserId = null, bool includeProperties = true)
         {
             return await ExecuteWithResult(async () =>
             {
                 CommonHelper.ValidateArgumentNotNullOrEmpty(identity, nameof(identity));
-                T entity = await GetEntity(PredicateForIdOrSlug(identity)).ConfigureAwait(false);
+                T entity = await Get(PredicateForIdOrSlug(identity), includeProperties).ConfigureAwait(false);
                 await PopulateRetrievedEntity(entity).ConfigureAwait(false);
                 await CheckGetPermissionsAsync(entity, currentUserId).ConfigureAwait(false);
                 return entity;
@@ -197,11 +183,11 @@
         }
 
         /// <summary>
-        /// Deletes entity with the given Id.
+        /// Retrieves entity with the given Id.
         /// </summary>
         ///
-        /// <param name="id">The id of the entity to delete.</param>
-        /// <param name="currentUserId"> The current user Id.</param>
+        /// <param name="id">The id of the entity to retrieve.</param>
+        /// <returns>The retrieved entity.</returns>
         ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="id"/> is not positive.
@@ -215,11 +201,42 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public virtual async Task DeleteAsync(Guid id, string currentUserId = null)
+        public async Task<T> GetFirstOrDefaultAsync(Guid? currentUserId = null, bool includeProperties = true)
+        {
+            return await ExecuteWithResult(async () =>
+            {
+                T entity = await _unitOfWork.GetRepository<T>().GetFirstOrDefaultAsync(
+                    include: includeProperties ? IncludeNavigationProperties : null).ConfigureAwait(false);
+                await PopulateRetrievedEntity(entity).ConfigureAwait(false);
+                await CheckGetPermissionsAsync(entity, currentUserId).ConfigureAwait(false);
+                return entity;
+            }).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Deletes entity with the given Id or Slug.
+        /// </summary>
+        ///
+        /// <param name="identity">The id or slug of the entity to delete.</param>
+        /// <param name="currentUserId"> The current user Id.</param>
+        ///
+        /// <exception cref="ArgumentException">
+        /// If <paramref name="identity"/> is not positive.
+        /// </exception>
+        /// <exception cref="EntityNotFoundException">
+        /// If entity with the given Id doesn't exist in DB.
+        /// </exception>
+        /// <exception cref="PersistenceException">
+        /// If a DB-based error occurs.
+        /// </exception>
+        /// <exception cref="ServiceException">
+        /// If any other errors occur while performing this operation.
+        /// </exception>
+        public virtual async Task DeleteAsync(string identity, Guid currentUserId)
         {
             await ExecuteAsync(async () =>
             {
-                T entity = await Get(id, false).ConfigureAwait(false);
+                T entity = await GetByIdOrSlugAsync(identity, currentUserId, false).ConfigureAwait(false);
                 await CheckDeletePermissionsAsync(entity, currentUserId).ConfigureAwait(false);
                 _unitOfWork.GetRepository<T>().Delete(entity);
                 _unitOfWork.SaveChanges();
@@ -242,7 +259,7 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        public async Task<SearchResult<T>> SearchAsync(S criteria)
+        public async Task<SearchResult<T>> SearchAsync(S criteria, bool includeProperties = true)
         {
             return await ExecuteWithResultAsync<SearchResult<T>>(async () =>
             {
@@ -254,7 +271,7 @@
                 predicate = ConstructQueryConditions(predicate, criteria);
 
                 // execute query and set result properties
-                var query = _unitOfWork.GetRepository<T>().GetAll(predicate: predicate, include: IncludeNavigationProperties);
+                var query = _unitOfWork.GetRepository<T>().GetAll(predicate: predicate, include: includeProperties ? IncludeNavigationProperties : null);
 
                 // construct SortBy property selector expression
 
@@ -276,22 +293,17 @@
 
                 var result = query.ToPagedList(criteria.Page, criteria.Size);
 
-                // await PopulateRetrievedEntities(result.Items).ConfigureAwait(false);
+                await PopulateRetrievedEntities(result.Items).ConfigureAwait(false);
 
                 return result;
             }).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// If entity needs to support the get by slug then has to override this method.
+        /// If entity needs to support the get by slug or id then has to override this method.
         /// </summary>
         /// <param name="slug">The slug</param>
-        /// <returns>The expression to filter by slug</returns>
-        protected virtual Expression<Func<T, bool>> PredicateForSlug(string slug)
-        {
-            throw new ServiceException($"The {_entityName} does not support get by slug");
-        }
-
+        /// <returns>The expression to filter by slug or slug</returns>
         protected virtual Expression<Func<T, bool>> PredicateForIdOrSlug(string identity)
         {
             throw new ServiceException($"The {_entityName} does not support get by slug or slug");
@@ -301,7 +313,7 @@
         /// Check if entity could be accessed by current user
         /// </summary>
         /// <param name="entityToReturn">The entity being returned</param>
-        protected virtual async Task CheckGetPermissionsAsync(T entityToReturn, string CurrentUserId)
+        protected virtual async Task CheckGetPermissionsAsync(T entityToReturn, Guid? CurrentUserId = null)
         {
             await Task.FromResult(0);
         }
@@ -310,7 +322,7 @@
         /// Check if entity could be deleted
         /// </summary>
         /// <param name="entityToDelete">The entity being deleted</param>
-        protected virtual async Task CheckDeletePermissionsAsync(T entityToDelete, string CurrentUserId)
+        protected virtual async Task CheckDeletePermissionsAsync(T entityToDelete, Guid CurrentUserId)
         {
             await Task.FromResult(0);
         }
@@ -392,20 +404,20 @@
             await Task.FromResult(0);
         }
 
-        // /// <summary>
-        // /// Populates the retrieved entities in batch.
-        // /// </summary>
-        // /// <remarks>
-        // /// It should be overridden in child services to populate extra properties.
-        // /// </remarks>
-        // protected virtual async Task PopulateRetrievedEntities(IList<T> entities)
-        // {
-        //     // do nothing by default
-        //     foreach (var entity in entities)
-        //     {
-        //         await PopulateRetrievedEntity(entity);
-        //     }
-        // }
+        /// <summary>
+        /// Populates the retrieved entities in batch.
+        /// </summary>
+        /// <remarks>
+        /// It should be overridden in child services to populate extra properties.
+        /// </remarks>
+        protected virtual async Task PopulateRetrievedEntities(IList<T> entities)
+        {
+            // do nothing by default
+            foreach (var entity in entities)
+            {
+                await PopulateRetrievedEntity(entity);
+            }
+        }
 
         /// <summary>
         /// Applies filters to the given query.
@@ -524,13 +536,5 @@
             CommonHelper.CheckFoundEntity(entity);
             return entity;
         }
-
-        protected virtual async Task<T> GetEntity(Expression<Func<T, bool>> predicate)
-        {
-            T entity = await _unitOfWork.GetRepository<T>().GetFirstOrDefaultAsync(predicate: predicate).ConfigureAwait(false);
-            CommonHelper.CheckFoundEntity(entity);
-            return entity;
-        }
     }
 }
-

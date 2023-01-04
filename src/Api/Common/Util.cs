@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Api.Common
 {
     using Lingtren.Application.Common.Exceptions;
+    using Lingtren.Domain.Enums;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
     using System.Linq;
@@ -14,7 +15,7 @@
         /// <summary>
         /// Represents the JSON serialize settings.
         /// </summary>
-        public static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+        public static readonly JsonSerializerSettings SerializerSettings = new()
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
@@ -51,11 +52,13 @@
         /// <returns>The logged in user details.</returns>
         public static CurrentUser ToLoggedInUser(this ClaimsPrincipal claimsPrincipal)
         {
-            var userId = claimsPrincipal.GetClaim(ClaimTypes.NameIdentifier, isRequired: true);
+            var userId = claimsPrincipal.GetClaim("uid", isRequired: true);
+            var userName = claimsPrincipal.GetClaim(ClaimTypes.NameIdentifier, isRequired: true);
             var email = claimsPrincipal.GetClaim(ClaimTypes.Email, isRequired: false);
             var mobileNumber = claimsPrincipal.GetClaim("mobile_number", isRequired: false);
+            var role = claimsPrincipal.GetClaim(ClaimTypes.Role, isRequired: true);
 
-            return new CurrentUser { Id = long.Parse(userId), Email = email, MobileNumber = mobileNumber, };
+            return new CurrentUser { Id = Guid.Parse(userId), Name = userName, Email = email, MobileNumber = mobileNumber, Role = Enum.Parse<UserRole>(role) };
         }
 
         /// <summary>
@@ -67,8 +70,7 @@
         /// <returns>The claim value.</returns>
         public static string? GetClaim(this ClaimsPrincipal claimsPrincipal, string claimType, bool isRequired = false)
         {
-            Claim claim = FindClaim(claimsPrincipal, claimType, isRequired);
-
+            var claim = FindClaim(claimsPrincipal, claimType, isRequired);
             return claim?.Value;
         }
 
@@ -87,8 +89,7 @@
             {
                 return default;
             }
-            var result = Deserialize<T>(claim.Value);
-            return result;
+            return Deserialize<T>(claim.Value);
         }
 
         /// <summary>
@@ -98,7 +99,7 @@
         /// <param name="claimType">Type of the claim.</param>
         /// <param name="isRequired">if set to <c>true</c> [is required].</param>
         /// <returns>Found claim.</returns>
-        private static Claim FindClaim(ClaimsPrincipal claimsPrincipal, string claimType, bool isRequired)
+        private static Claim? FindClaim(ClaimsPrincipal claimsPrincipal, string claimType, bool isRequired)
         {
             var claim = claimsPrincipal.Claims.FirstOrDefault(x => x.Type == claimType);
             if (claim == null && isRequired)

@@ -1,11 +1,8 @@
-﻿
-
-namespace Lingtren.Infrastructure.Services
+﻿namespace Lingtren.Infrastructure.Services
 {
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Persistence;
-    using Lingtren.Infrastructure.Services;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -45,10 +42,7 @@ namespace Lingtren.Infrastructure.Services
         /// <returns>An instance of type inherited from <see cref="IRepository{TEntity}"/> interface.</returns>
         public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
         {
-            if (repositories == null)
-            {
-                repositories = new Dictionary<Type, object>();
-            }
+            repositories ??= new Dictionary<Type, object>();
 
             var type = typeof(TEntity);
             if (!repositories.ContainsKey(type))

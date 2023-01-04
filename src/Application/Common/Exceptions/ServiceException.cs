@@ -1,6 +1,5 @@
 ﻿namespace Lingtren.Application.Common.Exceptions
 {
-    using System;
     using System.Runtime.Serialization;
 
     [Serializable]

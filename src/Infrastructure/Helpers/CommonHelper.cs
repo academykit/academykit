@@ -16,12 +16,12 @@
     /// <threadsafety>
     /// This class is immutable and thread safe.
     /// </threadsafety>
-    internal static class CommonHelper
+    public static class CommonHelper
     {
         /// <summary>
         /// Represents the request property name for the current user.
         /// </summary>
-        internal const string CurrentUserPropertyName = "CurrentUser";
+        public const string CurrentUserPropertyName = "CurrentUser";
 
         /// <summary>
         /// Represents the JSON serializer settings.
@@ -42,7 +42,7 @@
         /// <exception cref="ArgumentNullException">If the <paramref name="criteria"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentException">If the <paramref name="criteria"/> is incorrect,
         /// e.g. PageNumber is negative, or PageNumber is positive and PageSize is not positive.</exception>
-        internal static void CheckSearchCriteria(BaseSearchCriteria criteria)
+        public static void CheckSearchCriteria(BaseSearchCriteria criteria)
         {
             ValidateArgumentNotNull(criteria, nameof(criteria));
 
@@ -64,7 +64,7 @@
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The found entity.</param>
         /// <exception cref="EntityNotFoundException">If <paramref name="entity"/> is null.</exception>
-        internal static void CheckFoundEntity<T>(T entity)
+        public static void CheckFoundEntity<T>(T entity)
         {
             if (entity == null)
             {
@@ -79,7 +79,7 @@
         /// <param name="entity">The found entity.</param>
         /// <param name="entityId">The entity identifier.</param>
         /// <exception cref="EntityNotFoundException">If <paramref name="entity"/> is null.</exception>
-        internal static void CheckFoundEntity<T>(T entity, Guid entityId)
+        public static void CheckFoundEntity<T>(T entity, Guid entityId)
             where T : IdentifiableEntity
         {
             if (entity == null)
@@ -96,7 +96,7 @@
         /// <param name="paramName">The name of the parameter.</param>
         ///
         /// <exception cref="ArgumentException">If <paramref name="param"/> is not positive number.</exception>
-        internal static void ValidateArgumentGuid(Guid param, string paramName)
+        public static void ValidateArgumentGuid(Guid param, string paramName)
         {
             if (param == Guid.Empty)
             {
@@ -112,7 +112,7 @@
         /// <param name="paramName">The name of the parameter.</param>
         ///
         /// <exception cref="ArgumentException">If <paramref name="param"/> is not positive number.</exception>
-        internal static void ValidateArgumentPositive(long param, string paramName)
+        public static void ValidateArgumentPositive(long param, string paramName)
         {
             if (param <= 0)
             {
@@ -128,7 +128,7 @@
         /// <param name="paramName">The name of the parameter.</param>
         ///
         /// <exception cref="ArgumentException">If <paramref name="param"/> is negative number.</exception>
-        internal static void ValidateArgumentNotNegative(decimal param, string paramName)
+        public static void ValidateArgumentNotNegative(decimal param, string paramName)
         {
             if (param < 0)
             {
@@ -146,7 +146,7 @@
         /// <param name="paramName">The name of the parameter.</param>
         ///
         /// <exception cref="ArgumentNullException">If <paramref name="param"/> is <c>null</c>.</exception>
-        internal static void ValidateArgumentNotNull<T>(T param, string paramName)
+        public static void ValidateArgumentNotNull<T>(T param, string paramName)
             where T : class
         {
             if (param == null)
@@ -164,7 +164,7 @@
         ///
         /// <exception cref="ArgumentNullException">If <paramref name="param"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentException">If <paramref name="param"/> is empty.</exception>
-        internal static void ValidateArgumentNotNullOrEmpty(string param, string paramName)
+        public static void ValidateArgumentNotNullOrEmpty(string param, string paramName)
         {
             ValidateArgumentNotNull(param, paramName);
             if (string.IsNullOrWhiteSpace(param))
@@ -230,7 +230,7 @@
         /// <param name="ordering">The order column name.</param>
         /// <returns>The new Queryable with applied OrderBy.</returns>
         /// <remarks>Thrown exceptions will be propagated.</remarks>
-        internal static IQueryable<T> OrderBy<T>(this IQueryable<T> source, string ordering)
+        public static IQueryable<T> OrderBy<T>(this IQueryable<T> source, string ordering)
         {
             return OrderbyFromColumnName(source, "OrderBy", ordering);
         }
@@ -243,7 +243,7 @@
         /// <param name="ordering">The order column name.</param>
         /// <returns>The new Queryable with applied OrderByDescending.</returns>
         /// <remarks>Thrown exceptions will be propagated.</remarks>
-        internal static IQueryable<T> OrderByDescending<T>(this IQueryable<T> source,
+        public static IQueryable<T> OrderByDescending<T>(this IQueryable<T> source,
             string ordering)
         {
             return OrderbyFromColumnName(source, "OrderByDescending", ordering);
@@ -255,7 +255,7 @@
         /// <typeparam name="T">The type of the items.</typeparam>
         /// <param name="list">The list.</param>
         /// <param name="items">The items to add.</param>
-        internal static void AddRange<T>(this IList<T> list, IEnumerable<T> items)
+        public static void AddRange<T>(this IList<T> list, IEnumerable<T> items)
         {
             foreach (var item in items)
             {
@@ -269,7 +269,7 @@
         ///
         /// <param name="obj">The object to describe.</param>
         /// <returns>The JSON description of the object.</returns>
-        internal static string GetObjectDescription(object obj)
+        public static string GetObjectDescription(object obj)
         {
             try
             {
@@ -293,7 +293,7 @@
         /// <param name="checkIfExists">The function to check if the slug already exist or not</param>
         /// <param name="name">The initial title to generate slug from.</param>
         /// <param name="counter">The initial value of slug index</param>
-        internal static string GetEntityTitleSlug<TEntity>(IUnitOfWork unitOfWork,
+        public static string GetEntityTitleSlug<TEntity>(IUnitOfWork unitOfWork,
         Func<string, Expression<Func<TEntity, bool>>> checkIfExists, string name, int counter = 0) where TEntity : class
         {
             var title = name;
@@ -320,7 +320,7 @@
         /// <param name="checkIfExists">The function to check if the slug already exist or not</param>
         /// <param name="name">The initial title to generate slug from.</param>
         /// <param name="counter">The initial value of slug index</param>
-        internal static async Task<string> GetEntityTitleSlugAsync<TEntity>(IUnitOfWork unitOfWork,
+        public static async Task<string> GetEntityTitleSlugAsync<TEntity>(IUnitOfWork unitOfWork,
         Func<string, Expression<Func<TEntity, bool>>> checkIfExists, string name, int counter = 0) where TEntity : class
         {
             var title = name;
@@ -344,13 +344,13 @@
         {
             // creating a data table instance and typed it as our incoming model   
             // as I make it generic, if you want, you can make it the model typed you want.  
-            DataTable dataTable = new DataTable(typeof(T).Name);
+            DataTable dataTable = new(typeof(T).Name);
 
             //Get all the properties of that model  
             PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             // Loop through all the properties              
-            // Adding Column name to our datatable  
+            // Adding Column name to our data-table  
             foreach (PropertyInfo prop in Props)
             {
                 //Setting column names as Property names    
@@ -372,4 +372,3 @@
         }
     }
 }
-
