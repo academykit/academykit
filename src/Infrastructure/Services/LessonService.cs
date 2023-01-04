@@ -156,7 +156,7 @@ namespace Lingtren.Infrastructure.Services
                     predicate: p => p.QuestionSetId == lesson.QuestionSetId && p.StartTime != default && p.EndTime != default
                     ).ConfigureAwait(false);
 
-                remainingAttempt = lesson.QuestionSet.AllowedRetake > 0 ? lesson.QuestionSet.AllowedRetake - submissionCount : null;
+                remainingAttempt = lesson.QuestionSet.AllowedRetake > 0 ? lesson.QuestionSet.AllowedRetake - submissionCount : submissionCount > 0 ? 0 : 1;
 
                 hasResult = containResults;
             }
