@@ -853,9 +853,9 @@ namespace Lingtren.Infrastructure.Services
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
             var watchHistories = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(
                 predicate: p => p.CourseId == course.Id && p.UserId == userId,
-                include: src => src.Include(x => x.User).Include(x => x.Lesson)
+                include: src => src.Include(x => x.User).Include(x => x.Lesson.Section)
                 ).ConfigureAwait(false);
-
+            watchHistories = watchHistories.OrderBy(x => x.Lesson.Section.Order).ThenBy(x => x.Lesson.Order).ToList();
             var response = new List<LessonStudentResponseModel>();
             watchHistories.ForEach(x => response.Add(new LessonStudentResponseModel
             {
