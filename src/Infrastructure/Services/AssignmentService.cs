@@ -526,7 +526,7 @@
                     UpdatedOn = currentTimeStamp,
                 };
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
-                   predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
+                   predicate: p => p.LessonId == lesson.Id && p.UserId == model.UserId
                    ).ConfigureAwait(false);
                 if (watchHistory != null)
                 {
@@ -604,7 +604,7 @@
                 assignmentReview.UpdatedOn = currentTimeStamp;
 
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
-                   predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
+                   predicate: p => p.LessonId == lesson.Id && p.UserId == model.UserId
                    ).ConfigureAwait(false);
                 if (watchHistory != null)
                 {
