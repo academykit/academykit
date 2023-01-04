@@ -155,7 +155,7 @@ namespace Lingtren.Infrastructure.Services
 
             bool? hasReviewedAssignment = null;
             AssignmentReviewResponseModel? review = null;
-            
+
             if (lesson.Type == LessonType.Assignment)
             {
                 lesson.Assignments = new List<Assignment>();

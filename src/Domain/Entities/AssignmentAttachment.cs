@@ -4,7 +4,7 @@ namespace Lingtren.Domain.Entities
 
     public class AssignmentAttachment : AuditableEntity
     {
-        public Guid AssignmentId  { get; set; }
+        public Guid AssignmentId { get; set; }
         public Assignment Assignment { get; set; }
         public string FileUrl { get; set; }
         public int Order { get; set; }

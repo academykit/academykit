@@ -860,7 +860,7 @@
             {
                 var selectedAnsIds = !string.IsNullOrWhiteSpace(userAssignment?.SelectedOption) ?
                                         userAssignment?.SelectedOption.Split(",").Select(Guid.Parse).ToList() : new List<Guid>();
-                item.AssignmentQuestionOptions?.OrderBy(x=>x.Order).ToList().ForEach(x =>
+                item.AssignmentQuestionOptions?.OrderBy(x => x.Order).ToList().ForEach(x =>
                                 data.AssignmentQuestionOptions.Add(new AssignmentQuestionOptionResponseModel()
                                 {
                                     Id = x.Id,

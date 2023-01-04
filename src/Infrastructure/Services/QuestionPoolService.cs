@@ -84,7 +84,7 @@
         /// <returns>The updated query.</returns>
         protected override IIncludableQueryable<QuestionPool, object> IncludeNavigationProperties(IQueryable<QuestionPool> query)
         {
-            return query.Include(x => x.User).Include(x=>x.QuestionPoolTeachers).Include(x=>x.QuestionPoolQuestions);
+            return query.Include(x => x.User).Include(x => x.QuestionPoolTeachers).Include(x => x.QuestionPoolQuestions);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@
         public async Task<QuestionPoolQuestion> GetQuestionPoolQuestion(string poolIdentity, Guid questionId)
         {
             var questionPool = await _unitOfWork.GetRepository<QuestionPool>().GetFirstOrDefaultAsync(
-                predicate: p=> p.Id.ToString() == poolIdentity || p.Slug == poolIdentity).ConfigureAwait(false);
+                predicate: p => p.Id.ToString() == poolIdentity || p.Slug == poolIdentity).ConfigureAwait(false);
             return await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetFirstOrDefaultAsync(
                 predicate: p => p.QuestionPoolId == questionPool.Id && p.QuestionId == questionId).ConfigureAwait(false);
         }

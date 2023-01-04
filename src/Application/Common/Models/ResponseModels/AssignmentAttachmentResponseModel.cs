@@ -12,9 +12,9 @@
         public UserModel User { get; set; }
         public AssignmentAttachmentResponseModel(AssignmentAttachment attachment)
         {
-            AssignmentId= attachment.AssignmentId;
+            AssignmentId = attachment.AssignmentId;
             AssignmentName = attachment.Assignment?.Name;
-            FileUrl= attachment.FileUrl;
+            FileUrl = attachment.FileUrl;
             Order = attachment.Order;
             Name = attachment.Name;
             MimeType = attachment.MimeType;
