@@ -214,7 +214,9 @@
                     predicate: p => p.CourseId == lesson.CourseId && p.UserId == currentUserId && !p.IsDeleted
                             && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)
                             ).ConfigureAwait(false);
-                if (!isEnrolled)
+                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+
+                if (!isEnrolled && !isSuperAdminOrAdmin)
                 {
                     _logger.LogWarning("User with id:{currentUserId} has not enrolled in course with id: {courseId} and question set id with id: {questionSetId}."
                                                 , currentUserId, lesson.CourseId, questionSet.Id);
@@ -339,7 +341,9 @@
                     questionSetSubmission.SubmissionErrorMessage += " Exam submission question doesn't match with question set question.";
                 }
 
-                if (questionSet.Duration != 0 && currentTimeStamp.AddSeconds(-30) > questionSet.EndTime)
+                if (questionSet.Duration != 0
+                    && (currentTimeStamp.AddSeconds(-30) > questionSet.EndTime
+                        || (currentTimeStamp.AddSeconds(-30) - questionSetSubmission.StartTime).TotalSeconds > questionSet.Duration))
                 {
                     _logger.LogWarning("Exam duration expires for question set submission with id: {questionSetSubmissionId} and user with id: {currentUserId}", questionSetSubmissionId, currentUserId);
                     isSubmissionError = true;
@@ -708,7 +712,9 @@
             if (history != null)
             {
                 history.IsCompleted = true;
-                history.IsPassed = history.IsPassed ? history.IsPassed : (result.TotalMark - result.NegativeMark) / totalQuestion >= questionSet.PassingWeightage;
+                history.IsPassed = history.IsPassed ? history.IsPassed :
+                                    questionSet.PassingWeightage > 0 ?
+                                        (result.TotalMark - result.NegativeMark) * 100 / totalQuestion >= questionSet.PassingWeightage : false;
                 history.UpdatedOn = currentTimeStamp;
                 history.UpdatedBy = currentUserId;
                 _unitOfWork.GetRepository<WatchHistory>().Update(history);
@@ -726,7 +732,7 @@
                     UpdatedBy = currentUserId,
                     UpdatedOn = currentTimeStamp,
                     IsCompleted = true,
-                    IsPassed = (result.TotalMark - result.NegativeMark) / totalQuestion >= questionSet.PassingWeightage,
+                    IsPassed = questionSet.PassingWeightage > 0 ? (result.TotalMark - result.NegativeMark) * 100 / totalQuestion >= questionSet.PassingWeightage : false,
                 };
                 await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
             }
