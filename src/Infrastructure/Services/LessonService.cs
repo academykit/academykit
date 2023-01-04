@@ -142,6 +142,7 @@ namespace Lingtren.Infrastructure.Services
             }
 
             bool? hasResult = null;
+            int? remainingAttempt = null;
             if (lesson.Type == LessonType.Exam)
             {
                 lesson.QuestionSet = new QuestionSet();
@@ -150,12 +151,19 @@ namespace Lingtren.Infrastructure.Services
                 var containResults = await _unitOfWork.GetRepository<QuestionSetResult>().ExistsAsync(
                     predicate: p => p.UserId == currentUserId && p.QuestionSetId == lesson.QuestionSetId
                     ).ConfigureAwait(false);
+
+                var submissionCount = await _unitOfWork.GetRepository<QuestionSetSubmission>().CountAsync(
+                    predicate: p => p.QuestionSetId == lesson.QuestionSetId && p.StartTime != default && p.EndTime != default
+                    ).ConfigureAwait(false);
+
+                remainingAttempt = lesson.QuestionSet.AllowedRetake > 0 ? lesson.QuestionSet.AllowedRetake - submissionCount : null;
+
                 hasResult = containResults;
             }
 
             bool? hasReviewedAssignment = null;
             AssignmentReviewResponseModel? review = null;
-            
+
             if (lesson.Type == LessonType.Assignment)
             {
                 lesson.Assignments = new List<Assignment>();
@@ -202,6 +210,7 @@ namespace Lingtren.Infrastructure.Services
             responseModel.HasResult = hasResult;
             responseModel.HasReviewedAssignment = hasReviewedAssignment;
             responseModel.AssignmentReview = review;
+            responseModel.RemainingAttempt = remainingAttempt;
             return responseModel;
         }
 
