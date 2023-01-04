@@ -152,8 +152,10 @@ namespace Lingtren.Infrastructure.Services
                     ).ConfigureAwait(false);
                 hasResult = containResults;
             }
+
             bool? hasReviewedAssignment = null;
             AssignmentReviewResponseModel? review = null;
+            
             if (lesson.Type == LessonType.Assignment)
             {
                 lesson.Assignments = new List<Assignment>();
@@ -182,12 +184,21 @@ namespace Lingtren.Infrastructure.Services
                 }
             }
 
+            var currentLessonWatchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
+                predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
+                ).ConfigureAwait(false);
+
             var responseModel = new LessonResponseModel(lesson);
+
+            responseModel.IsCompleted = currentLessonWatchHistory != null ? currentLessonWatchHistory.IsCompleted : false;
+            responseModel.IsPassed = currentLessonWatchHistory != null ? currentLessonWatchHistory.IsPassed : false;
+
             var nextLessonIndex = currentIndex + 1;
             if ((nextLessonIndex + 1) <= lessons.Count)
             {
                 responseModel.NextLessonSlug = lessons.GetItemByIndex(nextLessonIndex)?.Slug;
             }
+
             responseModel.HasResult = hasResult;
             responseModel.HasReviewedAssignment = hasReviewedAssignment;
             responseModel.AssignmentReview = review;
@@ -608,7 +619,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="userId"> the user id </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the instance of <see cref="MeetingReportResponseModel" /> .</returns>
-        public async Task<MeetingReportResponseModel> GetMeetingReportAsync(string identity,string lessonIdentity,string userId, Guid currentUserId)
+        public async Task<MeetingReportResponseModel> GetMeetingReportAsync(string identity, string lessonIdentity, string userId, Guid currentUserId)
         {
             var response = new MeetingReportResponseModel();
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
@@ -632,7 +643,7 @@ namespace Lingtren.Infrastructure.Services
             response.MobileNumber = report.User?.MobileNumber;
             response.Date = report.StartTime;
             response.JoinedTime = report.JoinTime.ToShortDateString();
-            response.LeftTime =   report.LeftTime.HasValue ? report.LeftTime.Value.ToShortTimeString() : string.Empty;
+            response.LeftTime = report.LeftTime.HasValue ? report.LeftTime.Value.ToShortTimeString() : string.Empty;
             response.LessonId = lesson.Id;
             report.Duration = report.Duration;
             return response;

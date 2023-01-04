@@ -213,9 +213,10 @@ namespace Lingtren.Infrastructure.Services
                         CourseId = lesson.CourseId,
                         LessonId = lesson.Id,
                         UserId = user.Id,
-                        IsCompleted = false,
+                        IsCompleted = true,
+                        IsPassed = true,
                         CreatedBy = user.Id,
-                        CreatedOn = DateTime.UtcNow
+                        CreatedOn = DateTime.UtcNow,
                     };
                     await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
                 }
