@@ -3,6 +3,7 @@
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
@@ -133,5 +134,49 @@
             }
         }
         #endregion Private Methods
+
+        /// <summary>
+        /// Handle to get department users
+        /// </summary>
+        /// <param name="identity">the department id or slug</param>
+        /// <param name="searchCriteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <param name="currentUserId">the current logged in user id</param>
+        /// <returns></returns>
+        public async Task<SearchResult<UserResponseModel>> GetUsers(string identity, BaseSearchCriteria searchCriteria, Guid currentUserId)
+        {
+            var department = await GetByIdOrSlugAsync(identity, currentUserId).ConfigureAwait(false);
+
+            var predicate = PredicateBuilder.New<User>(true);
+            predicate = predicate.And(p => p.DepartmentId == department.Id && p.IsActive);
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.Search))
+            {
+                var search = searchCriteria.Search.ToLower().Trim();
+                predicate = predicate.And(x =>
+                    ((x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim() + " " + x.LastName.Trim()).Trim().Contains(search)
+                 || x.Email.ToLower().Trim().Contains(search)
+                 || x.MobileNumber.ToLower().Trim().Contains(search));
+            }
+
+            var users = await _unitOfWork.GetRepository<User>().GetAllAsync(
+                predicate: predicate
+                ).ConfigureAwait(false);
+
+            var searchResult = users.ToIPagedList(searchCriteria.Page, searchCriteria.Size);
+
+            var response = new SearchResult<UserResponseModel>()
+            {
+                CurrentPage = searchResult.CurrentPage,
+                Items = new List<UserResponseModel>(),
+                PageSize = searchResult.PageSize,
+                TotalPage = searchResult.TotalPage,
+                TotalCount = searchResult.TotalCount
+            };
+
+            searchResult.Items.ForEach(p =>
+                  response.Items.Add(new UserResponseModel(p))
+              );
+            return response;
+        }
     }
 }

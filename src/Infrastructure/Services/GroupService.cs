@@ -115,6 +115,33 @@
             }
 
         }
+
+        /// <summary>
+        /// Check the validations required for delete
+        /// </summary>
+        /// <param name="entity">the instance of <see cref="Assignment"/></param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
+        protected override async Task CheckDeletePermissionsAsync(Group entity, Guid currentUserId)
+        {
+            var courseCount = await _unitOfWork.GetRepository<Course>().CountAsync(
+                predicate: p => p.GroupId == entity.Id && (p.IsUpdate || p.Status == CourseStatus.Draft)
+                ).ConfigureAwait(false);
+
+            if (courseCount > 0)
+            {
+                _logger.LogWarning("Group with id: {id} cannot be removed since some courses is associated with it.", entity.Id);
+                throw new ForbiddenException("Some courses is associated with this group. So, group cannot be removed.");
+            }
+
+            var groupFiles = await _unitOfWork.GetRepository<GroupFile>().GetAllAsync(predicate: p => p.GroupId == entity.Id).ConfigureAwait(false);
+            var groupMembers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(predicate: p => p.GroupId == entity.Id).ConfigureAwait(false);
+
+            _unitOfWork.GetRepository<GroupFile>().Delete(groupFiles);
+            _unitOfWork.GetRepository<GroupMember>().Delete(groupMembers);
+        }
+
+
         #endregion Protected Region
 
         #region Group Member

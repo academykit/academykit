@@ -102,7 +102,7 @@
         [HttpGet("{identity}")]
         public async Task<GroupResponseModel> Get(string identity)
         {
-            Group model = await _groupService.GetByIdOrSlugAsync(identity,CurrentUser.Id).ConfigureAwait(false);
+            Group model = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             return new GroupResponseModel(model, memberCount: model.GroupMembers.Count);
         }
 
@@ -131,6 +131,20 @@
         }
 
         /// <summary>
+        /// delete department api
+        /// </summary>
+        /// <param name="identity"> id or slug </param>
+        /// <returns> the task complete </returns>
+        [HttpDelete("{identity}")]
+        public async Task<IActionResult> DeleteAsync(string identity)
+        {
+            IsSuperAdminOrAdmin(CurrentUser.Role);
+
+            await _groupService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Group removed successfully." });
+        }
+
+        /// <summary>
         /// group member search api
         /// </summary>
         /// <param name="identity">the group id or slug</param>
@@ -140,7 +154,7 @@
         [HttpGet("{identity}/members")]
         public async Task<SearchResult<GroupMemberResponseModel>> SearchGroupMembers(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
         {
-            var group = await _groupService.GetByIdOrSlugAsync(identity,CurrentUser.Id).ConfigureAwait(false);
+            var group = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             if (group == null)
             {
                 throw new EntityNotFoundException("Group not found.");
@@ -182,7 +196,7 @@
         [HttpGet("{identity}/notMembers")]
         public async Task<SearchResult<UserModel>> SearchNotGroupMembers(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
         {
-            var group = await _groupService.GetByIdOrSlugAsync(identity,CurrentUser.Id).ConfigureAwait(false);
+            var group = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             if (group == null)
             {
                 throw new EntityNotFoundException("Group not found.");
@@ -190,8 +204,11 @@
             var predicate = PredicateBuilder.New<User>(true);
             if (!string.IsNullOrWhiteSpace(searchCriteria.Search))
             {
-                var search = searchCriteria.Search.Trim().ToLower();
-                predicate = predicate.And(p => p.FirstName.Contains(search) || p.Email.Contains(search));
+                var search = searchCriteria.Search.ToLower().Trim();
+                predicate = predicate.And(x =>
+                    ((x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim() + " " + x.LastName.Trim()).Trim().Contains(search)
+                 || x.Email.ToLower().Trim().Contains(search)
+                 || x.MobileNumber.ToLower().Trim().Contains(search));
             }
             predicate = predicate.And(p => !p.Groups.Select(x => x.Name).Contains(identity) && !(p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin) && p.IsActive);
             var users = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate).ConfigureAwait(false);
