@@ -47,7 +47,7 @@
         {
             if (role != UserRole.SuperAdmin)
             {
-                throw new ForbiddenException("SuperAdmin Access");
+                throw new ForbiddenException("Super Admin Access");
             }
         }
         /// <summary>
@@ -57,7 +57,7 @@
         {
             if (role != UserRole.SuperAdmin && role != UserRole.Admin)
             {
-                throw new ForbiddenException("SuperAdmin or Admin Access");
+                throw new ForbiddenException("Super Admin or Admin Access");
             }
         }
         /// <summary>
@@ -67,7 +67,7 @@
         {
             if (role != UserRole.SuperAdmin && role != UserRole.Admin && role != UserRole.Trainer)
             {
-                throw new ForbiddenException("SuperAdmin or Admin or Trainer Access");
+                throw new ForbiddenException("Super Admin or Admin or Trainer Access");
             }
         }
 

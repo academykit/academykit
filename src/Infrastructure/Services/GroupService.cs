@@ -103,8 +103,8 @@
         {
             if (!CurrentUserId.HasValue)
             {
-                _logger.LogWarning("CurrentUserId is required");
-                throw new ForbiddenException("CurrentUserId is required");
+                _logger.LogWarning("CurrentUserId is required.");
+                throw new ForbiddenException("CurrentUserId is required.");
             }
             var userAccess = await ValidateUserCanAccessGroup(entityToReturn.Id, CurrentUserId.Value).ConfigureAwait(false);
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(CurrentUserId.Value).ConfigureAwait(false);
@@ -242,21 +242,21 @@
             var group = await GetByIdOrSlugAsync(identity).ConfigureAwait(false);
             if (group == null)
             {
-                _logger.LogWarning("Group not found with identity : {identity}", identity);
-                throw new EntityNotFoundException("Group not found");
+                _logger.LogWarning("Group not found with identity : {identity}.", identity);
+                throw new EntityNotFoundException("Group not found.");
             }
             var isAccess = await IsSuperAdminOrAdminOrTrainer(currentUserId).ConfigureAwait(false);
             if (!isAccess)
             {
-                _logger.LogWarning("User with userId : {userId} is not admin/teacher to remove member from the group", currentUserId);
+                _logger.LogWarning("User with userId : {userId} is not admin/teacher to remove member from the group.", currentUserId);
                 throw new ForbiddenException("Only user with super-admin or admin or trainer role is allowed to remove member from the group.");
             }
             var groupMember = await _unitOfWork.GetRepository<GroupMember>().GetFirstOrDefaultAsync(
                 predicate: p => p.GroupId == group.Id && p.Id == id).ConfigureAwait(false);
             if (groupMember == null)
             {
-                _logger.LogWarning("Group member with id : {id} not found in the group with id : {groupId}", id, group.Id);
-                throw new ForbiddenException("Group member not found");
+                _logger.LogWarning("Group member with id : {id} not found in the group with id : {groupId}.", id, group.Id);
+                throw new ForbiddenException("Group member not found.");
             }
             groupMember.IsActive = enabled;
             groupMember.UpdatedBy = currentUserId;
@@ -278,21 +278,21 @@
             var group = await GetByIdOrSlugAsync(identity, currentUserId).ConfigureAwait(false);
             if (group == null)
             {
-                _logger.LogWarning("Group not found with identity : {identity}", identity);
-                throw new EntityNotFoundException("Group not found");
+                _logger.LogWarning("Group not found with identity : {identity}.", identity);
+                throw new EntityNotFoundException("Group not found.");
             }
             var isAccess = await IsSuperAdminOrAdminOrTrainer(currentUserId).ConfigureAwait(false);
             if (!isAccess)
             {
-                _logger.LogWarning("User with userId : {userId} is not admin/teacher to remove member from the group", currentUserId);
+                _logger.LogWarning("User with userId : {userId} is not admin/teacher to remove member from the group.", currentUserId);
                 throw new ForbiddenException("Only user with super-admin or admin or trainer role is allowed to remove member from the group.");
             }
             var groupMember = await _unitOfWork.GetRepository<GroupMember>().GetFirstOrDefaultAsync(
                 predicate: p => p.GroupId == group.Id && p.Id == id).ConfigureAwait(false);
             if (groupMember == null)
             {
-                _logger.LogWarning("Group member with id : {id} not found in the group with id : {groupId}", id, group.Id);
-                throw new ForbiddenException("Group member not found");
+                _logger.LogWarning("Group member with id : {id} not found in the group with id : {groupId}.", id, group.Id);
+                throw new ForbiddenException("Group member not found.");
             }
             _unitOfWork.GetRepository<GroupMember>().Delete(groupMember);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -316,8 +316,8 @@
                              p.Slug.Equals(model.GroupIdentity)).ConfigureAwait(false);
                 if (group == null)
                 {
-                    _logger.LogWarning("Group with identity: {identity} not found", model.GroupIdentity);
-                    throw new EntityNotFoundException("Group not found");
+                    _logger.LogWarning("Group with identity: {identity} not found.", model.GroupIdentity);
+                    throw new EntityNotFoundException("Group not found.");
                 }
 
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
@@ -325,7 +325,7 @@
 
                 if (!isSuperAdminOrAdmin && !isGroupTeacher)
                 {
-                    _logger.LogWarning("User with id: {userId} is not super-admin or admin or teacher for the group with id :{groupId}", currentUserId, group.Id);
+                    _logger.LogWarning("User with id: {userId} is not super-admin or admin or teacher for the group with id :{groupId}.", currentUserId, group.Id);
                     throw new ForbiddenException("Unauthorized user to create an attachment in the group.");
                 }
 
@@ -369,8 +369,8 @@
                     ).ConfigureAwait(false);
                 if (group == null)
                 {
-                    _logger.LogWarning("Group with identity : {identity} not found", groupIdentity);
-                    throw new EntityNotFoundException("Group not found");
+                    _logger.LogWarning("Group with identity : {identity} not found.", groupIdentity);
+                    throw new EntityNotFoundException("Group not found.");
                 }
 
                 var file = await _unitOfWork.GetRepository<GroupFile>().GetFirstOrDefaultAsync(
@@ -378,15 +378,15 @@
                     ).ConfigureAwait(false);
                 if (file == null)
                 {
-                    _logger.LogWarning("File with id : {fileId} not found for group with id: {groupId}", fileId, group.Id);
-                    throw new EntityNotFoundException("File not found");
+                    _logger.LogWarning("File with id : {fileId} not found for group with id: {groupId}.", fileId, group.Id);
+                    throw new EntityNotFoundException("File not found.");
                 }
 
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (file.CreatedBy != currentUserId && !isSuperAdminOrAdmin)
                 {
-                    _logger.LogWarning("User with id: {userId} is not authorized user to remove file from the group with id : {groupId}", currentUserId, group.Id);
-                    throw new ForbiddenException("Unauthorized user to remove the file from the group");
+                    _logger.LogWarning("User with id: {userId} is not authorized user to remove file from the group with id : {groupId}.", currentUserId, group.Id);
+                    throw new ForbiddenException("Unauthorized user to remove the file from the group.");
                 }
 
                 _unitOfWork.GetRepository<GroupFile>().Delete(file);
@@ -413,15 +413,15 @@
                     ).ConfigureAwait(false);
                 if (group == null)
                 {
-                    _logger.LogWarning("Group with identity: {identity} not found", searchCriteria.GroupIdentity);
-                    throw new EntityNotFoundException("Group not found");
+                    _logger.LogWarning("Group with identity: {identity} not found.", searchCriteria.GroupIdentity);
+                    throw new EntityNotFoundException("Group not found.");
                 }
 
                 var userAccess = await ValidateUserCanAccessGroup(group.Id, searchCriteria.CurrentUserId).ConfigureAwait(false);
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(searchCriteria.CurrentUserId).ConfigureAwait(false);
                 if (!userAccess && !isSuperAdminOrAdmin)
                 {
-                    _logger.LogWarning("User with id: {userId} is not authorized user to access the group with id: {groupId}", searchCriteria.CurrentUserId, group.Id);
+                    _logger.LogWarning("User with id: {userId} is not authorized user to access the group with id: {groupId}.", searchCriteria.CurrentUserId, group.Id);
                     throw new ForbiddenException("User can't access the group.");
                 }
 

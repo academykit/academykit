@@ -130,7 +130,7 @@
         public async Task<IActionResult> SubmissionAsync(string lessonIdentity, IList<FeedbackSubmissionRequestModel> model)
         {
             await _feedbackService.FeedbackSubmissionAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Feedback Submitted Successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "Feedback submitted Successfully." });
         }
 
         /// <summary>

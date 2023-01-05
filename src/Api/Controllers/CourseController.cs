@@ -174,7 +174,7 @@ namespace Lingtren.Api.Controllers
             if (!statusExists)
             {
                 _logger.LogWarning("Invalid course status : {status} requested for status change by the user with id : {userId}", status, CurrentUser.Id);
-                throw new ForbiddenException("Invalid course status requested");
+                throw new ForbiddenException("Invalid course status request.");
             }
             await _courseService.ChangeStatusAsync(identity, status, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Course status changed successfully." });
@@ -188,7 +188,7 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> Enroll(string identity)
         {
             await _courseService.EnrollmentAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "User enrolled in the course successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "User successfully enrolled in the course." });
         }
 
         /// <summary>

@@ -314,17 +314,17 @@
                 if (user == null)
                 {
                     _logger.LogWarning("User not found with email: {email}.", model.Email);
-                    throw new EntityNotFoundException("User Not Found.");
+                    throw new EntityNotFoundException("User not found.");
                 }
                 if (currentTimeStamp > user.PasswordResetTokenExpiry)
                 {
-                    _logger.LogWarning("Password reset token expired for the user with id : {id}", user.Id);
+                    _logger.LogWarning("Password reset token expired for the user with id : {id}.", user.Id);
                     throw new ForbiddenException("Password reset token expired.");
                 }
                 if (model.Token != user.PasswordResetToken)
                 {
                     _logger.LogWarning("User not found with email: {email}.", model.Email);
-                    throw new ForbiddenException("Reset Token Not Matched.");
+                    throw new ForbiddenException("Reset token not matched.");
                 }
                 user.PasswordChangeToken = await BuildResetPasswordJWTToken(user.Email).ConfigureAwait(false);
                 _unitOfWork.GetRepository<User>().Update(user);
@@ -383,19 +383,19 @@
             var user = await GetUserByEmailAsync(model.OldEmail).ConfigureAwait(false);
             if (user == null)
             {
-                _logger.LogWarning("User with email : {email} not found", model.OldEmail);
+                _logger.LogWarning("User with email : {email} not found.", model.OldEmail);
                 throw new ForbiddenException($"User not found with email : {model.OldEmail}.");
             }
             var newUser = await GetUserByEmailAsync(model.NewEmail).ConfigureAwait(false);
             if (newUser != null)
             {
-                _logger.LogWarning("User with new email : {email} found in the system", model.NewEmail);
+                _logger.LogWarning("User with new email : {email} found in the system.", model.NewEmail);
                 throw new ForbiddenException($"This new email address {model.NewEmail} already exist in another account.");
             }
             var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password);
             if (!isUserAuthenticated)
             {
-                _logger.LogWarning("User with id : {userId} password not matched for email change", user.Id);
+                _logger.LogWarning("User with id : {userId} password not matched for email change.", user.Id);
                 throw new ForbiddenException("User password not matched.");
             }
             var changeEmailToken = GenerateResendAndChangeEmailToken(model.OldEmail, model.NewEmail, _changeEmailEncryptionKey, _changeEmailTokenExpiry);
@@ -415,13 +415,13 @@
             var (oldEmail, newEmail) = VerifyResendAndEmailChangeToken(token, currentTimeStamp, _resendChangeEmailEncryptionKey);
             if (string.IsNullOrWhiteSpace(oldEmail) || string.IsNullOrWhiteSpace(newEmail))
             {
-                _logger.LogWarning("Old email or new email is null or empty for resend change email");
-                throw new ForbiddenException("Old email or new email cannot be null or empty");
+                _logger.LogWarning("Old email or new email is null or empty for resend change email.");
+                throw new ForbiddenException("Old email or new email cannot be null or empty.");
             }
             var user = await GetUserByEmailAsync(oldEmail).ConfigureAwait(false);
             if (user == null)
             {
-                _logger.LogWarning("User with email : {email} not found", oldEmail);
+                _logger.LogWarning("User with email : {email} not found.", oldEmail);
                 throw new ForbiddenException($"User not found with email : {newEmail}.");
             }
             var changeEmailToken = GenerateResendAndChangeEmailToken(oldEmail, newEmail, _changeEmailEncryptionKey, _changeEmailTokenExpiry);
@@ -441,13 +441,13 @@
             var (oldEmail, newEmail) = VerifyResendAndEmailChangeToken(token, currentTimeStamp, _changeEmailEncryptionKey);
             if (string.IsNullOrWhiteSpace(oldEmail) || string.IsNullOrWhiteSpace(newEmail))
             {
-                _logger.LogWarning("Old email or new email is null or empty for verify change email");
-                throw new ForbiddenException("Old email or new email cannot be null or empty");
+                _logger.LogWarning("Old email or new email is null or empty for verify change email.");
+                throw new ForbiddenException("Old email or new email cannot be null or empty.");
             }
             var user = await GetUserByEmailAsync(oldEmail).ConfigureAwait(false);
             if (user == null)
             {
-                _logger.LogWarning("User with email : {email} not found", oldEmail);
+                _logger.LogWarning("User with email : {email} not found.", oldEmail);
                 throw new ForbiddenException($"User not found with email : {newEmail}.");
             }
             user.Email = newEmail;
@@ -510,7 +510,7 @@
                 var tokenExpiry = security.ValidTo;
                 if (tokenExpiry < currentTimeStamp)
                 {
-                    throw new ForbiddenException("Change email token has already expired. Please resend change email request");
+                    throw new ForbiddenException("Change email token has already expired. Please resend change email request.");
                 }
                 return (oldEmail, newEmail);
             }
@@ -688,7 +688,7 @@
             if (checkDuplicateEmail)
             {
                 _logger.LogWarning("Duplicate user email : {email} is found.", entity.Email);
-                throw new ServiceException("Duplicate email is found");
+                throw new ServiceException("Duplicate email is found.");
             }
         }
 

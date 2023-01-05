@@ -143,7 +143,7 @@
             var group = await _groupService.GetByIdOrSlugAsync(identity,CurrentUser.Id).ConfigureAwait(false);
             if (group == null)
             {
-                throw new EntityNotFoundException("Group not found");
+                throw new EntityNotFoundException("Group not found.");
             }
             GroupMemberBaseSearchCriteria criteria = new()
             {
@@ -185,7 +185,7 @@
             var group = await _groupService.GetByIdOrSlugAsync(identity,CurrentUser.Id).ConfigureAwait(false);
             if (group == null)
             {
-                throw new EntityNotFoundException("Group not found");
+                throw new EntityNotFoundException("Group not found.");
             }
             var predicate = PredicateBuilder.New<User>(true);
             if (!string.IsNullOrWhiteSpace(searchCriteria.Search))

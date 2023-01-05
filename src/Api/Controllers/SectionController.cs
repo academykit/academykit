@@ -40,7 +40,7 @@ namespace Lingtren.Api.Controllers
             var course = await _courseService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
             if (course == null)
             {
-                throw new EntityNotFoundException("Course not found");
+                throw new EntityNotFoundException("Course not found.");
             }
 
             searchCriteria.CurrentUserId = CurrentUser.Id;
@@ -75,7 +75,7 @@ namespace Lingtren.Api.Controllers
             var course = await _courseService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
             if (course == null)
             {
-                throw new EntityNotFoundException("Course not found");
+                throw new EntityNotFoundException("Course not found.");
             }
             var entity = new Section()
             {
@@ -101,7 +101,7 @@ namespace Lingtren.Api.Controllers
             var course = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             if (course == null)
             {
-                throw new EntityNotFoundException("Course not found");
+                throw new EntityNotFoundException("Course not found.");
             }
             var model = await _sectionService.GetByIdOrSlugAsync(sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
             return new SectionResponseModel(model, fetchLesson: true);
@@ -120,13 +120,13 @@ namespace Lingtren.Api.Controllers
             var course = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             if (course == null)
             {
-                throw new EntityNotFoundException("Course not found");
+                throw new EntityNotFoundException("Course not found.");
             }
             var entity = await _sectionService.GetByIdOrSlugAsync(sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
 
             if (entity == null)
             {
-                throw new EntityNotFoundException("Section not found");
+                throw new EntityNotFoundException("Section not found.");
             }
 
             entity.Name = model.Name;

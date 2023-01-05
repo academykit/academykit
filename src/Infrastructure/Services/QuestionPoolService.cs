@@ -111,8 +111,8 @@
                 predicate: p => p.Id != entity.Id && p.Name.ToLower() == entity.Name.ToLower() && p.CreatedBy == entity.CreatedBy).ConfigureAwait(false);
             if (QuestionPoolExist)
             {
-                _logger.LogWarning("Duplicate QuestionPool name : {name} is found for the QuestionPool with id : {id}", entity.Name, entity.Id);
-                throw new ServiceException("Duplicate QuestionPool name is found");
+                _logger.LogWarning("Duplicate QuestionPool name : {name} is found for the QuestionPool with id : {id}.", entity.Name, entity.Id);
+                throw new ServiceException("Duplicate question pool name is found.");
             }
         }
         #endregion Private Methods

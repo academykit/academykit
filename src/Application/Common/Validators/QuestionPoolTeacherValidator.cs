@@ -6,8 +6,8 @@
     {
         public QuestionPoolTeacherValidator()
         {
-            RuleFor(x => x.QuestionPoolIdentity).NotNull().NotEmpty().WithMessage("Question pool identity is required");
-            RuleFor(x => x.Email).NotNull().NotEmpty().WithMessage("Email is required");
+            RuleFor(x => x.QuestionPoolIdentity).NotNull().NotEmpty().WithMessage("Question pool identity is required.");
+            RuleFor(x => x.Email).NotNull().NotEmpty().WithMessage("Email is required.");
         }
     }
 }

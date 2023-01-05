@@ -340,12 +340,12 @@ namespace Lingtren.Infrastructure.Services
                 var filePath = settings.FirstOrDefault(x => x.Key == "Server_FilePath")?.Value;
                 if (string.IsNullOrEmpty(filePath))
                 {
-                    throw new EntityNotFoundException("Server Storage file path not found");
+                    throw new EntityNotFoundException("Server Storage file path not found.");
                 }
                 var videoPath = settings.FirstOrDefault(x => x.Key == "Server_VideoPath")?.Value;
                 if (string.IsNullOrEmpty(videoPath))
                 {
-                    throw new EntityNotFoundException("Video path not found");
+                    throw new EntityNotFoundException("Video path not found.");
                 }
 
                 var serverUrl = settings.FirstOrDefault(x => x.Key == "Server_Url")?.Value;

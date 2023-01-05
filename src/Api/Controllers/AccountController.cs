@@ -70,10 +70,10 @@
             var user = await _userService.GetUserByEmailAsync(model.Email);
             if (user == null)
             {
-                return BadRequest(new CommonResponseModel { Message = "User Not Found" });
+                return BadRequest(new CommonResponseModel { Message = "User not found." });
             }
             await _userService.ResetPasswordAsync(user).ConfigureAwait(false);
-            return Ok(new { message = "Forgot password executed successfully", success = true });
+            return Ok(new { message = "Forgot password executed successfully.", success = true });
         }
 
         [HttpPost("VerifyResetToken")]
@@ -81,7 +81,7 @@
         public async Task<IActionResult> VerifyResetToken([FromBody] VerifyResetTokenModel model)
         {
             var passwordResetToken = await _userService.VerifyPasswordResetTokenAsync(model).ConfigureAwait(false);
-            return Ok(new { message = "Password Reset Token Matched Successfully", data = passwordResetToken });
+            return Ok(new { message = "Password reset token matched successfully.", data = passwordResetToken });
         }
 
         [HttpPost("ResetPassword")]
@@ -96,14 +96,14 @@
 
             if (DateTimeOffset.FromUnixTimeSeconds(exp).ToUniversalTime() <= DateTimeOffset.UtcNow)
             {
-                return BadRequest(new CommonResponseModel { Message = "Token Expired" });
+                return BadRequest(new CommonResponseModel { Message = "Token expired" });
             }
 
             var user = await _userService.GetUserByEmailAsync(email.Trim().ToLower());
 
             if (user == null)
             {
-                return BadRequest(new CommonResponseModel { Message = "User Not Found" });
+                return BadRequest(new CommonResponseModel { Message = "User not found." });
             }
             user.HashPassword = _userService.HashPassword(model.NewPassword);
             await _userService.UpdateAsync(user, includeProperties: false);

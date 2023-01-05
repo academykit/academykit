@@ -42,8 +42,8 @@
                     predicate: p => p.AssignmentId == entity.Id).ConfigureAwait(false);
             if (assignmentSubmissions)
             {
-                _logger.LogWarning("Assignment with id : {id} having type : {type} contains assignment submissions", entity.Id, entity.Type);
-                throw new ForbiddenException("Assignment contains assignment submissions");
+                _logger.LogWarning("Assignment with id : {id} having type : {type} contains assignment submissions.", entity.Id, entity.Type);
+                throw new ForbiddenException("Assignment contains assignment submissions. So, it cannot be deleted.");
             }
 
             _unitOfWork.GetRepository<AssignmentAttachment>().Delete(entity.AssignmentAttachments);
@@ -124,12 +124,12 @@
                             predicate: p => p.Id == entity.LessonId && !p.IsDeleted).ConfigureAwait(false);
             if (lesson == null)
             {
-                _logger.LogWarning("Lesson with id : {lessonId} not found for assignment with id : {id}", entity.LessonId, entity.Id);
-                throw new EntityNotFoundException("Lesson not found");
+                _logger.LogWarning("Lesson with id : {lessonId} not found for assignment with id : {id}.", entity.LessonId, entity.Id);
+                throw new EntityNotFoundException("Lesson not found.");
             }
             if (lesson.Type != LessonType.Assignment)
             {
-                _logger.LogWarning("Lesson with id : {lessonId} is of invalid lesson type to create,edit or delete assignment for user with id :{userId}", lesson.Id, entity.CreatedBy);
+                _logger.LogWarning("Lesson with id : {lessonId} is of invalid lesson type to create,edit or delete assignment for user with id :{userId}.", lesson.Id, entity.CreatedBy);
                 throw new ForbiddenException("Invalid lesson type for assignment.");
             }
             await ValidateAndGetCourse(entity.CreatedBy, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
@@ -243,33 +243,33 @@
                     predicate: p => p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity).ConfigureAwait(false);
                 if (lesson == null)
                 {
-                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found");
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
+                    throw new EntityNotFoundException("Lesson not found.");
                 }
                 if (lesson.Type != LessonType.Assignment)
                 {
-                    _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}",
+                    _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}.",
                                         lesson.Id, currentUserId);
-                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}.");
                 }
                 if (lesson.Status != CourseStatus.Published)
                 {
-                    _logger.LogWarning("Lesson with id: {id} not published for user with id: {userId}", lesson.Id, currentUserId);
-                    throw new EntityNotFoundException("Lesson not published");
+                    _logger.LogWarning("Lesson with id: {id} not published for user with id: {userId}.", lesson.Id, currentUserId);
+                    throw new EntityNotFoundException("Lesson not published.");
                 }
 
                 var course = await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
                 if (course.Status == CourseStatus.Completed)
                 {
-                    _logger.LogWarning("Course with id : {courseId} is in {status} status to give assignment for the user with id: {userId}",
+                    _logger.LogWarning("Course with id : {courseId} is in {status} status to give assignment for the user with id: {userId}.",
                         course.Id, course.Status, currentUserId);
-                    throw new ForbiddenException($"Cannot submit assignment to the course having {course.Status} status");
+                    throw new ForbiddenException($"Cannot submit assignment to the course having {course.Status} status.");
                 }
                 if (course.CourseTeachers.Any(x => x.UserId == currentUserId))
                 {
-                    _logger.LogWarning("User with id: {userId} is a teacher of the course with id: {courseId} and lesson with id: {lessonId} to submit the assignment",
+                    _logger.LogWarning("User with id: {userId} is a teacher of the course with id: {courseId} and lesson with id: {lessonId} to submit the assignment.",
                         currentUserId, course.Id, lesson.Id);
-                    throw new ForbiddenException("Course teacher cannot submit the assignment");
+                    throw new ForbiddenException("Course teacher cannot submit the assignment.");
                 }
 
                 var assignmentReviewExist = await _unitOfWork.GetRepository<AssignmentReview>().ExistsAsync(
@@ -277,9 +277,9 @@
                     ).ConfigureAwait(false);
                 if (assignmentReviewExist)
                 {
-                    _logger.LogWarning("Assignment review exist for lesson with id: {lessonId} and user with id : {userId}",
+                    _logger.LogWarning("Assignment review exist for lesson with id: {lessonId} and user with id : {userId}.",
                         lesson.Id, currentUserId);
-                    throw new ForbiddenException("Review has been already given to current assignment");
+                    throw new ForbiddenException("Review has been already given to current assignment.");
                 }
 
                 var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
@@ -350,14 +350,14 @@
                    predicate: p => p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity).ConfigureAwait(false);
                 if (lesson == null)
                 {
-                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found");
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
+                    throw new EntityNotFoundException("Lesson not found.");
                 }
                 if (lesson.Type != LessonType.Assignment)
                 {
-                    _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}",
+                    _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}.",
                                         lesson.Id, currentUserId);
-                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}.");
                 }
                 var course = await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
 
@@ -442,13 +442,13 @@
             if (lesson == null)
             {
                 _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", searchCriteria.LessonIdentity, searchCriteria.CurrentUserId);
-                throw new EntityNotFoundException("Lesson not found");
+                throw new EntityNotFoundException("Lesson not found.");
             }
             if (lesson.Type != LessonType.Assignment)
             {
                 _logger.LogWarning("Lesson type not matched for assignment fetch for lesson with id: {id} and user with id: {userId}",
                                     lesson.Id, searchCriteria.CurrentUserId);
-                throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+                throw new ForbiddenException($"Invalid lesson type :{lesson.Type}.");
             }
 
             var course = await ValidateAndGetCourse(searchCriteria.CurrentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
@@ -508,14 +508,14 @@
                    predicate: p => p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity).ConfigureAwait(false);
                 if (lesson == null)
                 {
-                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found");
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
+                    throw new EntityNotFoundException("Lesson not found.");
                 }
                 if (lesson.Type != LessonType.Assignment)
                 {
-                    _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}",
+                    _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}.",
                                         lesson.Id, currentUserId);
-                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}.");
                 }
                 await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
 
@@ -583,14 +583,14 @@
                    predicate: p => p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity).ConfigureAwait(false);
                 if (lesson == null)
                 {
-                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found");
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
+                    throw new EntityNotFoundException("Lesson not found.");
                 }
                 if (lesson.Type != LessonType.Assignment)
                 {
-                    _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}",
+                    _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}.",
                                         lesson.Id, currentUserId);
-                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}.");
                 }
                 await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
 
@@ -599,9 +599,9 @@
                     ).ConfigureAwait(false);
                 if (assignmentReview == null)
                 {
-                    _logger.LogWarning("Assignment review with id: {id} not found for user with id: {userId} and lesson with id: {lessonId}",
+                    _logger.LogWarning("Assignment review with id: {id} not found for user with id: {userId} and lesson with id: {lessonId}.",
                                     id, currentUserId, lesson.Id);
-                    throw new EntityNotFoundException("Assignment Review not found");
+                    throw new EntityNotFoundException("Assignment review not found.");
                 }
                 var currentTimeStamp = DateTime.UtcNow;
 
@@ -660,14 +660,14 @@
                    predicate: p => p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity).ConfigureAwait(false);
                 if (lesson == null)
                 {
-                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found");
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
+                    throw new EntityNotFoundException("Lesson not found.");
                 }
                 if (lesson.Type != LessonType.Assignment)
                 {
-                    _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}",
+                    _logger.LogWarning("Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}.",
                                         lesson.Id, currentUserId);
-                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}.");
                 }
                 await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
 
@@ -676,9 +676,9 @@
                        ).ConfigureAwait(false);
                 if (assignmentReview == null)
                 {
-                    _logger.LogWarning("Assignment review with id: {id} not found for user with id: {userId} and lesson with id: {lessonId}",
+                    _logger.LogWarning("Assignment review with id: {id} not found for user with id: {userId} and lesson with id: {lessonId}.",
                                     id, currentUserId, lesson.Id);
-                    throw new EntityNotFoundException("Assignment Review not found");
+                    throw new EntityNotFoundException("Assignment review not found.");
                 }
 
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(

@@ -72,19 +72,19 @@ namespace Lingtren.Infrastructure.Services
                 x.Slug.Equals(identity)).ConfigureAwait(false);
                 if (tag == default)
                 {
-                    throw new EntityNotFoundException("Tag not found");
+                    throw new EntityNotFoundException("Tag not found.");
                 }
 
                 var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: x => x.Id == currentUserId).ConfigureAwait(false);
                 if (user == null)
                 {
-                    throw new EntityNotFoundException("User not found");
+                    throw new EntityNotFoundException("User not found.");
                 }
 
                 var access = ValidateUser(user, tag);
                 if (!access)
                 {
-                    throw new ForbiddenException("Unauthorized user");
+                    throw new ForbiddenException("Unauthorized user.");
                 }
 
                 // to do check tag exist on other services 
@@ -125,7 +125,7 @@ namespace Lingtren.Infrastructure.Services
                 var tagNameExist = tags.Any(x => x.Id != tag.Id && x.Name.ToLower() == tagName.ToLower());
                 if (tagNameExist)
                 {
-                    throw new ForbiddenException("Tag name already exist");
+                    throw new ForbiddenException("Tag name already exist.");
                 }
 
                 tag.Name = tagName;

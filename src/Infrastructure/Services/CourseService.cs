@@ -160,8 +160,8 @@ namespace Lingtren.Infrastructure.Services
         {
             if (course.Status != CourseStatus.Draft)
             {
-                _logger.LogWarning("Course with id : {courseId} cannot be delete having status : {status}", course.Id, course.Status.ToString());
-                throw new ForbiddenException("Only draft course can be delete");
+                _logger.LogWarning("Course with id : {courseId} cannot be delete having status : {status}.", course.Id, course.Status.ToString());
+                throw new ForbiddenException("Only draft course can be deleted.");
             }
             await ValidateAndGetCourse(currentUserId, courseIdentity: course.Id.ToString(), validateForModify: true).ConfigureAwait(false);
         }
@@ -174,8 +174,8 @@ namespace Lingtren.Infrastructure.Services
         {
             if (!CurrentUserId.HasValue)
             {
-                _logger.LogWarning("CurrentUserId is required");
-                throw new ForbiddenException("CurrentUserId is required");
+                _logger.LogWarning("CurrentUserId is required.");
+                throw new ForbiddenException("CurrentUserId is required.");
             }
 
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(CurrentUserId.Value).ConfigureAwait(false);
@@ -186,14 +186,14 @@ namespace Lingtren.Infrastructure.Services
             }
             if (!entityToReturn.IsUpdate && entityToReturn.Status != CourseStatus.Published)
             {
-                throw new EntityNotFoundException("The course could not be found");
+                throw new EntityNotFoundException("The course could not be found.");
             }
             if (entityToReturn.GroupId.HasValue)
             {
                 var hasAccess = await ValidateUserCanAccessGroupCourse(entityToReturn, CurrentUserId.Value).ConfigureAwait(false);
                 if (!hasAccess)
                 {
-                    throw new ForbiddenException("User not allowed to access this course");
+                    throw new ForbiddenException("User not allowed to access this course.");
                 }
             }
         }
@@ -278,8 +278,8 @@ namespace Lingtren.Infrastructure.Services
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
             if (course.Status == status)
             {
-                _logger.LogWarning("Course with id : {courseId} cannot be changed to same status by User with id {userId}", course.Id, currentUserId);
-                throw new ForbiddenException("Course cannot be changed to same status");
+                _logger.LogWarning("Course with id : {courseId} cannot be changed to same status by User with id {userId}.", course.Id, currentUserId);
+                throw new ForbiddenException("Course cannot be changed to same status.");
             }
 
             if ((course.Status == CourseStatus.Draft && (status == CourseStatus.Published || status == CourseStatus.Rejected))
@@ -287,16 +287,16 @@ namespace Lingtren.Infrastructure.Services
                 || (course.Status == CourseStatus.Rejected && status == CourseStatus.Published)
                 || (course.Status != CourseStatus.Published && status == CourseStatus.Completed))
             {
-                _logger.LogWarning("Course with id: {id} cannot be changed from {status} status to {changeStatus} status", course.Id, course.Status, status);
-                throw new ForbiddenException($"Course with status: {course.Status} cannot be changed to {status} status");
+                _logger.LogWarning("Course with id: {id} cannot be changed from {status} status to {changeStatus} status.", course.Id, course.Status, status);
+                throw new ForbiddenException($"Course with status: {course.Status} cannot be changed to {status} status.");
             }
 
             var isSuperAdminOrAdminAccess = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
             if (!isSuperAdminOrAdminAccess && (status == CourseStatus.Published || status == CourseStatus.Rejected))
             {
-                _logger.LogWarning("User with id: {userId} is unauthorized user to change course with id: {id} status from {status} to {changeStatus}",
+                _logger.LogWarning("User with id: {userId} is unauthorized user to change course with id: {id} status from {status} to {changeStatus}.",
                     currentUserId, course.Id, course.Status, status);
-                throw new ForbiddenException($"Unauthorized user to change course status to {status}");
+                throw new ForbiddenException($"Unauthorized user to change course status to {status}.");
             }
 
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
@@ -346,8 +346,8 @@ namespace Lingtren.Infrastructure.Services
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
             if (course == null)
             {
-                _logger.LogWarning("Course with identity: {identity} not found for user with id: {userId}", identity, currentUserId);
-                throw new ForbiddenException("Course not found");
+                _logger.LogWarning("Course with identity: {identity} not found for user with id: {userId}.", identity, currentUserId);
+                throw new ForbiddenException("Course not found.");
             }
             course.IsUpdate = true;
             course.Status = CourseStatus.Draft;
@@ -380,8 +380,8 @@ namespace Lingtren.Infrastructure.Services
 
                 if (course.Status == CourseStatus.Completed)
                 {
-                    _logger.LogWarning("Course with id :{id} is in {status} status for enrollment", course.Id, course.Status);
-                    throw new ForbiddenException($"Cannot enrolled in the course having {course.Status} status");
+                    _logger.LogWarning("Course with id :{id} is in {status} status for enrollment.", course.Id, course.Status);
+                    throw new ForbiddenException($"Cannot enrolled in the course having {course.Status} status.");
                 }
 
                 var existCourseEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().ExistsAsync(
@@ -391,8 +391,8 @@ namespace Lingtren.Infrastructure.Services
 
                 if (existCourseEnrollment)
                 {
-                    _logger.LogWarning("User with userId: {userId} is already enrolled in the course with id: {courseId}", userId, course.Id);
-                    throw new ForbiddenException("You are already enrolled in this course");
+                    _logger.LogWarning("User with userId: {userId} is already enrolled in the course with id: {courseId}.", userId, course.Id);
+                    throw new ForbiddenException("You are already enrolled in this course.");
                 }
 
                 var currentTimeStamp = DateTime.UtcNow;
@@ -427,18 +427,18 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity : {identity} not found for user with id : {currentUserId}", identity, currentUserId);
-                    throw new EntityNotFoundException("Course not found");
+                    _logger.LogWarning("Course with identity : {identity} not found for user with id : {currentUserId}.", identity, currentUserId);
+                    throw new EntityNotFoundException("Course not found.");
                 }
                 if (course.Status != CourseStatus.Draft)
                 {
-                    _logger.LogWarning("Course with identity : {identity} is in {status} status. So, it cannot be removed", identity, course.Status);
+                    _logger.LogWarning("Course with identity : {identity} is in {status} status. So, it cannot be removed.", identity, course.Status);
                     throw new EntityNotFoundException("Course with draft status is only allowed to removed.");
                 }
                 if (course.CourseEnrollments.Count > 0)
                 {
-                    _logger.LogWarning("Course with identity : {identity} contains enrollments", identity);
-                    throw new EntityNotFoundException("Course contains member enrollments. So, it cannot be removed");
+                    _logger.LogWarning("Course with identity : {identity} contains enrollments.", identity);
+                    throw new EntityNotFoundException("Course contains member enrollments. So, it cannot be removed.");
                 }
 
                 var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
@@ -514,8 +514,8 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: false).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity : {identity} not found for user with id : {currentUserId}", identity, currentUserId);
-                    throw new EntityNotFoundException("Course not found");
+                    _logger.LogWarning("Course with identity : {identity} not found for user with id : {currentUserId}.", identity, currentUserId);
+                    throw new EntityNotFoundException("Course not found.");
                 }
                 course.Sections = new List<Section>();
                 course.Sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
@@ -614,15 +614,15 @@ namespace Lingtren.Infrastructure.Services
                 predicate: p => p.Id.ToString() == identity || p.Slug == identity).ConfigureAwait(false);
             if (group == null)
             {
-                _logger.LogWarning("Group with identity: {identity} not found", identity);
-                throw new EntityNotFoundException("Group not found");
+                _logger.LogWarning("Group with identity: {identity} not found.", identity);
+                throw new EntityNotFoundException("Group not found.");
             }
 
             var userAccess = await ValidateUserCanAccessGroup(group.Id, criteria.CurrentUserId).ConfigureAwait(false);
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(criteria.CurrentUserId).ConfigureAwait(false);
             if (!userAccess && !isSuperAdminOrAdmin)
             {
-                _logger.LogWarning("User with id: {userId} is not authorized user to access the group with id: {groupId}", criteria.CurrentUserId, group.Id);
+                _logger.LogWarning("User with id: {userId} is not authorized user to access the group with id: {groupId}.", criteria.CurrentUserId, group.Id);
                 throw new ForbiddenException("User can't access the group.");
             }
 
@@ -1087,8 +1087,8 @@ namespace Lingtren.Infrastructure.Services
                     ).ConfigureAwait(false);
                 if (course.Signatures.Count == 0)
                 {
-                    _logger.LogWarning("At least one trainer signature detail is required for course with id :{courseId}", course.Id);
-                    throw new EntityNotFoundException("At least one trainer signature detail is required");
+                    _logger.LogWarning("At least one trainer signature detail is required for course with id :{courseId}.", course.Id);
+                    throw new EntityNotFoundException("At least one trainer signature detail is required.");
                 }
                 course.CourseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
                      predicate: p => p.CourseId == course.Id
@@ -1096,8 +1096,8 @@ namespace Lingtren.Infrastructure.Services
 
                 if (course.CourseCertificate == null)
                 {
-                    _logger.LogWarning("Certificate detail information not found for course with id :{courseId}", course.Id);
-                    throw new EntityNotFoundException("Certificate detail information not found");
+                    _logger.LogWarning("Certificate detail information not found for course with id :{courseId}.", course.Id);
+                    throw new EntityNotFoundException("Certificate detail information not found.");
                 }
 
                 var predicate = PredicateBuilder.New<CourseEnrollment>(true);
@@ -1198,8 +1198,8 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity: {identity} not found", identity);
-                    throw new EntityNotFoundException("Course not found");
+                    _logger.LogWarning("Course with identity: {identity} not found.", identity);
+                    throw new EntityNotFoundException("Course not found.");
                 }
 
                 var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(predicate: x => x.CourseId == course.Id).ConfigureAwait(false);
@@ -1228,15 +1228,15 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity: {identity} not found", identity);
-                    throw new EntityNotFoundException("Course not found");
+                    _logger.LogWarning("Course with identity: {identity} not found.", identity);
+                    throw new EntityNotFoundException("Course not found.");
                 }
                 var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
                     predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
                 if (signatures.Count >= 3)
                 {
-                    _logger.LogWarning("Course with id: {id} cannot have more than 3 signatures for user with id: {userId}", course.Id, currentUserId);
-                    throw new ForbiddenException("At most 3 signatures are only allowed");
+                    _logger.LogWarning("Course with id: {id} cannot have more than 3 signatures for user with id: {userId}.", course.Id, currentUserId);
+                    throw new ForbiddenException("At most 3 signatures are only allowed.");
                 }
                 var currentTimeStamp = DateTime.UtcNow;
                 var signature = new Signature
@@ -1294,16 +1294,16 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity: {identity} not found", identity);
-                    throw new EntityNotFoundException("Course not found");
+                    _logger.LogWarning("Course with identity: {identity} not found.", identity);
+                    throw new EntityNotFoundException("Course not found.");
                 }
                 var signature = await _unitOfWork.GetRepository<Signature>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == id && p.CourseId == course.Id
                     ).ConfigureAwait(false);
                 if (signature == null)
                 {
-                    _logger.LogWarning("Signature with id: {id} and courseId : {courseId} not found", id, course.Id);
-                    throw new EntityNotFoundException("Signature not found");
+                    _logger.LogWarning("Signature with id: {id} and courseId : {courseId} not found.", id, course.Id);
+                    throw new EntityNotFoundException("Signature not found.");
                 }
                 var currentTimeStamp = DateTime.UtcNow;
 
@@ -1358,16 +1358,16 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity: {identity} not found", identity);
-                    throw new EntityNotFoundException("Course not found");
+                    _logger.LogWarning("Course with identity: {identity} not found.", identity);
+                    throw new EntityNotFoundException("Course not found.");
                 }
                 var signature = await _unitOfWork.GetRepository<Signature>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == id && p.CourseId == course.Id
                     ).ConfigureAwait(false);
                 if (signature == null)
                 {
-                    _logger.LogWarning("Signature with id: {id} and courseId : {courseId} not found", id, course.Id);
-                    throw new EntityNotFoundException("Signature not found");
+                    _logger.LogWarning("Signature with id: {id} and courseId : {courseId} not found.", id, course.Id);
+                    throw new EntityNotFoundException("Signature not found.");
                 }
 
                 var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
@@ -1407,8 +1407,8 @@ namespace Lingtren.Infrastructure.Services
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
             if (course == null)
             {
-                _logger.LogWarning("Course with identity: {identity} not found", identity);
-                throw new EntityNotFoundException("Course not found");
+                _logger.LogWarning("Course with identity: {identity} not found.", identity);
+                throw new EntityNotFoundException("Course not found.");
             }
             var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
                        predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
@@ -1460,8 +1460,8 @@ namespace Lingtren.Infrastructure.Services
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
             if (course == null)
             {
-                _logger.LogWarning("Course with identity: {identity} not found", identity);
-                throw new EntityNotFoundException("Course not found");
+                _logger.LogWarning("Course with identity: {identity} not found.", identity);
+                throw new EntityNotFoundException("Course not found.");
             }
             var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
                 predicate: p => p.CourseId == course.Id

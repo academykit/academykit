@@ -194,7 +194,7 @@
             var zoomSetting = await _unitOfWork.GetRepository<ZoomSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
             if (zoomSetting == null)
             {
-                throw new EntityNotFoundException("Zoom setting not found");
+                throw new EntityNotFoundException("Zoom setting not found.");
             }
             var tokenHandler = new JwtSecurityTokenHandler();
             var currentTimeStamp = DateTime.UtcNow;
@@ -229,10 +229,10 @@
             var zoomSetting = await _unitOfWork.GetRepository<ZoomSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
             if (zoomSetting == null)
             {
-                throw new EntityNotFoundException("Zoom setting not found");
+                throw new EntityNotFoundException("Zoom setting not found.");
             }
 
-            // Get the current epoch timestamp
+            // Get the current epoch time-stamp
             int tsNow = (int)(now - new DateTime(1970, 1, 1)).TotalSeconds;
             int tsAccessExp = (int)(now.AddMinutes(accessTokenValidityInMinutes) - new DateTime(1970, 1, 1)).TotalSeconds;
 

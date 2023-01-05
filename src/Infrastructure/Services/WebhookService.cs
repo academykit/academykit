@@ -37,18 +37,18 @@ namespace Lingtren.Infrastructure.Services
             {
                 if (context == null)
                 {
-                    throw new ArgumentException("Context not found");
+                    throw new ArgumentException("Context not found.");
                 }
 
                 if (dto.Payload.Object.Recording_files.Count == default)
                 {
-                    _logger.LogWarning("No recording files");
+                    _logger.LogWarning("No recording files.");
                     return;
                 }
 
                 if (string.IsNullOrEmpty(dto.Payload.Object.Id.ToString()))
                 {
-                    _logger.LogWarning("There is no meeting id");
+                    _logger.LogWarning("There is no meeting id.");
                     return;
                 }
 
@@ -56,13 +56,13 @@ namespace Lingtren.Infrastructure.Services
                             dto.Payload.Object.Id, include: source => source.Include(x => x.Lesson)).ConfigureAwait(false);
                 if (meeting == null)
                 {
-                    _logger.LogWarning("Meeting not found");
+                    _logger.LogWarning("Meeting not found.");
                     return;
                 }
 
                 if (meeting.Lesson == null && meeting.Lesson?.Type != LessonType.LiveClass)
                 {
-                    _logger.LogWarning("Lesson is not live class");
+                    _logger.LogWarning("Lesson is not live class.");
                     return;
                 }
 
@@ -198,7 +198,7 @@ namespace Lingtren.Infrastructure.Services
 
                 if (user == default)
                 {
-                    _logger.LogWarning("User with id : {id} not found", model.Payload.Object.Participant.Customer_Key);
+                    _logger.LogWarning("User with id : {id} not found.", model.Payload.Object.Participant.Customer_Key);
                     return;
                 }
 
@@ -263,7 +263,7 @@ namespace Lingtren.Infrastructure.Services
 
                 if (user == default)
                 {
-                    _logger.LogWarning("User with id : {id} not found", model.Payload.Object.Participant.Customer_Key);
+                    _logger.LogWarning("User with id : {id} not found.", model.Payload.Object.Participant.Customer_Key);
                     return;
                 }
 
@@ -273,7 +273,7 @@ namespace Lingtren.Infrastructure.Services
                             && p.LeftTime == default).ConfigureAwait(false);
                 if (report == default)
                 {
-                    _logger.LogWarning("Meeting Report not found for user with id : {userId} and meeting with id : {id}",
+                    _logger.LogWarning("Meeting Report not found for user with id : {userId} and meeting with id : {id}.",
                                         user.Id, meeting.Id);
                     return;
                 }

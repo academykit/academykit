@@ -32,14 +32,14 @@ namespace Lingtren.Infrastructure.Services
                 var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (!isAdmin)
                 {
-                    throw new ForbiddenException("Unauthorized user");
+                    throw new ForbiddenException("Unauthorized user.");
                 }
                 var slug = CommonHelper.GetEntityTitleSlug<Level>(_unitOfWork, (slug) => q => q.Slug == slug, levelName);
                 var level = await _unitOfWork.GetRepository<Level>().GetFirstOrDefaultAsync(predicate: x => x.Name.ToLower() == levelName.ToLower()
                           && x.IsActive).ConfigureAwait(false);
                 if (level != default)
                 {
-                    throw new ForbiddenException("level already exist");
+                    throw new ForbiddenException("Level already exist.");
                 }
                 var entity = new Level()
                 {
@@ -76,7 +76,7 @@ namespace Lingtren.Infrastructure.Services
                 var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (!isAdmin)
                 {
-                    throw new ForbiddenException("Unauthorized user");
+                    throw new ForbiddenException("Unauthorized user.");
                 }
 
                 var levels = await _unitOfWork.GetRepository<Level>().GetAllAsync(predicate: x => x.IsActive).ConfigureAwait(false);
@@ -84,7 +84,7 @@ namespace Lingtren.Infrastructure.Services
                 var level = levels.FirstOrDefault(x => x.Id.ToString() == identity || x.Slug.Equals(identity));
                 if (level == null)
                 {
-                    throw new EntityNotFoundException("Level not found");
+                    throw new EntityNotFoundException("Level not found.");
                 }
 
                 var levelNameExist = levels.Any(x => x.Id != level.Id && x.Name.ToLower() == levelName.ToLower());
@@ -120,13 +120,13 @@ namespace Lingtren.Infrastructure.Services
                 var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (!isAdmin)
                 {
-                    throw new ForbiddenException("Unauthorized user");
+                    throw new ForbiddenException("Unauthorized user.");
                 }
                 var level = await _unitOfWork.GetRepository<Level>().GetFirstOrDefaultAsync(predicate: x => x.Id.ToString() == identity ||
                 x.Slug.Equals(identity)).ConfigureAwait(false);
                 if (level == default)
                 {
-                    throw new EntityNotFoundException("Tag not found");
+                    throw new EntityNotFoundException("Tag not found.");
                 }
 
                 level.IsActive = false;

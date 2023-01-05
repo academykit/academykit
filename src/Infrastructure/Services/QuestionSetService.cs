@@ -60,14 +60,14 @@
                 if (questionSet == null)
                 {
                     _logger.LogWarning("Question set not found with identity: {identity}.", identity);
-                    throw new EntityNotFoundException("Question set not found");
+                    throw new EntityNotFoundException("Question set not found.");
                 }
                 var isCourseTeacher = questionSet.Lesson.Course.CourseTeachers.Any(x => x.UserId == currentUserId);
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (questionSet.CreatedBy != currentUserId && !isCourseTeacher && !isSuperAdminOrAdmin)
                 {
-                    _logger.LogWarning("User with userId: {userId} is unauthorized user to add questions in question set with id : {id}", currentUserId, questionSet.Id);
-                    throw new EntityNotFoundException("Unauthorized user to add questions in question set");
+                    _logger.LogWarning("User with userId: {userId} is unauthorized user to add questions in question set with id : {id}.", currentUserId, questionSet.Id);
+                    throw new EntityNotFoundException("Unauthorized user to add questions in question set.");
                 }
                 var checkQuestionSetSubmission = await _unitOfWork.GetRepository<QuestionSetSubmission>().ExistsAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id).ConfigureAwait(false);
@@ -140,14 +140,14 @@
             if (questionSet == null)
             {
                 _logger.LogWarning("Question set not found with identity: {identity}.", identity);
-                throw new EntityNotFoundException("Question set not found");
+                throw new EntityNotFoundException("Question set not found.");
             }
             var isCourseTeacher = questionSet.Lesson.Course.CourseTeachers.Any(x => x.UserId == currentUserId);
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
             if (questionSet.CreatedBy != currentUserId && !isCourseTeacher && !isSuperAdminOrAdmin)
             {
-                _logger.LogWarning("User with userId: {userId} is unauthorized user to get questions in question set with id : {id}", currentUserId, questionSet.Id);
-                throw new EntityNotFoundException("Unauthorized user to get questions in question set");
+                _logger.LogWarning("User with userId: {userId} is unauthorized user to get questions in question set with id : {id}.", currentUserId, questionSet.Id);
+                throw new EntityNotFoundException("Unauthorized user to get questions in question set.");
             }
             IList<QuestionResponseModel> questionsLists = new List<QuestionResponseModel>();
             var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
@@ -183,19 +183,19 @@
                     predicate: x => x.Id.ToString() == identity || x.Slug == identity).ConfigureAwait(false);
                 if (questionSet == null)
                 {
-                    _logger.LogWarning("Question set not found with identity: {identity} for user with id : {currentUserId}", identity, currentUserId);
-                    throw new EntityNotFoundException("Question set not found");
+                    _logger.LogWarning("Question set not found with identity: {identity} for user with id : {currentUserId}.", identity, currentUserId);
+                    throw new EntityNotFoundException("Question set not found.");
                 }
 
                 if (currentTimeStamp <= questionSet.StartTime)
                 {
-                    _logger.LogWarning("Question set with identity: {identity} has not started yet for user with id : {currentUserId}", identity, currentUserId);
+                    _logger.LogWarning("Question set with identity: {identity} has not started yet for user with id : {currentUserId}.", identity, currentUserId);
                     throw new ForbiddenException("Question set has not started yet.");
                 }
 
                 if (currentTimeStamp >= questionSet.EndTime)
                 {
-                    _logger.LogWarning("Question set with identity: {identity} has ended for user with id : {currentUserId}", identity, currentUserId);
+                    _logger.LogWarning("Question set with identity: {identity} has ended for user with id : {currentUserId}.", identity, currentUserId);
                     throw new ForbiddenException("Question set has ended.");
                 }
 
@@ -205,9 +205,9 @@
 
                 if (lesson.Course.Status == CourseStatus.Completed)
                 {
-                    _logger.LogWarning("Course with id : {courseId} is in {status} status to start exam for the user with id: {userId}",
+                    _logger.LogWarning("Course with id : {courseId} is in {status} status to start exam for the user with id: {userId}.",
                         lesson.Course.Id, lesson.Course.Status, currentUserId);
-                    throw new ForbiddenException($"Cannot give exam to the course having {lesson.Course.Status} status");
+                    throw new ForbiddenException($"Cannot give exam to the course having {lesson.Course.Status} status.");
                 }
 
                 var isEnrolled = await _unitOfWork.GetRepository<CourseEnrollment>().ExistsAsync(
@@ -220,7 +220,7 @@
                 {
                     _logger.LogWarning("User with id:{currentUserId} has not enrolled in course with id: {courseId} and question set id with id: {questionSetId}."
                                                 , currentUserId, lesson.CourseId, questionSet.Id);
-                    throw new ForbiddenException("User not enrolled in the course");
+                    throw new ForbiddenException("User not enrolled in the course.");
                 }
 
                 var questionSetSubmissionCount = await _unitOfWork.GetRepository<QuestionSetSubmission>().CountAsync(
@@ -229,12 +229,12 @@
                 if (questionSetSubmissionCount >= questionSet.AllowedRetake)
                 {
                     _logger.LogWarning("User with Id {currentUserId} has already taken exam of Question Set with Id {questionSetId}.", currentUserId, questionSet.Id);
-                    throw new ForbiddenException("Exam already taken");
+                    throw new ForbiddenException("Exam already taken.");
                 }
                 if (questionSet.EndTime.HasValue && questionSet.EndTime != default && questionSet.EndTime < currentTimeStamp)
                 {
                     _logger.LogWarning("Question set with id: {questionSetId} has been finished.", questionSet.Id);
-                    throw new ForbiddenException("Exam already finished");
+                    throw new ForbiddenException("Exam already finished.");
                 }
 
                 var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
@@ -300,8 +300,8 @@
                     include: src => src.Include(x => x.Lesson)).ConfigureAwait(false);
                 if (questionSet == null)
                 {
-                    _logger.LogWarning("Question set not found with identity: {identity} for user with id : {currentUserId}", identity, currentUserId);
-                    throw new EntityNotFoundException("Question set not found");
+                    _logger.LogWarning("Question set not found with identity: {identity} for user with id : {currentUserId}.", identity, currentUserId);
+                    throw new EntityNotFoundException("Question set not found.");
                 }
                 var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id,
@@ -311,15 +311,15 @@
                     predicate: p => p.Id == questionSetSubmissionId && p.QuestionSetId == questionSet.Id && p.UserId == currentUserId).ConfigureAwait(false);
                 if (questionSetSubmission == null)
                 {
-                    _logger.LogWarning("Question set submission not found with id: {questionSetSubmissionId} for user with id : {currentUserId}", questionSetSubmissionId, currentUserId);
-                    throw new EntityNotFoundException("Question set submission not found");
+                    _logger.LogWarning("Question set submission not found with id: {questionSetSubmissionId} for user with id : {currentUserId}.", questionSetSubmissionId, currentUserId);
+                    throw new EntityNotFoundException("Question set submission not found.");
                 }
 
                 var questionSetSubmissionAnswerCount = await _unitOfWork.GetRepository<QuestionSetSubmissionAnswer>().CountAsync(
                     predicate: p => p.QuestionSetSubmissionId == questionSetSubmissionId).ConfigureAwait(false);
                 if (questionSetSubmissionAnswerCount > 0)
                 {
-                    _logger.LogWarning("Question set submission with id: {questionSetSubmissionId} already contains answers for user with id: {currentUserId}", questionSetSubmissionId, currentUserId);
+                    _logger.LogWarning("Question set submission with id: {questionSetSubmissionId} already contains answers for user with id: {currentUserId}.", questionSetSubmissionId, currentUserId);
                     throw new ForbiddenException("Exam already submitted.");
                 }
 
@@ -436,8 +436,8 @@
 
                 if (questionSet == null)
                 {
-                    _logger.LogWarning("Question set not found with identity: {identity}", identity);
-                    throw new EntityNotFoundException("Question set not found");
+                    _logger.LogWarning("Question set not found with identity: {identity}.", identity);
+                    throw new EntityNotFoundException("Question set not found.");
                 }
 
                 var course = await ValidateAndGetCourse(currentUserId, questionSet.Lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
@@ -522,8 +522,8 @@
 
                 if (questionSet == null)
                 {
-                    _logger.LogWarning("Question set not found with identity: {identity}", identity);
-                    throw new EntityNotFoundException("Question set not found");
+                    _logger.LogWarning("Question set not found with identity: {identity}.", identity);
+                    throw new EntityNotFoundException("Question set not found.");
                 }
 
                 var course = await ValidateAndGetCourse(currentUserId, questionSet.Lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
@@ -602,8 +602,8 @@
 
                 if (questionSet == null)
                 {
-                    _logger.LogWarning("Question set not found with identity: {identity}", identity);
-                    throw new EntityNotFoundException("Question set not found");
+                    _logger.LogWarning("Question set not found with identity: {identity}.", identity);
+                    throw new EntityNotFoundException("Question set not found.");
                 }
 
                 var course = await ValidateAndGetCourse(currentUserId, questionSet.Lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
@@ -618,15 +618,15 @@
                                                                             include: src => src.Include(x => x.User)).ConfigureAwait(false);
                 if (questionSetResult == null)
                 {
-                    _logger.LogWarning("Question set result not found for user with id: {currentUserId} and question-set-id: {questionSetId}", currentUserId, questionSet.Id);
-                    throw new EntityNotFoundException("Exam result not found");
+                    _logger.LogWarning("Question set result not found for user with id: {currentUserId} and question-set-id: {questionSetId}.", currentUserId, questionSet.Id);
+                    throw new EntityNotFoundException("Exam result not found.");
                 }
                 var questionSetSubmission = await _unitOfWork.GetRepository<QuestionSetSubmission>().GetFirstOrDefaultAsync(predicate: p => p.Id == questionSetSubmissionId
                                                                             && p.QuestionSetId == questionSet.Id).ConfigureAwait(false);
                 if (questionSetSubmission == null)
                 {
-                    _logger.LogWarning("Question set submission not found with id: {questionSetSubmissionId} for user id: {currentUserId}", questionSetSubmission, currentUserId);
-                    throw new EntityNotFoundException("Exam submission not found");
+                    _logger.LogWarning("Question set submission not found with id: {questionSetSubmissionId} for user id: {currentUserId}.", questionSetSubmission, currentUserId);
+                    throw new EntityNotFoundException("Exam submission not found.");
                 }
                 var questionSetSubmissionAnswers = await _unitOfWork.GetRepository<QuestionSetSubmissionAnswer>().GetAllAsync(predicate: p => p.QuestionSetSubmissionId == questionSetSubmissionId,
                                                             include: src => src.Include(x => x.QuestionSetQuestion.QuestionPoolQuestion.Question.QuestionOptions)).ConfigureAwait(false);

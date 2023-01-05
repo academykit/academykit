@@ -33,7 +33,7 @@
         {
             if (model.QuestionPoolQuestionIds.Count == 0)
             {
-                throw new ForbiddenException("At least one question is required");
+                throw new ForbiddenException("At least one question is required.");
             }
             await _questionSetService.AddQuestionsAsync(identity, model, CurrentUser.Id);
             return Ok();
@@ -67,7 +67,7 @@
         public async Task<IActionResult> AnswerSubmission(string identity, Guid questionSetSubmissionId, IList<AnswerSubmissionRequestModel> answers)
         {
             await _questionSetService.AnswerSubmission(identity, questionSetSubmissionId, answers, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new { statusCode = 200, message = "Question set answer submitted successfully" });
+            return Ok(new { statusCode = 200, message = "Question set answer submitted successfully." });
         }
     }
 }

@@ -155,7 +155,7 @@
         public async Task<IActionResult> SubmissionAsync(string lessonIdentity, IList<AssignmentSubmissionRequestModel> model)
         {
             await _assignmentService.AssignmentSubmissionAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Assignment Submitted Successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "Assignment submitted successfully." });
         }
 
         /// <summary>
@@ -179,7 +179,7 @@
         {
             await _reviewValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             await _assignmentService.AssignmentReviewAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Assignment Reviewed Successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "Assignment reviewed successfully." });
         }
 
         /// <summary>
@@ -193,7 +193,7 @@
         {
             await _reviewValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             await _assignmentService.UpdateAssignmentReviewAsync(lessonIdentity, id, model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Assignment Review Update Successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "Assignment review update successfully." });
         }
 
         /// <summary>
@@ -206,7 +206,7 @@
         public async Task<IActionResult> DeleteReviewAsync(string lessonIdentity, Guid id)
         {
             await _assignmentService.DeleteReviewAsync(lessonIdentity, id, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Assignment Review Deleted Successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "Assignment review deleted successfully." });
         }
     }
 }

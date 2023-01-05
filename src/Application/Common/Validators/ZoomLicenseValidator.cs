@@ -7,9 +7,9 @@
     {
         public ZoomLicenseValidator()
         {
-            RuleFor(x => x.HostId).NotNull().NotEmpty().WithMessage("Host id is required").WithMessage("Host id length must be less than or equal to 50 characters");
-            RuleFor(x => x.LicenseEmail).NotNull().NotEmpty().WithMessage("Zoom license email is required").WithMessage("License Email length must be less than or equal to 50 characters");
-            RuleFor(x => x.Capacity).NotNull().NotEmpty().WithMessage("Capacity is required");
+            RuleFor(x => x.HostId).NotNull().NotEmpty().WithMessage("Host id is required.").WithMessage("Host id length must be less than or equal to 50 characters.");
+            RuleFor(x => x.LicenseEmail).NotNull().NotEmpty().WithMessage("Zoom license email is required.").WithMessage("License Email length must be less than or equal to 50 characters.");
+            RuleFor(x => x.Capacity).NotNull().NotEmpty().WithMessage("Capacity is required.");
         }
     }
 }

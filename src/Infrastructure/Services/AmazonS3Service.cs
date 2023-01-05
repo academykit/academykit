@@ -40,8 +40,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to save file in s3 bucket");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to save file in s3 bucket");
+                _logger.LogError(ex, "An error occurred while trying to save file in s3 bucket.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to save file in s3 bucket.");
             }
         }
 

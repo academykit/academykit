@@ -75,7 +75,7 @@
 
             if (user == null)
             {
-                throw new EntityNotFoundException("User not found");
+                throw new EntityNotFoundException("User not found.");
             }
 
             var currentTimeStamp = DateTime.UtcNow;
@@ -101,7 +101,7 @@
         public async Task<IActionResult> Delete(Guid id)
         {
             await _courseTeacherService.DeleteAsync(id.ToString(), CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel { Success = true, Message = "Course Teacher Removed Successfully" });
+            return Ok(new CommonResponseModel { Success = true, Message = "Course teacher removed successfully." });
         }
     }
 }

@@ -157,11 +157,11 @@
 
             if (startDateTime == default)
             {
-                throw new ForbiddenException("Start date is required");
+                throw new ForbiddenException("Start date is required.");
             }
             if (duration < 0 || duration == default)
             {
-                throw new ForbiddenException("Duration is required");
+                throw new ForbiddenException("Duration is required.");
             }
             var zoomLicenses = await _zoomLicenseService.GetActiveLicenses(startDateTime, duration).ConfigureAwait(false);
             return zoomLicenses.ToList();

@@ -109,8 +109,8 @@
                 ).ConfigureAwait(false);
             if (existUsers)
             {
-                _logger.LogWarning("Department with id: {id} contains users so it cannot be delete for user with id: {userId}", entityToDelete.Id, CurrentUserId);
-                throw new ForbiddenException("Department contains users so it cannot be delete.");
+                _logger.LogWarning("Department with id: {id} contains users so it cannot be deleted for user with id: {userId}.", entityToDelete.Id, CurrentUserId);
+                throw new ForbiddenException("Department contains users. So, it cannot be deleted.");
             }
         }
         #endregion Protected Methods
@@ -128,8 +128,8 @@
                 predicate: p => p.Id != entity.Id && p.Name.ToLower() == entity.Name.ToLower()).ConfigureAwait(false);
             if (departmentExist)
             {
-                _logger.LogWarning("Duplicate department name : {name} is found for the department with id : {id}", entity.Name, entity.Id);
-                throw new ServiceException("Duplicate department name is found");
+                _logger.LogWarning("Duplicate department name : {name} is found for the department with id : {id}.", entity.Name, entity.Id);
+                throw new ServiceException("Duplicate department name is found.");
             }
         }
         #endregion Private Methods

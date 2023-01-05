@@ -6,7 +6,7 @@
     {
         public DepartmentValidator()
         {
-            RuleFor(x => x.Name).NotNull().NotEmpty().WithMessage("Department name is required").MaximumLength(250).WithMessage("Name length must be less than or equal to 250 characters");
+            RuleFor(x => x.Name).NotNull().NotEmpty().WithMessage("Department name is required.").MaximumLength(250).WithMessage("Name length must be less than or equal to 250 characters");
         }
     }
 }
