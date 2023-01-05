@@ -366,7 +366,8 @@
 
                 var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
                     predicate: p => p.LessonId == lesson.Id,
-                    include: src => src.Include(x => x.AssignmentAttachments).Include(x => x.AssignmentQuestionOptions)
+                    include: src => src.Include(x => x.AssignmentAttachments).Include(x => x.AssignmentQuestionOptions),
+                    orderBy: x=>x.OrderBy(o=>o.Order)
                     ).ConfigureAwait(false);
 
                 var userAssignments = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(
@@ -468,7 +469,8 @@
 
             var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
                 predicate: p => p.LessonId == lesson.Id,
-                include: src => src.Include(x => x.AssignmentAttachments).Include(x => x.AssignmentQuestionOptions)
+                include: src => src.Include(x => x.AssignmentAttachments).Include(x => x.AssignmentQuestionOptions),
+                orderBy : x=>x.OrderBy(a=>a.Order)
                 ).ConfigureAwait(false);
 
             var userAssignments = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(
