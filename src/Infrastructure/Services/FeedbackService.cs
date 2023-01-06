@@ -98,6 +98,13 @@
         {
             await ValidateAndGetLessonForFeedback(entity).ConfigureAwait(false);
 
+            var order = await _unitOfWork.GetRepository<Feedback>().MaxAsync(
+              predicate: p => p.LessonId == entity.LessonId && p.IsActive,
+              selector: x => (int?)x.Order
+              ).ConfigureAwait(false);
+
+            entity.Order = order == null ? 1 : order.Value + 1;
+
             if (entity.FeedbackQuestionOptions.Count > 0)
             {
                 await _unitOfWork.GetRepository<FeedbackQuestionOption>().InsertAsync(entity.FeedbackQuestionOptions).ConfigureAwait(false);
@@ -466,7 +473,8 @@
 
             var feedbacks = await _unitOfWork.GetRepository<Feedback>().GetAllAsync(
                 predicate: p => p.LessonId == lesson.Id,
-                include: src => src.Include(x => x.FeedbackQuestionOptions)
+                include: src => src.Include(x => x.FeedbackQuestionOptions),
+                orderBy: o=>o.OrderBy(x=>x.Order)
                 ).ConfigureAwait(false);
 
             var userFeedbacks = await _unitOfWork.GetRepository<FeedbackSubmission>().GetAllAsync(
@@ -506,7 +514,7 @@
             {
                 var selectedAnsIds = !string.IsNullOrWhiteSpace(userFeedback?.SelectedOption) ?
                                         userFeedback?.SelectedOption.Split(",").Select(Guid.Parse).ToList() : new List<Guid>();
-                item.FeedbackQuestionOptions?.ToList().ForEach(x =>
+                item.FeedbackQuestionOptions?.OrderBy(x=>x.Order).ToList().ForEach(x =>
                                 data.FeedbackQuestionOptions.Add(new FeedbackQuestionOptionResponseModel()
                                 {
                                     Id = x.Id,
