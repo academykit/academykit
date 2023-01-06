@@ -103,7 +103,9 @@
         public async Task<GroupResponseModel> Get(string identity)
         {
             Group model = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return new GroupResponseModel(model, memberCount: model.GroupMembers.Count);
+            var memberCount = await _unitOfWork.GetRepository<GroupMember>().CountAsync(
+                         predicate: x => x.GroupId == model.Id && x.IsActive).ConfigureAwait(false);
+            return new GroupResponseModel(model, memberCount: memberCount);
         }
 
         /// <summary>
