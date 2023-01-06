@@ -198,33 +198,8 @@
         [HttpGet("{identity}/notMembers")]
         public async Task<SearchResult<UserModel>> SearchNotGroupMembers(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
         {
-            var group = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            if (group == null)
-            {
-                throw new EntityNotFoundException("Group not found.");
-            }
-            var predicate = PredicateBuilder.New<User>(true);
-            if (!string.IsNullOrWhiteSpace(searchCriteria.Search))
-            {
-                var search = searchCriteria.Search.ToLower().Trim();
-                predicate = predicate.And(x =>
-                    ((x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim() + " " + x.LastName.Trim()).Trim().Contains(search)
-                 || x.Email.ToLower().Trim().Contains(search)
-                 || x.MobileNumber.ToLower().Trim().Contains(search));
-            }
-            predicate = predicate.And(p => !p.Groups.Select(x => x.Name).Contains(identity) && !(p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin) && p.IsActive);
-            var users = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate).ConfigureAwait(false);
-            var result = users.ToIPagedList(searchCriteria.Page, searchCriteria.Size);
-            var response = new SearchResult<UserModel>
-            {
-                Items = new List<UserModel>(),
-                CurrentPage = result.CurrentPage,
-                PageSize = result.PageSize,
-                TotalCount = result.TotalCount,
-                TotalPage = result.TotalPage
-            };
-            result.Items.ForEach(x => response.Items.Add(new UserModel(x)));
-            return response;
+            searchCriteria.CurrentUserId = CurrentUser.Id;
+            return await _groupService.GetNonGroupMembers(identity, searchCriteria).ConfigureAwait(false);
         }
 
         /// <summary>

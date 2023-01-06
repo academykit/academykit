@@ -489,5 +489,46 @@
         }
 
         #endregion Private Methods
+
+        /// <summary>
+        /// Handle to get users who is not present in members
+        /// </summary>
+        /// <param name="identity">the group id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the search result of <see cref="UserModel"/></returns>
+        public async Task<SearchResult<UserModel>> GetNonGroupMembers(string identity, BaseSearchCriteria criteria)
+        {
+            var group = await GetByIdOrSlugAsync(identity, criteria.CurrentUserId).ConfigureAwait(false);
+            if (group == null)
+            {
+                throw new EntityNotFoundException("Group not found.");
+            }
+
+            var predicate = PredicateBuilder.New<User>(true);
+            if (!string.IsNullOrWhiteSpace(criteria.Search))
+            {
+                var search = criteria.Search.ToLower().Trim();
+                predicate = predicate.And(x =>
+                    ((x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim() + " " + x.LastName.Trim()).Trim().Contains(search)
+                 || x.Email.ToLower().Trim().Contains(search)
+                 || x.MobileNumber.ToLower().Trim().Contains(search));
+            }
+
+            predicate = predicate.And(p => !p.GroupMembers.Any(x => x.GroupId == group.Id && x.UserId == p.Id));
+            predicate = predicate.And(p => p.IsActive && (p.Role != UserRole.SuperAdmin && p.Role != UserRole.Admin));
+
+            var users = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate).ConfigureAwait(false);
+            var result = users.ToIPagedList(criteria.Page, criteria.Size);
+            var response = new SearchResult<UserModel>
+            {
+                Items = new List<UserModel>(),
+                CurrentPage = result.CurrentPage,
+                PageSize = result.PageSize,
+                TotalCount = result.TotalCount,
+                TotalPage = result.TotalPage
+            };
+            result.Items.ForEach(x => response.Items.Add(new UserModel(x)));
+            return response;
+        }
     }
 }
