@@ -162,7 +162,8 @@
                     {
                         topic = meetingName,
                         duration,
-                        start_time = startDate,
+                        start_time = startDate.ToString("s") + "Z",
+                        type = 2,
                         timezone = "Asia/Kathmandu",
                     });
 
