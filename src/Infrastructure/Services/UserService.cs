@@ -564,6 +564,10 @@
             {
                 predicate = predicate.And(p => p.Role == criteria.Role.Value);
             }
+            if (criteria.DepartmentId.HasValue)
+            {
+                predicate = predicate.And(p => p.DepartmentId == criteria.DepartmentId.Value);
+            }
             if (criteria.IsActive != null)
             {
                 predicate.And(p => p.IsActive == criteria.IsActive);
