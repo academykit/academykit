@@ -147,7 +147,7 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> DeleteAsync(string identity)
         {
             await _courseService.DeleteCourseAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Course removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "Training removed successfully." });
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> UpdateCourse(string identity)
         {
             await _courseService.UpdateCourseStatusAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Course updated successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "Training updated successfully." });
         }
 
         /// <summary>
@@ -173,11 +173,11 @@ namespace Lingtren.Api.Controllers
             var statusExists = Enum.IsDefined(typeof(CourseStatus), status);
             if (!statusExists)
             {
-                _logger.LogWarning("Invalid course status : {status} requested for status change by the user with id : {userId}", status, CurrentUser.Id);
-                throw new ForbiddenException("Invalid course status request.");
+                _logger.LogWarning("Invalid training status : {status} requested for status change by the user with id : {userId}", status, CurrentUser.Id);
+                throw new ForbiddenException("Invalid training status change request.");
             }
             await _courseService.ChangeStatusAsync(identity, status, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Course status changed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "Training status changed successfully." });
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> Enroll(string identity)
         {
             await _courseService.EnrollmentAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "User successfully enrolled in the course." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "User successfully enrolled in the training." });
         }
 
         /// <summary>

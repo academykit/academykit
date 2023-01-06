@@ -6,7 +6,7 @@
     {
         public CourseTeacherValidator()
         {
-            RuleFor(x => x.CourseIdentity).NotNull().NotEmpty().WithMessage("Course identity is required.");
+            RuleFor(x => x.CourseIdentity).NotNull().NotEmpty().WithMessage("Training identity is required.");
             RuleFor(x => x.Email).NotNull().NotEmpty().WithMessage("Email is required.");
         }
     }

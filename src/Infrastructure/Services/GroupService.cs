@@ -130,8 +130,8 @@
 
             if (courseCount > 0)
             {
-                _logger.LogWarning("Group with id: {id} cannot be removed since some courses is associated with it.", entity.Id);
-                throw new ForbiddenException("Some courses is associated with this group. So, group cannot be removed.");
+                _logger.LogWarning("Group with id: {id} cannot be removed since some trainings is associated with it.", entity.Id);
+                throw new ForbiddenException("Some trainings are associated with this group. So, group cannot be removed.");
             }
 
             var groupFiles = await _unitOfWork.GetRepository<GroupFile>().GetAllAsync(predicate: p => p.GroupId == entity.Id).ConfigureAwait(false);

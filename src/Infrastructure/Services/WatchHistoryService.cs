@@ -90,14 +90,14 @@
             var course = await ValidateAndGetCourse(currentUserId, model.CourseIdentity, validateForModify: false).ConfigureAwait(false);
             if (course == null)
             {
-                _logger.LogWarning("Course with identity: {identity} not found for user with :{id}.", model.CourseIdentity, currentUserId);
-                throw new EntityNotFoundException("Course not found.");
+                _logger.LogWarning("Training with identity: {identity} not found for user with :{id}.", model.CourseIdentity, currentUserId);
+                throw new EntityNotFoundException("Training not found.");
             }
             var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                 predicate: p => p.CourseId == course.Id && (p.Id.ToString() == model.LessonIdentity || p.Slug == model.LessonIdentity)).ConfigureAwait(false);
             if (lesson == null)
             {
-                _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and course with id : {courseId}.", model.LessonIdentity, currentUserId, course.Id);
+                _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and training with id : {courseId}.", model.LessonIdentity, currentUserId, course.Id);
                 throw new EntityNotFoundException("Lesson not found.");
             }
 
@@ -188,14 +188,14 @@
                 var course = await ValidateAndGetCourse(currentUserId, model.CourseIdentity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity: {identity} not found for user with :{id}.", model.CourseIdentity, currentUserId);
-                    throw new EntityNotFoundException("Course not found.");
+                    _logger.LogWarning("Training with identity: {identity} not found for user with :{id}.", model.CourseIdentity, currentUserId);
+                    throw new EntityNotFoundException("Training not found.");
                 }
                 var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                     predicate: p => p.CourseId == course.Id && (p.Id.ToString() == model.LessonIdentity || p.Slug == model.LessonIdentity)).ConfigureAwait(false);
                 if (lesson == null)
                 {
-                    _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and course with id : {courseId}.", model.LessonIdentity, currentUserId, course.Id);
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and training with id : {courseId}.", model.LessonIdentity, currentUserId, course.Id);
                     throw new EntityNotFoundException("Lesson not found.");
                 }
                 var currentTimeStamp = DateTime.UtcNow;
@@ -259,8 +259,8 @@
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex, "An error occurred while trying to calculate course completed percentage.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to calculate course completed percentage.");
+                this._logger.LogError(ex, "An error occurred while trying to calculate training completed percentage.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to calculate training completed percentage.");
             }
         }
 

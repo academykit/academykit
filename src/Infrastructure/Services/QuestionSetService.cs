@@ -205,9 +205,9 @@
 
                 if (lesson.Course.Status == CourseStatus.Completed)
                 {
-                    _logger.LogWarning("Course with id : {courseId} is in {status} status to start exam for the user with id: {userId}.",
+                    _logger.LogWarning("training with id : {courseId} is in {status} status to start exam for the user with id: {userId}.",
                         lesson.Course.Id, lesson.Course.Status, currentUserId);
-                    throw new ForbiddenException($"Cannot give exam to the course having {lesson.Course.Status} status.");
+                    throw new ForbiddenException($"Cannot give exam to the training having {lesson.Course.Status} status.");
                 }
 
                 var isEnrolled = await _unitOfWork.GetRepository<CourseEnrollment>().ExistsAsync(
@@ -218,9 +218,9 @@
 
                 if (!isEnrolled && !isSuperAdminOrAdmin)
                 {
-                    _logger.LogWarning("User with id:{currentUserId} has not enrolled in course with id: {courseId} and question set id with id: {questionSetId}."
+                    _logger.LogWarning("User with id:{currentUserId} has not enrolled in training with id: {courseId} and question set id with id: {questionSetId}."
                                                 , currentUserId, lesson.CourseId, questionSet.Id);
-                    throw new ForbiddenException("User not enrolled in the course.");
+                    throw new ForbiddenException("User is not enrolled in this training.");
                 }
 
                 var questionSetSubmissionCount = await _unitOfWork.GetRepository<QuestionSetSubmission>().CountAsync(

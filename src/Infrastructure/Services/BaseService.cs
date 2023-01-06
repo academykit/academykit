@@ -183,9 +183,9 @@
                 {
                     return course;
                 }
-                throw new ForbiddenException("You are not allowed to access this course.");
+                throw new ForbiddenException("You are not allowed to access this training.");
             }
-            throw new ForbiddenException("You are not allowed to modify this course.");
+            throw new ForbiddenException("You are not allowed to modify this training.");
         }
 
         protected async Task<bool> ValidateUserCanAccessGroupCourse(Course course, Guid currentUserId)

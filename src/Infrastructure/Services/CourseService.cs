@@ -160,8 +160,8 @@ namespace Lingtren.Infrastructure.Services
         {
             if (course.Status != CourseStatus.Draft)
             {
-                _logger.LogWarning("Course with id : {courseId} cannot be delete having status : {status}.", course.Id, course.Status.ToString());
-                throw new ForbiddenException("Only draft course can be deleted.");
+                _logger.LogWarning("Training with id : {courseId} cannot be deleted having status : {status}.", course.Id, course.Status.ToString());
+                throw new ForbiddenException("Only training with draft status can be deleted.");
             }
             await ValidateAndGetCourse(currentUserId, courseIdentity: course.Id.ToString(), validateForModify: true).ConfigureAwait(false);
         }
@@ -186,14 +186,14 @@ namespace Lingtren.Infrastructure.Services
             }
             if (!entityToReturn.IsUpdate && entityToReturn.Status != CourseStatus.Published)
             {
-                throw new EntityNotFoundException("The course could not be found.");
+                throw new EntityNotFoundException("The training could not be found.");
             }
             if (entityToReturn.GroupId.HasValue)
             {
                 var hasAccess = await ValidateUserCanAccessGroupCourse(entityToReturn, CurrentUserId.Value).ConfigureAwait(false);
                 if (!hasAccess)
                 {
-                    throw new ForbiddenException("User not allowed to access this course.");
+                    throw new ForbiddenException("User not allowed to access this training.");
                 }
             }
         }
@@ -217,7 +217,7 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Handle to update course
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
+        /// <param name="identity">the training id or slug</param>
         /// <param name="model">the instance of <see cref="CourseRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns></returns>
@@ -269,8 +269,8 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Handle to change course status
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
-        /// <param name="status">the course status</param>
+        /// <param name="identity">the training id or slug</param>
+        /// <param name="status">the training status</param>
         /// <param name="currentUserId">the current id</param>
         /// <returns></returns>
         public async Task ChangeStatusAsync(string identity, CourseStatus status, Guid currentUserId)
@@ -278,8 +278,8 @@ namespace Lingtren.Infrastructure.Services
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
             if (course.Status == status)
             {
-                _logger.LogWarning("Course with id : {courseId} cannot be changed to same status by User with id {userId}.", course.Id, currentUserId);
-                throw new ForbiddenException("Course cannot be changed to same status.");
+                _logger.LogWarning("Training with id : {courseId} cannot be changed to same status by User with id {userId}.", course.Id, currentUserId);
+                throw new ForbiddenException("Training cannot be changed to same status.");
             }
 
             if ((course.Status == CourseStatus.Draft && (status == CourseStatus.Published || status == CourseStatus.Rejected))
@@ -287,16 +287,16 @@ namespace Lingtren.Infrastructure.Services
                 || (course.Status == CourseStatus.Rejected && status == CourseStatus.Published)
                 || (course.Status != CourseStatus.Published && status == CourseStatus.Completed))
             {
-                _logger.LogWarning("Course with id: {id} cannot be changed from {status} status to {changeStatus} status.", course.Id, course.Status, status);
-                throw new ForbiddenException($"Course with status: {course.Status} cannot be changed to {status} status.");
+                _logger.LogWarning("Training with id: {id} cannot be changed from {status} status to {changeStatus} status.", course.Id, course.Status, status);
+                throw new ForbiddenException($"Training with status: {course.Status} cannot be changed to {status} status.");
             }
 
             var isSuperAdminOrAdminAccess = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
             if (!isSuperAdminOrAdminAccess && (status == CourseStatus.Published || status == CourseStatus.Rejected))
             {
-                _logger.LogWarning("User with id: {userId} is unauthorized user to change course with id: {id} status from {status} to {changeStatus}.",
+                _logger.LogWarning("User with id: {userId} is unauthorized user to change training with id: {id} status from {status} to {changeStatus}.",
                     currentUserId, course.Id, course.Status, status);
-                throw new ForbiddenException($"Unauthorized user to change course status to {status}.");
+                throw new ForbiddenException($"Unauthorized user to change training status to {status}.");
             }
 
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
@@ -338,7 +338,7 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Handle to update course status
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
+        /// <param name="identity">the training id or slug</param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns></returns>
         public async Task UpdateCourseStatusAsync(string identity, Guid currentUserId)
@@ -346,8 +346,8 @@ namespace Lingtren.Infrastructure.Services
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
             if (course == null)
             {
-                _logger.LogWarning("Course with identity: {identity} not found for user with id: {userId}.", identity, currentUserId);
-                throw new ForbiddenException("Course not found.");
+                _logger.LogWarning("Training with identity: {identity} not found for user with id: {userId}.", identity, currentUserId);
+                throw new ForbiddenException("Training not found.");
             }
             course.IsUpdate = true;
             course.Status = CourseStatus.Draft;
@@ -380,8 +380,8 @@ namespace Lingtren.Infrastructure.Services
 
                 if (course.Status == CourseStatus.Completed)
                 {
-                    _logger.LogWarning("Course with id :{id} is in {status} status for enrollment.", course.Id, course.Status);
-                    throw new ForbiddenException($"Cannot enrolled in the course having {course.Status} status.");
+                    _logger.LogWarning("Training with id :{id} is in {status} status for enrollment.", course.Id, course.Status);
+                    throw new ForbiddenException($"Cannot enrolled in the training having {course.Status} status.");
                 }
 
                 var existCourseEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().ExistsAsync(
@@ -391,8 +391,8 @@ namespace Lingtren.Infrastructure.Services
 
                 if (existCourseEnrollment)
                 {
-                    _logger.LogWarning("User with userId: {userId} is already enrolled in the course with id: {courseId}.", userId, course.Id);
-                    throw new ForbiddenException("You are already enrolled in this course.");
+                    _logger.LogWarning("User with userId: {userId} is already enrolled in the training with id: {courseId}.", userId, course.Id);
+                    throw new ForbiddenException("You are already enrolled in this training.");
                 }
 
                 var currentTimeStamp = DateTime.UtcNow;
@@ -417,7 +417,7 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Handle to delete course
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
+        /// <param name="identity">the training id or slug</param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the task complete</returns>
         public async Task DeleteCourseAsync(string identity, Guid currentUserId)
@@ -427,18 +427,18 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity : {identity} not found for user with id : {currentUserId}.", identity, currentUserId);
-                    throw new EntityNotFoundException("Course not found.");
+                    _logger.LogWarning("Training with identity : {identity} not found for user with id : {currentUserId}.", identity, currentUserId);
+                    throw new EntityNotFoundException("Training not found.");
                 }
                 if (course.Status != CourseStatus.Draft)
                 {
-                    _logger.LogWarning("Course with identity : {identity} is in {status} status. So, it cannot be removed.", identity, course.Status);
-                    throw new EntityNotFoundException("Course with draft status is only allowed to removed.");
+                    _logger.LogWarning("Training with identity : {identity} is in {status} status. So, it cannot be removed.", identity, course.Status);
+                    throw new EntityNotFoundException("Training with draft status is only allowed to removed.");
                 }
                 if (course.CourseEnrollments.Count > 0)
                 {
-                    _logger.LogWarning("Course with identity : {identity} contains enrollments.", identity);
-                    throw new EntityNotFoundException("Course contains member enrollments. So, it cannot be removed.");
+                    _logger.LogWarning("Training with identity : {identity} contains enrollments.", identity);
+                    throw new EntityNotFoundException("Training contains member enrollments. So, it cannot be removed.");
                 }
 
                 var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
@@ -456,7 +456,7 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Handle to get user enrollment status in course
         /// </summary>
-        /// <param name="id">the course id</param>
+        /// <param name="id">the training id</param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
         public async Task<CourseEnrollmentStatus> GetUserCourseEnrollmentStatus(Course course, Guid currentUserId, bool fetchMembers = false)
@@ -504,7 +504,7 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Handle to get course detail
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
+        /// <param name="identity">the training id or slug</param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the instance of <see cref="CourseResponseModel"/></returns>
         public async Task<CourseResponseModel> GetDetailAsync(string identity, Guid currentUserId)
@@ -514,8 +514,8 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: false).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity : {identity} not found for user with id : {currentUserId}.", identity, currentUserId);
-                    throw new EntityNotFoundException("Course not found.");
+                    _logger.LogWarning("Training with identity : {identity} not found for user with id : {currentUserId}.", identity, currentUserId);
+                    throw new EntityNotFoundException("Training not found.");
                 }
                 course.Sections = new List<Section>();
                 course.Sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
@@ -596,8 +596,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to fetch course detail.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch course detail.");
+                _logger.LogError(ex, "An error occurred while trying to fetch training detail.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch training detail.");
             }
         }
 
@@ -645,7 +645,7 @@ namespace Lingtren.Infrastructure.Services
         /// Course group search predicate
         /// </summary>
         /// <param name="groupId">the group id</param>
-        /// <param name="predicate">the course predicate expression</param>
+        /// <param name="predicate">the training predicate expression</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns></returns>
         private static Expression<Func<Course, bool>> GroupCourseSearchPredicate(Guid groupId, Expression<Func<Course, bool>> predicate, BaseSearchCriteria criteria)
@@ -669,7 +669,7 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Handle to get course statistics 
         /// </summary>
-        /// <param name="identity"> the course id or slug </param>
+        /// <param name="identity"> the training id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the instance of <see cref="CourseStatisticsResponseModel" /> . </returns>
         public async Task<CourseStatisticsResponseModel> GetCourseStatisticsAsync(string identity, Guid currentUserId)
@@ -693,15 +693,15 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex) 
             {
-                 _logger.LogError(ex, "An error occurred while trying to fetch course  statistics.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch course  statistics.");
+                 _logger.LogError(ex, "An error occurred while trying to fetch training statistics.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch training statistics.");
             }
         }
 
         /// <summary>
         /// Handle to fetch course lesson statistics
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
+        /// <param name="identity">the training id or slug</param>
         /// <param name="currentUserId">the current user id or slug</param>
         /// <returns></returns>
         public async Task<IList<LessonStatisticsResponseModel>> LessonStatistics(string identity, Guid currentUserId)
@@ -735,15 +735,15 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to fetch course lesson statistics.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch course lesson statistics.");
+                _logger.LogError(ex, "An error occurred while trying to fetch training lesson statistics.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch training lesson statistics.");
             }
         }
 
         /// <summary>
         /// Handle to get lesson students report
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
+        /// <param name="identity">the training id or slug</param>
         /// <param name="lessonIdentity">the lesson id or slug</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the paginated data</returns>
@@ -788,7 +788,7 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Handle to fetch student course statistics report
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
+        /// <param name="identity">the training id or slug</param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the search result</returns>
         public async Task<SearchResult<StudentCourseStatisticsResponseModel>> StudentStatistics(string identity, Guid currentUserId, BaseSearchCriteria criteria)
@@ -836,15 +836,15 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to fetch course student statistics.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch course student statistics.");
+                _logger.LogError(ex, "An error occurred while trying to fetch training student statistics.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch training student statistics.");
             }
         }
 
         /// <summary>
         /// Handle to get student lessons detail
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
+        /// <param name="identity">the training id or slug</param>
         /// <param name="userId">the student id</param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns>the list of <see cref="LessonStudentResponseModel"/></returns>
@@ -1003,7 +1003,7 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Handle to search certificate
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
+        /// <param name="identity">the training id or slug</param>
         /// <param name="criteria">the instance of <see cref="CertificateBaseSearchCriteria"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the paginated result</returns>
@@ -1072,7 +1072,7 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Handle to issue the certificate
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
+        /// <param name="identity">the training id or slug</param>
         /// <param name="model">the instance of <see cref="CertificateIssueRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the list of <see cref="CourseCertificateIssuedResponseModel"/></returns>
@@ -1087,7 +1087,7 @@ namespace Lingtren.Infrastructure.Services
                     ).ConfigureAwait(false);
                 if (course.Signatures.Count == 0)
                 {
-                    _logger.LogWarning("At least one trainer signature detail is required for course with id :{courseId}.", course.Id);
+                    _logger.LogWarning("At least one trainer signature detail is required for training with id :{courseId}.", course.Id);
                     throw new EntityNotFoundException("At least one trainer signature detail is required.");
                 }
                 course.CourseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
@@ -1096,7 +1096,7 @@ namespace Lingtren.Infrastructure.Services
 
                 if (course.CourseCertificate == null)
                 {
-                    _logger.LogWarning("Certificate detail information not found for course with id :{courseId}.", course.Id);
+                    _logger.LogWarning("Certificate detail information not found for training with id :{courseId}.", course.Id);
                     throw new EntityNotFoundException("Certificate detail information not found.");
                 }
 
@@ -1138,8 +1138,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to issued the course certificate.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to issued the course certificate.");
+                _logger.LogError(ex, "An error occurred while trying to issued the training certificate.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to issued the training certificate.");
             }
         }
 
@@ -1188,7 +1188,7 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Handle to get signature
         /// </summary>
-        /// <param name="identity"> the course id or slug </param>
+        /// <param name="identity"> the training id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the list of <see cref="SignatureResponseModel" /> . </returns>
         public async Task<IList<SignatureResponseModel>> GetAllSignatureAsync(string identity, Guid currentUserId)
@@ -1198,8 +1198,8 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity: {identity} not found.", identity);
-                    throw new EntityNotFoundException("Course not found.");
+                    _logger.LogWarning("Training with identity: {identity} not found.", identity);
+                    throw new EntityNotFoundException("Training not found.");
                 }
 
                 var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(predicate: x => x.CourseId == course.Id).ConfigureAwait(false);
@@ -1209,15 +1209,15 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying fetch the course signature.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying fetch the course signature.");
+                _logger.LogError(ex, "An error occurred while trying fetch the training signature.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying fetch the training signature.");
             }
         }
 
         /// <summary>
         /// Handle to upload signature
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
+        /// <param name="identity">the training id or slug</param>
         /// <param name="model">the instance of <see cref="SignatureRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the instance of <see cref="SignatureResponseModel"/></returns>
@@ -1228,14 +1228,14 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity: {identity} not found.", identity);
-                    throw new EntityNotFoundException("Course not found.");
+                    _logger.LogWarning("Training with identity: {identity} not found.", identity);
+                    throw new EntityNotFoundException("Training not found.");
                 }
                 var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
                     predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
                 if (signatures.Count >= 3)
                 {
-                    _logger.LogWarning("Course with id: {id} cannot have more than 3 signatures for user with id: {userId}.", course.Id, currentUserId);
+                    _logger.LogWarning("training with id: {id} cannot have more than 3 signatures for user with id: {userId}.", course.Id, currentUserId);
                     throw new ForbiddenException("At most 3 signatures are only allowed.");
                 }
                 var currentTimeStamp = DateTime.UtcNow;
@@ -1274,15 +1274,15 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to upload signature in the course.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to upload signature in the course.");
+                _logger.LogError(ex, "An error occurred while trying to upload signature in the training.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to upload signature in the training.");
             }
         }
 
         /// <summary>
         /// Handle to update signature
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
+        /// <param name="identity">the training id or slug</param>
         /// <param name="id">the signature id</param>
         /// <param name="model">the instance of <see cref="SignatureRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
@@ -1294,15 +1294,15 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity: {identity} not found.", identity);
-                    throw new EntityNotFoundException("Course not found.");
+                    _logger.LogWarning("Training with identity: {identity} not found.", identity);
+                    throw new EntityNotFoundException("Training not found.");
                 }
                 var signature = await _unitOfWork.GetRepository<Signature>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == id && p.CourseId == course.Id
                     ).ConfigureAwait(false);
                 if (signature == null)
                 {
-                    _logger.LogWarning("Signature with id: {id} and courseId : {courseId} not found.", id, course.Id);
+                    _logger.LogWarning("Signature with id: {id} and trainingId : {courseId} not found.", id, course.Id);
                     throw new EntityNotFoundException("Signature not found.");
                 }
                 var currentTimeStamp = DateTime.UtcNow;
@@ -1339,15 +1339,15 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to update signature in the course.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update signature in the course.");
+                _logger.LogError(ex, "An error occurred while trying to update signature in the training.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update signature in the training.");
             }
         }
 
         /// <summary>
         /// Handle to delete signature
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
+        /// <param name="identity">the training id or slug</param>
         /// <param name="id">the signature id</param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the task complete</returns>
@@ -1358,15 +1358,15 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity: {identity} not found.", identity);
-                    throw new EntityNotFoundException("Course not found.");
+                    _logger.LogWarning("Training with identity: {identity} not found.", identity);
+                    throw new EntityNotFoundException("Training not found.");
                 }
                 var signature = await _unitOfWork.GetRepository<Signature>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == id && p.CourseId == course.Id
                     ).ConfigureAwait(false);
                 if (signature == null)
                 {
-                    _logger.LogWarning("Signature with id: {id} and courseId : {courseId} not found.", id, course.Id);
+                    _logger.LogWarning("Signature with id: {id} and trainingId : {courseId} not found.", id, course.Id);
                     throw new EntityNotFoundException("Signature not found.");
                 }
 
@@ -1390,15 +1390,15 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to update signature in the course.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update signature in the course.");
+                _logger.LogError(ex, "An error occurred while trying to update signature in the training.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update signature in the training.");
             }
         }
 
         /// <summary>
         /// Handle to insert course certificate detail
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
+        /// <param name="identity">the training id or slug</param>
         /// <param name="model">the instance of <see cref="CourseCertificateRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns></returns>
@@ -1407,8 +1407,8 @@ namespace Lingtren.Infrastructure.Services
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
             if (course == null)
             {
-                _logger.LogWarning("Course with identity: {identity} not found.", identity);
-                throw new EntityNotFoundException("Course not found.");
+                _logger.LogWarning("Training with identity: {identity} not found.", identity);
+                throw new EntityNotFoundException("Training not found.");
             }
             var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
                        predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
@@ -1452,7 +1452,7 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Handle to get certificate detail information
         /// </summary>
-        /// <param name="identity">the course id or slug </param>
+        /// <param name="identity">the training id or slug </param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns></returns>
         public async Task<CourseCertificateResponseModel?> GetCertificateDetailAsync(string identity, Guid currentUserId)
@@ -1460,8 +1460,8 @@ namespace Lingtren.Infrastructure.Services
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
             if (course == null)
             {
-                _logger.LogWarning("Course with identity: {identity} not found.", identity);
-                throw new EntityNotFoundException("Course not found.");
+                _logger.LogWarning("Training with identity: {identity} not found.", identity);
+                throw new EntityNotFoundException("Training not found.");
             }
             var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
                 predicate: p => p.CourseId == course.Id

@@ -261,15 +261,15 @@
                 var course = await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
                 if (course.Status == CourseStatus.Completed)
                 {
-                    _logger.LogWarning("Course with id : {courseId} is in {status} status to give assignment for the user with id: {userId}.",
+                    _logger.LogWarning("Training with id : {courseId} is in {status} status to give assignment for the user with id: {userId}.",
                         course.Id, course.Status, currentUserId);
-                    throw new ForbiddenException($"Cannot submit assignment to the course having {course.Status} status.");
+                    throw new ForbiddenException($"Cannot submit assignment of the training having {course.Status} status.");
                 }
                 if (course.CourseTeachers.Any(x => x.UserId == currentUserId))
                 {
-                    _logger.LogWarning("User with id: {userId} is a teacher of the course with id: {courseId} and lesson with id: {lessonId} to submit the assignment.",
+                    _logger.LogWarning("User with id: {userId} is a teacher of the training with id: {courseId} and lesson with id: {lessonId} to submit the assignment.",
                         currentUserId, course.Id, lesson.Id);
-                    throw new ForbiddenException("Course teacher cannot submit the assignment.");
+                    throw new ForbiddenException("Training teacher cannot submit the assignment.");
                 }
 
                 var assignmentReviewExist = await _unitOfWork.GetRepository<AssignmentReview>().ExistsAsync(

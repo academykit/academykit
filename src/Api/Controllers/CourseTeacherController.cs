@@ -101,7 +101,7 @@
         public async Task<IActionResult> Delete(Guid id)
         {
             await _courseTeacherService.DeleteAsync(id.ToString(), CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel { Success = true, Message = "Course teacher removed successfully." });
+            return Ok(new CommonResponseModel { Success = true, Message = "Training trainer removed successfully." });
         }
     }
 }

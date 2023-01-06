@@ -290,15 +290,15 @@
                 var course = await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
                 if (course.Status == CourseStatus.Completed)
                 {
-                    _logger.LogWarning("Course with id : {courseId} is in {status} status to give Feedback for the user with id: {userId}.",
+                    _logger.LogWarning("training with id : {courseId} is in {status} status to give Feedback for the user with id: {userId}.",
                         course.Id, course.Status, currentUserId);
-                    throw new ForbiddenException($"Cannot submit Feedback to the course having {course.Status} status.");
+                    throw new ForbiddenException($"Cannot submit feedback of the training having {course.Status} status.");
                 }
                 if (course.CourseTeachers.Any(x => x.UserId == currentUserId))
                 {
-                    _logger.LogWarning("User with id: {userId} is a teacher of the course with id: {courseId} and lesson with id: {lessonId} to submit the feedback.",
+                    _logger.LogWarning("User with id: {userId} is a teacher of the training with id: {courseId} and lesson with id: {lessonId} to submit the feedback.",
                         currentUserId, course.Id, lesson.Id);
-                    throw new ForbiddenException("Course teacher cannot submit the feedback.");
+                    throw new ForbiddenException("Training trainer cannot submit the feedback.");
                 }
 
                 var feedbacks = await _unitOfWork.GetRepository<Feedback>().GetAllAsync(

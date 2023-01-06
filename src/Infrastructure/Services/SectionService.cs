@@ -118,13 +118,13 @@ namespace Lingtren.Infrastructure.Services
                 if (section.Status == CourseStatus.Published)
                 {
                     _logger.LogWarning("Section with id: {sectionId} is in published status.", section.Id);
-                    throw new ForbiddenException("Course section is published.");
+                    throw new ForbiddenException("Training section is published.");
                 }
 
                 if (section.Lessons.Any(x => !x.IsDeleted))
                 {
                     _logger.LogWarning("Section with id: {sectionId} consist lessons for delete.", section.Id);
-                    throw new ForbiddenException("Course section consist lessons.");
+                    throw new ForbiddenException("Training section consist lessons.");
                 }
 
                 section.IsDeleted = true;
@@ -155,8 +155,8 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("ReorderAsync(): Course with identity : {identity} not found for user with id :{userId}.", identity, currentUserId);
-                    throw new EntityNotFoundException("Course was not found.");
+                    _logger.LogWarning("ReorderAsync(): Training with identity : {identity} not found for user with id :{userId}.", identity, currentUserId);
+                    throw new EntityNotFoundException("Training was not found.");
                 }
 
                 var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(

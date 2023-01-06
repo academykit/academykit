@@ -136,7 +136,7 @@
             if (questionPool.QuestionPoolTeachers.Any(p => p.UserId == entity.UserId))
             {
                 _logger.LogWarning("User with Id {userId} is already question pool teacher of question pool with Id  : {id}.", entity.UserId, questionPool.Id);
-                throw new ForbiddenException("User is already found as course teacher.");
+                throw new ForbiddenException("User is already found as training trainer.");
             }
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == entity.UserId).ConfigureAwait(false);
             CommonHelper.CheckFoundEntity(user);
