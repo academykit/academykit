@@ -355,6 +355,8 @@
                         UpdatedBy = currentUserId,
                         UpdatedOn = currentTimeStamp,
                     };
+                    await ManageStudentCourseComplete(course.Id, lesson.Id, currentUserId, currentTimeStamp).ConfigureAwait(false);
+
                     await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
                 }
 

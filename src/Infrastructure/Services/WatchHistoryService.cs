@@ -143,26 +143,7 @@
                 await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
                 response = watchHistory;
             }
-
-            var percentage = await this.GetCourseCompletedPercentage(course.Id, currentUserId).ConfigureAwait(false);
-
-            var courseEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(
-                predicate: p => p.CourseId == course.Id && p.UserId == currentUserId
-                                && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)
-                ).ConfigureAwait(false);
-
-            if (courseEnrollment != null)
-            {
-                courseEnrollment.Percentage = percentage;
-                courseEnrollment.CurrentLessonId = lesson.Id;
-                courseEnrollment.UpdatedBy = currentUserId;
-                courseEnrollment.UpdatedOn = currentTimeStamp;
-                if (percentage == 100)
-                {
-                    courseEnrollment.EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Completed;
-                }
-                _unitOfWork.GetRepository<CourseEnrollment>().Update(courseEnrollment);
-            }
+            await ManageStudentCourseComplete( course.Id, lesson.Id, currentUserId, currentTimeStamp).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             return new WatchHistoryResponseModel
             {
@@ -173,6 +154,8 @@
                 WatchedDate = Convert.ToDateTime(response.UpdatedOn)
             };
         }
+
+
 
         /// <summary>
         /// Handle to pass student in requested lesson
@@ -253,13 +236,13 @@
                     predicate: p => p.CourseId == courseId && !p.IsDeleted && p.Status == CourseStatus.Published).ConfigureAwait(false);
                 var completedLessonCount = await _unitOfWork.GetRepository<WatchHistory>().CountAsync(
                     predicate: p => p.CourseId == courseId && p.UserId == currentUserId && p.IsCompleted).ConfigureAwait(false);
-                var percentage = (Convert.ToDouble(completedLessonCount) / Convert.ToDouble(totalLessonCount)) * 100;
+                var percentage = (Convert.ToDouble(completedLessonCount + 1) / Convert.ToDouble(totalLessonCount)) * 100;
                 var result = Convert.ToInt32(percentage);
                 return result;
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex, "An error occurred while trying to calculate training completed percentage.");
+                _logger.LogError(ex, "An error occurred while trying to calculate training completed percentage.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to calculate training completed percentage.");
             }
         }

@@ -734,31 +734,9 @@
                     IsCompleted = true,
                     IsPassed = questionSet.PassingWeightage > 0 ? (result.TotalMark - result.NegativeMark) * 100 / totalQuestion >= questionSet.PassingWeightage : false,
                 };
+                await ManageStudentCourseComplete(questionSet.Lesson.CourseId, questionSet.Lesson.Id, currentUserId, currentTimeStamp).ConfigureAwait(false);
+
                 await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
-            }
-
-            var totalLessonCount = await _unitOfWork.GetRepository<Lesson>().CountAsync(
-                predicate: p => p.CourseId == questionSet.Lesson.CourseId && !p.IsDeleted && p.Status == CourseStatus.Published).ConfigureAwait(false);
-            var completedLessonCount = await _unitOfWork.GetRepository<WatchHistory>().CountAsync(
-                predicate: p => p.CourseId == questionSet.Lesson.CourseId && p.UserId == currentUserId && p.IsCompleted).ConfigureAwait(false);
-            var percentage = (Convert.ToDouble(completedLessonCount) / Convert.ToDouble(totalLessonCount)) * 100;
-
-            var courseEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(
-                predicate: p => p.CourseId == questionSet.Lesson.CourseId && p.UserId == currentUserId
-                                && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)
-                ).ConfigureAwait(false);
-
-            if (courseEnrollment != null)
-            {
-                courseEnrollment.Percentage = Convert.ToInt32(percentage);
-                courseEnrollment.CurrentLessonId = questionSet.Lesson.Id;
-                courseEnrollment.UpdatedBy = currentUserId;
-                courseEnrollment.UpdatedOn = currentTimeStamp;
-                if (percentage == 100)
-                {
-                    courseEnrollment.EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Completed;
-                }
-                _unitOfWork.GetRepository<CourseEnrollment>().Update(courseEnrollment);
             }
         }
 
