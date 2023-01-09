@@ -113,7 +113,7 @@ namespace Lingtren.Infrastructure.Services
             var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
 
             var userCompletedWatchHistories = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(
-                predicate: p => p.UserId == currentUserId && p.CourseId == lesson.CourseId && p.IsCompleted && p.IsPassed
+                predicate: p => p.UserId == currentUserId && p.CourseId == lesson.CourseId && p.IsPassed
                 ).ConfigureAwait(false);
 
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
