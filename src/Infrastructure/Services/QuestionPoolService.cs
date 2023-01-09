@@ -84,7 +84,7 @@
         /// <returns>The updated query.</returns>
         protected override IIncludableQueryable<QuestionPool, object> IncludeNavigationProperties(IQueryable<QuestionPool> query)
         {
-            return query.Include(x => x.User).Include(x=>x.QuestionPoolTeachers).Include(x=>x.QuestionPoolQuestions);
+            return query.Include(x => x.User).Include(x => x.QuestionPoolTeachers).Include(x => x.QuestionPoolQuestions);
         }
 
         /// <summary>
@@ -96,6 +96,26 @@
         {
             return p => p.Id.ToString() == identity || p.Slug == identity;
         }
+
+        /// <summary>
+        /// Check the validations required for delete
+        /// </summary>
+        /// <param name="entity">the instance of <see cref="Assignment"/></param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <returns></returns>
+        protected override async Task CheckDeletePermissionsAsync(QuestionPool entity, Guid currentUserId)
+        {
+            var questionPoolQuestionExists = await _unitOfWork.GetRepository<QuestionPoolQuestion>().ExistsAsync(
+                predicate: p => p.QuestionPoolId == entity.Id
+                ).ConfigureAwait(false);
+
+            if (questionPoolQuestionExists)
+            {
+                _logger.LogWarning("Question pool with id: {poolId} contains questions. So, it cannot be deleted.", entity.Id);
+                throw new ForbiddenException("Question pool contains questions. So, to delete question pool remove all the questions from pool.");
+            }
+        }
+
         #endregion Protected Methods
 
         #region Private Methods
@@ -126,7 +146,7 @@
         public async Task<QuestionPoolQuestion> GetQuestionPoolQuestion(string poolIdentity, Guid questionId)
         {
             var questionPool = await _unitOfWork.GetRepository<QuestionPool>().GetFirstOrDefaultAsync(
-                predicate: p=> p.Id.ToString() == poolIdentity || p.Slug == poolIdentity).ConfigureAwait(false);
+                predicate: p => p.Id.ToString() == poolIdentity || p.Slug == poolIdentity).ConfigureAwait(false);
             return await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetFirstOrDefaultAsync(
                 predicate: p => p.QuestionPoolId == questionPool.Id && p.QuestionId == questionId).ConfigureAwait(false);
         }
