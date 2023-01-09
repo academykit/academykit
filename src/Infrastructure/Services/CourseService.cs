@@ -223,47 +223,52 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         public async Task<Course> UpdateAsync(string identity, CourseRequestModel model, Guid currentUserId)
         {
-            var existing = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
-            var currentTimeStamp = DateTime.UtcNow;
-
-            existing.Id = existing.Id;
-            existing.Name = model.Name;
-            existing.Language = model.Language;
-            existing.GroupId = model.GroupId;
-            existing.LevelId = model.LevelId;
-            existing.Duration = model.Duration;
-            existing.Description = model.Description;
-            existing.ThumbnailUrl = model.ThumbnailUrl;
-            existing.UpdatedBy = currentUserId;
-            existing.UpdatedOn = currentTimeStamp;
-
-            var newCourseTags = new List<CourseTag>();
-
-            foreach (var tagId in model.TagIds)
+            return await ExecuteWithResultAsync<Course>(async () =>
             {
-                newCourseTags.Add(new CourseTag
+                var existing = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+                var currentTimeStamp = DateTime.UtcNow;
+
+                existing.Group = null;
+
+                existing.Id = existing.Id;
+                existing.Name = model.Name;
+                existing.Language = model.Language;
+                existing.GroupId = model.GroupId;
+                existing.LevelId = model.LevelId;
+                existing.Duration = model.Duration;
+                existing.Description = model.Description;
+                existing.ThumbnailUrl = model.ThumbnailUrl;
+                existing.UpdatedBy = currentUserId;
+                existing.UpdatedOn = currentTimeStamp;
+
+                var newCourseTags = new List<CourseTag>();
+
+                foreach (var tagId in model.TagIds)
                 {
-                    Id = Guid.NewGuid(),
-                    TagId = tagId,
-                    CourseId = existing.Id,
-                    CreatedOn = currentTimeStamp,
-                    CreatedBy = currentUserId,
-                    UpdatedOn = currentTimeStamp,
-                    UpdatedBy = currentUserId,
-                });
-            }
+                    newCourseTags.Add(new CourseTag
+                    {
+                        Id = Guid.NewGuid(),
+                        TagId = tagId,
+                        CourseId = existing.Id,
+                        CreatedOn = currentTimeStamp,
+                        CreatedBy = currentUserId,
+                        UpdatedOn = currentTimeStamp,
+                        UpdatedBy = currentUserId,
+                    });
+                }
 
-            if (existing.CourseTags.Count > 0)
-            {
-                _unitOfWork.GetRepository<CourseTag>().Delete(existing.CourseTags);
-            }
-            if (newCourseTags.Count > 0)
-            {
-                await _unitOfWork.GetRepository<CourseTag>().InsertAsync(newCourseTags).ConfigureAwait(false);
-            }
-            _unitOfWork.GetRepository<Course>().Update(existing);
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-            return await GetByIdOrSlugAsync(identity, currentUserId).ConfigureAwait(false);
+                if (existing.CourseTags.Count > 0)
+                {
+                    _unitOfWork.GetRepository<CourseTag>().Delete(existing.CourseTags);
+                }
+                if (newCourseTags.Count > 0)
+                {
+                    await _unitOfWork.GetRepository<CourseTag>().InsertAsync(newCourseTags).ConfigureAwait(false);
+                }
+                _unitOfWork.GetRepository<Course>().Update(existing);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                return await GetByIdOrSlugAsync(identity, currentUserId).ConfigureAwait(false);
+            });
         }
 
         /// <summary>
@@ -677,23 +682,23 @@ namespace Lingtren.Infrastructure.Services
             try
             {
                 var response = new CourseStatisticsResponseModel();
-              var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
-              var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate:p => p.CourseId == course.Id &&
-              !p.IsDeleted && (p.Status == CourseStatus.Published || p.Status == CourseStatus.Completed)).ConfigureAwait(false);
-              response.TotalTeachers = course.CourseTeachers.Count;
-              response.TotalLessons = lessons.Count;
-              response.TotalMeetings = lessons.Count(x => (x.Type == LessonType.LiveClass || x.Type == LessonType.RecordedVideo) && x.MeetingId != null);
-              response.TotalLectures = lessons.Count(x => x.Type == LessonType.Video || x.Type == LessonType.RecordedVideo);
-              response.TotalExams = lessons.Count(x => x.Type == LessonType.Exam);
-              response.TotalAssignments = lessons.Count(x => x.Type == LessonType.Assignment);
-              response.TotalDocuments = lessons.Count(x => x.Type == LessonType.Document);
-             response.TotalEnrollments = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(predicate: p => p.CourseId == course.Id && 
-             (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed));
-              return response;
+                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+                var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.CourseId == course.Id &&
+                !p.IsDeleted && (p.Status == CourseStatus.Published || p.Status == CourseStatus.Completed)).ConfigureAwait(false);
+                response.TotalTeachers = course.CourseTeachers.Count;
+                response.TotalLessons = lessons.Count;
+                response.TotalMeetings = lessons.Count(x => (x.Type == LessonType.LiveClass || x.Type == LessonType.RecordedVideo) && x.MeetingId != null);
+                response.TotalLectures = lessons.Count(x => x.Type == LessonType.Video || x.Type == LessonType.RecordedVideo);
+                response.TotalExams = lessons.Count(x => x.Type == LessonType.Exam);
+                response.TotalAssignments = lessons.Count(x => x.Type == LessonType.Assignment);
+                response.TotalDocuments = lessons.Count(x => x.Type == LessonType.Document);
+                response.TotalEnrollments = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(predicate: p => p.CourseId == course.Id &&
+                (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed));
+                return response;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                 _logger.LogError(ex, "An error occurred while trying to fetch training statistics.");
+                _logger.LogError(ex, "An error occurred while trying to fetch training statistics.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch training statistics.");
             }
         }
