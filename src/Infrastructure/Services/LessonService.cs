@@ -192,6 +192,25 @@ namespace Lingtren.Infrastructure.Services
                 }
             }
 
+            bool? hasFeedbackSubmitted = null;
+
+            if (lesson.Type == LessonType.Feedback)
+            {
+                var feedbackIds = await _unitOfWork.GetRepository<Feedback>().GetAllAsync(
+                    selector: x => x.Id,
+                    predicate: p => p.LessonId == lesson.Id && p.IsActive
+                    ).ConfigureAwait(false);
+
+                var feebackSubmissionExists = await _unitOfWork.GetRepository<FeedbackSubmission>().ExistsAsync(
+                    predicate: p => feedbackIds.Contains(p.FeedbackId) && p.UserId == currentUserId
+                    ).ConfigureAwait(false);
+
+                if (feebackSubmissionExists)
+                {
+                    hasFeedbackSubmitted = true;
+                }
+            }
+
             var currentLessonWatchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
                 predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
                 ).ConfigureAwait(false);
@@ -211,6 +230,7 @@ namespace Lingtren.Infrastructure.Services
             responseModel.HasReviewedAssignment = hasReviewedAssignment;
             responseModel.AssignmentReview = review;
             responseModel.RemainingAttempt = remainingAttempt;
+            responseModel.HasFeedbackSubmitted = hasFeedbackSubmitted;
             return responseModel;
         }
 
@@ -418,7 +438,7 @@ namespace Lingtren.Infrastructure.Services
                     ).ConfigureAwait(false);
                 if (lesson == null)
                 {
-                    _logger.LogWarning("DeleteLessonAsync(): Lesson with identity : {lessonIdentity} was not found for user with id : {userId} and having training with id : {courseId}.",lessonIdentity, currentUserId, course.Id);
+                    _logger.LogWarning("DeleteLessonAsync(): Lesson with identity : {lessonIdentity} was not found for user with id : {userId} and having training with id : {courseId}.", lessonIdentity, currentUserId, course.Id);
                     throw new EntityNotFoundException("Lesson was not found.");
                 }
 

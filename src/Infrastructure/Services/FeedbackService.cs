@@ -310,7 +310,20 @@
 
                 var feedbacks = await _unitOfWork.GetRepository<Feedback>().GetAllAsync(
                     predicate: p => p.LessonId == lesson.Id && p.IsActive,
-                    include: src => src.Include(x => x.FeedbackQuestionOptions)).ConfigureAwait(false);
+                    include: src => src.Include(x => x.FeedbackQuestionOptions)
+                    ).ConfigureAwait(false);
+
+                var feedbackIds = feedbacks.Select(x => x.Id).ToList();
+
+                var feebackSubmissionExists = await _unitOfWork.GetRepository<FeedbackSubmission>().ExistsAsync(
+                    predicate: p => feedbackIds.Contains(p.FeedbackId) && p.UserId == currentUserId
+                    ).ConfigureAwait(false);
+
+                if (feebackSubmissionExists)
+                {
+                    _logger.LogWarning("User with id: {userId} cannot resubmit the feedback having id: {feedbackId}.", currentUserId, lesson.Id);
+                    throw new ForbiddenException("Feedback cannot be re-submitted.");
+                }
 
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
                     predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
@@ -320,17 +333,10 @@
 
                 foreach (var item in models)
                 {
-                    var Feedback = feedbacks.FirstOrDefault(x => x.Id == item.FeedbackId);
-                    if (Feedback != null)
+                    var feedback = feedbacks.FirstOrDefault(x => x.Id == item.FeedbackId);
+                    if (feedback != null)
                     {
-                        if (item.Id != default)
-                        {
-                            await UpdateSubmissionAsync(currentUserId, currentTimeStamp, item, Feedback).ConfigureAwait(false);
-                        }
-                        else
-                        {
-                            await InsertSubmissionAsync(currentUserId, lesson.Id, currentTimeStamp, item, Feedback).ConfigureAwait(false);
-                        }
+                        await InsertSubmissionAsync(currentUserId, lesson.Id, currentTimeStamp, item, feedback).ConfigureAwait(false);
                     }
                 }
 
@@ -373,28 +379,18 @@
         /// <returns></returns>
         private async Task InsertSubmissionAsync(Guid currentUserId, Guid lessonId, DateTime currentTimeStamp, FeedbackSubmissionRequestModel item, Feedback feedback)
         {
-            var feedbackSubmission = await _unitOfWork.GetRepository<FeedbackSubmission>().GetFirstOrDefaultAsync(
-                predicate: p => p.Id == item.Id && p.UserId == currentUserId
-                ).ConfigureAwait(false);
-            if (feedbackSubmission == null)
+            var feedbackSubmission = new FeedbackSubmission
             {
-                feedbackSubmission = new FeedbackSubmission
-                {
-                    Id = Guid.NewGuid(),
-                    LessonId = lessonId,
-                    FeedbackId = feedback.Id,
-                    UserId = currentUserId,
-                    CreatedBy = currentUserId,
-                    CreatedOn = currentTimeStamp,
-                    UpdatedBy = currentUserId,
-                    UpdatedOn = currentTimeStamp,
-                };
-            }
-            else
-            {
-                feedbackSubmission.UpdatedOn = currentTimeStamp;
-                feedbackSubmission.UpdatedBy = currentUserId;
-            }
+                Id = Guid.NewGuid(),
+                LessonId = lessonId,
+                FeedbackId = feedback.Id,
+                UserId = currentUserId,
+                CreatedBy = currentUserId,
+                CreatedOn = currentTimeStamp,
+                UpdatedBy = currentUserId,
+                UpdatedOn = currentTimeStamp,
+            };
+
             if (feedback.Type == FeedbackTypeEnum.SingleChoice || feedback.Type == FeedbackTypeEnum.MultipleChoice)
             {
                 feedbackSubmission.SelectedOption = string.Join(",", item.SelectedOption);
@@ -408,29 +404,6 @@
                 feedbackSubmission.Rating = item.Rating;
             }
             await _unitOfWork.GetRepository<FeedbackSubmission>().InsertAsync(feedbackSubmission).ConfigureAwait(false);
-        }
-
-        private async Task UpdateSubmissionAsync(Guid currentUserId, DateTime currentTimeStamp, FeedbackSubmissionRequestModel item, Feedback feedback)
-        {
-            var feedbackSubmission = await _unitOfWork.GetRepository<FeedbackSubmission>().GetFirstOrDefaultAsync(
-                                            predicate: p => p.Id == item.Id && p.UserId == currentUserId
-                                            ).ConfigureAwait(false);
-
-            feedbackSubmission.UpdatedOn = currentTimeStamp;
-            feedbackSubmission.UpdatedBy = currentUserId;
-            if (feedback.Type == FeedbackTypeEnum.SingleChoice || feedback.Type == FeedbackTypeEnum.MultipleChoice)
-            {
-                feedbackSubmission.SelectedOption = string.Join(",", item.SelectedOption);
-            }
-            if (feedback.Type == FeedbackTypeEnum.Subjective)
-            {
-                feedbackSubmission.Answer = item.Answer;
-            }
-            if (feedback.Type == FeedbackTypeEnum.Rating)
-            {
-                feedbackSubmission.Rating = item.Rating;
-            }
-            _unitOfWork.GetRepository<FeedbackSubmission>().Update(feedbackSubmission);
         }
 
         #endregion Private Methods
@@ -474,7 +447,7 @@
             var feedbacks = await _unitOfWork.GetRepository<Feedback>().GetAllAsync(
                 predicate: p => p.LessonId == lesson.Id,
                 include: src => src.Include(x => x.FeedbackQuestionOptions),
-                orderBy: o=>o.OrderBy(x=>x.Order)
+                orderBy: o => o.OrderBy(x => x.Order)
                 ).ConfigureAwait(false);
 
             var userFeedbacks = await _unitOfWork.GetRepository<FeedbackSubmission>().GetAllAsync(
@@ -514,7 +487,7 @@
             {
                 var selectedAnsIds = !string.IsNullOrWhiteSpace(userFeedback?.SelectedOption) ?
                                         userFeedback?.SelectedOption.Split(",").Select(Guid.Parse).ToList() : new List<Guid>();
-                item.FeedbackQuestionOptions?.OrderBy(x=>x.Order).ToList().ForEach(x =>
+                item.FeedbackQuestionOptions?.OrderBy(x => x.Order).ToList().ForEach(x =>
                                 data.FeedbackQuestionOptions.Add(new FeedbackQuestionOptionResponseModel()
                                 {
                                     Id = x.Id,
