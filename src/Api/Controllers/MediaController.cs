@@ -14,12 +14,15 @@ namespace Lingtren.Api.Controllers
     {
         private readonly IMediaService _mediaService;
         private readonly IValidator<MediaRequestModel> _validator;
+        private readonly ILogger<MediaController> _logger;
         public MediaController(
             IMediaService mediaService,
-            IValidator<MediaRequestModel> validator)
+            IValidator<MediaRequestModel> validator,
+            ILogger<MediaController> logger)
         {
             _mediaService = mediaService;
             _validator = validator;
+            _logger = logger;
         }
 
         /// <summary>
@@ -64,13 +67,21 @@ namespace Lingtren.Api.Controllers
 
                 //NetworkCredential credentials = new NetworkCredential(@"smbadmin", "smbadmin");
                 string networkPath = @"\\159.89.163.233\public";
+
+                _logger.LogInformation($"Network Path = {networkPath}");
+
                 //string myNetworkPath = string.Empty;
                 //using (new ConnectToSharedFolder(networkPath, credentials))
                 //{
-                    var fileList = Directory.GetDirectories(networkPath);
-                    var filePath = Path.Combine(networkPath, "hello.mp4");
-                    var mimeType = GetMimeTypeForFileExtension(filePath);
-                    return PhysicalFile(filePath, mimeType, enableRangeProcessing: true);
+
+                var filePath = Path.Combine(networkPath, "hello.mp4");
+                _logger.LogInformation($"File Path = {filePath}");
+
+                var mimeType = GetMimeTypeForFileExtension(filePath);
+                _logger.LogInformation($"Test 123 = {mimeType}");
+
+                return PhysicalFile(filePath, mimeType, enableRangeProcessing: true);
+
                 //}
             }
             catch (Exception ex)
