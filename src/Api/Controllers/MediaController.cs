@@ -80,6 +80,10 @@ namespace Lingtren.Api.Controllers
                 {
                     _logger.LogInformation($"Exist File = {networkPath}");
                 }
+                else
+                {
+                    _logger.LogInformation($"Does not Exist File = {networkPath}");
+                }
 
                 var mimeType = GetMimeTypeForFileExtension(networkPath);
                 _logger.LogInformation($"Test 123 = {mimeType}");
