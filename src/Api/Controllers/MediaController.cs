@@ -62,16 +62,16 @@ namespace Lingtren.Api.Controllers
             try
             {
 
-                NetworkCredential credentials = new NetworkCredential(@"smbadmin", "smbadmin");
-                string networkPath = @"\\159.89.163.233\storage";
-                string myNetworkPath = string.Empty;
-                using (new ConnectToSharedFolder(networkPath, credentials))
-                {
+                //NetworkCredential credentials = new NetworkCredential(@"smbadmin", "smbadmin");
+                string networkPath = @"\\159.89.163.233\public";
+                //string myNetworkPath = string.Empty;
+                //using (new ConnectToSharedFolder(networkPath, credentials))
+                //{
                     var fileList = Directory.GetDirectories(networkPath);
                     var filePath = Path.Combine(networkPath, "hello.mp4");
                     var mimeType = GetMimeTypeForFileExtension(filePath);
                     return PhysicalFile(filePath, mimeType, enableRangeProcessing: true);
-                }
+                //}
             }
             catch (Exception ex)
             {
