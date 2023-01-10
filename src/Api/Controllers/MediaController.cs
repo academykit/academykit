@@ -66,7 +66,7 @@ namespace Lingtren.Api.Controllers
             {
 
                 //NetworkCredential credentials = new NetworkCredential(@"smbadmin", "smbadmin");
-                string networkPath = @"\\159.89.163.233\public\hello.mp4";
+                string networkPath = @"smb:\\159.89.163.233\public\hello.mp4";
 
                 _logger.LogInformation($"Network Path = {networkPath}");
 
