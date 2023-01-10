@@ -76,6 +76,10 @@ namespace Lingtren.Api.Controllers
 
                 //var filePath = Path.Combine(networkPath, "hello.mp4");
                 //_logger.LogInformation($"File Path = {filePath}");
+                if (System.IO.File.Exists(networkPath))
+                {
+                    _logger.LogInformation($"Exist File = {networkPath}");
+                }
 
                 var mimeType = GetMimeTypeForFileExtension(networkPath);
                 _logger.LogInformation($"Test 123 = {mimeType}");
