@@ -12,7 +12,7 @@
             {
                 RuleFor(x => x.FirstName).NotNull().NotEmpty().WithMessage("First name is required.").MaximumLength(100).WithMessage("First name length must be less than or equal to 100 characters.");
                 RuleFor(x => x.MiddleName).MaximumLength(100).WithMessage("Middle name length must be less than or equal to 100 characters.");
-                RuleFor(x => x.LastName).NotNull().NotEmpty().WithMessage("Last name is required.").MaximumLength(100).WithMessage("First name length must be less than or equal to 100 characters.");
+                RuleFor(x => x.LastName).NotNull().NotEmpty().WithMessage("Last name is required.").MaximumLength(100).WithMessage("Last name length must be less than or equal to 100 characters.");
                 RuleFor(x => x.Email).NotNull().NotEmpty().WithMessage("Email is required").MaximumLength(100).WithMessage("Email length must be less than or equal to 100 characters.")
                 .Must(email => ValidEmail(email)).WithMessage("Invalid email format.");
                 RuleFor(x => x.MobileNumber).MaximumLength(50).WithMessage("Mobile number length must be less than or equal to 50 characters.");
