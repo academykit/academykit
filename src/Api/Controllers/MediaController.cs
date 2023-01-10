@@ -66,21 +66,21 @@ namespace Lingtren.Api.Controllers
             {
 
                 //NetworkCredential credentials = new NetworkCredential(@"smbadmin", "smbadmin");
-                string networkPath = @"\\159.89.163.233\public";
+                string networkPath = @"\\159.89.163.233\public\hello.mp4";
 
                 _logger.LogInformation($"Network Path = {networkPath}");
 
-                //string myNetworkPath = string.Empty;
-                //using (new ConnectToSharedFolder(networkPath, credentials))
-                //{
+                ////string myNetworkPath = string.Empty;
+                ////using (new ConnectToSharedFolder(networkPath, credentials))
+                ////{
 
-                var filePath = Path.Combine(networkPath, "hello.mp4");
-                _logger.LogInformation($"File Path = {filePath}");
+                //var filePath = Path.Combine(networkPath, "hello.mp4");
+                //_logger.LogInformation($"File Path = {filePath}");
 
-                var mimeType = GetMimeTypeForFileExtension(filePath);
+                var mimeType = GetMimeTypeForFileExtension(networkPath);
                 _logger.LogInformation($"Test 123 = {mimeType}");
 
-                return PhysicalFile(filePath, mimeType, enableRangeProcessing: true);
+                return PhysicalFile(networkPath, mimeType, enableRangeProcessing: true);
 
                 //}
             }
