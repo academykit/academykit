@@ -2,9 +2,13 @@ namespace Lingtren.Api.Controllers
 {
     using Application.Common.Models.RequestModels;
     using FluentValidation;
+    using Lingtren.Api.Common;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.ResponseModels;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.StaticFiles;
+    using System.Net;
 
     public class MediaController : BaseApiController
     {
@@ -49,6 +53,42 @@ namespace Lingtren.Api.Controllers
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             return await _mediaService.UploadFileAsync(model).ConfigureAwait(false);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("/read")]
+        public async Task<IActionResult> Read()
+        {
+            try
+            {
+
+                NetworkCredential credentials = new NetworkCredential(@"smbadmin", "smbadmin");
+                string networkPath = @"\\159.89.163.233\storage";
+                string myNetworkPath = string.Empty;
+                using (new ConnectToSharedFolder(networkPath, credentials))
+                {
+                    var fileList = Directory.GetDirectories(networkPath);
+                    var filePath = Path.Combine(networkPath, "hello.mp4");
+                    var mimeType = GetMimeTypeForFileExtension(filePath);
+                    return PhysicalFile(filePath, mimeType, enableRangeProcessing: true);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private string GetMimeTypeForFileExtension(string filePath)
+        {
+            const string DefaultContentType = "application/octet-stream";
+            var provider = new FileExtensionContentTypeProvider();
+
+            if (!provider.TryGetContentType(filePath, out string contentType))
+            {
+                contentType = DefaultContentType;
+            }
+            return contentType;
         }
     }
 }
