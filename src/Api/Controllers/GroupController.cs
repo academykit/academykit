@@ -61,7 +61,9 @@
                          predicate: x => x.GroupId == p.Id && x.IsActive).Result;
                      var courseCount = _unitOfWork.GetRepository<Course>().CountAsync(
                          predicate: x => x.GroupId == p.Id && (x.Status == CourseStatus.Published || x.Status == CourseStatus.Completed || x.IsUpdate)).Result;
-                     response.Items.Add(new GroupResponseModel(p, memberCount, courseCount));
+                     var attachmentCount = _unitOfWork.GetRepository<GroupFile>().CountAsync(
+                         predicate: x => x.GroupId == p.Id).Result;
+                     response.Items.Add(new GroupResponseModel(p, memberCount, courseCount, attachmentCount));
                  }
              );
             return response;
