@@ -5,6 +5,7 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.ResponseModels;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class MediaController : BaseApiController
@@ -49,6 +50,7 @@ namespace Lingtren.Api.Controllers
         [HttpPost("file")]
         [RequestFormLimits(MultipartBodyLengthLimit = 2147483648)]
         [RequestSizeLimit(2147483648)]
+        [AllowAnonymous]
         public async Task<FileResponseModel> File([FromForm] MediaRequestModel model)
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
@@ -60,7 +62,8 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="key"> the file key </param>
         /// <returns> the presigned url </returns>
-        [HttpGet("file/{key}")]
-        public async Task<string> GetFile(string key) => await _mediaService.GetFileAsnc(key).ConfigureAwait(false);
+        [HttpGet("file")]
+        [AllowAnonymous]
+        public async Task<string> GetFile([FromQuery] string key) => await _mediaService.GetFileAsnc(key).ConfigureAwait(false);
     }
 }

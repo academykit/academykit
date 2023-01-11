@@ -185,12 +185,12 @@ namespace Lingtren.Infrastructure.Services
                 var model = new MediaRequestModel
                 {
                     File = file,
-                    Type = MediaType.PrivateFile
+                    Type = MediaType.Private
                 };
                 var mediaFileDto = new MediaFileDto();
                 if (Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
                 {
-                    model.Type = MediaType.File;
+                    model.Type = MediaType.Private;
                     mediaFileDto = await _amazonService.UploadFileS3BucketAsync(model).ConfigureAwait(false);
                 }
                 else

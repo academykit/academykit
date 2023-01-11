@@ -45,7 +45,7 @@ namespace Lingtren.Infrastructure.Services
                     Key = fileName,
                     ContentType = model.File.ContentType,
                     InputStream = model.File.OpenReadStream(),
-                    BucketName = model.Type == MediaType.File ? credentails.FileBucket : credentails.VideoBucket
+                    BucketName = model.Type == MediaType.Private ? credentails.FileBucket : credentails.VideoBucket
                 };
                 await transferUtility.UploadAsync(request);
                 return new MediaFileDto
@@ -72,7 +72,8 @@ namespace Lingtren.Infrastructure.Services
             {
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
                 var client = new AmazonS3Client(credentails.AccessKey, credentails.SecretKey, Amazon.RegionEndpoint.APSouth1);
-                var request = new GetPreSignedUrlRequest{
+                var request = new GetPreSignedUrlRequest
+                {
                     Key = key,
                     Expires = DateTime.Now.AddMinutes(60)
                 };

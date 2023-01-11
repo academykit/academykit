@@ -21,19 +21,19 @@
             (configuration.GetConnectionString("DefaultConnection"), MySqlServerVersion.LatestSupportedServerVersion),
             ServiceLifetime.Scoped);
 
-            // services.AddHangfireServer().AddHangfire(x =>
-            // {
-            //     x.UseFilter(new AutomaticRetryAttribute());
-            //     x.UseStorage(new MySqlStorage(configuration.GetConnectionString("Hangfireconnection"), new MySqlStorageOptions
-            //     {
-            //         QueuePollInterval = TimeSpan.FromSeconds(15),
-            //         JobExpirationCheckInterval = TimeSpan.FromHours(1),
-            //         CountersAggregateInterval = TimeSpan.FromMinutes(5),
-            //         PrepareSchemaIfNecessary = true,
-            //         DashboardJobListLimit = 50000,
-            //         TablesPrefix = "Hangfire"
-            //     }));
-            // });
+            services.AddHangfireServer().AddHangfire(x =>
+            {
+                x.UseFilter(new AutomaticRetryAttribute());
+                x.UseStorage(new MySqlStorage(configuration.GetConnectionString("Hangfireconnection"), new MySqlStorageOptions
+                {
+                    QueuePollInterval = TimeSpan.FromSeconds(15),
+                    JobExpirationCheckInterval = TimeSpan.FromHours(1),
+                    CountersAggregateInterval = TimeSpan.FromMinutes(5),
+                    PrepareSchemaIfNecessary = true,
+                    DashboardJobListLimit = 50000,
+                    TablesPrefix = "Hangfire"
+                }));
+            });
 
             #region Service DI
 

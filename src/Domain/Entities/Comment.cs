@@ -9,7 +9,7 @@ namespace Lingtren.Domain.Entities
         public Course Course { get; set; }
         public string Content { get; set; }
         public bool IsDeleted { get; set; }
-        public User User{ get; set; }
+        public User User { get; set; }
         public IList<CommentReply> CommentReplies { get; set; }
     }
 }

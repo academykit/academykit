@@ -143,7 +143,7 @@
                 await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
                 response = watchHistory;
             }
-            await ManageStudentCourseComplete( course.Id, lesson.Id, currentUserId, currentTimeStamp).ConfigureAwait(false);
+            await ManageStudentCourseComplete(course.Id, lesson.Id, currentUserId, currentTimeStamp).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             return new WatchHistoryResponseModel
             {

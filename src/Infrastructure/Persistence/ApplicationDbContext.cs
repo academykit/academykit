@@ -160,14 +160,7 @@
                 },
                 new Setting
                 {
-                    Key = "Server_VideoBucket",
-                },
-                new Setting
-                {
-                    Key = "Server_PrivateBucket",
-                },
-                new Setting{
-                    Key="Server_PublicBucket"
+                    Key = "Server_Bucket",
                 },
                 new Setting
                 {

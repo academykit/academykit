@@ -3,6 +3,7 @@ using System;
 using Lingtren.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230111165641_update data seeds")]
+    partial class updatedataseeds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2507,6 +2509,18 @@ namespace Infrastructure.Persistence.Migrations
                         new
                         {
                             Key = "Server_Bucket"
+                        },
+                        new
+                        {
+                            Key = "Server_VideoPath"
+                        },
+                        new
+                        {
+                            Key = "Server_PublicPath"
+                        },
+                        new
+                        {
+                            Key = "Server_PrivatePath"
                         },
                         new
                         {

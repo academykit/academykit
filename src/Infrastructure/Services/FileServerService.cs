@@ -8,10 +8,11 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Infrastructure.Common;
     using Microsoft.Extensions.Logging;
     using MimeKit;
+    using Minio;
 
     public class FileServerService : BaseService, IFileServerService
     {
-       
+
         public FileServerService(IUnitOfWork unitOfWork,
         ILogger<FileServerService> logger) : base(unitOfWork, logger)
         {
@@ -29,43 +30,42 @@ namespace Lingtren.Infrastructure.Services
             {
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient().WithEndpoint(credentails.Url).
-                            WithCredentials(credentails.AccessKey,credentails.SecretKey).Build();
+                            WithCredentials(credentails.AccessKey, credentails.SecretKey).Build();
                 var fileName = string.Concat(model.File.FileName.Where(c => !char.IsWhiteSpace(c)));
                 var extension = Path.GetExtension(fileName);
                 fileName = $"{Guid.NewGuid()}_{fileName}";
                 var bucketName = "";
-                 if (string.IsNullOrWhiteSpace(extension))
+                if (!string.IsNullOrWhiteSpace(extension))
                 {
                     MimeTypes.TryGetExtension(model.File.ContentType, out extension);
                     fileName = $"{Guid.NewGuid()}{extension}";
                 }
-                if(model.Type == MediaType.PrivateFile)
+                if (model.Type == MediaType.Private)
                 {
-                  bucketName = credentails.PrivateBucket;
+                    fileName = $"private/{fileName}";
                 }
-                if(model.Type == MediaType.File)
+                if (model.Type == MediaType.Public)
                 {
-                    bucketName = credentails.PublicBucket;
+                    fileName = $"public/{fileName}";
                 }
-                if(model.Type == MediaType.Video)
-                {
-                   bucketName = credentails.VideoBucket;
-                }
-                var objectArgs = new Minio.PutObjectArgs().WithObject(fileName).WithBucket(bucketName).WithStreamData(model.File.OpenReadStream()).WithContentType(model.File.ContentType);
+
+                var objectArgs = new Minio.PutObjectArgs().WithObject(fileName).WithBucket(credentails.Bucket).WithStreamData(model.File.OpenReadStream()).
+                    WithContentType(model.File.ContentType).WithObjectSize(model.File.Length);
                 await minio.PutObjectAsync(objectArgs);
-                return new MediaFileDto{
+                return new MediaFileDto
+                {
                     Key = fileName,
-                    Url = $"{credentails.Url}/{bucketName}/{fileName}"
+                    Url = $"{credentails.Url}/{credentails.Bucket}/{fileName}"
                 };
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while attempting to upload file to the server.");
+                _logger.LogError(ex.Message, "An error occurred while attempting to upload file to the server.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to upload file to the server.");
             }
         }
 
-         /// <summary>
+        /// <summary>
         /// Handle to get file presigned url
         /// </summary>
         /// <param name="key"> the file key </param>
@@ -76,15 +76,15 @@ namespace Lingtren.Infrastructure.Services
             {
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient().WithEndpoint(credentails.Url).
-                            WithCredentials(credentails.AccessKey,credentails.SecretKey).Build();
-                var objectArgs = new Minio.PresignedGetObjectArgs().WithObject(key).WithExpiry(60);
+                            WithCredentials(credentails.AccessKey, credentails.SecretKey).Build();
+                var objectArgs = new Minio.PresignedGetObjectArgs().WithObject(key).WithBucket(credentails.Bucket).WithExpiry(60);
                 var url = await minio.PresignedGetObjectAsync(objectArgs).ConfigureAwait(false);
                 return url;
             }
             catch (Exception ex)
             {
-              _logger.LogError(ex, "An error occurred while getting file presigned url.");
-            throw ex is ServiceException ? ex : new ServiceException("An error occurred while getting file presigned url.");
+                _logger.LogError(ex, "An error occurred while getting file presigned url.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while getting file presigned url.");
             }
         }
 
@@ -117,12 +117,15 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new EntityNotFoundException("Server url not found.");
                 }
+                var bucket = settings.FirstOrDefault(x => x.Key == "Server_Bucket")?.Value;
+                if (string.IsNullOrEmpty(secretKey))
+                {
+                    throw new EntityNotFoundException("Server bucket not found.");
+                }
                 miniodto.AccessKey = accessKey;
                 miniodto.SecretKey = secretKey;
                 miniodto.Url = url;
-                miniodto.PublicBucket = settings.FirstOrDefault(x => x.Key == "Server_PublicBucket").Value;
-                miniodto.PrivateBucket = settings.FirstOrDefault(x => x.Key == "Server_PrivateBucket")?.Value;
-                miniodto.VideoBucket = settings.FirstOrDefault(x => x.Key == "Server_VideoBucket")?.Value;
+                miniodto.Bucket = bucket;
                 return miniodto;
             }
             catch (Exception ex)

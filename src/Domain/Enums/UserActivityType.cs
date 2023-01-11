@@ -3,17 +3,17 @@
     public enum UserActivityType
     {
         LogIn = 1,
-        LogOut= 2,
+        LogOut = 2,
         UserCreated = 3,
         UserUpdated = 4,
-        UserMarkedInactive =5,
+        UserMarkedInactive = 5,
         ResetPassword = 6,
         ChangePassword = 7,
 
         CreateCourse = 11,
-        UpdateCourse =12,
+        UpdateCourse = 12,
         DeleteCourse = 13,
-        ArchiveCourse =14,
+        ArchiveCourse = 14,
         EnrolledCourse = 15,
         UnEnrolledCourse = 16,
         CompletedCourses = 17,
@@ -22,7 +22,7 @@
 
         CreateLiveSession = 21,
         UpdatedLiveSession = 22,
-        DeleteLiveSession  = 23,
+        DeleteLiveSession = 23,
         ArchiveLiveSession = 24,
         EnrolledLiveSession = 25,
         UnEnrolledLiveSession = 26,

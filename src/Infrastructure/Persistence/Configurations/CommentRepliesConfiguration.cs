@@ -8,7 +8,7 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<CommentReply> builder)
         {
-             builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.CommentId).HasColumnName("comment_id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.Content).HasColumnName("content").HasColumnType("VARCHAR(500)").HasMaxLength(500).IsRequired();

@@ -43,14 +43,14 @@ app.UseCors(x => x
               .AllowAnyHeader()
               .SetIsOriginAllowed(_ => true) // allow any origin
               .AllowCredentials());
-// app.UseHangfireDashboard("/jobs", new DashboardOptions
-// {
-//     Authorization = new[] { new HangfireCustomBasicAuthenticationFilter
-//         {
-//             User = builder.Configuration.GetSection("Hangfire").GetSection("User").Value,
-//             Pass = builder.Configuration.GetSection("Hangfire").GetSection("Password").Value
-//         }}
-// });
+app.UseHangfireDashboard("/jobs", new DashboardOptions
+{
+    Authorization = new[] { new HangfireCustomBasicAuthenticationFilter
+        {
+            User = builder.Configuration.GetSection("Hangfire").GetSection("User").Value,
+            Pass = builder.Configuration.GetSection("Hangfire").GetSection("Password").Value
+        }}
+});
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
