@@ -287,7 +287,7 @@
                     predicate: p => p.CourseId == courseId && !p.IsDeleted && p.Status == CourseStatus.Published).ConfigureAwait(false);
                 var completedLessonCount = await _unitOfWork.GetRepository<WatchHistory>().CountAsync(
                     predicate: p => p.CourseId == courseId && p.UserId == currentUserId && p.IsCompleted).ConfigureAwait(false);
-                var percentage = (Convert.ToDouble(completedLessonCount + 1) / Convert.ToDouble(totalLessonCount)) * 100;
+                var percentage = totalLessonCount == 0 ? 0 : (Convert.ToDouble(completedLessonCount + 1) / Convert.ToDouble(totalLessonCount)) * 100;
                 var result = Convert.ToInt32(percentage);
                 return result;
             }
