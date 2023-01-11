@@ -27,7 +27,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="model"> the instance of <see cref="StorageSetting" /> . </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the instance of <see cref="StorageSettingResponseModel" /> .</returns>
-        Task<StorageSettingResponseModel> StorageUpdateSettingAsync(StorageSettingRequestModel model,Guid currentUserId);
+        Task<StorageSettingResponseModel> StorageUpdateSettingAsync(StorageSettingRequestModel model, Guid currentUserId);
 
         /// <summary>
         /// Handle to get storage setting

@@ -18,7 +18,7 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.UpdatedBy).HasColumnName("updated_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
             builder.Property(x => x.UpdatedOn).HasColumnName("updated_on").HasColumnType("DATETIME").IsRequired(false);
             builder.HasMany(x => x.GroupMembers).WithOne(x => x.Group).HasForeignKey(x => x.GroupId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(x => x.GroupFiles).WithOne(x =>x.Group).HasForeignKey(x =>x.GroupId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.GroupFiles).WithOne(x => x.Group).HasForeignKey(x => x.GroupId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

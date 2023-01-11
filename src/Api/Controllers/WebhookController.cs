@@ -37,7 +37,7 @@ namespace Lingtren.Api.Controllers
             {
                 var reader = await stream.ReadToEndAsync();
                 var model = JsonConvert.DeserializeObject<ZoomRecordPayloadDto>(reader);
-                 if (model.Event.Equals("endpoint.url_validation"))
+                if (model.Event.Equals("endpoint.url_validation"))
                 {
                     var plainToken = model.Payload.PlainToken;
                     ASCIIEncoding encoding = new ASCIIEncoding();
@@ -104,7 +104,7 @@ namespace Lingtren.Api.Controllers
             {
                 var reader = await stream.ReadToEndAsync();
                 var model = JsonConvert.DeserializeObject<ZoomPayLoadDto>(reader);
-                 _logger.LogInformation(model.Event);
+                _logger.LogInformation(model.Event);
                 if (model.Event.Equals("endpoint.url_validation"))
                 {
                     var plainToken = model.Payload.PlainToken;

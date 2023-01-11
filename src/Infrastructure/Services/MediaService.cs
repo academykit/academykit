@@ -200,17 +200,17 @@ namespace Lingtren.Infrastructure.Services
             try
             {
                 var fileDto = new MediaFileDto();
-                  var storage = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: p => p.Key == "Storage").ConfigureAwait(false);
+                var storage = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: p => p.Key == "Storage").ConfigureAwait(false);
                 if (string.IsNullOrEmpty(storage.Value))
                 {
                     throw new ArgumentException("Storage setting is not configured");
                 }
 
-                var filePath = Path.Combine(Path.GetTempPath(),$"{Guid.NewGuid()}.mp4");
-                using(var client = new HttpClient())
+                var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.mp4");
+                using (var client = new HttpClient())
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",$"{downloadToken}");
-                    await client.DownloadFileTaskAsync(new Uri(fileUrl),filePath).ConfigureAwait(false);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{downloadToken}");
+                    await client.DownloadFileTaskAsync(new Uri(fileUrl), filePath).ConfigureAwait(false);
                 }
 
                 var key = $"{Guid.NewGuid()}.mp4";
@@ -372,7 +372,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="filePath"> the file path h</param>
         private void DeleteFilePath(string filePath)
         {
-            if(File.Exists(filePath))
+            if (File.Exists(filePath))
             {
                 File.Delete(filePath);
             }

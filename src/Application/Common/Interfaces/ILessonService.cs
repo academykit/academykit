@@ -61,7 +61,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="lessonIdentity">the lesson identity</param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the instance of <see cref="MeetingReportResponseModel" /> .</returns>
-        Task<MeetingReportResponseModel> GetMeetingReportAsync(string identity,string lessonIdentity,string userId, Guid currentUserId);
+        Task<MeetingReportResponseModel> GetMeetingReportAsync(string identity, string lessonIdentity, string userId, Guid currentUserId);
 
         /// <summary>
         /// Handle to update lesson

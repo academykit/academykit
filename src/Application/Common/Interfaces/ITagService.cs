@@ -27,6 +27,6 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="name"> the tag name </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the instance of <see cref="Tag" />.</returns>
-        Task<Tag> UpdateTagAsync(string identity,string name, Guid currentUserId);
+        Task<Tag> UpdateTagAsync(string identity, string name, Guid currentUserId);
     }
 }
