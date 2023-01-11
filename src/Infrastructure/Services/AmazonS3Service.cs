@@ -1,47 +1,88 @@
 namespace Lingtren.Infrastructure.Services
 {
     using Amazon.S3;
+    using Amazon.S3.Model;
     using Amazon.S3.Transfer;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Domain.Entities;
+    using Lingtren.Infrastructure.Common;
     using Microsoft.Extensions.Logging;
+    using MimeKit;
 
-    public class AmazonS3Service : IAmazonS3Service
+    public class AmazonS3Service : BaseService, IAmazonS3Service
     {
-        private readonly ILogger<AmazonS3Service> _logger;
-
-        public AmazonS3Service(ILogger<AmazonS3Service> logger)
+        public AmazonS3Service(IUnitOfWork unitOfWork, ILogger<AmazonS3Service> logger) : base(unitOfWork, logger)
         {
-            _logger = logger;
+
         }
 
         /// <summary>
-        /// Handle to save file to s3 bucket
+        /// Handle to upload file to s3 bucket
         /// </summary>
-        /// <param name="file"> the instance of <see cref="AwsS3FileDto" /> .</param>
-        /// <returns> the file url </returns>
-        public async Task<string> SaveFileS3BucketAsync(AwsS3FileDto dto)
+        /// <param name="file"> the instance of <see cref="MediaRequestModel" /> .</param>
+        /// <returns> the instance of <see cref="MediaFileDto" /> . </returns>
+        public async Task<MediaFileDto> UploadFileS3BucketAsync(MediaRequestModel model)
         {
             try
             {
                 // need to work on region end point
-                var client = new AmazonS3Client(dto.Setting?.AccessKey, dto.Setting?.SecretKey, Amazon.RegionEndpoint.APSouth1);
+                var credentails = await GetCredentialAsync().ConfigureAwait(false);
+                var client = new AmazonS3Client(credentails.AccessKey, credentails.SecretKey, Amazon.RegionEndpoint.APSouth1);
+                var fileName = string.Concat(model.File.FileName.Where(c => !char.IsWhiteSpace(c)));
+                var extension = Path.GetExtension(fileName);
+                fileName = $"{Guid.NewGuid()}_{fileName}";
+                if (string.IsNullOrWhiteSpace(extension))
+                {
+                    MimeTypes.TryGetExtension(model.File.ContentType, out extension);
+                    fileName = $"{Guid.NewGuid()}{extension}";
+                }
                 var transferUtility = new TransferUtility(client);
                 var request = new TransferUtilityUploadRequest
                 {
-                    Key = dto.Key,
-                    //   ContentType =dto.File.ContentType,
-                    InputStream = dto.File.OpenReadStream(),
-                    BucketName = dto.Type == MediaType.File ? dto.Setting?.FileBucket : dto.Setting?.VideoBucket
+                    Key = fileName,
+                    ContentType = model.File.ContentType,
+                    InputStream = model.File.OpenReadStream(),
+                    BucketName = model.Type == MediaType.File ? credentails.FileBucket : credentails.VideoBucket
                 };
                 await transferUtility.UploadAsync(request);
-                return $"{dto.Setting?.CloudFront}/{dto.Key}";
+                return new MediaFileDto
+                {
+                    Key = fileName,
+                    Url = $"{credentails.CloudFront}/{fileName}"
+                };
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to save file in s3 bucket.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to save file in s3 bucket.");
+            }
+        }
+
+        /// <summary>
+        /// Handle to get s3 presigned file url
+        /// </summary>
+        /// <param name="key"> the file key </param>
+        /// <returns> the pre-signed file url </returns>
+        public async Task<string> GetS3PresignedFileAsync(string key)
+        {
+            try
+            {
+                var credentails = await GetCredentialAsync().ConfigureAwait(false);
+                var client = new AmazonS3Client(credentails.AccessKey, credentails.SecretKey, Amazon.RegionEndpoint.APSouth1);
+                var request = new GetPreSignedUrlRequest{
+                    Key = key,
+                    Expires = DateTime.Now.AddMinutes(60)
+                };
+                var url = client.GetPreSignedURL(request);
+                return url;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to get s3 pre-signed file url.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to get s3 pre-signed file url");
             }
         }
 
@@ -54,16 +95,17 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var client = new AmazonS3Client(dto.Setting?.AccessKey, dto.Setting?.SecretKey, Amazon.RegionEndpoint.APSouth1);
+                var credentails = await GetCredentialAsync().ConfigureAwait(false);
+                var client = new AmazonS3Client(credentails.AccessKey, credentails.SecretKey, Amazon.RegionEndpoint.APSouth1);
                 var transferUtility = new TransferUtility(client);
                 var request = new TransferUtilityUploadRequest
                 {
                     Key = dto.Key,
                     FilePath = dto.FilePath,
-                    BucketName = dto.Setting.VideoBucket
+                    BucketName = credentails.VideoBucket
                 };
                 await transferUtility.UploadAsync(request);
-                return $"{dto.Setting?.CloudFront}/{dto.Key}";
+                return $"{credentails.CloudFront}/{dto.Key}";
             }
             catch (Exception ex)
             {
@@ -71,5 +113,55 @@ namespace Lingtren.Infrastructure.Services
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to save recording file in s3 bucket.");
             }
         }
+
+        #region  private
+
+        /// <summary>
+        /// Handle to get credentails
+        /// </summary>
+        /// <returns> the instance of <see cref="AmazonSettingDto" /> .</returns>
+        private async Task<AmazonSettingDto> GetCredentialAsync()
+        {
+            try
+            {
+                var settings = await _unitOfWork.GetRepository<Setting>().GetAllAsync(predicate: x => x.Key.StartsWith("AWS")).ConfigureAwait(false);
+                var accessKey = settings.FirstOrDefault(x => x.Key == "AWS_AccessKey")?.Value;
+                if (string.IsNullOrEmpty(accessKey))
+                {
+                    throw new EntityNotFoundException("Aws Access key not found.");
+                }
+
+                var secretKey = settings.FirstOrDefault(x => x.Key == "AWS_SecretKey")?.Value;
+                if (string.IsNullOrEmpty(secretKey))
+                {
+                    throw new EntityNotFoundException("AWS secret key not found.");
+                }
+
+                var regionEndPoint = settings.FirstOrDefault(x => x.Key == "AWS_RegionEndpoint")?.Value;
+                if (string.IsNullOrEmpty(regionEndPoint))
+                {
+                    throw new EntityNotFoundException("Aws region end point not found.");
+                }
+                var fileBucket = settings.FirstOrDefault(x => x.Key == "AWS_FileBucket")?.Value;
+                var videoBucket = settings.FirstOrDefault(x => x.Key == "AWS_VideoBucket")?.Value;
+                var cloudFront = settings.FirstOrDefault(x => x.Key == "AWS_CloudFront")?.Value;
+                return new AmazonSettingDto
+                {
+                    AccessKey = accessKey,
+                    SecretKey = secretKey,
+                    RegionEndpoint = regionEndPoint,
+                    FileBucket = fileBucket,
+                    VideoBucket = videoBucket,
+                    CloudFront = cloudFront
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to get the minio credential.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to get the minio credential.");
+            }
+        }
+
+        #endregion
     }
 }
