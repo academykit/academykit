@@ -48,7 +48,7 @@ namespace Lingtren.Api.Controllers
             };
 
             searchResult.Items.ForEach(p =>
-                 response.Items.Add(new CourseResponseModel(p, _courseService.GetUserCourseEnrollmentStatus(p, CurrentUser.Id, fetchMembers: true).Result))
+                 response.Items.Add(new CourseResponseModel(p, _courseService.GetUserCourseEnrollmentStatus(p, CurrentUser.Id)))
              );
             return response;
         }
@@ -108,8 +108,7 @@ namespace Lingtren.Api.Controllers
             });
 
             var response = await _courseService.CreateAsync(entity).ConfigureAwait(false);
-            var userStatus = await _courseService.GetUserCourseEnrollmentStatus(response, CurrentUser.Id).ConfigureAwait(false);
-            return new CourseResponseModel(response, userStatus);
+            return new CourseResponseModel(response, null);
         }
 
         /// <summary>
@@ -134,7 +133,7 @@ namespace Lingtren.Api.Controllers
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var savedEntity = await _courseService.UpdateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
-            var userStatus = await _courseService.GetUserCourseEnrollmentStatus(savedEntity, CurrentUser.Id, fetchMembers: true).ConfigureAwait(false);
+            var userStatus = _courseService.GetUserCourseEnrollmentStatus(savedEntity, CurrentUser.Id);
             return new CourseResponseModel(savedEntity, userStatus);
         }
 

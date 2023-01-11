@@ -17,13 +17,13 @@
         public int Duration { get; set; }
         public Guid LevelId { get; set; }
         public string LevelName { get; set; }
-        public CourseEnrollmentStatus UserStatus { get; set; }
+        public CourseEnrollmentStatus? UserStatus { get; set; }
         public DateTime CreatedOn { get; set; }
         public IList<CourseTagResponseModel> Tags { get; set; }
         public UserModel User { get; set; }
         public IList<SectionResponseModel> Sections { get; set; }
 
-        public CourseResponseModel(Course model, CourseEnrollmentStatus userStatus, bool fetchSection = false)
+        public CourseResponseModel(Course model, CourseEnrollmentStatus? userStatus, bool fetchSection = false)
         {
             Id = model.Id;
             Slug = model.Slug;
