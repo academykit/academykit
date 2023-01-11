@@ -74,7 +74,7 @@
             var questionPool = await _questionPoolService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
             if (questionPool == null)
             {
-                throw new EntityNotFoundException("Question pool not found");
+                throw new EntityNotFoundException("Question pool not found.");
             }
 
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
@@ -93,7 +93,7 @@
             var questionPool = await _questionPoolService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
             if (questionPool == null)
             {
-                throw new EntityNotFoundException("Question pool not found");
+                throw new EntityNotFoundException("Question pool not found.");
             }
             var showCorrectAndHints = false;
             if (questionPool.CreatedBy == CurrentUser.Id || questionPool.QuestionPoolTeachers.Any(x => x.UserId == CurrentUser.Id))
@@ -132,92 +132,10 @@
             var questionPool = await _questionPoolService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
             if (questionPool == null)
             {
-                throw new EntityNotFoundException("Question pool not found");
+                throw new EntityNotFoundException("Question pool not found.");
             }
             await _questionService.DeleteQuestionAsync(poolIdentity: identity, questionId: id, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Question removed successfully." });
-        }
-
-        /// <summary>
-        /// Bulk question upload excel format
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("QuestionUploadExcelFormat")]
-        [AllowAnonymous]
-        public IActionResult DownloadFormat()
-        {
-            using var workbook = new XLWorkbook();
-            var currentRow = 1;
-            var worksheet = workbook.Worksheets.Add("Question");
-            worksheet.Cell(currentRow, 1).Value = "Title";
-            worksheet.Cell(currentRow, 2).Value = "Tags";
-            worksheet.Cell(currentRow, 3).Value = "Type";
-            worksheet.Cell(currentRow, 4).Value = "Description";
-            worksheet.Cell(currentRow, 5).Value = "Hints";
-            worksheet.Cell(currentRow, 6).Value = "OptionStart";
-            worksheet.Cell(currentRow, 7).Value = "";
-            worksheet.Cell(currentRow, 8).Value = "";
-            worksheet.Cell(currentRow, 9).Value = "OptionEnd";
-            worksheet.Cell(currentRow, 10).Value = "CorrectAnswer";
-
-            var worksheet2 = workbook.Worksheets.Add("Information");
-
-            worksheet2.Cell(currentRow, 1).Value = "Title";
-            worksheet2.Cell(currentRow, 2).Value = "Tags";
-            worksheet2.Cell(currentRow, 3).Value = "Type";
-            worksheet2.Cell(currentRow, 4).Value = "Description";
-            worksheet2.Cell(currentRow, 5).Value = "Hints";
-            worksheet2.Cell(currentRow, 6).Value = "OptionStart";
-            worksheet2.Cell(currentRow, 7).Value = "";
-            worksheet2.Cell(currentRow, 8).Value = "";
-            worksheet2.Cell(currentRow, 9).Value = "OptionEnd";
-            worksheet2.Cell(currentRow, 10).Value = "CorrectAnswer";
-
-            currentRow = 2;
-            worksheet2.Cell(currentRow, 1).Value = "Sample Question 1";
-            worksheet2.Cell(currentRow, 2).Value = "Sample Question 1";
-            worksheet2.Cell(currentRow, 3).Value = "0/1";
-            worksheet2.Cell(currentRow, 4).Value = "Question Description";
-            worksheet2.Cell(currentRow, 5).Value = "Question Hints";
-            worksheet2.Cell(currentRow, 6).Value = "Option 1";
-            worksheet2.Cell(currentRow, 7).Value = "Option 2";
-            worksheet2.Cell(currentRow, 8).Value = "Option 3";
-            worksheet2.Cell(currentRow, 9).Value = "Option 4";
-            worksheet2.Cell(currentRow, 10).Value = "F,H";
-
-            worksheet2.Cell(4, 1).Value = "Title";
-            worksheet2.Cell(4, 3).Value = "Question title is input in title column.";
-
-            worksheet2.Cell(5, 1).Value = "Tags";
-            worksheet2.Cell(5, 3).Value = "Question tags is input in tag column. Like (Biology,Nepali,Math). (Optional Field)";
-
-            worksheet2.Cell(6, 1).Value = "Type";
-            worksheet2.Cell(6, 3).Value = "0 is for multiple choice option and 1 is for single choice option. For now we are only accepting multiple choice option so please kindly enter 0";
-
-            worksheet2.Cell(7, 1).Value = "Description";
-            worksheet2.Cell(7, 3).Value = "Description of question is inputted here. Both text and image file valid for description.  (Optional Field).";
-
-            worksheet2.Cell(8, 1).Value = "Hints";
-            worksheet2.Cell(8, 3).Value = "Hints for question. (Optional Field).";
-
-            worksheet2.Cell(9, 1).Value = "OptionStart/OptionEnd";
-            worksheet2.Cell(9, 3).Value = "In between OptionStart and OptionEnd Column, users are requested to input the options for questions. Both text and image file is valid.";
-
-            worksheet2.Cell(10, 1).Value = "CorrectAnswer";
-            worksheet2.Cell(10, 3).Value = "Column name between OptionStart and OptionEnd like (F,G,H) is inputted for correct options.";
-
-            worksheet2.Cell(10, 1).Value = "For Image File Input";
-            worksheet2.Cell(10, 3).Value = "Users are requested to create images/ folder and save image file in images folder. In the section, " +
-                                                "where image file is valid users are requested to input image name with extension like (pic1.png,pic2.jpeg). " +
-                                                "And upload file as zip with combination of .xlsx file and images/ folder ";
-
-            using var stream = new MemoryStream();
-            workbook.SaveAs(stream);
-            var content = stream.ToArray();
-            return File(
-                content,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "questions.xlsx");
         }
     }
 }

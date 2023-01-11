@@ -48,7 +48,7 @@ namespace Lingtren.Api.Controllers
             };
 
             searchResult.Items.ForEach(p =>
-                 response.Items.Add(new CourseResponseModel(p, _courseService.GetUserCourseEnrollmentStatus(p, CurrentUser.Id, fetchMembers: true).Result))
+                 response.Items.Add(new CourseResponseModel(p, _courseService.GetUserCourseEnrollmentStatus(p, CurrentUser.Id)))
              );
             return response;
         }
@@ -108,8 +108,7 @@ namespace Lingtren.Api.Controllers
             });
 
             var response = await _courseService.CreateAsync(entity).ConfigureAwait(false);
-            var userStatus = await _courseService.GetUserCourseEnrollmentStatus(response, CurrentUser.Id).ConfigureAwait(false);
-            return new CourseResponseModel(response, userStatus);
+            return new CourseResponseModel(response, null);
         }
 
         /// <summary>
@@ -134,7 +133,7 @@ namespace Lingtren.Api.Controllers
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var savedEntity = await _courseService.UpdateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
-            var userStatus = await _courseService.GetUserCourseEnrollmentStatus(savedEntity, CurrentUser.Id, fetchMembers: true).ConfigureAwait(false);
+            var userStatus = _courseService.GetUserCourseEnrollmentStatus(savedEntity, CurrentUser.Id);
             return new CourseResponseModel(savedEntity, userStatus);
         }
 
@@ -147,7 +146,7 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> DeleteAsync(string identity)
         {
             await _courseService.DeleteCourseAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Course removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "Training removed successfully." });
         }
 
         /// <summary>
@@ -159,7 +158,7 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> UpdateCourse(string identity)
         {
             await _courseService.UpdateCourseStatusAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Course updated successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "Training updated successfully." });
         }
 
         /// <summary>
@@ -173,11 +172,11 @@ namespace Lingtren.Api.Controllers
             var statusExists = Enum.IsDefined(typeof(CourseStatus), status);
             if (!statusExists)
             {
-                _logger.LogWarning("Invalid course status : {status} requested for status change by the user with id : {userId}", status, CurrentUser.Id);
-                throw new ForbiddenException("Invalid course status requested");
+                _logger.LogWarning("Invalid training status : {status} requested for status change by the user with id : {userId}", status, CurrentUser.Id);
+                throw new ForbiddenException("Invalid training status change request.");
             }
             await _courseService.ChangeStatusAsync(identity, status, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Course status changed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "Training status changed successfully." });
         }
 
         /// <summary>
@@ -188,7 +187,7 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> Enroll(string identity)
         {
             await _courseService.EnrollmentAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "User enrolled in the course successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "User successfully enrolled in the training." });
         }
 
         /// <summary>

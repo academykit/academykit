@@ -3,7 +3,19 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
+RUN apt-get update
+RUN apt-get install -y curl
+RUN apt-get install -y libpng-dev libjpeg-dev curl libxi6 build-essential libgl1-mesa-glx
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
+RUN apt-get install -y nodejs
+
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+RUN apt-get update
+RUN apt-get install -y curl
+RUN apt-get install -y libpng-dev libjpeg-dev curl libxi6 build-essential libgl1-mesa-glx
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
+RUN apt-get install -y nodejs
+
 WORKDIR /src
 
 COPY ["./src/Api/Api.csproj", "src/Api/"]
@@ -21,7 +33,7 @@ RUN dotnet build "Api.csproj" -c Release -o /app/build
 
 # run publish over the API project
 FROM build AS publish
-RUN dotnet publish "Api.csproj" -c Release -o /app/publish
+RUN dotnet publish "Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

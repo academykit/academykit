@@ -51,7 +51,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current user id</param>
         /// <param name="fetchMembers">the bool value for fetch members</param>
         /// <returns></returns>
-        Task<CourseEnrollmentStatus> GetUserCourseEnrollmentStatus(Course course, Guid currentUserId, bool fetchMembers = false);
+        CourseEnrollmentStatus GetUserCourseEnrollmentStatus(Course course, Guid currentUserId);
 
         /// <summary>
         /// Handle to get course detail

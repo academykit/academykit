@@ -12,7 +12,7 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.Name).HasColumnName("name").HasMaxLength(500).IsRequired();
             builder.Property(x => x.Slug).HasColumnName("slug").HasColumnType("VARCHAR(520)").HasMaxLength(520).IsRequired();
-            builder.Property(x => x.ThumbnailUrl).HasColumnName("thumbnail_url").IsRequired(false);
+            builder.Property(x => x.ThumbnailUrl).HasColumnName("thumbnail_url").HasMaxLength(500).IsRequired(false);
             builder.Property(x => x.Description).HasColumnName("description").HasMaxLength(5000).IsRequired(false);
             builder.Property(x => x.NegativeMarking).HasColumnName("negative_marking").HasDefaultValue(0).HasColumnType("decimal(10,4)");
             builder.Property(x => x.QuestionMarking).HasColumnName("question_marking").IsRequired().HasColumnType("decimal(10,4)");

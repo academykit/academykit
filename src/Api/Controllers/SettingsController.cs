@@ -36,7 +36,7 @@ namespace Lingtren.Api.Controllers
             _smtpSettingValidator = smtpSettingValidator;
         }
 
-        #region general settings
+        #region General settings
 
         /// <summary>
         /// get general setting
@@ -65,7 +65,7 @@ namespace Lingtren.Api.Controllers
 
             if (existing == null)
             {
-                _logger.LogWarning("General Setting with id : {id} is not found", id);
+                _logger.LogWarning("General setting with id : {id} was not found.", id);
                 throw new EntityNotFoundException("General setting was not found.");
             }
             var currentTimeStamp = DateTime.UtcNow;
@@ -83,7 +83,7 @@ namespace Lingtren.Api.Controllers
             return new GeneralSettingResponseModel(savedEntity);
         }
 
-        #endregion general settings
+        #endregion General settings
 
         #region zoom settings
 
@@ -116,7 +116,7 @@ namespace Lingtren.Api.Controllers
 
             if (existing == null)
             {
-                _logger.LogWarning("Zoom Setting with id : {id} is not found", id);
+                _logger.LogWarning("Zoom setting with id : {id} was not found.", id);
                 throw new EntityNotFoundException("Zoom setting was not found.");
             }
             var currentTimeStamp = DateTime.UtcNow;
@@ -138,10 +138,10 @@ namespace Lingtren.Api.Controllers
 
         #endregion zoom settings
 
-        #region smtp settings
+        #region SMTP settings
 
         /// <summary>
-        /// get smtp setting
+        /// get SMTP setting
         /// </summary>
         /// <returns> the instance of <see cref="SMTPSettingResponseModel" /> .</returns>
         [HttpGet("smtp")]
@@ -153,9 +153,9 @@ namespace Lingtren.Api.Controllers
         }
 
         /// <summary>
-        /// update smtp settings
+        /// update SMTP settings
         /// </summary>
-        /// <param name="id"> the smtp setting id</param>
+        /// <param name="id"> the SMTP setting id</param>
         /// <param name="model"> the  instance of <see cref="SMTPSettingRequestModel" /> .</param>
         /// <returns> the instance of <see cref="SMTPSettingResponseModel" /> .</returns>
         [HttpPut("smtp/{id}")]
@@ -168,7 +168,7 @@ namespace Lingtren.Api.Controllers
 
             if (existing == null)
             {
-                _logger.LogWarning("SMTP Setting with id : {id} is not found", id);
+                _logger.LogWarning("SMTP setting with id : {id} was not found.", id);
                 throw new EntityNotFoundException("SMTP setting was not found.");
             }
             var currentTimeStamp = DateTime.UtcNow;
@@ -188,6 +188,6 @@ namespace Lingtren.Api.Controllers
             return new SMTPSettingResponseModel(savedEntity);
         }
 
-        #endregion smtp settings
+        #endregion SMTP settings
     }
 }

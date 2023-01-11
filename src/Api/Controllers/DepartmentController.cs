@@ -144,5 +144,17 @@
             var savedEntity = await _departmentService.UpdateAsync(existing).ConfigureAwait(false);
             return new DepartmentResponseModel(savedEntity);
         }
+
+        /// <summary>
+        /// get deparment users api
+        /// </summary>
+        /// <param name="identity">the department id or slug</param>
+        /// <returns>the instance of <see cref="UserResponseModel"/></returns>
+        [HttpGet("{identity}/users")]
+        public async Task<SearchResult<UserResponseModel>> GetUsers(string identity, BaseSearchCriteria searchCriteria)
+        {
+            IsSuperAdminOrAdmin(CurrentUser.Role);
+            return await _departmentService.GetUsers(identity, searchCriteria, CurrentUser.Id);
+        }
     }
 }

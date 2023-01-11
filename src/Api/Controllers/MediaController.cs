@@ -2,20 +2,27 @@ namespace Lingtren.Api.Controllers
 {
     using Application.Common.Models.RequestModels;
     using FluentValidation;
+    using Lingtren.Api.Common;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.ResponseModels;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.StaticFiles;
+    using System.Net;
 
     public class MediaController : BaseApiController
     {
         private readonly IMediaService _mediaService;
         private readonly IValidator<MediaRequestModel> _validator;
+        private readonly ILogger<MediaController> _logger;
         public MediaController(
             IMediaService mediaService,
-            IValidator<MediaRequestModel> validator)
+            IValidator<MediaRequestModel> validator,
+            ILogger<MediaController> logger)
         {
             _mediaService = mediaService;
             _validator = validator;
+            _logger = logger;
         }
 
         /// <summary>
@@ -49,6 +56,46 @@ namespace Lingtren.Api.Controllers
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             return await _mediaService.UploadFileAsync(model).ConfigureAwait(false);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("/read")]
+        public IActionResult Read()
+        {
+            try
+            {
+                const string networkPath = @"\\159.89.163.233\public";
+                var filePath = Path.Combine(networkPath, "hello.mp4");
+
+                _logger.LogInformation("File Path = {filePath}", filePath);
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    _logger.LogInformation("Exist File = {networkPath}", filePath);
+                }
+                else
+                {
+                    _logger.LogInformation("Does not Exist File = {filePath}", filePath);
+                }
+                var mimeType = GetMimeTypeForFileExtension(filePath);
+                return PhysicalFile(filePath, mimeType, enableRangeProcessing: true);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static string GetMimeTypeForFileExtension(string filePath)
+        {
+            const string DefaultContentType = "application/octet-stream";
+            var provider = new FileExtensionContentTypeProvider();
+
+            if (!provider.TryGetContentType(filePath, out string contentType))
+            {
+                contentType = DefaultContentType;
+            }
+            return contentType;
         }
     }
 }

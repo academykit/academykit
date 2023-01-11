@@ -96,6 +96,7 @@
             services.AddSingleton<IValidator<AssignmentReviewRequestModel>, AssignmentReviewValidator>();
             services.AddSingleton<IValidator<MediaRequestModel>, MediaValidator>();
             services.AddSingleton<IValidator<FeedbackRequestModel>, FeedbackValidator>();
+            services.AddSingleton<IValidator<IList<FeedbackSubmissionRequestModel>>, FeedbackSubmissionValidator>();
             services.AddSingleton<IValidator<SignatureRequestModel>, SignatureValidator>();
             services.AddSingleton<IValidator<CourseCertificateRequestModel>, CourseCertificateValidator>();
 

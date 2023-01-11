@@ -8,12 +8,12 @@
     {
         public ChangeEmailValidator()
         {
-            RuleFor(x => x.NewEmail).NotNull().NotEmpty().WithMessage("New password is required").Length(6, 100)
-                     .Must(email => ValidEmail(email)).WithMessage("Invalid email format");
-            RuleFor(x => x.OldEmail).NotNull().NotEmpty().WithMessage("old email is required");
-            RuleFor(x => x.Password).NotNull().NotEmpty().WithMessage("password email is required");
-            RuleFor(x => x.ConfirmEmail).NotNull().NotEmpty().WithMessage("Confirm email is required");
-            RuleFor(x => x.NewEmail).Equal(x => x.ConfirmEmail).WithMessage("New email and Confirm email does not matched");
+            RuleFor(x => x.NewEmail).NotNull().NotEmpty().WithMessage("New password is required.").Length(6, 100)
+                     .Must(email => ValidEmail(email)).WithMessage("Invalid email format.");
+            RuleFor(x => x.OldEmail).NotNull().NotEmpty().WithMessage("Old email is required.");
+            RuleFor(x => x.Password).NotNull().NotEmpty().WithMessage("Password is required.");
+            RuleFor(x => x.ConfirmEmail).NotNull().NotEmpty().WithMessage("Confirm email is required.");
+            RuleFor(x => x.NewEmail).Equal(x => x.ConfirmEmail).WithMessage("New email and confirm email does not matched.");
         }
 
         public static bool ValidEmail(string email)

@@ -30,22 +30,22 @@
         /// <summary>
         /// Check the validations required for delete
         /// </summary>
-        /// <param name="course teacher"></param>
+        /// <param name="training trainer"></param>
         /// <param name="currentUserId"></param>
         /// <returns></returns>
         protected override async Task CheckDeletePermissionsAsync(CourseTeacher teacher, Guid currentUserId)
         {
             if (teacher.UserId == currentUserId)
             {
-                _logger.LogWarning("User with id : {id} cannot remove own-self from course teacher with course id : {courseId}", currentUserId, teacher.CourseId);
-                throw new ForbiddenException("User cannot be removed themselves");
+                _logger.LogWarning("User with id : {id} cannot remove own-self from training trainer with course id : {courseId}", currentUserId, teacher.CourseId);
+                throw new ForbiddenException("User cannot be removed same user.");
             }
 
             var course = await ValidateAndGetCourse(currentUserId, courseIdentity: teacher.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
             if (course.CreatedBy == teacher.UserId)
             {
-                _logger.LogWarning("Course with Id {id} creator User Id {userId} can't be delete from course teacher.", course.Id, teacher.UserId);
-                throw new ForbiddenException("Course author cannot be removed");
+                _logger.LogWarning("Training with id {id} creator User Id {userId} can't be delete from training trainer.", course.Id, teacher.UserId);
+                throw new ForbiddenException("Training author cannot be removed.");
             }
         }
 
@@ -63,28 +63,28 @@
             var course = await ValidateAndGetCourse(entity.CreatedBy, courseIdentity: entity.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
             if (course.CreatedBy == entity.UserId)
             {
-                _logger.LogWarning("course with Id {courseId} creator User Id {userId} can't be course teacher.", course.Id, entity.UserId);
-                throw new ForbiddenException("Course author cannot be added");
+                _logger.LogWarning("Training with id {courseId} creator User Id {userId} can't be training trainer.", course.Id, entity.UserId);
+                throw new ForbiddenException("Training author cannot be added.");
             }
             var hasAccess = await IsSuperAdminOrAdminOrTrainer(entity.UserId).ConfigureAwait(false);
             if (!hasAccess)
             {
-                _logger.LogWarning("User having Id: {userId} with trainee role is not allowed to added as course teacher of course with Id {courseId}.",
+                _logger.LogWarning("User having Id: {userId} with trainee role is not allowed to added as training trainer of training with id {courseId}.",
                                             entity.UserId, course.Id);
-                throw new ForbiddenException("User with trainee role is not allowed to add as course teacher");
+                throw new ForbiddenException("User with trainee role is not allowed to add as training trainer.");
             }
             if (course.CourseTeachers.Any(p => p.UserId == entity.UserId))
             {
-                _logger.LogWarning("User with Id {userId} is already course teacher of course with Id {courseId}.", entity.UserId, course.Id);
-                throw new ForbiddenException("User is already found as course teacher");
+                _logger.LogWarning("User with Id {userId} is already training trainer of training with id {courseId}.", entity.UserId, course.Id);
+                throw new ForbiddenException("User is already found as training trainer.");
             }
             if (course.GroupId.HasValue)
             {
                 var canAccess = await ValidateUserCanAccessGroupCourse(course, entity.UserId).ConfigureAwait(false);
                 if (!canAccess)
                 {
-                    _logger.LogWarning("User with Id {userId} can't access course with Id {courseId}.", entity.UserId, course.Id);
-                    throw new ForbiddenException("Unauthorized user to added as teacher in group course.");
+                    _logger.LogWarning("User with Id {userId} can't access training with id {courseId}.", entity.UserId, course.Id);
+                    throw new ForbiddenException("Unauthorized user to added as trainer in group course.");
                 }
             }
 

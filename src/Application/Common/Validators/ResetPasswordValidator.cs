@@ -8,11 +8,11 @@
     {
         public ResetPasswordValidator()
         {
-            RuleFor(x => x.NewPassword).NotNull().NotEmpty().WithMessage("New password is required").Length(6, 20)
-                    .Must(pw => HasValidPassword(pw)).WithMessage("Password should contains at least one lowercase, one uppercase, one digit and one symbol");
-            RuleFor(x => x.ConfirmPassword).NotNull().NotEmpty().WithMessage("Confirm password is required");
-            RuleFor(x => x.PasswordChangeToken).NotNull().NotEmpty().WithMessage("Password change token is required");
-            RuleFor(x => x.NewPassword).Equal(x => x.ConfirmPassword).WithMessage("New password and Confirm password does not matched");
+            RuleFor(x => x.NewPassword).NotNull().NotEmpty().WithMessage("New password is required.").Length(6, 20)
+                    .Must(pw => HasValidPassword(pw)).WithMessage("Password should contains at least one lowercase, one uppercase, one digit and one symbol.");
+            RuleFor(x => x.ConfirmPassword).NotNull().NotEmpty().WithMessage("Confirm password is required.");
+            RuleFor(x => x.PasswordChangeToken).NotNull().NotEmpty().WithMessage("Password change token is required.");
+            RuleFor(x => x.NewPassword).Equal(x => x.ConfirmPassword).WithMessage("New password and confirm password does not matched.");
         }
 
         public static bool HasValidPassword(string pw)

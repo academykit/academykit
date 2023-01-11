@@ -113,18 +113,18 @@ namespace Lingtren.Infrastructure.Services
                     include: s => s.Include(x => x.Lessons).Include(x => x.Course)).ConfigureAwait(false);
                 if (section == null)
                 {
-                    throw new EntityNotFoundException("Section not found");
+                    throw new EntityNotFoundException("Section not found.");
                 }
                 if (section.Status == CourseStatus.Published)
                 {
-                    _logger.LogWarning("Section with id: {sectionId} is in published status", section.Id);
-                    throw new ForbiddenException("Course section is published.");
+                    _logger.LogWarning("Section with id: {sectionId} is in published status.", section.Id);
+                    throw new ForbiddenException("Training section is published.");
                 }
 
                 if (section.Lessons.Any(x => !x.IsDeleted))
                 {
-                    _logger.LogWarning("Section with id: {sectionId} consist lessons for delete", section.Id);
-                    throw new ForbiddenException("Course section consist lessons");
+                    _logger.LogWarning("Section with id: {sectionId} consist lessons for delete.", section.Id);
+                    throw new ForbiddenException("Training section consist lessons.");
                 }
 
                 section.IsDeleted = true;
@@ -155,8 +155,8 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("ReorderAsync(): Course with identity : {identity} not found for user with id :{userId}.", identity, currentUserId);
-                    throw new EntityNotFoundException("Course was not found");
+                    _logger.LogWarning("ReorderAsync(): Training with identity : {identity} not found for user with id :{userId}.", identity, currentUserId);
+                    throw new EntityNotFoundException("Training was not found.");
                 }
 
                 var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
@@ -204,8 +204,8 @@ namespace Lingtren.Infrastructure.Services
                 predicate: p => p.Id != entity.Id && p.CourseId == entity.CourseId && p.Name.ToLower() == entity.Name.ToLower() && !p.IsDeleted).ConfigureAwait(false);
             if (sectionExist)
             {
-                _logger.LogWarning("Duplicate section name : {name} is found for the section with id : {id}", entity.Name, entity.Id);
-                throw new ServiceException("Duplicate section name is found");
+                _logger.LogWarning("Duplicate section name : {name} is found for the section with id : {id}.", entity.Name, entity.Id);
+                throw new ServiceException("Duplicate section name is found.");
             }
         }
 

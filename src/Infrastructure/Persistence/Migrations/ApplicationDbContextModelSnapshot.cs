@@ -1259,8 +1259,8 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Key")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasMaxLength(500)
+                        .HasColumnType("VARCHAR(500)")
                         .HasColumnName("key");
 
                     b.Property<string>("MimeType")
@@ -1289,8 +1289,8 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasMaxLength(500)
+                        .HasColumnType("VARCHAR(500)")
                         .HasColumnName("url");
 
                     b.HasKey("Id");
@@ -1990,7 +1990,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnName("start_time");
 
                     b.Property<string>("ThumbnailUrl")
-                        .HasColumnType("longtext")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("thumbnail_url");
 
                     b.Property<string>("UpdatedBy")
@@ -2780,8 +2781,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnName("hash_password");
 
                     b.Property<string>("ImageUrl")
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasMaxLength(500)
+                        .HasColumnType("VARCHAR(500)")
                         .HasColumnName("image_url");
 
                     b.Property<bool>("IsActive")
@@ -2821,8 +2822,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnName("password_reset_token_expiry");
 
                     b.Property<string>("Profession")
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasMaxLength(250)
+                        .HasColumnType("VARCHAR(250)")
                         .HasColumnName("profession");
 
                     b.Property<string>("PublicUrls")
@@ -2898,8 +2899,8 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("VideoUrl")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasMaxLength(500)
+                        .HasColumnType("VARCHAR(500)")
                         .HasColumnName("video_url");
 
                     b.HasKey("Id");

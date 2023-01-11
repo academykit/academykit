@@ -41,8 +41,8 @@
                 var smtpSetting = await _smtpSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
                 if (smtpSetting == null)
                 {
-                    _logger.LogWarning("SMTP Setting not found");
-                    throw new EntityNotFoundException("SMTP Setting not found");
+                    _logger.LogWarning("SMTP Setting not found.");
+                    throw new EntityNotFoundException("SMTP Setting not found.");
                 }
 
                 htmlBody = htmlBody.Replace("[content]", emailRequestDto.Message);

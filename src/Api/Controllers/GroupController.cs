@@ -61,7 +61,9 @@
                          predicate: x => x.GroupId == p.Id && x.IsActive).Result;
                      var courseCount = _unitOfWork.GetRepository<Course>().CountAsync(
                          predicate: x => x.GroupId == p.Id && (x.Status == CourseStatus.Published || x.Status == CourseStatus.Completed || x.IsUpdate)).Result;
-                     response.Items.Add(new GroupResponseModel(p, memberCount, courseCount));
+                     var attachmentCount = _unitOfWork.GetRepository<GroupFile>().CountAsync(
+                         predicate: x => x.GroupId == p.Id).Result;
+                     response.Items.Add(new GroupResponseModel(p, memberCount, courseCount, attachmentCount));
                  }
              );
             return response;
@@ -103,7 +105,9 @@
         public async Task<GroupResponseModel> Get(string identity)
         {
             Group model = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return new GroupResponseModel(model, memberCount: model.GroupMembers.Count);
+            var memberCount = await _unitOfWork.GetRepository<GroupMember>().CountAsync(
+                         predicate: x => x.GroupId == model.Id && x.IsActive).ConfigureAwait(false);
+            return new GroupResponseModel(model, memberCount: memberCount);
         }
 
         /// <summary>
@@ -131,6 +135,20 @@
         }
 
         /// <summary>
+        /// delete department api
+        /// </summary>
+        /// <param name="identity"> id or slug </param>
+        /// <returns> the task complete </returns>
+        [HttpDelete("{identity}")]
+        public async Task<IActionResult> DeleteAsync(string identity)
+        {
+            IsSuperAdminOrAdmin(CurrentUser.Role);
+
+            await _groupService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = "Group removed successfully." });
+        }
+
+        /// <summary>
         /// group member search api
         /// </summary>
         /// <param name="identity">the group id or slug</param>
@@ -143,7 +161,7 @@
             var group = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             if (group == null)
             {
-                throw new EntityNotFoundException("Group not found");
+                throw new EntityNotFoundException("Group not found.");
             }
             GroupMemberBaseSearchCriteria criteria = new()
             {
@@ -182,30 +200,8 @@
         [HttpGet("{identity}/notMembers")]
         public async Task<SearchResult<UserModel>> SearchNotGroupMembers(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
         {
-            var group = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            if (group == null)
-            {
-                throw new EntityNotFoundException("Group not found");
-            }
-            var predicate = PredicateBuilder.New<User>(true);
-            if (!string.IsNullOrWhiteSpace(searchCriteria.Search))
-            {
-                var search = searchCriteria.Search.Trim().ToLower();
-                predicate = predicate.And(p => p.FirstName.Contains(search) || p.Email.Contains(search));
-            }
-            predicate = predicate.And(p => !p.Groups.Select(x => x.Name).Contains(identity) && !(p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin) && p.IsActive);
-            var users = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate).ConfigureAwait(false);
-            var result = users.ToIPagedList(searchCriteria.Page, searchCriteria.Size);
-            var response = new SearchResult<UserModel>
-            {
-                Items = new List<UserModel>(),
-                CurrentPage = result.CurrentPage,
-                PageSize = result.PageSize,
-                TotalCount = result.TotalCount,
-                TotalPage = result.TotalPage
-            };
-            result.Items.ForEach(x => response.Items.Add(new UserModel(x)));
-            return response;
+            searchCriteria.CurrentUserId = CurrentUser.Id;
+            return await _groupService.GetNonGroupMembers(identity, searchCriteria).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -269,7 +265,7 @@
 
             searchResult.Items.ForEach(p =>
             {
-                response.Items.Add(new CourseResponseModel(p, _courseService.GetUserCourseEnrollmentStatus(p, CurrentUser.Id, fetchMembers: true).Result));
+                response.Items.Add(new CourseResponseModel(p, _courseService.GetUserCourseEnrollmentStatus(p, CurrentUser.Id)));
             });
             return response;
         }

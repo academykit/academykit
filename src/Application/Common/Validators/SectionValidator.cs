@@ -6,7 +6,7 @@ namespace Lingtren.Application.Common.Validators
     {
         public SectionValidator()
         {
-            RuleFor(x => x.Name).NotNull().NotEmpty().WithMessage("Section name is required");
+            RuleFor(x => x.Name).NotNull().NotEmpty().WithMessage("Section name is required.");
         }
     }
 }

@@ -122,13 +122,13 @@
             var existing = await GetAsync(commentId, currentUserId).ConfigureAwait(false);
             if (existing == null)
             {
-                _logger.LogWarning("Comment with id :{id} not found", commentId);
-                throw new EntityNotFoundException("Comment not found");
+                _logger.LogWarning("Comment with id :{id} not found.", commentId);
+                throw new EntityNotFoundException("Comment not found.");
             }
             if (existing.CreatedBy != currentUserId)
             {
-                _logger.LogWarning("User with id: {currentUserId} is not authorized user to edit comment with id :{id}", currentUserId, commentId);
-                throw new ForbiddenException("Unauthorized user to edit comment");
+                _logger.LogWarning("User with id: {currentUserId} is not authorized user to edit comment with id :{id}.", currentUserId, commentId);
+                throw new ForbiddenException("Unauthorized user to edit comment.");
             }
             existing.Content = model.Content;
             existing.UpdatedBy = currentUserId;
@@ -165,20 +165,20 @@
             var comment = await GetAsync(id, currentUserId).ConfigureAwait(false);
             if (comment == null)
             {
-                _logger.LogWarning("Comment with id :{id} not found", id);
-                throw new EntityNotFoundException("Comment not found");
+                _logger.LogWarning("Comment with id :{id} not found.", id);
+                throw new EntityNotFoundException("Comment not found.");
             }
             var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
             if (comment.CreatedBy != currentUserId && !isSuperAdminOrAdmin && !isTeacher)
             {
-                _logger.LogWarning("User with id: {currentUserId} is not authorized user to delete comment with id :{id}", currentUserId, id);
-                throw new ForbiddenException("Unauthorized user to delete comment");
+                _logger.LogWarning("User with id: {currentUserId} is not authorized user to delete comment with id :{id}.", currentUserId, id);
+                throw new ForbiddenException("Unauthorized user to delete comment.");
             }
             var existReply = await _unitOfWork.GetRepository<CommentReply>().ExistsAsync(p => p.CommentId == comment.Id && !p.IsDeleted).ConfigureAwait(false);
             if (existReply)
             {
-                _logger.LogWarning("Comment with id:{commentId} contains replies to remove comment by user with id: {userId}", id, currentUserId);
+                _logger.LogWarning("Comment with id:{commentId} contains replies to remove comment by user with id: {userId}.", id, currentUserId);
                 throw new ForbiddenException("Please remove the reply before removing comment.");
             }
 
@@ -251,8 +251,8 @@
                 ).ConfigureAwait(false);
             if (user == null)
             {
-                _logger.LogWarning("User with id :{id} not found", currentUserId);
-                throw new EntityNotFoundException("User not found");
+                _logger.LogWarning("User with id :{id} not found.", currentUserId);
+                throw new EntityNotFoundException("User not found.");
             }
 
             var reply = new CommentReply
@@ -299,14 +299,14 @@
                 ).ConfigureAwait(false);
             if (existing == null)
             {
-                _logger.LogWarning("Comment reply with id :{id} and comment with id :{commentId} not found", replyId, commentId);
-                throw new EntityNotFoundException("Comment reply not found");
+                _logger.LogWarning("Comment reply with id :{id} and comment with id :{commentId} not found.", replyId, commentId);
+                throw new EntityNotFoundException("Comment reply not found.");
             }
             if (existing.CreatedBy != currentUserId)
             {
-                _logger.LogWarning("User with id: {currentUserId} is not authorized user to edit reply with id: {replyId} comment with id :{id}",
+                _logger.LogWarning("User with id: {currentUserId} is not authorized user to edit reply with id: {replyId} comment with id :{id}.",
                     currentUserId, replyId, commentId);
-                throw new ForbiddenException("Unauthorized user to edit comment");
+                throw new ForbiddenException("Unauthorized user to edit comment.");
             }
 
             existing.Content = model.Content;
@@ -348,15 +348,15 @@
                 ).ConfigureAwait(false);
             if (commentReply == null)
             {
-                _logger.LogWarning("Comment reply with id :{id} and comment with id :{commentId} not found", replyId, id);
-                throw new EntityNotFoundException("Comment reply not found");
+                _logger.LogWarning("Comment reply with id :{id} and comment with id :{commentId} not found.", replyId, id);
+                throw new EntityNotFoundException("Comment reply not found.");
             }
             var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
             if (commentReply.CreatedBy != currentUserId && !isSuperAdminOrAdmin && !isTeacher)
             {
-                _logger.LogWarning("User with id: {currentUserId} is not authorized user to delete comment reply with id :{replyId} having comment with id :{id}", currentUserId, replyId, id);
-                throw new ForbiddenException("Unauthorized user to delete comment reply");
+                _logger.LogWarning("User with id: {currentUserId} is not authorized user to delete comment reply with id :{replyId} having comment with id :{id}.", currentUserId, replyId, id);
+                throw new ForbiddenException("Unauthorized user to delete comment reply.");
             }
             commentReply.IsDeleted = true;
             commentReply.UpdatedBy = currentUserId;

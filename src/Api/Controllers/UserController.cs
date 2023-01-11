@@ -76,8 +76,8 @@
 
             if ((model.Role == UserRole.Admin || model.Role == UserRole.SuperAdmin) && CurrentUser.Role != UserRole.SuperAdmin)
             {
-                _logger.LogWarning("{CurrentUser.Role} cannot create user of {model.Role}", CurrentUser.Role, model.Role);
-                throw new ForbiddenException($"{CurrentUser.Role} cannot create user of {model.Role}");
+                _logger.LogWarning("{CurrentUser.Role} cannot create user with role {model.Role}.", CurrentUser.Role, model.Role);
+                throw new ForbiddenException($"{CurrentUser.Role} cannot create user with role {model.Role}.");
             }
 
             var currentTimeStamp = DateTime.UtcNow;
@@ -135,8 +135,8 @@
         {
             if (CurrentUser.Id != userId && CurrentUser.Role != UserRole.SuperAdmin && CurrentUser.Role != UserRole.Admin)
             {
-                _logger.LogWarning("User with Id : {userId} and role :{role} is not allowed to update user", CurrentUser.Id, CurrentUser.Role.ToString());
-                throw new ForbiddenException("Only same user is allowed to update user or by admin only");
+                _logger.LogWarning("User with Id : {userId} and role :{role} is not allowed to update user.", CurrentUser.Id, CurrentUser.Role.ToString());
+                throw new ForbiddenException("Only same user is allowed to update user or by admin only.");
             }
             await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Update").ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _userService.GetAsync(userId, CurrentUser.Id, includeAllProperties: false).ConfigureAwait(false);

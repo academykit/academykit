@@ -14,13 +14,17 @@
     {
         private readonly IFeedbackService _feedbackService;
         private readonly IValidator<FeedbackRequestModel> _validator;
+        private readonly IValidator<IList<FeedbackSubmissionRequestModel>> _submissionValidator;
+
         public FeedbackController(
             IFeedbackService feedbackService,
-            IValidator<FeedbackRequestModel> validator
+            IValidator<FeedbackRequestModel> validator,
+            IValidator<IList<FeedbackSubmissionRequestModel>> submissionValidator
             )
         {
             _feedbackService = feedbackService;
             _validator = validator;
+            _submissionValidator = submissionValidator;
         }
 
         /// <summary>
@@ -129,8 +133,9 @@
         [HttpPost("{lessonIdentity}/submissions")]
         public async Task<IActionResult> SubmissionAsync(string lessonIdentity, IList<FeedbackSubmissionRequestModel> model)
         {
+            await _submissionValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             await _feedbackService.FeedbackSubmissionAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Feedback Submitted Successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = "Feedback submitted Successfully." });
         }
 
         /// <summary>

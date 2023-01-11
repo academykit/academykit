@@ -35,20 +35,20 @@
 
                 if (questionPool == null)
                 {
-                    _logger.LogWarning("Question pool not found with identity : {identity}", identity);
-                    throw new EntityNotFoundException("Question pool not found");
+                    _logger.LogWarning("Question pool not found with identity : {identity}.", identity);
+                    throw new EntityNotFoundException("Question pool not found.");
                 }
 
                 var hasTeacher = ValidateQuestionPoolMaintainer(questionPool, currentUserId);
                 if (!hasTeacher)
                 {
-                    throw new ForbiddenException("Invalid access to change question pool teacher's role");
+                    throw new ForbiddenException("Invalid access to change question pool teacher's role.");
                 }
 
                 var user = questionPool?.QuestionPoolTeachers.FirstOrDefault(x => x.UserId == userId);
                 if (user == null)
                 {
-                    throw new EntityNotFoundException("User not found in question pool");
+                    throw new EntityNotFoundException("User not found in question pool.");
                 }
 
                 user.Role = role;
@@ -59,8 +59,8 @@
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while attempting to assign role to question pool");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to assign role to question pool");
+                _logger.LogError(ex, "An error occurred while attempting to assign role to question pool.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to assign role to question pool.");
             }
         }
 
@@ -104,15 +104,15 @@
         {
             if (teacher.UserId == currentUserId)
             {
-                _logger.LogWarning("User with id : {userId} cannot remove own-self from question pool teacher with pool id : {poolId}", currentUserId, teacher.QuestionPoolId);
-                throw new ForbiddenException("User cannot be removed themselves");
+                _logger.LogWarning("User with id : {userId} cannot remove own-self from question pool teacher with pool id : {poolId}.", currentUserId, teacher.QuestionPoolId);
+                throw new ForbiddenException("User cannot be removed same user.");
             }
 
             var questionPool = await ValidateAndGetQuestionPool(currentUserId, questionPoolIdentity: teacher.QuestionPoolId.ToString()).ConfigureAwait(false);
             if (questionPool.CreatedBy == teacher.UserId)
             {
                 _logger.LogWarning("QuestionPool with Id {id} creator User Id {userId} can't be delete from questionPool teacher.", questionPool.Id, teacher.UserId);
-                throw new ForbiddenException("Question pool author cannot be removed");
+                throw new ForbiddenException("Question pool author cannot be removed.");
             }
         }
 
@@ -131,12 +131,12 @@
             if (questionPool.CreatedBy == entity.UserId)
             {
                 _logger.LogWarning("QuestionPool with Id : {id} creator User Id : {userId} can't be questionPool teacher.", questionPool.Id, entity.UserId);
-                throw new ForbiddenException("Question pool author cannot be added");
+                throw new ForbiddenException("Question pool author cannot be added.");
             }
             if (questionPool.QuestionPoolTeachers.Any(p => p.UserId == entity.UserId))
             {
                 _logger.LogWarning("User with Id {userId} is already question pool teacher of question pool with Id  : {id}.", entity.UserId, questionPool.Id);
-                throw new ForbiddenException("User is already found as course teacher");
+                throw new ForbiddenException("User is already found as training trainer.");
             }
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == entity.UserId).ConfigureAwait(false);
             CommonHelper.CheckFoundEntity(user);

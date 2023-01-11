@@ -36,7 +36,7 @@
 
             if (lesson == null)
             {
-                _logger.LogWarning("Lesson with identity : {identity} not found for user with id : {id}", criteria.LessonIdentity, criteria.CurrentUserId);
+                _logger.LogWarning("Lesson with identity : {identity} not found for user with id : {id}.", criteria.LessonIdentity, criteria.CurrentUserId);
                 throw new EntityNotFoundException("Lesson not found.");
             }
 
@@ -62,8 +62,8 @@
                     predicate: p => p.FeedbackId == entity.Id).ConfigureAwait(false);
             if (feedbackSubmissions)
             {
-                _logger.LogWarning("Feedback with id : {id} having type : {type} contains Feedback submissions", entity.Id, entity.Type);
-                throw new ForbiddenException("Feedback contains feedback submissions");
+                _logger.LogWarning("Feedback with id : {id} having type : {type} contains Feedback submissions.", entity.Id, entity.Type);
+                throw new ForbiddenException("Feedback contains feedback submissions.");
             }
             _unitOfWork.GetRepository<FeedbackQuestionOption>().Delete(entity.FeedbackQuestionOptions);
         }
@@ -97,6 +97,13 @@
         protected override async Task CreatePreHookAsync(Feedback entity)
         {
             await ValidateAndGetLessonForFeedback(entity).ConfigureAwait(false);
+
+            var order = await _unitOfWork.GetRepository<Feedback>().MaxAsync(
+              predicate: p => p.LessonId == entity.LessonId && p.IsActive,
+              selector: x => (int?)x.Order
+              ).ConfigureAwait(false);
+
+            entity.Order = order == null ? 1 : order.Value + 1;
 
             if (entity.FeedbackQuestionOptions.Count > 0)
             {
@@ -132,13 +139,13 @@
                             predicate: p => p.Id == entity.LessonId && !p.IsDeleted).ConfigureAwait(false);
             if (lesson == null)
             {
-                _logger.LogWarning("Lesson with id : {lessonId} not found for Feedback with id : {id}", entity.LessonId, entity.Id);
-                throw new EntityNotFoundException("Lesson not found");
+                _logger.LogWarning("Lesson with id : {lessonId} not found for Feedback with id : {id}.", entity.LessonId, entity.Id);
+                throw new EntityNotFoundException("Lesson not found.");
             }
             if (lesson.Type != LessonType.Feedback)
             {
-                _logger.LogWarning("Lesson with id : {lessonId} is of invalid lesson type to create,edit or delete Feedback for user with id :{userId}", lesson.Id, entity.CreatedBy);
-                throw new ForbiddenException("Invalid lesson type for Feedback.");
+                _logger.LogWarning("Lesson with id : {lessonId} is of invalid lesson type to create,edit or delete Feedback for user with id :{userId}.", lesson.Id, entity.CreatedBy);
+                throw new ForbiddenException("Invalid lesson type for feedback.");
             }
             await ValidateAndGetCourse(entity.CreatedBy, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
             return lesson;
@@ -160,14 +167,14 @@
                    predicate: p => p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity).ConfigureAwait(false);
                 if (lesson == null)
                 {
-                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found");
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
+                    throw new EntityNotFoundException("Lesson not found.");
                 }
                 if (lesson.Type != LessonType.Feedback)
                 {
-                    _logger.LogWarning("Lesson type not matched for feedback submission for lesson with id: {id} and user with id: {userId}",
+                    _logger.LogWarning("Lesson type not matched for feedback submission for lesson with id: {id} and user with id: {userId}.",
                                         lesson.Id, currentUserId);
-                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}.");
                 }
                 await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
 
@@ -272,38 +279,51 @@
                     predicate: p => p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity).ConfigureAwait(false);
                 if (lesson == null)
                 {
-                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found");
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
+                    throw new EntityNotFoundException("Lesson not found.");
                 }
                 if (lesson.Type != LessonType.Feedback)
                 {
-                    _logger.LogWarning("Lesson type not matched for feedback submission for lesson with id: {id} and user with id: {userId}",
+                    _logger.LogWarning("Lesson type not matched for feedback submission for lesson with id: {id} and user with id: {userId}.",
                                         lesson.Id, currentUserId);
-                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}.");
                 }
                 if (lesson.Status != CourseStatus.Published)
                 {
-                    _logger.LogWarning("Lesson with id: {id} not published for user with id: {userId}", lesson.Id, currentUserId);
-                    throw new EntityNotFoundException("Lesson not published");
+                    _logger.LogWarning("Lesson with id: {id} not published for user with id: {userId}.", lesson.Id, currentUserId);
+                    throw new EntityNotFoundException("Lesson not published.");
                 }
 
                 var course = await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
                 if (course.Status == CourseStatus.Completed)
                 {
-                    _logger.LogWarning("Course with id : {courseId} is in {status} status to give Feedback for the user with id: {userId}",
+                    _logger.LogWarning("training with id : {courseId} is in {status} status to give Feedback for the user with id: {userId}.",
                         course.Id, course.Status, currentUserId);
-                    throw new ForbiddenException($"Cannot submit Feedback to the course having {course.Status} status");
+                    throw new ForbiddenException($"Cannot submit feedback of the training having {course.Status} status.");
                 }
                 if (course.CourseTeachers.Any(x => x.UserId == currentUserId))
                 {
-                    _logger.LogWarning("User with id: {userId} is a teacher of the course with id: {courseId} and lesson with id: {lessonId} to submit the feedback",
+                    _logger.LogWarning("User with id: {userId} is a teacher of the training with id: {courseId} and lesson with id: {lessonId} to submit the feedback.",
                         currentUserId, course.Id, lesson.Id);
-                    throw new ForbiddenException("Course teacher cannot submit the feedback");
+                    throw new ForbiddenException("Training trainer cannot submit the feedback.");
                 }
 
                 var feedbacks = await _unitOfWork.GetRepository<Feedback>().GetAllAsync(
                     predicate: p => p.LessonId == lesson.Id && p.IsActive,
-                    include: src => src.Include(x => x.FeedbackQuestionOptions)).ConfigureAwait(false);
+                    include: src => src.Include(x => x.FeedbackQuestionOptions)
+                    ).ConfigureAwait(false);
+
+                var feedbackIds = feedbacks.Select(x => x.Id).ToList();
+
+                var feebackSubmissionExists = await _unitOfWork.GetRepository<FeedbackSubmission>().ExistsAsync(
+                    predicate: p => feedbackIds.Contains(p.FeedbackId) && p.UserId == currentUserId
+                    ).ConfigureAwait(false);
+
+                if (feebackSubmissionExists)
+                {
+                    _logger.LogWarning("User with id: {userId} cannot resubmit the feedback having id: {feedbackId}.", currentUserId, lesson.Id);
+                    throw new ForbiddenException("Feedback cannot be re-submitted.");
+                }
 
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
                     predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
@@ -313,17 +333,10 @@
 
                 foreach (var item in models)
                 {
-                    var Feedback = feedbacks.FirstOrDefault(x => x.Id == item.FeedbackId);
-                    if (Feedback != null)
+                    var feedback = feedbacks.FirstOrDefault(x => x.Id == item.FeedbackId);
+                    if (feedback != null)
                     {
-                        if (item.Id != default)
-                        {
-                            await UpdateSubmissionAsync(currentUserId, currentTimeStamp, item, Feedback).ConfigureAwait(false);
-                        }
-                        else
-                        {
-                            await InsertSubmissionAsync(currentUserId, lesson.Id, currentTimeStamp, item, Feedback).ConfigureAwait(false);
-                        }
+                        await InsertSubmissionAsync(currentUserId, lesson.Id, currentTimeStamp, item, feedback).ConfigureAwait(false);
                     }
                 }
 
@@ -342,6 +355,8 @@
                         UpdatedBy = currentUserId,
                         UpdatedOn = currentTimeStamp,
                     };
+                    await ManageStudentCourseComplete(course.Id, lesson.Id, currentUserId, currentTimeStamp).ConfigureAwait(false);
+
                     await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
                 }
 
@@ -366,28 +381,18 @@
         /// <returns></returns>
         private async Task InsertSubmissionAsync(Guid currentUserId, Guid lessonId, DateTime currentTimeStamp, FeedbackSubmissionRequestModel item, Feedback feedback)
         {
-            var feedbackSubmission = await _unitOfWork.GetRepository<FeedbackSubmission>().GetFirstOrDefaultAsync(
-                predicate: p => p.Id == item.Id && p.UserId == currentUserId
-                ).ConfigureAwait(false);
-            if (feedbackSubmission == null)
+            var feedbackSubmission = new FeedbackSubmission
             {
-                feedbackSubmission = new FeedbackSubmission
-                {
-                    Id = Guid.NewGuid(),
-                    LessonId = lessonId,
-                    FeedbackId = feedback.Id,
-                    UserId = currentUserId,
-                    CreatedBy = currentUserId,
-                    CreatedOn = currentTimeStamp,
-                    UpdatedBy = currentUserId,
-                    UpdatedOn = currentTimeStamp,
-                };
-            }
-            else
-            {
-                feedbackSubmission.UpdatedOn = currentTimeStamp;
-                feedbackSubmission.UpdatedBy = currentUserId;
-            }
+                Id = Guid.NewGuid(),
+                LessonId = lessonId,
+                FeedbackId = feedback.Id,
+                UserId = currentUserId,
+                CreatedBy = currentUserId,
+                CreatedOn = currentTimeStamp,
+                UpdatedBy = currentUserId,
+                UpdatedOn = currentTimeStamp,
+            };
+
             if (feedback.Type == FeedbackTypeEnum.SingleChoice || feedback.Type == FeedbackTypeEnum.MultipleChoice)
             {
                 feedbackSubmission.SelectedOption = string.Join(",", item.SelectedOption);
@@ -401,29 +406,6 @@
                 feedbackSubmission.Rating = item.Rating;
             }
             await _unitOfWork.GetRepository<FeedbackSubmission>().InsertAsync(feedbackSubmission).ConfigureAwait(false);
-        }
-
-        private async Task UpdateSubmissionAsync(Guid currentUserId, DateTime currentTimeStamp, FeedbackSubmissionRequestModel item, Feedback feedback)
-        {
-            var feedbackSubmission = await _unitOfWork.GetRepository<FeedbackSubmission>().GetFirstOrDefaultAsync(
-                                            predicate: p => p.Id == item.Id && p.UserId == currentUserId
-                                            ).ConfigureAwait(false);
-
-            feedbackSubmission.UpdatedOn = currentTimeStamp;
-            feedbackSubmission.UpdatedBy = currentUserId;
-            if (feedback.Type == FeedbackTypeEnum.SingleChoice || feedback.Type == FeedbackTypeEnum.MultipleChoice)
-            {
-                feedbackSubmission.SelectedOption = string.Join(",", item.SelectedOption);
-            }
-            if (feedback.Type == FeedbackTypeEnum.Subjective)
-            {
-                feedbackSubmission.Answer = item.Answer;
-            }
-            if (feedback.Type == FeedbackTypeEnum.Rating)
-            {
-                feedbackSubmission.Rating = item.Rating;
-            }
-            _unitOfWork.GetRepository<FeedbackSubmission>().Update(feedbackSubmission);
         }
 
         #endregion Private Methods
@@ -441,14 +423,14 @@
 
             if (lesson == null)
             {
-                _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", searchCriteria.LessonIdentity, searchCriteria.CurrentUserId);
-                throw new EntityNotFoundException("Lesson not found");
+                _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", searchCriteria.LessonIdentity, searchCriteria.CurrentUserId);
+                throw new EntityNotFoundException("Lesson not found.");
             }
             if (lesson.Type != LessonType.Feedback)
             {
-                _logger.LogWarning("Lesson type not matched for Feedback fetch for lesson with id: {id} and user with id: {userId}",
+                _logger.LogWarning("Lesson type not matched for Feedback fetch for lesson with id: {id} and user with id: {userId}.",
                                     lesson.Id, searchCriteria.CurrentUserId);
-                throw new ForbiddenException($"Invalid lesson type :{lesson.Type}");
+                throw new ForbiddenException($"Invalid lesson type :{lesson.Type}.");
             }
 
             var course = await ValidateAndGetCourse(searchCriteria.CurrentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
@@ -466,7 +448,8 @@
 
             var feedbacks = await _unitOfWork.GetRepository<Feedback>().GetAllAsync(
                 predicate: p => p.LessonId == lesson.Id,
-                include: src => src.Include(x => x.FeedbackQuestionOptions)
+                include: src => src.Include(x => x.FeedbackQuestionOptions),
+                orderBy: o => o.OrderBy(x => x.Order)
                 ).ConfigureAwait(false);
 
             var userFeedbacks = await _unitOfWork.GetRepository<FeedbackSubmission>().GetAllAsync(
@@ -506,7 +489,7 @@
             {
                 var selectedAnsIds = !string.IsNullOrWhiteSpace(userFeedback?.SelectedOption) ?
                                         userFeedback?.SelectedOption.Split(",").Select(Guid.Parse).ToList() : new List<Guid>();
-                item.FeedbackQuestionOptions?.ToList().ForEach(x =>
+                item.FeedbackQuestionOptions?.OrderBy(x => x.Order).ToList().ForEach(x =>
                                 data.FeedbackQuestionOptions.Add(new FeedbackQuestionOptionResponseModel()
                                 {
                                     Id = x.Id,

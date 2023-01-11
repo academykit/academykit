@@ -92,13 +92,13 @@
 
                 if (questionPool == null)
                 {
-                    _logger.LogWarning("Question pool not found with identity: {identity}", identity);
-                    throw new EntityNotFoundException("Question pool not found");
+                    _logger.LogWarning("Question pool not found with identity: {identity}.", identity);
+                    throw new EntityNotFoundException("Question pool not found.");
                 }
                 if (currentUserId != questionPool.CreatedBy && !questionPool.QuestionPoolTeachers.Any(x => x.UserId == currentUserId))
                 {
-                    _logger.LogWarning("User with id: {currentUserId} is not allowed to add question in the question pool with id: {questionPoolId}", currentUserId, questionPool.Id);
-                    throw new ForbiddenException("Unauthorized user to add question in pool");
+                    _logger.LogWarning("User with id: {currentUserId} is not allowed to add question in the question pool with id: {questionPoolId}.", currentUserId, questionPool.Id);
+                    throw new ForbiddenException("Unauthorized user to add question in pool.");
                 }
                 var currentTimeStamp = DateTime.UtcNow;
                 var entity = new Question()
@@ -184,20 +184,20 @@
                                                             include: src => src.Include(x => x.QuestionPoolTeachers)).ConfigureAwait(false);
                 if (questionPool == null)
                 {
-                    _logger.LogWarning("Question pool not found with identity: {poolIdentity}", poolIdentity);
-                    throw new EntityNotFoundException("Question pool not found");
+                    _logger.LogWarning("Question pool not found with identity: {poolIdentity}.", poolIdentity);
+                    throw new EntityNotFoundException("Question pool not found.");
                 }
                 var existing = await _unitOfWork.GetRepository<Question>().GetFirstOrDefaultAsync(predicate: x => x.Id == questionId,
                                                             include: src => src.Include(x => x.QuestionOptions).Include(x => x.QuestionTags)).ConfigureAwait(false);
                 if (existing == null)
                 {
-                    _logger.LogWarning("Question not found with id: {questionId}", questionId);
-                    throw new EntityNotFoundException("Question not found");
+                    _logger.LogWarning("Question not found with id: {questionId}.", questionId);
+                    throw new EntityNotFoundException("Question not found.");
                 }
                 if (existing.CreatedBy != currentUserId)
                 {
-                    _logger.LogWarning("User with id: {currentUserId} is not allowed to update question with id: {id}", currentUserId, existing.Id);
-                    throw new ForbiddenException("Unauthorized user to update the question");
+                    _logger.LogWarning("User with id: {currentUserId} is not allowed to update question with id: {id}.", currentUserId, existing.Id);
+                    throw new ForbiddenException("Unauthorized user to update the question.");
                 }
 
                 var questionPoolQuestion = await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetFirstOrDefaultAsync(
@@ -213,8 +213,8 @@
                         ).ConfigureAwait(false);
                     if (existQuestionSetSubmissions)
                     {
-                        _logger.LogWarning("Question with id: {id} cannot be edited such that it is associated with exam submission", existing.Id);
-                        throw new ForbiddenException("Question is associated with exam submission so it cannot be edited");
+                        _logger.LogWarning("Question with id: {id} cannot be edited such that it is associated with exam submission.", existing.Id);
+                        throw new ForbiddenException("Question is associated with exam submission. So, it cannot be edited.");
                     }
                 }
                 var currentTimeStamp = DateTime.UtcNow;
@@ -294,21 +294,21 @@
                                                                 x.Slug.Equals(poolIdentity)) && !x.IsDeleted).ConfigureAwait(false);
                 if (questionPool == null)
                 {
-                    _logger.LogWarning("Question pool not found with identity: {poolIdentity}", poolIdentity);
-                    throw new EntityNotFoundException("Question pool not found");
+                    _logger.LogWarning("Question pool not found with identity: {poolIdentity}.", poolIdentity);
+                    throw new EntityNotFoundException("Question pool not found.");
                 }
 
                 var existing = await _unitOfWork.GetRepository<Question>().GetFirstOrDefaultAsync(predicate: p => p.Id == questionId,
                                                     include: src => src.Include(x => x.QuestionOptions).Include(x => x.QuestionTags)).ConfigureAwait(false);
                 if (existing == null)
                 {
-                    _logger.LogWarning("Question not found with id: {id}", questionId);
-                    throw new EntityNotFoundException("Question not found");
+                    _logger.LogWarning("Question not found with id: {id}.", questionId);
+                    throw new EntityNotFoundException("Question not found.");
                 }
                 if (existing.CreatedBy != currentUserId)
                 {
-                    _logger.LogWarning("User with id: {currentUserId} is not allowed to update question with id: {id}", currentUserId, existing.Id);
-                    throw new ForbiddenException("Unauthorized user to delete question");
+                    _logger.LogWarning("User with id: {currentUserId} is not allowed to update question with id: {id}.", currentUserId, existing.Id);
+                    throw new ForbiddenException("Unauthorized user to delete question.");
                 }
                 var questionPoolQuestion = await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetFirstOrDefaultAsync(
                     predicate: p => p.QuestionPoolId == questionPool.Id && p.QuestionId == existing.Id).ConfigureAwait(false);
@@ -318,8 +318,8 @@
 
                 if (checkQuestionSetQuestionExist)
                 {
-                    _logger.LogWarning("Question with id: {id} is associated with Question-Set-Questions", existing.Id);
-                    throw new ForbiddenException("Question is associated with question set");
+                    _logger.LogWarning("Question with id: {id} is associated with Question-Set-Questions.", existing.Id);
+                    throw new ForbiddenException("Question is associated with question set.");
                 }
 
                 _unitOfWork.GetRepository<QuestionPoolQuestion>().Delete(questionPoolQuestion);

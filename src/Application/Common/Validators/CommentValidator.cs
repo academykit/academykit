@@ -6,8 +6,8 @@
     {
         public CommentValidator()
         {
-            RuleFor(x => x.Content).NotNull().NotEmpty().WithMessage("Content is required")
-                .MaximumLength(500).WithMessage("Name length must be less than or equal to 500 characters");
+            RuleFor(x => x.Content).NotNull().NotEmpty().WithMessage("Content is required.")
+                .MaximumLength(500).WithMessage("Name length must be less than or equal to 500 characters.");
         }
     }
 }

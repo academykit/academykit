@@ -62,5 +62,13 @@
         /// <param name="searchCriteria"> the instance of <see cref="GroupFileSearchCriteria" /> . </param>
         /// <returns> the list of <see cref="GroupFileResponseModel" /> .</returns>
         Task<SearchResult<GroupFile>> GetGroupFilesAsync(GroupFileSearchCriteria searchCriteria);
+
+        /// <summary>
+        /// Handle to get users who is not present in members
+        /// </summary>
+        /// <param name="identity">the group id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the search result of <see cref="UserModel"/></returns>
+        Task<SearchResult<UserModel>> GetNonGroupMembers(string identity, BaseSearchCriteria criteria);
     }
 }

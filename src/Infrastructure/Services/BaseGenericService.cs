@@ -293,8 +293,6 @@
 
                 var result = query.ToPagedList(criteria.Page, criteria.Size);
 
-                await PopulateRetrievedEntities(result.Items).ConfigureAwait(false);
-
                 return result;
             }).ConfigureAwait(false);
         }
@@ -402,21 +400,6 @@
         {
             // do nothing by default
             await Task.FromResult(0);
-        }
-
-        /// <summary>
-        /// Populates the retrieved entities in batch.
-        /// </summary>
-        /// <remarks>
-        /// It should be overridden in child services to populate extra properties.
-        /// </remarks>
-        protected virtual async Task PopulateRetrievedEntities(IList<T> entities)
-        {
-            // do nothing by default
-            foreach (var entity in entities)
-            {
-                await PopulateRetrievedEntity(entity);
-            }
         }
 
         /// <summary>

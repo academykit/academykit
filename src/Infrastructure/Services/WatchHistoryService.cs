@@ -90,15 +90,15 @@
             var course = await ValidateAndGetCourse(currentUserId, model.CourseIdentity, validateForModify: false).ConfigureAwait(false);
             if (course == null)
             {
-                _logger.LogWarning("Course with identity: {identity} not found for user with :{id}", model.CourseIdentity, currentUserId);
-                throw new EntityNotFoundException("Course not found");
+                _logger.LogWarning("Training with identity: {identity} not found for user with :{id}.", model.CourseIdentity, currentUserId);
+                throw new EntityNotFoundException("Training not found.");
             }
             var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                 predicate: p => p.CourseId == course.Id && (p.Id.ToString() == model.LessonIdentity || p.Slug == model.LessonIdentity)).ConfigureAwait(false);
             if (lesson == null)
             {
-                _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and course with id : {courseId}", model.LessonIdentity, currentUserId, course.Id);
-                throw new EntityNotFoundException("Lesson not found");
+                _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and training with id : {courseId}.", model.LessonIdentity, currentUserId, course.Id);
+                throw new EntityNotFoundException("Lesson not found.");
             }
 
             var isCompleted = false;
@@ -143,26 +143,7 @@
                 await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
                 response = watchHistory;
             }
-
-            var percentage = await this.GetCourseCompletedPercentage(course.Id, currentUserId).ConfigureAwait(false);
-
-            var courseEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(
-                predicate: p => p.CourseId == course.Id && p.UserId == currentUserId
-                                && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)
-                ).ConfigureAwait(false);
-
-            if (courseEnrollment != null)
-            {
-                courseEnrollment.Percentage = percentage;
-                courseEnrollment.CurrentLessonId = lesson.Id;
-                courseEnrollment.UpdatedBy = currentUserId;
-                courseEnrollment.UpdatedOn = currentTimeStamp;
-                if (percentage == 100)
-                {
-                    courseEnrollment.EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Completed;
-                }
-                _unitOfWork.GetRepository<CourseEnrollment>().Update(courseEnrollment);
-            }
+            await ManageStudentCourseComplete( course.Id, lesson.Id, currentUserId, currentTimeStamp).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             return new WatchHistoryResponseModel
             {
@@ -173,6 +154,8 @@
                 WatchedDate = Convert.ToDateTime(response.UpdatedOn)
             };
         }
+
+
 
         /// <summary>
         /// Handle to pass student in requested lesson
@@ -188,15 +171,15 @@
                 var course = await ValidateAndGetCourse(currentUserId, model.CourseIdentity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Course with identity: {identity} not found for user with :{id}", model.CourseIdentity, currentUserId);
-                    throw new EntityNotFoundException("Course not found");
+                    _logger.LogWarning("Training with identity: {identity} not found for user with :{id}.", model.CourseIdentity, currentUserId);
+                    throw new EntityNotFoundException("Training not found.");
                 }
                 var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                     predicate: p => p.CourseId == course.Id && (p.Id.ToString() == model.LessonIdentity || p.Slug == model.LessonIdentity)).ConfigureAwait(false);
                 if (lesson == null)
                 {
-                    _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and course with id : {courseId}", model.LessonIdentity, currentUserId, course.Id);
-                    throw new EntityNotFoundException("Lesson not found");
+                    _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and training with id : {courseId}.", model.LessonIdentity, currentUserId, course.Id);
+                    throw new EntityNotFoundException("Lesson not found.");
                 }
                 var currentTimeStamp = DateTime.UtcNow;
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
@@ -253,14 +236,14 @@
                     predicate: p => p.CourseId == courseId && !p.IsDeleted && p.Status == CourseStatus.Published).ConfigureAwait(false);
                 var completedLessonCount = await _unitOfWork.GetRepository<WatchHistory>().CountAsync(
                     predicate: p => p.CourseId == courseId && p.UserId == currentUserId && p.IsCompleted).ConfigureAwait(false);
-                var percentage = (Convert.ToDouble(completedLessonCount) / Convert.ToDouble(totalLessonCount)) * 100;
+                var percentage = (Convert.ToDouble(completedLessonCount + 1) / Convert.ToDouble(totalLessonCount)) * 100;
                 var result = Convert.ToInt32(percentage);
                 return result;
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex, "An error occurred while trying to calculate course completed percentage.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to calculate course completed percentage.");
+                _logger.LogError(ex, "An error occurred while trying to calculate training completed percentage.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to calculate training completed percentage.");
             }
         }
 

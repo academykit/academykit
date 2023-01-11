@@ -151,7 +151,8 @@
                 predicate: predicate,
                 include: s => s.Include(x => x.CourseTeachers)
                                 .Include(x => x.User)
-                                .Include(x => x.CourseTags)).ConfigureAwait(false);
+                                .Include(x => x.CourseEnrollments)
+                                ).ConfigureAwait(false);
 
             CommonHelper.CheckFoundEntity(course);
 
@@ -162,12 +163,6 @@
                     predicate: p => p.Id == course.GroupId,
                     include: src => src.Include(x => x.GroupMembers)).ConfigureAwait(false);
             }
-
-            course.CourseEnrollments = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
-                predicate: p => p.CourseId == course.Id
-                    && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)
-                    ).ConfigureAwait(false);
-            // if current user is the creator he can modify/access the course
 
             var isSuperAdminOrAdminAccess = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
 
@@ -183,9 +178,9 @@
                 {
                     return course;
                 }
-                throw new ForbiddenException("You are not allowed to access this course.");
+                throw new ForbiddenException("You are not allowed to access this training.");
             }
-            throw new ForbiddenException("You are not allowed to modify this course.");
+            throw new ForbiddenException("You are not allowed to modify this training.");
         }
 
         protected async Task<bool> ValidateUserCanAccessGroupCourse(Course course, Guid currentUserId)
@@ -271,6 +266,62 @@
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
                 predicate: p => p.Id == currentUserId && p.IsActive && p.Role == UserRole.Trainer).ConfigureAwait(false);
             return user != null;
+        }
+
+        /// <summary>
+        ///  Handle to get course completed percentage
+        /// </summary>
+        /// <param name="courseId"> the course id </param>
+        /// <param name="currentUserId"> the lesson id</param>
+        /// <returns> the percentage </returns>
+        private async Task<int> GetCourseCompletedPercentage(Guid courseId, Guid currentUserId)
+        {
+            try
+            {
+                var totalLessonCount = await _unitOfWork.GetRepository<Lesson>().CountAsync(
+                    predicate: p => p.CourseId == courseId && !p.IsDeleted && p.Status == CourseStatus.Published).ConfigureAwait(false);
+                var completedLessonCount = await _unitOfWork.GetRepository<WatchHistory>().CountAsync(
+                    predicate: p => p.CourseId == courseId && p.UserId == currentUserId && p.IsCompleted).ConfigureAwait(false);
+                var percentage = totalLessonCount == 0 ? 0 : (Convert.ToDouble(completedLessonCount + 1) / Convert.ToDouble(totalLessonCount)) * 100;
+                var result = Convert.ToInt32(percentage);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to calculate training completed percentage.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to calculate training completed percentage.");
+            }
+        }
+
+        /// <summary>
+        /// Handle to manage student course complete state
+        /// </summary>
+        /// <param name="currentUserId">the current user id</param>
+        /// <param name="courseId">the course id <see </param>
+        /// <param name="lessonId">the lesson id</param>
+        /// <param name="currentTimeStamp">the current time stamp</param>
+        /// <returns>the task complete</returns>
+        protected async Task ManageStudentCourseComplete(Guid courseId, Guid lessonId, Guid currentUserId, DateTime currentTimeStamp)
+        {
+            var percentage = await GetCourseCompletedPercentage(courseId, currentUserId).ConfigureAwait(false);
+
+            var courseEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(
+                predicate: p => p.CourseId == courseId && p.UserId == currentUserId
+                                && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)
+                ).ConfigureAwait(false);
+
+            if (courseEnrollment != null)
+            {
+                courseEnrollment.Percentage = percentage;
+                courseEnrollment.CurrentLessonId = lessonId;
+                courseEnrollment.UpdatedBy = currentUserId;
+                courseEnrollment.UpdatedOn = currentTimeStamp;
+                if (percentage == 100)
+                {
+                    courseEnrollment.EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Completed;
+                }
+                _unitOfWork.GetRepository<CourseEnrollment>().Update(courseEnrollment);
+            }
         }
     }
 }
