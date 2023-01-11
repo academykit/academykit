@@ -64,33 +64,21 @@ namespace Lingtren.Api.Controllers
         {
             try
             {
+                const string networkPath = @"\\159.89.163.233\public";
+                var filePath = Path.Combine(networkPath, "hello.mp4");
 
-                //NetworkCredential credentials = new NetworkCredential(@"smbadmin", "smbadmin");
-                string networkPath = @"\\159.89.163.233/public/hello.mp4";
+                _logger.LogInformation("File Path = {filePath}", filePath);
 
-                _logger.LogInformation($"Network Path = {networkPath}");
-
-                ////string myNetworkPath = string.Empty;
-                ////using (new ConnectToSharedFolder(networkPath, credentials))
-                ////{
-
-                //var filePath = Path.Combine(networkPath, "hello.mp4");
-                //_logger.LogInformation($"File Path = {filePath}");
-                if (System.IO.File.Exists(networkPath))
+                if (System.IO.File.Exists(filePath))
                 {
-                    _logger.LogInformation($"Exist File = {networkPath}");
+                    _logger.LogInformation("Exist File = {networkPath}", filePath);
                 }
                 else
                 {
-                    _logger.LogInformation($"Does not Exist File = {networkPath}");
+                    _logger.LogInformation("Does not Exist File = {filePath}", filePath);
                 }
-
                 var mimeType = GetMimeTypeForFileExtension(networkPath);
-                _logger.LogInformation($"Test 123 = {mimeType}");
-
                 return PhysicalFile(networkPath, mimeType, enableRangeProcessing: true);
-
-                //}
             }
             catch (Exception ex)
             {
@@ -98,7 +86,7 @@ namespace Lingtren.Api.Controllers
             }
         }
 
-        private string GetMimeTypeForFileExtension(string filePath)
+        private static string GetMimeTypeForFileExtension(string filePath)
         {
             const string DefaultContentType = "application/octet-stream";
             var provider = new FileExtensionContentTypeProvider();
