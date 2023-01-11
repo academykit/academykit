@@ -34,7 +34,6 @@ mono_crash.*
 
 /src/Api/obj/*
 /src/Api/bin/*
-/src/Api/Properties/*
 
 /tests/Application.IntegrationTests/bin/*
 /tests/Application.IntegrationTests/obj/*
