@@ -265,7 +265,7 @@
 
             searchResult.Items.ForEach(p =>
             {
-                response.Items.Add(new CourseResponseModel(p, _courseService.GetUserCourseEnrollmentStatus(p, CurrentUser.Id, fetchMembers: true).Result));
+                response.Items.Add(new CourseResponseModel(p, _courseService.GetUserCourseEnrollmentStatus(p, CurrentUser.Id)));
             });
             return response;
         }

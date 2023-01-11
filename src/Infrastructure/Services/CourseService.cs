@@ -137,7 +137,8 @@ namespace Lingtren.Infrastructure.Services
                         .Include(x => x.CourseTags).ThenInclude(x => x.Tag)
                         .Include(x => x.Level)
                         .Include(x => x.Group)
-                        .Include(x => x.CourseTeachers);
+                        .Include(x => x.CourseTeachers)
+                        .Include(x => x.CourseEnrollments);
         }
 
         /// <summary>
@@ -464,7 +465,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="id">the training id</param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
-        public async Task<CourseEnrollmentStatus> GetUserCourseEnrollmentStatus(Course course, Guid currentUserId, bool fetchMembers = false)
+        public CourseEnrollmentStatus GetUserCourseEnrollmentStatus(Course course, Guid currentUserId)
         {
             CourseEnrollmentStatus userStatus = CourseEnrollmentStatus.NotEnrolled;
             if (course.CreatedBy == currentUserId)
@@ -475,18 +476,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 return CourseEnrollmentStatus.Teacher;
             }
-            var enrolledMember = new CourseEnrollment();
-            if (fetchMembers)
-            {
-                enrolledMember = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(
-                predicate: p => p.CourseId == course.Id && p.UserId == currentUserId && !p.IsDeleted
-                            && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
-                                || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)).ConfigureAwait(false);
-            }
-            else
-            {
-                enrolledMember = course.CourseEnrollments?.FirstOrDefault(p => p.UserId == currentUserId && !p.IsDeleted);
-            }
+            var enrolledMember = course.CourseEnrollments?.FirstOrDefault(p => p.UserId == currentUserId && !p.IsDeleted);
 
             if (enrolledMember != null)
             {
@@ -545,7 +535,7 @@ namespace Lingtren.Infrastructure.Services
                     GroupId = course.GroupId,
                     User = course.User != null ? new UserModel(course.User) : new UserModel(),
                     Status = course.Status,
-                    UserStatus = GetUserCourseEnrollmentStatus(course, currentUserId, fetchMembers: true).Result,
+                    UserStatus = GetUserCourseEnrollmentStatus(course, currentUserId),
                     Sections = new List<SectionResponseModel>(),
                     Tags = new List<CourseTagResponseModel>()
                 };
@@ -636,10 +626,9 @@ namespace Lingtren.Infrastructure.Services
                 predicate: predicate,
                 include: src => src.Include(x => x.CourseTeachers)
                                 .Include(x => x.CourseTags)
+                                .Include(x=>x.CourseEnrollments)
                 ).ConfigureAwait(false);
             var result = course.ToIPagedList(criteria.Page, criteria.Size);
-
-            await PopulateRetrievedEntities(result.Items).ConfigureAwait(false);
             return result;
         }
 
@@ -735,7 +724,7 @@ namespace Lingtren.Infrastructure.Services
                     IsMandatory = x.IsMandatory,
                     EnrolledStudent = course.CourseEnrollments.Count,
                     LessonWatched = _unitOfWork.GetRepository<WatchHistory>().CountAsync(
-                                        predicate: p => p.LessonId == x.Id && p.IsCompleted 
+                                        predicate: p => p.LessonId == x.Id && p.IsCompleted
                                             && course.CourseEnrollments.Select(x => x.UserId).Contains(p.UserId)).Result
                 }));
                 return response;

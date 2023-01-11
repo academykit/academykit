@@ -151,7 +151,8 @@
                 predicate: predicate,
                 include: s => s.Include(x => x.CourseTeachers)
                                 .Include(x => x.User)
-                                .Include(x => x.CourseTags)).ConfigureAwait(false);
+                                .Include(x => x.CourseEnrollments)
+                                ).ConfigureAwait(false);
 
             CommonHelper.CheckFoundEntity(course);
 
@@ -162,12 +163,6 @@
                     predicate: p => p.Id == course.GroupId,
                     include: src => src.Include(x => x.GroupMembers)).ConfigureAwait(false);
             }
-
-            course.CourseEnrollments = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
-                predicate: p => p.CourseId == course.Id
-                    && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)
-                    ).ConfigureAwait(false);
-            // if current user is the creator he can modify/access the course
 
             var isSuperAdminOrAdminAccess = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
 

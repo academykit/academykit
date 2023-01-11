@@ -414,7 +414,7 @@
                     };
                 }
 
-                response.UserStatus = await _courseService.GetUserCourseEnrollmentStatus(course, currentUserId, fetchMembers: true).ConfigureAwait(false);
+                response.UserStatus = _courseService.GetUserCourseEnrollmentStatus(course, currentUserId);
 
                 foreach (var item in assignments)
                 {
@@ -470,7 +470,7 @@
             predicate = predicate.And(x => x.LessonId == lesson.Id);
 
             var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
-                predicate: p => p.LessonId == lesson.Id,
+                predicate: predicate,
                 include: src => src.Include(x => x.AssignmentAttachments).Include(x => x.AssignmentQuestionOptions),
                 orderBy: x => x.OrderBy(a => a.Order)
                 ).ConfigureAwait(false);
