@@ -734,7 +734,9 @@ namespace Lingtren.Infrastructure.Services
                     SectionName = x.Section?.Name,
                     IsMandatory = x.IsMandatory,
                     EnrolledStudent = course.CourseEnrollments.Count,
-                    LessonWatched = _unitOfWork.GetRepository<WatchHistory>().CountAsync(predicate: p => p.LessonId == x.Id && p.IsCompleted).Result
+                    LessonWatched = _unitOfWork.GetRepository<WatchHistory>().CountAsync(
+                                        predicate: p => p.LessonId == x.Id && p.IsCompleted 
+                                            && course.CourseEnrollments.Select(x => x.UserId).Contains(p.UserId)).Result
                 }));
                 return response;
             }
