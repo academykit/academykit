@@ -30,6 +30,8 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(
                 ));
 
 builder.Services.AddAuthorization();
+builder.Logging.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Logs/myapp-{Date}.txt"), minimumLevel: LogLevel.Warning);
+
 
 var app = builder.Build();
 
