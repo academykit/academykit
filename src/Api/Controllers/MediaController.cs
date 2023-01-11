@@ -60,7 +60,7 @@ namespace Lingtren.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet("/read")]
-        public async Task<IActionResult> Read()
+        public IActionResult Read()
         {
             try
             {
@@ -77,8 +77,8 @@ namespace Lingtren.Api.Controllers
                 {
                     _logger.LogInformation("Does not Exist File = {filePath}", filePath);
                 }
-                var mimeType = GetMimeTypeForFileExtension(networkPath);
-                return PhysicalFile(networkPath, mimeType, enableRangeProcessing: true);
+                var mimeType = GetMimeTypeForFileExtension(filePath);
+                return PhysicalFile(filePath, mimeType, enableRangeProcessing: true);
             }
             catch (Exception ex)
             {
