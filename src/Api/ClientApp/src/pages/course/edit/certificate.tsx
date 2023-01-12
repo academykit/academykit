@@ -135,7 +135,7 @@ const Certificate = () => {
                   <DatePicker
                     w={"100%"}
                     placeholder="Pick Starting Date"
-                    label="Event date"
+                    label="Start date"
                     withAsterisk
                     icon={<IconCalendar size={16} />}
                     {...form.getInputProps("eventStartDate")}
@@ -146,7 +146,7 @@ const Certificate = () => {
                   <DatePicker
                     w={"100%"}
                     placeholder="Pick Ending Date"
-                    label="Event date"
+                    label="End date"
                     withAsterisk
                     icon={<IconCalendar size={16} />}
                     {...form.getInputProps("eventEndDate")}
