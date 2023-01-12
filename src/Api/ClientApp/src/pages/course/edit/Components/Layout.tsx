@@ -49,11 +49,6 @@ function CourseEditNav() {
       to: RoutePath.manageCourse.student(params.id).route,
       role: UserRole.Trainer,
     },
-    {
-      label: "Certificates Stat",
-      to: RoutePath.manageCourse.certificateStat(params.id).route,
-      role: UserRole.Trainer,
-    },
   ];
 
   return <NavOutlet data={navLink} hideBreadCrumb={2} />;

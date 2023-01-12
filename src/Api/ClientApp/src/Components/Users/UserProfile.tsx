@@ -66,7 +66,7 @@ const RowsCompleted = ({ item }: { item: ICertificateList }) => {
         <Flex align={"center"}>
           <Anchor onClick={() => setOpened((v) => !v)}>
             <Image
-              width={200}
+              width={150}
               height={100}
               fit="contain"
               // sx={{":hover"}}

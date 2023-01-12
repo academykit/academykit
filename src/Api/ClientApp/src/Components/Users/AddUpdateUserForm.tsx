@@ -26,10 +26,10 @@ const schema = Yup.object().shape({
   role: Yup.string()
     .oneOf(["1", "2", "3", "4"], "Role is required.")
     .required("Role is required."),
-  mobileNumber: Yup.string().matches(
-    PHONE_VALIDATION,
-    "Please enter valid phone number."
-  ),
+  mobileNumber: Yup.string().nullable().matches(PHONE_VALIDATION, {
+    message: "Please enter valid phone number.",
+    excludeEmptyString: true,
+  }),
 });
 
 const AddUpdateUserForm = ({

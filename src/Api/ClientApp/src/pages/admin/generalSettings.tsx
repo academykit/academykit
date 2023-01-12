@@ -42,10 +42,10 @@ const GeneralSettings = () => {
   const schema = Yup.object().shape({
     companyName: Yup.string().required("Company Name is required."),
     companyAddress: Yup.string().required("Company Address required."),
-    companyContactNumber: Yup.string().matches(
-      PHONE_VALIDATION,
-      "Please enter valid phone number."
-    ),
+    companyContactNumber: Yup.string().nullable().matches(PHONE_VALIDATION, {
+      message: "Please enter valid phone number.",
+      excludeEmptyString: true,
+    }),
     emailSignature: Yup.string().required("Signature is required."),
   });
   const form = useForm({

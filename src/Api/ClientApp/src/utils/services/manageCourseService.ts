@@ -69,6 +69,10 @@ export interface IStudentStat {
   lessonId: string;
   lessonSlug: string;
   lessonName: string;
+  certificateUrl:string;
+  certificateIssuedDate:string;
+  hasCertificateIssued:boolean
+  imageUrl:string
 }
 export interface ICourseStudentStat {
   items: IStudentStat[];

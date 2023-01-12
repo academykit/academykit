@@ -39,10 +39,13 @@ const schema = Yup.object().shape({
   firstName: Yup.string().required("First Name is required."),
   lastName: Yup.string().required("Last Name is required."),
   email: Yup.string().email("Invalid Email").required("Email is required."),
-  mobileNumber: Yup.string().matches(
-    PHONE_VALIDATION,
-    "Please enter valid phone number."
-  ),
+  mobileNumber: Yup.string()
+    .nullable()
+    .notRequired()
+    .matches(PHONE_VALIDATION, {
+      message: "Please enter valid phone number.",
+      excludeEmptyString: true,
+    }),
 });
 const UserInfo = () => {
   const userId = localStorage.getItem("id");
