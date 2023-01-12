@@ -185,9 +185,9 @@ const StudentLessonDetails = ({
                 <Group style={{ gap: "6px" }}>
                   <Text w={"100%"}>
                     Date:{" "}
-                    {moment
-                      .utc(meetingReport.data?.date)
-                      .format("YYYY-MM-DD HH:mm:ss")}
+                    {moment(meetingReport.data?.date + "Z").format(
+                      "YYYY-MM-DD HH:mm:ss"
+                    )}
                   </Text>
                   <Text w={"100%"}>
                     Joined Time: {meetingReport.data?.joinedTime}

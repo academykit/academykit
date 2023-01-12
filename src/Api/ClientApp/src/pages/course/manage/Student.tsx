@@ -100,9 +100,9 @@ const ManageStudents = ({
             )}
             <div style={{ marginTop: "10px" }}>
               {item?.certificateIssuedDate
-                ? moment
-                    .utc(item?.certificateIssuedDate)
-                    .format("YYYY-MM-DD HH:mm:ss")
+                ? moment(item?.certificateIssuedDate + "Z").format(
+                    "YYYY-MM-DD HH:mm:ss"
+                  )
                 : ""}
             </div>
           </Flex>
