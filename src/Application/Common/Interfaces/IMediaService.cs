@@ -12,7 +12,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// </summary>
         /// <param name="model"> the instance of <see cref="MediaRequestModel" /> .</param>
         /// <returns> the instance of <see cref="FileResponseModel" />. </returns>
-        Task<FileResponseModel> UploadFileAsync(MediaRequestModel model);
+        Task<string> UploadFileAsync(MediaRequestModel model);
 
         /// <summary>
         /// Handle to upload group file

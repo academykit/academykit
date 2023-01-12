@@ -10,8 +10,8 @@ namespace Lingtren.Application.Common.Interfaces
         /// Handle to upload the file async
         /// </summary>
         /// <param name="model"> the instance of <see cref="MediaRequestModel" /> .</param>
-        /// <returns> the instance of <see cref="MediaFileDto" /> .</returns>
-        Task<MediaFileDto> UploadFileAsync(MediaRequestModel model);
+        /// <returns> the file key or url.</returns>
+        Task<string> UploadFileAsync(MediaRequestModel model);
 
         /// <summary>
         /// Handle to get file presigned url
