@@ -45,16 +45,6 @@
         }
 
         /// <summary>
-        /// course certificate search api
-        /// </summary>
-        /// <returns> the list of <see cref="CourseCertificateResponseModel" /> .</returns>
-        [HttpGet]
-        public async Task<SearchResult<CourseCertificateIssuedResponseModel>> SearchAsync(string identity, [FromQuery] CertificateBaseSearchCriteria searchCriteria)
-        {
-            return await _courseService.SearchCertificateAsync(identity, searchCriteria, CurrentUser.Id).ConfigureAwait(false);
-        }
-
-        /// <summary>
         /// course  certificate issue api
         /// </summary>
         /// <param name="identity">the course id or slug</param>
