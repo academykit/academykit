@@ -15,6 +15,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { IconFileDescription, IconMessage } from "@tabler/icons";
 import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import {
+  ICourseLesson,
   useCourseDescription,
   useGetCourseLesson,
 } from "@utils/services/courseService";
@@ -32,6 +33,7 @@ import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
 import FeedbackDetails from "@components/Course/Classes/FeedbackDetails";
 import lazyWithRetry from "@utils/lazyImportWithReload";
+
 const PdfViewer = lazyWithRetry(
   () => import("@components/Course/Classes/PdfViewer")
 );
@@ -78,6 +80,8 @@ const useStyle = createStyles((theme) => ({
     alignItems: "center",
   },
 }));
+
+
 
 const Classes = () => {
   const navigate = useNavigate();
@@ -137,6 +141,8 @@ const Classes = () => {
     }
   };
 
+
+
   return (
     <Box p={0}>
       <Grid className={classes.wrapper}>
@@ -172,6 +178,7 @@ const Classes = () => {
 
             {(courseLesson.data?.type == LessonType.Video ||
               courseLesson.data?.type == LessonType.RecordedVideo) && (
+                
               <AspectRatio
                 ratio={16 / 9}
                 mt={matches ? 1 : -8}

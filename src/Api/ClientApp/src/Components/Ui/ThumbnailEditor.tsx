@@ -7,7 +7,7 @@ import { UseFormReturnType } from "@mantine/form/lib/types";
 import FilePondPluginImageValidateSize from "filepond-plugin-image-validate-size";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import { uploadFile } from "@utils/services/fileService";
+import { FileAccess, uploadFile } from "@utils/services/fileService";
 import { EFIleUploadType } from "@utils/enums";
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -89,7 +89,7 @@ const ThumbnailEditor = ({
             abort
           ) => {
             try {
-              const res = await uploadFile(file as File, EFIleUploadType.image);
+              const res = await uploadFile(file as File, FileAccess.Public);
               load(res.data);
               form.setFieldValue(FormField, res.data);
             } catch (e) {

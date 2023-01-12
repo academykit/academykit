@@ -5,8 +5,7 @@ import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import { Box } from "@mantine/core";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-import { uploadVideo } from "@utils/services/fileService";
-import { EFIleUploadType } from "@utils/enums";
+import { FileAccess, uploadVideo } from "@utils/services/fileService";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -65,10 +64,10 @@ const LessonVideoUpload = ({
             try {
               const res = await uploadVideo(
                 file as File,
-                EFIleUploadType.video
+                FileAccess.Private
               );
               load(res.data);
-              setUrl(() => res.data);
+              setUrl(() => res.data.key);
             } catch (e) {
               error("Unable to upload file");
             }
