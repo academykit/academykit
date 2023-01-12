@@ -178,7 +178,7 @@
         public async Task<ChangeEmailResponseModel> ChangeEmailRequestAsync(ChangeEmailRequestModel model)
         {
             await _changeEmailValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            return await _userService.ChangeEmailRequestAsync(model).ConfigureAwait(false);
+            return await _userService.ChangeEmailRequestAsync(model, CurrentUser.Id).ConfigureAwait(false);
         }
 
         /// <summary>
