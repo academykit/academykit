@@ -1,4 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
 import { httpClient } from "./service-axios";
+
+export enum FileAccess {
+  Private = 1,
+  Public = 2
+}
 
 export const uploadFile = (file: File, type: number) => {
   return httpClient.post<string>(
@@ -12,7 +18,7 @@ export const uploadFile = (file: File, type: number) => {
   );
 };
 export const uploadVideo = (file: File, type: number) => {
-  return httpClient.post<string>(
+  return httpClient.post<{key:string}>(
     "/api/media/file",
     { file, type },
     {
@@ -22,3 +28,11 @@ export const uploadVideo = (file: File, type: number) => {
     }
   );
 };
+
+
+export const getFileUrl =  (key: string) => {
+  return useQuery(['/api/media/file/'+key], () => 
+  httpClient.get<string>("/api/media/file?key="+key),
+  {select: data => data.data, retry: false}
+  )
+}

@@ -15,6 +15,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { IconFileDescription, IconMessage } from "@tabler/icons";
 import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import {
+  ICourseLesson,
   useCourseDescription,
   useGetCourseLesson,
 } from "@utils/services/courseService";
@@ -32,6 +33,7 @@ import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
 import FeedbackDetails from "@components/Course/Classes/FeedbackDetails";
 import lazyWithRetry from "@utils/lazyImportWithReload";
+import { getFileUrl } from "@utils/services/fileService";
 const PdfViewer = lazyWithRetry(
   () => import("@components/Course/Classes/PdfViewer")
 );
@@ -78,6 +80,27 @@ const useStyle = createStyles((theme) => ({
     alignItems: "center",
   },
 }));
+
+// const VideoPlayerComponent = ({data, matches, classes, onCourseEnded, setVideoState}:{data: ICourseLesson | undefined, matches: boolean,classes: any, onCourseEnded:any, setVideoState: React.SetStateAction<any>}) => {
+
+//   const url = getFileUrl(data?.videoUrl ?? "")
+//   console.log(url.data)
+
+//   return  <AspectRatio
+//   ratio={16 / 9}
+//   mt={matches ? 1 : -8}
+//   className={classes.videoSection}
+// >
+//   <VideoPlayer
+//     onEnded={() =>
+//       onCourseEnded(data?.nextLessonSlug as string)
+      
+//     }
+//     url={"http://159.89.163.233:9000/standalone/private/17e97c26-ff54-4bc5-88a8-07e5462cb90b.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=hrTS4kHQK94Gy4wx%2F20230112%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20230112T084034Z&X-Amz-Expires=60&X-Amz-SignedHeaders=host&X-Amz-Signature=016d132f012a9c5fbef9490ff5a00b5081d7e306ec993592fe8a17f967459a80"}
+//     setCurrentPlayerState={setVideoState}
+//   />
+// </AspectRatio>
+// }
 
 const Classes = () => {
   const navigate = useNavigate();
@@ -137,6 +160,8 @@ const Classes = () => {
     }
   };
 
+
+
   return (
     <Box p={0}>
       <Grid className={classes.wrapper}>
@@ -172,6 +197,7 @@ const Classes = () => {
 
             {(courseLesson.data?.type == LessonType.Video ||
               courseLesson.data?.type == LessonType.RecordedVideo) && (
+                
               <AspectRatio
                 ratio={16 / 9}
                 mt={matches ? 1 : -8}
