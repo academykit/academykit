@@ -10,7 +10,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// </summary>
         /// <param name="file"> the instance of <see cref="MediaRequestModel" /> .</param>
         /// <returns> the instance of <see cref="MediaFileDto" /> . </returns>
-        Task<MediaFileDto> UploadFileS3BucketAsync(MediaRequestModel model);
+        Task<string> UploadFileS3BucketAsync(MediaRequestModel model);
 
         /// <summary>
         /// Handle to save recording file to s3 bucket

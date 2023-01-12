@@ -1117,7 +1117,7 @@ namespace Lingtren.Infrastructure.Services
             MemoryStream ms = new(response.RawBytes);
             var file = new FormFile(ms, 0, response.RawBytes.Length, fileName, fileName);
             var fileResponse = await _mediaService.UploadFileAsync(new MediaRequestModel { File = file, Type = MediaType.Public }).ConfigureAwait(false);
-            return fileResponse.Url;
+            return fileResponse;
         }
 
         #endregion Certificate

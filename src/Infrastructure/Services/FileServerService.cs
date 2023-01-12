@@ -23,8 +23,8 @@ namespace Lingtren.Infrastructure.Services
         /// Handle to upload file 
         /// </summary>
         /// <param name="model"> the instance of <see cref="MediaRequestModel" /> .</param>
-        /// <returns> the instance of <see cref="MediaFileDto" /> .</returns>
-        public async Task<MediaFileDto> UploadFileAsync(MediaRequestModel model)
+        /// <returns> the file key or url .</returns>
+        public async Task<string> UploadFileAsync(MediaRequestModel model)
         {
             try
             {
@@ -52,11 +52,7 @@ namespace Lingtren.Infrastructure.Services
                 var objectArgs = new Minio.PutObjectArgs().WithObject(fileName).WithBucket(credentails.Bucket).WithStreamData(model.File.OpenReadStream()).
                     WithContentType(model.File.ContentType).WithObjectSize(model.File.Length);
                 await minio.PutObjectAsync(objectArgs);
-                return new MediaFileDto
-                {
-                    Key = fileName,
-                    Url = $"{credentails.Url}/{credentails.Bucket}/{fileName}"
-                };
+                return model.Type == MediaType.Private ? fileName :  $"{credentails.Url}/{credentails.Bucket}/{fileName}";
             }
             catch (Exception ex)
             {
