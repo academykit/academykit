@@ -254,7 +254,7 @@ const ManageStudents = ({
             onClick={() => setSubmitModal(true)}
             disabled={selected.length === 0}
           >
-            Submit
+            Issue Certificate
           </Button>
         </Group>
       )}
