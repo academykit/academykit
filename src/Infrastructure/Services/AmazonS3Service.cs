@@ -24,7 +24,7 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="file"> the instance of <see cref="MediaRequestModel" /> .</param>
         /// <returns> the instance of <see cref="MediaFileDto" /> . </returns>
-        public async Task<MediaFileDto> UploadFileS3BucketAsync(MediaRequestModel model)
+        public async Task<string> UploadFileS3BucketAsync(MediaRequestModel model)
         {
             try
             {
@@ -48,11 +48,7 @@ namespace Lingtren.Infrastructure.Services
                     BucketName = model.Type == MediaType.Private ? credentails.FileBucket : credentails.VideoBucket
                 };
                 await transferUtility.UploadAsync(request);
-                return new MediaFileDto
-                {
-                    Key = fileName,
-                    Url = $"{credentails.CloudFront}/{fileName}"
-                };
+                return model.Type == MediaType.Private ? fileName : $"{credentails.CloudFront}/{fileName}";
             }
             catch (Exception ex)
             {

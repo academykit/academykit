@@ -135,8 +135,8 @@ namespace Lingtren.Infrastructure.Services
         /// Handle to upload the file
         /// </summary>
         /// <param name="model"> the instance of <see cref="MediaRequestModel" /> .</param>
-        /// <returns> the instance of <see cref="FileResponseModel" />. </returns>
-        public async Task<FileResponseModel> UploadFileAsync(MediaRequestModel model)
+        /// <returns> the file key or string </returns>
+        public async Task<string> UploadFileAsync(MediaRequestModel model)
         {
             try
             {
@@ -145,20 +145,16 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ArgumentException("Storage setting is not configured");
                 }
-                var mediaFileDto = new MediaFileDto();
+                var key = "";
                 if (Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
                 {
-                    mediaFileDto = await _amazonService.UploadFileS3BucketAsync(model).ConfigureAwait(false);
+                    key = await _amazonService.UploadFileS3BucketAsync(model).ConfigureAwait(false);
                 }
                 else
                 {
-                    mediaFileDto = await _fileServerService.UploadFileAsync(model).ConfigureAwait(false);
+                    key = await _fileServerService.UploadFileAsync(model).ConfigureAwait(false);
                 }
-                return new FileResponseModel
-                {
-                    Key = mediaFileDto.Key,
-                    Url = mediaFileDto.Url
-                };
+               return key;
             }
             catch (Exception ex)
             {
@@ -191,11 +187,11 @@ namespace Lingtren.Infrastructure.Services
                 if (Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
                 {
                     model.Type = MediaType.Private;
-                    mediaFileDto = await _amazonService.UploadFileS3BucketAsync(model).ConfigureAwait(false);
+                 //   mediaFileDto = await _amazonService.UploadFileS3BucketAsync(model).ConfigureAwait(false);
                 }
                 else
                 {
-                    mediaFileDto = await _fileServerService.UploadFileAsync(model).ConfigureAwait(false);
+               //     mediaFileDto = await _fileServerService.UploadFileAsync(model).ConfigureAwait(false);
                 }
                 return new GroupFileDto
                 {

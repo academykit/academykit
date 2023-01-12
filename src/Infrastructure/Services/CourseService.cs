@@ -823,6 +823,7 @@ namespace Lingtren.Infrastructure.Services
                      {
                          UserId = p.UserId,
                          FullName = p.User?.FullName,
+                         ImageUrl = p.User?.ImageUrl,
                          LessonId = p.CurrentLessonId,
                          LessonSlug = p.Lesson?.Slug,
                          LessonName = p.Lesson?.Name,
@@ -1117,7 +1118,7 @@ namespace Lingtren.Infrastructure.Services
             MemoryStream ms = new(response.RawBytes);
             var file = new FormFile(ms, 0, response.RawBytes.Length, fileName, fileName);
             var fileResponse = await _mediaService.UploadFileAsync(new MediaRequestModel { File = file, Type = MediaType.Public }).ConfigureAwait(false);
-            return fileResponse.Url;
+            return fileResponse;
         }
 
         #endregion Certificate
