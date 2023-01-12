@@ -162,7 +162,6 @@ const EditCourse = () => {
         thumbnailUrl: data.thumbnail,
       });
       navigator(RoutePath.manageCourse.lessons(slug.id).route);
-
       showNotification({
         title: "Success",
         message: "Training Updated successfully",

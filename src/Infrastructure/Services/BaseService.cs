@@ -152,6 +152,7 @@
                 include: s => s.Include(x => x.CourseTeachers)
                                 .Include(x => x.User)
                                 .Include(x => x.CourseEnrollments)
+                                .Include(x=>x.CourseTags)
                                 ).ConfigureAwait(false);
 
             CommonHelper.CheckFoundEntity(course);
