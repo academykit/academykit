@@ -11,7 +11,7 @@ import { api } from "./service-api";
 type RequestData = Record<string, any>;
 
 const THREE_MINUTES = 3 * 60 * 1000;
-const baseURL = BASE_URL;
+const baseURL = "/";
 const baseConfig = {
   baseURL,
   timeout: THREE_MINUTES,
