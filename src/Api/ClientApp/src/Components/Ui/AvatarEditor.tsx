@@ -1,5 +1,5 @@
 import { UseFormReturnType } from "@mantine/form";
-import { uploadFile } from "@utils/services/fileService";
+import { FileAccess, uploadFile } from "@utils/services/fileService";
 import { useEffect, useState } from "react";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
@@ -13,7 +13,7 @@ import {
   default as FilePondPluginFileValidateSize,
   default as FilePondPluginImageResize,
 } from "filepond-plugin-file-validate-size";
-import { EFIleUploadType } from "@utils/enums";
+
 registerPlugin(
   FilePondPluginImageExifOrientation,
   FilePondPluginImagePreview,
@@ -95,7 +95,7 @@ const AvatarEditor = ({
             abort
           ) => {
             try {
-              const res = await uploadFile(file as File, EFIleUploadType.image);
+              const res = await uploadFile(file as File, FileAccess.Public);
               load(res.data);
               if (onUploadSuccess) {
                 onUploadSuccess(res.data);
