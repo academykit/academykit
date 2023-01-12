@@ -52,7 +52,7 @@ namespace Lingtren.Infrastructure.Services
                 var objectArgs = new Minio.PutObjectArgs().WithObject(fileName).WithBucket(credentails.Bucket).WithStreamData(model.File.OpenReadStream()).
                     WithContentType(model.File.ContentType).WithObjectSize(model.File.Length);
                 await minio.PutObjectAsync(objectArgs);
-                return model.Type == MediaType.Private ? fileName :  $"{credentails.Url}/{credentails.Bucket}/{fileName}";
+                return model.Type == MediaType.Private ? fileName :  $"http://{credentails.Url}/{credentails.Bucket}/{fileName}";
             }
             catch (Exception ex)
             {
@@ -73,7 +73,7 @@ namespace Lingtren.Infrastructure.Services
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient().WithEndpoint(credentails.Url).
                             WithCredentials(credentails.AccessKey, credentails.SecretKey).Build();
-                var objectArgs = new Minio.PresignedGetObjectArgs().WithObject(key).WithBucket(credentails.Bucket).WithExpiry(600);
+                var objectArgs = new Minio.PresignedGetObjectArgs().WithObject(key).WithBucket(credentails.Bucket).WithExpiry(1000);
                 var url = await minio.PresignedGetObjectAsync(objectArgs).ConfigureAwait(false);
                 return url;
             }
