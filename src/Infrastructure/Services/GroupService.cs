@@ -359,13 +359,13 @@
                     throw new ForbiddenException("Unauthorized user to create an attachment in the group.");
                 }
 
-                var groupFileDto = await _mediaService.UploadGroupFileAsync(model.File).ConfigureAwait(false);
+                var url = await _mediaService.UploadGroupFileAsync(model.File).ConfigureAwait(false);
+
                 var groupFile = new GroupFile
                 {
                     Id = Guid.NewGuid(),
                     Name = model.File.FileName,
-                    Url = groupFileDto.Url,
-                    Key = groupFileDto.Key,
+                    Url = url,
                     MimeType = model.File.ContentType,
                     GroupId = group.Id,
                     CreatedBy = currentUserId,

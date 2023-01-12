@@ -19,7 +19,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// </summary>
         /// <param name="file"> the instance of <see cref="IFormFile" /> .</param>
         /// <returns> the instance of <see cref="GroupFileDto" /> .</returns>
-        Task<GroupFileDto> UploadGroupFileAsync(IFormFile file);
+        Task<string> UploadGroupFileAsync(IFormFile file);
 
         /// <summary>
         /// Handle to update storage setting
