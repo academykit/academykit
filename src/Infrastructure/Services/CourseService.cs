@@ -823,6 +823,7 @@ namespace Lingtren.Infrastructure.Services
                      {
                          UserId = p.UserId,
                          FullName = p.User?.FullName,
+                         ImageUrl = p.User?.ImageUrl,
                          LessonId = p.CurrentLessonId,
                          LessonSlug = p.Lesson?.Slug,
                          LessonName = p.Lesson?.Name,
