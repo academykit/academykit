@@ -86,32 +86,13 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
                       >
                         <NavLink
                           variant="subtle"
-                          label="Statistics"
+                          label="Manage"
                           component={Link}
                           to={RoutePath.manageCourse.manage(data.slug).route}
                           rightSection={
                             <IconChevronRight size={12} stroke={1.5} />
                           }
                         ></NavLink>
-                        <NavLink
-                          variant="subtle"
-                          label="Edit"
-                          component={Link}
-                          to={RoutePath.manageCourse.edit(data.slug).routes()}
-                          rightSection={
-                            <IconChevronRight size={12} stroke={1.5} />
-                          }
-                        ></NavLink>
-
-                        {/* <NavLink
-                          onClick={() => {}}
-                          variant="subtle"
-                          label="Delete"
-                          component={"button"}
-                          rightSection={
-                            <IconChevronRight size={12} stroke={1.5} />
-                          }
-                        ></NavLink> */}
                       </Group>
                     </Paper>
                   </Popover.Dropdown>
