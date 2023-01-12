@@ -1,6 +1,23 @@
 namespace Lingtren.Application.Common.Interfaces
 {
+    using System;
+    using Lingtren.Application.Common.Dtos;
+    using Lingtren.Application.Common.Models.RequestModels;
+
     public interface IFileServerService
     {
+        /// <summary>
+        /// Handle to upload the file async
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="MediaRequestModel" /> .</param>
+        /// <returns> the instance of <see cref="MediaFileDto" /> .</returns>
+        Task<MediaFileDto> UploadFileAsync(MediaRequestModel model);
+
+        /// <summary>
+        /// Handle to get file presigned url
+        /// </summary>
+        /// <param name="key"> the file key </param>
+        /// <returns> the pre signed url </returns>
+        Task<string> GetFilePresignedUrl(string key);
     }
 }

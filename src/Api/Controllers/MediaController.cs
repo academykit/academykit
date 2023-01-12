@@ -7,8 +7,6 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.StaticFiles;
-    using System.Net;
 
     public class MediaController : BaseApiController
     {
@@ -52,50 +50,20 @@ namespace Lingtren.Api.Controllers
         [HttpPost("file")]
         [RequestFormLimits(MultipartBodyLengthLimit = 2147483648)]
         [RequestSizeLimit(2147483648)]
-        public async Task<string> Video([FromForm] MediaRequestModel model)
+        [AllowAnonymous]
+        public async Task<FileResponseModel> File([FromForm] MediaRequestModel model)
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             return await _mediaService.UploadFileAsync(model).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// get file api
+        /// </summary>
+        /// <param name="key"> the file key </param>
+        /// <returns> the presigned url </returns>
+        [HttpGet("file")]
         [AllowAnonymous]
-        [HttpGet("/read")]
-        public IActionResult Read()
-        {
-            try
-            {
-                const string networkPath = @"\\159.89.163.233\public";
-                var filePath = Path.Combine(networkPath, "hello.mp4");
-
-                _logger.LogInformation("File Path = {filePath}", filePath);
-
-                if (System.IO.File.Exists(filePath))
-                {
-                    _logger.LogInformation("Exist File = {networkPath}", filePath);
-                }
-                else
-                {
-                    _logger.LogInformation("Does not Exist File = {filePath}", filePath);
-                }
-                var mimeType = GetMimeTypeForFileExtension(filePath);
-                return PhysicalFile(filePath, mimeType, enableRangeProcessing: true);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        private static string GetMimeTypeForFileExtension(string filePath)
-        {
-            const string DefaultContentType = "application/octet-stream";
-            var provider = new FileExtensionContentTypeProvider();
-
-            if (!provider.TryGetContentType(filePath, out string contentType))
-            {
-                contentType = DefaultContentType;
-            }
-            return contentType;
-        }
+        public async Task<string> GetFile([FromQuery] string key) => await _mediaService.GetFileAsnc(key).ConfigureAwait(false);
     }
 }

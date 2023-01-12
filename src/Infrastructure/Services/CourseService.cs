@@ -1174,7 +1174,8 @@ namespace Lingtren.Infrastructure.Services
             var fileName = certificate?.Title ?? "certificate";
             MemoryStream ms = new(response.RawBytes);
             var file = new FormFile(ms, 0, response.RawBytes.Length, fileName, fileName);
-            return await _mediaService.UploadFileAsync(new MediaRequestModel { File = file, Type = MediaType.File }).ConfigureAwait(false);
+            var fileResponse = await _mediaService.UploadFileAsync(new MediaRequestModel { File = file, Type = MediaType.Public }).ConfigureAwait(false);
+            return fileResponse.Url;
         }
 
         #endregion Certificate

@@ -1,6 +1,6 @@
 namespace Lingtren.Application.Common.Dtos
 {
-    public class AmazonSettingModel
+    public class AmazonSettingDto
     {
         public string AccessKey { get; set; }
         public string SecretKey { get; set; }

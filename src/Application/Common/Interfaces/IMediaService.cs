@@ -11,8 +11,8 @@ namespace Lingtren.Application.Common.Interfaces
         /// Handle to upload the file
         /// </summary>
         /// <param name="model"> the instance of <see cref="MediaRequestModel" /> .</param>
-        /// <returns> the file url </returns>
-        Task<string> UploadFileAsync(MediaRequestModel model);
+        /// <returns> the instance of <see cref="FileResponseModel" />. </returns>
+        Task<FileResponseModel> UploadFileAsync(MediaRequestModel model);
 
         /// <summary>
         /// Handle to upload group file
@@ -43,5 +43,12 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="downloadToken"> the download token </param>
         /// <returns> the instance of <see cref="MediaFileDto" /> .</returns>
         Task<MediaFileDto> UploadRecordingFileAsync(string fileUrl, string downloadToken);
+
+        /// <summary>
+        /// Handle to get file
+        /// </summary>
+        /// <param name="key"> the file key </param>
+        /// <returns> the pre-signed url </returns>
+        Task<string> GetFileAsnc(string key);
     }
 }
