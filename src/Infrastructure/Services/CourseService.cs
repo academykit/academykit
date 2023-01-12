@@ -826,7 +826,10 @@ namespace Lingtren.Infrastructure.Services
                          LessonId = p.CurrentLessonId,
                          LessonSlug = p.Lesson?.Slug,
                          LessonName = p.Lesson?.Name,
-                         Percentage = p.Percentage
+                         Percentage = p.Percentage,
+                         HasCertificateIssued = p.HasCertificateIssued,
+                         CertificateIssuedDate = p.CertificateIssuedDate,
+                         CertificateUrl = p.CertificateUrl
                      }));
                 return response;
             }
@@ -945,7 +948,7 @@ namespace Lingtren.Infrastructure.Services
                 predicate: predicate,
                 include: src => src.Include(x => x.User).Include(x => x.CourseEnrollments).ThenInclude(x => x.User)
                 ).ConfigureAwait(false);
-            
+
             var result = courses.ToIPagedList(criteria.Page, criteria.Size);
             var response = new SearchResult<DashboardCourseResponseModel>
             {
@@ -955,7 +958,7 @@ namespace Lingtren.Infrastructure.Services
                 TotalCount = result.TotalCount,
                 TotalPage = result.TotalPage,
             };
-            
+
             if (currentUserRole == UserRole.SuperAdmin || currentUserRole == UserRole.Admin || currentUserRole == UserRole.Trainer)
             {
                 result.Items.ForEach(x =>
@@ -1004,76 +1007,6 @@ namespace Lingtren.Infrastructure.Services
         #endregion Dashboard
 
         #region Certificate
-
-        /// <summary>
-        /// Handle to search certificate
-        /// </summary>
-        /// <param name="identity">the training id or slug</param>
-        /// <param name="criteria">the instance of <see cref="CertificateBaseSearchCriteria"/></param>
-        /// <param name="currentUserId">the current logged in user id</param>
-        /// <returns>the paginated result</returns>
-        public async Task<SearchResult<CourseCertificateIssuedResponseModel>> SearchCertificateAsync(string identity, CertificateBaseSearchCriteria criteria, Guid currentUserId)
-        {
-            var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
-
-            var predicate = PredicateBuilder.New<CourseEnrollment>(true);
-            predicate = predicate.And(p => p.CourseId == course.Id && !p.IsDeleted);
-            if (criteria.CompletedCourse)
-            {
-                predicate = predicate.And(p => p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed);
-            }
-            else
-            {
-                predicate = predicate.And(p => p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled);
-            }
-
-            if (!string.IsNullOrWhiteSpace(criteria.Search))
-            {
-                var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(x =>
-                    ((x.User.FirstName.Trim() + " " + x.User.MiddleName.Trim()).Trim() + " " + x.User.LastName.Trim()).Trim().Contains(search)
-                        || x.User.Email.ToLower().Trim().Contains(search));
-            }
-
-            var query = _unitOfWork.GetRepository<CourseEnrollment>().GetAll(
-                predicate: predicate,
-                include: src => src.Include(x => x.User));
-
-            if (criteria.SortBy == null)
-            {
-                criteria.SortBy = nameof(CourseEnrollment.Percentage);
-                criteria.SortType = SortType.Descending;
-            }
-            query = criteria.SortType == SortType.Ascending
-                ? query.OrderBy(criteria.SortBy)
-                : query.OrderByDescending(criteria.SortBy);
-            var result = query.ToList().ToIPagedList(criteria.Page, criteria.Size);
-
-            var response = new SearchResult<CourseCertificateIssuedResponseModel>
-            {
-                Items = new List<CourseCertificateIssuedResponseModel>(),
-                CurrentPage = result.CurrentPage,
-                PageSize = result.PageSize,
-                TotalCount = result.TotalCount,
-                TotalPage = result.TotalPage,
-            };
-
-            result.Items.ForEach(p =>
-                 response.Items.Add(new CourseCertificateIssuedResponseModel()
-                 {
-                     CourseId = course.Id,
-                     CourseName = course.Name,
-                     CourseSlug = course.Slug,
-                     CertificateIssuedDate = p.CertificateIssuedDate,
-                     HasCertificateIssued = p.HasCertificateIssued,
-                     CertificateUrl = p.CertificateUrl,
-                     Percentage = p.Percentage,
-                     User = new UserModel(p.User)
-                 })
-             );
-            return response;
-        }
-
         /// <summary>
         /// Handle to issue the certificate
         /// </summary>
