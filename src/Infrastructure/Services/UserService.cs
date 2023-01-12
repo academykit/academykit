@@ -378,7 +378,7 @@
         /// </summary>
         /// <param name="model">the instance of <see cref="ChangeEmailRequestModel"/></param>
         /// <returns>the instance of <see cref="ChangeEmailResponseModel"/></returns>
-        public async Task<ChangeEmailResponseModel> ChangeEmailRequestAsync(ChangeEmailRequestModel model)
+        public async Task<ChangeEmailResponseModel> ChangeEmailRequestAsync(ChangeEmailRequestModel model, Guid currentUserId)
         {
             var user = await GetUserByEmailAsync(model.OldEmail).ConfigureAwait(false);
             if (user == null)
@@ -397,6 +397,11 @@
             {
                 _logger.LogWarning("User with id : {userId} password not matched for email change.", user.Id);
                 throw new ForbiddenException("User password not matched.");
+            }
+            if (user.Id != currentUserId)
+            {
+                _logger.LogWarning("User with email: {email} is invalid user request to change email of current user with id: {currentUserId}", user.Email, currentUserId);
+                throw new ForbiddenException("Unauthorized current email user request to change email.");
             }
             var changeEmailToken = GenerateResendAndChangeEmailToken(model.OldEmail, model.NewEmail, _changeEmailEncryptionKey, _changeEmailTokenExpiry);
             var resendToken = GenerateResendAndChangeEmailToken(model.OldEmail, model.NewEmail, _resendChangeEmailEncryptionKey, _resendChangeEmailTokenExpiry);

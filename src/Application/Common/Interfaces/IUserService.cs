@@ -93,7 +93,7 @@
         /// </summary>
         /// <param name="model">the instance of <see cref="ChangeEmailRequestModel"/></param>
         /// <returns>the instance of <see cref="ChangeEmailResponseModel"/></returns>
-        Task<ChangeEmailResponseModel> ChangeEmailRequestAsync(ChangeEmailRequestModel model);
+        Task<ChangeEmailResponseModel> ChangeEmailRequestAsync(ChangeEmailRequestModel model, Guid currentUserId);
 
         /// <summary>
         /// Handle to resend change user email

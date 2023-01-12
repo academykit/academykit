@@ -119,7 +119,7 @@ const PoolCard = ({
         </Group>
         <Group py={5} position="apart">
           <div style={{ zIndex: 20 }}>
-            <UserShortProfile size={"xs"} user={user} />
+            <UserShortProfile size={"sm"} user={user} />
           </div>
           <Text color={"dimmed"} size={"sm"}>
             Total Questions: {questionCount}

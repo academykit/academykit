@@ -70,9 +70,9 @@ const AvatarEditor = ({
         instantUpload={true}
         onremovefile={(errRes, file) => handleToRemoveImage(errRes, file)}
         acceptedFileTypes={["image/png", "image/jpeg", "image/gif"]}
-        imageValidateSizeMinWidth={639}
-        imageValidateSizeMinHeight={359}
-        imageValidateSizeMinResolution={229401}
+        // imageValidateSizeMinWidth={639}
+        // imageValidateSizeMinHeight={359}
+        // imageValidateSizeMinResolution={229401}
         stylePanelLayout="compact circle"
         stylePanelAspectRatio="1:1"
         files={files}

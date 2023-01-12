@@ -42,6 +42,7 @@ const LessonAddList = ({
           setAddState={setAddState}
           sectionId={sectionId}
           setAddLessonClick={setAddLessonClick}
+          isEditing={false}
         />
       );
       break;
