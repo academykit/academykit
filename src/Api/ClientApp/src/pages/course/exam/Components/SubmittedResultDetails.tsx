@@ -35,6 +35,7 @@ const useStyle = createStyles((theme) => ({
     width: "50px",
     justifyContent: "center",
     alignItems: "center",
+    cursor: 'pointer'
   },
   navigateWrapper: {
     border: "1px solid grey",

@@ -183,6 +183,7 @@ const EditCourse = () => {
             <ThumbnailEditor
               formContext={useFormContext}
               currentThumbnail={courseSingleData?.thumbnailUrl}
+              label="thumbnail"
             />
             <Group mt={10} grow>
               <TextInput

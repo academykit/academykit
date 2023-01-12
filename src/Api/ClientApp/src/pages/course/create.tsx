@@ -142,7 +142,7 @@ const CreateCoursePage = () => {
       <FormProvider form={form}>
         <form onSubmit={form.onSubmit(submitHandler)}>
           <Box mt={20}>
-            <ThumbnailEditor formContext={useFormContext} />
+            <ThumbnailEditor formContext={useFormContext} label="thumbnail"/>
             <Group mt={10} grow>
               <TextInput
                 placeholder="Course Title."

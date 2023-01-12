@@ -7,6 +7,8 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.StaticFiles;
+    using System.Net;
 
     public class MediaController : BaseApiController
     {
@@ -46,12 +48,12 @@ namespace Lingtren.Api.Controllers
         /// upload file api
         /// </summary>
         /// <param name="model"> the instance of <see cref="MediaRequestModel" /> .</param>
-        /// <returns> the video url </returns>
+        /// <returns> the key or url </returns>
         [HttpPost("file")]
         [RequestFormLimits(MultipartBodyLengthLimit = 2147483648)]
         [RequestSizeLimit(2147483648)]
         [AllowAnonymous]
-        public async Task<FileResponseModel> File([FromForm] MediaRequestModel model)
+        public async Task<string> File([FromForm] MediaRequestModel model)
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             return await _mediaService.UploadFileAsync(model).ConfigureAwait(false);
