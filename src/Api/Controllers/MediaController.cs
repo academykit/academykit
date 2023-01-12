@@ -7,6 +7,8 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.StaticFiles;
+    using System.Net;
 
     public class MediaController : BaseApiController
     {
