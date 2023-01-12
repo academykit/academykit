@@ -147,16 +147,6 @@ namespace Lingtren.Application.Common.Interfaces
         #endregion Dashboard
 
         #region Certificate
-
-        /// <summary>
-        /// Handle to search certificate
-        /// </summary>
-        /// <param name="identity">the course id or slug</param>
-        /// <param name="criteria">the instance of <see cref="CertificateBaseSearchCriteria"/></param>
-        /// <param name="currentUserId">the current logged in user id</param>
-        /// <returns>the paginated result</returns>
-        Task<SearchResult<CourseCertificateIssuedResponseModel>> SearchCertificateAsync(string identity, CertificateBaseSearchCriteria criteria, Guid currentUserId);
-
         /// <summary>
         /// Handle to issue the certificate
         /// </summary>
