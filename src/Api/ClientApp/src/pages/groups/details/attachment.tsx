@@ -25,11 +25,13 @@ import {
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconCopy, IconDownload, IconTrash } from "@tabler/icons";
 import errorType from "@utils/services/axiosError";
+import { getFileUrl } from "@utils/services/fileService";
 import {
   IGroupAttachmentItems,
   useGroupAttachment,
   useRemoveGroupAttachment,
 } from "@utils/services/groupService";
+import moment from "moment";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -43,17 +45,20 @@ const GroupAttachment = ({
   const [deleteAttachment, setDeleteAttachment] = useState("");
   const [opened, setOpened] = useState(false);
   const authUser = useAuth();
-
+  
+  
   if (getGroupAttachment.error) {
     throw getGroupAttachment.error;
   }
-
+  
   const Rows = ({ item }: { item: IGroupAttachmentItems }) => {
+    const [enabled, setEnabled] = useState(false)
     const removeAttachment = useRemoveGroupAttachment(
       id as string,
       item.id,
       searchParams
-    );
+      );
+      const fileUrl = getFileUrl(item.url,enabled)
     const handleDelete = async () => {
       try {
         await removeAttachment.mutateAsync({
@@ -74,7 +79,11 @@ const GroupAttachment = ({
       setDeleteAttachment("");
     };
     const handleDownload = () => {
-      window.open(item.url);
+      setEnabled(true)
+      if(fileUrl.isSuccess){
+
+        window.open(fileUrl.data);
+      }
     };
 
     return (
@@ -86,45 +95,19 @@ const GroupAttachment = ({
           onConfirm={handleDelete}
         />
 
-        <td>{item.createdOn}</td>
+        <td>{ moment(item.createdOn + "Z").format('YYYY-MM-DD HH:mm:ss') }</td>
         <td>{item.name}</td>
         <td>{item.mimeType}</td>
-        <td style={{ maxWidth: "500px" }}>
-          <TextInput
-            size="md"
-            value={item?.url}
-            styles={{
-              input: {
-                cursor: "pointer",
-                opacity: "0.4",
-              },
-            }}
-          />
-        </td>
+       
         <td>
           <Flex>
-            <CopyButton value={item?.url} timeout={2000}>
-              {({ copied, copy }) => (
-                <Tooltip
-                  label={copied ? "Copied" : "Copy"}
-                  withArrow
-                  position="right"
-                >
-                  <ActionIcon color={copied ? "teal" : "gray"} onClick={copy}>
-                    {copied ? <IconCheck size={16} /> : <IconCopy size={16} />}
-                  </ActionIcon>
-                </Tooltip>
-              )}
-            </CopyButton>
+            
             <Tooltip label={"Download attachment"}>
-              <ActionIcon onClick={handleDownload}>
+              <ActionIcon onClick={() => handleDownload()}>
                 <IconDownload />
               </ActionIcon>
             </Tooltip>
-          </Flex>
-        </td>
-        <td>
-          <Flex>
+         
             <Tooltip label={"Delete attachment"}>
               <ActionIcon onClick={() => setDeleteAttachment(item.id)}>
                 <IconTrash color="red" />
@@ -132,6 +115,7 @@ const GroupAttachment = ({
             </Tooltip>
           </Flex>
         </td>
+        
       </tr>
     );
   };
@@ -184,8 +168,6 @@ const GroupAttachment = ({
                     <th>Uploaded Date</th>
                     <th>Name</th>
                     <th>Type</th>
-                    <th>Url</th>
-                    <th></th>
                     <th>Action</th>
                   </tr>
                 </thead>

@@ -30,9 +30,10 @@ export const uploadVideo = (file: File, type: number) => {
 };
 
 
-export const getFileUrl =  (key: string) => {
+export const getFileUrl =  (key: string, enabled: boolean) => {
   return useQuery(['/api/media/file/'+key], () => 
-  httpClient.get<string>("/api/media/file?key="+key),
-  {select: data => data.data, retry: false}
+  {
+    return  httpClient.get<string>("/api/media/file?key="+key)},
+  {select: data => data.data, retry: false, enabled}
   )
 }

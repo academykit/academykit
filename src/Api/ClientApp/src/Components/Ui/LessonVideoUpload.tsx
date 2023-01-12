@@ -67,7 +67,6 @@ const LessonVideoUpload = ({
                 FileAccess.Private
               );
               load(res.data);
-              console.log(res.data.key)
               setUrl(() => res.data.key);
             } catch (e) {
               error("Unable to upload file");

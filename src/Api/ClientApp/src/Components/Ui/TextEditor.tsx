@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { UseFormReturnType } from "@mantine/form";
 import { EFIleUploadType } from "@utils/enums";
-import { uploadFile } from "@utils/services/fileService";
+import { FileAccess, uploadFile } from "@utils/services/fileService";
 import RichTextEditor from "@mantine/rte";
 
 type IProps = {
@@ -15,7 +15,7 @@ const TextEditor = ({ formContext, label }: IProps) => {
         const formData = new FormData();
         formData.append("image", file);
 
-        uploadFile(file, EFIleUploadType.image)
+        uploadFile(file, FileAccess.Public)
           .then((result) => resolve(result.data))
           .catch(() => reject(new Error("Upload failed")));
       }),
