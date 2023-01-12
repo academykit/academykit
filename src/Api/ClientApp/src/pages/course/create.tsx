@@ -126,7 +126,7 @@ const CreateCoursePage = () => {
         title: "Success!",
         message: "Course Created successfully!",
       });
-      navigate(RoutePath.courses.description(res.data.slug).route);
+      navigate(RoutePath.manageCourse.lessons(res.data.slug).route);
     } catch (err) {
       const error = errorType(err);
       showNotification({
@@ -142,7 +142,7 @@ const CreateCoursePage = () => {
       <FormProvider form={form}>
         <form onSubmit={form.onSubmit(submitHandler)}>
           <Box mt={20}>
-            <ThumbnailEditor formContext={useFormContext} />
+            <ThumbnailEditor formContext={useFormContext} label="thumbnail"/>
             <Group mt={10} grow>
               <TextInput
                 placeholder="Course Title."

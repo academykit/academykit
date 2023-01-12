@@ -28,24 +28,13 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
   const matches = useMediaQuery("(min-width: 991px");
 
   const onMarkComplete = () => {
-    try {
-      watchHistory.mutateAsync({
-        courseId: lesson.courseId,
-        lessonId: lesson.id,
-      });
+      
       onEnded();
       showNotification({
         title: "Success",
         message: "Pdf marked as completed!",
       });
-    } catch (err) {
-      const error = errorType(err);
-      showNotification({
-        color: "red",
-        title: "Error",
-        message: error as string,
-      });
-    }
+    
   };
 
   const transform: TransformToolbarSlot = (slot: ToolbarSlot) => ({

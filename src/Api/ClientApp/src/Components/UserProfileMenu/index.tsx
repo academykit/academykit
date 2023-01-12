@@ -63,7 +63,7 @@ const UserProfileMenu: FC<Props> = ({
           )}
         </Menu.Target>
 
-        <Menu.Dropdown>
+        <Menu.Dropdown miw={"200px"}>
           <Box sx={{ textAlign: "center" }}>
             <Text size={"xl"} weight="bolder">
               {fullName}

@@ -35,11 +35,12 @@ const useStyle = createStyles((theme) => ({
     width: "100%",
     justifyContent: "start",
     alignItems: "start",
-    borderRadius: "5px",
+    borderRadius:'5px',
     border: "1px solid gray",
     ">label": {
       cursor: "pointer",
     },
+    marginBottom:'15px'
   },
   navigate: {
     display: "flex",
@@ -47,10 +48,11 @@ const useStyle = createStyles((theme) => ({
     width: "50px",
     justifyContent: "center",
     alignItems: "center",
+    cursor: 'pointer'
   },
   navigateWrapper: {
     border: "1px solid grey",
-    borderRadius: "5px",
+    borderRadius:'5px',
 
     maxHeight: "80vh",
     height: "100%",
@@ -174,7 +176,7 @@ const Exam = ({
       <Modal
         opened={examSubmission.isSuccess}
         onClose={() => navigate(-1)}
-        title="Exam is submitted successfully. Please  be patient for your result"
+        title="Exam submitted successfully. Please be patient for your result."
       >
         <Button onClick={() => navigate(-1)}>Close</Button>
       </Modal>
@@ -206,27 +208,27 @@ const Exam = ({
               )}
             </Box>
             <Container className={classes.option}>
-              {questions[currentIndex]?.type === QuestionType.MultipleChoice &&
-                questions[currentIndex]?.questionOptions && (
-                  <ExamCheckBox
-                    currentIndex={currentIndex}
-                    form={form}
-                    options={questions[currentIndex]?.questionOptions}
-                  />
-                )}
-              {questions[currentIndex]?.type === QuestionType.SingleChoice &&
-                questions[currentIndex]?.questionOptions && (
-                  <ExamRadio
-                    currentIndex={currentIndex}
-                    form={form}
-                    options={questions[currentIndex]?.questionOptions}
-                  />
-                )}
+              {questions[currentIndex]?.type === QuestionType.MultipleChoice && 
+                questions[currentIndex]?.questionOptions && <ExamCheckBox 
+                currentIndex={currentIndex}
+                form={form}
+                options={questions[currentIndex]?.questionOptions}
+                />
+              }
+              {questions[currentIndex]?.type === QuestionType.SingleChoice && 
+                questions[currentIndex]?.questionOptions && <ExamRadio 
+                currentIndex={currentIndex}
+                form={form}
+                options={questions[currentIndex]?.questionOptions}
+                />
+              }
+              
             </Container>
           </Box>
           <Card p={4} px={20} className={classes.buttonNav}>
             {currentIndex !== 0 ? (
               <Button
+              my={5}
                 onClick={() => {
                   onQuestionVisit(currentIndex);
                   setCurrentIndex(currentIndex - 1);
@@ -239,12 +241,13 @@ const Exam = ({
             )}
             {/* @ts-ignore */}
             <button style={{ display: "none" }} ref={submitButtonRef}></button>
-            <Text>
+            <Text my={5}>
               {currentIndex + 1}/{questions.length}
             </Text>
 
             {currentIndex < questions.length - 1 ? (
               <Button
+              my={5}
                 onClick={() => {
                   onQuestionVisit(currentIndex);
                   setCurrentIndex((currentIndex) => currentIndex + 1);

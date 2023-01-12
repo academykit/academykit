@@ -17,9 +17,11 @@ import { Link } from "react-router-dom";
 const ExamDetails = ({
   exam,
   hasResult,
+  remainingAttempt
 }: {
   exam: ICourseMcq;
   hasResult: boolean;
+  remainingAttempt: number
 }) => {
   const auth = useAuth();
   const userId = auth?.auth?.id ?? "";
@@ -69,21 +71,24 @@ const ExamDetails = ({
             )}
           </Box>
           {moment().isBetween(exam.startTime + "z", exam.endTime + "z") ? (
-            <Button
+            <>
+            {remainingAttempt > 0 ? <Button
               mt={10}
               component={Link}
               to={RoutePath.exam.details(exam.slug).route}
             >
               Start Exam
-            </Button>
+            </Button>: <Text mt={15}>You have exceeded attempt count.</Text>}
+            </>
           ) : (
-            <Box>
-              {moment.utc().isBefore(exam.startTime + "z")
-                ? "Starts "
-                : "Ended "}
-              {moment(exam.startTime + "z")
+            <Box mt={10}>
+              {moment.utc().isBefore(exam.startTime + "z") ? `Starts ${moment(exam.startTime + "z")
+        
                 .utc()
-                .fromNow()}
+                .fromNow()}`: `Ended ${moment(exam.endTime + "z")
+                .utc()
+                .fromNow()}`}
+              
             </Box>
           )}
         </div>
