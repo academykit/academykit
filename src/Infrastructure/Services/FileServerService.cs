@@ -73,7 +73,7 @@ namespace Lingtren.Infrastructure.Services
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient().WithEndpoint(credentails.Url).
                             WithCredentials(credentails.AccessKey, credentails.SecretKey).Build();
-                var objectArgs = new Minio.PresignedGetObjectArgs().WithObject(key).WithBucket(credentails.Bucket).WithExpiry(60);
+                var objectArgs = new Minio.PresignedGetObjectArgs().WithObject(key).WithBucket(credentails.Bucket).WithExpiry(600);
                 var url = await minio.PresignedGetObjectAsync(objectArgs).ConfigureAwait(false);
                 return url;
             }
