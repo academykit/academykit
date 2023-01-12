@@ -728,6 +728,7 @@
                     CourseId = item.CourseId,
                     CourseName = item.Course.Name,
                     CourseSlug = item.Course.Slug,
+                    Percentage= item.Percentage,
                     HasCertificateIssued = item.HasCertificateIssued,
                     CertificateIssuedDate = item.CertificateIssuedDate,
                     CertificateUrl = item.CertificateUrl,
