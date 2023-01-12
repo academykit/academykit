@@ -73,6 +73,15 @@
                                             entity.UserId, course.Id);
                 throw new ForbiddenException("User with trainee role is not allowed to add as training trainer.");
             }
+
+            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(entity.UserId).ConfigureAwait(false);
+            if (isSuperAdminOrAdmin)
+            {
+                _logger.LogWarning("User having Id: {userId} with superadmin or admin role is not allowed to added as training trainer of training with id {courseId}.",
+                                            entity.UserId, course.Id);
+                throw new ForbiddenException("User with superadmin or admin role is not allowed to add as training trainer.");
+            }
+
             if (course.CourseTeachers.Any(p => p.UserId == entity.UserId))
             {
                 _logger.LogWarning("User with Id {userId} is already training trainer of training with id {courseId}.", entity.UserId, course.Id);
