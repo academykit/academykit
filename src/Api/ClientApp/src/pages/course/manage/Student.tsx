@@ -30,90 +30,8 @@ import { useState } from "react";
 import ConfirmationModal from "@components/Ui/ConfirmationModal";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
-
-const Rows = ({ item }: { item: IStudentStat }) => {
-  const [openImage, setOpenImage] = useState(false);
-  const { id } = useParams();
-  const course_id = id as string;
-  const [selected, setSelected] = useState<string[]>([]);
-
-  const handelCheckboxChange = (userId: string) => {
-    if (selected.includes(userId)) {
-      setSelected(selected.filter((x) => x !== userId));
-    } else {
-      setSelected([userId, ...selected]);
-    }
-  };
-
-  return (
-    <tr key={item.userId}>
-      <td>
-        {" "}
-        <Checkbox
-        // onChange={() => handelCheckboxChange(item.user.id)}
-        // checked={selected.includes(item.user.id)}
-        />
-      </td>
-      <td>
-        <Anchor
-          component={Link}
-          to={`${RoutePath.userProfile}/${item.userId}`}
-          size="sm"
-          sx={{ display: "flex" }}
-        >
-          <Avatar
-            size={26}
-            mr={8}
-            src={
-              "https://d2j66931zkyzgl.cloudfront.net/standalone/2eb8a5be-218a-43a6-b131-17531d669064.png"
-            }
-            radius={26}
-          />
-
-          {item?.fullName}
-        </Anchor>
-      </td>
-      <td>
-        <ProgressBar total={100} positive={item?.percentage} />
-      </td>
-      <td>
-        <Flex direction={"column"}>
-          {item?.hasCertificateIssued ? <Badge>Yes</Badge> : <Badge>No</Badge>}
-          <div>{item?.certificateIssueDate}</div>
-        </Flex>
-      </td>
-      <td style={{ textAlign: "center" }}>
-        <Anchor
-          component={Link}
-          to={`${RoutePath.classes}/${course_id}/${item.lessonSlug}`}
-          size="sm"
-        >
-          {item?.lessonName}
-        </Anchor>
-      </td>
-      <td>
-        <Modal
-          opened={openImage}
-          size="xl"
-          // title={item?.user?.fullName}
-          onClose={() => setOpenImage(false)}
-        >
-          <Image src={item?.certificateUrl}></Image>
-        </Modal>
-        <Anchor onClick={() => setOpenImage((v) => !v)}>
-          <Image src={item?.certificateUrl} />
-        </Anchor>
-      </td>
-      <td>
-        <UnstyledButton component={Link} to={item.userId}>
-          <Badge color="green" variant="outline">
-            View
-          </Badge>
-        </UnstyledButton>
-      </td>
-    </tr>
-  );
-};
+import moment from "moment";
+import { getInitials } from "@utils/getInitialName";
 
 const ManageStudents = ({
   searchParams,
@@ -126,12 +44,135 @@ const ManageStudents = ({
   const getStudentStat = useGetStudentStatistics(course_id, searchParams);
   const [opened, setOpened] = useState(false);
   const postUserData = usePostStatisticsCertificate(course_id, searchParams);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [submitModal, setSubmitModal] = useState(false);
+
+  const Rows = ({ item }: { item: IStudentStat }) => {
+    const [openImage, setOpenImage] = useState(false);
+    const { id } = useParams();
+    const course_id = id as string;
+
+    const handelCheckboxChange = (userId: string) => {
+      if (selected.includes(userId)) {
+        setSelected(selected.filter((x) => x !== userId));
+      } else {
+        setSelected([userId, ...selected]);
+      }
+    };
+
+    return (
+      <tr key={item.userId}>
+        <td>
+          <Checkbox
+            onChange={() => handelCheckboxChange(item?.userId)}
+            checked={selected.includes(item.userId)}
+          />
+        </td>
+        <td>
+          <Anchor
+            component={Link}
+            to={`${RoutePath.userProfile}/${item.userId}`}
+            size="sm"
+            sx={{ display: "flex" }}
+          >
+            <Avatar
+              sx={{ cursor: "pointer" }}
+              size={26}
+              mr={8}
+              src={item?.imageUrl}
+              radius={26}
+            >
+              {!item?.imageUrl && getInitials(item?.fullName ?? "")}
+            </Avatar>
+
+            {item?.fullName}
+          </Anchor>
+        </td>
+        <td>
+          <ProgressBar total={100} positive={item?.percentage} />
+        </td>
+        <td>
+          <Flex direction={"column"} justify={"center"} align={"center"}>
+            {item?.hasCertificateIssued ? (
+              <Badge maw={"60px"}>Yes</Badge>
+            ) : (
+              <Badge maw={"60px"}>No</Badge>
+            )}
+            <div style={{ marginTop: "10px" }}>
+              {item?.certificateIssuedDate
+                ? moment
+                    .utc(item?.certificateIssuedDate)
+                    .format("YYYY-MM-DD HH:mm:ss")
+                : ""}
+            </div>
+          </Flex>
+        </td>
+        <td style={{ textAlign: "center" }}>
+          <Anchor
+            component={Link}
+            to={`${RoutePath.classes}/${course_id}/${item.lessonSlug}`}
+            size="sm"
+          >
+            {item?.lessonName}
+          </Anchor>
+        </td>
+        <td>
+          <Modal
+            opened={openImage}
+            size="xl"
+            title={item?.fullName}
+            onClose={() => setOpenImage(false)}
+          >
+            <Image src={item?.certificateUrl}></Image>
+          </Modal>
+          {item?.certificateUrl ? (
+            <Anchor onClick={() => setOpenImage((v) => !v)}>
+              <Image
+                width={150}
+                height={100}
+                fit="contain"
+                src={item?.certificateUrl}
+              />
+            </Anchor>
+          ) : (
+            ""
+          )}
+        </td>
+        <td>
+          <UnstyledButton component={Link} to={item.userId}>
+            <Badge color="green" variant="outline">
+              View
+            </Badge>
+          </UnstyledButton>
+        </td>
+      </tr>
+    );
+  };
 
   const handleIssueAll = async () => {
     try {
       await postUserData.mutateAsync({
         data: [],
         issueAll: true,
+        identity: course_id,
+      });
+      showNotification({ message: "Certificate sent successfully" });
+    } catch (error) {
+      const err = errorType(error);
+
+      showNotification({
+        title: "Error!",
+        color: "red",
+        message: err,
+      });
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      await postUserData.mutateAsync({
+        data: selected,
+        issueAll: false,
         identity: course_id,
       });
       showNotification({ message: "Certificate sent successfully" });
@@ -153,6 +194,12 @@ const ManageStudents = ({
         open={opened}
         onClose={() => setOpened(false)}
         onConfirm={handleIssueAll}
+      />
+      <ConfirmationModal
+        title="Are you sure want to issue certificate?"
+        open={submitModal}
+        onClose={() => setSubmitModal(false)}
+        onConfirm={handleSubmit}
       />
       <Group position="apart" mb={"lg"}>
         <Title>Student Statistics</Title>
@@ -181,8 +228,8 @@ const ManageStudents = ({
                 <th>Progress</th>
                 <th>
                   <Flex align={"center"} direction={"column"}>
-                    <div>isIssued</div>
-                    <div></div>IssuedDate
+                    <div>(isIssued)</div>
+                    <div>(IssuedDate)</div>
                   </Flex>
                 </th>
                 <th style={{ textAlign: "center" }}>Current Lesson</th>
@@ -200,6 +247,18 @@ const ManageStudents = ({
       ) : (
         <Box mt={5}>No Students Found</Box>
       )}
+      {getStudentStat.data && getStudentStat.data?.items.length >= 1 && (
+        <Group position="left">
+          <Button
+            mt={10}
+            onClick={() => setSubmitModal(true)}
+            disabled={selected.length === 0}
+          >
+            Submit
+          </Button>
+        </Group>
+      )}
+
       {getStudentStat.data && pagination(getStudentStat.data?.totalPage)}
     </ScrollArea>
   );
