@@ -17,6 +17,7 @@ import { useWatchHistoryUser } from "@utils/services/watchHistory";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
 import { useGetMeetingReport } from "@utils/services/liveSessionService";
+import moment from "moment";
 
 const StudentLessonDetails = ({
   type,
@@ -182,7 +183,12 @@ const StudentLessonDetails = ({
             <>
               {!meetingReport.isError && (
                 <Group style={{ gap: "6px" }}>
-                  <Text w={"100%"}>Date: {meetingReport.data?.date}</Text>
+                  <Text w={"100%"}>
+                    Date:{" "}
+                    {moment
+                      .utc(meetingReport.data?.date)
+                      .format("YYYY-MM-DD HH:mm:ss")}
+                  </Text>
                   <Text w={"100%"}>
                     Joined Time: {meetingReport.data?.joinedTime}
                   </Text>
