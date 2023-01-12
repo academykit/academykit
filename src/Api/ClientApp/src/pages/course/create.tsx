@@ -126,7 +126,7 @@ const CreateCoursePage = () => {
         title: "Success!",
         message: "Course Created successfully!",
       });
-      navigate(RoutePath.courses.description(res.data.slug).route);
+      navigate(RoutePath.manageCourse.lessons(res.data.slug).route);
     } catch (err) {
       const error = errorType(err);
       showNotification({

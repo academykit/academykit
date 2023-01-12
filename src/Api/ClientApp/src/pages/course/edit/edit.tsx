@@ -161,7 +161,7 @@ const EditCourse = () => {
         name: data.title.trim().split(/ +/).join(" "),
         thumbnailUrl: data.thumbnail,
       });
-      navigator(RoutePath.courses.description(slug.id).route);
+      navigator(RoutePath.manageCourse.lessons(slug.id).route);
       showNotification({
         title: "Success",
         message: "Training Updated successfully",
