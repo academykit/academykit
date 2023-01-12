@@ -15,7 +15,6 @@ const EditCourse = lazyWithRetry(() => import("./edit"));
 const CourseLessons = lazyWithRetry(() => import("./lessons"));
 const Teacher = lazyWithRetry(() => import("./teacher"));
 
-const CertificateCourse = lazyWithRetry(() => import("../manage/Certificate"));
 const ManageLessons = lazyWithRetry(() => import("../manage/Lesson"));
 const ManageStudents = lazyWithRetry(() => import("../manage/Student"));
 
@@ -40,7 +39,6 @@ const CourseRoute = () => {
           <Route path="/students/:studentId" element={<StudentDetails />} />
           <Route path="/lessons-stat" element={<ManageLessons />} />
           <Route path="/lessons-stat/:lessonId" element={<LessonDetails />} />
-          <Route path="/certificate-stat" element={<CertificateCourse />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/edit" element={<EditCourse />} />
           <Route path="/teachers" element={<Teacher />} />
