@@ -6,7 +6,6 @@ namespace Lingtren.Domain.Entities
     {
         public Guid GroupId { get; set; }
         public Group Group { get; set; }
-        public string Key { get; set; }
         public string Name { get; set; }
         public double Size { get; set; }
         public string Url { get; set; }
