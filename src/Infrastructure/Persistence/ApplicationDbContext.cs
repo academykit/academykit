@@ -156,23 +156,19 @@
                 },
                 new Setting
                 {
-                    Key = "Server_FilePath",
-                },
-                new Setting
-                {
-                    Key = "Server_VideoPath",
-                },
-                new Setting
-                {
                     Key = "Server_Url",
                 },
                 new Setting
                 {
-                    Key = "Server_UserName",
+                    Key = "Server_Bucket",
                 },
                 new Setting
                 {
-                    Key = "Server_Password",
+                    Key = "Server_AccessKey",
+                },
+                new Setting
+                {
+                    Key = "Server_SecretKey",
                 }
             );
             base.OnModelCreating(builder);

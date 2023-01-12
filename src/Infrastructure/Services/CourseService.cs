@@ -626,7 +626,7 @@ namespace Lingtren.Infrastructure.Services
                 predicate: predicate,
                 include: src => src.Include(x => x.CourseTeachers)
                                 .Include(x => x.CourseTags)
-                                .Include(x=>x.CourseEnrollments)
+                                .Include(x => x.CourseEnrollments)
                 ).ConfigureAwait(false);
             var result = course.ToIPagedList(criteria.Page, criteria.Size);
             return result;
@@ -883,11 +883,13 @@ namespace Lingtren.Infrastructure.Services
             var responseModel = new DashboardResponseModel();
             if (currentUserRole == UserRole.SuperAdmin || currentUserRole == UserRole.Admin)
             {
-                responseModel.TotalUsers = await _unitOfWork.GetRepository<User>().CountAsync().ConfigureAwait(false);
-                responseModel.TotalActiveUsers = await _unitOfWork.GetRepository<User>().CountAsync(predicate: p => p.IsActive).ConfigureAwait(false);
+                var users = await _unitOfWork.GetRepository<User>().GetAllAsync().ConfigureAwait(false);
+
+                responseModel.TotalUsers = users.Count();
+                responseModel.TotalActiveUsers = users.Count(predicate: p => p.IsActive);
+                responseModel.TotalTrainers = users.Count(predicate: p => p.IsActive && p.Role == UserRole.Trainer);
+
                 responseModel.TotalGroups = await _unitOfWork.GetRepository<Group>().CountAsync(predicate: p => p.IsActive).ConfigureAwait(false);
-                responseModel.TotalTrainers = await _unitOfWork.GetRepository<User>().CountAsync(
-                    predicate: p => p.IsActive && p.Role == UserRole.Trainer).ConfigureAwait(false);
                 responseModel.TotalTrainings = await _unitOfWork.GetRepository<Course>().CountAsync(
                     predicate: p => p.Status == CourseStatus.Published || p.Status == CourseStatus.Completed || p.IsUpdate).ConfigureAwait(false);
             }
@@ -896,24 +898,23 @@ namespace Lingtren.Infrastructure.Services
                 responseModel.TotalGroups = await _unitOfWork.GetRepository<Group>().CountAsync(
                     predicate: p => p.GroupMembers.Any(x => x.UserId == currentUserId) && p.IsActive
                     ).ConfigureAwait(false);
-                responseModel.TotalActiveTrainings = await _unitOfWork.GetRepository<Course>().CountAsync(
-                    predicate: p => p.CourseTeachers.Any(x => x.UserId == currentUserId) && (p.Status == CourseStatus.Published || p.IsUpdate)
+
+                var trainings = await _unitOfWork.GetRepository<Course>().GetAllAsync(
+                    predicate: p => p.CourseTeachers.Any(x => x.UserId == currentUserId)
                     ).ConfigureAwait(false);
-                responseModel.TotalCompletedTrainings = await _unitOfWork.GetRepository<Course>().CountAsync(
-                    predicate: p => p.CourseTeachers.Any(x => x.UserId == currentUserId) && p.Status == CourseStatus.Completed
-                    ).ConfigureAwait(false);
+
+                responseModel.TotalActiveTrainings = trainings.Count(predicate: p => p.Status == CourseStatus.Published || p.IsUpdate);
+                responseModel.TotalCompletedTrainings = trainings.Count(predicate: p => p.Status == CourseStatus.Completed);
             }
             if (currentUserRole == UserRole.Trainee)
             {
-                responseModel.TotalEnrolledCourses = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(
-                    predicate: p => p.UserId == currentUserId && !p.IsDeleted && p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled
-                    ).ConfigureAwait(false);
-                responseModel.TotalInProgressCourses = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(
-                    predicate: p => p.UserId == currentUserId && !p.IsDeleted && p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
-                    ).ConfigureAwait(false);
-                responseModel.TotalCompletedCourses = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(
-                    predicate: p => p.UserId == currentUserId && !p.IsDeleted && p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
-                    ).ConfigureAwait(false);
+                var trainings = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
+                   predicate: p => p.UserId == currentUserId && !p.IsDeleted
+                   ).ConfigureAwait(false);
+
+                responseModel.TotalEnrolledCourses = trainings.Count(predicate: p => p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled);
+                responseModel.TotalInProgressCourses = trainings.Count(predicate: p => p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled);
+                responseModel.TotalCompletedCourses = trainings.Count(predicate: p => p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed);
             }
             return responseModel;
         }
@@ -928,19 +929,23 @@ namespace Lingtren.Infrastructure.Services
         public async Task<SearchResult<DashboardCourseResponseModel>> GetDashboardCourses(Guid currentUserId, UserRole currentUserRole, BaseSearchCriteria criteria)
         {
             var predicate = PredicateBuilder.New<Course>(true);
+
             if (currentUserRole == UserRole.SuperAdmin || currentUserRole == UserRole.Admin || currentUserRole == UserRole.Trainer)
             {
                 predicate = predicate.And(p => p.CourseTeachers.Any(x => x.CourseId == p.Id && x.UserId == currentUserId));
             }
+
             if (currentUserRole == UserRole.Trainee)
             {
                 predicate = predicate.And(p => p.CourseEnrollments.Any(x => x.CourseId == p.Id && x.UserId == currentUserId && !x.IsDeleted &&
                             (x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)));
             }
+
             var courses = await _unitOfWork.GetRepository<Course>().GetAllAsync(
                 predicate: predicate,
-                include: src => src.Include(x => x.User)
+                include: src => src.Include(x => x.User).Include(x => x.CourseEnrollments).ThenInclude(x => x.User)
                 ).ConfigureAwait(false);
+            
             var result = courses.ToIPagedList(criteria.Page, criteria.Size);
             var response = new SearchResult<DashboardCourseResponseModel>
             {
@@ -950,17 +955,19 @@ namespace Lingtren.Infrastructure.Services
                 TotalCount = result.TotalCount,
                 TotalPage = result.TotalPage,
             };
+            
             if (currentUserRole == UserRole.SuperAdmin || currentUserRole == UserRole.Admin || currentUserRole == UserRole.Trainer)
             {
                 result.Items.ForEach(x =>
                 {
-                    var courseEnrollments = _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
-                                    predicate: p => p.CourseId == x.Id && !p.IsDeleted
+                    var courseEnrollments = x.CourseEnrollments.Where(
+                                    p => !p.IsDeleted
                                     && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
-                                        || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed),
-                                    include: src => src.Include(x => x.User)).Result;
+                                        || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed));
+
                     var students = new List<UserModel>();
                     courseEnrollments.ForEach(p => students.Add(new UserModel(p.User)));
+
                     response.Items.Add(new DashboardCourseResponseModel
                     {
                         Id = x.Id,
@@ -972,6 +979,7 @@ namespace Lingtren.Infrastructure.Services
                     });
                 });
             }
+
             if (currentUserRole == UserRole.Trainee)
             {
                 result.Items.ForEach(x =>
@@ -982,10 +990,11 @@ namespace Lingtren.Infrastructure.Services
                         Slug = x.Slug,
                         Name = x.Name,
                         ThumbnailUrl = x.ThumbnailUrl,
-                        Percentage = _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(
-                                    predicate: p => p.CourseId == x.Id && p.UserId == currentUserId && !p.IsDeleted
+                        Percentage = x.CourseEnrollments.FirstOrDefault(
+                                    predicate: p => p.UserId == currentUserId && !p.IsDeleted
                                     && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
-                                        || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)).Result.Percentage,
+                                        || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed))?.Percentage,
+
                         User = new UserModel(x.User),
                     });
                 });
@@ -1174,7 +1183,8 @@ namespace Lingtren.Infrastructure.Services
             var fileName = certificate?.Title ?? "certificate";
             MemoryStream ms = new(response.RawBytes);
             var file = new FormFile(ms, 0, response.RawBytes.Length, fileName, fileName);
-            return await _mediaService.UploadFileAsync(new MediaRequestModel { File = file, Type = MediaType.File }).ConfigureAwait(false);
+            var fileResponse = await _mediaService.UploadFileAsync(new MediaRequestModel { File = file, Type = MediaType.Public }).ConfigureAwait(false);
+            return fileResponse.Url;
         }
 
         #endregion Certificate

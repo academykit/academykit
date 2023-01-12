@@ -25,7 +25,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             Lessons = new List<LessonResponseModel>();
             if (fetchLesson)
             {
-                model.Lessons.ToList().ForEach(item => Lessons.Add(new LessonResponseModel(item)));
+                model.Lessons?.ToList().ForEach(item => Lessons.Add(new LessonResponseModel(item)));
             }
         }
         public SectionResponseModel()
