@@ -442,7 +442,7 @@ export interface ICourseLesson {
   nextLessonSlug: string;
   hasResult: boolean;
   hasFeedbackSubmitted: boolean;
-
+remainingAttempt: number;
   hasReviewedAssignment: boolean;
   assignmentReview?: ICourseLessonAssignmentReview;
 }

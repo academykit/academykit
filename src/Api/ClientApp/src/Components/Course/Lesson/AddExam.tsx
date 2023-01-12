@@ -29,21 +29,21 @@ import * as Yup from "yup";
 const schema = Yup.object().shape({
   name: Yup.string().required("Exam Name is required."),
   description: Yup.string()
-    .required("Exam Description is required")
-    .max(5000, "Please Enter within 5000 Character Limit"),
+    .required("Exam Description is required.")
+    .max(5000, "Please Enter within 5000 Character Limit."),
   startDate: Yup.date()
-    .required("Start Date is required")
-    .typeError("Start Date is required"),
+    .required("Start Date is required.")
+    .typeError("Start Date is required."),
   endDate: Yup.date()
-    .required("End Date is required")
-    .typeError("End Date is required"),
-  questionMarking: Yup.string().required("Question weightage is required"),
+    .required("End Date is required.")
+    .typeError("End Date is required."),
+  questionMarking: Yup.string().required("Question weightage is required."),
   startTime: Yup.string()
-    .required("start time cannot be empty")
-    .typeError("Start Time is required"),
+    .required("start time cannot be empty.")
+    .typeError("Start Time is required."),
   endTime: Yup.string()
-    .required("end time cannot be empty")
-    .typeError("End Time is required"),
+    .required("end time cannot be empty.")
+    .typeError("End Time is required."),
   duration: Yup.string().required("Duration is required."),
 });
 
@@ -90,15 +90,15 @@ const AddExam = ({
   const course = lessonDetails.data;
 
   useEffect(() => {
-    if (lessonDetails.isSuccess) {
+    if (lessonDetails.isSuccess && isEditing) {
       const data = course?.questionSet;
       const startDateTime = moment(data?.startTime + "z")
-        .local()
-        .toDate();
+      .local()
+      .toDate();
       const endDateTime = moment(data?.endTime + "z")
-        .local()
-        .toDate();
-
+      .local()
+      .toDate();
+      
       form.setValues({
         name: course?.name ?? "",
         description: data?.description ?? "",
@@ -262,6 +262,7 @@ const AddExam = ({
             <NumberInput
               label="Number Of Retakes"
               placeholder="Retakes"
+              min={0}
               {...form.getInputProps("allowedRetake")}
             />
           </Grid.Col>

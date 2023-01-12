@@ -29,7 +29,6 @@ const CreateAssignment = ({
 
       {questionList.isSuccess && (
         <>
-          {searchComponent("Search for questions")}
           {questionList.data.length > 0 ? (
             <Box>
               {questionList.data.map((x) => (

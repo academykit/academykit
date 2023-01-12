@@ -35,7 +35,7 @@ const schema = Yup.object().shape({
   meetingDuration: Yup.string()
     .required("Meeting Duration is required.")
     .typeError("Meeting Duration is required."),
-  zoomLicenseId: Yup.string().required("Zoom License is required"),
+  zoomLicenseId: Yup.string().required("Zoom License is required."),
 });
 
 const AddMeeting = ({
@@ -70,21 +70,22 @@ const AddMeeting = ({
   );
 
   useEffect(() => {
-    if (lessonDetails.isSuccess) {
+    if (lessonDetails.isSuccess && isEditing) {
       const data = lessonDetails.data;
-      const startDateTime = moment(data?.meeting.startDate + "z")
+      const startDateTime = moment(data?.meeting?.startDate + "z")
         .local()
         .toDate();
 
+
       form.setValues({
         name: data?.name ?? "",
-        meetingDuration: data ? Number(data?.meeting.duration) / 60 : 0,
-        zoomLicenseId: data?.meeting.zoomLicenseId ?? "",
+        meetingDuration: data ? Number(data?.meeting?.duration) / 60 : 0,
+        zoomLicenseId: data?.meeting?.zoomLicenseId ?? "",
         meetingStartDate: startDateTime,
         meetingStartTime: startDateTime,
         isMandatory: data?.isMandatory,
       });
-      setIsMandatory(data.isMandatory);
+      setIsMandatory(data?.isMandatory);
     }
   }, [lessonDetails.isSuccess]);
 
@@ -93,7 +94,7 @@ const AddMeeting = ({
       name: "",
       meetingStartDate: new Date(),
       meetingStartTime: new Date(),
-      meetingDuration: 0,
+      meetingDuration: 1,
       zoomLicenseId: "",
       isMandatory: false,
     },
@@ -205,6 +206,7 @@ const AddMeeting = ({
           label="Meeting Duration (minutes)"
           placeholder="Meeting Duration in Minutes"
           withAsterisk
+          min={1}
           {...form.getInputProps("meetingDuration")}
         />
         <Select
@@ -212,6 +214,7 @@ const AddMeeting = ({
           placeholder="Pick one License"
           disabled={!(meetingDuration && meetingStartDate && meetingStartTime)}
           data={selectItem}
+          withAsterisk
           {...form.getInputProps("zoomLicenseId")}
         />
       </Group>

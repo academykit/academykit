@@ -8,7 +8,7 @@ import {
   Center,
 } from "@mantine/core";
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ColorSchemeToggle } from "./ColorSchemeToggle";
 
 const useStyles = createStyles((theme) => ({
@@ -45,6 +45,10 @@ const useStyles = createStyles((theme) => ({
 
 export function AppFooter({ name }: { name: string }) {
   const { classes } = useStyles();
+  const location = useLocation()
+
+  if(location.pathname.split('/')[1] === "exam") return <></>
+
   return (
     <footer className={classes.footer}>
       <Container fluid={true} className={classes.inner}>

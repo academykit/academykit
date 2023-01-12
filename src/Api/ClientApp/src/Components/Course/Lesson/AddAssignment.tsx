@@ -24,7 +24,7 @@ import * as Yup from "yup";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Assignment's Title is required."),
-  description: Yup.string().required("Assignment's Description is required"),
+  description: Yup.string().required("Assignment's Description is required."),
 });
 
 const AddAssignment = ({

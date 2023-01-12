@@ -209,6 +209,7 @@ const Classes = () => {
                 <ExamDetails
                   exam={courseLesson.data.questionSet}
                   hasResult={courseLesson.data.hasResult}
+                  remainingAttempt={courseLesson.data.remainingAttempt}
                 />
               </Box>
             )}

@@ -4,6 +4,7 @@ import {
   Button,
   Checkbox,
   Container,
+  Flex,
   Group,
   Paper,
   Select,
@@ -175,9 +176,10 @@ const EditAssignment = ({
                 <Text mt={20}>Options</Text>
                 {form.values.answers &&
                   form.values.answers.map((x, i) => (
-                    <Group key={i} mb={30}>
+                    <Flex key={i} mb={30} mt={10} align='center'>
                       <Checkbox
                         {...form.getInputProps(`answers.${i}.isCorrect`)}
+                        mr={10}
                         checked={
                           form.values.answers &&
                           form?.values.answers[i].isCorrect
@@ -189,6 +191,7 @@ const EditAssignment = ({
                         formContext={useFormContext}
                       ></TextEditor>
                       <UnstyledButton
+                      ml={10}
                         onClick={() => {
                           form.insertListItem(
                             "answers",
@@ -205,6 +208,7 @@ const EditAssignment = ({
                       {form.values.answers &&
                         form.values.answers.length > 1 && (
                           <UnstyledButton
+                          ml={10}
                             onClick={() => {
                               form.removeListItem("answers", i);
                             }}
@@ -218,7 +222,7 @@ const EditAssignment = ({
                           {form.errors[`answers.${i}.option`]}
                         </span>
                       )}
-                    </Group>
+                    </Flex>
                   ))}
                 {typeof form.errors[`answers`] === "string" && (
                   <span style={{ color: "red" }}>{form.errors[`answers`]}</span>

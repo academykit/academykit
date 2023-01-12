@@ -25,7 +25,7 @@ import * as Yup from "yup";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Lecture Name is required."),
-  description: Yup.string().required("Lecture's Description is required"),
+  description: Yup.string().required("Lecture's Description is required."),
 });
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
@@ -124,7 +124,7 @@ const AddLecture = ({
               />
             </Grid.Col>
           </Grid>
-          <Text mt={10}>Lecture</Text>
+          <Text size={'sm'} mt={10}>Lecture <span style={{color: 'red'}}>*</span></Text>
           <LessonVideoUpload
             setUrl={setVideoUrl}
             currentVideo={videoUrl}
