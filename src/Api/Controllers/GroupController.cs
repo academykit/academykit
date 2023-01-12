@@ -8,7 +8,6 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
@@ -57,13 +56,7 @@
 
             searchResult.Items.ForEach(p =>
                  {
-                     var memberCount = _unitOfWork.GetRepository<GroupMember>().CountAsync(
-                         predicate: x => x.GroupId == p.Id && x.IsActive).Result;
-                     var courseCount = _unitOfWork.GetRepository<Course>().CountAsync(
-                         predicate: x => x.GroupId == p.Id && (x.Status == CourseStatus.Published || x.Status == CourseStatus.Completed || x.IsUpdate)).Result;
-                     var attachmentCount = _unitOfWork.GetRepository<GroupFile>().CountAsync(
-                         predicate: x => x.GroupId == p.Id).Result;
-                     response.Items.Add(new GroupResponseModel(p, memberCount, courseCount, attachmentCount));
+                     response.Items.Add(new GroupResponseModel(p));
                  }
              );
             return response;
@@ -104,10 +97,8 @@
         [HttpGet("{identity}")]
         public async Task<GroupResponseModel> Get(string identity)
         {
-            Group model = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            var memberCount = await _unitOfWork.GetRepository<GroupMember>().CountAsync(
-                         predicate: x => x.GroupId == model.Id && x.IsActive).ConfigureAwait(false);
-            return new GroupResponseModel(model, memberCount: memberCount);
+            var model = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            return new GroupResponseModel(model);
         }
 
         /// <summary>

@@ -82,7 +82,10 @@
         protected override IIncludableQueryable<Group, object> IncludeNavigationProperties(IQueryable<Group> query)
         {
             return query
-                .Include(x => x.User);
+                .Include(x => x.User)
+                .Include(x => x.GroupMembers)
+                .Include(x => x.Courses)
+                .Include(x => x.GroupFiles);
         }
 
         /// <summary>
