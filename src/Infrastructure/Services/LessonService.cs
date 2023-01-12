@@ -21,14 +21,17 @@ namespace Lingtren.Infrastructure.Services
     {
         private readonly IZoomLicenseService _zoomLicenseService;
         private readonly IZoomSettingService _zoomSettingService;
+        private readonly IFileServerService _fileServerService;
         public LessonService(
             IUnitOfWork unitOfWork,
             ILogger<LessonService> logger,
             IZoomLicenseService zoomLicenseService,
+            IFileServerService fileServerService,
             IZoomSettingService zoomSettingService) : base(unitOfWork, logger)
         {
             _zoomLicenseService = zoomLicenseService;
             _zoomSettingService = zoomSettingService;
+            _fileServerService = fileServerService;
         }
 
         #region Protected Region
@@ -216,7 +219,10 @@ namespace Lingtren.Infrastructure.Services
                 ).ConfigureAwait(false);
 
             var responseModel = new LessonResponseModel(lesson);
-
+            if(!string.IsNullOrEmpty(responseModel.VideoUrl))
+            {
+                 responseModel.VideoUrl = await _fileServerService.GetFilePresignedUrl(responseModel.VideoUrl).ConfigureAwait(false);
+            }
             responseModel.IsCompleted = currentLessonWatchHistory != null ? currentLessonWatchHistory.IsCompleted : false;
             responseModel.IsPassed = currentLessonWatchHistory != null ? currentLessonWatchHistory.IsPassed : false;
 
