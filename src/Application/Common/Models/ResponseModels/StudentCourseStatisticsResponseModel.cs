@@ -4,6 +4,7 @@
     {
         public Guid UserId { get; set; }
         public string FullName { get; set; }
+        public string? ImageUrl { get; set; }
         public double Percentage { get; set; }
         public Guid? LessonId { get; set; }
         public string LessonSlug { get; set; }
