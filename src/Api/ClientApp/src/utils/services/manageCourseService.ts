@@ -74,11 +74,9 @@ export interface IStudentStat {
   hasCertificateIssued:boolean
   imageUrl:string
 }
-export interface ICourseStudentStat {
-  items: IStudentStat[];
-}
+
 const getStudentStatistics = async (courseIdentity: string, query: string) => {
-  return await httpClient.get<IPaginated<ICourseStudentStat>>(
+  return await httpClient.get<IPaginated<IStudentStat>>(
     api.course.studentStat(courseIdentity) + `?${query}`
   );
 };
@@ -201,6 +199,9 @@ export const usePostStatisticsCertificate = (
         queryClient.invalidateQueries([
           api.course.certificate(identity, search),
         ]);
+        queryClient.invalidateQueries([
+          api.course.studentStat(identity), search
+        ])
       },
       onError: (err) => {
         return errorType(err);

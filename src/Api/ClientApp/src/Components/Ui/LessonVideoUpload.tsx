@@ -38,7 +38,9 @@ const LessonVideoUpload = ({
   const [files, setFiles] = useState<any>([]);
   return (
     <Box my={marginy} sx={{ maxWidth: 470 }}>
+     
       <FilePond
+      
         files={files}
         onaddfile={(error, file) => {}}
         fileValidateTypeLabelExpectedTypes="Expected .mp4 .avi .mov"
@@ -67,7 +69,7 @@ const LessonVideoUpload = ({
                 FileAccess.Private
               );
               load(res.data);
-              setUrl(() => res.data.key);
+              setUrl(() => res.data);
             } catch (e) {
               error("Unable to upload file");
             }

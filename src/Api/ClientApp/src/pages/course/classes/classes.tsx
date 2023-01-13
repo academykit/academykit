@@ -99,7 +99,7 @@ const Classes = () => {
   >("loading");
 
   const { data, isLoading } = useCourseDescription(id as string);
-  const courseLesson = useGetCourseLesson(
+  const  courseLesson = useGetCourseLesson(
     id as string,
     lessonId === "1" ? undefined : lessonId
   );
@@ -166,13 +166,13 @@ const Classes = () => {
             {courseLesson.isError && (
               <Box className={cx(classes.videoSection, classes.errorSection)}>
                 <Box>{errorType(courseLesson.error)}</Box>
-                <Button
+                 {courseLesson.error?.response?.status && courseLesson.error?.response?.status === 403 && <Button
                   component={Link}
                   mt={20}
                   to={`${RoutePath.classes}/${id}/1`}
                 >
                   View Previous Lesson
-                </Button>
+                </Button>}
               </Box>
             )}
 

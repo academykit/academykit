@@ -272,6 +272,17 @@ const CourseDescription = () => {
                       </Button>
                     </Link>
                   )}
+                {auth?.auth &&
+                  course.data?.status !== (CourseStatus.Draft || CourseStatus.Review) &&
+                  (auth?.auth?.role <= UserRole.Admin ||
+                   course.data?.userStatus === (CourseUserStatus.Author || CourseUserStatus.Teacher)) &&
+                  (
+                    <Link to={RoutePath.manageCourse.dashboard(id).route}>
+                      <Button radius="xl" size="md" className={classes.control}>
+                        Manage
+                      </Button>
+                    </Link>
+                  )}
               </Group>
             </Center>
 
