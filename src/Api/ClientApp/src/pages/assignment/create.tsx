@@ -20,16 +20,12 @@ const CreateAssignment = ({
   lessonId,
 }: Props & IWithSearchPagination) => {
   const [addQuestion, setAddQuestion] = useToggle();
-  const params = useParams();
 
   const questionList = useAssignmentQuestion(lessonId, searchParams);
   return (
     <Container>
-      <Breadcrumb hide={1} />
-
       {questionList.isSuccess && (
         <>
-          {searchComponent("Search for questions")}
           {questionList.data.length > 0 ? (
             <Box>
               {questionList.data.map((x) => (
@@ -42,7 +38,7 @@ const CreateAssignment = ({
               ))}
             </Box>
           ) : (
-            <Box mt={10}>No Questions Found!</Box>
+            <Box mt={10}>No assignment questions found!</Box>
           )}
           {addQuestion && (
             <EditAssignment
