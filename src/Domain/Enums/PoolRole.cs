@@ -2,7 +2,7 @@
 {
     public enum PoolRole
     {
-        Author = 1,
-        Creator = 2
+        Creator = 1,
+        Author = 2
     }
 }

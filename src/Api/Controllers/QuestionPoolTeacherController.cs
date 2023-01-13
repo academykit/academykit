@@ -93,7 +93,7 @@
                 Id = Guid.NewGuid(),
                 QuestionPoolId = questionPool.Id,
                 UserId = user.Id,
-                Role = PoolRole.Creator,
+                Role = PoolRole.Author,
                 CreatedBy = CurrentUser.Id,
                 CreatedOn = currentTimeStamp,
                 UpdatedBy = CurrentUser.Id,
