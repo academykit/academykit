@@ -99,10 +99,12 @@ const UserProfileMenu: FC<Props> = ({
           >
             <Text size={size}>Account</Text>
           </Menu.Item>
-          <Menu.Item className={classes.item} icon={<IconLogout size={14} />}>
-            <UnstyledButton onClick={auth?.logout}>
-              <Text size={size}>Logout</Text>
-            </UnstyledButton>
+          <Menu.Item
+            onClick={auth?.logout}
+            className={classes.item}
+            icon={<IconLogout size={14} />}
+          >
+            <Text size={size}>Logout</Text>
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
