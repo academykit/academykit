@@ -1,6 +1,8 @@
 ﻿namespace Lingtren.Application.Common.Models.ResponseModels
 {
     using Lingtren.Domain.Entities;
+    using Lingtren.Domain.Enums;
+
     public class GroupResponseModel
     {
         public Guid Id { get; set; }
@@ -17,8 +19,8 @@
             Slug = model.Slug;
             Name = model.Name;
             IsActive = model.IsActive;
-            MemberCount = model.GroupMembers?.Count;
-            CourseCount = model.Courses?.Count;
+            MemberCount = model.GroupMembers?.Count(x => x.IsActive);
+            CourseCount = model.Courses?.Count(x => x.Status == CourseStatus.Published || x.Status == CourseStatus.Completed || x.IsUpdate);
             AttachmentCount = model.GroupFiles?.Count;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
         }

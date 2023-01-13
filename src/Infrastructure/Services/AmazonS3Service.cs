@@ -114,7 +114,7 @@ namespace Lingtren.Infrastructure.Services
         #region  private
 
         /// <summary>
-        /// Handle to get credentails
+        /// Handle to get credential
         /// </summary>
         /// <returns> the instance of <see cref="AmazonSettingDto" /> .</returns>
         private async Task<AmazonSettingDto> GetCredentialAsync()
@@ -154,8 +154,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while attempting to get the minio credential.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to get the minio credential.");
+                _logger.LogError(ex, "An error occurred while attempting to get the aws credential.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to get the aws credential.");
             }
         }
 

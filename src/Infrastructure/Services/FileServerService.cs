@@ -8,6 +8,7 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Infrastructure.Common;
     using Microsoft.Extensions.Logging;
     using MimeKit;
+    using System;
 
     public class FileServerService : BaseService, IFileServerService
     {
@@ -51,7 +52,7 @@ namespace Lingtren.Infrastructure.Services
                 var objectArgs = new Minio.PutObjectArgs().WithObject(fileName).WithBucket(credentails.Bucket).WithStreamData(model.File.OpenReadStream()).
                     WithContentType(model.File.ContentType).WithObjectSize(model.File.Length);
                 await minio.PutObjectAsync(objectArgs);
-                return model.Type == MediaType.Private ? fileName :  $"{credentails.Url}/{credentails.Bucket}/{fileName}";
+                return model.Type == MediaType.Private ? fileName : $"{credentails.Url}/{credentails.Bucket}/{fileName}";
             }
             catch (Exception ex)
             {
@@ -82,10 +83,34 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
+        /// <summary>
+        /// Handle to upload file 
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="MediaRequestModel" /> .</param>
+        /// <returns> the file key or url .</returns>
+        public async Task RemoveFileAsync(string key)
+        {
+            try
+            {
+                var credentails = await GetCredentialAsync().ConfigureAwait(false);
+                var minio = new Minio.MinioClient().WithEndpoint(credentails.EndPoint).
+                            WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
+
+
+                var objectArgs = new Minio.RemoveObjectArgs().WithBucket(credentails.Bucket).WithObject(key);
+                await minio.RemoveObjectAsync(objectArgs);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, "An error occurred while attempting to upload file to the server.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to upload file to the server.");
+            }
+        }
+
         #region private
 
         /// <summary>
-        /// Handle to get credentails
+        /// Handle to get credential
         /// </summary>
         /// <returns> the instance of <see cref="MinIoDto" /> .</returns>
         private async Task<MinIoDto> GetCredentialAsync()

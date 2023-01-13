@@ -75,7 +75,7 @@
                 Id = Guid.NewGuid(),
                 QuestionPoolId = entity.Id,
                 UserId = CurrentUser.Id,
-                Role = PoolRole.Author,
+                Role = PoolRole.Creator,
                 CreatedOn = currentTimeStamp,
                 CreatedBy = CurrentUser.Id,
                 UpdatedOn = currentTimeStamp,

@@ -19,10 +19,15 @@
     public class GroupService : BaseGenericService<Group, GroupBaseSearchCriteria>, IGroupService
     {
         private readonly IMediaService _mediaService;
-        public GroupService(IUnitOfWork unitOfWork,
-            ILogger<GroupService> logger, IMediaService mediaService) : base(unitOfWork, logger)
+        private readonly IFileServerService _fileServerService;
+        public GroupService(
+            IUnitOfWork unitOfWork,
+            ILogger<GroupService> logger,
+            IMediaService mediaService,
+            IFileServerService fileServerService) : base(unitOfWork, logger)
         {
             _mediaService = mediaService;
+            _fileServerService = fileServerService;
         }
 
         #region Protected Region
@@ -421,6 +426,11 @@
 
                 _unitOfWork.GetRepository<GroupFile>().Delete(file);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+                if (!string.IsNullOrWhiteSpace(file.Url))
+                {
+                    await _fileServerService.RemoveFileAsync(file.Url).ConfigureAwait(false);
+                }
             }
             catch (Exception ex)
             {

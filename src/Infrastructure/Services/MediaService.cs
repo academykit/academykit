@@ -12,6 +12,7 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
+    using MimeKit;
     using System.Net.Http.Headers;
     public class MediaService : BaseService, IMediaService
     {
