@@ -8,7 +8,6 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Infrastructure.Common;
     using Microsoft.Extensions.Logging;
     using MimeKit;
-    using Minio;
 
     public class FileServerService : BaseService, IFileServerService
     {
@@ -30,7 +29,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient().WithEndpoint(credentails.Url).
-                            WithCredentials(credentails.AccessKey, credentails.SecretKey).Build();
+                            WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
                 var fileName = string.Concat(model.File.FileName.Where(c => !char.IsWhiteSpace(c)));
                 var extension = Path.GetExtension(fileName);
                 fileName = $"{Guid.NewGuid()}_{fileName}";
@@ -52,7 +51,7 @@ namespace Lingtren.Infrastructure.Services
                 var objectArgs = new Minio.PutObjectArgs().WithObject(fileName).WithBucket(credentails.Bucket).WithStreamData(model.File.OpenReadStream()).
                     WithContentType(model.File.ContentType).WithObjectSize(model.File.Length);
                 await minio.PutObjectAsync(objectArgs);
-                return model.Type == MediaType.Private ? fileName :  $"http://{credentails.Url}/{credentails.Bucket}/{fileName}";
+                return model.Type == MediaType.Private ? fileName :  $"https://{credentails.Url}/{credentails.Bucket}/{fileName}";
             }
             catch (Exception ex)
             {
@@ -72,10 +71,9 @@ namespace Lingtren.Infrastructure.Services
             {
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient().WithEndpoint(credentails.Url).
-                            WithCredentials(credentails.AccessKey, credentails.SecretKey).Build();
+                            WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
                 var objectArgs = new Minio.PresignedGetObjectArgs().WithObject(key).WithBucket(credentails.Bucket).WithExpiry(1000);
-                var url = await minio.PresignedGetObjectAsync(objectArgs).ConfigureAwait(false);
-                return url;
+                return await minio.PresignedGetObjectAsync(objectArgs).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
