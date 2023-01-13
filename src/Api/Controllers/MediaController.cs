@@ -52,7 +52,6 @@ namespace Lingtren.Api.Controllers
         [HttpPost("file")]
         [RequestFormLimits(MultipartBodyLengthLimit = 2147483648)]
         [RequestSizeLimit(2147483648)]
-        [AllowAnonymous]
         public async Task<string> File([FromForm] MediaRequestModel model)
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
@@ -65,7 +64,6 @@ namespace Lingtren.Api.Controllers
         /// <param name="key"> the file key </param>
         /// <returns> the presigned url </returns>
         [HttpGet("file")]
-        [AllowAnonymous]
         public async Task<string> GetFile([FromQuery] string key) => await _mediaService.GetFileAsnc(key).ConfigureAwait(false);
     }
 }

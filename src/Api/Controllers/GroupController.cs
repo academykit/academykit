@@ -267,6 +267,8 @@
         /// <param name="model"> the instance of <see cref="GroupFileRequestModel" /> . </param>
         /// <returns> the instance of <see cref="GroupFileResponseModel" /> .</returns>
         [HttpPost("file")]
+        [RequestFormLimits(MultipartBodyLengthLimit = 2147483648)]
+        [RequestSizeLimit(2147483648)]
         public async Task<GroupFileResponseModel> UploadFile([FromForm] GroupFileRequestModel model)
         {
             var response = await _groupService.UploadGroupFileAsync(model, CurrentUser.Id).ConfigureAwait(false);
