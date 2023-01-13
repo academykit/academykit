@@ -28,7 +28,7 @@ namespace Lingtren.Infrastructure.Services
             try
             {
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
-                var minio = new Minio.MinioClient().WithEndpoint(credentails.Url).
+                var minio = new Minio.MinioClient().WithEndpoint(credentails.EndPoint).
                             WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
                 var fileName = string.Concat(model.File.FileName.Where(c => !char.IsWhiteSpace(c)));
                 var extension = Path.GetExtension(fileName);
@@ -51,7 +51,7 @@ namespace Lingtren.Infrastructure.Services
                 var objectArgs = new Minio.PutObjectArgs().WithObject(fileName).WithBucket(credentails.Bucket).WithStreamData(model.File.OpenReadStream()).
                     WithContentType(model.File.ContentType).WithObjectSize(model.File.Length);
                 await minio.PutObjectAsync(objectArgs);
-                return model.Type == MediaType.Private ? fileName :  $"https://{credentails.Url}/{credentails.Bucket}/{fileName}";
+                return model.Type == MediaType.Private ? fileName :  $"{credentails.Url}/{credentails.Bucket}/{fileName}";
             }
             catch (Exception ex)
             {
@@ -70,9 +70,9 @@ namespace Lingtren.Infrastructure.Services
             try
             {
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
-                var minio = new Minio.MinioClient().WithEndpoint(credentails.Url).
+                var minio = new Minio.MinioClient().WithEndpoint(credentails.EndPoint).
                             WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
-                var objectArgs = new Minio.PresignedGetObjectArgs().WithObject(key).WithBucket(credentails.Bucket).WithExpiry(1000);
+                var objectArgs = new Minio.PresignedGetObjectArgs().WithObject(key).WithBucket(credentails.Bucket).WithExpiry(credentails.ExpiryTime);
                 return await minio.PresignedGetObjectAsync(objectArgs).ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -116,9 +116,23 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new EntityNotFoundException("Server bucket not found.");
                 }
+
+                var endPoint = settings.FirstOrDefault(x => x.Key == "Server_EndPoint")?.Value;
+                if (string.IsNullOrEmpty(secretKey))
+                {
+                    throw new EntityNotFoundException("Server end point not found.");
+                }
+
+                var expiryTime = settings.FirstOrDefault(x => x.Key == "Server_PresignedExpiryTime")?.Value;
+                if (string.IsNullOrEmpty(secretKey))
+                {
+                    throw new EntityNotFoundException("Server end point not found.");
+                }
                 miniodto.AccessKey = accessKey;
                 miniodto.SecretKey = secretKey;
                 miniodto.Url = url;
+                miniodto.ExpiryTime = Convert.ToInt32(expiryTime);
+                miniodto.EndPoint = endPoint;
                 miniodto.Bucket = bucket;
                 return miniodto;
             }

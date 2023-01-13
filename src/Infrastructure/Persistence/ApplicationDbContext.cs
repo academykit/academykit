@@ -169,6 +169,13 @@
                 new Setting
                 {
                     Key = "Server_SecretKey",
+                },
+                 new Setting
+                {
+                    Key = "Server_PresignedExpiryTime",
+                },
+                new Setting{
+                    Key = "Server_EndPoint",
                 }
             );
             base.OnModelCreating(builder);
