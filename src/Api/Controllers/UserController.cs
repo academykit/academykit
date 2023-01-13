@@ -17,6 +17,7 @@
     public class UserController : BaseApiController
     {
         private readonly ILogger<UserController> _logger;
+        private readonly IFileServerService _fileServerService;
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
         private readonly IValidator<UserRequestModel> _validator;
@@ -24,12 +25,14 @@
 
         public UserController(
                             ILogger<UserController> logger,
+                            IFileServerService fileServerService,
                             IUserService userService,
                             IEmailService emailService,
                             IValidator<UserRequestModel> validator,
                             IValidator<ChangeEmailRequestModel> changeEmailValidator
                            )
         {
+            _fileServerService = fileServerService;
             _logger = logger;
             _userService = userService;
             _emailService = emailService;
@@ -142,6 +145,8 @@
             var existing = await _userService.GetAsync(userId, CurrentUser.Id, includeAllProperties: false).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
 
+            var imageKey = existing.ImageUrl;
+
             existing.Id = existing.Id;
             existing.FirstName = model.FirstName;
             existing.MiddleName = model.MiddleName;
@@ -165,7 +170,18 @@
                 }
                 existing.Role = model.Role;
             }
+
             var savedEntity = await _userService.UpdateAsync(existing).ConfigureAwait(false);
+
+            if (imageKey != model.ImageUrl && !string.IsNullOrWhiteSpace(imageKey))
+            {
+                if (imageKey.ToLower().Trim().Contains("/public/") && imageKey.IndexOf("/standalone/") != -1)
+                {
+                    imageKey = imageKey.Substring(imageKey.IndexOf("/standalone/") + "/standalone/".Length);
+                }
+                await _fileServerService.RemoveFileAsync(imageKey).ConfigureAwait(false);
+            }
+
             return new UserResponseModel(savedEntity);
         }
 

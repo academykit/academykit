@@ -19,5 +19,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="key"> the file key </param>
         /// <returns> the pre signed url </returns>
         Task<string> GetFilePresignedUrl(string key);
+
+        Task RemoveFileAsync(string key);
     }
 }

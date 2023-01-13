@@ -219,9 +219,9 @@ namespace Lingtren.Infrastructure.Services
                 ).ConfigureAwait(false);
 
             var responseModel = new LessonResponseModel(lesson);
-            if(!string.IsNullOrEmpty(responseModel.VideoUrl))
+            if (!string.IsNullOrEmpty(responseModel.VideoUrl))
             {
-                 responseModel.VideoUrl = await _fileServerService.GetFilePresignedUrl(responseModel.VideoUrl).ConfigureAwait(false);
+                responseModel.VideoUrl = await _fileServerService.GetFilePresignedUrl(responseModel.VideoUrl).ConfigureAwait(false);
             }
             responseModel.IsCompleted = currentLessonWatchHistory != null ? currentLessonWatchHistory.IsCompleted : false;
             responseModel.IsPassed = currentLessonWatchHistory != null ? currentLessonWatchHistory.IsPassed : false;
@@ -360,59 +360,86 @@ namespace Lingtren.Infrastructure.Services
                     throw new EntityNotFoundException("Training not found.");
                 }
 
-                var existingLesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+                var existing = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                     predicate: p => p.CourseId == course.Id && p.SectionId == section.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity)
                     ).ConfigureAwait(false);
-                if (existingLesson == null)
+                if (existing == null)
                 {
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id} and training with id: {courseId} and section with id: {sectionId}.", lessonIdentity, currentUserId, course.Id, section.Id);
                     throw new EntityNotFoundException("Lesson not found.");
                 }
 
-                if (model.Type != existingLesson.Type)
+                if (model.Type != existing.Type)
                 {
-                    _logger.LogWarning("Lesson type not matched for lesson with id: {id}.", existingLesson.Id);
+                    _logger.LogWarning("Lesson type not matched for lesson with id: {id}.", existing.Id);
                     throw new ForbiddenException("Lesson type not matched.");
                 }
                 var currentTimeStamp = DateTime.UtcNow;
 
-                existingLesson.Name = model.Name;
-                existingLesson.Description = model.Description;
-                existingLesson.ThumbnailUrl = model.ThumbnailUrl;
-                existingLesson.IsMandatory = model.IsMandatory;
-                existingLesson.UpdatedBy = currentUserId;
-                existingLesson.UpdatedOn = currentTimeStamp;
+                var existingThumbnailUrlKey = existing.ThumbnailUrl;
+                var existingDocumentUrlKey = existing.DocumentUrl;
+                var existingVideoUrl = existing.VideoUrl;
 
-                if (existingLesson.Type == LessonType.Exam)
+
+                existing.Name = model.Name;
+                existing.Description = model.Description;
+                existing.ThumbnailUrl = model.ThumbnailUrl;
+                existing.IsMandatory = model.IsMandatory;
+                existing.UpdatedBy = currentUserId;
+                existing.UpdatedOn = currentTimeStamp;
+
+                if (existing.Type == LessonType.Exam)
                 {
-                    existingLesson.Name = model.QuestionSet.Name;
+                    existing.Name = model.QuestionSet.Name;
                 }
-                if (existingLesson.Type == LessonType.Document)
+                if (existing.Type == LessonType.Document)
                 {
-                    existingLesson.DocumentUrl = model.DocumentUrl;
+                    existing.DocumentUrl = model.DocumentUrl;
                 }
-                if (existingLesson.Type == LessonType.Video)
+                if (existing.Type == LessonType.Video)
                 {
-                    existingLesson.VideoUrl = model.VideoUrl;
+                    existing.VideoUrl = model.VideoUrl;
                 }
-                if (existingLesson.Type == LessonType.LiveClass)
+                if (existing.Type == LessonType.LiveClass)
                 {
-                    existingLesson.Meeting = new Meeting();
-                    existingLesson.Meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.Id == existingLesson.MeetingId).ConfigureAwait(false);
-                    existingLesson.Duration = model.Meeting.MeetingDuration * 60; //convert duration from minutes to seconds;
-                    await UpdateMeetingAsync(model, existingLesson).ConfigureAwait(false);
+                    existing.Meeting = new Meeting();
+                    existing.Meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.Id == existing.MeetingId).ConfigureAwait(false);
+                    existing.Duration = model.Meeting.MeetingDuration * 60; //convert duration from minutes to seconds;
+                    await UpdateMeetingAsync(model, existing).ConfigureAwait(false);
                 }
-                if (existingLesson.Type == LessonType.Exam)
+                if (existing.Type == LessonType.Exam)
                 {
-                    existingLesson.QuestionSet = new QuestionSet();
-                    existingLesson.QuestionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(predicate: p => p.Id == existingLesson.QuestionSetId).ConfigureAwait(false);
-                    existingLesson.Duration = model.QuestionSet.Duration * 60; //convert duration from minutes to seconds;
-                    await UpdateQuestionSetAsync(model, existingLesson).ConfigureAwait(false);
+                    existing.QuestionSet = new QuestionSet();
+                    existing.QuestionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(predicate: p => p.Id == existing.QuestionSetId).ConfigureAwait(false);
+                    existing.Duration = model.QuestionSet.Duration * 60; //convert duration from minutes to seconds;
+                    await UpdateQuestionSetAsync(model, existing).ConfigureAwait(false);
                 }
 
-                _unitOfWork.GetRepository<Lesson>().Update(existingLesson);
+                _unitOfWork.GetRepository<Lesson>().Update(existing);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                return existingLesson;
+
+                // Delete file from server if file are changed
+
+                if (existingThumbnailUrlKey != model.ThumbnailUrl && !string.IsNullOrWhiteSpace(existingThumbnailUrlKey))
+                {
+                    if (existingThumbnailUrlKey.ToLower().Trim().Contains("/public/") && existingThumbnailUrlKey.IndexOf("/standalone/") != -1)
+                    {
+                        existingThumbnailUrlKey = existingThumbnailUrlKey.Substring(existingThumbnailUrlKey.IndexOf("/standalone/") + "/standalone/".Length);
+                    }
+                    await _fileServerService.RemoveFileAsync(existingThumbnailUrlKey).ConfigureAwait(false);
+                }
+
+                if (existingDocumentUrlKey != model.DocumentUrl && !string.IsNullOrWhiteSpace(existingDocumentUrlKey))
+                {
+                    await _fileServerService.RemoveFileAsync(existingDocumentUrlKey).ConfigureAwait(false);
+                }
+
+                if (existingVideoUrl != model.VideoUrl && !string.IsNullOrWhiteSpace(existingVideoUrl))
+                {
+                    await _fileServerService.RemoveFileAsync(existingVideoUrl).ConfigureAwait(false);
+                }
+
+                return existing;
             }
             catch (Exception ex)
             {
@@ -538,6 +565,25 @@ namespace Lingtren.Infrastructure.Services
 
                 _unitOfWork.GetRepository<Lesson>().Delete(lesson);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+                if (!string.IsNullOrWhiteSpace(lesson.ThumbnailUrl))
+                {
+                    if (lesson.ThumbnailUrl.ToLower().Trim().Contains("/public/") && lesson.ThumbnailUrl.IndexOf("/standalone/") != -1)
+                    {
+                        lesson.ThumbnailUrl = lesson.ThumbnailUrl.Substring(lesson.ThumbnailUrl.IndexOf("/standalone/") + "/standalone/".Length);
+                    }
+                    await _fileServerService.RemoveFileAsync(lesson.ThumbnailUrl).ConfigureAwait(false);
+                }
+
+                if (!string.IsNullOrWhiteSpace(lesson.DocumentUrl))
+                {
+                    await _fileServerService.RemoveFileAsync(lesson.DocumentUrl).ConfigureAwait(false);
+                }
+
+                if (!string.IsNullOrWhiteSpace(lesson.VideoUrl))
+                {
+                    await _fileServerService.RemoveFileAsync(lesson.VideoUrl).ConfigureAwait(false);
+                }
             }).ConfigureAwait(false);
         }
 

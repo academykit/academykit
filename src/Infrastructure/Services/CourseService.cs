@@ -25,14 +25,17 @@ namespace Lingtren.Infrastructure.Services
     {
         private readonly string imageApi;
         private readonly IMediaService _mediaService;
+        private readonly IFileServerService _fileServerService;
         public CourseService(
             IUnitOfWork unitOfWork,
             ILogger<CourseService> logger,
             IConfiguration configuration,
-            IMediaService mediaService) : base(unitOfWork, logger)
+            IMediaService mediaService,
+            IFileServerService fileServerService) : base(unitOfWork, logger)
         {
             imageApi = configuration.GetSection("AppUrls:ImageApi").Value;
             _mediaService = mediaService;
+            _fileServerService = fileServerService;
         }
         #region Protected Methods
         /// <summary>
@@ -229,6 +232,8 @@ namespace Lingtren.Infrastructure.Services
                 var existing = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 var currentTimeStamp = DateTime.UtcNow;
 
+                var imageKey = existing.ThumbnailUrl;
+
                 existing.Group = null;
 
                 existing.Id = existing.Id;
@@ -268,6 +273,16 @@ namespace Lingtren.Infrastructure.Services
                 }
                 _unitOfWork.GetRepository<Course>().Update(existing);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+                if (imageKey != model.ThumbnailUrl && !string.IsNullOrWhiteSpace(imageKey))
+                {
+                    if (imageKey.ToLower().Trim().Contains("/public/") && imageKey.IndexOf("/standalone/") != -1)
+                    {
+                        imageKey = imageKey.Substring(imageKey.IndexOf("/standalone/") + "/standalone/".Length);
+                    }
+                    await _fileServerService.RemoveFileAsync(imageKey).ConfigureAwait(false);
+                }
+
                 return await GetByIdOrSlugAsync(identity, currentUserId).ConfigureAwait(false);
             });
         }
@@ -447,15 +462,67 @@ namespace Lingtren.Infrastructure.Services
                     throw new EntityNotFoundException("Training contains member enrollments. So, it cannot be removed.");
                 }
 
+                var privateFiles = new List<string>();
+                var publicFiles = new List<string>();
+
                 var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
                 var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
+                var lessonIds = lessons.Select(x => x.Id).ToList();
 
-                _unitOfWork.GetRepository<Section>().Delete(sections);
+                var documentPaths = lessons.Select(x => x.DocumentUrl).ToList();
+                documentPaths.RemoveAll(x => string.IsNullOrWhiteSpace(x));
+                var videoPaths = lessons.Select(x => x.DocumentUrl).ToList();
+                videoPaths.RemoveAll(x => string.IsNullOrWhiteSpace(x));
+
+                privateFiles.AddRange(documentPaths);
+                privateFiles.AddRange(videoPaths);
+
+                var lessonThumbnails = lessons.Select(x => x.ThumbnailUrl).ToList();
+                lessonThumbnails.RemoveAll(x => string.IsNullOrWhiteSpace(x));
+
+                publicFiles.Add(course.ThumbnailUrl);
+                publicFiles.AddRange(lessonThumbnails);
+
+                var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
+                    predicate: p => lessonIds.Contains(p.LessonId),
+                    include: src => src.Include(x => x.AssignmentQuestionOptions)
+                                .Include(x => x.AssignmentAttachments)).ConfigureAwait(false);
+
+                if (assignments.Count > 0)
+                {
+                    var assignmentQuestionOptions = assignments.SelectMany(x => x.AssignmentQuestionOptions);
+                    var assignmentAttachments = assignments.SelectMany(x => x.AssignmentAttachments);
+
+                    _unitOfWork.GetRepository<AssignmentQuestionOption>().Delete(assignmentQuestionOptions);
+                    _unitOfWork.GetRepository<AssignmentAttachment>().Delete(assignmentAttachments);
+                    _unitOfWork.GetRepository<Assignment>().Delete(assignments);
+                }
+
                 _unitOfWork.GetRepository<Lesson>().Delete(lessons);
+                _unitOfWork.GetRepository<Section>().Delete(sections);
                 _unitOfWork.GetRepository<CourseTag>().Delete(course.CourseTags);
                 _unitOfWork.GetRepository<CourseTeacher>().Delete(course.CourseTeachers);
                 _unitOfWork.GetRepository<Course>().Delete(course);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+                // Process to remove the file associated with course and lessons
+                foreach (var item in publicFiles)
+                {
+                    if (!string.IsNullOrWhiteSpace(item))
+                    {
+                        var key = item;
+                        if (item.ToLower().Trim().Contains("/public/") && item.IndexOf("/standalone/") != -1)
+                        {
+                            key = item.Substring(item.IndexOf("/standalone/") + "/standalone/".Length);
+                        }
+                        await _fileServerService.RemoveFileAsync(key).ConfigureAwait(false);
+                    }
+                }
+
+                foreach (var item in privateFiles)
+                {
+                    await _fileServerService.RemoveFileAsync(item).ConfigureAwait(false);
+                }
             });
         }
 
@@ -1199,6 +1266,8 @@ namespace Lingtren.Infrastructure.Services
                 var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
                     predicate: p => p.CourseId == course.Id
                     ).ConfigureAwait(false);
+                var existingCertificateUrlKey = courseCertificate.SampleUrl;
+
                 if (courseCertificate != null)
                 {
                     var sampleSignatures = new List<Signature>();
@@ -1213,6 +1282,16 @@ namespace Lingtren.Infrastructure.Services
                 }
                 await _unitOfWork.GetRepository<Signature>().InsertAsync(signature).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+                if (!string.IsNullOrWhiteSpace(existingCertificateUrlKey))
+                {
+                    if (existingCertificateUrlKey.ToLower().Trim().Contains("/public/") && existingCertificateUrlKey.IndexOf("/standalone/") != -1)
+                    {
+                        existingCertificateUrlKey = existingCertificateUrlKey.Substring(existingCertificateUrlKey.IndexOf("/standalone/") + "/standalone/".Length);
+                    }
+                    await _fileServerService.RemoveFileAsync(existingCertificateUrlKey).ConfigureAwait(false);
+                }
+
                 var response = new SignatureResponseModel(signature);
                 return response;
             }
@@ -1251,6 +1330,8 @@ namespace Lingtren.Infrastructure.Services
                 }
                 var currentTimeStamp = DateTime.UtcNow;
 
+                var existingSignatureUrlKey = signature.FileUrl;
+
                 signature.FullName = model.FullName;
                 signature.Designation = model.Designation;
                 signature.FileUrl = model.FileURL;
@@ -1260,6 +1341,10 @@ namespace Lingtren.Infrastructure.Services
                 var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
                     predicate: p => p.CourseId == course.Id
                     ).ConfigureAwait(false);
+
+                var existingCertificateUrlKey = courseCertificate.SampleUrl;
+
+
                 if (courseCertificate != null)
                 {
                     var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
@@ -1278,6 +1363,24 @@ namespace Lingtren.Infrastructure.Services
 
                 _unitOfWork.GetRepository<Signature>().Update(signature);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+                if (!string.IsNullOrWhiteSpace(existingCertificateUrlKey))
+                {
+                    if (existingCertificateUrlKey.ToLower().Trim().Contains("/public/") && existingCertificateUrlKey.IndexOf("/standalone/") != -1)
+                    {
+                        existingCertificateUrlKey = existingCertificateUrlKey.Substring(existingCertificateUrlKey.IndexOf("/standalone/") + "/standalone/".Length);
+                    }
+                    await _fileServerService.RemoveFileAsync(existingCertificateUrlKey).ConfigureAwait(false);
+                }
+                if (existingSignatureUrlKey != signature.FileUrl && !string.IsNullOrWhiteSpace(existingSignatureUrlKey))
+                {
+                    if (existingSignatureUrlKey.ToLower().Trim().Contains("/public/") && existingSignatureUrlKey.IndexOf("/standalone/") != -1)
+                    {
+                        existingSignatureUrlKey = existingSignatureUrlKey.Substring(existingSignatureUrlKey.IndexOf("/standalone/") + "/standalone/".Length);
+                    }
+                    await _fileServerService.RemoveFileAsync(existingSignatureUrlKey).ConfigureAwait(false);
+                }
+
                 var response = new SignatureResponseModel(signature);
                 return response;
             }
@@ -1317,6 +1420,9 @@ namespace Lingtren.Infrastructure.Services
                 var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
                     predicate: p => p.CourseId == course.Id
                     ).ConfigureAwait(false);
+
+                var existingCertificateUrlKey = courseCertificate.SampleUrl;
+
                 if (courseCertificate != null)
                 {
                     var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
@@ -1331,6 +1437,25 @@ namespace Lingtren.Infrastructure.Services
 
                 _unitOfWork.GetRepository<Signature>().Delete(signature);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+                //Delete the previous certificate sample and signature file from server
+
+                if (!string.IsNullOrWhiteSpace(existingCertificateUrlKey))
+                {
+                    if (existingCertificateUrlKey.ToLower().Trim().Contains("/public/") && existingCertificateUrlKey.IndexOf("/standalone/") != -1)
+                    {
+                        existingCertificateUrlKey = existingCertificateUrlKey.Substring(existingCertificateUrlKey.IndexOf("/standalone/") + "/standalone/".Length);
+                    }
+                    await _fileServerService.RemoveFileAsync(existingCertificateUrlKey).ConfigureAwait(false);
+                }
+                if (!string.IsNullOrWhiteSpace(signature.FileUrl))
+                {
+                    if (signature.FileUrl.ToLower().Trim().Contains("/public/") && signature.FileUrl.IndexOf("/standalone/") != -1)
+                    {
+                        signature.FileUrl = signature.FileUrl.Substring(signature.FileUrl.IndexOf("/standalone/") + "/standalone/".Length);
+                    }
+                    await _fileServerService.RemoveFileAsync(signature.FileUrl).ConfigureAwait(false);
+                }
             }
             catch (Exception ex)
             {

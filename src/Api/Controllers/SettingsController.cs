@@ -14,6 +14,7 @@ namespace Lingtren.Api.Controllers
         private readonly IGeneralSettingService _generalSettingService;
         private readonly IZoomSettingService _zoomSettingService;
         private readonly ISMTPSettingService _smtpSettingService;
+        private readonly IFileServerService _fileServerService;
         private readonly IValidator<GeneralSettingRequestModel> _generalSettingValidator;
         private readonly IValidator<ZoomSettingRequestModel> _zoomSettingValidator;
         private readonly IValidator<SMTPSettingRequestModel> _smtpSettingValidator;
@@ -23,6 +24,7 @@ namespace Lingtren.Api.Controllers
             IGeneralSettingService generalSettingService,
             IZoomSettingService zoomSettingService,
             ISMTPSettingService smtpSettingService,
+            IFileServerService fileServerService,
             IValidator<GeneralSettingRequestModel> generalSettingValidator,
             IValidator<ZoomSettingRequestModel> zoomSettingValidator,
             IValidator<SMTPSettingRequestModel> smtpSettingValidator)
@@ -31,6 +33,7 @@ namespace Lingtren.Api.Controllers
             _generalSettingService = generalSettingService;
             _zoomSettingService = zoomSettingService;
             _smtpSettingService = smtpSettingService;
+            _fileServerService = fileServerService;
             _generalSettingValidator = generalSettingValidator;
             _zoomSettingValidator = zoomSettingValidator;
             _smtpSettingValidator = smtpSettingValidator;
@@ -70,6 +73,8 @@ namespace Lingtren.Api.Controllers
             }
             var currentTimeStamp = DateTime.UtcNow;
 
+            var logoUrlKey = existing.LogoUrl;
+
             existing.Id = existing.Id;
             existing.LogoUrl = model.LogoUrl;
             existing.CompanyName = model.CompanyName;
@@ -80,6 +85,16 @@ namespace Lingtren.Api.Controllers
             existing.UpdatedOn = currentTimeStamp;
 
             var savedEntity = await _generalSettingService.UpdateAsync(existing).ConfigureAwait(false);
+
+            if (logoUrlKey != model.LogoUrl && !string.IsNullOrWhiteSpace(logoUrlKey))
+            {
+                if (logoUrlKey.ToLower().Trim().Contains("/public/") && logoUrlKey.IndexOf("/standalone/") != -1)
+                {
+                    logoUrlKey = logoUrlKey.Substring(logoUrlKey.IndexOf("/standalone/") + "/standalone/".Length);
+                }
+                await _fileServerService.RemoveFileAsync(logoUrlKey).ConfigureAwait(false);
+            }
+
             return new GeneralSettingResponseModel(savedEntity);
         }
 
