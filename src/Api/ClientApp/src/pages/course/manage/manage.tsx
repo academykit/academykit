@@ -7,10 +7,7 @@ const ManageCourse = () => {
   const course_id = params.id as string;
   const getStat = useGetCourseManageStatistics(course_id);
 
-  if(getStat.isError){
-    
-    throw getStat.error
-  }
+
   const incomingData = [
     {
       key: "totalEnrollments",

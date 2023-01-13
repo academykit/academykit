@@ -6,8 +6,8 @@ export enum UserRole {
 }
 
 export enum PoolRole {
-  Author = 1,
-  Creator = 2,
+  Creator = 1,
+  Author = 2,
 }
 
 export enum CourseLanguage {
