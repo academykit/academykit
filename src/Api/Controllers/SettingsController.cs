@@ -162,7 +162,7 @@ namespace Lingtren.Api.Controllers
         [HttpGet("smtp")]
         public async Task<SMTPSettingResponseModel> GetSMTPSetting()
         {
-            IsSuperAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdmin(CurrentUser.Role);
             var model = await _smtpSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return new SMTPSettingResponseModel(model);
         }
@@ -176,7 +176,7 @@ namespace Lingtren.Api.Controllers
         [HttpPut("smtp/{id}")]
         public async Task<SMTPSettingResponseModel> UpdateSMTPSetting(Guid id, SMTPSettingRequestModel model)
         {
-            IsSuperAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdmin(CurrentUser.Role);
 
             await _smtpSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _smtpSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
