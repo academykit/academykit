@@ -1,5 +1,6 @@
 import UserShortProfile from "@components/UserShortProfile";
-import { Box, Group, Text, Title } from "@mantine/core";
+import { Box, Button, Group, Text, Title } from "@mantine/core";
+import { UserRole } from "@utils/enums";
 import formatDuration from "@utils/formatDuration";
 import { ISection } from "@utils/services/courseService";
 import { IUser } from "@utils/services/types";
@@ -22,8 +23,9 @@ const CourseContent = ({
 }) => {
   return (
     <Box my={20}>
-      <Group my={4}>
+      <Group my={4} position="apart">
         {user && <UserShortProfile user={user} size={"md"} />}
+        {user && user?.role <= UserRole.Trainer && <Button>Manage</Button>}
       </Group>
       <Title size={"h5"}>Course Content of {courseName}</Title>
       <Text size={10} color={"dimmed"}>

@@ -18,7 +18,7 @@ export const uploadFile = (file: File, type: number) => {
   );
 };
 export const uploadVideo = (file: File, type: number) => {
-  return httpClient.post<{key:string}>(
+  return httpClient.post<string>(
     "/api/media/file",
     { file, type },
     {

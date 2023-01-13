@@ -470,11 +470,7 @@ export const useGetCourseLesson = (
       enabled,
       retry: 0,
       onError: (err) => {
-        if (axios.isAxiosError(err)) {
-          if (err.response?.status === 403) {
-            return null;
-          }
-        }
+        
       },
       refetchOnMount: false,
       refetchOnWindowFocus: false,

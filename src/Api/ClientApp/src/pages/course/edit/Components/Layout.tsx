@@ -40,12 +40,12 @@ function CourseEditNav() {
       role: UserRole.Trainer,
     },
     {
-      label: "Lessons Stat",
+      label: "Lessons Stats",
       to: RoutePath.manageCourse.lessonsStat(params.id).route,
       role: UserRole.Trainer,
     },
     {
-      label: "Students Stat",
+      label: "Students",
       to: RoutePath.manageCourse.student(params.id).route,
       role: UserRole.Trainer,
     },

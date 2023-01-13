@@ -4,6 +4,7 @@ import {
   Button,
   Checkbox,
   Container,
+  Flex,
   Group,
   Paper,
   Select,
@@ -11,11 +12,11 @@ import {
   TextInput,
   UnstyledButton,
 } from "@mantine/core";
-import { createFormContext } from "@mantine/form";
+import { createFormContext, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { IconPlus, IconTrash } from "@tabler/icons";
 import { FeedbackType, ReadableEnum } from "@utils/enums";
-
+import * as Yup from 'yup'
 import errorType from "@utils/services/axiosError";
 import {
   ICreateFeedback,
@@ -23,7 +24,53 @@ import {
   useAddFeedbackQuestion,
   useEditFeedbackQuestion,
 } from "@utils/services/feedbackService";
+import React from "react";
 const fieldSize = "md";
+
+
+const schema = Yup.object().shape({
+  name: Yup.string().required("Title for feedback is required."),
+  type: Yup.string().required("Feedback is required!").nullable(),
+
+  answers: Yup.array()
+    .when(["type"], {
+      is: FeedbackType.MultipleChoice.toString(),
+      then: Yup.array()
+        .min(1, "Options should be more than one.")
+        .test(
+          "test",
+          "Options should be more than one.",
+          function (value: any) {
+            const a = value.length > 1;
+            return a;
+          }
+        )
+        .of(
+          Yup.object().shape({
+            option: Yup.string().trim().required("Options is required."),
+          })
+        ),
+    })
+    .when(["type"], {
+      is: FeedbackType.SingleChoice.toString(),
+      then: Yup.array()
+        .test(
+          "test",
+          "Options should be more than one.",
+          function (value: any) {
+            const length: number =
+            value && value.length;
+            return length > 1;
+          }
+        )
+        .of(
+          Yup.object().shape({
+            option: Yup.string().trim().required("Options is required."),
+          })
+        ),
+    }),
+});
+
 const getQuestionType = () => {
   return Object.entries(FeedbackType)
     .splice(0, Object.entries(FeedbackType).length / 2)
@@ -59,6 +106,7 @@ const EditFeedback = ({
           }))
         : [{ option: "" }],
     },
+    validate: yupResolver(schema)
   });
 
   const addFeedbackQuestions = useAddFeedbackQuestion(lessonId, search);
@@ -112,6 +160,7 @@ const EditFeedback = ({
               label="Feedback Type"
               {...form.getInputProps("type")}
               data={getQuestionType()}
+              withAsterisk
             ></Select>
             {(form.values.type === FeedbackType.MultipleChoice.toString() ||
               form.values.type === FeedbackType.SingleChoice.toString()) && (
@@ -119,13 +168,15 @@ const EditFeedback = ({
                 <Text mt={20}>Options</Text>
                 {form.values.answers &&
                   form.values.answers.map((x, i) => (
-                    <Group key={i} mb={30}>
+                    <div key={i}  style={{marginBottom: '30px'}}>
+                    <Flex >
                       <TextEditor
                         label={`answers.${i}.option`}
                         formContext={useFormContext}
                       ></TextEditor>
                       <UnstyledButton
-                        onClick={() => {
+mx={10}
+onClick={() => {
                           form.insertListItem(
                             "answers",
                             {
@@ -147,13 +198,15 @@ const EditFeedback = ({
                             <IconTrash color="red" />
                           </UnstyledButton>
                         )}
+                    </Flex>
                       {typeof form.errors[`answers.${i}.option`] ===
                         "string" && (
                         <span style={{ color: "red" }}>
                           {form.errors[`answers.${i}.option`]}
                         </span>
                       )}
-                    </Group>
+                    </div>
+
                   ))}
                 {typeof form.errors[`answers`] === "string" && (
                   <span style={{ color: "red" }}>{form.errors[`answers`]}</span>
@@ -171,7 +224,7 @@ const EditFeedback = ({
               >
                 Save
               </Button>
-              <Button size="sm" type="reset" onClick={onCancel}>
+              <Button size="sm" type="reset" onClick={onCancel} variant='outline'>
                 Cancel
               </Button>
             </Group>

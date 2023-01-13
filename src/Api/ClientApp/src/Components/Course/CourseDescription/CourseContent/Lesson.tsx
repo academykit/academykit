@@ -69,6 +69,7 @@ const Lesson = ({
           //@ts-ignore
           ref={ref}
           component={Link}
+          replace={true}
           to={`${RoutePath.classes}/${courseSlug}/${lesson.slug}`}
         >
           <Group>
