@@ -16,8 +16,6 @@ const CreateFeedback = ({ lessonId }: Props) => {
   const feedbackList = useFeedbackQuestion(lessonId, "");
   return (
     <Container>
-      <Breadcrumb hide={3} />
-
       {feedbackList.isSuccess && (
         <>
           {feedbackList.data.length > 0 ? (
@@ -32,7 +30,7 @@ const CreateFeedback = ({ lessonId }: Props) => {
               ))}
             </Box>
           ) : (
-            <Box mb={10}>No Questions Found!</Box>
+            <Box mb={10}>No feedback questions found!</Box>
           )}
         </>
       )}
