@@ -12,7 +12,7 @@
                         .WithMessage("Name length must be less than or equal to 500 characters.");
             RuleFor(x => x.Hints).MaximumLength(5000).WithMessage("Question hints length must be less than or equal to 5000 characters.");
             RuleFor(x => x.Description).MaximumLength(5000).WithMessage("Question description length must be less than or equal to 5000 characters.");
-            RuleFor(x => x.Type).NotNull().WithMessage("Question type is required.");
+            RuleFor(x => x.Type).NotNull().NotEmpty().WithMessage("Question type is required.").IsInEnum().WithMessage("Invalid question type.");
             RuleFor(x => x.Answers).NotNull().WithMessage("Option is required.");
             RuleFor(x => x.Answers).Must(x => x.Count >= 2).WithMessage("Option should be more than one.");
             RuleFor(x => x.Answers).Must(a => a.Any(b => b.IsCorrect)).WithMessage("At least one option should be provided as correct.");
