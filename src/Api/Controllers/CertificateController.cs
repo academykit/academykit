@@ -11,14 +11,17 @@
     public class CertificateController : BaseApiController
     {
         private readonly ICourseService _courseService;
+        private readonly ICertificateService _certificateService;
         private readonly IValidator<CourseCertificateRequestModel> _validator;
         public CertificateController(
             ICourseService courseService,
+            ICertificateService certificateService,
             IValidator<CourseCertificateRequestModel> validator)
 
         {
             _courseService = courseService;
             _validator = validator;
+            _certificateService = certificateService;
         }
 
         /// <summary>
@@ -54,6 +57,43 @@
         public async Task<IList<CourseCertificateIssuedResponseModel>> IssueCertificateAsync(string identity, CertificateIssueRequestModel model)
         {
             return await _courseService.IssueCertificateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// add external certificate api
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="CertificateRequestModel" /> .</param>
+        /// <returns> the instance of <see cref="CertificateResponseModel" /> .</returns>
+        [HttpPost("external")]
+        public async Task<CertificateResponseModel> External(CertificateRequestModel model)
+        {
+            var response = await _certificateService.SaveExternalCertificateAsync(model, CurrentUser.Id).ConfigureAwait(false);
+            return response;
+        }
+
+        /// <summary>
+        /// update external certificate api
+        /// </summary>
+        /// <param name="identity"> the ceritificate id or slug </param>
+        /// <param name="model"> the instance of <see cref="CertificateRequestModel" /> .</param>
+        /// <returns> the instance of <see cref="CertificateResponseModel" /> .</returns>
+        [HttpPut("{identit}/external")]
+        public async Task<CertificateResponseModel> UpdateExternal(string identit,CertificateRequestModel model)
+        {
+            var response = await _certificateService.UpdateExternalCertificateAsync(identit,model,CurrentUser.Id).ConfigureAwait(false);
+            return response;
+        }
+
+        /// <summary>
+        /// delete external certificate api
+        /// </summary>
+        /// <param name="identity"> the certificate id or slug </param>
+        /// <returns> the task complete </returns>
+        [HttpDelete("{identit}/external")]
+        public async Task<IActionResult> DeleteExternal(string identit)
+        {
+            await _certificateService.DeleteExternalCertificateAsync(identit,CurrentUser.Id).ConfigureAwait(false);
+             return Ok();
         }
     }
 }

@@ -1,17 +1,19 @@
-namespace Lingtren.Domain.Entities
+namespace Lingtren.Application.Common.Models.RequestModels
 {
-    using Lingtren.Domain.Common;
-    public class Certificate : AuditableEntity
+    using System.ComponentModel.DataAnnotations;
+    public class CertificateRequestModel
     {
+        [Required]
         public string Name { get; set; }
-        public string Slug { get; set; }
+
+        [Required]
         public DateTime StartDate { get; set; }
+        
+        [Required]
         public DateTime EndDate { get; set; }
         public string ImageUrl { get; set; }
         public string Location { get; set; }
         public string Institute { get; set; }
-        public int? Duration { get; set; }
-        public User User { get; set; }
-        public bool IsVerified { get; set; }
+        public int Duration { get; set; }
     }
 }

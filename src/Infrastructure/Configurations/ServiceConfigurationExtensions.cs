@@ -67,6 +67,7 @@
             services.AddTransient<IFeedbackService, FeedbackService>();
             services.AddTransient<IWebhookService, WebhookService>();
             services.AddTransient<IHangfireJobService, HangfireJobService>();
+            services.AddTransient<ICertificateService, CertificateService>();
 
             #endregion Service DI
 
