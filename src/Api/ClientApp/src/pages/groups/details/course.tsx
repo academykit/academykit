@@ -26,7 +26,7 @@ const GroupCourse = ({
       {auth?.auth && auth.auth?.role < UserRole.Trainee && (
         <Group position="right" mb={10}>
           <Link to={RoutePath.courses.create + `?group=${id}`}>
-            <Button>Create New Training</Button>
+            <Button>Add New Training</Button>
           </Link>
         </Group>
       )}

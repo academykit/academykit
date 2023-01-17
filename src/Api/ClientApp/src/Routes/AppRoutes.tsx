@@ -130,6 +130,10 @@ const MainRoutes = () => {
             path={RoutePath.pool.base + "/:id/*"}
             element={<MCQPoolRoute />}
           />
+          <Route
+          path={RoutePath.manageCourse.description().signature + "/*"}
+          element={<CourseRoute />}
+        />
         </Route>
 
         <Route path={RoutePath.groups.base} element={<GroupsPage />} />
@@ -142,10 +146,7 @@ const MainRoutes = () => {
           element={<UserProfile />}
         />
 
-        <Route
-          path={RoutePath.manageCourse.description().signature + "/*"}
-          element={<CourseRoute />}
-        />
+        
 
         <Route
           path={"/meet/:courseId/:lessonId"}
