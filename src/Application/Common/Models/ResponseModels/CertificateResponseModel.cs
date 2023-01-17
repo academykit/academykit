@@ -5,7 +5,6 @@ namespace Lingtren.Application.Common.Models.ResponseModels
     public class CertificateResponseModel
     {
         public Guid Id { get; set; }
-        public string Slug { get; set; }
         public string Name { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -24,7 +23,6 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public CertificateResponseModel(Certificate certificate)
         {
             Id = certificate.Id;
-            Slug = certificate.Slug;
             Name = certificate.Name;
             StartDate = certificate.StartDate;
             EndDate = certificate.EndDate;

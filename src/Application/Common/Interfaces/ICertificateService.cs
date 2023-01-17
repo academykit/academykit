@@ -1,5 +1,6 @@
 namespace Lingtren.Application.Common.Interfaces
 {
+    using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     public interface ICertificateService
@@ -19,7 +20,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="model"> the instance of <see cref="CertificateRequestModel" /> .</param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns></returns>
-        Task<CertificateResponseModel> UpdateExternalCertificateAsync(string identity, CertificateRequestModel model, Guid currentUserId);
+        Task<CertificateResponseModel> UpdateExternalCertificateAsync(Guid identity, CertificateRequestModel model, Guid currentUserId);
 
         /// <summary>
         /// Handle to delete the external certificate async
@@ -27,6 +28,44 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="identity"> the ceritifcate id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
-        Task DeleteExternalCertificateAsync(string identity,Guid currentUserId);
+        Task DeleteExternalCertificateAsync(Guid identity,Guid currentUserId);
+
+        /// <summary>
+        /// Handle to get external certificate
+        /// </summary>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the list of <see cref="CertificateResponseModel" /> .</returns>
+        Task<IList<CertificateResponseModel>> GetExternalCertificateAsync(Guid currentUserId);
+
+        /// <summary>
+        /// Handle to get certificate details 
+        /// </summary>
+        /// <param name="identity"> the id or slug </param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the instance of <see cref="CertificateResponseModel" /> .</returns>
+        Task<CertificateResponseModel> GetCertificateDetailAsync(Guid identity, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to verify certificate
+        /// </summary>
+        /// <param name="identity"> the certificate id or slug </param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the task complete </returns>
+        Task VerifyCertificateAsync(Guid identity,Guid currentUserId);
+
+        /// <summary>
+        /// Handle to get user certificates
+        /// </summary>
+        /// <param name="userId"> the user id </param>
+        /// <returns> the list of <see cref="CertificateResponseModel" /> </returns>
+        Task<IList<CertificateResponseModel>> GetUserCertificateAsync(Guid userId);
+
+        /// <summary>
+        /// Handle to get unverified certificate
+        /// </summary>
+        /// <param name="criteria"> the instance of <see cref="CertificateBaseSearchCriteria" /> .</param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the list of <see cref="CertificateReviewResponseModel" /> .</returns>
+        Task<SearchResult<CertificateReviewResponseModel>> GetReviewCertificatesAsync(CertificateBaseSearchCriteria criteria, Guid currentUserId);
     }
 }
