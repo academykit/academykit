@@ -11,7 +11,7 @@
 
     public class EmailService : IEmailService
     {
-        private readonly string _footerEmail = "Sincerely,<br>- The Vurilo Team";
+        private readonly string _footerEmail = "Sincerely,<br> The Vurilo Team";
         private readonly ILogger<EmailService> _logger;
         private readonly ISMTPSettingService _smtpSettingService;
         private readonly IWebHostEnvironment _hostingEnvironment;
