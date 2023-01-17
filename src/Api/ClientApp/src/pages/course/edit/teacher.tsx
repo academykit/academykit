@@ -39,7 +39,7 @@ const TeacherCards = ({
   const handleDelete = async () => {
     try {
       await deleteTeacher.mutateAsync(id);
-      showNotification({ message: "Course Teacher deleted successfully" });
+      showNotification({ message: "Course Teacher deleted successfully." });
     } catch (err) {
       const error = errorType(err);
       showNotification({ message: error, color: "red" });
@@ -63,7 +63,7 @@ const TeacherCards = ({
           <Group>
             <Text color={"dimmed"} size={"sm"}></Text>
             {auth?.auth &&
-              auth?.auth?.role !== UserRole.SuperAdmin &&
+              auth?.auth?.role === UserRole.SuperAdmin &&
               auth?.auth.id !== user?.id && (
                 <IconTrash
                   color="red"

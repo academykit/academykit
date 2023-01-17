@@ -6,6 +6,7 @@ import {
   Badge,
   Button,
   createStyles,
+  Flex,
 } from "@mantine/core";
 import RichTextEditor from "@mantine/rte";
 import { CourseLanguage } from "@utils/enums";
@@ -23,6 +24,9 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.smallerThan(theme.breakpoints.sm)]: {
       width: "100%",
     },
+    display: 'flex',
+    flexDirection:'column',
+    justifyContent: 'space-between'
   },
 }));
 
@@ -37,6 +41,7 @@ const CourseCard = ({ course }: { course: ICourse }) => {
       withBorder
       ml={15}
       mb={15}
+      h={380}
     >
       <Card.Section
         component={Link}
@@ -54,7 +59,7 @@ const CourseCard = ({ course }: { course: ICourse }) => {
       </Card.Section>
 
       <Group position="left" mt="md" mb="xs">
-        <Text weight={500} lineClamp={2}>
+        <Text weight={600} lineClamp={2}>
           {course?.name}
         </Text>
         {course.language && (
@@ -68,26 +73,26 @@ const CourseCard = ({ course }: { course: ICourse }) => {
           </Badge>
         )}
       </Group>
-      <Text size="sm" color="dimmed" lineClamp={2} sx={{ height: "60px" }}>
-        <RichTextEditor
-          styles={{
-            root: {
-              border: "none",
-            },
-          }}
-          value={course.description}
-          readOnly
-        />
-      </Text>
 
-      <Link
-        style={{ textDecoration: "none" }}
-        to={RoutePath.courses.description(course.slug).route}
-      >
-        <Button variant="light" color="blue" fullWidth mt="md" radius="md">
-          Watch
-        </Button>
-      </Link>
+          <Text size="sm" color="dimmed" lineClamp={2} sx={{ height: "60px" }}>
+            <RichTextEditor
+              styles={{
+                root: {
+                  border: "none",
+                },
+              }}
+              value={course.description}
+              readOnly
+            />
+          </Text>
+          <Link
+            style={{ textDecoration: "none" }}
+            to={RoutePath.courses.description(course.slug).route}
+          >
+            <Button variant="light" color="blue" fullWidth mt="md" radius="md">
+              Watch
+            </Button>
+          </Link>
     </Card>
   );
 };
