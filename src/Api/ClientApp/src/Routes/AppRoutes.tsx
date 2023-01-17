@@ -20,6 +20,7 @@ import { Navigate } from "react-router-dom";
 import Layout from "@components/Layout/Layout";
 import AdminAuthRoute from "./AdminRoute";
 import lazyWithRetry from "@utils/lazyImportWithReload";
+import MyTrainingExternal from "@pages/admin/Component/training/myTrainingExternal";
 const MyFeedback = lazyWithRetry(
   () => import("@pages/course/feedback/myfeedback")
 );
@@ -116,6 +117,10 @@ const MainRoutes = () => {
           element={<CourseListRoute />}
         />
         <Route
+          path={RoutePath.userCertificate + `/:id`}
+          element={<MyTrainingExternal />}
+        />
+        <Route
           path={RoutePath.courses.base}
           element={<Navigate to={RoutePath.courses.courseList} replace />}
         />
@@ -131,9 +136,9 @@ const MainRoutes = () => {
             element={<MCQPoolRoute />}
           />
           <Route
-          path={RoutePath.manageCourse.description().signature + "/*"}
-          element={<CourseRoute />}
-        />
+            path={RoutePath.manageCourse.description().signature + "/*"}
+            element={<CourseRoute />}
+          />
         </Route>
 
         <Route path={RoutePath.groups.base} element={<GroupsPage />} />
@@ -145,8 +150,6 @@ const MainRoutes = () => {
           path={RoutePath.userProfile + `/:id`}
           element={<UserProfile />}
         />
-
-        
 
         <Route
           path={"/meet/:courseId/:lessonId"}

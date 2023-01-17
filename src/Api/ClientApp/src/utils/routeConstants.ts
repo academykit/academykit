@@ -93,12 +93,16 @@ const RoutePath = {
   createSessions: "/sessions/create",
   userInfo: "/userInfo",
   userProfile: "/userProfile",
+  userCertificate: '/user/certificate',
 
   classes: "/classes",
   settings: {
     base: "/settings",
     profile: function () {
       return this.base + "/account";
+    },
+    training: function () {
+      return this.base + "/mytraining"
     },
     general: function () {
       return this.base + "/general";

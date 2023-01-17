@@ -11,13 +11,14 @@ import { useEditUser } from "@utils/services/adminService";
 import { UserRole } from "@utils/enums";
 
 import { Suspense, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Route, useNavigate } from "react-router-dom";
 import { IconEdit } from "@tabler/icons";
 import { IUserProfile } from "@utils/services/types";
 import useAuth from "@hooks/useAuth";
 import { IAuthContext } from "@context/AuthProvider";
 import { getInitials } from "@utils/getInitialName";
 import lazyWithRetry from "@utils/lazyImportWithReload";
+import RoutePath from "@utils/routeConstants";
 
 const AddUpdateUserForm = lazyWithRetry(() => import("./AddUpdateUserForm"));
 
@@ -32,6 +33,7 @@ const UserRow = ({
 }) => {
   const [opened, setOpened] = useState(false);
   const editUser = useEditUser(item?.id, search);
+  const navigate = useNavigate();
 
   return (
     <tr key={item?.id}>
@@ -70,6 +72,15 @@ const UserRow = ({
       </td>
       <td>{UserRole[item.role]}</td>
       <td>{item?.email}</td>
+      <td>
+        <Badge
+          color={"pink"}
+          onClick={() => navigate(RoutePath.userCertificate + `/${item?.id}`)}
+          sx={{ cursor: "pointer" }}
+        >
+          Pending
+        </Badge>
+      </td>
       <td>{item?.mobileNumber}</td>
       <td>
         {item?.isActive ? (
@@ -118,6 +129,7 @@ const UserMemberTable = ({
             <th>User</th>
             <th>Role</th>
             <th>Email</th>
+            <th>Certificate</th>
             <th>Phone Number</th>
             <th>Active Status</th>
             <th>Actions</th>

@@ -3,6 +3,7 @@ import {
   Grid,
   Group,
   Modal,
+  NumberInput,
   Paper,
   Switch,
   Textarea,
@@ -21,11 +22,23 @@ import { useParams } from "react-router-dom";
 import CreateAssignment from "@pages/assignment/create";
 import errorType from "@utils/services/axiosError";
 import * as Yup from "yup";
+import { DatePicker, TimeInput } from "@mantine/dates";
+import { IconCalendar } from "@tabler/icons";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Assignment's Title is required."),
   description: Yup.string().required("Assignment's Description is required."),
 });
+
+interface SubmitType {
+  name: string,
+  description: string,
+  isMandatory?: boolean,
+  eventStartDate?: Date,
+  eventEndDate?: Date,
+  startTime?: Date ,
+  endTime?: Date
+}
 
 const AddAssignment = ({
   setAddState,
@@ -58,11 +71,15 @@ const AddAssignment = ({
       name: item?.name ?? "",
       description: item?.description ?? "",
       isMandatory: item?.isMandatory ?? false,
+      eventStartDate: new Date(),
+      eventEndDate: new Date(),
+      endTime: new Date(),
+      startTime: new Date(),
     },
     validate: yupResolver(schema),
   });
 
-  const submitForm = async (values: { name: string; description: string }) => {
+  const submitForm = async (values: SubmitType) => {
     try {
       let assignmentData = {
         courseId: slug,
@@ -153,14 +170,54 @@ const AddAssignment = ({
                 }}
               />
             </Grid.Col>
-          </Grid>
+            
+            <Grid.Col span={6}>
+            <DatePicker
+                    w={"100%"}
+                    placeholder="Pick Starting Date"
+                    label="Start date"
+                    icon={<IconCalendar size={16} />}
+                    {...form.getInputProps("eventStartDate")}
+                  />
+            </Grid.Col> 
+            <Grid.Col span={6}>
+            <TimeInput
+              label="Start Time"
+              format="12"
+              clearable
+              {...form.getInputProps("startTime")}
+            />
+            </Grid.Col>
+           
+             <Grid.Col span={6}>
+            <DatePicker
+                    w={"100%"}
+                    placeholder="Pick Ending Date"
+                    label="End date"
+                    minDate={form.values.eventStartDate}
+                    icon={<IconCalendar size={16} />}
+                    {...form.getInputProps("eventEndDate")}
+                  />
+            </Grid.Col> 
+            <Grid.Col span={6}>
+            <TimeInput
+              label="End Time"
+              format="12"
+              clearable
+              {...form.getInputProps("endTime")}
+            />
+            </Grid.Col>
+            <Grid.Col>
+
           <Textarea
             placeholder="Assignment's Description"
             label="Assignment Description"
             mb={10}
             withAsterisk
             {...form.getInputProps("description")}
-          />
+            />
+            </Grid.Col>
+          </Grid>
           <Group position="left" mt="md">
             <Button
               type="submit"

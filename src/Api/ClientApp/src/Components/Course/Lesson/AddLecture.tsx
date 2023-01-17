@@ -24,8 +24,8 @@ import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
 const schema = Yup.object().shape({
-  name: Yup.string().required("Lecture Name is required."),
-  description: Yup.string().required("Lecture's Description is required."),
+  name: Yup.string().required("Video Name is required."),
+  description: Yup.string().required("Video's Description is required."),
 });
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
@@ -106,8 +106,8 @@ const AddLecture = ({
             <Grid.Col span={12} lg={8}>
               <TextInput
                 sx={{ width: "100%" }}
-                label="Lecture Name"
-                placeholder="Lecture Name"
+                label="Video Name"
+                placeholder="Video Name"
                 withAsterisk
                 {...form.getInputProps("name")}
               />
@@ -124,15 +124,15 @@ const AddLecture = ({
               />
             </Grid.Col>
           </Grid>
-          <Text size={'sm'} mt={10}>Lecture <span style={{color: 'red'}}>*</span></Text>
+          <Text size={'sm'} mt={10}>Video <span style={{color: 'red'}}>*</span></Text>
           <LessonVideoUpload
             setUrl={setVideoUrl}
             currentVideo={videoUrl}
             marginy={1}
           />
           <Textarea
-            placeholder="Lecture's Description"
-            label="Lecture Description"
+            placeholder="Video's Description"
+            label="Video Description"
             mb={10}
             withAsterisk
             {...form.getInputProps("description")}

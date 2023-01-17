@@ -104,7 +104,7 @@ const AddExam = ({
         description: data?.description ?? "",
         negativeMarking: data?.negativeMarking ?? 0,
         questionMarking: data?.questionMarking ?? 0,
-        passingWeightage: data?.passingWeightage ?? 0,
+        passingWeightage: data?.passingWeightage ?? 1,
         allowedRetake: data?.allowedRetake ?? 0,
         duration: data?.duration ? data.duration / 60 : 0,
         startTime: startDateTime,
@@ -122,7 +122,7 @@ const AddExam = ({
       name: "",
       description: "",
       negativeMarking: 0,
-      questionMarking: 0,
+      questionMarking: 1,
       passingWeightage: 0,
       allowedRetake: 0,
       duration: 0,
@@ -199,6 +199,7 @@ const AddExam = ({
               withAsterisk
               label="Question Weightage"
               min={1}
+              defaultValue={1}
               placeholder="Question Weightage"
               {...form.getInputProps("questionMarking")}
             />

@@ -133,7 +133,7 @@ const UserProfile = () => {
             size={"xl"}
             sx={{ margin: "5px 0", padding: "3px" }}
           >
-            About me
+            About {data?.fullName}
           </Text>
           <Divider />
           <Text size={"md"} sx={{ padding: "5px 50px" }}>
