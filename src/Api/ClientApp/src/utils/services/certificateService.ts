@@ -80,4 +80,5 @@ const getListCertificate = (query: string) => httpClient.get<IPaginated<ListCert
 
 export const useGetListCertificate = (query: string) => useQuery([api.externalCertificate.list,query], () => getListCertificate(query))
 
-const updateCertificateStatus = (id: string) => httpClient.patch()
+const updateCertificateStatus = ({id, status}: {id:string, status: CertificateStatus}) => httpClient.patch(api.externalCertificate.updateStatus(id+'?status='+status))
+export const useUpdateCertificateStatus = (id: string) => useMutation([api.externalCertificate.updateStatus(id)], updateCertificateStatus)
