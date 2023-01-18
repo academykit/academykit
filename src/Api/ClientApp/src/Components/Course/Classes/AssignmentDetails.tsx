@@ -11,6 +11,7 @@ import {
 } from "@mantine/core";
 import RoutePath from "@utils/routeConstants";
 import { ICourseLesson } from "@utils/services/courseService";
+import moment from "moment";
 import { Link } from "react-router-dom";
 
 const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
@@ -27,13 +28,22 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
         >
           View Result
         </Button>
-      ) : (
+      ) : lesson.assignmentExpired ? (
+        <Text>
+          Assignment is Already Expired. Please contact admin for more details.
+        </Text>
+      ) : !lesson.startDate || moment().isAfter(lesson.startDate) ? (
         <Button
           component={Link}
           to={RoutePath.assignment.details(lesson.id).route}
         >
           Start Assignment
         </Button>
+      ) : (
+        <Text>
+          Assignment is not started Yet. Assignment starts in{" "}
+          {moment(lesson.startDate).format(theme.dateFormat)}
+        </Text>
       )}
       {lesson.assignmentReview && (
         <Box mb={20} sx={{ color: theme.white }}>
