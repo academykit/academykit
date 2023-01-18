@@ -15,7 +15,6 @@ import {
   useCourseDescription,
   useCreateSection,
   useGetSection,
-  useLessonReorder,
 } from "@utils/services/courseService";
 import { useParams } from "react-router-dom";
 import { showNotification } from "@mantine/notifications";

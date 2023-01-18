@@ -73,7 +73,7 @@ const SectionItem = ({
       });
     }
   };
-  const active = () => "true";
+  const active = () => section?.activeSection === item.slug;
 
   return (
     <Paper
