@@ -5,6 +5,7 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Enums;
+    using Lingtren.Infrastructure.Helpers;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/certificate")]
@@ -35,9 +36,10 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the instance of <see cref="CertificateRequestModel" /> .</param>
         /// <returns> the instance of <see cref="CertificateResponseModel" /> .</returns>
         [HttpPut("{identity}/external")]
-        public async Task<CertificateResponseModel> UpdateExternal(Guid identity,CertificateRequestModel model)
+        public async Task<CertificateResponseModel> UpdateExternal(Guid identity, CertificateRequestModel model)
         {
-            var response = await _certificateService.UpdateExternalCertificateAsync(identity,model,CurrentUser.Id).ConfigureAwait(false);
+            CommonHelper.ValidateArgumentNotNullOrEmpty(model.Name, nameof(model.Name));
+            var response = await _certificateService.UpdateExternalCertificateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
             return response;
         }
 
@@ -49,8 +51,8 @@ namespace Lingtren.Api.Controllers
         [HttpDelete("{identity}/external")]
         public async Task<IActionResult> DeleteExternal(Guid identity)
         {
-            await _certificateService.DeleteExternalCertificateAsync(identity,CurrentUser.Id).ConfigureAwait(false);
-             return Ok();
+            await _certificateService.DeleteExternalCertificateAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            return Ok();
         }
 
         /// <summary>
@@ -73,7 +75,7 @@ namespace Lingtren.Api.Controllers
         /// <param name="identity"> the certificate id or slug </param>
         /// <returns> the instance of <see cerf="CertificateResponseModel" /> .</returns>
         [HttpGet("{identity}")]
-        public async Task<CertificateResponseModel> Certificate(Guid identity) => await _certificateService.GetCertificateDetailAsync(identity,CurrentUser.Id).ConfigureAwait(false);
+        public async Task<CertificateResponseModel> Certificate(Guid identity) => await _certificateService.GetCertificateDetailAsync(identity, CurrentUser.Id).ConfigureAwait(false);
 
         /// <summary>
         /// verify certificate api
@@ -83,7 +85,7 @@ namespace Lingtren.Api.Controllers
         [HttpPatch("{identity}/verify")]
         public async Task<IActionResult> Verify(Guid identity, [FromQuery] CertificateStatus status)
         {
-            await _certificateService.VerifyCertificateAsync(identity,status,CurrentUser.Id).ConfigureAwait(false);
+            await _certificateService.VerifyCertificateAsync(identity, status, CurrentUser.Id).ConfigureAwait(false);
             return Ok();
         }
 
@@ -101,9 +103,9 @@ namespace Lingtren.Api.Controllers
         /// <param name="criteria"> the instance of <see cref="CertificateBaseSearchCriteria" /> .</param>
         /// <returns> the list of <see cref="CertificateResponseModel" /> .</returns>
         [HttpGet("review")]
-        public async Task<SearchResult<CertificateResponseModel>> GetReviews([FromQuery]CertificateBaseSearchCriteria criteria)
+        public async Task<SearchResult<CertificateResponseModel>> GetReviews([FromQuery] CertificateBaseSearchCriteria criteria)
         {
-            var searchResult = await _certificateService.GetReviewCertificatesAsync(criteria,CurrentUser.Id).ConfigureAwait(false);
+            var searchResult = await _certificateService.GetReviewCertificatesAsync(criteria, CurrentUser.Id).ConfigureAwait(false);
             var response = new SearchResult<CertificateResponseModel>()
             {
                 Items = searchResult.Items,
