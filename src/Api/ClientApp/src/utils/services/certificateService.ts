@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ICertificateList } from "./manageCourseService";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
 import { IPaginated, IUser } from "./types";
@@ -60,12 +61,12 @@ export const useAddCertificate = () => {
 };
 
 const updateCertificate = ({data, id}:{data: ExternalCertificatePost, id: string}) => {
-  return httpClient.post(api.externalCertificate.update(data.id), data);
+  return httpClient.put(api.externalCertificate.update(id), data);
 };
 
-export const useUpdateCertificate = () => {
+export const useUpdateCertificate = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation(["update" + api.externalCertificate.add], addCertificate, {
+  return useMutation(["update" + api.externalCertificate.add], updateCertificate, {
     onSuccess: () => {
       queryClient.invalidateQueries([
         "certificate",
@@ -124,4 +125,14 @@ queryClient.invalidateQueries([api.externalCertificate.list, ''])
       }
     }
   );
+}
+
+const getInternalCertificate = () => {
+  return httpClient.get<ICertificateList[]>(api.externalCertificate.internal)
+}
+
+export const useGetInternalCertificate = () => {
+  return useQuery([
+    api.externalCertificate.internal
+  ], () => getInternalCertificate())
 }

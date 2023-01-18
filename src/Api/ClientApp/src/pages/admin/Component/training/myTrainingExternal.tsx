@@ -27,9 +27,10 @@ import {
   useGetExternalCertificate,
   useGetUserCertificate,
   useUpdateCertificate,
+  useUpdateCertificateStatus,
 } from "@utils/services/certificateService";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
@@ -67,6 +68,9 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
   const addCertificate = useAddCertificate();
   const certificateList = useGetExternalCertificate(id ? false : true);
   const userCertificate = useGetUserCertificate(id as string);
+  const update = useUpdateCertificate(id as string);
+  const [idd, setIdd] = useState<any>();
+  const [updates, setUpdates] = useState(false);
 
   const form = useForm({
     initialValues: {
@@ -79,23 +83,41 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
     validate: yupResolver(schema),
   });
 
+  useEffect(() => {
+    if (idd) {
+      setShowConfirmation();
+      form.setValues({
+        name: idd?.name,
+        duration: idd?.duration,
+        location: idd?.location,
+        institute: idd?.institute,
+        imageUrl: idd?.imageUrl,
+      });
+    }
+  }, [idd]);
+
   const handleSubmit = async (data: any) => {
     data = { ...data, startDate: value[0], endDate: value[1] };
     try {
-      await addCertificate.mutateAsync(data);
+      if (updates) {
+        await update.mutateAsync({ data, id: idd?.id });
+      } else {
+        await addCertificate.mutateAsync(data);
+      }
       showNotification({
         message: "Certificate added successfully.",
       });
       form.reset();
     } catch (error) {
       const err = errorType(error);
-      console.log(error);
       showNotification({
         color: "red",
         message: err,
       });
     }
     setShowConfirmation();
+    setIdd(() => null);
+    setUpdates(() => false);
   };
 
   const auth = useAuth();
@@ -104,7 +126,11 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
       <Modal
         title="Add new Certificate"
         opened={showConfirmation}
-        onClose={setShowConfirmation}
+        onClose={() => {
+          setShowConfirmation();
+          setIdd(null);
+          setUpdates(false);
+        }}
         styles={{
           title: {
             fontWeight: "bold",
@@ -146,6 +172,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
               formContext={useFormContext}
               label="Certificate Image"
               FormField="imageUrl"
+              currentThumbnail={idd?.imageUrl}
             />
             <Button type="submit" loading={addCertificate.isLoading}>
               Submit
@@ -167,9 +194,14 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                 <Text weight={"bold"}>
                   {x.name}
                   <Badge ml={20}>{CertificateStatus[x.status]}</Badge>
-                  {/* <ActionIcon>
+                  <ActionIcon
+                    onClick={() => {
+                      setIdd(x);
+                      setUpdates(true);
+                    }}
+                  >
                     <IconEdit />
-                  </ActionIcon> */}
+                  </ActionIcon>
                 </Text>
                 <Text mt={5}>
                   From {moment(x.startDate).format("YYYY-MM-DD")} to{" "}

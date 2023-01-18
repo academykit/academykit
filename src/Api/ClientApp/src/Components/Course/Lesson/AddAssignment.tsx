@@ -24,6 +24,22 @@ import errorType from "@utils/services/axiosError";
 import * as Yup from "yup";
 import { DatePicker, TimeInput } from "@mantine/dates";
 import { IconCalendar } from "@tabler/icons";
+import { getDateTime } from "@utils/getDateTime";
+import moment from "moment";
+
+const strippedFormValue = (value: any) => {
+  const val = { ...value };
+  delete val.isMandatory;
+  delete val.isRequired;
+  const startTime = getDateTime(val.startDate, val.startTime);
+  const endTime = getDateTime(val.endDate, val.endTime);
+  val.startTime = startTime.utcDateTime;
+  val.endTime = endTime.utcDateTime;
+  delete val.startDate;
+  delete val.endDate;
+
+  return val;
+};
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Assignment's Title is required."),
@@ -31,13 +47,13 @@ const schema = Yup.object().shape({
 });
 
 interface SubmitType {
-  name: string,
-  description: string,
-  isMandatory?: boolean,
-  eventStartDate?: Date,
-  eventEndDate?: Date,
-  startTime?: Date ,
-  endTime?: Date
+  name: string;
+  description: string;
+  isMandatory?: boolean;
+  eventStartDate?: Date;
+  eventEndDate?: Date;
+  startTime?: Date;
+  endTime?: Date;
 }
 
 const AddAssignment = ({
@@ -66,26 +82,50 @@ const AddAssignment = ({
   const [opened, setOpened] = useState(false);
   const [lessonId, setLessonId] = useState("");
 
+  console.log(item);
+
+  const startDateTime = item?.startDate
+    ? moment(item?.startDate + "z")
+        .local()
+        .toDate()
+    : new Date();
+
+  const endDateTime = item?.endDate
+    ? moment(item?.endDate + "z")
+        .local()
+        .toDate()
+    : new Date();
+
   const form = useForm({
     initialValues: {
       name: item?.name ?? "",
       description: item?.description ?? "",
       isMandatory: item?.isMandatory ?? false,
-      eventStartDate: new Date(),
-      eventEndDate: new Date(),
-      endTime: new Date(),
-      startTime: new Date(),
+      eventStartDate: startDateTime ?? new Date(),
+      eventEndDate: endDateTime ?? new Date(),
+      endTime: endDateTime ?? new Date(),
+      startTime: startDateTime ?? new Date(),
     },
     validate: yupResolver(schema),
   });
 
   const submitForm = async (values: SubmitType) => {
+    const startDate = getDateTime(
+      values?.eventStartDate?.toString() ?? "",
+      values?.startTime?.toString() ?? ""
+    );
+    const endDate = getDateTime(
+      values?.eventEndDate?.toString() ?? "",
+      values?.endTime?.toString() ?? ""
+    );
     try {
       let assignmentData = {
         courseId: slug,
         sectionIdentity: sectionId,
         type: LessonType.Assignment,
         ...values,
+        startDate: startDate.utcDateTime,
+        endDate: endDate.utcDateTime,
         isMandatory,
       };
       if (!isEditing) {
@@ -170,52 +210,52 @@ const AddAssignment = ({
                 }}
               />
             </Grid.Col>
-            
+
             <Grid.Col span={6}>
-            <DatePicker
-                    w={"100%"}
-                    placeholder="Pick Starting Date"
-                    label="Start date"
-                    icon={<IconCalendar size={16} />}
-                    {...form.getInputProps("eventStartDate")}
-                  />
-            </Grid.Col> 
-            <Grid.Col span={6}>
-            <TimeInput
-              label="Start Time"
-              format="12"
-              clearable
-              {...form.getInputProps("startTime")}
-            />
+              <DatePicker
+                w={"100%"}
+                placeholder="Pick Starting Date"
+                label="Start date"
+                icon={<IconCalendar size={16} />}
+                minDate={moment(new Date()).toDate()}
+                {...form.getInputProps("eventStartDate")}
+              />
             </Grid.Col>
-           
-             <Grid.Col span={6}>
-            <DatePicker
-                    w={"100%"}
-                    placeholder="Pick Ending Date"
-                    label="End date"
-                    minDate={form.values.eventStartDate}
-                    icon={<IconCalendar size={16} />}
-                    {...form.getInputProps("eventEndDate")}
-                  />
-            </Grid.Col> 
             <Grid.Col span={6}>
-            <TimeInput
-              label="End Time"
-              format="12"
-              clearable
-              {...form.getInputProps("endTime")}
-            />
+              <TimeInput
+                label="Start Time"
+                format="12"
+                clearable
+                {...form.getInputProps("startTime")}
+              />
+            </Grid.Col>
+
+            <Grid.Col span={6}>
+              <DatePicker
+                w={"100%"}
+                placeholder="Pick Ending Date"
+                label="End date"
+                minDate={form.values.eventStartDate}
+                icon={<IconCalendar size={16} />}
+                {...form.getInputProps("eventEndDate")}
+              />
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <TimeInput
+                label="End Time"
+                format="12"
+                clearable
+                {...form.getInputProps("endTime")}
+              />
             </Grid.Col>
             <Grid.Col>
-
-          <Textarea
-            placeholder="Assignment's Description"
-            label="Assignment Description"
-            mb={10}
-            withAsterisk
-            {...form.getInputProps("description")}
-            />
+              <Textarea
+                placeholder="Assignment's Description"
+                label="Assignment Description"
+                mb={10}
+                withAsterisk
+                {...form.getInputProps("description")}
+              />
             </Grid.Col>
           </Grid>
           <Group position="left" mt="md">

@@ -231,6 +231,7 @@ export const api = {
     user: (id?: string)=> `/api/certificate/external/${id}`,
     list: `/api/certificate/review`,
     updateStatus : (id?: string) => `/api/certificate/${id}/verify`,
-    update: (id?: string) => `/api/certificate/${id}/external`
+    update: (id?: string) => `/api/certificate/${id}/external`,
+    internal: `/api/certificate/internal`
   }
 };
