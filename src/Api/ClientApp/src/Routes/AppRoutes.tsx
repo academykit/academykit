@@ -117,14 +117,11 @@ const MainRoutes = () => {
           path={RoutePath.courses.courseList + "*"}
           element={<CourseListRoute />}
         />
-        <Route
-          path={RoutePath.settings.userCertificate()}
-          element={<CertificateList />}
-        />
-        <Route
+
+        {/* <Route
           path={"/user/certificate" + `/:id`}
           element={<MyTrainingExternal />}
-        />
+        /> */}
         <Route
           path={RoutePath.courses.base}
           element={<Navigate to={RoutePath.courses.courseList} replace />}

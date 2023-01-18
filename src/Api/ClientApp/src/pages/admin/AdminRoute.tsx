@@ -15,6 +15,7 @@ import {
 import Account from "./account";
 import AdminNav from "./Component/AdminNav";
 import AdminViewCertificate from "./Component/training/adminViewCertificate";
+import CertificateList from "./Component/training/certificateList";
 import MyTrainingInternal from "./Component/training/myTrainingInternal";
 
 const AdminCourseList = lazyWithRetry(() => import("./course"));
@@ -49,13 +50,13 @@ const AdminRoutesChild = () => {
             path={"/mytraining/external"}
             element={<AdminViewCertificate />}
           />
-          <Route path={"/*"} element={<NotFound />} />
         </Route>
         <Route element={<AdminAuthRoute />}>
           <Route path={"/smtp"} element={<SMTP />} />
           <Route path={"/level"} element={<Level />} />
           <Route path={"/department"} element={<Department />} />
           <Route path={"/courses"} element={<AdminCourseList />} />
+          <Route path={"/user/certificate"} element={<CertificateList />} />
           <Route path="*" element={<Navigate to={RoutePath[404]} replace />} />
         </Route>
         <Route element={<SuperAdminRoute />}>

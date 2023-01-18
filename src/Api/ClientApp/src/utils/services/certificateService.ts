@@ -11,6 +11,7 @@ export interface ExternalCertificatePost {
   location: string;
   institute: string;
   duration: number;
+  status: CertificateStatus;
 }
 
 export enum CertificateStatus {
@@ -58,6 +59,22 @@ export const useAddCertificate = () => {
   });
 };
 
+const updateCertificate = ({data, id}:{data: ExternalCertificatePost, id: string}) => {
+  return httpClient.post(api.externalCertificate.update(data.id), data);
+};
+
+export const useUpdateCertificate = () => {
+  const queryClient = useQueryClient();
+  return useMutation(["update" + api.externalCertificate.add], addCertificate, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([
+        "certificate",
+        api.externalCertificate.add,
+      ]);
+    },
+  });
+};
+
 const getUserCertificate = (id?: string) => {
   return httpClient.get(api.externalCertificate.user(id));
 };
@@ -73,8 +90,9 @@ export const useGetUserCertificate = (id?: string) => {
   );
 };
 
-interface ListCertificate extends ExternalCertificatePost {
-  userName: string;
+export interface ListCertificate extends ExternalCertificatePost {
+  user: IUser;
+  id: string;
 }
 
 const getListCertificate = (query: string) =>
@@ -93,10 +111,17 @@ const updateCertificateStatus = ({
   status: CertificateStatus;
 }) =>
   httpClient.patch(
-    api.externalCertificate.updateStatus(id + "?status=" + status)
+    api.externalCertificate.updateStatus(id )+ "?status=" + status
   );
 export const useUpdateCertificateStatus = (id: string) =>
-  useMutation(
+ { 
+  const queryClient = useQueryClient();
+  return useMutation(
     [api.externalCertificate.updateStatus(id)],
-    updateCertificateStatus
+    updateCertificateStatus,{
+      onSuccess: () => {
+queryClient.invalidateQueries([api.externalCertificate.list, ''])
+      }
+    }
   );
+}

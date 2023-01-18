@@ -7,6 +7,7 @@ import {
   Card,
   Flex,
   Group,
+  Badge,
   Image,
   Modal,
   Text,
@@ -16,14 +17,16 @@ import { DateRangePicker } from "@mantine/dates";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import { IconDownload, IconEye } from "@tabler/icons";
+import { IconDownload, IconEdit, IconEye } from "@tabler/icons";
 import downloadImage from "@utils/downloadImage";
 import { UserRole } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
 import {
+  CertificateStatus,
   useAddCertificate,
   useGetExternalCertificate,
   useGetUserCertificate,
+  useUpdateCertificate,
 } from "@utils/services/certificateService";
 import moment from "moment";
 import { useState } from "react";
@@ -34,7 +37,28 @@ const [FormProvider, useFormContext, useForm] = createFormContext();
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Certificate name is required."),
+  duration: Yup.number().typeError("Duration must be in hours."),
 });
+
+// const EditModal = ({values}:{values: any}) => {
+//   const form = useForm({
+//     initialValues: {
+//       name: values?.name,
+//       duration: values?.duration,
+//       location: values?.location,
+//       institute: values?.institute,
+//       imageUrl: values?.imageUrl,
+//     },
+//     validate: yupResolver(schema),
+//   });
+
+//   const [openId, setOpenId] = useState('')
+
+//   const update = useUpdateCertificate(values?.id)
+
+//   return
+
+// };
 
 const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
   const [showConfirmation, setShowConfirmation] = useToggle();
@@ -140,51 +164,63 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
           <Card withBorder mt={10}>
             <Flex justify={"space-between"}>
               <Box>
-                <Text weight={"bold"}>Name: {x.name} </Text>
-                <Text weight={"bold"}>Duration: {x.duration}</Text>
                 <Text weight={"bold"}>
-                  Date: {moment(x.startDate).format("YYYY-MM-DD")} to{" "}
-                  {moment(x.endDate).format("YYYY-MM-DD")}
+                  {x.name}
+                  <Badge ml={20}>{CertificateStatus[x.status]}</Badge>
+                  {/* <ActionIcon>
+                    <IconEdit />
+                  </ActionIcon> */}
                 </Text>
-                <Text weight={"bold"}>Location: {x.location}</Text>
-                <Text weight={"bold"}>Institute: {x.institute}</Text>
+                <Text mt={5}>
+                  From {moment(x.startDate).format("YYYY-MM-DD")} to{" "}
+                  {moment(x.endDate).format("YYYY-MM-DD")} completed in about{" "}
+                  {x.duration} hrs.
+                </Text>
+                <Text>
+                  {x.institute}, {x.location}
+                </Text>
               </Box>
               <Box
                 style={{ width: 150, marginTop: "auto", marginBottom: "auto" }}
               >
-                <div style={{ position: "relative" }}>
-                  <Image
-                    src={x.imageUrl || ""}
-                    radius="md"
-                    style={{
-                      opacity: "0.5",
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: "absolute",
-                      left: 0,
-                      bottom: 0,
-                      right: 0,
-                      margin: "auto",
-                      top: 0,
-                      width: "45px",
-                      height: "30px",
-                      display: "flex",
-                    }}
-                  >
-                    <ActionIcon onClick={() => window.open(x.imageUrl)} mr={10}>
-                      <IconEye color="black" />
-                    </ActionIcon>
-                    <ActionIcon
-                      onClick={() =>
-                        downloadImage(x.imageUrl, x.user.fullName ?? "")
-                      }
+                {x.imageUrl && (
+                  <div style={{ position: "relative" }}>
+                    <Image
+                      src={x.imageUrl || ""}
+                      radius="md"
+                      style={{
+                        opacity: "0.5",
+                      }}
+                    />
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: 0,
+                        bottom: 0,
+                        right: 0,
+                        margin: "auto",
+                        top: 0,
+                        width: "45px",
+                        height: "30px",
+                        display: "flex",
+                      }}
                     >
-                      <IconDownload color="black" />
-                    </ActionIcon>
+                      <ActionIcon
+                        onClick={() => window.open(x.imageUrl)}
+                        mr={10}
+                      >
+                        <IconEye color="black" />
+                      </ActionIcon>
+                      <ActionIcon
+                        onClick={() =>
+                          downloadImage(x.imageUrl, x.user.fullName ?? "")
+                        }
+                      >
+                        <IconDownload color="black" />
+                      </ActionIcon>
+                    </div>
                   </div>
-                </div>
+                )}
               </Box>
             </Flex>
             {auth?.auth &&
