@@ -19,7 +19,10 @@ import { useLogin } from "@utils/services/authService";
 import Logo from "@components/Logo";
 import RoutePath from "@utils/routeConstants";
 import { IUserProfile } from "@utils/services/types";
-import { useGeneralSetting } from "@utils/services/adminService";
+import {
+  useCompanySetting,
+  useGeneralSetting,
+} from "@utils/services/adminService";
 
 const LoginPage = () => {
   const form = useForm({
@@ -64,7 +67,7 @@ const LoginPage = () => {
       });
     }
   }, [login.isError, login.isSuccess]);
-  const settings = useGeneralSetting();
+  const companySettings = useCompanySetting();
 
   return (
     <Container size={420} my={40}>
@@ -73,7 +76,7 @@ const LoginPage = () => {
           <Image
             height={50}
             width={50}
-            src={settings?.data?.data?.logoUrl}
+            src={companySettings?.data?.data?.imageUrl}
           ></Image>
         </Link>
       </Center>

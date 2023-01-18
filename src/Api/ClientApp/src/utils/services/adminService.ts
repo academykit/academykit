@@ -68,6 +68,10 @@ export interface IGeneralSetting {
   updatedOn: string;
   user: IUser;
 }
+export interface ICompanySetting{
+  name:string;
+  imageUrl:string
+}
 
 export interface IGeneralSettingUpdate {
   logoUrl: string;
@@ -410,6 +414,15 @@ export const useGeneralSetting = () => {
     { staleTime: Infinity, cacheTime: Infinity }
   );
 };
+// company settings
+export const useCompanySetting=()=>{
+  return useQuery(
+    [api.adminUser.getCompanySettings],()=>{
+      return httpClient.get<ICompanySetting>(api.adminUser.getCompanySettings)
+    }
+  )
+  }
+
 
 export const useUpdateGeneralSetting = (id: string | undefined) => {
   const queryClient = useQueryClient();
