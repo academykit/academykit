@@ -148,6 +148,7 @@ const Certificate = () => {
                     placeholder="Pick Ending Date"
                     label="End date"
                     withAsterisk
+                    minDate={form.values.eventStartDate}
                     icon={<IconCalendar size={16} />}
                     {...form.getInputProps("eventEndDate")}
                   />
