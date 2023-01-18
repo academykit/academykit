@@ -32,7 +32,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
       onEnded();
       showNotification({
         title: "Success",
-        message: "Pdf marked as completed!",
+        message: "Pdf marked as completed.",
       });
     
   };
