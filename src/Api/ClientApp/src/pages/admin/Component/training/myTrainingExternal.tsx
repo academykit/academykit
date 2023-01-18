@@ -105,7 +105,9 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
         await addCertificate.mutateAsync(data);
       }
       showNotification({
-        message: `Certificate ${updates ? "edited" : "added"} successfully.`,
+        message: `Training certification ${
+          updates ? "edited" : "added"
+        } successfully.`,
       });
       form.reset();
     } catch (error) {
