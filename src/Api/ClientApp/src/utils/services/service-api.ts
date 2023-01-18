@@ -221,4 +221,7 @@ export const api = {
     repliesDetails: (courseId: string, commentId: string, replyId: string) =>
       `/api/course/${courseId}/comments/${commentId}/commentReply/${replyId}`,
   },
+  externalCertificate: {
+    add: '/api/certificate/external'
+  }
 };

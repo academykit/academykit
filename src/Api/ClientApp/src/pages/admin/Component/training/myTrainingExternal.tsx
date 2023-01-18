@@ -1,3 +1,4 @@
+import ThumbnailEditor from "@components/Ui/ThumbnailEditor";
 import useAuth from "@hooks/useAuth";
 import {
   ActionIcon,
@@ -12,18 +13,49 @@ import {
   TextInput,
 } from "@mantine/core";
 import { DateRangePicker } from "@mantine/dates";
+import { createFormContext } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
 import { IconDownload, IconEye } from "@tabler/icons";
 import downloadImage from "@utils/downloadImage";
 import { UserRole } from "@utils/enums";
+import errorType from "@utils/services/axiosError";
+import { useAddCertificate } from "@utils/services/certificateService";
 import { useState } from "react";
+
+const [FormProvider, useFormContext, useForm] = createFormContext();
 
 const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
   const [showConfirmation, setShowConfirmation] = useToggle();
-  const [value, setValue] = useState<[Date, Date]>([
-    new Date(2021, 11, 1),
-    new Date(2021, 11, 5),
-  ]);
+  const [value, setValue] = useState<[Date, Date]>([new Date(), new Date()]);
+  const certificate = useAddCertificate();
+
+  const form = useForm({
+    initialValues: {
+      name: "",
+      duration: 0,
+      location: "",
+      institute: "",
+      imageUrl: "",
+    },
+  });
+
+  const handleSubmit = async (data: any) => {
+    console.log(data);
+    try {
+      await certificate.mutateAsync(data);
+      showNotification({
+        message: "Certificate added successfully.",
+      });
+    } catch (error) {
+      const err = errorType(error);
+      console.log(error);
+      showNotification({
+        color: "red",
+        message: err,
+      });
+    }
+  };
 
   const auth = useAuth();
   return (
@@ -38,19 +70,44 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
           },
         }}
       >
-        <form>
-          <TextInput label="Name" />
-          <TextInput label="Duration" />
-          <DateRangePicker
-            label="Start Date - End Date"
-            placeholder="Pick dates range"
-            value={value}
-            //@ts-ignore
-            onChange={setValue}
-          />
-          <TextInput label="Location" />
-          <TextInput label="Institute" />
-        </form>
+        <FormProvider form={form}>
+          <form onSubmit={form.onSubmit(handleSubmit)}>
+            <TextInput
+              label="Name"
+              name="name"
+              {...form.getInputProps("name")}
+            />
+            <TextInput
+              label="Duration"
+              name="duration"
+              {...form.getInputProps("duration")}
+            />
+            <DateRangePicker
+              label="Start Date - End Date"
+              placeholder="Pick dates range"
+              value={value}
+              //@ts-ignore
+              onChange={setValue}
+            />
+            <TextInput
+              label="Location"
+              name="location"
+              {...form.getInputProps("location")}
+            />
+            <TextInput
+              label="Institute"
+              name="institute"
+              {...form.getInputProps("institute")}
+            />
+            <Text>Certificate Image</Text>
+            <ThumbnailEditor
+              formContext={useFormContext}
+              label="Certificate Image"
+              FormField="imageUrl"
+            />
+            <Button type="submit">Submit</Button>
+          </form>
+        </FormProvider>
       </Modal>
       <Group position="right" onClick={() => setShowConfirmation()}>
         <Button>Add Certificate</Button>
