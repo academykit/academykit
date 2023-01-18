@@ -56,6 +56,8 @@
                 Id = Guid.NewGuid(),
                 Name = model.Name,
                 Hints = model.Hints,
+                StartDate = model.StartDate,
+                EndDate = model.EndDate,
                 Description = model.Description,
                 LessonId = model.LessonId,
                 Type = model.Type,

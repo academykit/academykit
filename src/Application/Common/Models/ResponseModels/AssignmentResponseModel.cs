@@ -8,6 +8,8 @@
         public Guid Id { get; set; }
         public Guid LessonId { get; set; }
         public string LessonName { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Hints { get; set; }
@@ -36,6 +38,8 @@
             Hints = showHints ? assignment.Hints : null;
             Order = assignment.Order;
             IsActive = assignment.IsActive;
+            StartDate = assignment.StartDate;
+            EndDate = assignment.EndDate;
             Type = assignment.Type;
             User = assignment.User != null ? new UserModel(assignment.User) : new UserModel();
             AssignmentAttachments = new List<AssignmentAttachmentResponseModel>();

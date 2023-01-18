@@ -4,6 +4,7 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
+    using Lingtren.Domain.Enums;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/certificate")]
@@ -73,9 +74,9 @@ namespace Lingtren.Api.Controllers
         /// <param name="identity"> the certificate id or slug </param>
         /// <returns> the task complete </returns>
         [HttpPatch("{identity}/verify")]
-        public async Task<IActionResult> Verify(Guid identity)
+        public async Task<IActionResult> Verify(Guid identity, [FromQuery] CertificateStatus status)
         {
-            await _certificateService.VerifyCertificateAsync(identity,CurrentUser.Id).ConfigureAwait(false);
+            await _certificateService.VerifyCertificateAsync(identity,status,CurrentUser.Id).ConfigureAwait(false);
             return Ok();
         }
 

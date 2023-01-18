@@ -3,6 +3,8 @@ namespace Lingtren.Application.Common.Interfaces
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
+    using Lingtren.Domain.Enums;
+
     public interface ICertificateService
     {
         /// <summary>
@@ -49,9 +51,10 @@ namespace Lingtren.Application.Common.Interfaces
         /// Handle to verify certificate
         /// </summary>
         /// <param name="identity"> the certificate id or slug </param>
+        /// <param name="status"> the certificate status </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
-        Task VerifyCertificateAsync(Guid identity,Guid currentUserId);
+        Task VerifyCertificateAsync(Guid identity,CertificateStatus status,Guid currentUserId);
 
         /// <summary>
         /// Handle to get user certificates
