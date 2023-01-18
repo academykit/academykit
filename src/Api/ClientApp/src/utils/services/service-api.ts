@@ -68,6 +68,10 @@ export const api = {
   course: {
     list: "/api/course",
     detail: (id: string) => `/api/course/${id}`,
+    reorder: (id: string) => `/api/course/${id}/lesson/reorder`,
+    reorderSection: (id: string) => `/api/course/${id}/section/reorder`,
+
+
     update: (id: string) => `/api/course/${id}`,
     enroll: (id: string) => `/api/Course/${id}/enroll`,
     status: (id: string, status: CourseStatus) =>
