@@ -69,7 +69,7 @@ const AdminNav = () => {
     },
     {
       label: "Certificates",
-      to: RoutePath.userCertificate,
+      to: RoutePath.settings.userCertificate(),
       role: UserRole.Admin,
     },
     // { label: "Payment System", to: "/paymentmethods" },

@@ -93,7 +93,6 @@ const RoutePath = {
   createSessions: "/sessions/create",
   userInfo: "/userInfo",
   userProfile: "/userProfile",
-  userCertificate: '/user/certificate',
 
   classes: "/classes",
   settings: {
@@ -101,6 +100,8 @@ const RoutePath = {
     profile: function () {
       return this.base + "/account";
     },
+  userCertificate: function() { return this.base + '/user/certificate'},
+
     training: function () {
       return this.base + "/mytraining"
     },

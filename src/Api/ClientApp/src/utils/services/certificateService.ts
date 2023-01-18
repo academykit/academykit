@@ -13,6 +13,12 @@ export interface ExternalCertificatePost{
     duration: number
   }
 
+  export enum CertificateStatus {
+    Draft = 1,
+        Approved = 2,
+        Rejected = 3
+  }
+
 export interface GetExternalCertificate extends ExternalCertificatePost
     {
       id:string;
@@ -73,3 +79,5 @@ interface ListCertificate {
 const getListCertificate = (query: string) => httpClient.get<IPaginated<ListCertificate>>(api.externalCertificate.list)
 
 export const useGetListCertificate = (query: string) => useQuery([api.externalCertificate.list,query], () => getListCertificate(query))
+
+const updateCertificateStatus = (id: string) => httpClient.patch()

@@ -117,9 +117,12 @@ const MainRoutes = () => {
           path={RoutePath.courses.courseList + "*"}
           element={<CourseListRoute />}
         />
-        <Route path={RoutePath.userCertificate} element={<CertificateList />} />
         <Route
-          path={RoutePath.userCertificate + `/:id`}
+          path={RoutePath.settings.userCertificate()}
+          element={<CertificateList />}
+        />
+        <Route
+          path={"/user/certificate" + `/:id`}
           element={<MyTrainingExternal />}
         />
         <Route
