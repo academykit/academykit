@@ -292,7 +292,7 @@
                 _unitOfWork.GetRepository<User>().Update(user);
                 var companyName = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync(selector: x => x.CompanyName).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                await _emailService.SendForgetPasswordEmail(user.Email, user.FirstName, token,companyName).ConfigureAwait(false);
+                await _emailService.SendForgetPasswordEmail(user.Email, user.FirstName, token, companyName).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -407,7 +407,7 @@
             var companyName = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync(selector: x => x.CompanyName).ConfigureAwait(false);
             var changeEmailToken = GenerateResendAndChangeEmailToken(model.OldEmail, model.NewEmail, _changeEmailEncryptionKey, _changeEmailTokenExpiry);
             var resendToken = GenerateResendAndChangeEmailToken(model.OldEmail, model.NewEmail, _resendChangeEmailEncryptionKey, _resendChangeEmailTokenExpiry);
-            await _emailService.SendChangePasswordMailAsync(model.NewEmail, user.FirstName, changeEmailToken, _changeEmailTokenExpiry,companyName).ConfigureAwait(false);
+            await _emailService.SendChangePasswordMailAsync(model.NewEmail, user.FirstName, changeEmailToken, _changeEmailTokenExpiry, companyName).ConfigureAwait(false);
             return new ChangeEmailResponseModel() { ResendToken = resendToken };
         }
 
@@ -434,7 +434,7 @@
             var changeEmailToken = GenerateResendAndChangeEmailToken(oldEmail, newEmail, _changeEmailEncryptionKey, _changeEmailTokenExpiry);
             var resendToken = GenerateResendAndChangeEmailToken(oldEmail, newEmail, _resendChangeEmailEncryptionKey, _resendChangeEmailTokenExpiry);
             var companyName = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync(selector: x => x.CompanyName).ConfigureAwait(false);
-            await _emailService.SendChangePasswordMailAsync(newEmail, user.FirstName, changeEmailToken, _changeEmailTokenExpiry,companyName).ConfigureAwait(false);
+            await _emailService.SendChangePasswordMailAsync(newEmail, user.FirstName, changeEmailToken, _changeEmailTokenExpiry, companyName).ConfigureAwait(false);
             return new ChangeEmailResponseModel() { ResendToken = resendToken };
         }
 
@@ -713,45 +713,55 @@
         /// <returns>the instance of <see cref="UserResponseModel"/></returns>
         public async Task<UserResponseModel> GetDetailAsync(Guid userId)
         {
-            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
-                predicate: p => p.Id == userId,
-                include: src => src.Include(x => x.Department)
-                ).ConfigureAwait(false);
-
-            var userCertificates = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
-                predicate: p => p.UserId == userId && p.HasCertificateIssued.HasValue && p.HasCertificateIssued.Value,
-                include: src => src.Include(x => x.Course)
-                ).ConfigureAwait(false);
-            var externalCertificates = await _unitOfWork.GetRepository<Certificate>().GetAllAsync(predicate: p => p.CreatedBy == userId &&
-                                     p.Status == CertificateStatus.Approved).ConfigureAwait(false);
-            var response = new UserResponseModel(user);
-            foreach (var item in userCertificates)
+            try
             {
-                response.Certificates.Add(new CourseCertificateIssuedResponseModel
+
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Id == userId,
+                    include: src => src.Include(x => x.Department)
+                    ).ConfigureAwait(false);
+
+                var userCertificates = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
+                    predicate: p => p.UserId == userId && p.HasCertificateIssued.HasValue && p.HasCertificateIssued.Value,
+                    include: src => src.Include(x => x.Course)
+                    ).ConfigureAwait(false);
+                var externalCertificates = await _unitOfWork.GetRepository<Certificate>().GetAllAsync(predicate: p => p.CreatedBy == userId &&
+                                         p.Status == CertificateStatus.Approved).ConfigureAwait(false);
+                var response = new UserResponseModel(user);
+                foreach (var item in userCertificates)
                 {
-                    CourseId = item.CourseId,
-                    CourseName = item.Course.Name,
-                    CourseSlug = item.Course.Slug,
-                    Percentage= item.Percentage,
-                    HasCertificateIssued = item.HasCertificateIssued,
-                    CertificateIssuedDate = item.CertificateIssuedDate,
-                    CertificateUrl = item.CertificateUrl,
-                });
-            }
+                    response.Certificates.Add(new CourseCertificateIssuedResponseModel
+                    {
+                        CourseId = item.CourseId,
+                        CourseName = item.Course.Name,
+                        CourseSlug = item.Course.Slug,
+                        Percentage = item.Percentage,
+                        HasCertificateIssued = item.HasCertificateIssued,
+                        CertificateIssuedDate = item.CertificateIssuedDate,
+                        CertificateUrl = item.CertificateUrl,
+                    });
+                }
 
-            foreach(var external in externalCertificates)
-            {
-                response.ExternalCertificates.Add(new ExternalCertificateResponseModel{
-                    Name = external.Name,
-                    StartDate = external.StartDate,
-                    EndDate = external.EndDate,
-                    ImageUrl = external.ImageUrl,
-                    Location = external.Location,
-                    Institute = external.Institute,
-                    Duration =  external.Duration != 0 ? external.Duration.ToString() : null
-                });
+                foreach (var external in externalCertificates)
+                {
+                    response.ExternalCertificates.Add(new ExternalCertificateResponseModel
+                    {
+                        Name = external.Name,
+                        StartDate = external.StartDate,
+                        EndDate = external.EndDate,
+                        ImageUrl = external.ImageUrl,
+                        Location = external.Location,
+                        Institute = external.Institute,
+                        Duration = external.Duration != 0 ? external.Duration.ToString() : null
+                    });
+                }
+                return response;
             }
-            return response;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to fetch user detail information.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to fetch user detail information.");
+            }
         }
     }
 }

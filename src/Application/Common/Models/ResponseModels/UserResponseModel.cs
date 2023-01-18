@@ -22,7 +22,7 @@
         public DateTime CreatedOn { get; set; }
         public string FullName { get; set; }
         public IList<CourseCertificateIssuedResponseModel> Certificates { get; set; } = new List<CourseCertificateIssuedResponseModel>();
-        public IList<ExternalCertificateResponseModel> ExternalCertificates { get; set; }
+        public IList<ExternalCertificateResponseModel> ExternalCertificates { get; set; } = new List<ExternalCertificateResponseModel>();
         public UserResponseModel(User user)
         {
             Id = user.Id;
