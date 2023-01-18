@@ -147,10 +147,12 @@ const UserProfile = () => {
           </Text>
           {data?.bio && (
             <>
-              <Text size={"md"} sx={{ padding: "5px 50px" }}>
-                Bio:
-              </Text>
               <RichTextEditor
+                styles={{
+                  root: {
+                    border: "none",
+                  },
+                }}
                 mt={1}
                 mb={15}
                 m={50}

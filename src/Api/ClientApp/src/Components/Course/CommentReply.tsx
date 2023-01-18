@@ -6,15 +6,12 @@ import {
   Avatar,
   Group,
   Box,
-  Anchor,
-  Modal,
   Button,
   Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import RichTextEditor from "@mantine/rte";
 import { UserRole } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
 import {

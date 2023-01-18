@@ -1,5 +1,6 @@
 import AddLesson from "@components/Ui/AddLessons";
 import { ILessons } from "@utils/services/courseService";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import Lesson from "./Lesson";
 
 const Lessons = ({
@@ -9,11 +10,29 @@ const Lessons = ({
   lessons: ILessons[];
   sectionId: string;
 }) => {
+  const items = lessons.map((x, index) => (
+    <Draggable key={x.slug} draggableId={x.slug} index={index}>
+      {(provided) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          <Lesson lesson={x} sectionId={sectionId} />
+        </div>
+      )}
+    </Draggable>
+  ));
   return (
     <>
-      {lessons.map((x) => (
-        <Lesson lesson={x} key={x.id} sectionId={sectionId} />
-      ))}
+      <Droppable droppableId={sectionId} direction="vertical" type="lesson">
+        {(provided) => (
+          <div {...provided.droppableProps} ref={provided.innerRef}>
+            {items}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
       <AddLesson sectionId={sectionId} />
     </>
   );

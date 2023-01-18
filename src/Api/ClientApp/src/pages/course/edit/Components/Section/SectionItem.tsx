@@ -1,10 +1,21 @@
 import DeleteModal from "@components/Ui/DeleteModal";
 import EditNameForm from "@components/Ui/EditNameForm";
 import { useSection } from "@context/SectionProvider";
-import { Button, Container, Group, Modal, Paper } from "@mantine/core";
+import {
+  ActionIcon,
+  Container,
+  createStyles,
+  Group,
+  Paper,
+} from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import { IconChevronRight, IconPencilMinus, IconTrashX } from "@tabler/icons";
+import {
+  IconChevronRight,
+  IconDragDrop,
+  IconPencilMinus,
+  IconTrashX,
+} from "@tabler/icons";
 import errorType from "@utils/services/axiosError";
 import {
   ISection,
@@ -12,9 +23,31 @@ import {
   useUpdateSectionName,
 } from "@utils/services/courseService";
 import { useState } from "react";
+import { DraggableStateSnapshot } from "react-beautiful-dnd";
 import Lessons from "./Lessons";
 
-const SectionItem = ({ item, slug }: { item: ISection; slug: string }) => {
+const useStyle = createStyles((theme) => ({
+  dragging: {
+    backgroundColor:
+      theme.colorScheme === "dark" ? theme.colors.blue : theme.colors.gray[3],
+  },
+  drop: {
+    backgroundColor:
+      theme.colorScheme === "dark" ? theme.colors.blue : theme.colors.gray[4],
+  },
+}));
+const SectionItem = ({
+  item,
+  slug,
+  dragHandleProps,
+  snapshot,
+}: {
+  item: ISection;
+  slug: string;
+  dragHandleProps: any;
+  snapshot: DraggableStateSnapshot;
+}) => {
+  const { theme, cx, classes } = useStyle();
   const [value, toggle] = useToggle();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const updateSection = useUpdateSectionName(slug);
@@ -40,80 +73,78 @@ const SectionItem = ({ item, slug }: { item: ISection; slug: string }) => {
       });
     }
   };
-  const active = () => section?.activeSection === item.slug;
+  const active = () => "true";
 
   return (
-    <div style={{ marginTop: "20px" }} key={item.id}>
+    <Paper
+      my={30}
+      withBorder
+      p={10}
+      className={cx({
+        [classes.dragging]: snapshot.isDragging,
+        [classes.drop]: snapshot.isDropAnimating,
+      })}
+    >
       <DeleteModal
         title={`Are you sure you want to delete?`}
         open={value}
         onClose={toggle}
         onConfirm={onDelete}
       />
-
-      {/* <Droppable droppableId={item.id} type="courses"> */}
-      {/* {(provided) => ( */}
-      <Paper
-        // ref={provided.innerRef}
-        // {...provided.droppableProps}
-        withBorder
-        p={10}
+      <Container
+        fluid
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
       >
-        <Container
-          fluid
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          {!isEditing ? (
-            <div>
-              {item.name}
-              <IconPencilMinus
-                size={16}
-                style={{ marginLeft: "10px", cursor: "pointer" }}
-                onClick={() => {
-                  setIsEditing(true);
-                }}
-              />
-            </div>
-          ) : (
-            <EditNameForm
-              updateFunction={updateSection}
-              item={item}
-              slug={slug}
-              setIsEditing={setIsEditing}
-            />
-          )}
-          <Group position="right" grow>
-            <IconTrashX
-              size={18}
-              style={{ color: "red", cursor: "pointer" }}
-              onClick={() => {
-                toggle();
-              }}
-            />
-            <IconChevronRight
+        {!isEditing ? (
+          <div>
+            {item.name}
+            <IconPencilMinus
               size={16}
+              style={{ marginLeft: "10px", cursor: "pointer" }}
               onClick={() => {
-                section?.setActiveSection(item.slug);
-              }}
-              style={{
-                transform: active() ? "rotate(90deg)" : "",
-                transition: "0.35s",
-                cursor: "pointer",
+                setIsEditing(true);
               }}
             />
-          </Group>
-        </Container>
-        {active() && item.lessons && (
-          <Lessons lessons={item.lessons} sectionId={item.slug} />
+          </div>
+        ) : (
+          <EditNameForm
+            updateFunction={updateSection}
+            item={item}
+            slug={slug}
+            setIsEditing={setIsEditing}
+          />
         )}
-        {/* {provided.placeholder} */}
-      </Paper>
-      {/* )} */}
-      {/* </Droppable> */}
-    </div>
+        <Group position="right" grow>
+          <IconTrashX
+            size={18}
+            style={{ color: "red", cursor: "pointer" }}
+            onClick={() => {
+              toggle();
+            }}
+          />
+          <IconChevronRight
+            size={16}
+            onClick={() => {
+              section?.setActiveSection(item.slug);
+            }}
+            style={{
+              transform: active() ? "rotate(90deg)" : "",
+              transition: "0.35s",
+              cursor: "pointer",
+            }}
+          />
+          <ActionIcon {...dragHandleProps}>
+            <IconDragDrop />
+          </ActionIcon>
+        </Group>
+      </Container>
+      {active() && item.lessons && (
+        <Lessons lessons={item.lessons} sectionId={item.slug} />
+      )}
+    </Paper>
   );
 };
 
