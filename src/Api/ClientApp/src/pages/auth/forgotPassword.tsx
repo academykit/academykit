@@ -9,6 +9,7 @@ import {
   Anchor,
   Box,
   Group,
+  Image,
 } from "@mantine/core";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
@@ -19,6 +20,7 @@ import { useForgotPassword, useLogin } from "@utils/services/authService";
 import Logo from "@components/Logo";
 import RoutePath from "@utils/routeConstants";
 import errorType from "@utils/services/axiosError";
+import { useCompanySetting } from "@utils/services/adminService";
 
 const ForgotPassword = () => {
   const location = useLocation();
@@ -58,12 +60,17 @@ const ForgotPassword = () => {
       navigate(from, { replace: true });
     }
   }, [auth?.auth]);
+  const companySettings = useCompanySetting();
 
   return (
     <Container size={470} my={40}>
       <Center m={"lg"}>
         <Link to={"/"}>
-          <Logo />
+          <Image
+            height={50}
+            width={50}
+            src={companySettings?.data?.data?.imageUrl}
+          ></Image>
         </Link>
       </Center>
       <Title
