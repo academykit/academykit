@@ -8,6 +8,7 @@ import {
   Center,
   Anchor,
   Group,
+  Image,
 } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { useForm } from "@mantine/form";
@@ -18,6 +19,7 @@ import { useLogin } from "@utils/services/authService";
 import Logo from "@components/Logo";
 import RoutePath from "@utils/routeConstants";
 import { IUserProfile } from "@utils/services/types";
+import { useGeneralSetting } from "@utils/services/adminService";
 
 const LoginPage = () => {
   const form = useForm({
@@ -62,12 +64,17 @@ const LoginPage = () => {
       });
     }
   }, [login.isError, login.isSuccess]);
+  const settings = useGeneralSetting();
 
   return (
     <Container size={420} my={40}>
       <Center m={"lg"}>
         <Link to={"/"}>
-          <Logo />
+          <Image
+            height={50}
+            width={50}
+            src={settings?.data?.data?.logoUrl}
+          ></Image>
         </Link>
       </Center>
       <Title
