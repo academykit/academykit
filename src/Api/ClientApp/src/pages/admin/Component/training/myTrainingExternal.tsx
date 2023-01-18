@@ -105,7 +105,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
         await addCertificate.mutateAsync(data);
       }
       showNotification({
-        message: "Certificate added successfully.",
+        message: `Certificate ${updates ? "edited" : "added"} successfully.`,
       });
       form.reset();
     } catch (error) {
@@ -191,10 +191,13 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
           <Card withBorder mt={10}>
             <Flex justify={"space-between"}>
               <Box>
-                <Text weight={"bold"}>
-                  {x.name}
-                  <Badge ml={20}>{CertificateStatus[x.status]}</Badge>
+                <Flex>
+                  <Text weight={"bold"}>
+                    {x.name}
+                    <Badge ml={20}>{CertificateStatus[x.status]}</Badge>
+                  </Text>
                   <ActionIcon
+                    ml={5}
                     onClick={() => {
                       setIdd(x);
                       setUpdates(true);
@@ -202,7 +205,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                   >
                     <IconEdit />
                   </ActionIcon>
-                </Text>
+                </Flex>
                 <Text mt={5}>
                   From {moment(x.startDate).format("YYYY-MM-DD")} to{" "}
                   {moment(x.endDate).format("YYYY-MM-DD")} completed in about{" "}
