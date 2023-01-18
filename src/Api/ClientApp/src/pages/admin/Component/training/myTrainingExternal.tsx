@@ -148,7 +148,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
               {...form.getInputProps("name")}
             />
             <TextInput
-              label="Duration"
+              label="Duration (hours)"
               name="duration"
               {...form.getInputProps("duration")}
             />
