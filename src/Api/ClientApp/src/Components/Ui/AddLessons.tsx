@@ -71,7 +71,7 @@ const LessonAddList = ({
             variant="outline"
             onClick={() => setAddState("lecture")}
           >
-            + Lecture
+            + Video
           </Badge>{" "}
           <Badge
             style={{ cursor: "pointer" }}
