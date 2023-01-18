@@ -19,9 +19,10 @@
         public string LevelName { get; set; }
         public CourseEnrollmentStatus? UserStatus { get; set; }
         public DateTime CreatedOn { get; set; }
-        public IList<CourseTagResponseModel> Tags { get; set; }
         public UserModel User { get; set; }
+        public IList<CourseTagResponseModel> Tags { get; set; }
         public IList<SectionResponseModel> Sections { get; set; }
+        public decimal? Percentage { get; set; }
 
         public CourseResponseModel(Course model, CourseEnrollmentStatus? userStatus, bool fetchSection = false)
         {

@@ -236,5 +236,18 @@ namespace Lingtren.Api.Controllers
         {
             return await _courseService.StudentLessonsDetail(identity, userId, CurrentUser.Id).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// User course api
+        /// </summary>
+        /// <param name="userId">the requested user id</param>
+        /// <param name="searchCriteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the search result of <see cref="CourseResponseModel"/></returns>
+        [HttpGet("user/{userId}")]
+        public async Task<SearchResult<CourseResponseModel>> GetUserCourses(Guid userId, [FromQuery] BaseSearchCriteria searchCriteria)
+        {
+            searchCriteria.CurrentUserId = CurrentUser.Id;
+            return await _courseService.GetUserCourses(userId, searchCriteria).ConfigureAwait(false);
+        }
     }
 }
