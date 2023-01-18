@@ -27,6 +27,10 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
         >
           View Result
         </Button>
+      ) : lesson.assignmentExpired ? (
+        <Text>
+          Assignment is Already Expired. Please contact admin for more details.
+        </Text>
       ) : (
         <Button
           component={Link}

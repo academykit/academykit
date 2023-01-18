@@ -467,9 +467,10 @@ export interface ICourseLesson {
   nextLessonSlug: string;
   hasResult: boolean;
   hasFeedbackSubmitted: boolean;
-remainingAttempt: number;
+  remainingAttempt: number;
   hasReviewedAssignment: boolean;
   assignmentReview?: ICourseLessonAssignmentReview;
+  assignmentExpired: boolean
 }
 
 const getCourseLesson = async (
