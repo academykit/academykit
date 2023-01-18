@@ -31,6 +31,9 @@
         public bool? HasFeedbackSubmitted { get; set; }
         public bool? HasReviewedAssignment { get; set; }
         public int? RemainingAttempt { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public bool AssignmentExpired { get; set; }
         public MeetingResponseModel? Meeting { get; set; }
         public QuestionSetResponseModel? QuestionSet { get; set; }
         public AssignmentReviewResponseModel? AssignmentReview { get; set; }
@@ -56,6 +59,8 @@
             SectionName = model.Section?.Name;
             MeetingId = model.MeetingId;
             QuestionSetId = model.QuestionSetId;
+            StartDate = model.StartDate;
+            EndDate = model.EndDate;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
             Meeting = model.Meeting == null ? null : new MeetingResponseModel(model.Meeting);
             QuestionSet = model.QuestionSet == null ? null : new QuestionSetResponseModel(model.QuestionSet);

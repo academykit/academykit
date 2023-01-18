@@ -131,14 +131,15 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
-                var members = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(predicate:p => p.GroupId == course.GroupId, include: s => s.Include(x =>x.User).Include(x => x.Group)).ConfigureAwait(false);
-                if(members.Count != default)
+                var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(predicate: x => x.Id == course.GroupId,
+                include: source => source.Include(x => x.GroupMembers).ThenInclude(x => x.User)).ConfigureAwait(false);
+                if(group.GroupMembers.Count != default)
                 {
-                    foreach(var member in members)
+                    foreach(var member in group.GroupMembers)
                     {
                         var fullName = string.IsNullOrEmpty(member.User?.MiddleName) ? $"{member.User?.FirstName} {member.User?.LastName}" : $"{member.User?.FirstName} {member.User?.MiddleName} {member.User?.LastName}";
                         var html = $"Dear {fullName},<br><br>";
-                        html += $"You have new {course.Name} training available for the {member.Group.Name}. Please, go to {member.Group.Name} to find the training there. <br><br>";
+                        html += $"You have new {course.Name} training available for the {group.Name} group. Please, go to {group.Name} group to find the training there. <br><br>";
                         html += $"Thank You, <br> {settings.CompanyName}";
 
                         var model = new EmailRequestDto

@@ -68,7 +68,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// </summary>
         /// <param name="criteria"> the instance of <see cref="CertificateBaseSearchCriteria" /> .</param>
         /// <param name="currentUserId"> the current user id </param>
-        /// <returns> the list of <see cref="CertificateReviewResponseModel" /> .</returns>
-        Task<SearchResult<CertificateReviewResponseModel>> GetReviewCertificatesAsync(CertificateBaseSearchCriteria criteria, Guid currentUserId);
+        /// <returns> the list of <see cref="CertificateResponseModel" /> .</returns>
+        Task<SearchResult<CertificateResponseModel>> GetReviewCertificatesAsync(CertificateBaseSearchCriteria criteria, Guid currentUserId);
     }
 }

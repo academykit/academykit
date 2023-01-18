@@ -722,7 +722,8 @@
                 predicate: p => p.UserId == userId && p.HasCertificateIssued.HasValue && p.HasCertificateIssued.Value,
                 include: src => src.Include(x => x.Course)
                 ).ConfigureAwait(false);
-
+            var externalCertificates = await _unitOfWork.GetRepository<Certificate>().GetAllAsync(predicate: p => p.CreatedBy == userId &&
+                                     p.Status == CertificateStatus.Approved).ConfigureAwait(false);
             var response = new UserResponseModel(user);
             foreach (var item in userCertificates)
             {
@@ -735,6 +736,19 @@
                     HasCertificateIssued = item.HasCertificateIssued,
                     CertificateIssuedDate = item.CertificateIssuedDate,
                     CertificateUrl = item.CertificateUrl,
+                });
+            }
+
+            foreach(var external in externalCertificates)
+            {
+                response.ExternalCertificates.Add(new ExternalCertificateResponseModel{
+                    Name = external.Name,
+                    StartDate = external.StartDate,
+                    EndDate = external.EndDate,
+                    ImageUrl = external.ImageUrl,
+                    Location = external.Location,
+                    Institute = external.Institute,
+                    Duration =  external.Duration != 0 ? external.Duration.ToString() : null
                 });
             }
             return response;
