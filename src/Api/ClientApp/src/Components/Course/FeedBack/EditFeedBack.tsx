@@ -30,7 +30,7 @@ const fieldSize = "md";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Title for feedback is required."),
-  type: Yup.string().required("Feedback is required!").nullable(),
+  type: Yup.string().required("Feedback type is required.").nullable(),
 
   answers: Yup.array()
     .when(["type"], {

@@ -110,7 +110,7 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
                   return <StudentAvatar data={x} />;
                 })
               ) : (
-                <Text size="xs">No Users Enrolled!</Text>
+                <Text size="xs">No Users Enrolled.</Text>
               )}
               {data.students.length > 3 && (
                 <Avatar radius="xl">+{data.students.length - 3}</Avatar>
