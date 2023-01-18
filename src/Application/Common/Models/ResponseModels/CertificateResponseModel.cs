@@ -1,4 +1,5 @@
 using Lingtren.Domain.Entities;
+using Lingtren.Domain.Enums;
 
 namespace Lingtren.Application.Common.Models.ResponseModels
 {
@@ -12,7 +13,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string Location { get; set; }
         public string Institute { get; set; }
         public string Duration { get; set; }
-        public string Status { get; set; }
+        public CertificateStatus Status { get; set; }
         public UserModel User { get; set; }
 
         public CertificateResponseModel()
@@ -30,7 +31,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             Location = certificate.Location;
             Institute = certificate.Institute;
             Duration = certificate.Duration != 0 ? certificate.Duration.ToString() : null;
-            Status = certificate.Status.ToString();
+            Status = certificate.Status;
         }
     }
 }

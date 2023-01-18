@@ -3,6 +3,7 @@ using Lingtren.Application.Common.Exceptions;
 using Lingtren.Application.Common.Interfaces;
 using Lingtren.Application.Common.Models.RequestModels;
 using Lingtren.Application.Common.Models.ResponseModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lingtren.Api.Controllers
@@ -50,6 +51,21 @@ namespace Lingtren.Api.Controllers
         {
             var model = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return new GeneralSettingResponseModel(model);
+        }
+
+        /// <summary>
+        /// get company info api
+        /// </summary>
+        /// <returns> the instance of <see cref="CompanyResponseModel" /> .</returns>
+        [HttpGet("company")]
+        [AllowAnonymous]
+        public async Task<CompanyResponseModel> Company()
+        {
+            var response = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
+            return new CompanyResponseModel{
+                Name = response.CompanyName,
+                ImageUrl = response.LogoUrl
+            };
         }
 
         /// <summary>
