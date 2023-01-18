@@ -67,6 +67,11 @@ const AdminNav = () => {
       to: RoutePath.settings.courses(),
       role: UserRole.Admin,
     },
+    {
+      label: "Certificates",
+      to: RoutePath.userCertificate,
+      role: UserRole.Admin,
+    },
     // { label: "Payment System", to: "/paymentmethods" },
   ];
   return <NavOutlet data={adminNavLink} />;

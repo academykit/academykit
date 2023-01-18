@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IUser } from "./types";
+import { IPaginated, IUser } from "./types";
 
 export interface ExternalCertificatePost{
     name: string;
@@ -23,14 +23,15 @@ export interface GetExternalCertificate extends ExternalCertificatePost
   
 
 const getExternalCertificate = () => {
-    return httpClient.get<GetExternalCertificate>(api.externalCertificate.add)
+    return httpClient.get<GetExternalCertificate[]>(api.externalCertificate.add)
 }
 
-export const useGetExternalCertificate = () => {
-    useQuery(['certificate',api.externalCertificate.add],
+export const useGetExternalCertificate = (isEnabled: boolean) => {
+   return useQuery(['certificate',api.externalCertificate.add],
     
     () => getExternalCertificate(), {
-        select: data => data.data
+        select: data => data.data,
+        enabled: isEnabled
     })
 }
 
@@ -47,3 +48,28 @@ queryClient.invalidateQueries(['certificate',api.externalCertificate.add])
         }
     })
   }
+
+const getUserCertificate = (id?: string) => {
+    return httpClient.get(api.externalCertificate.user(id))
+}
+
+export const useGetUserCertificate = (id?: string) => {
+    return useQuery([api.externalCertificate.user(id)], ()=>getUserCertificate(id), {
+        select: data => data.data,
+        enabled: !!id
+    })
+}
+
+interface ListCertificate {
+    id: string;
+    userName: string;
+    cerificateName: string;
+    userId: string;
+    startDate: string
+    endDate: string
+  }
+
+
+const getListCertificate = (query: string) => httpClient.get<IPaginated<ListCertificate>>(api.externalCertificate.list)
+
+export const useGetListCertificate = (query: string) => useQuery([api.externalCertificate.list,query], () => getListCertificate(query))

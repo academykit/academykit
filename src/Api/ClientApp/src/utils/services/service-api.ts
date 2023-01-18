@@ -222,6 +222,8 @@ export const api = {
       `/api/course/${courseId}/comments/${commentId}/commentReply/${replyId}`,
   },
   externalCertificate: {
-    add: '/api/certificate/external'
+    add: '/api/certificate/external',
+    user: (id?: string)=> `/api/certificate/external/${id}`,
+    list: `/api/certificate/review`
   }
 };

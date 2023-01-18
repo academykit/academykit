@@ -72,15 +72,7 @@ const UserRow = ({
       </td>
       <td>{UserRole[item.role]}</td>
       <td>{item?.email}</td>
-      <td>
-        <Badge
-          color={"pink"}
-          onClick={() => navigate(RoutePath.userCertificate + `/${item?.id}`)}
-          sx={{ cursor: "pointer" }}
-        >
-          Pending
-        </Badge>
-      </td>
+
       <td>{item?.mobileNumber}</td>
       <td>
         {item?.isActive ? (
@@ -129,7 +121,6 @@ const UserMemberTable = ({
             <th>User</th>
             <th>Role</th>
             <th>Email</th>
-            <th>Certificate</th>
             <th>Phone Number</th>
             <th>Active Status</th>
             <th>Actions</th>

@@ -21,6 +21,7 @@ import Layout from "@components/Layout/Layout";
 import AdminAuthRoute from "./AdminRoute";
 import lazyWithRetry from "@utils/lazyImportWithReload";
 import MyTrainingExternal from "@pages/admin/Component/training/myTrainingExternal";
+import CertificateList from "@pages/admin/Component/training/certificateList";
 const MyFeedback = lazyWithRetry(
   () => import("@pages/course/feedback/myfeedback")
 );
@@ -116,6 +117,7 @@ const MainRoutes = () => {
           path={RoutePath.courses.courseList + "*"}
           element={<CourseListRoute />}
         />
+        <Route path={RoutePath.userCertificate} element={<CertificateList />} />
         <Route
           path={RoutePath.userCertificate + `/:id`}
           element={<MyTrainingExternal />}
