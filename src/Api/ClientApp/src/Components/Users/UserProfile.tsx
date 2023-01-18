@@ -162,39 +162,36 @@ const UserProfile = () => {
           )}
         </Paper>
       </div>
-      {auth?.auth &&
-        auth?.auth.role === UserRole.Trainee &&
-        data?.certificates &&
-        data?.certificates?.length > 0 && (
-          <>
-            <Title mt={"xl"}>Certificate</Title>
-            <ScrollArea>
-              <Paper mt={10}>
-                <Table
-                  sx={{ minWidth: 800 }}
-                  verticalSpacing="sm"
-                  striped
-                  highlightOnHover
-                >
-                  <thead>
-                    <tr>
-                      <th>Trainings Name</th>
-                      <th>Completion</th>
-                      <th>isIssued</th>
-                      <th>Certificate URL</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data?.certificates &&
-                      data?.certificates.map((x: any) => (
-                        <RowsCompleted key={x.userId} item={x} />
-                      ))}
-                  </tbody>
-                </Table>
-              </Paper>
-            </ScrollArea>
-          </>
-        )}
+      {auth?.auth && data?.certificates && data?.certificates?.length > 0 && (
+        <>
+          <Title mt={"xl"}>Certificate</Title>
+          <ScrollArea>
+            <Paper mt={10}>
+              <Table
+                sx={{ minWidth: 800 }}
+                verticalSpacing="sm"
+                striped
+                highlightOnHover
+              >
+                <thead>
+                  <tr>
+                    <th>Trainings Name</th>
+                    <th>Completion</th>
+                    <th>isIssued</th>
+                    <th>Certificate URL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data?.certificates &&
+                    data?.certificates.map((x: any) => (
+                      <RowsCompleted key={x.userId} item={x} />
+                    ))}
+                </tbody>
+              </Table>
+            </Paper>
+          </ScrollArea>
+        </>
+      )}
     </>
   );
 };

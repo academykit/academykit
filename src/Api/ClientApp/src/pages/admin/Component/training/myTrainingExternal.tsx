@@ -149,7 +149,9 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                 <Text weight={"bold"}>Location: {x.location}</Text>
                 <Text weight={"bold"}>Institute: {x.institute}</Text>
               </Box>
-              <Box style={{ width: 150, marginTop: "auto" }}>
+              <Box
+                style={{ width: 150, marginTop: "auto", marginBottom: "auto" }}
+              >
                 <div style={{ position: "relative" }}>
                   <Image
                     src={x.imageUrl || ""}
@@ -185,14 +187,16 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                 </div>
               </Box>
             </Flex>
-            {auth?.auth && auth.auth.role <= UserRole.Admin && (
-              <Box mt={10}>
-                <Button>Approve</Button>
-                <Button ml={10} variant="outline" color={"red"}>
-                  Reject
-                </Button>
-              </Box>
-            )}
+            {auth?.auth &&
+              auth.auth.role <= UserRole.Admin &&
+              auth.auth.id !== x.user.id && (
+                <Box mt={10}>
+                  <Button>Approve</Button>
+                  <Button ml={10} variant="outline" color={"red"}>
+                    Reject
+                  </Button>
+                </Box>
+              )}
           </Card>
         ))}
     </div>
