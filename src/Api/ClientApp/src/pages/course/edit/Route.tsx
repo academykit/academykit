@@ -1,8 +1,11 @@
+import useAuth from "@hooks/useAuth";
 import { Loader } from "@mantine/core";
+import Forbidden from "@pages/403";
+import { CourseUserStatus, UserRole } from "@utils/enums";
 import lazyWithRetry from "@utils/lazyImportWithReload";
 import { useCourseDescription } from "@utils/services/courseService";
 import React, { useEffect } from "react";
-import { Routes, Route, useParams } from "react-router-dom";
+import { Routes, Route, useParams, useNavigate } from "react-router-dom";
 
 const LessonDetails = lazyWithRetry(() => import("../manage/lessonDetails"));
 const ManageCourse = lazyWithRetry(() => import("../manage/manage"));
@@ -21,12 +24,24 @@ const ManageStudents = lazyWithRetry(() => import("../manage/Student"));
 const CourseRoute = () => {
   const params = useParams();
   const courseDetail = useCourseDescription(params.id as string);
+  const auth = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (courseDetail.isError) {
       throw courseDetail.error;
     }
+
+
+
   }, [courseDetail.isError]);
+
+if(courseDetail.isSuccess){
+  if(!(courseDetail.data.userStatus === (CourseUserStatus.Author || CourseUserStatus.Teacher) || auth?.auth && auth.auth.role <= UserRole.Admin)){
+    return navigate('/403') 
+  }
+}
+
 
   return courseDetail.isLoading ? (
     <Loader />

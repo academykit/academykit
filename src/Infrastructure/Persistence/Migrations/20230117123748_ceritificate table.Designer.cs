@@ -3,6 +3,7 @@ using System;
 using Lingtren.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230117123748_ceritificate table")]
+    partial class ceritificatetable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -430,8 +432,9 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnName("duration");
 
                     b.Property<DateTime>("EndDate")
+                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("DATETIME")
-                        .HasColumnName("end_date");
+                        .HasColumnName("start_date");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("VARCHAR(200)")
@@ -441,6 +444,12 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("VARCHAR(100)");
+
+                    b.Property<bool>("IsVerified")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_verified");
 
                     b.Property<string>("Location")
                         .HasColumnType("VARCHAR(100)")
@@ -453,12 +462,9 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime>("StartDate")
+                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("DATETIME")
                         .HasColumnName("start_date");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int")
-                        .HasColumnName("status");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
@@ -1456,10 +1462,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("duration");
 
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("end_date");
-
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
@@ -1500,10 +1502,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(270)
                         .HasColumnType("VARCHAR(270)")
                         .HasColumnName("slug");
-
-                    b.Property<DateTime?>("StartDate")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("start_date");
 
                     b.Property<int>("Status")
                         .HasColumnType("int")

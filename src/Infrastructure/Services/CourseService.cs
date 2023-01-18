@@ -1,5 +1,6 @@
 namespace Lingtren.Infrastructure.Services
 {
+    using Hangfire;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -354,6 +355,16 @@ namespace Lingtren.Infrastructure.Services
             _unitOfWork.GetRepository<Lesson>().Update(lessons);
             _unitOfWork.GetRepository<Course>().Update(course);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+            if(status == CourseStatus.Review)
+            {
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseReviewMailAsync(course.Name, null));
+            }
+
+            if (status == CourseStatus.Published)
+            {
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.GroupCoursePublishedMail(course, null));
+            }
         }
 
         /// <summary>

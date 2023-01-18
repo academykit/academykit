@@ -11,7 +11,6 @@
 
     public class EmailService : IEmailService
     {
-        private readonly string _footerEmail = "Sincerely,<br>- The Vurilo Team";
         private readonly ILogger<EmailService> _logger;
         private readonly ISMTPSettingService _smtpSettingService;
         private readonly IWebHostEnvironment _hostingEnvironment;
@@ -81,14 +80,15 @@
         /// <param name="emailAddress">the email address of the receiver</param>
         /// <param name="firstName">the first name of the receiver</param>
         /// <param name="resetToken">the reset token</param>
+        /// <param name="companyName"> the company name </param>
         /// <returns></returns>
-        public async Task SendForgetPasswordEmail(string emailAddress, string firstName, string resetToken)
+        public async Task SendForgetPasswordEmail(string emailAddress, string firstName, string resetToken, string companyName)
         {
             try
             {
                 var html = $"Dear {firstName},<br><br>";
                 html += $"Requested for password reset. <br> Your Token is <b><u>{resetToken}</u></b> for password reset. Token is valid for 5 minutes only.<br><br>";
-                html += _footerEmail;
+                html += $"Thank You,<br> {companyName}";
 
                 var mail = new EmailRequestDto
                 {
@@ -110,14 +110,15 @@
         /// <param name="emailAddress">the email address of the receiver</param>
         /// <param name="firstName">the first name of the receiver</param>
         /// <param name="password">the login password of the receiver</param>
+        /// <param name="companyName"> the company name </param>
         /// <returns></returns>
-        public async Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password)
+        public async Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password, string companyName)
         {
             try
             {
                 var html = $"Dear {firstName},<br><br>";
                 html += $"Your account has been created in Vurilo Team. <br> Your Login Password is <b><u>{password}</u></b><br><br>";
-                html += _footerEmail;
+                html += $"Thank You,<br> {companyName}";
 
                 var mail = new EmailRequestDto
                 {
@@ -140,15 +141,16 @@
         /// <param name="firstName">the first name of the receiver</param>
         /// <param name="token">the jwt token</param>
         /// <param name="expiredTime">the login password of the receiver</param>
+        /// <param name="companyName"> the company name </param>
         /// <returns></returns>
-        public async Task SendChangePasswordMailAsync(string email, string firstName, string token, int expiredTime)
+        public async Task SendChangePasswordMailAsync(string email, string firstName, string token, int expiredTime, string companyName)
         {
             try
             {
                 var html = $"Dear {firstName},<br><br>";
                 html += @$"Please <a href='{_appUrl}/changeEmail?token={token}'> <u  style='color:blue;'>Click here</u></a> to change the email for E-learning. 
                                 <br> The link will expire in {expiredTime} minute<br><br>";
-                html += _footerEmail;
+                html += $"Thank You,<br> {companyName}";
 
                 var mail = new EmailRequestDto
                 {

@@ -11,14 +11,17 @@
     public class CertificateController : BaseApiController
     {
         private readonly ICourseService _courseService;
+        private readonly ICertificateService _certificateService;
         private readonly IValidator<CourseCertificateRequestModel> _validator;
         public CertificateController(
             ICourseService courseService,
+            ICertificateService certificateService,
             IValidator<CourseCertificateRequestModel> validator)
 
         {
             _courseService = courseService;
             _validator = validator;
+            _certificateService = certificateService;
         }
 
         /// <summary>

@@ -116,7 +116,7 @@ export const User = ({
           Your progress on learning materials:
         </Text>
       ) : (
-        <Text c="dimmed">You are not enrolled to any Trainings.</Text>
+        <Text c="dimmed">You are not enrolled to any training.</Text>
       )}
 
       <SimpleGrid

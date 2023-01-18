@@ -3,6 +3,7 @@ using System;
 using Lingtren.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230118062339_alter_table_assignment_certificate")]
+    partial class alter_table_assignment_certificate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,6 +44,10 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(5000)")
                         .HasColumnName("description");
 
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("end_date");
+
                     b.Property<string>("Hints")
                         .HasMaxLength(5000)
                         .HasColumnType("VARCHAR(5000)")
@@ -69,6 +75,10 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0)
                         .HasColumnName("order");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("start_date");
 
                     b.Property<int>("Type")
                         .HasColumnType("int")
@@ -1456,10 +1466,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("duration");
 
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("end_date");
-
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
@@ -1500,10 +1506,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(270)
                         .HasColumnType("VARCHAR(270)")
                         .HasColumnName("slug");
-
-                    b.Property<DateTime?>("StartDate")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("start_date");
 
                     b.Property<int>("Status")
                         .HasColumnType("int")

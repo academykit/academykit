@@ -22,6 +22,7 @@
         public DateTime CreatedOn { get; set; }
         public string FullName { get; set; }
         public IList<CourseCertificateIssuedResponseModel> Certificates { get; set; } = new List<CourseCertificateIssuedResponseModel>();
+        public IList<ExternalCertificateResponseModel> ExternalCertificates { get; set; }
         public UserResponseModel(User user)
         {
             Id = user.Id;

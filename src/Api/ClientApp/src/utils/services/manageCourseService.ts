@@ -235,6 +235,7 @@ export const useGetCourseManageStatistics = (courseIdentity: string) => {
       select: (data) => {
         return data.data;
       },
+      retry: false
     }
   );
 };
