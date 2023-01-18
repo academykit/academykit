@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using Hangfire;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -227,6 +228,10 @@
                 }
                 await _unitOfWork.GetRepository<GroupMember>().InsertAsync(groupMembers).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                if(usersToBeAdded.ToList().Count != default)
+                {
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendMailNewGroupMember(group.Name,usersToBeAdded.ToList(),null));
+                }
 
                 var result = new GroupAddMemberResponseModel();
 

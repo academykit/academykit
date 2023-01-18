@@ -52,6 +52,7 @@
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<FeedbackQuestionOption> FeedbackQuestionOptions { get; set; }
         public DbSet<FeedbackSubmission> FeedbackSubmissions { get; set; }
+        public DbSet<Certificate> Certificates { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
