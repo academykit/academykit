@@ -38,7 +38,7 @@ const getQuestionType = () => {
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Title of Question is required."),
-  type: Yup.string().required("Question is required!").nullable(),
+  type: Yup.string().required("Question type is required.").nullable(),
 
   answers: Yup.array()
     .when(["type"], {

@@ -176,6 +176,7 @@ namespace Lingtren.Infrastructure.Services
                     predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId && !p.IsDeleted,
                     include: src => src.Include(x => x.User)
                     ).ConfigureAwait(false);
+
                 if (assignmentReview != null)
                 {
                     hasReviewedAssignment = true;
@@ -232,6 +233,11 @@ namespace Lingtren.Infrastructure.Services
                 responseModel.NextLessonSlug = lessons.GetItemByIndex(nextLessonIndex)?.Slug;
             }
 
+            if(lesson.Type == LessonType.Assignment && lesson.EndDate.HasValue)
+            {
+                responseModel.AssignmentExpired = lesson.EndDate <= DateTime.UtcNow;
+            }
+
             responseModel.HasResult = hasResult;
             responseModel.HasReviewedAssignment = hasReviewedAssignment;
             responseModel.AssignmentReview = review;
@@ -279,6 +285,8 @@ namespace Lingtren.Infrastructure.Services
                     IsMandatory = model.IsMandatory,
                     SectionId = section.Id,
                     Status = CourseStatus.Draft,
+                    StartDate = model.StartDate,
+                    EndDate = model.EndDate,
                     CreatedBy = currentUserId,
                     CreatedOn = currentTimeStamp,
                     UpdatedBy = currentUserId,

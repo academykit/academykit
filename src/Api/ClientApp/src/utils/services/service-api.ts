@@ -19,6 +19,7 @@ export const api = {
     users: (queryString: any) => `api/user?${queryString}`,
     addUsers: `api/user`,
     editUsers: (userId: string) => `api/user/${userId}`,
+    getCompanySettings:`api/admin/settings/company`,
     getGeneralSettings: `api/admin/settings`,
     getZoomSettings: `api/admin/settings/zoom`,
     getZoomLicense: `api/zoomlicense`,

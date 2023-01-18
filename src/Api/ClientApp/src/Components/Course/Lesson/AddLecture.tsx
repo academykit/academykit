@@ -108,6 +108,8 @@ const AddLecture = ({
                 sx={{ width: "100%" }}
                 label="Video Name"
                 placeholder="Video Name"
+                label="Video Name"
+                placeholder="Video Name"
                 withAsterisk
                 {...form.getInputProps("name")}
               />
@@ -124,13 +126,17 @@ const AddLecture = ({
               />
             </Grid.Col>
           </Grid>
-          <Text size={'sm'} mt={10}>Video <span style={{color: 'red'}}>*</span></Text>
+          <Text size={"sm"} mt={10}>
+            Video <span style={{ color: "red" }}>*</span>
+          </Text>
           <LessonVideoUpload
             setUrl={setVideoUrl}
             currentVideo={videoUrl}
             marginy={1}
           />
           <Textarea
+            placeholder="Video's Description"
+            label="Video Description"
             placeholder="Video's Description"
             label="Video Description"
             mb={10}

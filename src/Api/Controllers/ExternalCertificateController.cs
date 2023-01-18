@@ -92,12 +92,12 @@ namespace Lingtren.Api.Controllers
         /// get in review certificate async
         /// </summary>
         /// <param name="criteria"> the instance of <see cref="CertificateBaseSearchCriteria" /> .</param>
-        /// <returns> the list of <see cref="CertificateReviewResponseModel" /> .</returns>
+        /// <returns> the list of <see cref="CertificateResponseModel" /> .</returns>
         [HttpGet("review")]
-        public async Task<SearchResult<CertificateReviewResponseModel>> GetReviews([FromQuery]CertificateBaseSearchCriteria criteria)
+        public async Task<SearchResult<CertificateResponseModel>> GetReviews([FromQuery]CertificateBaseSearchCriteria criteria)
         {
             var searchResult = await _certificateService.GetReviewCertificatesAsync(criteria,CurrentUser.Id).ConfigureAwait(false);
-            var response = new SearchResult<CertificateReviewResponseModel>()
+            var response = new SearchResult<CertificateResponseModel>()
             {
                 Items = searchResult.Items,
                 PageSize = searchResult.PageSize,

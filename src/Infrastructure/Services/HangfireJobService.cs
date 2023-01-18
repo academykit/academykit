@@ -11,7 +11,6 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using System;
-    using static Dapper.SqlMapper;
 
     public class HangfireJobService : BaseService, IHangfireJobService
     {
@@ -47,7 +46,7 @@ namespace Lingtren.Infrastructure.Services
                 foreach (var user in users)
                 {
                     var fullName = string.IsNullOrEmpty(user.MiddleName) ? $"{user.FirstName} {user.LastName}" : $"{user.FirstName} {user.MiddleName} {user.LastName}";
-                    var html = $"Dear {fullName},<br>";
+                    var html = $"Dear {fullName},<br><br>";
                     html += $"You have new {courseName} training available for the review process. <br><br>";
                     html += $"Thank You, <br> {settings.CompanyName}";
                     var model = new EmailRequestDto
@@ -96,7 +95,7 @@ namespace Lingtren.Infrastructure.Services
                 foreach (var user in users)
                 {
                     var fullName = string.IsNullOrEmpty(user.MiddleName) ? $"{user.FirstName} {user.LastName}" : $"{user.FirstName} {user.MiddleName} {user.LastName}";
-                    var html = $"Dear {fullName},<br>";
+                    var html = $"Dear {fullName},<br><br>";
                     html += $"You have been added to the {gropName}. Now you can find the Training Materials which has been created for this {gropName}. <br><br>";
                     html += $"Thank You, <br> {settings.CompanyName}";
                     var model = new EmailRequestDto
@@ -132,14 +131,15 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
-                var members = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(predicate:p => p.GroupId == course.GroupId, include: s => s.Include(x =>x.User).Include(x => x.Group)).ConfigureAwait(false);
-                if(members.Count != default)
+                var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(predicate: x => x.Id == course.GroupId,
+                include: source => source.Include(x => x.GroupMembers).ThenInclude(x => x.User)).ConfigureAwait(false);
+                if(group.GroupMembers.Count != default)
                 {
-                    foreach(var member in members)
+                    foreach(var member in group.GroupMembers)
                     {
                         var fullName = string.IsNullOrEmpty(member.User?.MiddleName) ? $"{member.User?.FirstName} {member.User?.LastName}" : $"{member.User?.FirstName} {member.User?.MiddleName} {member.User?.LastName}";
-                        var html = $"Dear {fullName},<br>";
-                        html += $"You have new {course.Name} training available for the {member.Group.Name}. Please, go to {member.Group.Name} to find the training there. <br><br>";
+                        var html = $"Dear {fullName},<br><br>";
+                        html += $"You have new {course.Name} training available for the {group.Name} group. Please, go to {group.Name} group to find the training there. <br><br>";
                         html += $"Thank You, <br> {settings.CompanyName}";
 
                         var model = new EmailRequestDto

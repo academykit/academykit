@@ -16,8 +16,9 @@
         /// <param name="emailAddress">the email address of the receiver</param>
         /// <param name="firstName">the first name of the receiver</param>
         /// <param name="resetToken">the reset token</param>
+        /// <param name="companyName"> the company name </param>
         /// <returns></returns>
-        Task SendForgetPasswordEmail(string emailAddress, string firstName, string resetToken);
+        Task SendForgetPasswordEmail(string emailAddress, string firstName, string resetToken, string companyName);
 
         /// <summary>
         /// Email for account created and password
@@ -25,8 +26,9 @@
         /// <param name="emailAddress">the email address of the receiver</param>
         /// <param name="firstName">the first name of the receiver</param>
         /// <param name="password">the login password of the receiver</param>
+        /// <param name="companyName"> the company name </param>
         /// <returns></returns>
-        Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password);
+        Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password, string companyName);
 
         /// <summary>
         /// Email for account created and password
@@ -35,7 +37,8 @@
         /// <param name="firstName">the first name of the receiver</param>
         /// <param name="token">the jwt token</param>
         /// <param name="expiredTime">the login password of the receiver</param>
+        /// <param name="companyName"> the company name </param>
         /// <returns></returns>
-        Task SendChangePasswordMailAsync(string email, string firstName, string token, int expiredTime);
+        Task SendChangePasswordMailAsync(string email, string firstName, string token, int expiredTime, string companyName);
     }
 }

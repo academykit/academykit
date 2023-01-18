@@ -23,6 +23,8 @@ namespace Lingtren.Domain.Entities
         public Guid? MeetingId { get; set; }
         public Meeting Meeting { get; set; }
         public Guid? QuestionSetId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public QuestionSet QuestionSet { get; set; }
         public User User { get; set; }
         public string VideoKey { get; set; }

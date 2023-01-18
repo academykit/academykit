@@ -6,7 +6,6 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Helpers;
     using Microsoft.Extensions.Logging;
     using Microsoft.EntityFrameworkCore;
     using Lingtren.Application.Common.Dtos;
@@ -144,7 +143,7 @@ namespace Lingtren.Infrastructure.Services
                     ImageUrl = x.ImageUrl,
                     Duration = x.Duration != default ? x.Duration.ToString() : null,
                     Location = x.Location,
-                    Status = x.Status.ToString(),
+                    Status = x.Status,
                     User = new UserModel(x.User)
                 }).ToList();
                 return response;
@@ -193,7 +192,7 @@ namespace Lingtren.Infrastructure.Services
                     ImageUrl = ceritifcate.ImageUrl,
                     Duration = ceritifcate.Duration != default ? ceritifcate.Duration.ToString() : null,
                     Location = ceritifcate.Location,
-                    Status = ceritifcate.Status.ToString(),
+                    Status = ceritifcate.Status,
                     User = new UserModel(ceritifcate.User)
                 };
             });
@@ -221,7 +220,7 @@ namespace Lingtren.Infrastructure.Services
                     ImageUrl = x.ImageUrl,
                     Duration = x.Duration != default ? x.Duration.ToString() : null,
                     Location = x.Location,
-                   Status = x.Status.ToString(),
+                   Status = x.Status,
                     User = new UserModel(x.User)
                 }).ToList();
                 return response;
@@ -238,8 +237,8 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="criteria"> the instance of <see cref="CertificateBaseSearchCriteria" /> .</param>
         /// <param name="currentUserId"> the current user id </param>
-        /// <returns> the list of <see cref="CertificateReviewResponseModel" /> .</returns>
-        public async Task<SearchResult<CertificateReviewResponseModel>> GetReviewCertificatesAsync(CertificateBaseSearchCriteria criteria, Guid currentUserId)
+        /// <returns> the list of <see cref="CertificateResponseModel" /> .</returns>
+        public async Task<SearchResult<CertificateResponseModel>> GetReviewCertificatesAsync(CertificateBaseSearchCriteria criteria, Guid currentUserId)
         {
             try
             {
@@ -251,14 +250,18 @@ namespace Lingtren.Infrastructure.Services
                 var certificates = await _unitOfWork.GetRepository<Certificate>().GetAllAsync(predicate: p => p.Status == CertificateStatus.Draft,
                 include: source => source.Include(x => x.User)).ConfigureAwait(false);
 
-                var response = certificates.Select(x => new CertificateReviewResponseModel
+                var response = certificates.Select(x => new CertificateResponseModel
                 {
                     Id = x.Id,
-                    CerificateName = x.Name,
+                    Name = x.Name,
                     StartDate = x.StartDate,
                     EndDate = x.EndDate,
-                    UserId = x.CreatedBy,
-                    UserName = x.User.FullName
+                    Institute = x.Institute,
+                    ImageUrl = x.ImageUrl,
+                    Duration = x.Duration != default ? x.Duration.ToString() : null,
+                    Location = x.Location,
+                    Status = x.Status,
+                    User = new UserModel(x.User)
                 }).ToList();
                 return response.ToIPagedList(criteria.Page, criteria.Size);
             }

@@ -73,6 +73,14 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
       role: UserRole.Admin,
     },
     {
+      icon: <IconUsers size={16} />,
+      color: "yellow",
+      label: "Groups",
+      href: "/groups",
+      replace: true,
+      role: UserRole.Trainee,
+    },
+    {
       icon: <IconCertificate size={16} />,
       color: "red",
       label: "Trainings",
@@ -88,14 +96,7 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
       replace: true,
       role: UserRole.Trainer,
     },
-    {
-      icon: <IconUsers size={16} />,
-      color: "yellow",
-      label: "Groups",
-      href: "/groups",
-      replace: true,
-      role: UserRole.Trainee,
-    },
+
 
     {
       icon: <IconSettings size={16} />,

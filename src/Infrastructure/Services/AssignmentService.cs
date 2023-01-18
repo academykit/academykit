@@ -286,6 +286,7 @@
                     predicate: p => p.LessonId == lesson.Id && p.IsActive,
                     include: src => src.Include(x => x.AssignmentQuestionOptions)).ConfigureAwait(false);
 
+
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
                     predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
                     ).ConfigureAwait(false);
