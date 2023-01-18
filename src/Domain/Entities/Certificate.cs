@@ -1,6 +1,8 @@
 namespace Lingtren.Domain.Entities
 {
     using Lingtren.Domain.Common;
+    using Lingtren.Domain.Enums;
+
     public class Certificate : AuditableEntity
     {
         public string Name { get; set; }
@@ -11,6 +13,6 @@ namespace Lingtren.Domain.Entities
         public string Institute { get; set; }
         public int? Duration { get; set; }
         public User User { get; set; }
-        public bool IsVerified { get; set; }
+        public CertificateStatus Status { get; set; }
     }
 }

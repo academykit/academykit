@@ -12,7 +12,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string Location { get; set; }
         public string Institute { get; set; }
         public string Duration { get; set; }
-        public bool IsVerified { get; set; }
+        public string Status { get; set; }
         public UserModel User { get; set; }
 
         public CertificateResponseModel()
@@ -30,8 +30,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             Location = certificate.Location;
             Institute = certificate.Institute;
             Duration = certificate.Duration != 0 ? certificate.Duration.ToString() : null;
-            IsVerified = certificate.IsVerified;
-
+            Status = certificate.Status.ToString();
         }
     }
 }

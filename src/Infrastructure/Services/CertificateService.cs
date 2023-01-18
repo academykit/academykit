@@ -10,6 +10,7 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.Extensions.Logging;
     using Microsoft.EntityFrameworkCore;
     using Lingtren.Application.Common.Dtos;
+    using Lingtren.Domain.Enums;
 
     public class CertificateService : BaseService, ICertificateService
     {
@@ -36,7 +37,7 @@ namespace Lingtren.Infrastructure.Services
                     ImageUrl = model.ImageUrl,
                     Institute = model.Institute,
                     Duration = model.Duration,
-                    IsVerified = false,
+                    Status =CertificateStatus.Draft,
                     Location = model.Location,
                     CreatedBy = currentUserId,
                     CreatedOn = DateTime.UtcNow
@@ -69,9 +70,9 @@ namespace Lingtren.Infrastructure.Services
                     throw new ForbiddenException("Unauthorized user.");
                 }
 
-                if (ceritificate.IsVerified)
+                if (ceritificate.Status == CertificateStatus.Approved)
                 {
-                    throw new ArgumentException("Cerificate with identity : {identity} is already verified.");
+                    throw new ArgumentException("Cerificate with identity : {identity} is already approved.");
                 }
 
                 ceritificate.Name = model.Name;
@@ -143,7 +144,7 @@ namespace Lingtren.Infrastructure.Services
                     ImageUrl = x.ImageUrl,
                     Duration = x.Duration != default ? x.Duration.ToString() : null,
                     Location = x.Location,
-                    IsVerified = x.IsVerified,
+                    Status = x.Status.ToString(),
                     User = new UserModel(x.User)
                 }).ToList();
                 return response;
@@ -173,7 +174,7 @@ namespace Lingtren.Infrastructure.Services
                     throw new EntityNotFoundException("Certificate not found");
                 }
 
-                if (!ceritifcate.IsVerified)
+                if (ceritifcate.Status == CertificateStatus.Draft || ceritifcate.Status == CertificateStatus.Rejected)
                 {
                     var isAccess = await UnverifiedCertificateAccess(ceritifcate, currentUserId).ConfigureAwait(false);
                     if (!isAccess)
@@ -192,7 +193,7 @@ namespace Lingtren.Infrastructure.Services
                     ImageUrl = ceritifcate.ImageUrl,
                     Duration = ceritifcate.Duration != default ? ceritifcate.Duration.ToString() : null,
                     Location = ceritifcate.Location,
-                    IsVerified = ceritifcate.IsVerified,
+                    Status = ceritifcate.Status.ToString(),
                     User = new UserModel(ceritifcate.User)
                 };
             });
@@ -207,7 +208,7 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var certificates = await _unitOfWork.GetRepository<Certificate>().GetAllAsync(predicate: p => p.CreatedBy == userId && p.IsVerified,
+                var certificates = await _unitOfWork.GetRepository<Certificate>().GetAllAsync(predicate: p => p.CreatedBy == userId && p.Status == CertificateStatus.Approved,
                 include: source => source.Include(x => x.User)).ConfigureAwait(false);
 
                 var response = certificates.Select(x => new CertificateResponseModel
@@ -220,7 +221,7 @@ namespace Lingtren.Infrastructure.Services
                     ImageUrl = x.ImageUrl,
                     Duration = x.Duration != default ? x.Duration.ToString() : null,
                     Location = x.Location,
-                    IsVerified = x.IsVerified,
+                   Status = x.Status.ToString(),
                     User = new UserModel(x.User)
                 }).ToList();
                 return response;
@@ -247,7 +248,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ForbiddenException("Unauthorized user");
                 }
-                var certificates = await _unitOfWork.GetRepository<Certificate>().GetAllAsync(predicate: p => !p.IsVerified,
+                var certificates = await _unitOfWork.GetRepository<Certificate>().GetAllAsync(predicate: p => p.Status == CertificateStatus.Draft,
                 include: source => source.Include(x => x.User)).ConfigureAwait(false);
 
                 var response = certificates.Select(x => new CertificateReviewResponseModel
@@ -272,9 +273,10 @@ namespace Lingtren.Infrastructure.Services
         /// Handle to verify certificate
         /// </summary>
         /// <param name="identity"> the certificate id or slug </param>
+        /// <param name="status"> the certificate status </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
-        public async Task VerifyCertificateAsync(Guid identity, Guid currentUserId)
+        public async Task VerifyCertificateAsync(Guid identity,CertificateStatus status, Guid currentUserId)
         {
             try
             {
@@ -291,7 +293,11 @@ namespace Lingtren.Infrastructure.Services
                     throw new EntityNotFoundException("Certificate not found");
                 }
 
-                ceritifcate.IsVerified = true;
+                ceritifcate.Status = status;
+                if(status == CertificateStatus.Rejected)
+                {
+                    ceritifcate.Status = CertificateStatus.Draft;
+                }
                 _unitOfWork.GetRepository<Certificate>().Update(ceritifcate);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
