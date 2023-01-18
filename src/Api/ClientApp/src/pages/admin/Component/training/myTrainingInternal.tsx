@@ -19,6 +19,9 @@ const MyTrainingInternal = () => {
 
   return (
     <Container fluid>
+      {internal.isSuccess && internal.data.data.length <= 0 && (
+        <Box>No Certificates Found.</Box>
+      )}
       {internal.isSuccess &&
         internal.data.data.map((x) => (
           <Card withBorder mt={10}>
