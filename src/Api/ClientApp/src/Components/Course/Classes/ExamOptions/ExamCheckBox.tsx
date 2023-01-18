@@ -1,33 +1,42 @@
-import { Box, Card, createStyles, Group, Title } from '@mantine/core';
-import { UseFormReturnType } from '@mantine/form';
-import RichTextEditor from '@mantine/rte';
-import { ILessonStartQuestion, ILessonStartQuestionOption } from '@utils/services/examService';
-import React from 'react'
+import { Box, Card, createStyles, Group, Title } from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import RichTextEditor from "@mantine/rte";
+import {
+  ILessonStartQuestion,
+  ILessonStartQuestionOption,
+} from "@utils/services/examService";
 
 const useStyle = createStyles((theme) => ({
-    option: {
-      ">label": {
-        cursor: "pointer",
-      },
+  option: {
+    ">label": {
+      cursor: "pointer",
     },
-    active: {
-      outline: `2px solid ${theme.colors[theme.primaryColor][1]}`,
-    },
-  }));
+  },
+  active: {
+    outline: `2px solid ${theme.colors[theme.primaryColor][1]}`,
+  },
+}));
 
 type Props = {
-    form: UseFormReturnType<ILessonStartQuestion<ILessonStartQuestionOption>[], (values: ILessonStartQuestion<ILessonStartQuestionOption>[]) => ILessonStartQuestion<any>[]>,
-    options:ILessonStartQuestionOption[]
-    currentIndex: number;
-}
+  form: UseFormReturnType<
+    ILessonStartQuestion<ILessonStartQuestionOption>[],
+    (
+      values: ILessonStartQuestion<ILessonStartQuestionOption>[]
+    ) => ILessonStartQuestion<any>[]
+  >;
+  options: ILessonStartQuestionOption[];
+  currentIndex: number;
+};
 
-const ExamCheckBox = ({form, options, currentIndex}: Props) => {
+const ExamCheckBox = ({ form, options, currentIndex }: Props) => {
   const { classes, cx } = useStyle();
 
   return (
     <Box mt={10} px={20} className={classes.option}>
-<Group>
-        <Title size={"xs"} mb={5}>Options</Title>
+      <Group>
+        <Title size={"xs"} mb={5}>
+          Options
+        </Title>
       </Group>
       {options.map((option, index) => (
         <label key={option.id} htmlFor={option.id}>
@@ -46,8 +55,7 @@ const ExamCheckBox = ({form, options, currentIndex}: Props) => {
             className={cx({
               [classes.active]:
                 //@ts-ignore
-                form.values[currentIndex].questionOptions[index]
-                  .isCorrect,
+                form.values[currentIndex].questionOptions[index].isCorrect,
             })}
           >
             <RichTextEditor
@@ -63,7 +71,7 @@ const ExamCheckBox = ({form, options, currentIndex}: Props) => {
         </label>
       ))}
     </Box>
-  )
-}
+  );
+};
 
-export default ExamCheckBox
+export default ExamCheckBox;

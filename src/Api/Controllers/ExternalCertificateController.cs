@@ -61,6 +61,13 @@ namespace Lingtren.Api.Controllers
         public async Task<IList<CertificateResponseModel>> GetExternal() => await _certificateService.GetExternalCertificateAsync(CurrentUser.Id).ConfigureAwait(false);
 
         /// <summary>
+        /// get internal certificate api
+        /// </summary>
+        /// <returns> the list of <see cref="CourseCertificateIssuedResponseModel" /> .</returns>
+        [HttpGet("internal")]
+        public async Task<IList<CourseCertificateIssuedResponseModel>> GetInternal() => await _certificateService.GetInternalCertificateAsync(CurrentUser.Id).ConfigureAwait(false);
+
+        /// <summary>
         /// get certificate api
         /// </summary>
         /// <param name="identity"> the certificate id or slug </param>

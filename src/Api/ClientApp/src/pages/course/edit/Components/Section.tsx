@@ -1,50 +1,95 @@
-import { ISection } from "@utils/services/courseService";
+import { ILessons } from "@utils/services/courseService";
+
+import {
+  ISection,
+  useLessonReorder,
+  useSectionReorder,
+} from "@utils/services/courseService";
+import { useMemo, useState } from "react";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from "react-beautiful-dnd";
 
 import SectionItem from "./Section/SectionItem";
 
-// const dragReducer = produce((draft, action) => {
-//   switch (action.type) {
-//     case "MOVE": {
-//       draft[action.from] = draft[action.from] || [];
-//       draft[action.to] = draft[action.to] || [];
-//       const [removed] = draft[action.from].splice(action.fromIndex, 1);
-//       draft[action.to].splice(action.toIndex, 0, removed);
-//     }
-//   }
-// });
-
 const CourseSection = ({ data, slug }: { data: ISection[]; slug: string }) => {
-  // const b = {};
-  // data.map((e) => {
-  //   //@ts-ignore
-  //   return (b[e.id] = e.lessons);
-  // });
+  const [lessonData, setLessonData] = useState<ISection[]>(data);
+  useMemo(() => setLessonData(data), [data]);
 
-  // const [state, dispatch] = useReducer(dragReducer, b);
+  const lessonReorder = useLessonReorder(slug as string);
+  const sectionReorder = useSectionReorder(slug as string);
 
-  // const onDragEnd = useCallback((result: any) => {
-  //   if (result.reason === "DROP") {
-  //     if (!result.destination) {
-  //       return;
-  //     }
-  //     dispatch({
-  //       type: "MOVE",
-  //       from: result.source.droppableId,
-  //       to: result.destination.droppableId,
-  //       fromIndex: result.source.index,
-  //       toIndex: result.destination.index,
-  //     });
-  //   }
-  // }, []);
+  const onDragEnd = (result: DropResult) => {
+    const { destination, source, draggableId, type } = result;
+    if (!destination) return;
+
+    switch (type) {
+      case "section":
+        let newList = [...data];
+        const temp = newList[source.index];
+        newList.splice(source.index, 1);
+        newList.splice(destination.index, 0, temp);
+        sectionReorder.mutate({ id: slug, data: newList.map((x) => x.id) });
+        setLessonData(newList);
+        break;
+      default:
+        let tempList = [...data];
+        const draggableIndex = tempList.findIndex(
+          (x) => x.slug == source.droppableId
+        );
+        const lessons = tempList[draggableIndex].lessons && [
+          ...(tempList[draggableIndex].lessons as ILessons[]),
+        ];
+        const tempLesson = lessons?.splice(source.index, 1);
+        tempList[draggableIndex].lessons = lessons;
+        const dropableIndex = tempList.findIndex(
+          (x) => x.slug == destination.droppableId
+        );
+        tempLesson &&
+          tempList[dropableIndex].lessons?.splice(
+            destination.index,
+            0,
+            tempLesson[0]
+          );
+        setLessonData(tempList);
+        const requestData = {
+          sectionIdentity: tempList[dropableIndex].id,
+          ids: tempList[dropableIndex].lessons?.map((x) => x.id),
+        };
+        lessonReorder.mutateAsync({ id: slug, data: requestData });
+    }
+  };
+
+  const items = lessonData.map((item, index) => (
+    <Draggable key={item.id} index={index} draggableId={item.slug}>
+      {(provided, snapshot) => (
+        <div {...provided.draggableProps} ref={provided.innerRef}>
+          <SectionItem
+            dragHandleProps={provided.dragHandleProps}
+            snapshot={snapshot}
+            key={item.id}
+            item={item}
+            slug={slug}
+          />
+        </div>
+      )}
+    </Draggable>
+  ));
 
   return (
-    <div>
-      {/* <DragDropContext onDragEnd={onDragEnd}> */}
-      {data?.map((item) => (
-        <SectionItem key={item.id} item={item} slug={slug} />
-      ))}
-      {/* </DragDropContext> */}
-    </div>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="dnd-list" direction="vertical" type="section">
+        {(provided, snapshot) => (
+          <div {...provided.droppableProps} ref={provided.innerRef}>
+            {items}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
   );
 };
 

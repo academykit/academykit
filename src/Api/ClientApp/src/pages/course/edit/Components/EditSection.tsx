@@ -16,7 +16,7 @@ import {
   useCreateSection,
   useGetSection,
 } from "@utils/services/courseService";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { showNotification } from "@mantine/notifications";
 import { UseQueryResult } from "@tanstack/react-query";
 import { IPaginated } from "@utils/services/types";
@@ -38,6 +38,7 @@ const EditSection = () => {
   const getSection: UseQueryResult<IPaginated<ISection>> = useGetSection(
     slug as string
   );
+
   const getCourseDetails: any = useCourseDescription(slug as string);
 
   return (
@@ -51,6 +52,7 @@ const EditSection = () => {
           </Text>
         </Grid.Col>
       </Grid>
+
       <Box className={classes.section}>
         <Box mt={20}>
           {getSection.data && (
@@ -61,6 +63,7 @@ const EditSection = () => {
           )}
         </Box>
       </Box>
+
       <div style={{ marginTop: "20px" }}>
         {!section?.isAddSection ? (
           <Button

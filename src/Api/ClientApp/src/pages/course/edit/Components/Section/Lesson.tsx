@@ -27,9 +27,8 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
     marginTop: "10px",
     borderRadius: theme.radius.md,
-    border: `1px solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[7]
-    }`,
+    border: `1px solid ${theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[7]
+      }`,
     padding: `${theme.spacing.sm}px ${theme.spacing.xl}px`,
     paddingLeft: theme.spacing.xl - theme.spacing.md, // to offset drag handle
     backgroundColor:
@@ -66,7 +65,6 @@ const Lesson = ({
   const { classes, cx } = useStyles();
   const { id: slug } = useParams();
 
-  const [isEditingLesson, setIsEditingLesson] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [value, toggle] = useToggle();
   const deleteLesson = useDeleteLesson(slug as string);
@@ -100,17 +98,6 @@ const Lesson = ({
         onClose={toggle}
         onConfirm={onDeleteLesson}
       />
-
-      {/* <Draggable key={item?.id} index={index} draggableId={item?.id}>
-          {(provided, snapshot) => (
-            <div
-              className={cx(classes.item, {
-                [classes.itemDragging]: snapshot.isDragging,
-              })}
-              ref={provided.innerRef}
-              {...provided.draggableProps}
-              {...provided.dragHandleProps}
-            > */}
       <div className={classes.item}>
         <Grid grow justify={"center"}>
           <Grid.Col span={4}>
@@ -120,7 +107,7 @@ const Lesson = ({
           </Grid.Col>
           <Grid.Col span={4}>
             <Group position="center">
-              <Text m={"auto"}>Type: {LessonType[lesson.type]}</Text>
+              <Text m={"auto"}>{LessonType[lesson.type]}</Text>
             </Group>
           </Grid.Col>
           <Grid.Col span={4}>
@@ -146,15 +133,13 @@ const Lesson = ({
           </Grid.Col>
         </Grid>
       </div>
-      {/* </div>
-          )}
-        </Draggable> */}
+
       {isEditing &&
         LessonEditCase({
           item: lesson,
           lessonType: lesson?.type,
-          setAddLessonClick: () => {},
-          setAddState: () => {},
+          setAddLessonClick: () => { },
+          setAddState: () => { },
           sectionId: sectionId,
         })}
     </div>

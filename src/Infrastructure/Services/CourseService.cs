@@ -38,6 +38,7 @@ namespace Lingtren.Infrastructure.Services
             _mediaService = mediaService;
             _fileServerService = fileServerService;
         }
+
         #region Protected Methods
         /// <summary>
         /// This is called before entity is saved to DB.
@@ -363,7 +364,7 @@ namespace Lingtren.Infrastructure.Services
 
             if (status == CourseStatus.Published)
             {
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.GroupCoursePublishedMail(course, null));
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.GroupCoursePublishedMailAsync(course.GroupId.Value,course.Name, null));
             }
         }
 

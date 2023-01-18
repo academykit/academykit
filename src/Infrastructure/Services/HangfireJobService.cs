@@ -117,11 +117,12 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Handle to send group course published mail
         /// </summary>
-        /// <param name="course"> the instance of <see cref="Course"/></param>
+        /// <param name="groupId"> the group id</param>
+        /// <param name="courseName"> the course name </param>
         /// <param name="context"> the instance of <see cref="PerformContext"/></param>
         /// <returns> the task complete </returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task GroupCoursePublishedMail(Course course, PerformContext context = null)
+        public async Task GroupCoursePublishedMailAsync(Guid groupId, string courseName, PerformContext context = null)
         {
             try
             {
@@ -131,7 +132,7 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
-                var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(predicate: x => x.Id == course.GroupId,
+                var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(predicate: x => x.Id == groupId,
                 include: source => source.Include(x => x.GroupMembers).ThenInclude(x => x.User)).ConfigureAwait(false);
                 if(group.GroupMembers.Count != default)
                 {
@@ -139,7 +140,7 @@ namespace Lingtren.Infrastructure.Services
                     {
                         var fullName = string.IsNullOrEmpty(member.User?.MiddleName) ? $"{member.User?.FirstName} {member.User?.LastName}" : $"{member.User?.FirstName} {member.User?.MiddleName} {member.User?.LastName}";
                         var html = $"Dear {fullName},<br><br>";
-                        html += $"You have new {course.Name} training available for the {group.Name} group. Please, go to {group.Name} group to find the training there. <br><br>";
+                        html += $"You have new {courseName} training available for the {group.Name} group. Please, go to {group.Name} group to find the training there. <br><br>";
                         html += $"Thank You, <br> {settings.CompanyName}";
 
                         var model = new EmailRequestDto

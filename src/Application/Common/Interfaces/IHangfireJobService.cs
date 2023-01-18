@@ -18,10 +18,11 @@ namespace Lingtren.Application.Common.Interfaces
         /// <summary>
         /// Handle to send group course published mail
         /// </summary>
-        /// <param name="course"> the instance of <see cref="Course"/></param>
+        /// <param name="groupId"> the group id</param>
+        /// <param name="courseName"> the course name </param>
         /// <param name="context"> the instance of <see cref="PerformContext"/></param>
         /// <returns> the task complete </returns>
-        Task GroupCoursePublishedMail(Course course, PerformContext context = null);
+        Task GroupCoursePublishedMailAsync(Guid groupId, string courseName, PerformContext context = null);
 
         /// <summary>
         /// Handle to send course review mail

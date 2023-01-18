@@ -30,7 +30,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="identity"> the ceritifcate id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
-        Task DeleteExternalCertificateAsync(Guid identity,Guid currentUserId);
+        Task DeleteExternalCertificateAsync(Guid identity, Guid currentUserId);
 
         /// <summary>
         /// Handle to get external certificate
@@ -54,7 +54,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="status"> the certificate status </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
-        Task VerifyCertificateAsync(Guid identity,CertificateStatus status,Guid currentUserId);
+        Task VerifyCertificateAsync(Guid identity, CertificateStatus status, Guid currentUserId);
 
         /// <summary>
         /// Handle to get user certificates
@@ -70,5 +70,12 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the list of <see cref="CertificateResponseModel" /> .</returns>
         Task<SearchResult<CertificateResponseModel>> GetReviewCertificatesAsync(CertificateBaseSearchCriteria criteria, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to get internal certificate
+        /// </summary>
+        /// <param name="userId"> the user id </param>
+        /// <returns> the list of <see cref="CourseCertificateIssuedResponseModel" /> .</returns>
+        Task<IList<CourseCertificateIssuedResponseModel>> GetInternalCertificateAsync(Guid userId);
     }
 }

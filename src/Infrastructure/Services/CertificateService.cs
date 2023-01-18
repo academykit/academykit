@@ -40,7 +40,12 @@ namespace Lingtren.Infrastructure.Services
                     Location = model.Location,
                     CreatedBy = currentUserId,
                     CreatedOn = DateTime.UtcNow
-                };
+                };;
+                var isAdmin =await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+                if(isAdmin)
+                {
+                    certificate.Status = CertificateStatus.Approved;
+                }
                 await _unitOfWork.GetRepository<Certificate>().InsertAsync(certificate).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return new CertificateResponseModel(certificate);
@@ -297,18 +302,47 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 ceritifcate.Status = status;
-                if(status == CertificateStatus.Rejected)
-                {
-                    ceritifcate.Status = CertificateStatus.Draft;
-                }
                 _unitOfWork.GetRepository<Certificate>().Update(ceritifcate);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-
                 _logger.LogError(ex.Message);
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        
+        /// <summary>
+        /// Handle to get internal certificate
+        /// </summary>
+        /// <param name="userId"> the user id </param>
+        /// <returns> the list of <see cref="CourseCertificateIssuedResponseModel" /> .</returns>
+        public async Task<IList<CourseCertificateIssuedResponseModel>> GetInternalCertificateAsync(Guid userId)
+        {
+            try
+            {
+                 var userCertificates = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
+                predicate: p => p.UserId == userId && p.HasCertificateIssued.HasValue && p.HasCertificateIssued.Value,
+                include: src => src.Include(x => x.Course)
+                ).ConfigureAwait(false);
+
+                var response =  userCertificates.Select(item => new CourseCertificateIssuedResponseModel
+                {
+                    CourseId = item.CourseId,
+                    CourseName = item.Course.Name,
+                    CourseSlug = item.Course.Slug,
+                    Percentage= item.Percentage,
+                    HasCertificateIssued = item.HasCertificateIssued,
+                    CertificateIssuedDate = item.CertificateIssuedDate,
+                    CertificateUrl = item.CertificateUrl,
+                }).ToList();
+                return response;
+            }
+            catch (Exception ex)
+            {
+               _logger.LogError(ex.Message);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message); throw;
             }
         }
 
