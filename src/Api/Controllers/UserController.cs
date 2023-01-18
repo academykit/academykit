@@ -20,6 +20,7 @@
         private readonly IFileServerService _fileServerService;
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
+        private readonly IGeneralSettingService _generalSettingService;
         private readonly IValidator<UserRequestModel> _validator;
         private readonly IValidator<ChangeEmailRequestModel> _changeEmailValidator;
 
@@ -29,6 +30,7 @@
                             IUserService userService,
                             IEmailService emailService,
                             IValidator<UserRequestModel> validator,
+                            IGeneralSettingService generalSettingService,
                             IValidator<ChangeEmailRequestModel> changeEmailValidator
                            )
         {
@@ -38,6 +40,7 @@
             _emailService = emailService;
             _validator = validator;
             _changeEmailValidator = changeEmailValidator;
+            _generalSettingService = generalSettingService;
         }
 
         /// <summary>
@@ -112,7 +115,8 @@
             entity.HashPassword = _userService.HashPassword(password);
 
             var response = await _userService.CreateAsync(entity).ConfigureAwait(false);
-            await _emailService.SendUserCreatedPasswordEmail(entity.Email, entity.FullName, password).ConfigureAwait(false);
+            var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
+            await _emailService.SendUserCreatedPasswordEmail(entity.Email, entity.FullName, password,company.CompanyName).ConfigureAwait(false);
             return new UserResponseModel(response);
         }
 

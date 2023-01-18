@@ -6,7 +6,6 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Helpers;
     using Microsoft.Extensions.Logging;
     using Microsoft.EntityFrameworkCore;
     using Lingtren.Application.Common.Dtos;
@@ -144,7 +143,7 @@ namespace Lingtren.Infrastructure.Services
                     ImageUrl = x.ImageUrl,
                     Duration = x.Duration != default ? x.Duration.ToString() : null,
                     Location = x.Location,
-                    Status = x.Status.ToString(),
+                    Status = x.Status,
                     User = new UserModel(x.User)
                 }).ToList();
                 return response;
@@ -193,7 +192,7 @@ namespace Lingtren.Infrastructure.Services
                     ImageUrl = ceritifcate.ImageUrl,
                     Duration = ceritifcate.Duration != default ? ceritifcate.Duration.ToString() : null,
                     Location = ceritifcate.Location,
-                    Status = ceritifcate.Status.ToString(),
+                    Status = ceritifcate.Status,
                     User = new UserModel(ceritifcate.User)
                 };
             });
@@ -221,7 +220,7 @@ namespace Lingtren.Infrastructure.Services
                     ImageUrl = x.ImageUrl,
                     Duration = x.Duration != default ? x.Duration.ToString() : null,
                     Location = x.Location,
-                   Status = x.Status.ToString(),
+                   Status = x.Status,
                     User = new UserModel(x.User)
                 }).ToList();
                 return response;

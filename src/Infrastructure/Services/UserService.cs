@@ -290,8 +290,9 @@
                 user.PasswordResetToken = token;
                 user.PasswordResetTokenExpiry = tokenExpiry;
                 _unitOfWork.GetRepository<User>().Update(user);
+                var companyName = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync(selector: x => x.CompanyName).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                await _emailService.SendForgetPasswordEmail(user.Email, user.FirstName, token).ConfigureAwait(false);
+                await _emailService.SendForgetPasswordEmail(user.Email, user.FirstName, token,companyName).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -403,9 +404,10 @@
                 _logger.LogWarning("User with email: {email} is invalid user request to change email of current user with id: {currentUserId}", user.Email, currentUserId);
                 throw new ForbiddenException("Unauthorized current email user request to change email.");
             }
+            var companyName = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync(selector: x => x.CompanyName).ConfigureAwait(false);
             var changeEmailToken = GenerateResendAndChangeEmailToken(model.OldEmail, model.NewEmail, _changeEmailEncryptionKey, _changeEmailTokenExpiry);
             var resendToken = GenerateResendAndChangeEmailToken(model.OldEmail, model.NewEmail, _resendChangeEmailEncryptionKey, _resendChangeEmailTokenExpiry);
-            await _emailService.SendChangePasswordMailAsync(model.NewEmail, user.FirstName, changeEmailToken, _changeEmailTokenExpiry).ConfigureAwait(false);
+            await _emailService.SendChangePasswordMailAsync(model.NewEmail, user.FirstName, changeEmailToken, _changeEmailTokenExpiry,companyName).ConfigureAwait(false);
             return new ChangeEmailResponseModel() { ResendToken = resendToken };
         }
 
@@ -431,7 +433,8 @@
             }
             var changeEmailToken = GenerateResendAndChangeEmailToken(oldEmail, newEmail, _changeEmailEncryptionKey, _changeEmailTokenExpiry);
             var resendToken = GenerateResendAndChangeEmailToken(oldEmail, newEmail, _resendChangeEmailEncryptionKey, _resendChangeEmailTokenExpiry);
-            await _emailService.SendChangePasswordMailAsync(newEmail, user.FirstName, changeEmailToken, _changeEmailTokenExpiry).ConfigureAwait(false);
+            var companyName = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync(selector: x => x.CompanyName).ConfigureAwait(false);
+            await _emailService.SendChangePasswordMailAsync(newEmail, user.FirstName, changeEmailToken, _changeEmailTokenExpiry,companyName).ConfigureAwait(false);
             return new ChangeEmailResponseModel() { ResendToken = resendToken };
         }
 
