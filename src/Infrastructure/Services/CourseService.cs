@@ -648,6 +648,8 @@ namespace Lingtren.Infrastructure.Services
                         Name = l.Name,
                         Slug = l.Slug,
                         Order = l.Order,
+                        StartDate = l.StartDate,
+                        EndDate = l.EndDate,
                         CourseId = l.CourseId,
                         SectionId = l.SectionId,
                         QuestionSetId = l.QuestionSetId,
