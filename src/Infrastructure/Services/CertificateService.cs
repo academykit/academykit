@@ -37,6 +37,7 @@ namespace Lingtren.Infrastructure.Services
                     Institute = model.Institute,
                     Duration = model.Duration,
                     IsVerified = false,
+                    Location = model.Location,
                     CreatedBy = currentUserId,
                     CreatedOn = DateTime.UtcNow
                 };
@@ -77,10 +78,13 @@ namespace Lingtren.Infrastructure.Services
                 ceritificate.StartDate = model.StartDate;
                 ceritificate.EndDate = model.EndDate;
                 ceritificate.ImageUrl = model.ImageUrl;
+                ceritificate.Location = model.Location;
                 ceritificate.Institute = model.Institute;
                 ceritificate.Duration = model.Duration;
                 ceritificate.UpdatedBy = currentUserId;
                 ceritificate.UpdatedOn = DateTime.UtcNow;
+                _unitOfWork.GetRepository<Certificate>().Update(ceritificate);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return new CertificateResponseModel(ceritificate);
             });
         }
@@ -95,7 +99,7 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var ceritificate = await _unitOfWork.GetRepository<Certificate>().GetFirstOrDefaultAsync(predicate:p  => p.Id == identity).ConfigureAwait(false);
+                var ceritificate = await _unitOfWork.GetRepository<Certificate>().GetFirstOrDefaultAsync(predicate: p => p.Id == identity).ConfigureAwait(false);
                 if (ceritificate == null)
                 {
                     throw new EntityNotFoundException($"Certificate with identity : {identity} not found.");
@@ -124,25 +128,24 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var response = new List<CertificateResponseModel>();
+                _logger.LogWarning(currentUserId.ToString());
                 var certificates = await _unitOfWork.GetRepository<Certificate>().GetAllAsync(predicate: p => p.CreatedBy == currentUserId,
                 include: source => source.Include(x => x.User)).ConfigureAwait(false);
-                if (response.Count != default)
+                _logger.LogError(certificates.Count.ToString());
+
+                var response = certificates.Select(x => new CertificateResponseModel
                 {
-                    response = certificates.Select(x => new CertificateResponseModel
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        StartDate = x.StartDate,
-                        EndDate = x.EndDate,
-                        Institute = x.Institute,
-                        ImageUrl = x.ImageUrl,
-                        Duration = x.Duration != default ? x.Duration.ToString() : null,
-                        Location = x.Location,
-                        IsVerified = x.IsVerified,
-                        User = new UserModel(x.User)
-                    }).ToList();
-                }
+                    Id = x.Id,
+                    Name = x.Name,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
+                    Institute = x.Institute,
+                    ImageUrl = x.ImageUrl,
+                    Duration = x.Duration != default ? x.Duration.ToString() : null,
+                    Location = x.Location,
+                    IsVerified = x.IsVerified,
+                    User = new UserModel(x.User)
+                }).ToList();
                 return response;
             }
             catch (Exception ex)
@@ -204,25 +207,22 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var response = new List<CertificateResponseModel>();
                 var certificates = await _unitOfWork.GetRepository<Certificate>().GetAllAsync(predicate: p => p.CreatedBy == userId && p.IsVerified,
                 include: source => source.Include(x => x.User)).ConfigureAwait(false);
-                if (response.Count != default)
+
+                var response = certificates.Select(x => new CertificateResponseModel
                 {
-                    response = certificates.Select(x => new CertificateResponseModel
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        StartDate = x.StartDate,
-                        EndDate = x.EndDate,
-                        Institute = x.Institute,
-                        ImageUrl = x.ImageUrl,
-                        Duration = x.Duration != default ? x.Duration.ToString() : null,
-                        Location = x.Location,
-                        IsVerified = x.IsVerified,
-                        User = new UserModel(x.User)
-                    }).ToList();
-                }
+                    Id = x.Id,
+                    Name = x.Name,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
+                    Institute = x.Institute,
+                    ImageUrl = x.ImageUrl,
+                    Duration = x.Duration != default ? x.Duration.ToString() : null,
+                    Location = x.Location,
+                    IsVerified = x.IsVerified,
+                    User = new UserModel(x.User)
+                }).ToList();
                 return response;
             }
             catch (Exception ex)
@@ -247,21 +247,18 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ForbiddenException("Unauthorized user");
                 }
-                var response = new List<CertificateReviewResponseModel>();
                 var certificates = await _unitOfWork.GetRepository<Certificate>().GetAllAsync(predicate: p => !p.IsVerified,
                 include: source => source.Include(x => x.User)).ConfigureAwait(false);
-                if (response.Count != default)
+
+                var response = certificates.Select(x => new CertificateReviewResponseModel
                 {
-                    response = certificates.Select(x => new CertificateReviewResponseModel
-                    {
-                        Id = x.Id,
-                        CerificateName = x.Name,
-                        StartDate = x.StartDate,
-                        EndDate = x.EndDate,
-                        UserId = x.CreatedBy,
-                        UserName = x.User.FullName
-                    }).ToList();
-                }
+                    Id = x.Id,
+                    CerificateName = x.Name,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
+                    UserId = x.CreatedBy,
+                    UserName = x.User.FullName
+                }).ToList();
                 return response.ToIPagedList(criteria.Page, criteria.Size);
             }
             catch (Exception ex)
