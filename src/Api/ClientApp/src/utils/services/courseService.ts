@@ -471,6 +471,7 @@ export interface ICourseLesson {
   hasReviewedAssignment: boolean;
   assignmentReview?: ICourseLessonAssignmentReview;
   assignmentExpired: boolean
+  startDate: string
 }
 
 const getCourseLesson = async (
