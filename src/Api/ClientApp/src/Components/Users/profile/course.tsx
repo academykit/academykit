@@ -2,10 +2,10 @@ import ProgressBar from "@components/Ui/ProgressBar";
 import withSearchPagination, {
   IWithSearchPagination,
 } from "@hoc/useSearchPagination";
-import { Table, Title, useMantineTheme } from "@mantine/core";
+import { Anchor, Table, Title, useMantineTheme } from "@mantine/core";
 import { useMyCourse } from "@utils/services/courseService";
 import moment from "moment";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const UserCourse = (props: IWithSearchPagination) => {
   const { id } = useParams();
@@ -27,7 +27,11 @@ const UserCourse = (props: IWithSearchPagination) => {
           <tbody>
             {data.items.map((x) => (
               <tr>
-                <td>{x.name}</td>
+                <td>
+                  <Anchor component={Link} to={`/trainings/${x.slug}`}>
+                    {x.name}
+                  </Anchor>
+                </td>
                 <td>{moment(x.createdOn).format(theme.dateFormat)}</td>
                 <td>
                   <ProgressBar total={100} positive={x.percentage} />
