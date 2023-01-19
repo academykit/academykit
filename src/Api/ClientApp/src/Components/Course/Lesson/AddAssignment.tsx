@@ -81,8 +81,6 @@ const AddAssignment = ({
   const [opened, setOpened] = useState(false);
   const [lessonId, setLessonId] = useState("");
 
-  console.log(item);
-
   const startDateTime = item?.startDate
     ? moment(item?.startDate + "z")
         .local()
