@@ -3,7 +3,6 @@ import {
   Grid,
   Group,
   Modal,
-  NumberInput,
   Paper,
   Switch,
   Textarea,
@@ -110,22 +109,26 @@ const AddAssignment = ({
   });
 
   const submitForm = async (values: SubmitType) => {
-    const startDate = getDateTime(
-      values?.eventStartDate?.toString() ?? "",
-      values?.startTime?.toString() ?? ""
-    );
-    const endDate = getDateTime(
-      values?.eventEndDate?.toString() ?? "",
-      values?.endTime?.toString() ?? ""
-    );
+    const startDate =
+      values?.eventStartDate &&
+      getDateTime(
+        values?.eventStartDate?.toString() ?? "",
+        values?.startTime?.toString() ?? ""
+      );
+    const endDate =
+      values?.eventEndDate &&
+      getDateTime(
+        values?.eventEndDate?.toString() ?? "",
+        values?.endTime?.toString() ?? ""
+      );
     try {
       let assignmentData = {
         courseId: slug,
         sectionIdentity: sectionId,
         type: LessonType.Assignment,
         ...values,
-        startDate: startDate.utcDateTime,
-        endDate: endDate.utcDateTime,
+        startDate: startDate && startDate.utcDateTime,
+        endDate: endDate && endDate.utcDateTime,
         isMandatory,
       };
       if (!isEditing) {

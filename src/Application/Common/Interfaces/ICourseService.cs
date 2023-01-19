@@ -213,6 +213,14 @@ namespace Lingtren.Application.Common.Interfaces
         /// <returns></returns>
         Task<CourseCertificateResponseModel?> GetCertificateDetailAsync(string identity, Guid currentUserId);
 
+        /// <summary>
+        /// Handle to get user courses list with progress detail
+        /// </summary>
+        /// <param name="userId">the requested user id</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the search result of <see cref="CourseResponseModel"/></returns>
+        Task<SearchResult<CourseResponseModel>> GetUserCourses(Guid userId, BaseSearchCriteria criteria);
+
         #endregion Signature
     }
 }

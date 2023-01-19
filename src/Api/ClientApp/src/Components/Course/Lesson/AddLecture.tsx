@@ -137,8 +137,6 @@ const AddLecture = ({
           <Textarea
             placeholder="Video's Description"
             label="Video Description"
-            placeholder="Video's Description"
-            label="Video Description"
             mb={10}
             withAsterisk
             {...form.getInputProps("description")}
