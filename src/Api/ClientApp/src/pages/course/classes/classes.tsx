@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from "react";
+import { Suspense, useState } from "react";
 import {
   AspectRatio,
   Box,
@@ -15,7 +15,6 @@ import { useMediaQuery } from "@mantine/hooks";
 import { IconFileDescription, IconMessage } from "@tabler/icons";
 import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import {
-  ICourseLesson,
   useCourseDescription,
   useGetCourseLesson,
 } from "@utils/services/courseService";
@@ -81,8 +80,6 @@ const useStyle = createStyles((theme) => ({
   },
 }));
 
-
-
 const Classes = () => {
   const navigate = useNavigate();
   const { classes, theme, cx } = useStyle();
@@ -99,7 +96,7 @@ const Classes = () => {
   >("loading");
 
   const { data, isLoading } = useCourseDescription(id as string);
-  const  courseLesson = useGetCourseLesson(
+  const courseLesson = useGetCourseLesson(
     id as string,
     lessonId === "1" ? undefined : lessonId
   );
@@ -141,8 +138,6 @@ const Classes = () => {
     }
   };
 
-
-
   return (
     <Box p={0}>
       <Grid className={classes.wrapper}>
@@ -166,19 +161,21 @@ const Classes = () => {
             {courseLesson.isError && (
               <Box className={cx(classes.videoSection, classes.errorSection)}>
                 <Box>{errorType(courseLesson.error)}</Box>
-                 {courseLesson.error?.response?.status && courseLesson.error?.response?.status === 403 && <Button
-                  component={Link}
-                  mt={20}
-                  to={`${RoutePath.classes}/${id}/1`}
-                >
-                  View Previous Lesson
-                </Button>}
+                {courseLesson.error?.response?.status &&
+                  courseLesson.error?.response?.status === 403 && (
+                    <Button
+                      component={Link}
+                      mt={20}
+                      to={`${RoutePath.classes}/${id}/1`}
+                    >
+                      View Previous Lesson
+                    </Button>
+                  )}
               </Box>
             )}
 
             {(courseLesson.data?.type == LessonType.Video ||
               courseLesson.data?.type == LessonType.RecordedVideo) && (
-                
               <AspectRatio
                 ratio={16 / 9}
                 mt={matches ? 1 : -8}

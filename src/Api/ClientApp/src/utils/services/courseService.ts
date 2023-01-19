@@ -5,7 +5,6 @@ import {
   CourseUserStatus,
   LessonType,
 } from "@utils/enums";
-import axios from "axios";
 import errorType from "./axiosError";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
@@ -43,12 +42,25 @@ export interface ICourse {
 }
 
 const getCourse = async (search: string) =>
-  await httpClient.get<IPaginated<ICourse>>(api.course.list + `?${search}`);
+  await httpClient.get<IPaginated<ICourse >>(api.course.list + `?${search}`);
 
 export const useCourse = (search: string) =>
   useQuery([api.course.list, search], () => getCourse(search), {
     select: (data) => data.data,
   });
+
+export interface IMyCourse extends ICourse {
+    percentage: number
+  }
+
+  const getMyCourse = async (userId:string) =>
+  await httpClient.get<IPaginated<IMyCourse>>(api.course.userList(userId));
+
+export const useMyCourse = (userId:string) =>
+  useQuery([api.course.userList(userId), ], () => getMyCourse(userId), {
+    select: (data) => data.data,
+  });
+
 
 const getCourseTeacher = async (course_id: string) =>
   await httpClient.get<IPaginated<ICreateCourseTeacher>>(

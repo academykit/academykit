@@ -1,35 +1,26 @@
 import {
-  ActionIcon,
-  Anchor,
   Avatar,
-  Badge,
-  CopyButton,
+  Box,
   createStyles,
   Divider,
-  Flex,
   Group,
-  Image,
-  Modal,
   Paper,
-  ScrollArea,
-  Table,
+  Tabs,
   Text,
-  Title,
-  Tooltip,
 } from "@mantine/core";
-import { IconCheck, IconCopy, IconDownload, IconEdit } from "@tabler/icons";
+import {
+  IconEdit,
+  IconFileDescription,
+  IconMessage,
+  IconSchool,
+} from "@tabler/icons";
 import { useProfileAuth } from "@utils/services/authService";
 
-import { Link, useParams } from "react-router-dom";
+import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import RichTextEditor from "@mantine/rte";
-import { ICertificateList } from "@utils/services/manageCourseService";
 import useAuth from "@hooks/useAuth";
-import { useState } from "react";
-import {
-  GetExternalCertificate,
-  useGetUserCertificate,
-} from "@utils/services/certificateService";
-import moment from "moment";
+
+import InternalCertificate from "./Components/InternalCertificate";
 
 const useStyles = createStyles((theme) => ({
   avatarImage: {
@@ -44,125 +35,13 @@ const useStyles = createStyles((theme) => ({
     },
   },
 }));
-
-const RowsCompleted = ({ item }: { item: ICertificateList }) => {
-  const [opened, setOpened] = useState(false);
-  const handleDownload = () => {
-    window.open(item?.certificateUrl);
-  };
-  return (
-    <tr key={item?.user?.id}>
-      <td>{item?.courseName}</td>
-
-      <td>{item?.percentage}%</td>
-      <td>
-        {item?.hasCertificateIssued ? <Badge>Yes</Badge> : <Badge>No</Badge>}
-      </td>
-      <td style={{ maxWidth: "0px" }}>
-        <Modal
-          opened={opened}
-          size="xl"
-          title={item?.courseName}
-          onClose={() => setOpened(false)}
-        >
-          <Image src={item?.certificateUrl}></Image>
-        </Modal>
-        <Flex align={"center"}>
-          <Anchor onClick={() => setOpened((v) => !v)}>
-            <Image
-              width={150}
-              height={100}
-              fit="contain"
-              // sx={{":hover"}}
-              src={item?.certificateUrl}
-            />
-          </Anchor>
-          <CopyButton value={item?.certificateUrl} timeout={2000}>
-            {({ copied, copy }) => (
-              <Tooltip
-                label={copied ? "Copied" : "Copy"}
-                withArrow
-                position="right"
-              >
-                <ActionIcon color={copied ? "teal" : "gray"} onClick={copy}>
-                  {copied ? <IconCheck size={16} /> : <IconCopy size={16} />}
-                </ActionIcon>
-              </Tooltip>
-            )}
-          </CopyButton>
-          <ActionIcon onClick={() => handleDownload()}>
-            <IconDownload />
-          </ActionIcon>
-        </Flex>
-      </td>
-    </tr>
-  );
-};
-
-const RowsExternal = ({ item }: { item: GetExternalCertificate }) => {
-  const { theme } = useStyles();
-  const [opened, setOpened] = useState(false);
-  const handleDownload = () => {
-    window.open(item?.imageUrl);
-  };
-  return (
-    <tr key={item?.user?.id}>
-      <td>{item?.name}</td>
-
-      <td>{item?.status === 2 ? <Badge>Yes</Badge> : <Badge>No</Badge>}</td>
-      <td>{moment(item?.startDate).format(theme.dateFormat)}</td>
-      <td>{moment(item?.endDate).format(theme.dateFormat)}</td>
-      <td>{item?.institute}</td>
-      <td>{item.location}</td>
-      <td style={{ maxWidth: "0px" }}>
-        <Modal
-          opened={opened}
-          size="xl"
-          title={item?.name}
-          onClose={() => setOpened(false)}
-        >
-          <Image src={item?.imageUrl}></Image>
-        </Modal>
-        <Flex align={"center"}>
-          <Anchor onClick={() => setOpened((v) => !v)}>
-            <Image
-              width={150}
-              height={100}
-              fit="contain"
-              // sx={{":hover"}}
-              src={item?.imageUrl}
-            />
-          </Anchor>
-          <CopyButton value={item?.imageUrl} timeout={2000}>
-            {({ copied, copy }) => (
-              <Tooltip
-                label={copied ? "Copied" : "Copy"}
-                withArrow
-                position="right"
-              >
-                <ActionIcon color={copied ? "teal" : "gray"} onClick={copy}>
-                  {copied ? <IconCheck size={16} /> : <IconCopy size={16} />}
-                </ActionIcon>
-              </Tooltip>
-            )}
-          </CopyButton>
-          <ActionIcon onClick={() => handleDownload()}>
-            <IconDownload />
-          </ActionIcon>
-        </Flex>
-      </td>
-    </tr>
-  );
-};
-
 const UserProfile = () => {
+  const { id, tabValue } = useParams();
   const { classes } = useStyles();
-  const query = useParams();
   const local_id = localStorage.getItem("id");
-  const auth = useAuth();
-  const externalCertificate = useGetUserCertificate(query.id);
+  const navigate = useNavigate();
 
-  const { data, isLoading, isSuccess } = useProfileAuth(query.id as string);
+  const { data, isSuccess } = useProfileAuth(id as string);
   return (
     <>
       <div>
@@ -177,7 +56,7 @@ const UserProfile = () => {
           <div style={{ marginLeft: "15px" }}>
             <Group>
               <Text size={"xl"}>{data?.fullName}</Text>
-              {isSuccess && query.id === local_id ? (
+              {isSuccess && id === local_id ? (
                 <Link to={"/settings"}>
                   <IconEdit style={{ marginLeft: "5px" }} />
                 </Link>
@@ -225,69 +104,32 @@ const UserProfile = () => {
           )}
         </Paper>
       </div>
-      {auth?.auth && data?.certificates && data?.certificates?.length > 0 && (
-        <>
-          <Title mt={"xl"}>Certificate</Title>
-          <ScrollArea>
-            <Paper mt={10}>
-              <Table
-                sx={{ minWidth: 800 }}
-                verticalSpacing="sm"
-                striped
-                highlightOnHover
-              >
-                <thead>
-                  <tr>
-                    <th>Trainings Name</th>
-                    <th>Completion</th>
-                    <th>isIssued</th>
-                    <th>Certificate URL</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data?.certificates &&
-                    data?.certificates.map((x: any) => (
-                      <RowsCompleted key={x.userId} item={x} />
-                    ))}
-                </tbody>
-              </Table>
-            </Paper>
-          </ScrollArea>
-        </>
-      )}
+      <Box mt={20}>
+        <Tabs
+          defaultChecked={true}
+          defaultValue={"certificate"}
+          value={tabValue}
+          onTabChange={(value) =>
+            navigate(`${value}`, { preventScrollReset: true })
+          }
+        >
+          <Tabs.List>
+            <Tabs.Tab
+              value="certificate"
+              icon={<IconFileDescription size={14} />}
+            >
+              Certificate
+            </Tabs.Tab>
+            <Tabs.Tab value="training" icon={<IconSchool size={14} />}>
+              Training
+            </Tabs.Tab>
+          </Tabs.List>
 
-      {externalCertificate.data && externalCertificate.data.length > 0 && (
-        <>
-          <Title mt={"xl"}>External Certificate</Title>
-          <ScrollArea>
-            <Paper mt={10}>
-              <Table
-                sx={{ minWidth: 800 }}
-                verticalSpacing="sm"
-                striped
-                highlightOnHover
-              >
-                <thead>
-                  <tr>
-                    <th>Trainings Name</th>
-                    <th>Verified</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Issued by</th>
-                    <th>Issuer location</th>
-                    <th>Certificate URL</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {externalCertificate?.data.map((x: any) => (
-                    <RowsExternal key={x.userId} item={x} />
-                  ))}
-                </tbody>
-              </Table>
-            </Paper>
-          </ScrollArea>
-        </>
-      )}
+          <Box pt="xs">
+            <Outlet />
+          </Box>
+        </Tabs>
+      </Box>
     </>
   );
 };

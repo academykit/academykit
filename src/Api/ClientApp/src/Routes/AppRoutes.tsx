@@ -1,4 +1,3 @@
-import React from "react";
 import LoginPage from "@pages/auth/loginPage";
 import { Route, Routes } from "react-router-dom";
 import RoutePath from "@utils/routeConstants";
@@ -20,8 +19,6 @@ import { Navigate } from "react-router-dom";
 import Layout from "@components/Layout/Layout";
 import AdminAuthRoute from "./AdminRoute";
 import lazyWithRetry from "@utils/lazyImportWithReload";
-import MyTrainingExternal from "@pages/admin/Component/training/myTrainingExternal";
-import CertificateList from "@pages/admin/Component/training/certificateList";
 const MyFeedback = lazyWithRetry(
   () => import("@pages/course/feedback/myfeedback")
 );
@@ -58,6 +55,9 @@ const CourseRoute = lazyWithRetry(() => import("@pages/course/edit/Route"));
 const UserInfo = lazyWithRetry(() => import("@components/Users/UserInfo"));
 const UserProfile = lazyWithRetry(
   () => import("@components/Users/UserProfile")
+);
+const UserProfileRoute = lazyWithRetry(
+  () => import("@components/Users/Components/UserProfileRoute")
 );
 const Classes = lazyWithRetry(() => import("@pages/course/classes/classes"));
 
@@ -149,9 +149,11 @@ const MainRoutes = () => {
         </Route>
         <Route path={RoutePath.userInfo + `/:id`} element={<UserInfo />} />
         <Route
-          path={RoutePath.userProfile + `/:id`}
+          path={RoutePath.userProfile + `/:id/*`}
           element={<UserProfile />}
-        />
+        >
+          <Route path={`*`} element={<UserProfileRoute />} />
+        </Route>
 
         <Route
           path={"/meet/:courseId/:lessonId"}

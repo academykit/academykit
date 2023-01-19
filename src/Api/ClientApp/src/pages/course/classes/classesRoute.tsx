@@ -1,6 +1,6 @@
 import { Loader } from "@mantine/core";
 import lazyWithRetry from "@utils/lazyImportWithReload";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 const CourseDescriptionSection = lazyWithRetry(
@@ -16,7 +16,6 @@ const ClassesRoute = () => {
         <Route index element={<CourseDescriptionSection />} />
         <Route path="comments" element={<Comments />} />
         <Route path="description" element={<CourseDescriptionSection />} />
-        {/* <Route path="*" element={<>asdasdasdsa</>} /> */}
         <Route path="*" element={<Navigate replace to={"/404"} />} />
       </Routes>
     </Suspense>
