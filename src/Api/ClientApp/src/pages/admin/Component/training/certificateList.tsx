@@ -1,3 +1,6 @@
+import withSearchPagination, {
+  IWithSearchPagination,
+} from "@hoc/useSearchPagination";
 import { IAuthContext } from "@context/AuthProvider";
 import useAuth from "@hooks/useAuth";
 import {
@@ -25,6 +28,7 @@ import {
 } from "@utils/services/certificateService";
 import moment from "moment";
 import React from "react";
+import UserShortProfile from "@components/UserShortProfile";
 
 const CertificateCard = ({
   auth,
@@ -67,9 +71,10 @@ const CertificateCard = ({
             {item.duration} hrs.
           </Text>
           <Text>
-            {item.institute}, {item.location}
+            {item.institute}
+            {item.location && `, ${item.location}`}
           </Text>
-          <Text>User: {item.user.fullName}</Text>
+          <UserShortProfile size={"sm"} user={item.user} />
         </Box>
         <Box style={{ width: 150, marginTop: "auto", marginBottom: "auto" }}>
           {item.imageUrl && (
@@ -134,18 +139,26 @@ const CertificateCard = ({
   );
 };
 
-const CertificateList = () => {
-  const listCertificate = useGetListCertificate("");
+const CertificateList = ({
+  searchParams,
+  // searchComponent,
+  pagination,
+}: IWithSearchPagination) => {
+  const listCertificate = useGetListCertificate(searchParams);
   const auth = useAuth();
   return (
     <Container fluid>
       <Title>List of External Trainings</Title>
+      {/* {searchComponent("Search for trainings")} */}
+
       {listCertificate.isSuccess &&
         listCertificate.data.data.items.map((x) => (
           <CertificateCard auth={auth} item={x} />
         ))}
+      {listCertificate.isSuccess &&
+        pagination(listCertificate.data.data.totalPage)}
     </Container>
   );
 };
 
-export default CertificateList;
+export default withSearchPagination(CertificateList);

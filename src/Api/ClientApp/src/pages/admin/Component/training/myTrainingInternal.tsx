@@ -6,6 +6,7 @@ import {
   Image,
   Text,
   ActionIcon,
+  Tooltip,
 } from "@mantine/core";
 import { IconDownload, IconEye } from "@tabler/icons";
 import downloadImage from "@utils/downloadImage";
@@ -59,19 +60,26 @@ const MyTrainingInternal = () => {
                         display: "flex",
                       }}
                     >
-                      <ActionIcon
-                        onClick={() => window.open(x.certificateUrl)}
-                        mr={10}
-                      >
-                        <IconEye color="black" />
-                      </ActionIcon>
-                      <ActionIcon
-                        onClick={() =>
-                          downloadImage(x.certificateUrl, x.user.fullName ?? "")
-                        }
-                      >
-                        <IconDownload color="black" />
-                      </ActionIcon>
+                      <Tooltip label="View Certificate">
+                        <ActionIcon
+                          onClick={() => window.open(x.certificateUrl)}
+                          mr={10}
+                        >
+                          <IconEye color="black" />
+                        </ActionIcon>
+                      </Tooltip>
+                      <Tooltip label="Download Certificate">
+                        <ActionIcon
+                          onClick={() =>
+                            downloadImage(
+                              x.certificateUrl,
+                              x.user.fullName ?? ""
+                            )
+                          }
+                        >
+                          <IconDownload color="black" />
+                        </ActionIcon>
+                      </Tooltip>
                     </div>
                   </div>
                 )}

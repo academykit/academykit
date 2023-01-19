@@ -12,6 +12,7 @@ import {
   Modal,
   Text,
   TextInput,
+  createStyles,
 } from "@mantine/core";
 import { DateRangePicker } from "@mantine/dates";
 import { createFormContext, yupResolver } from "@mantine/form";
@@ -39,25 +40,7 @@ const schema = Yup.object().shape({
   duration: Yup.number().typeError("Duration must be in hours."),
 });
 
-// const EditModal = ({values}:{values: any}) => {
-//   const form = useForm({
-//     initialValues: {
-//       name: values?.name,
-//       duration: values?.duration,
-//       location: values?.location,
-//       institute: values?.institute,
-//       imageUrl: values?.imageUrl,
-//     },
-//     validate: yupResolver(schema),
-//   });
-
-//   const [openId, setOpenId] = useState('')
-
-//   const update = useUpdateCertificate(values?.id)
-
-//   return
-
-// };
+const useStyles = createStyles({});
 
 const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
   const [showConfirmation, setShowConfirmation] = useToggle();
@@ -68,6 +51,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
   const update = useUpdateCertificate(id as string);
   const [idd, setIdd] = useState<any>();
   const [updates, setUpdates] = useState(false);
+  const { theme } = useStyles();
 
   const form = useForm({
     initialValues: {
@@ -195,20 +179,22 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                     {x.name}
                     <Badge ml={20}>{CertificateStatus[x.status]}</Badge>
                   </Text>
-                  <ActionIcon
-                    ml={5}
-                    onClick={() => {
-                      setIdd(x);
-                      setUpdates(true);
-                    }}
-                  >
-                    <IconEdit />
-                  </ActionIcon>
+                  {x.status !== CertificateStatus.Approved && (
+                    <ActionIcon
+                      ml={5}
+                      onClick={() => {
+                        setIdd(x);
+                        setUpdates(true);
+                      }}
+                    >
+                      <IconEdit />
+                    </ActionIcon>
+                  )}
                 </Flex>
                 <Text mt={5}>
-                  From {moment(x.startDate).format("YYYY-MM-DD")} to{" "}
-                  {moment(x.endDate).format("YYYY-MM-DD")} completed in about{" "}
-                  {x.duration} hrs.
+                  From {moment(x.startDate).format(theme.dateFormat)} to{" "}
+                  {moment(x.endDate).format(theme.dateFormat)}, Completed in
+                  about {x.duration} hrs.
                 </Text>
                 <Text>
                   {x.institute}, {x.location}

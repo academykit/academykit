@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { createFormContext, yupResolver } from "@mantine/form";
-import { TextInput, Button, Textarea, Container } from "@mantine/core";
+import { TextInput, Button, Textarea, Container, Text } from "@mantine/core";
 import ThumbnailEditor from "@components/Ui/ThumbnailEditor";
 import {
   useGeneralSetting,
@@ -92,9 +92,13 @@ const GeneralSettings = () => {
             FormField="logoUrl"
             currentThumbnail={data?.logoUrl}
           />
+          <Text c="dimmed" size="xs">
+            Note : Image minimum resolution size should be 640 * 360
+          </Text>
           <TextInput
             label="Company Name"
             withAsterisk
+            mt={20}
             name="companyName"
             placeholder="Please enter your company name"
             {...form.getInputProps("companyName")}

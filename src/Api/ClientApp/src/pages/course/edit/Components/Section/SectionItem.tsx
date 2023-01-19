@@ -69,7 +69,8 @@ const SectionItem = ({
       const err = errorType(error);
       showNotification({
         message: err,
-        title: "Error",
+        color: "red",
+        title: "Error!",
       });
     }
   };
