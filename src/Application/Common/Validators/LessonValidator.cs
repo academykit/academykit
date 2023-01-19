@@ -20,6 +20,7 @@
                                          .When(x => x.Type == LessonType.Exam);
             RuleFor(x => x.Meeting).SetValidator(new MeetingValidator())
                                          .When(x => x.Type == LessonType.LiveClass);
+            RuleFor(x => x).Must(x => x.EndDate != default && x.StartDate != default && x.EndDate > x.StartDate).WithMessage("EndDate must be greater than StartDate.");
         }
     }
 

@@ -227,6 +227,11 @@ namespace Lingtren.Infrastructure.Services
             responseModel.IsCompleted = currentLessonWatchHistory != null ? currentLessonWatchHistory.IsCompleted : false;
             responseModel.IsPassed = currentLessonWatchHistory != null ? currentLessonWatchHistory.IsPassed : false;
 
+            if(lesson.Type == LessonType.Document && !string.IsNullOrEmpty(lesson.DocumentUrl))
+            {
+                responseModel.DocumentUrl = await _fileServerService.GetFilePresignedUrl(lesson.DocumentUrl).ConfigureAwait(false);
+            }
+
             var nextLessonIndex = currentIndex + 1;
             if ((nextLessonIndex + 1) <= lessons.Count)
             {
