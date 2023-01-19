@@ -5,15 +5,16 @@ import {
   CopyButton,
   Flex,
   Image,
-  Modal,
+  Box,
   Paper,
   ScrollArea,
   Table,
   Title,
   Tooltip,
   useMantineTheme,
+  Text,
 } from "@mantine/core";
-import { IconCheck, IconCopy, IconDownload } from "@tabler/icons";
+import { IconCheck, IconCopy, IconDownload, IconEye } from "@tabler/icons";
 import {
   GetExternalCertificate,
   useGetUserCertificate,
@@ -21,6 +22,7 @@ import {
 import moment from "moment";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import downloadImage from "@utils/downloadImage";
 
 const RowsExternal = ({ item }: { item: GetExternalCertificate }) => {
   const theme = useMantineTheme();
@@ -35,46 +37,56 @@ const RowsExternal = ({ item }: { item: GetExternalCertificate }) => {
       <td>{item?.status === 2 ? <Badge>Yes</Badge> : <Badge>No</Badge>}</td>
       <td>{moment(item?.startDate).format(theme.dateFormat)}</td>
       <td>{moment(item?.endDate).format(theme.dateFormat)}</td>
+      <td>{item?.duration} Hour(s)</td>
       <td>{item?.institute}</td>
-      <td>{item.location}</td>
+      <td style={{ wordBreak: "break-all" }}>{item.location}</td>
       <td style={{ maxWidth: "0px" }}>
-        <Modal
-          opened={opened}
-          size="xl"
-          title={item?.name}
-          onClose={() => setOpened(false)}
-        >
-          <Image src={item?.imageUrl}></Image>
-        </Modal>
-        <Flex align={"center"}>
-          <Anchor onClick={() => setOpened((v) => !v)}>
-            {item?.imageUrl && (
+        <Box style={{ width: 150, marginTop: "auto", marginBottom: "auto" }}>
+          {item?.imageUrl ? (
+            <div style={{ position: "relative" }}>
               <Image
                 width={150}
                 height={100}
                 fit="contain"
-                // sx={{":hover"}}
+                sx={{ opacity: "0.5" }}
                 src={item?.imageUrl}
               />
-            )}
-          </Anchor>
-          <CopyButton value={item?.imageUrl} timeout={2000}>
-            {({ copied, copy }) => (
-              <Tooltip
-                label={copied ? "Copied" : "Copy"}
-                withArrow
-                position="right"
+              <div
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  bottom: 0,
+                  right: 0,
+                  margin: "auto",
+                  top: 0,
+                  width: "45px",
+                  height: "30px",
+                  display: "flex",
+                }}
               >
-                <ActionIcon color={copied ? "teal" : "gray"} onClick={copy}>
-                  {copied ? <IconCheck size={16} /> : <IconCopy size={16} />}
-                </ActionIcon>
-              </Tooltip>
-            )}
-          </CopyButton>
-          <ActionIcon onClick={() => handleDownload()}>
-            <IconDownload />
-          </ActionIcon>
-        </Flex>
+                <Tooltip label="View Certificate">
+                  <ActionIcon
+                    onClick={() => window.open(item?.imageUrl)}
+                    mr={10}
+                  >
+                    <IconEye color="black" />
+                  </ActionIcon>
+                </Tooltip>
+                <Tooltip label="Download Certificate">
+                  <ActionIcon
+                    onClick={() =>
+                      downloadImage(item?.imageUrl, item?.user?.fullName ?? "")
+                    }
+                  >
+                    <IconDownload color="black" />
+                  </ActionIcon>
+                </Tooltip>
+              </div>
+            </div>
+          ) : (
+            <Text>No Certificate</Text>
+          )}
+        </Box>
       </td>
     </tr>
   );
@@ -102,9 +114,10 @@ const ExternalCertificate = () => {
                     <th>Verified</th>
                     <th>Start Date</th>
                     <th>End Date</th>
+                    <th>Duration</th>
                     <th>Issued by</th>
                     <th>Issuer location</th>
-                    <th>Certificate URL</th>
+                    <th>Certificate</th>
                   </tr>
                 </thead>
                 <tbody>

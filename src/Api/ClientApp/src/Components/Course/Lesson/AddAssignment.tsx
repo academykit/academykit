@@ -81,8 +81,6 @@ const AddAssignment = ({
   const [opened, setOpened] = useState(false);
   const [lessonId, setLessonId] = useState("");
 
-  console.log(item);
-
   const startDateTime = item?.startDate
     ? moment(item?.startDate + "z")
         .local()
@@ -109,6 +107,12 @@ const AddAssignment = ({
   });
 
   const submitForm = async (values: SubmitType) => {
+    const val = { ...values };
+    delete val.eventEndDate;
+    delete val.endTime;
+    delete val.eventStartDate;
+    delete val.startTime;
+
     const startDate =
       values?.eventStartDate &&
       getDateTime(
@@ -126,7 +130,7 @@ const AddAssignment = ({
         courseId: slug,
         sectionIdentity: sectionId,
         type: LessonType.Assignment,
-        ...values,
+        ...val,
         startDate: startDate && startDate.utcDateTime,
         endDate: endDate && endDate.utcDateTime,
         isMandatory,

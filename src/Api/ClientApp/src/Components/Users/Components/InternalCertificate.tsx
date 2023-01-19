@@ -11,12 +11,14 @@ import {
   Table,
   Title,
   Tooltip,
+  Box,
 } from "@mantine/core";
 import { IconCheck, IconCopy, IconDownload } from "@tabler/icons";
 import { useProfileAuth } from "@utils/services/authService";
 import { ICertificateList } from "@utils/services/manageCourseService";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+
 const RowsCompleted = ({ item }: { item: ICertificateList }) => {
   const [opened, setOpened] = useState(false);
   const handleDownload = () => {
@@ -77,31 +79,35 @@ const InternalCertificate = () => {
   return (
     <>
       <Title mt={"xl"}>Certificate</Title>
-      <ScrollArea>
-        <Paper mt={10}>
-          <Table
-            sx={{ minWidth: 800 }}
-            verticalSpacing="sm"
-            striped
-            highlightOnHover
-          >
-            <thead>
-              <tr>
-                <th>Trainings Name</th>
-                <th>Completion</th>
-                <th>isIssued</th>
-                <th>Certificate URL</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data?.certificates &&
-                data?.certificates.map((x: any) => (
-                  <RowsCompleted key={x.userId} item={x} />
-                ))}
-            </tbody>
-          </Table>
-        </Paper>
-      </ScrollArea>
+      {data && data?.certificates.length > 0 ? (
+        <ScrollArea>
+          <Paper mt={10}>
+            <Table
+              sx={{ minWidth: 800 }}
+              verticalSpacing="sm"
+              striped
+              highlightOnHover
+            >
+              <thead>
+                <tr>
+                  <th>Trainings Name</th>
+                  <th>Completion</th>
+                  <th>isIssued</th>
+                  <th>Certificate URL</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data?.certificates &&
+                  data?.certificates.map((x: any) => (
+                    <RowsCompleted key={x.userId} item={x} />
+                  ))}
+              </tbody>
+            </Table>
+          </Paper>
+        </ScrollArea>
+      ) : (
+        <Box mt={10}>No Certificates found.</Box>
+      )}
     </>
   );
 };

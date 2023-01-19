@@ -97,7 +97,7 @@ export interface ListCertificate extends ExternalCertificatePost {
 }
 
 const getListCertificate = (query: string) =>
-  httpClient.get<IPaginated<ListCertificate>>(api.externalCertificate.list);
+  httpClient.get<IPaginated<ListCertificate>>(api.externalCertificate.list + `?${query}`);
 
 export const useGetListCertificate = (query: string) =>
   useQuery([api.externalCertificate.list, query], () =>

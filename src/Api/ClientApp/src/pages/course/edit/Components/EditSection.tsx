@@ -22,6 +22,7 @@ import { UseQueryResult } from "@tanstack/react-query";
 import { IPaginated } from "@utils/services/types";
 import { useForm } from "@mantine/form";
 import errorType from "@utils/services/axiosError";
+import { IconDragDrop } from "@tabler/icons";
 
 const useStyle = createStyles((theme) => ({
   section: {
@@ -45,10 +46,12 @@ const EditSection = () => {
     <Container fluid>
       <Grid mt={20}>
         <Grid.Col span={section?.matches ? 10 : 12}>
-          <Title>Sections and Lessons</Title>
+          <Title mb={10}>Sections and Lessons</Title>
           <Text>
             You can add lessons and group them into sections. Add section, then
-            add lessons within the section.
+            add lessons within the section. You can arrange the order of the
+            sections and lessons by dragging & dropping them by using the
+            "Sorting Icon" {<IconDragDrop />}
           </Text>
         </Grid.Col>
       </Grid>
