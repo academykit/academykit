@@ -398,6 +398,8 @@ namespace Lingtren.Infrastructure.Services
                 existing.Description = model.Description;
                 existing.ThumbnailUrl = model.ThumbnailUrl;
                 existing.IsMandatory = model.IsMandatory;
+                existing.StartDate = model.StartDate;
+                existing.EndDate = model.EndDate;
                 existing.UpdatedBy = currentUserId;
                 existing.UpdatedOn = currentTimeStamp;
 
