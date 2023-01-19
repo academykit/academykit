@@ -131,9 +131,9 @@ const MainRoutes = () => {
             element={<MCQPoolRoute />}
           />
           <Route
-          path={RoutePath.manageCourse.description().signature + "/*"}
-          element={<CourseRoute />}
-        />
+            path={RoutePath.manageCourse.description().signature + "/*"}
+            element={<CourseRoute />}
+          />
         </Route>
 
         <Route path={RoutePath.groups.base} element={<GroupsPage />} />
@@ -145,8 +145,6 @@ const MainRoutes = () => {
           path={RoutePath.userProfile + `/:id`}
           element={<UserProfile />}
         />
-
-        
 
         <Route
           path={"/meet/:courseId/:lessonId"}
@@ -161,7 +159,7 @@ const MainRoutes = () => {
         <Route path="/settings/*" element={<AdminRoute />} />
 
         <Route
-          path={RoutePath.classes + "/:id/:lessonId"}
+          path={RoutePath.classes + "/:id/:lessonId/*"}
           element={<Classes />}
         >
           <Route path="*" element={<ClassesRoute />} />
