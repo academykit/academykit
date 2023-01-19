@@ -6,7 +6,6 @@ import { Navigate, Route, Routes } from "react-router-dom";
 const CourseDescriptionSection = lazyWithRetry(
   () => import("@pages/course/classes/description")
 );
-const Classes = lazyWithRetry(() => import("@pages/course/classes/classes"));
 
 const Comments = lazyWithRetry(() => import("@pages/course/classes/comments"));
 

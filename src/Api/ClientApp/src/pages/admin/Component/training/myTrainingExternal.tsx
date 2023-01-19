@@ -25,9 +25,7 @@ import {
   CertificateStatus,
   useAddCertificate,
   useGetExternalCertificate,
-  useGetUserCertificate,
   useUpdateCertificate,
-  useUpdateCertificateStatus,
 } from "@utils/services/certificateService";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -67,7 +65,6 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
   const [value, setValue] = useState<[Date, Date]>([new Date(), new Date()]);
   const addCertificate = useAddCertificate();
   const certificateList = useGetExternalCertificate(id ? false : true);
-  const userCertificate = useGetUserCertificate(id as string);
   const update = useUpdateCertificate(id as string);
   const [idd, setIdd] = useState<any>();
   const [updates, setUpdates] = useState(false);

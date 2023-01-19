@@ -77,7 +77,7 @@ export const useUpdateCertificate = (id: string) => {
 };
 
 const getUserCertificate = (id?: string) => {
-  return httpClient.get(api.externalCertificate.user(id));
+  return httpClient.get<GetExternalCertificate[]>(api.externalCertificate.user(id));
 };
 
 export const useGetUserCertificate = (id?: string) => {
