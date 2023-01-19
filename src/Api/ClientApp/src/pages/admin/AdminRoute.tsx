@@ -1,11 +1,22 @@
-import { Loader } from "@mantine/core";
+import { Container, Loader, Tabs } from "@mantine/core";
+import NotFound from "@pages/404";
 import AdminAuthRoute, { SuperAdminRoute } from "@routes/AdminRoute";
 import lazyWithRetry from "@utils/lazyImportWithReload";
 import RoutePath from "@utils/routeConstants";
 import React, { Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import Account from "./account";
 import AdminNav from "./Component/AdminNav";
+import AdminViewCertificate from "./Component/training/adminViewCertificate";
+import CertificateList from "./Component/training/certificateList";
+import MyTrainingInternal from "./Component/training/myTrainingInternal";
 
 const AdminCourseList = lazyWithRetry(() => import("./course"));
 const Department = lazyWithRetry(() => import("./department"));
@@ -33,11 +44,19 @@ const AdminRoutesChild = () => {
       <Routes>
         <Route path={"/"} element={<Settings />} />
         <Route path={"/account"} element={<Account />} />
+        <Route element={<MyTrainings />}>
+          <Route path={"/mytraining"} element={<MyTrainingInternal />} />
+          <Route
+            path={"/mytraining/external"}
+            element={<AdminViewCertificate />}
+          />
+        </Route>
         <Route element={<AdminAuthRoute />}>
           <Route path={"/smtp"} element={<SMTP />} />
           <Route path={"/level"} element={<Level />} />
           <Route path={"/department"} element={<Department />} />
           <Route path={"/courses"} element={<AdminCourseList />} />
+          <Route path={"/user/certificate"} element={<CertificateList />} />
           <Route path="*" element={<Navigate to={RoutePath[404]} replace />} />
         </Route>
         <Route element={<SuperAdminRoute />}>
@@ -48,6 +67,29 @@ const AdminRoutesChild = () => {
         </Route>
       </Routes>
     </Suspense>
+  );
+};
+
+const MyTrainings = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  return (
+    <Container fluid>
+      <Tabs
+        my={20}
+        value={location.pathname}
+        onTabChange={(value) => navigate(`${value}`)}
+      >
+        <Tabs.List>
+          <Tabs.Tab value="/settings/mytraining">Internal</Tabs.Tab>
+          <Tabs.Tab value="/settings/mytraining/external">External</Tabs.Tab>
+        </Tabs.List>
+      </Tabs>
+      <Suspense fallback={<Loader />}>
+        <Outlet />
+      </Suspense>
+    </Container>
   );
 };
 

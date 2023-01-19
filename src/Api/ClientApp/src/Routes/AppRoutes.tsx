@@ -20,6 +20,8 @@ import { Navigate } from "react-router-dom";
 import Layout from "@components/Layout/Layout";
 import AdminAuthRoute from "./AdminRoute";
 import lazyWithRetry from "@utils/lazyImportWithReload";
+import MyTrainingExternal from "@pages/admin/Component/training/myTrainingExternal";
+import CertificateList from "@pages/admin/Component/training/certificateList";
 const MyFeedback = lazyWithRetry(
   () => import("@pages/course/feedback/myfeedback")
 );
@@ -115,6 +117,11 @@ const MainRoutes = () => {
           path={RoutePath.courses.courseList + "*"}
           element={<CourseListRoute />}
         />
+
+        {/* <Route
+          path={"/user/certificate" + `/:id`}
+          element={<MyTrainingExternal />}
+        /> */}
         <Route
           path={RoutePath.courses.base}
           element={<Navigate to={RoutePath.courses.courseList} replace />}

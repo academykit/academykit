@@ -357,14 +357,14 @@ namespace Lingtren.Infrastructure.Services
             _unitOfWork.GetRepository<Course>().Update(course);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
-            if(status == CourseStatus.Review)
+            if (status == CourseStatus.Review)
             {
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseReviewMailAsync(course.Name, null));
             }
 
             if (status == CourseStatus.Published)
             {
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.GroupCoursePublishedMailAsync(course.GroupId.Value,course.Name, null));
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.GroupCoursePublishedMailAsync(course.GroupId.Value, course.Name, null));
             }
         }
 
@@ -648,6 +648,8 @@ namespace Lingtren.Infrastructure.Services
                         Name = l.Name,
                         Slug = l.Slug,
                         Order = l.Order,
+                        StartDate = l.StartDate,
+                        EndDate = l.EndDate,
                         CourseId = l.CourseId,
                         SectionId = l.SectionId,
                         QuestionSetId = l.QuestionSetId,
@@ -709,6 +711,77 @@ namespace Lingtren.Infrastructure.Services
                 ).ConfigureAwait(false);
             var result = course.ToIPagedList(criteria.Page, criteria.Size);
             return result;
+        }
+
+        /// <summary>
+        /// Handle to get user courses list with progress detail
+        /// </summary>
+        /// <param name="userId">the requested user id</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the search result of <see cref="CourseResponseModel"/></returns>
+        public async Task<SearchResult<CourseResponseModel>> GetUserCourses(Guid userId, BaseSearchCriteria criteria)
+        {
+            try
+            {
+                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(criteria.CurrentUserId).ConfigureAwait(false);
+
+                if (!isSuperAdminOrAdmin && criteria.CurrentUserId != userId)
+                {
+                    return new SearchResult<CourseResponseModel>
+                    {
+                        Items = new List<CourseResponseModel>(),
+                        CurrentPage = criteria.Page,
+                        PageSize = criteria.Size,
+                    };
+                }
+                var predicate = PredicateBuilder.New<Course>(true);
+                predicate = predicate.And(p => p.CourseEnrollments.Any(x => x.CourseId == p.Id && x.UserId == userId && !x.IsDeleted &&
+                               (x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)));
+
+                var courses = await _unitOfWork.GetRepository<Course>().GetAllAsync(
+                   predicate: predicate,
+                   include: src => src.Include(x => x.User).Include(x => x.CourseEnrollments).Include(x => x.Group).Include(x => x.Level)
+                   ).ConfigureAwait(false);
+
+                var result = courses.ToIPagedList(criteria.Page, criteria.Size);
+
+                var response = new SearchResult<CourseResponseModel>
+                {
+                    Items = new List<CourseResponseModel>(),
+                    CurrentPage = result.CurrentPage,
+                    PageSize = result.PageSize,
+                    TotalCount = result.TotalCount,
+                    TotalPage = result.TotalPage,
+                };
+
+                result.Items.ForEach(x =>
+                {
+                    response.Items.Add(new CourseResponseModel
+                    {
+                        Id = x.Id,
+                        Slug = x.Slug,
+                        Name = x.Name,
+                        ThumbnailUrl = x.ThumbnailUrl,
+                        Percentage = x.CourseEnrollments.FirstOrDefault(
+                                    predicate: p => p.UserId == userId && !p.IsDeleted
+                                    && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                                        || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed))?.Percentage,
+                        Language = x.Language,
+                        GroupId = x.GroupId,
+                        GroupName = x.Group?.Name,
+                        LevelId = x.LevelId,
+                        LevelName = x.Level?.Name,
+                        CreatedOn = x.CreatedOn,
+                        User = new UserModel(x.User),
+                    });
+                });
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to fetch training list of the user.");
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch training list of the user.");
+            }
         }
 
         #endregion Public Methods
@@ -1550,6 +1623,8 @@ namespace Lingtren.Infrastructure.Services
 
             return courseCertificate == null ? null : new CourseCertificateResponseModel(courseCertificate);
         }
+
+
 
         #endregion Signature
     }

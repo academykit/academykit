@@ -11,6 +11,11 @@ const AdminNav = () => {
       role: UserRole.Trainee,
     },
     {
+      label: "Your Trainings",
+      to: RoutePath.settings.training(),
+      role: UserRole.Trainee,
+    },
+    {
       label: "Admin Settings",
       to: RoutePath.settings.base,
       separator: true,
@@ -60,6 +65,11 @@ const AdminNav = () => {
     {
       label: "Trainings",
       to: RoutePath.settings.courses(),
+      role: UserRole.Admin,
+    },
+    {
+      label: "Certificates",
+      to: RoutePath.settings.userCertificate(),
       role: UserRole.Admin,
     },
     // { label: "Payment System", to: "/paymentmethods" },

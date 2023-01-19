@@ -35,35 +35,24 @@ import errorType from "@utils/services/axiosError";
 import moment from "moment";
 import { getInitials } from "@utils/getInitialName";
 import { IconDownload, IconEye } from "@tabler/icons";
+import downloadImage from "@utils/downloadImage";
 
-function downloadImage(src: string, name: string) {
-  //@ts-ignore
-  const img = document.createElement('img');
-  img.crossOrigin = 'anonymous';  
-  img.src = src;
-  img.onload = () => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = img.width;
-    canvas.height = img.height;
-      //@ts-ignore
-
-    ctx.drawImage(img, 0, 0);
-    const a = document.createElement('a');
-    a.download = name+` Certificate.png`;
-    a.href = canvas.toDataURL('image/png');
-    a.click();
-  };
-}
-
-const Rows = ({ item, setSelected, selected, searchParams}: 
-  { item: IStudentStat, setSelected: Dispatch<SetStateAction<string[]>>,
-     selected: string[], searchParams: string }) => {
+const Rows = ({
+  item,
+  setSelected,
+  selected,
+  searchParams,
+}: {
+  item: IStudentStat;
+  setSelected: Dispatch<SetStateAction<string[]>>;
+  selected: string[];
+  searchParams: string;
+}) => {
   const { id } = useParams();
   const course_id = id as string;
   const postUserData = usePostStatisticsCertificate(course_id, searchParams);
 
-  const handleSubmit = async (dataUser : string[]) => {
+  const handleSubmit = async (dataUser: string[]) => {
     try {
       await postUserData.mutateAsync({
         data: dataUser,
@@ -88,8 +77,7 @@ const Rows = ({ item, setSelected, selected, searchParams}:
     } else {
       setSelected([userId, ...selected]);
     }
-  };  
-
+  };
 
   return (
     <tr key={item.userId}>
@@ -130,38 +118,46 @@ const Rows = ({ item, setSelected, selected, searchParams}:
       <td>
         <Flex direction={"column"} justify={"center"} align={"center"}>
           {item?.hasCertificateIssued ? (
-             <div style={{ marginTop: "10px" }}>
+            <div style={{ marginTop: "10px" }}>
               <Text>
-
-             Issued on {moment(item?.certificateIssuedDate + "Z").format(
-                   "YYYY-MM-DD"
-                 )
-               }
+                Issued on{" "}
+                {moment(item?.certificateIssuedDate + "Z").format("YYYY-MM-DD")}
               </Text>
-              <Flex justify={'center'} mt={8}>
-                <Tooltip label='View Certificate'>
-                <UnstyledButton mr="sm" onClick={() => {
-                  window.open(item.certificateUrl)
-                }}>
-                  <IconEye  size={23} color='green'/>
-                </UnstyledButton>
+              <Flex justify={"center"} mt={8}>
+                <Tooltip label="View Certificate">
+                  <UnstyledButton
+                    mr="sm"
+                    onClick={() => {
+                      window.open(item.certificateUrl);
+                    }}
+                  >
+                    <IconEye size={23} color="green" />
+                  </UnstyledButton>
                 </Tooltip>
-                <Tooltip label='Download Certificate'>
-
-                <UnstyledButton onClick={() => downloadImage(item.certificateUrl, item.fullName)}>
-                  <IconDownload size={23} color='green'/>
-                </UnstyledButton>
+                <Tooltip label="Download Certificate">
+                  <UnstyledButton
+                    onClick={() =>
+                      downloadImage(item.certificateUrl, item.fullName)
+                    }
+                  >
+                    <IconDownload size={23} color="green" />
+                  </UnstyledButton>
                 </Tooltip>
               </Flex>
-           </div>
+            </div>
           ) : (
             <>
-            <Badge>Not Issued</Badge>
-            <Button size="xs" mt={10} loading={postUserData.isLoading}
-             onClick={() => handleSubmit([item.userId])}>Issue</Button>
+              <Badge>Not Issued</Badge>
+              <Button
+                size="xs"
+                mt={10}
+                loading={postUserData.isLoading}
+                onClick={() => handleSubmit([item.userId])}
+              >
+                Issue
+              </Button>
             </>
           )}
-         
         </Flex>
       </td>
       <td style={{ textAlign: "center" }}>
@@ -173,8 +169,6 @@ const Rows = ({ item, setSelected, selected, searchParams}:
           {item?.lessonName}
         </Anchor>
       </td>
-      
-        
     </tr>
   );
 };
@@ -192,8 +186,6 @@ const ManageStudents = ({
   const postUserData = usePostStatisticsCertificate(course_id, searchParams);
   const [selected, setSelected] = useState<string[]>([]);
   const [submitModal, setSubmitModal] = useState(false);
-
-
 
   const handleIssueAll = async () => {
     try {
@@ -214,10 +206,10 @@ const ManageStudents = ({
     }
   };
 
-  const handleSubmit = async (dataUser? : string[]) => {
+  const handleSubmit = async (dataUser?: string[]) => {
     try {
       await postUserData.mutateAsync({
-        data: dataUser?.length === 1 ?dataUser:  selected,
+        data: dataUser?.length === 1 ? dataUser : selected,
         issueAll: false,
         identity: course_id,
       });
@@ -249,25 +241,28 @@ const ManageStudents = ({
       />
       <Group position="apart" mb={"lg"}>
         <Title>Students</Title>
-        <Flex >
-        {getStudentStat.data && getStudentStat.data?.items.length >= 1 && (
-          <Button
-            onClick={() => setSubmitModal(true)}
-            disabled={selected.length === 0}
-            mr={20}
-            loading={selected.length !== 0 && postUserData.isLoading}
-          >
-            Issue Certificate
-          </Button>
-      )}
-
-        {getStudentStat.data && getStudentStat.data?.items.length >= 1 && (
-          <Button 
-          loading={selected.length === 0 && postUserData.isLoading}
-           disabled={selected.length > 0}
-            onClick={() => setOpened(true)}>Issue Certificates to All</Button>
+        <Flex>
+          {getStudentStat.data && getStudentStat.data?.items.length >= 1 && (
+            <Button
+              onClick={() => setSubmitModal(true)}
+              disabled={selected.length === 0}
+              mr={20}
+              loading={selected.length !== 0 && postUserData.isLoading}
+            >
+              Issue Certificate
+            </Button>
           )}
-          </Flex>
+
+          {getStudentStat.data && getStudentStat.data?.items.length >= 1 && (
+            <Button
+              loading={selected.length === 0 && postUserData.isLoading}
+              disabled={selected.length > 0}
+              onClick={() => setOpened(true)}
+            >
+              Issue Certificates to All
+            </Button>
+          )}
+        </Flex>
       </Group>
 
       <div style={{ display: "flex" }}>
@@ -298,7 +293,13 @@ const ManageStudents = ({
             </thead>
             <tbody>
               {getStudentStat.data?.items?.map((item) => (
-                <Rows item={item} key={item?.userId} selected={selected} setSelected={setSelected} searchParams={searchParams} />
+                <Rows
+                  item={item}
+                  key={item?.userId}
+                  selected={selected}
+                  setSelected={setSelected}
+                  searchParams={searchParams}
+                />
               ))}
             </tbody>
           </Table>
@@ -306,7 +307,7 @@ const ManageStudents = ({
       ) : (
         <Box mt={5}>No Students Found</Box>
       )}
-      
+
       {getStudentStat.data && pagination(getStudentStat.data?.totalPage)}
     </ScrollArea>
   );

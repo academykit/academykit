@@ -100,6 +100,11 @@ const RoutePath = {
     profile: function () {
       return this.base + "/account";
     },
+  userCertificate: function() { return this.base + '/user/certificate'},
+
+    training: function () {
+      return this.base + "/mytraining"
+    },
     general: function () {
       return this.base + "/general";
     },
