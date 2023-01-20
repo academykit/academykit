@@ -40,7 +40,7 @@ const RowsExternal = ({ item }: { item: GetExternalCertificate }) => {
       <td>{item?.duration} Hour(s)</td>
       <td>{item?.institute}</td>
       <td style={{ wordBreak: "break-all" }}>{item.location}</td>
-      <td style={{ maxWidth: "0px" }}>
+      <td>
         <Box style={{ width: 150, marginTop: "auto", marginBottom: "auto" }}>
           {item?.imageUrl ? (
             <div style={{ position: "relative" }}>
@@ -107,6 +107,7 @@ const ExternalCertificate = () => {
                 verticalSpacing="sm"
                 striped
                 highlightOnHover
+                withBorder
               >
                 <thead>
                   <tr>
