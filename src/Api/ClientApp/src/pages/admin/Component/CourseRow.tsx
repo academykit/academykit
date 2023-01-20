@@ -6,6 +6,7 @@ import {
   Button,
   Group,
   Modal,
+  Textarea,
   Tooltip,
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
@@ -34,6 +35,7 @@ const color = (status: CourseStatus) => {
 
 const CourseRow = ({ course }: { course: ICourse }) => {
   const [confirmPublish, togglePublish] = useToggle();
+  const [isRejected, toggleRejected] = useToggle();
   const courseStatus = useCourseStatus(course.id);
   const auth = useAuth();
 
@@ -68,14 +70,33 @@ const CourseRow = ({ course }: { course: ICourse }) => {
         <Modal
           opened={confirmPublish}
           onClose={togglePublish}
-          title={`Are you sure you want to publish "${course.name}"?`}
+          title={
+            isRejected
+              ? `Leave a message for your rejection`
+              : `Are you sure you want to publish "${course.name}"?`
+          }
         >
-          <Group mt={10}>
-            <Button onClick={onPublish}>Yes</Button>
-            <Button variant="outline" onClick={() => togglePublish()}>
-              No
-            </Button>
-          </Group>
+          {!isRejected ? (
+            <Group mt={10}>
+              <Button onClick={onPublish}>Publish</Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  toggleRejected();
+                }}
+              >
+                Reject
+              </Button>
+            </Group>
+          ) : (
+            <Group>
+              <Textarea w={"100%"} />
+              <Button>Submit</Button>
+              <Button variant="outline" onClick={() => toggleRejected()}>
+                Cancel
+              </Button>
+            </Group>
+          )}
         </Modal>
         {course.name}
       </td>
