@@ -470,7 +470,7 @@ export const useActiveZoomLicense = (
     () => getActiveZoomLicense(startDateTime, duration),
     {
       select: (data) => data,
-      enabled: startDateTime && duration ? true : false,
+      // enabled: startDateTime && duration ? true : false,
     }
   );
 };
