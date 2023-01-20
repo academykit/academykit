@@ -30,7 +30,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient().WithEndpoint(credentails.EndPoint).
-                            WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
+                            WithCredentials(credentails.AccessKey, credentails.SecretKey).Build();
                 var fileName = string.Concat(model.File.FileName.Where(c => !char.IsWhiteSpace(c)));
                 var extension = Path.GetExtension(fileName);
                 fileName = $"{Guid.NewGuid()}_{fileName}";
@@ -72,7 +72,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient().WithEndpoint(credentails.EndPoint).
-                            WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
+                            WithCredentials(credentails.AccessKey, credentails.SecretKey).Build();
                 var objectArgs = new Minio.PresignedGetObjectArgs().WithObject(key).WithBucket(credentails.Bucket).WithExpiry(credentails.ExpiryTime);
                 return await minio.PresignedGetObjectAsync(objectArgs).ConfigureAwait(false);
             }
