@@ -163,8 +163,8 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
           </form>
         </FormProvider>
       </Modal>
-      <Group position="right" onClick={() => setShowConfirmation()}>
-        <Button>Add Certificate</Button>
+      <Group position="right">
+        <Button onClick={() => setShowConfirmation()}>Add Certificate</Button>
       </Group>
       {certificateList.isSuccess && certificateList.data?.length < 0 && (
         <Box>No External trainings found.</Box>

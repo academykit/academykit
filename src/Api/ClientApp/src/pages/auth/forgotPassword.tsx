@@ -104,7 +104,12 @@ const ForgotPassword = () => {
               </Anchor>
             </Link>
           </Group>
-          <Button loading={login.isLoading} fullWidth mt="xl" type="submit">
+          <Button
+            loading={forgotPassword.isLoading}
+            fullWidth
+            mt="xl"
+            type="submit"
+          >
             Proceed
           </Button>
         </Paper>

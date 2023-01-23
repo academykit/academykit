@@ -124,7 +124,7 @@ const CreateCoursePage = () => {
       form.reset();
       showNotification({
         title: "Success!",
-        message: "Course Created successfully!",
+        message: "Training created successfully.",
       });
       navigate(RoutePath.manageCourse.lessons(res.data.slug).route);
     } catch (err) {
@@ -142,7 +142,7 @@ const CreateCoursePage = () => {
       <FormProvider form={form}>
         <form onSubmit={form.onSubmit(submitHandler)}>
           <Box mt={20}>
-            <ThumbnailEditor formContext={useFormContext} label="thumbnail"/>
+            <ThumbnailEditor formContext={useFormContext} label="thumbnail" />
             <Group mt={10} grow>
               <TextInput
                 placeholder="Course Title."
