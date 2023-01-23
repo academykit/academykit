@@ -7,6 +7,8 @@ import {
   Loader,
   Box,
   Title,
+  Text,
+  Anchor,
 } from "@mantine/core";
 import UserMemberTable from "@components/Users/UserMemberTable";
 import { useAddUser, useUsers } from "@utils/services/adminService";
@@ -15,6 +17,7 @@ import withSearchPagination, {
 } from "@hoc/useSearchPagination";
 import errorType from "@utils/services/axiosError";
 import lazyWithRetry from "@utils/lazyImportWithReload";
+import CSVUpload from "@components/Ui/CSVUpload";
 const AddUpdateUserForm = lazyWithRetry(
   () => import("../../Components/Users/AddUpdateUserForm")
 );
@@ -33,6 +36,7 @@ const UsersList = ({
   sortComponent,
 }: IWithSearchPagination) => {
   const [opened, setOpened] = useState(false);
+  const [importModal, setImportModal] = useState(false);
   const { data, isLoading: loading, isError: error } = useUsers(searchParams);
   const addUser = useAddUser(searchParams);
 
@@ -54,15 +58,43 @@ const UsersList = ({
           />
         </Suspense>
       </Modal>
+      <Modal
+        opened={importModal}
+        onClose={() => setImportModal(false)}
+        title="Bulk Import Users"
+        styles={{ title: { fontWeight: "bold" } }}
+      >
+        <Text mb={10} size="sm">
+          CSV file format should be similar to sample CSV. Please
+          <Anchor
+            href="https://google.com"
+            style={{
+              textDecoration: "underline",
+            }}
+            mx={5}
+          >
+            click here
+          </Anchor>
+          to download sample CSV.
+        </Text>
+
+        <CSVUpload />
+      </Modal>
       <Group
         sx={{ justifyContent: "space-between", alignItems: "center" }}
         mb={15}
       >
         <Title>Users</Title>
-
-        <Button ml={5} onClick={() => setOpened(true)}>
-          Add User
-        </Button>
+        <div>
+          <Button onClick={() => setOpened(true)}>Add User</Button>
+          {/* <Button
+            ml={10}
+            variant="outline"
+            onClick={() => setImportModal(true)}
+          >
+            Import Users
+          </Button> */}
+        </div>
       </Group>
       <div style={{ display: "flex", marginBottom: "10px" }}>
         {searchComponent("Search for users")}

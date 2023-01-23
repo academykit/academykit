@@ -44,7 +44,9 @@ const schema = Yup.object().shape({
   endTime: Yup.string()
     .required("end time cannot be empty.")
     .typeError("End Time is required."),
-  duration: Yup.string().required("Duration is required."),
+  duration: Yup.number()
+    .required("Duration is required.")
+    .min(1, "Exam duration should at least be one."),
 });
 
 const strippedFormValue = (value: any) => {
@@ -93,12 +95,12 @@ const AddExam = ({
     if (lessonDetails.isSuccess && isEditing) {
       const data = course?.questionSet;
       const startDateTime = moment(data?.startTime + "z")
-      .local()
-      .toDate();
+        .local()
+        .toDate();
       const endDateTime = moment(data?.endTime + "z")
-      .local()
-      .toDate();
-      
+        .local()
+        .toDate();
+
       form.setValues({
         name: course?.name ?? "",
         description: data?.description ?? "",
@@ -106,7 +108,7 @@ const AddExam = ({
         questionMarking: data?.questionMarking ?? 0,
         passingWeightage: data?.passingWeightage ?? 1,
         allowedRetake: data?.allowedRetake ?? 0,
-        duration: data?.duration ? data.duration / 60 : 0,
+        duration: data?.duration ? data.duration / 60 : 1,
         startTime: startDateTime,
         startDate: startDateTime,
         endDate: endDateTime,

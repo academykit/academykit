@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Box,
   Button,
   Container,
@@ -9,10 +10,11 @@ import {
   Text,
   TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { useToggle } from "@mantine/hooks";
-import { IconCalendar } from "@tabler/icons";
+import { IconCalendar, IconEye, IconDownload } from "@tabler/icons";
 import {
   useAddCertificate,
   useGetCertificateDetails,
@@ -26,6 +28,7 @@ import * as Yup from "yup";
 import errorType from "@utils/services/axiosError";
 import { useEffect } from "react";
 import moment from "moment";
+import downloadImage from "@utils/downloadImage";
 
 const schema = Yup.object().shape({
   title: Yup.string().required("Course Title is required."),
@@ -42,6 +45,8 @@ const Certificate = () => {
   const getSignature = useGetSignature(params.id as string);
   const addCertificate = useAddCertificate(params.id as string);
   const getCertificateDetails = useGetCertificateDetails(params.id as string);
+  const data = getCertificateDetails.data?.data;
+
   const form = useForm({
     validate: yupResolver(schema),
     initialValues: {
@@ -116,8 +121,57 @@ const Certificate = () => {
             breakpoints={[{ maxWidth: 1050, cols: 1, spacing: "sm" }]}
           >
             <Box sx={{ width: "300px", margin: "auto" }}>
-              {/* <AspectRatio ratio={16 / 9}> */}
-              <Image src={getCertificateDetails.data?.data?.sampleUrl} />
+              {getCertificateDetails.data?.data.sampleUrl &&
+                getCertificateDetails.isSuccess && (
+                  <div
+                    style={{ position: "relative", backgroundColor: "black" }}
+                  >
+                    <Image
+                      radius={"md"}
+                      style={{
+                        opacity: "0.4",
+                      }}
+                      src={getCertificateDetails.data?.data?.sampleUrl}
+                    />
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: -20,
+                        bottom: 0,
+                        right: 0,
+                        top: 0,
+                        margin: "auto",
+                        width: "45px",
+                        height: "30px",
+                        display: "flex",
+                      }}
+                    >
+                      <Tooltip label="View Certificate">
+                        <ActionIcon
+                          variant="default"
+                          onClick={() => window.open(data?.sampleUrl)}
+                          mr={10}
+                          size="md"
+                        >
+                          <IconEye />
+                        </ActionIcon>
+                      </Tooltip>
+                      <Tooltip label="Download Certificate">
+                        <ActionIcon
+                          variant="default"
+                          onClick={() =>
+                            downloadImage(
+                              data?.sampleUrl ?? "",
+                              data?.title ?? ""
+                            )
+                          }
+                        >
+                          <IconDownload />
+                        </ActionIcon>
+                      </Tooltip>
+                    </div>
+                  </div>
+                )}
             </Box>
 
             <Container fluid w={"100%"}>

@@ -164,7 +164,7 @@ const EditCourse = () => {
       navigator(RoutePath.manageCourse.lessons(slug.id).route);
       showNotification({
         title: "Success",
-        message: "Training Updated successfully",
+        message: "Training updated successfully.",
       });
     } catch (err) {
       const error = errorType(err);
