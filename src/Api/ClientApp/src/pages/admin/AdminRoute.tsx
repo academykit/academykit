@@ -57,11 +57,11 @@ const AdminRoutesChild = () => {
           <Route path={"/department"} element={<Department />} />
           <Route path={"/courses"} element={<AdminCourseList />} />
           <Route path={"/user/certificate"} element={<CertificateList />} />
+          <Route path={"/zoomlicense"} element={<ZoomLicense />} />
+          <Route path={"/filestorage"} element={<FileStorage />} />
           <Route path="*" element={<Navigate to={RoutePath[404]} replace />} />
         </Route>
         <Route element={<SuperAdminRoute />}>
-          <Route path={"/zoomlicense"} element={<ZoomLicense />} />
-          <Route path={"/filestorage"} element={<FileStorage />} />
           <Route path={"/zoom"} element={<ZoomSettings />} />
           <Route path={"/general"} element={<GeneralSettings />} />
         </Route>
