@@ -43,6 +43,18 @@ const strippedFormValue = (value: any) => {
 const schema = Yup.object().shape({
   name: Yup.string().required("Assignment's Title is required."),
   description: Yup.string().required("Assignment's Description is required."),
+  startTime: Yup.date()
+    .required("Start Time is required.")
+    .typeError("Please enter a valid time."),
+  eventStartDate: Yup.date()
+    .required("Start Date is required.")
+    .typeError("Please enter a valid time."),
+  eventEndDate: Yup.date()
+    .required("End Date is required.")
+    .typeError("Please enter a valid start date."),
+  endTime: Yup.date()
+    .required("End Time is required")
+    .typeError("Please enter valid time."),
 });
 
 interface SubmitType {
