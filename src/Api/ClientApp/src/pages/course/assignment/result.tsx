@@ -1,7 +1,6 @@
 import UserShortProfile from "@components/UserShortProfile";
 import useAuth from "@hooks/useAuth";
 import {
-  Box,
   Button,
   Card,
   Container,
@@ -16,10 +15,7 @@ import {
 import { useToggle } from "@mantine/hooks";
 import RichTextEditor from "@mantine/rte";
 import { QuestionType, UserRole } from "@utils/enums";
-import {
-  IAssignmentReview,
-  useAssignmentReview,
-} from "@utils/services/assignmentService";
+import { useAssignmentReview } from "@utils/services/assignmentService";
 import { useNavigate, useParams } from "react-router-dom";
 import AssignmentReviewForm from "./Component/AssignmentReviewForm";
 
@@ -77,19 +73,29 @@ const AssignmentResult = () => {
         <Card key={x.id} shadow="sm" my={10} withBorder>
           <Title>{x.name}</Title>
           {x.description && (
-            <RichTextEditor
-              styles={{
-                root: {
-                  border: "none",
-                },
-              }}
-              my={10}
-              value={x.description}
-              readOnly
-            ></RichTextEditor>
+            <>
+              <Text mt={15} weight="bold">
+                Description
+              </Text>
+              <RichTextEditor
+                my={10}
+                value={x.description}
+                readOnly
+              ></RichTextEditor>
+            </>
+          )}
+
+          {x.hints && (
+            <>
+              <Text weight="bold">Hint</Text>
+              <RichTextEditor my={10} value={x.hints} readOnly />
+            </>
           )}
           {x.type === QuestionType.Subjective ? (
-            <RichTextEditor readOnly={true} value={x.answer} />
+            <>
+              <Text weight="bold">Answers</Text>
+              <RichTextEditor readOnly={true} value={x.answer} />
+            </>
           ) : (
             x.assignmentQuestionOptions &&
             x.assignmentQuestionOptions.map((option) => (
