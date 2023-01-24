@@ -28,9 +28,7 @@ import * as Yup from "yup";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Exam Name is required."),
-  description: Yup.string()
-    .required("Exam Description is required.")
-    .max(5000, "Please Enter within 5000 Character Limit."),
+
   startDate: Yup.date()
     .required("Start Date is required.")
     .typeError("Start Date is required."),
@@ -285,7 +283,6 @@ const AddExam = ({
           <Grid.Col>
             <Textarea
               label="Description"
-              withAsterisk
               placeholder="Exam's Description"
               {...form.getInputProps("description")}
             />
