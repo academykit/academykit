@@ -1,13 +1,59 @@
-import { Container, Divider } from "@mantine/core";
+import { Button, Container, createStyles, Divider, Title } from "@mantine/core";
 
 import { useAssignmentQuestion } from "@utils/services/assignmentService";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AssignmentForm from "./Component/AssignmentForm";
 
+const useStyles = createStyles((theme) => ({
+  root: {
+    paddingTop: 80,
+    paddingBottom: 80,
+  },
+
+  title: {
+    fontWeight: 900,
+    fontSize: 34,
+    marginBottom: theme.spacing.md,
+    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+
+    [theme.fn.smallerThan("sm")]: {
+      fontSize: 32,
+    },
+  },
+
+  control: {
+    [theme.fn.smallerThan("sm")]: {
+      width: "100%",
+    },
+  },
+}));
+
 const AssignmentPage = () => {
+  const { classes } = useStyles();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const assignment = useAssignmentQuestion(id as string, "");
+
+  if (assignment.isSuccess && assignment.data?.length === 0) {
+    return (
+      <Container className={classes.root}>
+        <div>
+          <Title className={classes.title}>No questions found...</Title>
+
+          <Button
+            variant="outline"
+            size="md"
+            mt="xl"
+            onClick={() => navigate(-1)}
+            className={classes.control}
+          >
+            Go back
+          </Button>
+        </div>
+      </Container>
+    );
+  }
 
   return (
     <Container my={50}>

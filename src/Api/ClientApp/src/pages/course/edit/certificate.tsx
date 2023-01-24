@@ -121,7 +121,7 @@ const Certificate = () => {
             breakpoints={[{ maxWidth: 1050, cols: 1, spacing: "sm" }]}
           >
             <Box sx={{ width: "300px", margin: "auto" }}>
-              {getCertificateDetails.data?.data.sampleUrl &&
+              {getCertificateDetails.data?.data?.sampleUrl &&
                 getCertificateDetails.isSuccess && (
                   <div
                     style={{ position: "relative", backgroundColor: "black" }}
@@ -159,12 +159,12 @@ const Certificate = () => {
                       <Tooltip label="Download Certificate">
                         <ActionIcon
                           variant="default"
-                          onClick={() =>
+                          onClick={() => {
                             downloadImage(
                               data?.sampleUrl ?? "",
                               data?.title ?? ""
-                            )
-                          }
+                            );
+                          }}
                         >
                           <IconDownload />
                         </ActionIcon>

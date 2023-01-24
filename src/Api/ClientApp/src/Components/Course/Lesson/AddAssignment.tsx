@@ -48,13 +48,13 @@ const schema = Yup.object().shape({
     .typeError("Please enter a valid time."),
   eventStartDate: Yup.date()
     .required("Start Date is required.")
-    .typeError("Please enter a valid time."),
+    .typeError("Please enter a valid date."),
   eventEndDate: Yup.date()
     .required("End Date is required.")
     .typeError("Please enter a valid start date."),
   endTime: Yup.date()
     .required("End Time is required")
-    .typeError("Please enter valid time."),
+    .typeError("Please enter a valid time."),
 });
 
 interface SubmitType {

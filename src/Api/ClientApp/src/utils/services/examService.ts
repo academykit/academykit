@@ -38,6 +38,7 @@ const getStartExam = (lessonId: string) =>
 export const useStartExam = (lessonId: string) =>
   useMutation([api.exam.startExam(lessonId)], () => getStartExam(lessonId), {
     retry: false,
+    
   });
 
 export interface ILessonExamSubmit {

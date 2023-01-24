@@ -93,7 +93,6 @@ const AddMeeting = ({
   });
 
   const meeting = useActiveZoomLicense(dateTime, form.values.meetingDuration);
-  // console.log(!meeting.is && meeting.isLoading);
 
   const selectItem = meeting.data?.data
     ? meeting.data.data.map((e) => {
@@ -102,7 +101,6 @@ const AddMeeting = ({
     : [""];
 
   const changeZoomLiscense = () => {
-    console.log("first");
     const { meetingDuration, meetingStartTime, meetingStartDate } = form.values;
     if (meetingDuration && meetingStartTime && meetingStartDate) {
       const time = new Date(meetingStartTime).toLocaleTimeString();
