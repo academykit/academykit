@@ -27,8 +27,9 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
     marginTop: "10px",
     borderRadius: theme.radius.md,
-    border: `1px solid ${theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[7]
-      }`,
+    border: `1px solid ${
+      theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[7]
+    }`,
     padding: `${theme.spacing.sm}px ${theme.spacing.xl}px`,
     paddingLeft: theme.spacing.xl - theme.spacing.md, // to offset drag handle
     backgroundColor:
@@ -138,9 +139,10 @@ const Lesson = ({
         LessonEditCase({
           item: lesson,
           lessonType: lesson?.type,
-          setAddLessonClick: () => { },
-          setAddState: () => { },
+          setAddLessonClick: () => {},
+          setAddState: () => {},
           sectionId: sectionId,
+          setIsEditing,
         })}
     </div>
   );
@@ -152,12 +154,14 @@ const LessonEditCase = ({
   setAddLessonClick,
   setAddState,
   sectionId,
+  setIsEditing,
 }: {
   lessonType: number;
   item: ILessons;
   setAddLessonClick: React.Dispatch<React.SetStateAction<boolean>>;
   setAddState: React.Dispatch<React.SetStateAction<string>>;
   sectionId: string;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   switch (lessonType) {
     case LessonType.Video:
@@ -168,6 +172,7 @@ const LessonEditCase = ({
           isEditing={true}
           setAddLessonClick={setAddLessonClick}
           setAddState={setAddState}
+          setIsEditing={setIsEditing}
         />
       );
     case LessonType.Exam:
@@ -177,6 +182,7 @@ const LessonEditCase = ({
           item={item as ILessonMCQ}
           setAddState={setAddState}
           isEditing={true}
+          setIsEditing={setIsEditing}
         />
       );
     case LessonType.Assignment:
@@ -186,6 +192,7 @@ const LessonEditCase = ({
           item={item as ILessonAssignment}
           setAddState={setAddState}
           isEditing={true}
+          setIsEditing={setIsEditing}
         />
       );
     case LessonType.LiveClass:
@@ -196,6 +203,7 @@ const LessonEditCase = ({
           setAddState={setAddState}
           isEditing={true}
           setAddLessonClick={setAddLessonClick}
+          setIsEditing={setIsEditing}
         />
       );
     case LessonType.Feedback:
@@ -205,6 +213,7 @@ const LessonEditCase = ({
           item={item as ILessonFeedback}
           setAddState={setAddState}
           isEditing={true}
+          setIsEditing={setIsEditing}
         />
       );
     case LessonType.Document:
@@ -215,6 +224,7 @@ const LessonEditCase = ({
           setAddState={setAddState}
           isEditing={true}
           item={item as ILessonFile}
+          setIsEditing={setIsEditing}
         />
       );
     default:

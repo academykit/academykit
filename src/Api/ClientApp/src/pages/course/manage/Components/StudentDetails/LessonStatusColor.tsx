@@ -2,25 +2,26 @@ import { Badge, Group } from "@mantine/core";
 import { LessonType } from "@utils/enums";
 
 const videoType = {
-  true: "watched",
-  false: "not watched",
+  true: "Watched",
+  false: "Not Watched",
 };
 const examType = {
   true: "Passed",
   false: "Failed",
 };
 const liveSessionType = {
-  true: "Attend",
-  false: "Not Attend",
+  true: "Attended",
+  false: "Not Attended",
 };
 const documentType = {
-  true: "Attend",
-  false: "Not Attend",
+  true: "Viewed",
+  false: "Not Viewed",
 };
 const feedBackType = {
-  true: "Done",
-  false: "Not Done",
+  true: "Submitted",
+  false: "Not Submitted",
 };
+
 const getType = (type: LessonType) => {
   switch (type) {
     case LessonType.Exam:
