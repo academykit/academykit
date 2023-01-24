@@ -136,6 +136,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
             <DateRangePicker
               label="Start Date - End Date"
               placeholder="Pick dates range"
+              allowSingleDateInRange={true}
               value={value}
               //@ts-ignore
               onChange={setValue}
