@@ -31,11 +31,13 @@ const AddFeedback = ({
   item,
   isEditing,
   sectionId,
+  setIsEditing,
 }: {
   setAddState: Function;
   item?: ILessonAssignment;
   isEditing?: boolean;
   sectionId: string;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
@@ -87,6 +89,7 @@ const AddFeedback = ({
         title: "Success",
         message: `Assignment ${isEditing ? "Edited" : "Added"} successfully!`,
       });
+      setIsEditing(false);
     } catch (error: any) {
       const err = errorType(error);
 

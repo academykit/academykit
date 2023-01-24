@@ -44,12 +44,14 @@ const AddMeeting = ({
   isEditing,
   sectionId,
   setAddLessonClick,
+  setIsEditing,
 }: {
   setAddState: React.Dispatch<React.SetStateAction<string>>;
   item?: ILessonMeeting;
   isEditing?: boolean;
   sectionId?: string;
   setAddLessonClick: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
@@ -144,6 +146,7 @@ const AddMeeting = ({
         title: "Success!",
       });
       setAddLessonClick(true);
+      setIsEditing(false);
     } catch (error) {
       const err = errorType(error);
       showNotification({

@@ -71,19 +71,17 @@ const AddAssignment = ({
   item,
   isEditing,
   sectionId,
+  setIsEditing,
 }: {
   setAddState: Function;
   item?: ILessonAssignment;
   isEditing?: boolean;
   sectionId: string;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
-  const updateLesson = useUpdateLesson(
-    // item?.courseId || "",
-    // item?.id,
-    slug as string
-  );
+  const updateLesson = useUpdateLesson(slug as string);
 
   const [isMandatory, setIsMandatory] = useState<boolean>(
     item?.isMandatory ?? false
@@ -163,6 +161,7 @@ const AddAssignment = ({
         title: "Success",
         message: `Assignment ${isEditing ? "Edited" : "Added"} successfully!`,
       });
+      setIsEditing(false);
     } catch (error: any) {
       const err = errorType(error);
 

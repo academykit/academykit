@@ -33,11 +33,12 @@ const AddDocument = ({
   isEditing,
   sectionId,
   setAddLessonClick,
+  setIsEditing,
 }: {
   setAddState: Function;
   item?: ILessonAssignment;
   setAddLessonClick: Function;
-
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   isEditing?: boolean;
   sectionId: string;
 }) => {
@@ -93,6 +94,7 @@ const AddDocument = ({
         message: `File ${isEditing ? "Edited" : "Added"} successfully!`,
       });
       setAddLessonClick(true);
+      setIsEditing(false);
     } catch (error: any) {
       const err = errorType(error);
 

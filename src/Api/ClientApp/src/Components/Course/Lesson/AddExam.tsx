@@ -66,11 +66,13 @@ const AddExam = ({
   item,
   isEditing,
   sectionId,
+  setIsEditing,
 }: {
   setAddState: Function;
   item?: ILessonMCQ;
   isEditing?: boolean;
   sectionId: string;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { id: slug } = useParams();
   const navigate = useNavigate();
@@ -158,6 +160,7 @@ const AddExam = ({
           isMandatory: values.isMandatory,
         } as ILessonMCQ);
       }
+      setIsEditing(false);
       showNotification({
         title: "Success!",
         message: `Lesson ${isEditing ? "Edited" : "Added"} successfully!`,

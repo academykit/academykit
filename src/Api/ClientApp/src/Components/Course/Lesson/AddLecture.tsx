@@ -35,12 +35,14 @@ const AddLecture = ({
   setAddLessonClick,
   isEditing,
   sectionId,
+  setIsEditing,
 }: {
   setAddState: Function;
   item?: ILessons;
   setAddLessonClick: Function;
   isEditing?: boolean;
   sectionId: string;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { id: slug } = useParams();
   const [videoUrl, setVideoUrl] = React.useState<string>(item?.videoUrl ?? "");
@@ -83,6 +85,7 @@ const AddLecture = ({
         message: `Lesson ${isEditing ? "Edited" : "Added"} successfully`,
       });
       setAddLessonClick(true);
+      setIsEditing(false);
     } catch (error: any) {
       const err = errorType(error);
       showNotification({
