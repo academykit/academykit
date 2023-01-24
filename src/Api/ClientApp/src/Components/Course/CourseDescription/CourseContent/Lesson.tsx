@@ -70,7 +70,9 @@ const Lesson = ({
           ref={ref}
           component={Link}
           replace={true}
-          to={`${RoutePath.classes}/${courseSlug}/${lesson.slug}`}
+          to={`${RoutePath.classes}/${courseSlug}/${lesson.slug}${
+            lesson.type === LessonType.LiveClass ? "/comments" : ""
+          }`}
         >
           <Group>
             <Box w={"100%"} p={15}>

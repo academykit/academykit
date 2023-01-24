@@ -16,7 +16,7 @@ import { createFormContext, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { IconPlus, IconTrash } from "@tabler/icons";
 import { FeedbackType, ReadableEnum } from "@utils/enums";
-import * as Yup from 'yup'
+import * as Yup from "yup";
 import errorType from "@utils/services/axiosError";
 import {
   ICreateFeedback,
@@ -26,7 +26,6 @@ import {
 } from "@utils/services/feedbackService";
 import React from "react";
 const fieldSize = "md";
-
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Title for feedback is required."),
@@ -58,8 +57,7 @@ const schema = Yup.object().shape({
           "test",
           "Options should be more than one.",
           function (value: any) {
-            const length: number =
-            value && value.length;
+            const length: number = value && value.length;
             return length > 1;
           }
         )
@@ -106,7 +104,7 @@ const EditFeedback = ({
           }))
         : [{ option: "" }],
     },
-    validate: yupResolver(schema)
+    validate: yupResolver(schema),
   });
 
   const addFeedbackQuestions = useAddFeedbackQuestion(lessonId, search);
@@ -160,6 +158,12 @@ const EditFeedback = ({
               label="Feedback Type"
               {...form.getInputProps("type")}
               data={getQuestionType()}
+              onClick={() => {
+                feedbackQuestion &&
+                  form.setFieldValue("answers", [
+                    { option: "", isSelected: false },
+                  ]);
+              }}
               withAsterisk
             ></Select>
             {(form.values.type === FeedbackType.MultipleChoice.toString() ||
@@ -168,37 +172,37 @@ const EditFeedback = ({
                 <Text mt={20}>Options</Text>
                 {form.values.answers &&
                   form.values.answers.map((x, i) => (
-                    <div key={i}  style={{marginBottom: '30px'}}>
-                    <Flex >
-                      <TextEditor
-                        label={`answers.${i}.option`}
-                        formContext={useFormContext}
-                      ></TextEditor>
-                      <UnstyledButton
-mx={10}
-onClick={() => {
-                          form.insertListItem(
-                            "answers",
-                            {
-                              option: "",
-                            },
-                            i + 1
-                          );
-                        }}
-                      >
-                        <IconPlus color="green" />
-                      </UnstyledButton>
-                      {form.values.answers &&
-                        form.values.answers.length > 1 && (
-                          <UnstyledButton
-                            onClick={() => {
-                              form.removeListItem("answers", i);
-                            }}
-                          >
-                            <IconTrash color="red" />
-                          </UnstyledButton>
-                        )}
-                    </Flex>
+                    <div key={i} style={{ marginBottom: "30px" }}>
+                      <Flex>
+                        <TextEditor
+                          label={`answers.${i}.option`}
+                          formContext={useFormContext}
+                        ></TextEditor>
+                        <UnstyledButton
+                          mx={10}
+                          onClick={() => {
+                            form.insertListItem(
+                              "answers",
+                              {
+                                option: "",
+                              },
+                              i + 1
+                            );
+                          }}
+                        >
+                          <IconPlus color="green" />
+                        </UnstyledButton>
+                        {form.values.answers &&
+                          form.values.answers.length > 1 && (
+                            <UnstyledButton
+                              onClick={() => {
+                                form.removeListItem("answers", i);
+                              }}
+                            >
+                              <IconTrash color="red" />
+                            </UnstyledButton>
+                          )}
+                      </Flex>
                       {typeof form.errors[`answers.${i}.option`] ===
                         "string" && (
                         <span style={{ color: "red" }}>
@@ -206,7 +210,6 @@ onClick={() => {
                         </span>
                       )}
                     </div>
-
                   ))}
                 {typeof form.errors[`answers`] === "string" && (
                   <span style={{ color: "red" }}>{form.errors[`answers`]}</span>
@@ -224,7 +227,12 @@ onClick={() => {
               >
                 Save
               </Button>
-              <Button size="sm" type="reset" onClick={onCancel} variant='outline'>
+              <Button
+                size="sm"
+                type="reset"
+                onClick={onCancel}
+                variant="outline"
+              >
                 Cancel
               </Button>
             </Group>

@@ -47,10 +47,6 @@ const AddLecture = ({
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
 
-  const [isMandatory, setIsMandatory] = React.useState<EventTarget | boolean>(
-    item?.isMandatory ?? false
-  );
-
   const form = useForm({
     initialValues: {
       videoUrl: item?.videoUrl ?? "",
@@ -107,8 +103,6 @@ const AddLecture = ({
                 sx={{ width: "100%" }}
                 label="Video Name"
                 placeholder="Video Name"
-                label="Video Name"
-                placeholder="Video Name"
                 withAsterisk
                 {...form.getInputProps("name")}
               />
@@ -117,11 +111,6 @@ const AddLecture = ({
               <Switch
                 label="Is Mandatory"
                 {...form.getInputProps("isMandatory")}
-                checked={isMandatory}
-                onChange={() => {
-                  setIsMandatory(() => !isMandatory);
-                  form.setFieldValue("isMandatory", !isMandatory);
-                }}
               />
             </Grid.Col>
           </Grid>
