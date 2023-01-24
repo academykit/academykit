@@ -82,10 +82,10 @@ const UserProfile = () => {
           <Text size={"md"} sx={{ padding: "5px 50px" }}>
             Mobile number: {data?.mobileNumber}
           </Text>
-          <Text size={"md"} sx={{ padding: "5px 50px" }}>
+          <Text size={"md"} sx={{ padding: "5px 50px" }} mb={10}>
             Email: {data?.email}
           </Text>
-          {data?.bio && (
+          {data && data?.bio.replace(/<[^>]+>/g, "").length > 0 && (
             <>
               <RichTextEditor
                 styles={{

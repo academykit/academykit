@@ -71,7 +71,7 @@ const Lesson = ({
           component={Link}
           replace={true}
           to={`${RoutePath.classes}/${courseSlug}/${lesson.slug}${
-            lesson.type === LessonType.LiveClass ? "/comments" : ""
+            lesson.type === LessonType.LiveClass ? "/comments" : "/description"
           }`}
         >
           <Group>
