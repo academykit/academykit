@@ -7,7 +7,6 @@ const ManageCourse = () => {
   const course_id = params.id as string;
   const getStat = useGetCourseManageStatistics(course_id);
 
-
   const incomingData = [
     {
       key: "totalEnrollments",
@@ -31,7 +30,7 @@ const ManageCourse = () => {
     },
     {
       key: "totalLectures",
-      label: "Total Lectures",
+      label: "Total Videos",
       icon: "lecture",
     },
     {
