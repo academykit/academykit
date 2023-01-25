@@ -378,14 +378,15 @@ export const useDeleteLesson = (slug: string) => {
 };
 
 // courses status
-const courseStatus = async (data: { id: string; status: CourseStatus }) => {
-  return await httpClient.patch(api.course.status(data.id, data.status));
+const courseStatus = async (data: { identity: string; status: CourseStatus, message? : string }) => {
+  return await httpClient.patch(api.course.status,data);
 };
-export const useCourseStatus = (id: string) => {
+export const useCourseStatus = (id: string, search: string) => {
   const queryClient = useQueryClient();
   return useMutation([api.course.enroll(id)], courseStatus, {
     onSuccess: () => {
       queryClient.invalidateQueries([api.course.detail(id)]);
+      queryClient.invalidateQueries([api.course.list, search])
     },
   });
 };
