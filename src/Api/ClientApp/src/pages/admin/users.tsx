@@ -87,13 +87,6 @@ const UsersList = ({
         <Title>Users</Title>
         <div>
           <Button onClick={() => setOpened(true)}>Add User</Button>
-          {/* <Button
-            ml={10}
-            variant="outline"
-            onClick={() => setImportModal(true)}
-          >
-            Import Users
-          </Button> */}
         </div>
       </Group>
       <div style={{ display: "flex", marginBottom: "10px" }}>

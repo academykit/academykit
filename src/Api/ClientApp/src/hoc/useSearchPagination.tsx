@@ -95,7 +95,11 @@ const withSearchPagination =
           data={data}
           onChange={(e: string) => {
             setFilterValue(() => e);
-            setFilterKey(() => key);
+            if (e) {
+              setFilterKey(() => key);
+            } else {
+              setFilterKey(() => "");
+            }
           }}
         />
       );
