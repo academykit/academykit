@@ -3,11 +3,7 @@ import { Viewer, Worker } from "@react-pdf-viewer/core";
 // @ts-ignore
 import { toolbarPlugin } from "@react-pdf-viewer/toolbar";
 import { useMediaQuery } from "@mantine/hooks";
-import type {
-  ToolbarSlot,
-  TransformToolbarSlot,
-  // @ts-ignore
-} from "@react-pdf-viewer/toolbar";
+
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/toolbar/lib/styles/index.css";
 import {
@@ -15,8 +11,10 @@ import {
   Badge,
   Button,
   Container,
+  Divider,
   Group,
-  Text,
+  Menu,
+  Popover,
   useMantineColorScheme,
 } from "@mantine/core";
 import { ICourseLesson } from "@utils/services/courseService";
@@ -24,12 +22,10 @@ import { useWatchHistory } from "@utils/services/watchHistory";
 import { showNotification } from "@mantine/notifications";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
-import {
-  IconArrowsMaximize,
-  IconDownload,
-  IconZoomIn,
-  IconZoomOut,
-} from "@tabler/icons";
+import Download from "./PdfComponents/Download";
+import FullScreen from "./PdfComponents/FullScreen";
+import Zoom from "./PdfComponents/Zoom";
+import SwitchPage from "./PdfComponents/SwitchPage";
 
 interface PdfViewerProps {
   lesson: ICourseLesson;
@@ -37,10 +33,10 @@ interface PdfViewerProps {
 }
 
 const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
-  const toolbarPluginInstance = toolbarPlugin({});
-  // const { renderDefaultToolbar, Toolbar } = toolbarPluginInstance;
   const watchHistory = useWatchHistory(lesson.courseId, lesson.id);
   const matches = useMediaQuery("(min-width: 991px");
+  const matchesSmallScreen = useMediaQuery("(min-width: 550px");
+
   const theme = useMantineColorScheme();
   const onMarkComplete = () => {
     onEnded();
@@ -49,20 +45,6 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
       message: "Pdf marked as completed.",
     });
   };
-
-  const transform: TransformToolbarSlot = (slot: ToolbarSlot) => ({
-    ...slot,
-    EnterFullScreenMenuItem: () => <></>,
-    SwitchTheme: () =>
-      !lesson.isCompleted ? (
-        <Button onClick={onMarkComplete} loading={watchHistory.isLoading}>
-          Mark Complete
-        </Button>
-      ) : (
-        <Badge>Completed</Badge>
-      ),
-    Open: () => <></>,
-  });
 
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
     sidebarTabs: (_) => [],
@@ -73,32 +55,13 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
             <Container w="100%" fluid>
               <Group position="apart">
                 <Group>
-                  <toolbarSlot.ZoomIn
-                    children={(props) => (
-                      <ActionIcon onClick={props.onClick}>
-                        <IconZoomIn />
-                      </ActionIcon>
-                    )}
-                  />
-
-                  <toolbarSlot.Zoom
-                    children={(props) => (
-                      <Text color={"dimmed"}>{props.scale}</Text>
-                    )}
-                  />
-
-                  <toolbarSlot.ZoomOut
-                    children={(props) => (
-                      <ActionIcon onClick={props.onClick}>
-                        <IconZoomOut />
-                      </ActionIcon>
-                    )}
-                  />
-                  <toolbarSlot.CurrentPageLabel
-                    children={(props) => (
-                      <Text color={"red"}>{props.pageLabel}</Text>
-                    )}
-                  />
+                  {matchesSmallScreen && (
+                    <>
+                      <Zoom toolbarSlot={toolbarSlot} />
+                      <Divider orientation="vertical" />
+                    </>
+                  )}
+                  <SwitchPage toolbarSlot={toolbarSlot} />
                 </Group>
 
                 <Group>
@@ -112,20 +75,40 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
                   ) : (
                     <Badge>Completed</Badge>
                   )}
-                  <toolbarSlot.EnterFullScreen
-                    children={(props) => (
-                      <ActionIcon onClick={props.onClick}>
-                        <IconArrowsMaximize />
-                      </ActionIcon>
-                    )}
-                  />
-                  <toolbarSlot.Download
-                    children={(props) => (
-                      <ActionIcon onClick={props.onClick}>
-                        <IconDownload />
-                      </ActionIcon>
-                    )}
-                  />
+                  <FullScreen toolbarSlot={toolbarSlot} />
+                  <Download toolbarSlot={toolbarSlot} />
+                  {/* <Menu
+                    width={300}
+                    withArrow
+                    shadow="md"
+                    position="bottom-end"
+                    styles={{
+                      dropdown: {
+                        // position: "fixed",
+                      },
+                    }}
+                  >
+                    <Menu.Target>
+                      <IconDotsVertical />
+                    </Menu.Target>
+                    <Menu.Dropdown
+                      sx={(theme) => ({
+                        position: "absolute",
+                        top: "200px",
+                        background:
+                          theme.colorScheme === "dark"
+                            ? theme.colors.dark[7]
+                            : theme.white,
+                      })}
+                    >
+                      <Menu.Item>
+                        <Zoom toolbarSlot={toolbarSlot} />
+                      </Menu.Item>
+                      <Menu.Item>
+                        <SwitchPage toolbarSlot={toolbarSlot} />
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu> */}
                 </Group>
               </Group>
             </Container>
