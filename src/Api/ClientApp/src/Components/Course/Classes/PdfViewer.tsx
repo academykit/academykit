@@ -3,17 +3,29 @@ import { Viewer, Worker } from "@react-pdf-viewer/core";
 // @ts-ignore
 import { toolbarPlugin } from "@react-pdf-viewer/toolbar";
 import { useMediaQuery } from "@mantine/hooks";
-import type {
-  ToolbarSlot,
-  TransformToolbarSlot,
-  // @ts-ignore
-} from "@react-pdf-viewer/toolbar";
+
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/toolbar/lib/styles/index.css";
-import { Badge, Button } from "@mantine/core";
+import {
+  ActionIcon,
+  Badge,
+  Button,
+  Container,
+  Divider,
+  Group,
+  Menu,
+  Popover,
+  useMantineColorScheme,
+} from "@mantine/core";
 import { ICourseLesson } from "@utils/services/courseService";
 import { useWatchHistory } from "@utils/services/watchHistory";
 import { showNotification } from "@mantine/notifications";
+import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+import Download from "./PdfComponents/Download";
+import FullScreen from "./PdfComponents/FullScreen";
+import Zoom from "./PdfComponents/Zoom";
+import SwitchPage from "./PdfComponents/SwitchPage";
 
 interface PdfViewerProps {
   lesson: ICourseLesson;
@@ -21,11 +33,11 @@ interface PdfViewerProps {
 }
 
 const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
-  const toolbarPluginInstance = toolbarPlugin();
-  const { renderDefaultToolbar, Toolbar } = toolbarPluginInstance;
   const watchHistory = useWatchHistory(lesson.courseId, lesson.id);
   const matches = useMediaQuery("(min-width: 991px");
+  const matchesSmallScreen = useMediaQuery("(min-width: 550px");
 
+  const theme = useMantineColorScheme();
   const onMarkComplete = () => {
     onEnded();
     showNotification({
@@ -34,18 +46,76 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
     });
   };
 
-  const transform: TransformToolbarSlot = (slot: ToolbarSlot) => ({
-    ...slot,
-    EnterFullScreenMenuItem: () => <></>,
-    SwitchTheme: () =>
-      !lesson.isCompleted ? (
-        <Button onClick={onMarkComplete} loading={watchHistory.isLoading}>
-          Mark Complete
-        </Button>
-      ) : (
-        <Badge>Completed</Badge>
-      ),
-    Open: () => <></>,
+  const defaultLayoutPluginInstance = defaultLayoutPlugin({
+    sidebarTabs: (_) => [],
+    renderToolbar(Toolbar) {
+      return (
+        <Toolbar
+          children={(toolbarSlot) => (
+            <Container w="100%" fluid>
+              <Group position="apart">
+                <Group>
+                  {matchesSmallScreen && (
+                    <>
+                      <Zoom toolbarSlot={toolbarSlot} />
+                      <Divider orientation="vertical" />
+                    </>
+                  )}
+                  <SwitchPage toolbarSlot={toolbarSlot} />
+                </Group>
+
+                <Group>
+                  {!lesson.isCompleted ? (
+                    <Button
+                      onClick={onMarkComplete}
+                      loading={watchHistory.isLoading}
+                    >
+                      Mark Complete
+                    </Button>
+                  ) : (
+                    <Badge>Completed</Badge>
+                  )}
+                  <FullScreen toolbarSlot={toolbarSlot} />
+                  <Download toolbarSlot={toolbarSlot} />
+                  {/* <Menu
+                    width={300}
+                    withArrow
+                    shadow="md"
+                    position="bottom-end"
+                    styles={{
+                      dropdown: {
+                        // position: "fixed",
+                      },
+                    }}
+                  >
+                    <Menu.Target>
+                      <IconDotsVertical />
+                    </Menu.Target>
+                    <Menu.Dropdown
+                      sx={(theme) => ({
+                        position: "absolute",
+                        top: "200px",
+                        background:
+                          theme.colorScheme === "dark"
+                            ? theme.colors.dark[7]
+                            : theme.white,
+                      })}
+                    >
+                      <Menu.Item>
+                        <Zoom toolbarSlot={toolbarSlot} />
+                      </Menu.Item>
+                      <Menu.Item>
+                        <SwitchPage toolbarSlot={toolbarSlot} />
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu> */}
+                </Group>
+              </Group>
+            </Container>
+          )}
+        />
+      );
+    },
   });
 
   return (
@@ -61,22 +131,15 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
       >
         <div
           style={{
-            alignItems: "center",
-            backgroundColor: "#eeeeee",
-            borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
-            display: "flex",
-            padding: "0.25rem",
-          }}
-        >
-          <Toolbar>{renderDefaultToolbar(transform)}</Toolbar>
-        </div>
-        <div
-          style={{
             flex: 1,
             overflow: "hidden",
           }}
         >
-          <Viewer fileUrl={lesson.documentUrl} />
+          <Viewer
+            theme={theme.colorScheme}
+            plugins={[defaultLayoutPluginInstance]}
+            fileUrl={lesson.documentUrl}
+          />
         </div>
       </div>
     </Worker>
