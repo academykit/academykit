@@ -88,13 +88,13 @@ const AddDocument = ({
           ...fileData,
           lessonIdentity: item?.id,
         } as ILessonFile);
+        setIsEditing(false);
       }
       showNotification({
         title: "Success",
         message: `File ${isEditing ? "Edited" : "Added"} successfully!`,
       });
       setAddLessonClick(true);
-      setIsEditing(false);
     } catch (error: any) {
       const err = errorType(error);
 

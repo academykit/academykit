@@ -82,7 +82,7 @@ export interface ILessonAssignment extends ILessons {
 
 export interface ILessonFeedback extends ILessons {
   name: string;
-  description: string;
+  description?: string;
 }
 export interface ILessonFile extends ILessons {
   name: string;
