@@ -28,9 +28,7 @@ import * as Yup from "yup";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Exam Name is required."),
-  description: Yup.string()
-    .required("Exam Description is required.")
-    .max(5000, "Please Enter within 5000 Character Limit."),
+
   startDate: Yup.date()
     .required("Start Date is required.")
     .typeError("Start Date is required."),
@@ -44,7 +42,9 @@ const schema = Yup.object().shape({
   endTime: Yup.string()
     .required("end time cannot be empty.")
     .typeError("End Time is required."),
-  duration: Yup.string().required("Duration is required."),
+  duration: Yup.number()
+    .required("Duration is required.")
+    .min(1, "Exam duration should at least be one."),
 });
 
 const strippedFormValue = (value: any) => {
@@ -66,11 +66,13 @@ const AddExam = ({
   item,
   isEditing,
   sectionId,
+  setIsEditing,
 }: {
   setAddState: Function;
   item?: ILessonMCQ;
   isEditing?: boolean;
   sectionId: string;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { id: slug } = useParams();
   const navigate = useNavigate();
@@ -93,12 +95,12 @@ const AddExam = ({
     if (lessonDetails.isSuccess && isEditing) {
       const data = course?.questionSet;
       const startDateTime = moment(data?.startTime + "z")
-      .local()
-      .toDate();
+        .local()
+        .toDate();
       const endDateTime = moment(data?.endTime + "z")
-      .local()
-      .toDate();
-      
+        .local()
+        .toDate();
+
       form.setValues({
         name: course?.name ?? "",
         description: data?.description ?? "",
@@ -106,7 +108,7 @@ const AddExam = ({
         questionMarking: data?.questionMarking ?? 0,
         passingWeightage: data?.passingWeightage ?? 1,
         allowedRetake: data?.allowedRetake ?? 0,
-        duration: data?.duration ? data.duration / 60 : 0,
+        duration: data?.duration ? data.duration / 60 : 1,
         startTime: startDateTime,
         startDate: startDateTime,
         endDate: endDateTime,
@@ -158,6 +160,7 @@ const AddExam = ({
           isMandatory: values.isMandatory,
         } as ILessonMCQ);
       }
+      setIsEditing(false);
       showNotification({
         title: "Success!",
         message: `Lesson ${isEditing ? "Edited" : "Added"} successfully!`,
@@ -283,7 +286,6 @@ const AddExam = ({
           <Grid.Col>
             <Textarea
               label="Description"
-              withAsterisk
               placeholder="Exam's Description"
               {...form.getInputProps("description")}
             />

@@ -34,7 +34,7 @@ const AdminNav = () => {
     {
       label: "Zoom License",
       to: RoutePath.settings.zoomlicense(),
-      role: UserRole.SuperAdmin,
+      role: UserRole.Admin,
     },
     {
       label: "SMTP",
@@ -44,7 +44,7 @@ const AdminNav = () => {
     {
       label: "File Storage",
       to: RoutePath.settings.filestorage(),
-      role: UserRole.SuperAdmin,
+      role: UserRole.Admin,
     },
     {
       label: "Levels",

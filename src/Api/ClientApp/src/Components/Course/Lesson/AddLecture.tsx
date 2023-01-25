@@ -25,7 +25,6 @@ import * as Yup from "yup";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Video Name is required."),
-  description: Yup.string().required("Video's Description is required."),
 });
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
@@ -36,21 +35,19 @@ const AddLecture = ({
   setAddLessonClick,
   isEditing,
   sectionId,
+  setIsEditing,
 }: {
   setAddState: Function;
   item?: ILessons;
   setAddLessonClick: Function;
   isEditing?: boolean;
   sectionId: string;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { id: slug } = useParams();
   const [videoUrl, setVideoUrl] = React.useState<string>(item?.videoUrl ?? "");
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
-
-  const [isMandatory, setIsMandatory] = React.useState<EventTarget | boolean>(
-    item?.isMandatory ?? false
-  );
 
   const form = useForm({
     initialValues: {
@@ -88,6 +85,7 @@ const AddLecture = ({
         message: `Lesson ${isEditing ? "Edited" : "Added"} successfully`,
       });
       setAddLessonClick(true);
+      setIsEditing(false);
     } catch (error: any) {
       const err = errorType(error);
       showNotification({
@@ -108,8 +106,6 @@ const AddLecture = ({
                 sx={{ width: "100%" }}
                 label="Video Name"
                 placeholder="Video Name"
-                label="Video Name"
-                placeholder="Video Name"
                 withAsterisk
                 {...form.getInputProps("name")}
               />
@@ -118,11 +114,6 @@ const AddLecture = ({
               <Switch
                 label="Is Mandatory"
                 {...form.getInputProps("isMandatory")}
-                checked={isMandatory}
-                onChange={() => {
-                  setIsMandatory(() => !isMandatory);
-                  form.setFieldValue("isMandatory", !isMandatory);
-                }}
               />
             </Grid.Col>
           </Grid>
@@ -138,7 +129,6 @@ const AddLecture = ({
             placeholder="Video's Description"
             label="Video Description"
             mb={10}
-            withAsterisk
             {...form.getInputProps("description")}
           />
           <Group position="left" mt="md">

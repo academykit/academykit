@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   CourseLanguage,
   CourseStatus,
@@ -607,10 +607,16 @@ const addCertificate = ({
   return httpClient.post(api.course.addCertificateDetails(id), data);
 };
 export const useAddCertificate = (courseId: string) => {
+  const queryClient = useQueryClient()
   return useMutation(
     [api.course.addCertificateDetails(courseId)],
     addCertificate,
-    {}
+    {
+      onSuccess : () => {
+        queryClient.invalidateQueries([api.course.getCertificateDetails(courseId)])
+
+      }
+    }
   );
 };
 

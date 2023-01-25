@@ -8,7 +8,8 @@ import FilePondPluginImageValidateSize from "filepond-plugin-image-validate-size
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { FileAccess, uploadFile } from "@utils/services/fileService";
-import { EFIleUploadType } from "@utils/enums";
+import { Text } from "@mantine/core";
+
 registerPlugin(
   FilePondPluginImageExifOrientation,
   FilePondPluginImagePreview,
@@ -32,7 +33,6 @@ const ThumbnailEditor = ({
 }: IProps) => {
   const form = formContext();
   const [files, setFiles] = useState<any>([]);
-
   useEffect(() => {
     if (currentThumbnail) {
       setFiles([
@@ -118,6 +118,11 @@ const ThumbnailEditor = ({
           },
         }}
       />
+      {form.errors[FormField] && (
+        <Text color={"red"} size={"xs"} pos="absolute" top={"100%"}>
+          {form.errors[FormField]}
+        </Text>
+      )}
     </div>
   );
 };

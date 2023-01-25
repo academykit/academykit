@@ -42,7 +42,18 @@ const strippedFormValue = (value: any) => {
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Assignment's Title is required."),
-  description: Yup.string().required("Assignment's Description is required."),
+  startTime: Yup.date()
+    .required("Start Time is required.")
+    .typeError("Start Time is required."),
+  eventStartDate: Yup.date()
+    .required("Start Date is required.")
+    .typeError("Start Date is required."),
+  eventEndDate: Yup.date()
+    .required("End Date is required.")
+    .typeError("End Date is required."),
+  endTime: Yup.date()
+    .required("End Time is required.")
+    .typeError("End Time is required."),
 });
 
 interface SubmitType {
@@ -60,19 +71,17 @@ const AddAssignment = ({
   item,
   isEditing,
   sectionId,
+  setIsEditing,
 }: {
   setAddState: Function;
   item?: ILessonAssignment;
   isEditing?: boolean;
   sectionId: string;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
-  const updateLesson = useUpdateLesson(
-    // item?.courseId || "",
-    // item?.id,
-    slug as string
-  );
+  const updateLesson = useUpdateLesson(slug as string);
 
   const [isMandatory, setIsMandatory] = useState<boolean>(
     item?.isMandatory ?? false
@@ -152,6 +161,7 @@ const AddAssignment = ({
         title: "Success",
         message: `Assignment ${isEditing ? "Edited" : "Added"} successfully!`,
       });
+      setIsEditing(false);
     } catch (error: any) {
       const err = errorType(error);
 
@@ -260,7 +270,6 @@ const AddAssignment = ({
                 placeholder="Assignment's Description"
                 label="Assignment Description"
                 mb={10}
-                withAsterisk
                 {...form.getInputProps("description")}
               />
             </Grid.Col>

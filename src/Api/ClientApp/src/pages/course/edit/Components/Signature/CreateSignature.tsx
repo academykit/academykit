@@ -1,6 +1,6 @@
 import DeleteModal from "@components/Ui/DeleteModal";
 import ThumbnailEditor from "@components/Ui/ThumbnailEditor";
-import { Button, Group, Modal, Paper, Text, TextInput } from "@mantine/core";
+import { Button, Group, Paper, Text, TextInput } from "@mantine/core";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
@@ -20,6 +20,7 @@ const [FormProvider, useFormContext, useForm] =
 const schema = Yup.object().shape({
   fullName: Yup.string().required("Signature name is required."),
   designation: Yup.string().required("Designation is required."),
+  fileUrl: Yup.string().required("File Url is required!"),
 });
 
 const CreateSignature = ({
@@ -134,7 +135,7 @@ const CreateSignature = ({
             currentThumbnail={form.values.fileUrl}
             width="48.5%"
           />
-          <Group>
+          <Group mt={30}>
             <Button
               loading={createCertificate.isLoading || editSignature.isLoading}
               type="submit"

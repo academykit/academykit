@@ -87,6 +87,7 @@ const InternalCertificate = () => {
               verticalSpacing="sm"
               striped
               highlightOnHover
+              withBorder
             >
               <thead>
                 <tr>
