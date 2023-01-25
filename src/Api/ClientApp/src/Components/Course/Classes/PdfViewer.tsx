@@ -10,10 +10,26 @@ import type {
 } from "@react-pdf-viewer/toolbar";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/toolbar/lib/styles/index.css";
-import { Badge, Button } from "@mantine/core";
+import {
+  ActionIcon,
+  Badge,
+  Button,
+  Container,
+  Group,
+  Text,
+  useMantineColorScheme,
+} from "@mantine/core";
 import { ICourseLesson } from "@utils/services/courseService";
 import { useWatchHistory } from "@utils/services/watchHistory";
 import { showNotification } from "@mantine/notifications";
+import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+import {
+  IconArrowsMaximize,
+  IconDownload,
+  IconZoomIn,
+  IconZoomOut,
+} from "@tabler/icons";
 
 interface PdfViewerProps {
   lesson: ICourseLesson;
@@ -21,11 +37,11 @@ interface PdfViewerProps {
 }
 
 const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
-  const toolbarPluginInstance = toolbarPlugin();
-  const { renderDefaultToolbar, Toolbar } = toolbarPluginInstance;
+  const toolbarPluginInstance = toolbarPlugin({});
+  // const { renderDefaultToolbar, Toolbar } = toolbarPluginInstance;
   const watchHistory = useWatchHistory(lesson.courseId, lesson.id);
   const matches = useMediaQuery("(min-width: 991px");
-
+  const theme = useMantineColorScheme();
   const onMarkComplete = () => {
     onEnded();
     showNotification({
@@ -48,6 +64,77 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
     Open: () => <></>,
   });
 
+  const defaultLayoutPluginInstance = defaultLayoutPlugin({
+    sidebarTabs: (_) => [],
+    renderToolbar(Toolbar) {
+      return (
+        <Toolbar
+          children={(toolbarSlot) => (
+            <Container w="100%" fluid>
+              <Group position="apart">
+                <Group>
+                  <toolbarSlot.ZoomIn
+                    children={(props) => (
+                      <ActionIcon onClick={props.onClick}>
+                        <IconZoomIn />
+                      </ActionIcon>
+                    )}
+                  />
+
+                  <toolbarSlot.Zoom
+                    children={(props) => (
+                      <Text color={"dimmed"}>{props.scale}</Text>
+                    )}
+                  />
+
+                  <toolbarSlot.ZoomOut
+                    children={(props) => (
+                      <ActionIcon onClick={props.onClick}>
+                        <IconZoomOut />
+                      </ActionIcon>
+                    )}
+                  />
+                  <toolbarSlot.CurrentPageLabel
+                    children={(props) => (
+                      <Text color={"red"}>{props.pageLabel}</Text>
+                    )}
+                  />
+                </Group>
+
+                <Group>
+                  {!lesson.isCompleted ? (
+                    <Button
+                      onClick={onMarkComplete}
+                      loading={watchHistory.isLoading}
+                    >
+                      Mark Complete
+                    </Button>
+                  ) : (
+                    <Badge>Completed</Badge>
+                  )}
+                  <toolbarSlot.EnterFullScreen
+                    children={(props) => (
+                      <ActionIcon onClick={props.onClick}>
+                        <IconArrowsMaximize />
+                      </ActionIcon>
+                    )}
+                  />
+                  <toolbarSlot.Download
+                    children={(props) => (
+                      <ActionIcon onClick={props.onClick}>
+                        <IconDownload />
+                      </ActionIcon>
+                    )}
+                  />
+                </Group>
+              </Group>
+            </Container>
+          )}
+        />
+      );
+    },
+  });
+
   return (
     <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.1.81/build/pdf.worker.min.js">
       <div
@@ -61,22 +148,15 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
       >
         <div
           style={{
-            alignItems: "center",
-            backgroundColor: "#eeeeee",
-            borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
-            display: "flex",
-            padding: "0.25rem",
-          }}
-        >
-          <Toolbar>{renderDefaultToolbar(transform)}</Toolbar>
-        </div>
-        <div
-          style={{
             flex: 1,
             overflow: "hidden",
           }}
         >
-          <Viewer fileUrl={lesson.documentUrl} />
+          <Viewer
+            theme={theme.colorScheme}
+            plugins={[defaultLayoutPluginInstance]}
+            fileUrl={lesson.documentUrl}
+          />
         </div>
       </div>
     </Worker>
