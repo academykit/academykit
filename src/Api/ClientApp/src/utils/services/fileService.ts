@@ -37,3 +37,16 @@ export const getFileUrl =  (key: string, enabled: boolean) => {
   {select: data => data.data, retry: false, enabled}
   )
 }
+
+
+export const uploadUserCsv = (file: File) => {
+  return httpClient.post(
+    '/api/user/bulkuser',
+    {file},
+    {
+      headers: {
+        'content-type': 'multipart/form-data'
+      }
+    }
+  )
+}

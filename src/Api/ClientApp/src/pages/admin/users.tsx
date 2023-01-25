@@ -9,6 +9,8 @@ import {
   Title,
   Text,
   Anchor,
+  Tabs,
+  FileInput,
 } from "@mantine/core";
 import UserMemberTable from "@components/Users/UserMemberTable";
 import { useAddUser, useUsers } from "@utils/services/adminService";
@@ -39,6 +41,10 @@ const UsersList = ({
   const [importModal, setImportModal] = useState(false);
   const { data, isLoading: loading, isError: error } = useUsers(searchParams);
   const addUser = useAddUser(searchParams);
+  const [currentTab, setCurrentTab] = useState<string | null>("user");
+  const [file, setFile] = useState<File | null>(null);
+
+  const onSubmit = () => {};
 
   return (
     <>
@@ -50,36 +56,52 @@ const UsersList = ({
         styles={{ title: { fontWeight: "bold" } }}
       >
         <Suspense fallback={<Loader />}>
-          <AddUpdateUserForm
-            setOpened={setOpened}
-            opened={opened}
-            apiHooks={addUser}
-            isEditing={false}
-          />
+          <Tabs value={currentTab} onTabChange={setCurrentTab}>
+            <Tabs.List>
+              <Tabs.Tab value="user">Add User</Tabs.Tab>
+              <Tabs.Tab value="import">Import Users</Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="user">
+              <Box mt={10}>
+                <AddUpdateUserForm
+                  setOpened={setOpened}
+                  opened={opened}
+                  apiHooks={addUser}
+                  isEditing={false}
+                />
+              </Box>
+            </Tabs.Panel>
+            <Tabs.Panel value="import">
+              <Text my={10} size="sm">
+                CSV file format should be similar to sample CSV. Please
+                <Anchor
+                  href="https://google.com"
+                  style={{
+                    textDecoration: "underline",
+                  }}
+                  mx={5}
+                >
+                  click here
+                </Anchor>
+                to download sample CSV.
+              </Text>
+              <FileInput
+                label="Upload your CSV file"
+                value={file}
+                onChange={setFile}
+                mt={10}
+                accept="text/csv,
+          application/vnd.openxmlformats-officedocument.presentationml.presentation,
+          application/vnd.ms-excel,
+          application/csv"
+              />
+              <Button mt={10}>Submit</Button>
+              {/* <CSVUpload /> */}
+            </Tabs.Panel>
+          </Tabs>
         </Suspense>
       </Modal>
-      <Modal
-        opened={importModal}
-        onClose={() => setImportModal(false)}
-        title="Bulk Import Users"
-        styles={{ title: { fontWeight: "bold" } }}
-      >
-        <Text mb={10} size="sm">
-          CSV file format should be similar to sample CSV. Please
-          <Anchor
-            href="https://google.com"
-            style={{
-              textDecoration: "underline",
-            }}
-            mx={5}
-          >
-            click here
-          </Anchor>
-          to download sample CSV.
-        </Text>
 
-        <CSVUpload />
-      </Modal>
       <Group
         sx={{ justifyContent: "space-between", alignItems: "center" }}
         mb={15}
