@@ -1,0 +1,16 @@
+version: "3"
+services:
+  backend:
+    image: 762344227131.dkr.ecr.ap-south-1.amazonaws.com/standalone:latest
+    environment:
+      ConnectionStrings__DefaultConnection: 'Server=159.89.163.233;Database=standalone_uat_db;User=dev;Password=4ubiY2A163@f;Convert Zero Datetime=True;'
+      JWT__DurationInMinutes: 60
+      Amazon__AccessKey: AKIA3C72BYE54RE6GY7W
+      Amazon__SecretAccessKey: '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'
+      ConnectionStrings__Hangfireconnection: 'Server=159.89.163.233;Database=standalonehangfire;User=dev;Password=4ubiY2A163@f;Convert Zero Datetime=True;Allow User Variables=True;'
+      Hangfire__User: standalone
+      Hangfire__Password: Admino12
+      AppUrls__App: https://standalone.apps.vurilo.com
+    ports:
+      - 8080:80
+      - 8081:443
