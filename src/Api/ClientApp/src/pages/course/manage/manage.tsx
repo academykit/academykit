@@ -20,7 +20,7 @@ const ManageCourse = () => {
     },
     {
       key: "totalTeachers",
-      label: "Total Teachers",
+      label: "Total Trainers",
       icon: "groups",
     },
     {
