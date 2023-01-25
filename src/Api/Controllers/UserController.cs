@@ -132,6 +132,19 @@
         }
 
         /// <summary>
+        /// import bulk user api
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="UserImportRequestModel" /> . </param>
+        /// <returns> the task complete </returns>
+        [HttpPost("bulkuser")]
+        public async Task<IActionResult> BulkUser([FromForm]UserImportRequestModel model)
+        {
+            IsSuperAdminOrAdmin(CurrentUser.Role);
+            await _userService.ImportUserAsync(model.File,CurrentUser.Id).ConfigureAwait(false);
+            return Ok();
+        }
+
+        /// <summary>
         /// update user
         /// </summary>
         /// <param name="userId"> the user id</param>

@@ -1,6 +1,8 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using CsvHelper;
     using Domain.Entities;
+    using Hangfire;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -11,6 +13,7 @@
     using Lingtren.Infrastructure.Configurations;
     using LinqKit;
     using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Configuration;
@@ -18,6 +21,7 @@
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
     using System;
+    using System.Globalization;
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq.Expressions;
     using System.Security.Claims;
@@ -252,6 +256,71 @@
             if (needsOnlyHash) return hashed;
             // password will be concatenated with salt using ':'
             return $"{hashed}:{Convert.ToBase64String(salt)}";
+        }
+
+        /// <summary>
+        /// Handle to import the user
+        /// </summary>
+        /// <param name="file"> the instance of <see cref="IFormFile" /> .</param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the task complete </returns>
+        public async Task ImportUserAsync(IFormFile file, Guid currentUserId)
+        {
+            try
+            {
+               var users = new List<UserImportDto>();
+                using (var reader = new StreamReader(file.OpenReadStream()))
+                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                {
+                    while(csv.Read())
+                    {
+                       var user = csv.GetRecord<UserImportDto>();
+                        users.Add(user);
+                    }
+
+                }
+                var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
+               if(users.Count != default)
+               {
+                  var newUsers = new List<User>();
+                  var userEmails = new List<UserEmailDto>();
+                  foreach(var user in users)
+                  {
+                     var userEntity = new User()
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = user.FirstName,
+                        MiddleName = user.MiddleName,
+                        LastName = user.LastName,
+                        Email = user.Email,
+                        MobileNumber = user.MobileNumber,
+                        Role = System.Enum.Parse<UserRole>(user.Role),
+                        CreatedBy = currentUserId,
+                        CreatedOn = DateTime.UtcNow
+                     };
+                     var password = await GenerateRandomPassword(8).ConfigureAwait(false);
+                     userEntity.HashPassword = HashPassword(password);
+
+                     var userEmailDto = new UserEmailDto{
+                        FullName = userEntity.FullName,
+                        Email = userEntity.Email,
+                        Password = password,
+                        CompanyName = company.CompanyName
+                     };
+                     newUsers.Add(userEntity);
+                     userEmails.Add(userEmailDto);
+                  }
+
+               //   await _unitOfWork.GetRepository<User>().InsertAsync(newUsers).ConfigureAwait(false);
+                  await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                  BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailImportedUserAsync(userEmails,null));
+               }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
         }
 
         /// <summary>

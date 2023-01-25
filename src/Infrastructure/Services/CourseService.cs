@@ -292,34 +292,28 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// Handle to change course status
         /// </summary>
-        /// <param name="identity">the training id or slug</param>
-        /// <param name="status">the training status</param>
+        /// <param name="model">the instance of <see cref="CourseStatusRequestModel" /> .</param>
         /// <param name="currentUserId">the current id</param>
         /// <returns></returns>
-        public async Task ChangeStatusAsync(string identity, CourseStatus status, Guid currentUserId)
+        public async Task ChangeStatusAsync(CourseStatusRequestModel model ,Guid currentUserId)
         {
-            var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
-            if (course.Status == status)
-            {
-                _logger.LogWarning("Training with id : {courseId} cannot be changed to same status by User with id {userId}.", course.Id, currentUserId);
-                throw new ForbiddenException("Training cannot be changed to same status.");
-            }
+            var course = await ValidateAndGetCourse(currentUserId, model.Identity, validateForModify: true).ConfigureAwait(false);
 
-            if ((course.Status == CourseStatus.Draft && (status == CourseStatus.Published || status == CourseStatus.Rejected))
-                || (course.Status == CourseStatus.Published && (status == CourseStatus.Review || status == CourseStatus.Rejected))
-                || (course.Status == CourseStatus.Rejected && status == CourseStatus.Published)
-                || (course.Status != CourseStatus.Published && status == CourseStatus.Completed))
+            if ((course.Status == CourseStatus.Draft && (model.Status == CourseStatus.Published || model.Status == CourseStatus.Rejected))
+                || (course.Status == CourseStatus.Published && (model.Status == CourseStatus.Review || model.Status == CourseStatus.Rejected))
+                || (course.Status == CourseStatus.Rejected && model.Status == CourseStatus.Published)
+                || (course.Status != CourseStatus.Published && model.Status == CourseStatus.Completed))
             {
-                _logger.LogWarning("Training with id: {id} cannot be changed from {status} status to {changeStatus} status.", course.Id, course.Status, status);
-                throw new ForbiddenException($"Training with status: {course.Status} cannot be changed to {status} status.");
+                _logger.LogWarning("Training with id: {id} cannot be changed from {status} status to {changeStatus} status.", course.Id, course.Status, model.Status);
+                throw new ForbiddenException($"Training with status: {course.Status} cannot be changed to {model.Status} status.");
             }
 
             var isSuperAdminOrAdminAccess = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
-            if (!isSuperAdminOrAdminAccess && (status == CourseStatus.Published || status == CourseStatus.Rejected))
+            if (!isSuperAdminOrAdminAccess && (model.Status == CourseStatus.Published || model.Status == CourseStatus.Rejected))
             {
                 _logger.LogWarning("User with id: {userId} is unauthorized user to change training with id: {id} status from {status} to {changeStatus}.",
-                    currentUserId, course.Id, course.Status, status);
-                throw new ForbiddenException($"Unauthorized user to change training status to {status}.");
+                    currentUserId, course.Id, course.Status, model.Status);
+                throw new ForbiddenException($"Unauthorized user to change training status to {model.Status}.");
             }
 
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
@@ -335,19 +329,19 @@ namespace Lingtren.Infrastructure.Services
                 lessons = lessons.Where(x => x.Status != CourseStatus.Published).ToList();
             }
 
-            course.Status = status;
+            course.Status = model.Status;
             course.UpdatedBy = currentUserId;
             course.UpdatedOn = currentTimeStamp;
 
             sections.ForEach(x =>
             {
-                x.Status = status;
+                x.Status = model.Status;
                 x.UpdatedBy = currentUserId;
                 x.UpdatedOn = currentTimeStamp;
             });
             lessons.ForEach(x =>
             {
-                x.Status = status;
+                x.Status = model.Status;
                 x.UpdatedBy = currentUserId;
                 x.UpdatedOn = currentTimeStamp;
             });
@@ -357,14 +351,19 @@ namespace Lingtren.Infrastructure.Services
             _unitOfWork.GetRepository<Course>().Update(course);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
-            if (status == CourseStatus.Review)
+            if (model.Status == CourseStatus.Review)
             {
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseReviewMailAsync(course.Name, null));
             }
 
-            if (status == CourseStatus.Published)
+            if (model.Status == CourseStatus.Published)
             {
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.GroupCoursePublishedMailAsync(course.GroupId.Value, course.Name, null));
+            }
+
+            if(model.Status == CourseStatus.Rejected)
+            {
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.CourseRejectedMailAsync(course.Id,model.Message,null));
             }
         }
 
