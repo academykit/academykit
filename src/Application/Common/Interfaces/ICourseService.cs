@@ -15,11 +15,11 @@ namespace Lingtren.Application.Common.Interfaces
         /// <summary>
         /// Handle to change course status
         /// </summary>
-        /// <param name="identity">the course id or slug</param>
-        /// <param name="status">the course status</param>
+        /// <param name="model">the instance of <see cref="CourseStatusRequestModel" /> .</param>
         /// <param name="currentUserId">the current id</param>
         /// <returns></returns>
-        Task ChangeStatusAsync(string identity, CourseStatus status, Guid currentUserId);
+        Task ChangeStatusAsync(CourseStatusRequestModel model, Guid currentUserId);
+        
         /// <summary>
         /// Course Enrollment
         /// </summary>

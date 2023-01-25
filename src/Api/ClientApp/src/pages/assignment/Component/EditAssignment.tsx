@@ -129,8 +129,8 @@ const EditAssignment = ({
         showNotification({
           message: "Successfully added assignment question.",
         });
-        form.reset();
       }
+      form.reset();
       onCancel();
     } catch (err) {
       const error = errorType(err);
@@ -176,7 +176,7 @@ const EditAssignment = ({
                 <Text mt={20}>Options</Text>
                 {form.values.answers &&
                   form.values.answers.map((x, i) => (
-                    <Flex key={i} mb={30} mt={10} align='center'>
+                    <Flex key={i} mb={30} mt={10} align="center">
                       <Checkbox
                         {...form.getInputProps(`answers.${i}.isCorrect`)}
                         mr={10}
@@ -191,7 +191,7 @@ const EditAssignment = ({
                         formContext={useFormContext}
                       ></TextEditor>
                       <UnstyledButton
-                      ml={10}
+                        ml={10}
                         onClick={() => {
                           form.insertListItem(
                             "answers",
@@ -208,7 +208,7 @@ const EditAssignment = ({
                       {form.values.answers &&
                         form.values.answers.length > 1 && (
                           <UnstyledButton
-                          ml={10}
+                            ml={10}
                             onClick={() => {
                               form.removeListItem("answers", i);
                             }}

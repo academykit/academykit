@@ -13,7 +13,7 @@ function MCQPoolNav() {
       role: UserRole.Trainer,
     },
     {
-      label: "Teachers",
+      label: "Trainer",
       to: RoutePath.pool.teachers(params.id).route,
       role: UserRole.Trainer,
     },

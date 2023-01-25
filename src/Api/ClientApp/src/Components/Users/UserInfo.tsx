@@ -68,11 +68,13 @@ const UserInfo = () => {
     validate: yupResolver(schema),
   });
   const updateUser = useUpdateUser(userId as string);
-  const [imageURL, setImageURL] = useState(data?.imageUrl);
+  const [imageURL, setImageURL] = useState(data?.imageUrl ?? "");
   const navigator = useNavigate();
   const handleSubmit = async (data: FormValues) => {
     try {
-      await updateUser.mutateAsync({ id: userId as string, data });
+      const withImage = { ...data };
+      withImage.imageUrl = imageURL;
+      await updateUser.mutateAsync({ id: userId as string, data: withImage });
       navigator(`/userProfile/${userId as string}`);
       showNotification({
         title: "Successful",
@@ -97,8 +99,9 @@ const UserInfo = () => {
         bio: data?.bio ?? "",
         role: data?.role ?? 1,
         isActive: data?.isActive ?? false,
+        imageUrl: data?.imageUrl ?? "",
       });
-      setImageURL(data?.imageUrl);
+      setImageURL(data?.imageUrl ?? "");
     }
   }, [isSuccess]);
 
@@ -119,7 +122,8 @@ const UserInfo = () => {
             url={imageURL}
             label={"image"}
             onUploadSuccess={(imageURLUp: string) => {
-              return formData.setFieldValue("imageUrl", imageURLUp);
+              setImageURL(imageURLUp);
+              formData.setFieldValue("imageUrl", imageURLUp);
             }}
             onRemoveSuccess={() => {
               formData.setFieldValue("imageUrl", null);

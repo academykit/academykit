@@ -115,9 +115,9 @@ const Teacher = () => {
   return (
     <Container fluid>
       <Group sx={{ justifyContent: "space-between", alignItems: "center" }}>
-        <Title>Teachers</Title>
+        <Title>Trainers</Title>
         <Button onClick={() => toggleAddForm()}>
-          {!showAddForm ? "Add Teacher" : "Cancel"}
+          {!showAddForm ? "Add Trainer" : "Cancel"}
         </Button>
       </Group>
       <Transition

@@ -22,7 +22,7 @@ import {
   useQuestionSetQuestions,
 } from "@utils/services/questionService";
 import { showNotification } from "@mantine/notifications";
-import { useNavigate, useNavigation, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import errorType from "@utils/services/axiosError";
 import RichTextEditor from "@mantine/rte";
 
@@ -170,7 +170,7 @@ const Questions = () => {
   return (
     <div>
       <Breadcrumb hide={3} />
-      <Paper p={10} withBorder>
+      <Paper p={10} withBorder h={"1000px"}>
         <Grid mb={10}>
           <Grid.Col span={matches ? 3 : 6}>
             <Select
@@ -198,10 +198,7 @@ const Questions = () => {
           breakpoint="sm"
           //@ts-ignore
           itemComponent={ItemComponent}
-          // filter={(query, item) =>
-          //   item?.label.toLowerCase().includes(query.toLowerCase().trim()) ||
-          //   item?.description.toLowerCase().includes(query.toLowerCase().trim())
-          // }
+          sx={{ height: "85%" }}
         />
         <Group position="left" mt={10}>
           <Button onClick={addQuestion}>Submit</Button>

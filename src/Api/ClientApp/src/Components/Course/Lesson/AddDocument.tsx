@@ -25,7 +25,6 @@ import FileUploadLesson from "@components/Ui/FileUploadLesson";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("File Name is required."),
-  description: Yup.string().required("File Description is required."),
 });
 
 const AddDocument = ({
@@ -34,11 +33,12 @@ const AddDocument = ({
   isEditing,
   sectionId,
   setAddLessonClick,
+  setIsEditing,
 }: {
   setAddState: Function;
   item?: ILessonAssignment;
   setAddLessonClick: Function;
-
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   isEditing?: boolean;
   sectionId: string;
 }) => {
@@ -88,6 +88,7 @@ const AddDocument = ({
           ...fileData,
           lessonIdentity: item?.id,
         } as ILessonFile);
+        setIsEditing(false);
       }
       showNotification({
         title: "Success",
@@ -135,7 +136,6 @@ const AddDocument = ({
             placeholder="File's Description"
             label="File Description"
             mb={10}
-            withAsterisk
             {...form.getInputProps("description")}
           />
           <Group position="left" mt="md">

@@ -11,7 +11,7 @@ import {
   Tabs,
 } from "@mantine/core";
 import CourseContent from "@components/Course/CourseDescription/CourseContent/CourseContent";
-import { useMediaQuery } from "@mantine/hooks";
+import { useMediaQuery, useToggle } from "@mantine/hooks";
 import { IconFileDescription, IconMessage } from "@tabler/icons";
 import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import {
@@ -84,7 +84,8 @@ const Classes = () => {
   const navigate = useNavigate();
   const { classes, theme, cx } = useStyle();
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.md}px)`);
-  const { id, tabValue, lessonId } = useParams();
+  const params = useParams();
+  const tab = params["*"];
   const [videoState, setVideoState] = useState<
     | "loading"
     | "completed"
@@ -95,15 +96,16 @@ const Classes = () => {
     | "buffering"
   >("loading");
 
-  const { data, isLoading } = useCourseDescription(id as string);
+  const { data, isLoading } = useCourseDescription(params.id as string);
+
   const courseLesson = useGetCourseLesson(
-    id as string,
-    lessonId === "1" ? undefined : lessonId
+    params.id as string,
+    params.lessonId === "1" ? undefined : params.lessonId
   );
   const auth = useAuth();
   const watchHistory = useWatchHistory(
-    id as string,
-    lessonId === "1" ? undefined : lessonId
+    params.id as string,
+    params.lessonId === "1" ? undefined : params.lessonId
   );
   if (
     auth?.auth?.role !== UserRole.Admin &&
@@ -121,14 +123,16 @@ const Classes = () => {
   }
 
   const goToNextLesson = (nextLesson: string) =>
-    navigate(`${RoutePath.classes}/${id}/${nextLesson}`);
+    navigate(`${RoutePath.classes}/${params.id}/${nextLesson}`);
   const onCourseEnded = async (nextLesson: string) => {
     try {
       await watchHistory.mutateAsync({
         courseId: courseLesson.data?.courseId ?? "",
         lessonId: courseLesson.data?.id ?? "",
       });
-      goToNextLesson(nextLesson);
+      if (nextLesson) {
+        goToNextLesson(nextLesson);
+      }
     } catch (err) {
       const error = errorType(err);
       showNotification({
@@ -160,13 +164,17 @@ const Classes = () => {
             )}
             {courseLesson.isError && (
               <Box className={cx(classes.videoSection, classes.errorSection)}>
-                <Box>{errorType(courseLesson.error)}</Box>
+                {courseLesson.data?.nextLessonSlug ? (
+                  <Box>{errorType(courseLesson.error)}</Box>
+                ) : (
+                  <Box>You have completed the course!</Box>
+                )}
                 {courseLesson.error?.response?.status &&
                   courseLesson.error?.response?.status === 403 && (
                     <Button
                       component={Link}
                       mt={20}
-                      to={`${RoutePath.classes}/${id}/1`}
+                      to={`${RoutePath.classes}/${params.id}/1`}
                     >
                       View Previous Lesson
                     </Button>
@@ -258,18 +266,20 @@ const Classes = () => {
           <Tabs
             defaultChecked={true}
             defaultValue={"description"}
-            value={tabValue}
+            value={tab}
             onTabChange={(value) =>
               navigate(`${value}`, { preventScrollReset: true })
             }
           >
             <Tabs.List>
-              <Tabs.Tab
-                value="description"
-                icon={<IconFileDescription size={14} />}
-              >
-                Description
-              </Tabs.Tab>
+              {courseLesson.data?.type !== LessonType.LiveClass && (
+                <Tabs.Tab
+                  value="description"
+                  icon={<IconFileDescription size={14} />}
+                >
+                  Description
+                </Tabs.Tab>
+              )}
               <Tabs.Tab value="comments" icon={<IconMessage size={14} />}>
                 Comments
               </Tabs.Tab>

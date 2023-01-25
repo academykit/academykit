@@ -20,7 +20,7 @@ namespace Lingtren.Infrastructure.Services
         {
             _emailService = emailService;
         }
-        
+
         /// <summary>
         /// Handle to send course review mail
         /// </summary>
@@ -38,7 +38,7 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var users = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: p => p.Role == UserRole.Admin || p.Role == UserRole.SuperAdmin).ConfigureAwait(false);
-                if(users.Count == default)
+                if (users.Count == default)
                 {
                     return;
                 }
@@ -52,8 +52,94 @@ namespace Lingtren.Infrastructure.Services
                     var model = new EmailRequestDto
                     {
                         To = user.Email,
-                        Subject ="",
+                        Subject = "",
                         Message = html
+                    };
+                    await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handle to send course rejected mail
+        /// </summary>
+        /// <param name="courseId"> the course id </param>
+        /// <param name="message"> the message </param>
+        /// <param name="context"> the instance of <see cref="PerformContext" /> .</param>
+        /// <returns> the task complete </returns>
+        [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
+        public async Task CourseRejectedMailAsync(Guid courseId,string message, PerformContext context = null)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    throw new ArgumentException("Context not found.");
+                }
+
+                var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate: p => p.Id == courseId,
+                include: source => source.Include(x => x.CourseTeachers).ThenInclude(x => x.User)).ConfigureAwait(false);
+
+                if (course == default)
+                {
+                    throw new EntityNotFoundException("Course not found");
+                }
+
+                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
+                foreach (var teacher in course.CourseTeachers)
+                {
+                    if (!string.IsNullOrEmpty(teacher.User?.Email))
+                    {
+                        var html = $"Dear {teacher?.User.FullName},<br><br>";
+                        html += $"Your {course.Name} course has been rejected. <br>{message}</b><br><br>";
+                        html += $"Thank You,<br> {settings.CompanyName}";
+                        var model = new EmailRequestDto
+                        {
+                            To = teacher.User.Email,
+                            Message = html,
+                            Subject = "Account Created"
+                        };
+                        await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handle to send email to imported user async
+        /// </summary>
+        /// <param name="dtos"> the list of <see cref="UserEmailDto" /> .</param>
+        /// <returns> the task complete </returns>
+        [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
+        public async Task SendEmailImportedUserAsync(IList<UserEmailDto> dtos, PerformContext context = null)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    throw new ArgumentException("Context not found.");
+                }
+
+                foreach (var emailDto in dtos)
+                {
+                    var html = $"Dear {emailDto.FullName},<br><br>";
+                    html += $"Your account has been created in {emailDto.CompanyName}. <br> Your Login Password is <b><u>{emailDto.Password}</u></b><br><br>";
+                    html += $"Thank You,<br> {emailDto.CompanyName}";
+                    var model = new EmailRequestDto
+                    {
+                        To = emailDto.Email,
+                        Message = html,
+                        Subject = "Account Created"
                     };
                     await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
                 }
@@ -102,7 +188,7 @@ namespace Lingtren.Infrastructure.Services
                     {
                         To = user.Email,
                         Message = html,
-                        Subject ="New group member"
+                        Subject = "New group member"
                     };
                     await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
                 }
@@ -134,9 +220,9 @@ namespace Lingtren.Infrastructure.Services
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
                 var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(predicate: x => x.Id == groupId,
                 include: source => source.Include(x => x.GroupMembers).ThenInclude(x => x.User)).ConfigureAwait(false);
-                if(group.GroupMembers.Count != default)
+                if (group.GroupMembers.Count != default)
                 {
-                    foreach(var member in group.GroupMembers)
+                    foreach (var member in group.GroupMembers)
                     {
                         var fullName = string.IsNullOrEmpty(member.User?.MiddleName) ? $"{member.User?.FirstName} {member.User?.LastName}" : $"{member.User?.FirstName} {member.User?.MiddleName} {member.User?.LastName}";
                         var html = $"Dear {fullName},<br><br>";
@@ -153,7 +239,7 @@ namespace Lingtren.Infrastructure.Services
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);

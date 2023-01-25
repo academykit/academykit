@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Button,
   Grid,
@@ -44,12 +44,14 @@ const AddMeeting = ({
   isEditing,
   sectionId,
   setAddLessonClick,
+  setIsEditing,
 }: {
   setAddState: React.Dispatch<React.SetStateAction<string>>;
   item?: ILessonMeeting;
   isEditing?: boolean;
   sectionId?: string;
   setAddLessonClick: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
@@ -59,15 +61,8 @@ const AddMeeting = ({
     item?.id,
     isEditing
   );
-  const [isMandatory, setIsMandatory] = React.useState<boolean>(
-    lessonDetails.data?.isMandatory ?? false
-  );
 
-  const updateLesson = useUpdateLesson(
-    // item?.courseId || "",
-    // item?.id,
-    slug as string
-  );
+  const updateLesson = useUpdateLesson(slug as string);
 
   useEffect(() => {
     if (lessonDetails.isSuccess && isEditing) {
@@ -75,7 +70,6 @@ const AddMeeting = ({
       const startDateTime = moment(data?.meeting?.startDate + "z")
         .local()
         .toDate();
-
 
       form.setValues({
         name: data?.name ?? "",
@@ -85,7 +79,6 @@ const AddMeeting = ({
         meetingStartTime: startDateTime,
         isMandatory: data?.isMandatory,
       });
-      setIsMandatory(data?.isMandatory);
     }
   }, [lessonDetails.isSuccess]);
 
@@ -101,7 +94,6 @@ const AddMeeting = ({
     validate: yupResolver(schema),
   });
 
-  const { meetingDuration, meetingStartTime, meetingStartDate } = form.values;
   const meeting = useActiveZoomLicense(dateTime, form.values.meetingDuration);
 
   const selectItem = meeting.data?.data
@@ -110,7 +102,8 @@ const AddMeeting = ({
       })
     : [""];
 
-  useEffect(() => {
+  const changeZoomLiscense = () => {
+    const { meetingDuration, meetingStartTime, meetingStartDate } = form.values;
     if (meetingDuration && meetingStartTime && meetingStartDate) {
       const time = new Date(meetingStartTime).toLocaleTimeString();
       const date = new Date(meetingStartDate).toLocaleDateString();
@@ -118,7 +111,7 @@ const AddMeeting = ({
     } else {
       form.setFieldValue("zoomLicenseId", "");
     }
-  }, [meetingDuration, meetingStartTime, meetingStartDate]);
+  };
 
   const handleSubmit = async (values: any) => {
     const meeting = {
@@ -138,8 +131,9 @@ const AddMeeting = ({
           sectionIdentity: sectionId,
           isMandatory: values.isMandatory,
         } as ILessonMeeting);
+        setIsEditing(false);
       } else {
-        const response = await lesson.mutateAsync({
+        await lesson.mutateAsync({
           meeting,
           name: values.name,
           courseId: slug,
@@ -175,15 +169,7 @@ const AddMeeting = ({
           />
         </Grid.Col>
         <Grid.Col span={6} lg={3}>
-          <Switch
-            label="Is Mandatory"
-            {...form.getInputProps("isMandatory")}
-            checked={isMandatory}
-            onChange={() => {
-              setIsMandatory(() => !isMandatory);
-              form.setFieldValue("isMandatory", !isMandatory);
-            }}
-          />
+          <Switch label="Is Mandatory" {...form.getInputProps("isMandatory")} />
         </Grid.Col>
       </Grid>
       <Group grow>
@@ -210,9 +196,22 @@ const AddMeeting = ({
           {...form.getInputProps("meetingDuration")}
         />
         <Select
+          onClick={changeZoomLiscense}
+          onKeyDown={(e) => {
+            if (e.code === "Space") {
+              changeZoomLiscense();
+            }
+          }}
+          defaultValue="Pick one license"
           label="Zoom License"
           placeholder="Pick one License"
-          disabled={!(meetingDuration && meetingStartDate && meetingStartTime)}
+          disabled={
+            !(
+              form.values.meetingDuration &&
+              form.values.meetingStartDate &&
+              form.values.meetingStartTime
+            )
+          }
           data={selectItem}
           withAsterisk
           {...form.getInputProps("zoomLicenseId")}

@@ -7,9 +7,9 @@ import MyTrainingExternal from "./myTrainingExternal";
 const AdminViewCertificate = () => {
   const auth = useAuth();
   const navigate = useNavigate();
-  if (auth?.auth && auth?.auth?.role <= UserRole.Admin) {
-    navigate("/404");
-  }
+  // if (auth?.auth && auth?.auth?.role <= UserRole.Admin) {
+  //   navigate("/404");
+  // }
   return (
     <div>
       <MyTrainingExternal isAdmin={true} />

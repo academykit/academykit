@@ -207,6 +207,7 @@ namespace Lingtren.Api.Controllers
             existing.Id = existing.Id;
             existing.MailPort = model.MailPort;
             existing.MailServer = model.MailServer;
+            existing.ReplyTo = model.ReplyTo;
             existing.SenderName = model.SenderName;
             existing.SenderEmail = model.SenderEmail;
             existing.UserName = model.UserName;

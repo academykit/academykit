@@ -16,7 +16,7 @@ import {
   useCreateLesson,
   useUpdateLesson,
 } from "@utils/services/courseService";
-import { ILessonAssignment } from "@utils/services/types";
+import { ILessonFeedback } from "@utils/services/types";
 import { useParams } from "react-router-dom";
 import errorType from "@utils/services/axiosError";
 import * as Yup from "yup";
@@ -24,7 +24,6 @@ import CreateFeedback from "../FeedBack/CreateFeedBack";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Feedback Name is required."),
-  description: Yup.string().required("Feedback Description is required."),
 });
 
 const AddFeedback = ({
@@ -32,11 +31,13 @@ const AddFeedback = ({
   item,
   isEditing,
   sectionId,
+  setIsEditing,
 }: {
   setAddState: Function;
-  item?: ILessonAssignment;
+  item?: ILessonFeedback;
   isEditing?: boolean;
   sectionId: string;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
@@ -73,7 +74,7 @@ const AddFeedback = ({
       };
       if (!isEditing) {
         const response: any = await lesson.mutateAsync(
-          assignmentData as ILessonAssignment
+          assignmentData as ILessonFeedback
         );
         setLessonId(response?.data?.id);
         form.reset();
@@ -82,13 +83,15 @@ const AddFeedback = ({
         await updateLesson.mutateAsync({
           ...assignmentData,
           lessonIdentity: item?.id,
-        } as ILessonAssignment);
+        } as ILessonFeedback);
+        setIsEditing(false);
       }
       showNotification({
         title: "Success",
-        message: `Assignment ${isEditing ? "Edited" : "Added"} successfully!`,
+        message: `Feedback ${isEditing ? "Edited" : "Added"} successfully!`,
       });
     } catch (error: any) {
+      console.log(error);
       const err = errorType(error);
 
       showNotification({
@@ -158,7 +161,6 @@ const AddFeedback = ({
             placeholder="Feedback's Description"
             label="Feedback Description"
             mb={10}
-            withAsterisk
             {...form.getInputProps("description")}
           />
           <Group position="left" mt="md">

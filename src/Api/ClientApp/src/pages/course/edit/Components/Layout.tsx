@@ -30,7 +30,7 @@ function CourseEditNav() {
       role: UserRole.Trainer,
     },
     {
-      label: "Teachers",
+      label: "Trainers",
       to: RoutePath.manageCourse.teachers(params.id).route,
       role: UserRole.Trainer,
     },

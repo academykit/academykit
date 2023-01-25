@@ -1,4 +1,5 @@
-import { Box, SimpleGrid, Text } from "@mantine/core";
+import { Box, Flex, Group, Paper, SimpleGrid, Text } from "@mantine/core";
+import { IconActivity, IconBook, IconUserCheck } from "@tabler/icons";
 import {
   DashboardCourses,
   DashboardStats,
@@ -13,17 +14,36 @@ const incomingData = [
     label: "My Groups",
     icon: "userEnrollment",
   },
-  {
-    key: "totalActiveTrainings",
-    label: "My Active Trainings",
-    icon: "trainings",
-  },
-  {
-    key: "totalCompletedTrainings",
-    label: "My Completed Trainings",
-    icon: "active",
-  },
 ];
+
+const TrainerCardDual = ({ dashboard }: { dashboard: DashboardStats }) => {
+  return (
+    <Paper withBorder p="md" radius={"md"}>
+      <Group position="left" noWrap>
+        <IconBook size={26} stroke={1.5} />
+        <Text size="md">My Trainings</Text>
+      </Group>
+      <Group position="apart" noWrap mt={10}>
+        <Flex>
+          <IconActivity size={26} stroke={1.5} />
+          <Text ml={5} size="md">
+            Active
+          </Text>
+        </Flex>
+        <Flex>
+          <IconUserCheck size={26} stroke={1.5} />
+          <Text ml={5} size="md">
+            Completed
+          </Text>
+        </Flex>
+      </Group>
+      <Group position="apart" w={"80%"} m="auto">
+        <Text>{dashboard.totalActiveTrainings}</Text>
+        <Text>{dashboard.totalCompletedTrainings}</Text>
+      </Group>
+    </Paper>
+  );
+};
 
 const Trainers = ({
   dashboard,
@@ -47,6 +67,7 @@ const Trainers = ({
             //@ts-ignore
             <StatsCard key={x.key} data={x} dashboard={dashboard} />
           ))}
+        <TrainerCardDual dashboard={dashboard} />
       </SimpleGrid>
       <Text size={"xl"} weight="bold">
         My Training

@@ -4,8 +4,6 @@ import "filepond/dist/filepond.min.css";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import { Box } from "@mantine/core";
-import { createFormContext } from "@mantine/form";
-import { UseForm, UseFormReturnType } from "@mantine/form/lib/types";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 
 registerPlugin(

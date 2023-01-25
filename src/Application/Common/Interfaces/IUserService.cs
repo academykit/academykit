@@ -4,6 +4,8 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
+    using Microsoft.AspNetCore.Http;
+
     public interface IUserService : IGenericService<User, UserSearchCriteria>
     {
         /// <summary>
@@ -115,5 +117,14 @@
         /// <param name="userId">the user id</param>
         /// <returns>the instance of <see cref="UserResponseModel"/></returns>
         Task<UserResponseModel> GetDetailAsync(Guid userId);
+
+
+        /// <summary>
+        /// Handle to import the user
+        /// </summary>
+        /// <param name="file"> the instance of <see cref="IFormFile" /> .</param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the task complete </returns>
+        Task ImportUserAsync(IFormFile file, Guid currentUserId);
     }
 }

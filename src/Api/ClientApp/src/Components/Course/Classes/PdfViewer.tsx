@@ -14,7 +14,6 @@ import { Badge, Button } from "@mantine/core";
 import { ICourseLesson } from "@utils/services/courseService";
 import { useWatchHistory } from "@utils/services/watchHistory";
 import { showNotification } from "@mantine/notifications";
-import errorType from "@utils/services/axiosError";
 
 interface PdfViewerProps {
   lesson: ICourseLesson;
@@ -28,13 +27,11 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
   const matches = useMediaQuery("(min-width: 991px");
 
   const onMarkComplete = () => {
-      
-      onEnded();
-      showNotification({
-        title: "Success",
-        message: "Pdf marked as completed.",
-      });
-    
+    onEnded();
+    showNotification({
+      title: "Success",
+      message: "Pdf marked as completed.",
+    });
   };
 
   const transform: TransformToolbarSlot = (slot: ToolbarSlot) => ({
