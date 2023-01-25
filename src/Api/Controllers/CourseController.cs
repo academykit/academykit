@@ -27,6 +27,7 @@ namespace Lingtren.Api.Controllers
         {
             _courseService = courseService;
             _validator = validator;
+            _courseStatusValidator = courseStatusValidator;
             _logger = logger;
         }
 
