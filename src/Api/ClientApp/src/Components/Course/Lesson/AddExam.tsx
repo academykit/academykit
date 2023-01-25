@@ -77,11 +77,7 @@ const AddExam = ({
   const { id: slug } = useParams();
   const navigate = useNavigate();
   const lesson = useCreateLesson(slug as string);
-  const updateLesson = useUpdateLesson(
-    // item?.courseId || "",
-    // item?.id,
-    slug as string
-  );
+  const updateLesson = useUpdateLesson(slug as string);
 
   const lessonDetails = useGetCourseLesson(
     item?.courseId || "",
@@ -159,8 +155,8 @@ const AddExam = ({
           name: values.name,
           isMandatory: values.isMandatory,
         } as ILessonMCQ);
+        setIsEditing(false);
       }
-      setIsEditing(false);
       showNotification({
         title: "Success!",
         message: `Lesson ${isEditing ? "Edited" : "Added"} successfully!`,

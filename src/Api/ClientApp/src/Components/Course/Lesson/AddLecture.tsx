@@ -71,6 +71,7 @@ const AddLecture = ({
           ...values,
           videoUrl,
         } as ILessonLecture);
+        setIsEditing(false);
       } else {
         await lesson.mutateAsync({
           courseId: slug as string,
@@ -85,7 +86,6 @@ const AddLecture = ({
         message: `Lesson ${isEditing ? "Edited" : "Added"} successfully`,
       });
       setAddLessonClick(true);
-      setIsEditing(false);
     } catch (error: any) {
       const err = errorType(error);
       showNotification({

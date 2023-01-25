@@ -10,6 +10,7 @@ import { api } from "./service-api";
 import { httpClient } from "./service-axios";
 import {
   ILessonAssignment,
+  ILessonFeedback,
   ILessonLecture,
   ILessonMCQ,
   ILessonMeeting,
@@ -241,7 +242,7 @@ export interface ILessons {
   id: string;
   slug: string;
   name: string;
-  description: string;
+  description?: string;
   videoUrl: string;
   thumbnailUrl: string;
   documentUrl: string;
@@ -328,7 +329,7 @@ export const useDeleteSection = (slug: string) => {
 };
 
 const createLesson = async (
-  data: ILessonLecture | ILessonMCQ | ILessonAssignment | ILessonMeeting
+  data: ILessonLecture | ILessonMCQ | ILessonAssignment | ILessonMeeting | ILessonFeedback
 ) => {
   return await httpClient.post(api.lesson.addLesson(data.courseId), data);
 };
@@ -343,7 +344,7 @@ export const useCreateLesson = (slug: string) => {
 };
 
 const updateLesson = async (
-  data: ILessonLecture | ILessonMCQ | ILessonAssignment | ILessonMeeting
+  data: ILessonLecture | ILessonMCQ | ILessonAssignment | ILessonMeeting | ILessonFeedback
 ) => {
   return await httpClient.put(
     api.lesson.updateLesson(data.courseId, data.lessonIdentity),

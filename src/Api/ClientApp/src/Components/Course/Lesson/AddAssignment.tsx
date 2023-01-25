@@ -156,12 +156,12 @@ const AddAssignment = ({
           ...assignmentData,
           lessonIdentity: item?.id,
         } as ILessonAssignment);
+        setIsEditing(false);
       }
       showNotification({
         title: "Success",
         message: `Assignment ${isEditing ? "Edited" : "Added"} successfully!`,
       });
-      setIsEditing(false);
     } catch (error: any) {
       const err = errorType(error);
 

@@ -131,6 +131,7 @@ const AddMeeting = ({
           sectionIdentity: sectionId,
           isMandatory: values.isMandatory,
         } as ILessonMeeting);
+        setIsEditing(false);
       } else {
         await lesson.mutateAsync({
           meeting,
@@ -146,7 +147,6 @@ const AddMeeting = ({
         title: "Success!",
       });
       setAddLessonClick(true);
-      setIsEditing(false);
     } catch (error) {
       const err = errorType(error);
       showNotification({
