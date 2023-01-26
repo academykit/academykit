@@ -78,6 +78,7 @@ namespace Lingtren.Infrastructure.Services
                 var objectArgs = new Minio.PutObjectArgs().WithObject(fileName).WithBucket(credentails.Bucket).WithFileName(filePath).
                     WithContentType("video/mp4").WithObjectSize(fileSize);
                 await minio.PutObjectAsync(objectArgs);
+                _logger.LogInformation(fileName);
                 return fileName;
             }
             catch (Exception ex)
