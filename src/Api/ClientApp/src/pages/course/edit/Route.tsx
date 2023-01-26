@@ -24,24 +24,26 @@ const ManageStudents = lazyWithRetry(() => import("../manage/Student"));
 const CourseRoute = () => {
   const params = useParams();
   const courseDetail = useCourseDescription(params.id as string);
-  const auth = useAuth()
-  const navigate = useNavigate()
+  const auth = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (courseDetail.isError) {
       throw courseDetail.error;
     }
-
-
-
   }, [courseDetail.isError]);
 
-if(courseDetail.isSuccess){
-  if(!(courseDetail.data.userStatus === (CourseUserStatus.Author || CourseUserStatus.Teacher) || auth?.auth && auth.auth.role <= UserRole.Admin)){
-    return navigate('/403') 
+  if (courseDetail.isSuccess) {
+    if (
+      !(
+        courseDetail.data.userStatus === CourseUserStatus.Author ||
+        CourseUserStatus.Teacher ||
+        (auth?.auth && auth.auth.role <= UserRole.Admin)
+      )
+    ) {
+      return navigate("/403");
+    }
   }
-}
-
 
   return courseDetail.isLoading ? (
     <Loader />
