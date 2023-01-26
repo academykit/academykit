@@ -25,6 +25,7 @@ import * as Yup from "yup";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Video Name is required."),
+  videoUrl: Yup.string().required("Video is required!"),
 });
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
@@ -122,13 +123,14 @@ const AddLecture = ({
           </Text>
           <LessonVideoUpload
             setUrl={setVideoUrl}
+            formContext={useFormContext}
             currentVideo={videoUrl}
             marginy={1}
           />
           <Textarea
             placeholder="Video's Description"
             label="Video Description"
-            mb={10}
+            my={form.errors["videoUrl"] ? 20 : 10}
             {...form.getInputProps("description")}
           />
           <Group position="left" mt="md">

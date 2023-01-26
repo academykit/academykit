@@ -62,7 +62,7 @@ export const CourseUserStatusValue = {
   [CourseUserStatus.Author]: "Author",
   [CourseUserStatus.Enrolled]: "Enrolled",
   [CourseUserStatus.NotEnrolled]: "Not Enrolled",
-  [CourseUserStatus.Teacher]: "Teacher",
+  [CourseUserStatus.Teacher]: "Trainer",
 };
 
 export enum EFileStorageType {

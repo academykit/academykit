@@ -167,7 +167,7 @@ const Classes = () => {
                 {courseLesson.data?.nextLessonSlug ? (
                   <Box>{errorType(courseLesson.error)}</Box>
                 ) : (
-                  <Box>You have completed the course!</Box>
+                  <Box>No Lessons found</Box>
                 )}
                 {courseLesson.error?.response?.status &&
                   courseLesson.error?.response?.status === 403 && (

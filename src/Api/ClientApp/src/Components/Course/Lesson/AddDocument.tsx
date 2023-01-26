@@ -2,13 +2,13 @@ import {
   Button,
   Grid,
   Group,
-  Modal,
+  Text,
   Paper,
   Switch,
   Textarea,
   TextInput,
 } from "@mantine/core";
-import { useForm, yupResolver } from "@mantine/form";
+import { createFormContext, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { LessonType } from "@utils/enums";
 import {
@@ -25,7 +25,10 @@ import FileUploadLesson from "@components/Ui/FileUploadLesson";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("File Name is required."),
+  documentUrl: Yup.string().required("File is required!"),
 });
+
+const [FormProvider, useFormContext, useForm] = createFormContext();
 
 const AddDocument = ({
   setAddState,
@@ -44,7 +47,6 @@ const AddDocument = ({
 }) => {
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
-  const [fileUrl, setFileUrl] = React.useState<string>(item?.documentUrl ?? "");
 
   const updateLesson = useUpdateLesson(
     // item?.courseId || "",
@@ -63,12 +65,13 @@ const AddDocument = ({
     initialValues: {
       name: item?.name ?? "",
       description: item?.description ?? "",
+      documentUrl: item?.documentUrl ?? "",
       isMandatory: item?.isMandatory ?? false,
     },
     validate: yupResolver(schema),
   });
 
-  const submitForm = async (values: { name: string; description: string }) => {
+  const submitForm = async (values: any) => {
     try {
       let fileData = {
         courseId: slug,
@@ -76,7 +79,6 @@ const AddDocument = ({
         type: LessonType.Document,
         ...values,
         isMandatory,
-        documentUrl: fileUrl,
       };
       if (!isEditing) {
         const response: any = await lesson.mutateAsync(fileData as ILessonFile);
@@ -107,7 +109,7 @@ const AddDocument = ({
   };
 
   return (
-    <React.Fragment>
+    <FormProvider form={form}>
       <form onSubmit={form.onSubmit(submitForm)}>
         <Paper withBorder p="md">
           <Grid align={"center"} justify="space-around">
@@ -131,11 +133,17 @@ const AddDocument = ({
               />
             </Grid.Col>
           </Grid>
-          <FileUploadLesson currentFile={fileUrl} setUrl={setFileUrl} />
+          <Text size={"sm"} mt={10}>
+            Video <span style={{ color: "red" }}>*</span>
+          </Text>
+          <FileUploadLesson
+            currentFile={item?.documentUrl}
+            formContext={useFormContext}
+          />
           <Textarea
             placeholder="File's Description"
             label="File Description"
-            mb={10}
+            my={form.errors["documentUrl"] ? 20 : 10}
             {...form.getInputProps("description")}
           />
           <Group position="left" mt="md">
@@ -158,7 +166,7 @@ const AddDocument = ({
           </Group>
         </Paper>
       </form>
-    </React.Fragment>
+    </FormProvider>
   );
 };
 
