@@ -150,7 +150,9 @@ const CourseCardHorizontal = ({
                 {/* {auth?.auth && auth?.auth?.role > UserRole.Admin && ( */}
                 <Badge>{CourseUserStatusValue[course.userStatus]}</Badge>
                 {/* )} */}
-                {auth?.auth && auth?.auth?.role <= UserRole.Admin && (
+                {((auth?.auth && auth?.auth?.role <= UserRole.Admin) ||
+                  course.userStatus === CourseUserStatus.Author ||
+                  course.userStatus === CourseUserStatus.Teacher) && (
                   <>
                     <Badge ml={10} color={"teal"}>
                       {CourseStatus[course?.status]}
