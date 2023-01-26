@@ -1,5 +1,5 @@
 import { Box, Flex, Group, Paper, SimpleGrid, Text } from "@mantine/core";
-import { IconActivity, IconBook, IconUserCheck } from "@tabler/icons";
+import { IconActivity, IconBook, IconFileCheck } from "@tabler/icons";
 import {
   DashboardCourses,
   DashboardStats,
@@ -31,7 +31,7 @@ const TrainerCardDual = ({ dashboard }: { dashboard: DashboardStats }) => {
           </Text>
         </Flex>
         <Flex>
-          <IconUserCheck size={26} stroke={1.5} />
+          <IconFileCheck size={26} stroke={1.5} />
           <Text ml={5} size="md">
             Completed
           </Text>

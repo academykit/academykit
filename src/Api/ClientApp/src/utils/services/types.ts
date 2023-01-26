@@ -96,4 +96,5 @@ export interface ILessonMeeting extends ILessons {
     meetingDuration: number;
     zoomLicenseId: string;
   };
+  description?: string
 }

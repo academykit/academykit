@@ -85,7 +85,7 @@ const UserProfile = () => {
           <Text size={"md"} sx={{ padding: "5px 50px" }} mb={10}>
             Email: {data?.email}
           </Text>
-          {data && data?.bio.replace(/<[^>]+>/g, "").length > 0 && (
+          {data && data.bio && data?.bio.replace(/<[^>]+>/g, "").length > 0 && (
             <>
               <RichTextEditor
                 styles={{
