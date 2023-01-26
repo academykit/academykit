@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { FilePond } from "react-filepond";
 import { Text } from "@mantine/core";
+import { uploadUserCsv } from "@utils/services/fileService";
 
 const CSVUpload = () => {
   const [files, setFiles] = useState<any>([]);
+
   return (
     <div>
       <FilePond
@@ -23,7 +25,7 @@ const CSVUpload = () => {
           "application/csv",
         ]}
         // onChange={handleFileUpload}
-        labelIdle={`Drag & Drop your csv or <span class="filepond--label-action">Browse</span>`}
+        labelIdle={`Drag & Drop your user CSV or <span class="filepond--label-action">Browse</span>`}
         server={{
           remove: null,
           revert: null,
@@ -39,6 +41,8 @@ const CSVUpload = () => {
             abort
           ) => {
             try {
+              const res = await uploadUserCsv(file as File);
+
               abort();
             } catch (error) {}
           },

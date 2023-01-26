@@ -54,11 +54,11 @@ export interface IMyCourse extends ICourse {
     percentage: number
   }
 
-  const getMyCourse = async (userId:string) =>
-  await httpClient.get<IPaginated<IMyCourse>>(api.course.userList(userId));
+  const getMyCourse = async (userId:string,search: string) =>
+  await httpClient.get<IPaginated<IMyCourse>>(api.course.userList(userId) +`?${search}`);
 
-export const useMyCourse = (userId:string) =>
-  useQuery([api.course.userList(userId), ], () => getMyCourse(userId), {
+export const useMyCourse = (userId:string, search:string) =>
+  useQuery([api.course.userList(userId), search], () => getMyCourse(userId,search), {
     select: (data) => data.data,
   });
 

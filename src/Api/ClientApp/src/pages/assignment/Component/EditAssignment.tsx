@@ -169,6 +169,12 @@ const EditAssignment = ({
               label="Question Type"
               {...form.getInputProps("type")}
               data={getQuestionType()}
+              onClick={() => {
+                assignmentQuestion &&
+                  form.setFieldValue("answers", [
+                    { option: "", isCorrect: false, isSelected: false },
+                  ]);
+              }}
             ></Select>
             {(form.values.type === QuestionType.MultipleChoice.toString() ||
               form.values.type === QuestionType.SingleChoice.toString()) && (

@@ -51,7 +51,7 @@ const TeacherCards = ({
   return (
     <>
       <DeleteModal
-        title={`Do you want to delete teacher?`}
+        title={`Do you want to delete trainer?`}
         open={deletePopup}
         onClose={setDeletePopUP}
         onConfirm={handleDelete}
