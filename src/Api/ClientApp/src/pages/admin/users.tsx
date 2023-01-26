@@ -55,7 +55,6 @@ const UsersList = ({
       });
     } catch (error) {
       const err = errorType(error);
-      console.log(err, error);
       showNotification({
         message: err,
         color: "red",

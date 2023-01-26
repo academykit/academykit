@@ -72,8 +72,6 @@ const AddMeeting = ({
         .local()
         .toDate();
 
-      console.log(data);
-
       form.setValues({
         name: data?.name ?? "",
         meetingDuration: data ? Number(data?.meeting?.duration) / 60 : 0,

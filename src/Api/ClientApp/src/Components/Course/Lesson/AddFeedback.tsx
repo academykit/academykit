@@ -91,7 +91,6 @@ const AddFeedback = ({
         message: `Feedback ${isEditing ? "Edited" : "Added"} successfully!`,
       });
     } catch (error: any) {
-      console.log(error);
       const err = errorType(error);
 
       showNotification({
