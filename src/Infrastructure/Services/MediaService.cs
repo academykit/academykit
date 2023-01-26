@@ -222,7 +222,6 @@ namespace Lingtren.Infrastructure.Services
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{downloadToken}");
                     await client.DownloadFileTaskAsync(new Uri(fileUrl), filePath).ConfigureAwait(true);
                 }
-                _logger.LogInformation($"download : {filePath}");
                 string videoPath = "";
                 if (Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
                 {
@@ -231,7 +230,6 @@ namespace Lingtren.Infrastructure.Services
                 else
                 {
                    videoPath = await _fileServerService.UploadRecordingFileAsync(filePath,fileSize);
-                   _logger.LogInformation($" The vidoe path {videoPath}");
                    DeleteFilePath(filePath);
                 }
                 return videoPath;

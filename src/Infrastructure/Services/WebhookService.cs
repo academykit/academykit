@@ -104,6 +104,7 @@ namespace Lingtren.Infrastructure.Services
                     var lessonOrder = meeting.Lesson.Order + 1;
                     var firstRecording = recordingFileDtos.FirstOrDefault(x => x.Order == 1);
                     meeting.Lesson.Type = LessonType.RecordedVideo;
+                    meeting.Lesson.Name = firstRecording.Name;
                     meeting.Lesson.VideoUrl = firstRecording.VideoUrl;
                     recordingFileDtos.Remove(firstRecording);
                     var recordings = recordingFileDtos.OrderBy(x => x.Order).ToList();
@@ -143,7 +144,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var videos= recordingFileDtos.FirstOrDefault();
                     meeting.Lesson.Type = LessonType.RecordedVideo;
-                    meeting.Lesson.VideoUrl = "private/030bd765-58da-4a84-ab2c-ffe0fb71abe3.mp4";
+                    meeting.Lesson.VideoUrl = videos.VideoUrl;
                     _unitOfWork.GetRepository<Lesson>().Update(meeting.Lesson);
                 }
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
