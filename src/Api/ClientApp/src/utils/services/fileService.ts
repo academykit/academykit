@@ -39,7 +39,7 @@ export const getFileUrl =  (key: string, enabled: boolean) => {
 }
 
 
-export const uploadUserCsv = (file: File) => {
+export const uploadUserCsv = (file: File | null) => {
   return httpClient.post(
     '/api/user/bulkuser',
     {file},

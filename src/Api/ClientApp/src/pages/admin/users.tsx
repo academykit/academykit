@@ -19,7 +19,8 @@ import withSearchPagination, {
 } from "@hoc/useSearchPagination";
 import errorType from "@utils/services/axiosError";
 import lazyWithRetry from "@utils/lazyImportWithReload";
-import CSVUpload from "@components/Ui/CSVUpload";
+import { uploadUserCsv } from "@utils/services/fileService";
+import { showNotification } from "@mantine/notifications";
 const AddUpdateUserForm = lazyWithRetry(
   () => import("../../Components/Users/AddUpdateUserForm")
 );
@@ -38,13 +39,32 @@ const UsersList = ({
   sortComponent,
 }: IWithSearchPagination) => {
   const [opened, setOpened] = useState(false);
-  const [importModal, setImportModal] = useState(false);
   const { data, isLoading: loading, isError: error } = useUsers(searchParams);
   const addUser = useAddUser(searchParams);
   const [currentTab, setCurrentTab] = useState<string | null>("user");
   const [file, setFile] = useState<File | null>(null);
+  const [csvLoad, setCsvLoad] = useState<boolean>(false);
 
-  const onSubmit = () => {};
+  const onSubmit = async () => {
+    try {
+      setCsvLoad(true);
+      await uploadUserCsv(file);
+      showNotification({
+        message: "User imported successfully!",
+        title: "Successful",
+      });
+    } catch (error) {
+      const err = errorType(error);
+      console.log(err, error);
+      showNotification({
+        message: err,
+        color: "red",
+        title: "Error",
+      });
+    }
+    setCsvLoad(false);
+    setOpened(false);
+  };
 
   return (
     <>
@@ -75,7 +95,7 @@ const UsersList = ({
               <Text my={10} size="sm">
                 CSV file format should be similar to sample CSV. Please
                 <Anchor
-                  href="https://google.com"
+                  href="https://vurilo-desktop-app.s3.ap-south-1.amazonaws.com/bulkimportsample.csv"
                   style={{
                     textDecoration: "underline",
                   }}
@@ -89,14 +109,17 @@ const UsersList = ({
                 label="Upload your CSV file"
                 value={file}
                 onChange={setFile}
+                placeholder="Your CSV file"
                 mt={10}
+                description="Note: It only accepts CSV file"
                 accept="text/csv,
           application/vnd.openxmlformats-officedocument.presentationml.presentation,
           application/vnd.ms-excel,
           application/csv"
               />
-              <Button mt={10}>Submit</Button>
-              {/* <CSVUpload /> */}
+              <Button loading={csvLoad} mt={10} onClick={onSubmit}>
+                Submit
+              </Button>
             </Tabs.Panel>
           </Tabs>
         </Suspense>

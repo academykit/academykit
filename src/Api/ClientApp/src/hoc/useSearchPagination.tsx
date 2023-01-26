@@ -116,7 +116,7 @@ const withSearchPagination =
 
       const data = {
         page,
-        search,
+        search: search ?? "",
         size,
         sortBy,
         sortType,

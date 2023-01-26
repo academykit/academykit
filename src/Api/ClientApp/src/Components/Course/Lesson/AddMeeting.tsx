@@ -6,6 +6,7 @@ import {
   NumberInput,
   Select,
   Switch,
+  Textarea,
   TextInput,
 } from "@mantine/core";
 import { DatePicker, TimeInput } from "@mantine/dates";
@@ -71,6 +72,8 @@ const AddMeeting = ({
         .local()
         .toDate();
 
+      console.log(data);
+
       form.setValues({
         name: data?.name ?? "",
         meetingDuration: data ? Number(data?.meeting?.duration) / 60 : 0,
@@ -78,6 +81,7 @@ const AddMeeting = ({
         meetingStartDate: startDateTime,
         meetingStartTime: startDateTime,
         isMandatory: data?.isMandatory,
+        description: data?.description,
       });
     }
   }, [lessonDetails.isSuccess]);
@@ -90,6 +94,7 @@ const AddMeeting = ({
       meetingDuration: 1,
       zoomLicenseId: "",
       isMandatory: false,
+      description: "",
     },
     validate: yupResolver(schema),
   });
@@ -130,6 +135,7 @@ const AddMeeting = ({
           lessonIdentity: item?.id,
           sectionIdentity: sectionId,
           isMandatory: values.isMandatory,
+          description: values.description,
         } as ILessonMeeting);
         setIsEditing(false);
       } else {
@@ -140,6 +146,7 @@ const AddMeeting = ({
           type: LessonType.LiveClass,
           sectionIdentity: sectionId,
           isMandatory: values.isMandatory,
+          description: values.description,
         } as ILessonMeeting);
       }
       showNotification({
@@ -217,6 +224,11 @@ const AddMeeting = ({
           {...form.getInputProps("zoomLicenseId")}
         />
       </Group>
+      <Textarea
+        label="Description"
+        placeholder="Description for Live Class"
+        {...form.getInputProps("description")}
+      />
       <Group position="left" mt="md">
         <Button
           type="submit"
