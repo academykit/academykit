@@ -41,8 +41,8 @@ namespace Lingtren.Application.Common.Interfaces
         /// </summary>
         /// <param name="fileUrl"> the file url </param>
         /// <param name="downloadToken"> the download token </param>
-        /// <returns> the instance of <see cref="MediaFileDto" /> .</returns>
-        Task<MediaFileDto> UploadRecordingFileAsync(string fileUrl, string downloadToken);
+        /// <returns> the video path .</returns>
+        Task<string> UploadRecordingFileAsync(string fileUrl, string downloadToken);
 
         /// <summary>
         /// Handle to get file

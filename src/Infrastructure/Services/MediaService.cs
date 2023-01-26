@@ -204,8 +204,8 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="fileUrl"> the file url </param>
         /// <param name="downloadToken"> the download token </param>
-        /// <returns> the instance of <see cref="MediaFileDto" /> .</returns>
-        public async Task<MediaFileDto> UploadRecordingFileAsync(string fileUrl, string downloadToken)
+        /// <returns> the video path .</returns>
+        public async Task<string> UploadRecordingFileAsync(string fileUrl, string downloadToken)
         {
             try
             {
@@ -220,31 +220,20 @@ namespace Lingtren.Infrastructure.Services
                 using (var client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{downloadToken}");
-                    await client.DownloadFileTaskAsync(new Uri(fileUrl), filePath).ConfigureAwait(false);
+                    await client.DownloadFileTaskAsync(new Uri(fileUrl), filePath);
                 }
 
-                var key = $"{Guid.NewGuid()}.mp4";
-                string url = "";
-                if (System.Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
+                string videoPath = "";
+                if (Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
                 {
-                    // var awsSettings = await GetAwsSettings().ConfigureAwait(false);
-                    // var awsDto = new AwsS3FileDto
-                    // {
-                    //     Setting = awsSettings,
-                    //     Key = key,
-                    //     FilePath = filePath,
-                    //     Type = Application.Common.Dtos.MediaType.Video
-                    // };
-                    // url = await _amazonService.SaveRecordingFileS3BucketAsync(awsDto).ConfigureAwait(false);
-                    // DeleteFilePath(filePath);
+                    
                 }
                 else
                 {
-                    // var serverSettings = await GetServerStorageSettings().ConfigureAwait(false);
+                   videoPath = await _fileServerService.UploadRecordingFileAsync(filePath);
+                   DeleteFilePath(filePath);
                 }
-                fileDto.Key = key;
-                fileDto.Url = url;
-                return fileDto;
+                return videoPath;
             }
             catch (Exception ex)
             {

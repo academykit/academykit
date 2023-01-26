@@ -15,7 +15,7 @@
                                     .WithMessage("Document is required for lesson type is document");
             RuleFor(x => x.VideoUrl).NotNull().NotEmpty().When(x => x.Type == LessonType.Video || x.Type == LessonType.RecordedVideo)
                                     .WithMessage("Video is required for lesson type is video or recorded video.");
-            RuleFor(x => x.Description).MaximumLength(5000).WithMessage("Name length must be less than or equal to 5000 characters.");
+            RuleFor(x => x.Description).MaximumLength(5000).WithMessage("Description length must be less than or equal to 5000 characters.");
             RuleFor(x => x.QuestionSet).SetValidator(new QuestionSetValidator())
                                          .When(x => x.Type == LessonType.Exam);
             RuleFor(x => x.Meeting).SetValidator(new MeetingValidator())

@@ -61,6 +61,31 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
+         /// <summary>
+        /// Handle to upload the file path
+        /// </summary>
+        /// <param name="filePath"> the file path </param>
+        /// <returns> the new file path </returns>
+        public async Task<string> UploadRecordingFileAsync(string filePath)
+        {
+            try
+            {
+                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
+                var minio = new Minio.MinioClient().WithEndpoint(credentails.EndPoint).
+                            WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
+                var fileName = $"private/{Guid.NewGuid()}.mp4";
+                var objectArgs = new Minio.PutObjectArgs().WithObject(fileName).WithBucket(credentails.Bucket).WithFileName(filePath).
+                    WithContentType("video/mp4");
+                await minio.PutObjectAsync(objectArgs);
+                return fileName;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, "An error occurred while attempting to upload file to the server.");
+                throw ex is ServiceException ? ex : new ServiceException($"An error occurred while attempting to upload file to the server. {ex.Message}");
+            }
+        }
+
         /// <summary>
         /// Handle to get file presigned url
         /// </summary>
