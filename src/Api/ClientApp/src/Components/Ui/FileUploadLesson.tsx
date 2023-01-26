@@ -3,14 +3,14 @@ import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import { Box } from "@mantine/core";
+import { Box, Text } from "@mantine/core";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import {
   FileAccess,
   uploadFile,
   uploadVideo,
 } from "@utils/services/fileService";
-import { EFIleUploadType, LessonFileType } from "@utils/enums";
+import { UseFormReturnType } from "@mantine/form";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -19,11 +19,11 @@ registerPlugin(
 );
 
 const FileUploadLesson = ({
-  setUrl,
   currentFile,
+  formContext,
 }: {
-  setUrl: Function;
   currentFile?: string;
+  formContext: () => UseFormReturnType<any, (values: any) => any>;
 }) => {
   useEffect(() => {
     if (currentFile) {
@@ -39,8 +39,9 @@ const FileUploadLesson = ({
   }, [currentFile]);
 
   const [files, setFiles] = useState<any>([]);
+  const form = formContext();
   return (
-    <Box my={10} sx={{ maxWidth: 470 }}>
+    <Box sx={{ maxWidth: 470 }} pos="relative">
       <FilePond
         instantUpload={true}
         files={files}
@@ -67,7 +68,7 @@ const FileUploadLesson = ({
             try {
               const res = await uploadFile(file as File, FileAccess.Private);
               load(res.data);
-              setUrl(() => res.data);
+              form.setFieldValue("documentUrl", res.data);
             } catch (e) {
               error("Unable to upload file");
             }
@@ -94,6 +95,11 @@ const FileUploadLesson = ({
           },
         }}
       />
+      {form.errors["documentUrl"] && (
+        <Text color={"red"} size={"xs"} pos="absolute" top={"100%"}>
+          {form.errors["documentUrl"]}
+        </Text>
+      )}
     </Box>
   );
 };
