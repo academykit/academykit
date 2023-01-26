@@ -65,8 +65,9 @@ namespace Lingtren.Infrastructure.Services
         /// Handle to upload the file path
         /// </summary>
         /// <param name="filePath"> the file path </param>
+        /// 
         /// <returns> the new file path </returns>
-        public async Task<string> UploadRecordingFileAsync(string filePath)
+        public async Task<string> UploadRecordingFileAsync(string filePath,int fileSize)
         {
             try
             {
@@ -75,7 +76,7 @@ namespace Lingtren.Infrastructure.Services
                             WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
                 var fileName = $"private/{Guid.NewGuid()}.mp4";
                 var objectArgs = new Minio.PutObjectArgs().WithObject(fileName).WithBucket(credentails.Bucket).WithFileName(filePath).
-                    WithContentType("video/mp4");
+                    WithContentType("video/mp4").WithObjectSize(fileSize);
                 await minio.PutObjectAsync(objectArgs);
                 return fileName;
             }

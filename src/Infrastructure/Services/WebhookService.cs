@@ -73,7 +73,7 @@ namespace Lingtren.Infrastructure.Services
                 int order = 1;
                 foreach (var file in recordingFile)
                 {
-                    var videopath = await _mediaService.UploadRecordingFileAsync(file.Download_url, dto.Download_token).ConfigureAwait(true);
+                    var videopath = await _mediaService.UploadRecordingFileAsync(file.Download_url, dto.Download_token,file.File_size).ConfigureAwait(true);
                     var recording = new RecordingFileDto
                     {
                         Name = $"{meeting.Lesson.Name} Part {order}",

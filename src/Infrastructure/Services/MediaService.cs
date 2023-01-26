@@ -205,7 +205,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="fileUrl"> the file url </param>
         /// <param name="downloadToken"> the download token </param>
         /// <returns> the video path .</returns>
-        public async Task<string> UploadRecordingFileAsync(string fileUrl, string downloadToken)
+        public async Task<string> UploadRecordingFileAsync(string fileUrl, string downloadToken,int fileSize)
         {
             try
             {
@@ -230,7 +230,7 @@ namespace Lingtren.Infrastructure.Services
                 }
                 else
                 {
-                   videoPath = await _fileServerService.UploadRecordingFileAsync(filePath);
+                   videoPath = await _fileServerService.UploadRecordingFileAsync(filePath,fileSize);
                    _logger.LogError(videoPath);
                    DeleteFilePath(filePath);
                 }

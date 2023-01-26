@@ -42,7 +42,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="fileUrl"> the file url </param>
         /// <param name="downloadToken"> the download token </param>
         /// <returns> the video path .</returns>
-        Task<string> UploadRecordingFileAsync(string fileUrl, string downloadToken);
+        Task<string> UploadRecordingFileAsync(string fileUrl, string downloadToken,int fileSize);
 
         /// <summary>
         /// Handle to get file

@@ -18,7 +18,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// </summary>
         /// <param name="filePath"> the file path </param>
         /// <returns> the new file path </returns>
-        Task<string> UploadRecordingFileAsync(string filePath);
+        Task<string> UploadRecordingFileAsync(string filePath,int fileSize);
 
         /// <summary>
         /// Handle to get file presigned url
