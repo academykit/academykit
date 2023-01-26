@@ -220,7 +220,7 @@ namespace Lingtren.Infrastructure.Services
                 using (var client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{downloadToken}");
-                    await client.DownloadFileTaskAsync(new Uri(fileUrl), filePath);
+                    await client.DownloadFileTaskAsync(new Uri(fileUrl), filePath).ConfigureAwait(true);
                 }
 
                 string videoPath = "";
@@ -231,6 +231,7 @@ namespace Lingtren.Infrastructure.Services
                 else
                 {
                    videoPath = await _fileServerService.UploadRecordingFileAsync(filePath);
+                   _logger.LogError(videoPath);
                    DeleteFilePath(filePath);
                 }
                 return videoPath;
