@@ -7,6 +7,7 @@ import {
   Text,
   ActionIcon,
   Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
 import { IconDownload, IconEye } from "@tabler/icons";
 import downloadImage from "@utils/downloadImage";
@@ -17,6 +18,7 @@ import { Route, Routes, useLocation, useNavigate } from "react-router";
 
 const MyTrainingInternal = () => {
   const internal = useGetInternalCertificate();
+  const theme = useMantineTheme();
 
   return (
     <Container fluid>
@@ -31,7 +33,7 @@ const MyTrainingInternal = () => {
                 <Text weight={"bold"}>{x.courseName}</Text>
                 <Text weight={"bold"}>
                   Certificate Issued Date:{" "}
-                  {moment(x.certificateIssuedDate).format("YYYY-MM-DD")}
+                  {moment(x.certificateIssuedDate).format(theme.dateFormat)}
                 </Text>
                 <Text>Total {x.percentage}% completed</Text>
               </Box>
