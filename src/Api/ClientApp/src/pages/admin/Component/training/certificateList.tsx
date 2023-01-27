@@ -33,11 +33,13 @@ import UserShortProfile from "@components/UserShortProfile";
 const CertificateCard = ({
   auth,
   item,
+  search,
 }: {
   auth: IAuthContext | null;
   item: ListCertificate;
+  search: string;
 }) => {
-  const updateStatus = useUpdateCertificateStatus(item.id);
+  const updateStatus = useUpdateCertificateStatus(item.id, search);
 
   const handleSubmit = async (approve: boolean) => {
     try {
@@ -153,7 +155,7 @@ const CertificateList = ({
 
       {listCertificate.isSuccess &&
         listCertificate.data.data.items.map((x) => (
-          <CertificateCard auth={auth} item={x} />
+          <CertificateCard auth={auth} item={x} search={searchParams} />
         ))}
       {listCertificate.isSuccess &&
         pagination(listCertificate.data.data.totalPage)}

@@ -27,7 +27,7 @@ const MCQDetails = () => {
   const { id } = useParams();
   const pool = useOnePool(id as string);
   const addPool = useAddOnePool(id as string);
-  const [edit, setEdit] = useState(true);
+  const [edit, setEdit] = useState(false);
 
   const { theme } = useStyle();
   const form = useForm({
@@ -47,6 +47,7 @@ const MCQDetails = () => {
       showNotification({
         message: "Successfully updated pool",
       });
+      setEdit(!edit);
     } catch (err) {
       const error = errorType(err);
       showNotification({
