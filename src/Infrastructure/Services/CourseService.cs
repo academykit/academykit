@@ -898,9 +898,8 @@ namespace Lingtren.Infrastructure.Services
         {
             var course = await ValidateAndGetCourse(criteria.CurrentUserId, identity, validateForModify: true).ConfigureAwait(false);
             var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
-                predicate: p => p.CourseId == course.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),
-                include: src => src.Include(x => x.Section)
-                ).ConfigureAwait(false);
+                predicate: p => p.CourseId == course.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity))
+               .ConfigureAwait(false);
 
             var students = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
                 predicate: p => p.CourseId == course.Id,

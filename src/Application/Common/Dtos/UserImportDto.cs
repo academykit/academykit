@@ -13,9 +13,6 @@ namespace Lingtren.Application.Common.Dtos
         [Name("LastName")]
         public string LastName { get; set; }
 
-        [Name("UserName")]
-        public string UserName { get; set; }
-
         [Name("Email")]
         public string Email { get; set; }
 

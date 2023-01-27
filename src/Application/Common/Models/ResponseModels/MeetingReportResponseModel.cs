@@ -9,7 +9,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public DateTime StartDate { get; set; }
         public string JoinedTime { get; set; }
         public string LeftTime { get; set; } 
-        public TimeSpan? Duration { get; set; } 
+        public int Duration { get; set; } 
         public Guid LessonId { get; set; }
     }
 }
