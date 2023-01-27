@@ -20,6 +20,7 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
+    using MimeKit;
     using System;
     using System.Globalization;
     using System.IdentityModel.Tokens.Jwt;
@@ -268,6 +269,12 @@
         {
             try
             {
+
+                 MimeTypes.TryGetExtension(file.ContentType, out var extension);
+                 if (extension != ".csv")
+                 {
+                    throw new ArgumentException("File extension should be csv format");
+                  }
                 var users = new List<UserImportDto>();
                 using (var reader = new StreamReader(file.OpenReadStream()))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
@@ -298,8 +305,9 @@
                                 MiddleName = user.MiddleName,
                                 LastName = user.LastName,
                                 Email = user.Email,
+                                IsActive = true,
                                 MobileNumber = user.MobileNumber,
-                                Role = System.Enum.Parse<UserRole>(user.Role),
+                                Role = Enum.Parse<UserRole>(user.Role),
                                 CreatedBy = currentUserId,
                                 CreatedOn = DateTime.UtcNow
                             };
