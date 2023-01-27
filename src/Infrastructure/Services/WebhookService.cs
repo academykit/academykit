@@ -165,7 +165,8 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: x => x.MeetingNumber.ToString() == model.Payload.Object.Id).ConfigureAwait(false);
+                var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.MeetingNumber.ToString() ==
+                          model.Payload.Object.Id, include: source => source.Include(x => x.Lesson)).ConfigureAwait(false);
 
                 if (meeting == default)
                 {
@@ -182,23 +183,22 @@ namespace Lingtren.Infrastructure.Services
                     return;
                 }
 
-                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p => p.MeetingId == meeting.Id ||
-                            (p.Type == LessonType.LiveClass || p.Type == LessonType.RecordedVideo)).ConfigureAwait(false);
-
-                if (lesson != default)
+                var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == meeting.Lesson.CourseId &&
+                p.LessonId == meeting.Lesson.Id && p.UserId == user.Id).ConfigureAwait(false);
+                if(watchHistory == null)
                 {
-                    var watchHistory = new WatchHistory
+                    var entity = new WatchHistory
                     {
                         Id = Guid.NewGuid(),
-                        CourseId = lesson.CourseId,
-                        LessonId = lesson.Id,
+                        CourseId = meeting.Lesson.CourseId,
+                        LessonId = meeting.Lesson.Id,
                         UserId = user.Id,
                         IsCompleted = true,
                         IsPassed = true,
                         CreatedBy = user.Id,
                         CreatedOn = DateTime.UtcNow,
                     };
-                    await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
+                    await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(entity).ConfigureAwait(false);
                 }
 
                 var meetingReport = new MeetingReport
