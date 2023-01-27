@@ -9,7 +9,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useHover, useMediaQuery } from "@mantine/hooks";
-import { LessonType } from "@utils/enums";
+import { LessonType, ReadableEnum } from "@utils/enums";
 import formatDuration from "@utils/formatDuration";
 import RoutePath from "@utils/routeConstants";
 import { ILessons } from "@utils/services/courseService";
@@ -80,7 +80,9 @@ const Lesson = ({
                 {index + 1}. {lesson.name}
               </Title>
               <Badge color="blue" variant="light" ml={10}>
-                {LessonType[lesson.type]}
+                {ReadableEnum[
+                  LessonType[lesson.type] as keyof typeof ReadableEnum
+                ] ?? LessonType[lesson.type]}
               </Badge>
             </Box>
           </Group>

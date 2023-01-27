@@ -243,6 +243,7 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
           playbackRate={playbackRate}
           volume={volume}
           muted={muted}
+          progressInterval={1000}
           stopOnUnmount={!pip}
           onReady={handleReady}
           onStart={() => setCurrentPlayerState("viewing")}

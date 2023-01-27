@@ -31,6 +31,9 @@ export enum FeedbackType {
 export enum ReadableEnum {
   SingleChoice = "Single Choice",
   MultipleChoice = "Multiple Choice",
+  LiveClass = "Live Class",
+  RecordedVideo= "Recordings"
+
 }
 
 export enum LessonType {

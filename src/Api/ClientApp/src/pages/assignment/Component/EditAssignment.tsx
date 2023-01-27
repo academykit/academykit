@@ -23,9 +23,9 @@ import {
   useEditAssignmentQuestion,
 } from "@utils/services/assignmentService";
 import errorType from "@utils/services/axiosError";
+import { useMemo } from "react";
 import * as Yup from "yup";
 
-const fieldSize = "md";
 const getQuestionType = () => {
   return Object.entries(QuestionType)
     .splice(0, Object.entries(QuestionType).length / 2)
@@ -44,7 +44,7 @@ const schema = Yup.object().shape({
     .when(["type"], {
       is: QuestionType.MultipleChoice.toString(),
       then: Yup.array()
-        .min(1, "Options should be more than one.")
+        .min(2, "Options should be more than two.")
         .test(
           "test",
           "On Multiple Choice at least one option should be selected.",
@@ -62,6 +62,7 @@ const schema = Yup.object().shape({
     .when(["type"], {
       is: QuestionType.SingleChoice.toString(),
       then: Yup.array()
+        .min(2, "Option should be more than two.")
         .test(
           "test",
           "On Single choice, only one option should be selected.",
@@ -109,6 +110,8 @@ const EditAssignment = ({
     },
     validate: yupResolver(schema),
   });
+
+  const data = useMemo(() => getQuestionType(), []);
 
   const addAssignmentQuestion = useAddAssignmentQuestion(lessonId, search);
   const editAssignment = useEditAssignmentQuestion(lessonId, search);
@@ -168,7 +171,7 @@ const EditAssignment = ({
               size={"lg"}
               label="Question Type"
               {...form.getInputProps("type")}
-              data={getQuestionType()}
+              data={data}
               onClick={() => {
                 assignmentQuestion &&
                   form.setFieldValue("answers", [
@@ -182,53 +185,58 @@ const EditAssignment = ({
                 <Text mt={20}>Options</Text>
                 {form.values.answers &&
                   form.values.answers.map((x, i) => (
-                    <Flex key={i} mb={30} mt={10} align="center">
-                      <Checkbox
-                        {...form.getInputProps(`answers.${i}.isCorrect`)}
-                        mr={10}
-                        checked={
-                          form.values.answers &&
-                          form?.values.answers[i].isCorrect
-                        }
-                        name="isCorrect"
-                      ></Checkbox>
-                      <TextEditor
-                        label={`answers.${i}.option`}
-                        formContext={useFormContext}
-                      ></TextEditor>
-                      <UnstyledButton
-                        ml={10}
-                        onClick={() => {
-                          form.insertListItem(
-                            "answers",
-                            {
-                              option: "",
-                              isCorrect: false,
-                            },
-                            i + 1
-                          );
-                        }}
-                      >
-                        <IconPlus color="green" />
-                      </UnstyledButton>
-                      {form.values.answers &&
-                        form.values.answers.length > 1 && (
-                          <UnstyledButton
-                            ml={10}
-                            onClick={() => {
-                              form.removeListItem("answers", i);
-                            }}
-                          >
-                            <IconTrash color="red" />
-                          </UnstyledButton>
-                        )}
+                    <div
+                      key={i}
+                      style={{ marginBottom: "30px", marginTop: "10px" }}
+                    >
+                      <Flex align="center">
+                        <Checkbox
+                          {...form.getInputProps(`answers.${i}.isCorrect`)}
+                          mr={10}
+                          checked={
+                            form.values.answers &&
+                            form?.values.answers[i].isCorrect
+                          }
+                          name="isCorrect"
+                        ></Checkbox>
+                        <TextEditor
+                          label={`answers.${i}.option`}
+                          formContext={useFormContext}
+                        ></TextEditor>
+                        <UnstyledButton
+                          ml={10}
+                          onClick={() => {
+                            form.insertListItem(
+                              "answers",
+                              {
+                                option: "",
+                                isCorrect: false,
+                              },
+                              i + 1
+                            );
+                          }}
+                        >
+                          <IconPlus color="green" />
+                        </UnstyledButton>
+                        {form.values.answers &&
+                          form.values.answers.length > 1 && (
+                            <UnstyledButton
+                              ml={10}
+                              onClick={() => {
+                                form.removeListItem("answers", i);
+                              }}
+                            >
+                              <IconTrash color="red" />
+                            </UnstyledButton>
+                          )}
+                      </Flex>
                       {typeof form.errors[`answers.${i}.option`] ===
                         "string" && (
                         <span style={{ color: "red" }}>
                           {form.errors[`answers.${i}.option`]}
                         </span>
                       )}
-                    </Flex>
+                    </div>
                   ))}
                 {typeof form.errors[`answers`] === "string" && (
                   <span style={{ color: "red" }}>{form.errors[`answers`]}</span>

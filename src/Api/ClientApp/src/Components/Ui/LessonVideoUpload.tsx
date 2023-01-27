@@ -7,6 +7,7 @@ import { Box, Text } from "@mantine/core";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import { FileAccess, uploadVideo } from "@utils/services/fileService";
 import { UseFormReturnType } from "@mantine/form";
+import "./LessonVideoUpload.css";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
