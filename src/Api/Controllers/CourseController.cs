@@ -16,15 +16,18 @@ namespace Lingtren.Api.Controllers
     {
         private readonly ICourseService _courseService;
         private readonly IValidator<CourseRequestModel> _validator;
+        private readonly IValidator<CourseStatusRequestModel> _courseStatusValidator;
         private readonly ILogger<CourseController> _logger;
 
         public CourseController(
             ICourseService courseService,
             IValidator<CourseRequestModel> validator,
-            ILogger<CourseController> logger)
+            ILogger<CourseController> logger,
+            IValidator<CourseStatusRequestModel> courseStatusValidator)
         {
             _courseService = courseService;
             _validator = validator;
+            _courseStatusValidator = courseStatusValidator;
             _logger = logger;
         }
 
@@ -164,18 +167,13 @@ namespace Lingtren.Api.Controllers
         /// <summary>
         /// change course status api
         /// </summary>
-        /// <param name="identity"> id or slug </param>
+        /// <param name="model"> the instance of <see cref="CourseStatusRequestModel" /> . </param>
         /// <returns> the task complete </returns>
-        [HttpPatch("{identity}/status")]
-        public async Task<IActionResult> ChangeStatus(string identity, [FromQuery] CourseStatus status)
+        [HttpPatch("status")]
+        public async Task<IActionResult> ChangeStatus(CourseStatusRequestModel model)
         {
-            var statusExists = Enum.IsDefined(typeof(CourseStatus), status);
-            if (!statusExists)
-            {
-                _logger.LogWarning("Invalid training status : {status} requested for status change by the user with id : {userId}", status, CurrentUser.Id);
-                throw new ForbiddenException("Invalid training status change request.");
-            }
-            await _courseService.ChangeStatusAsync(identity, status, CurrentUser.Id).ConfigureAwait(false);
+            await _courseStatusValidator.ValidateAsync(model,options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await _courseService.ChangeStatusAsync(model, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = "Training status changed successfully." });
         }
 

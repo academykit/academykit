@@ -39,7 +39,7 @@ const TeacherCards = ({
   const handleDelete = async () => {
     try {
       await deleteTeacher.mutateAsync(id);
-      showNotification({ message: "Course Teacher deleted successfully." });
+      showNotification({ message: "Course trainer deleted successfully." });
     } catch (err) {
       const error = errorType(err);
       showNotification({ message: error, color: "red" });
@@ -51,7 +51,7 @@ const TeacherCards = ({
   return (
     <>
       <DeleteModal
-        title={`Do you want to delete teacher?`}
+        title={`Do you want to delete trainer?`}
         open={deletePopup}
         onClose={setDeletePopUP}
         onConfirm={handleDelete}
@@ -101,7 +101,7 @@ const Teacher = () => {
         email: email,
       });
       showNotification({
-        message: "Teacher added successfully!",
+        message: "Trainer has been added successfully!",
       });
       form.reset();
 
@@ -115,9 +115,9 @@ const Teacher = () => {
   return (
     <Container fluid>
       <Group sx={{ justifyContent: "space-between", alignItems: "center" }}>
-        <Title>Teachers</Title>
+        <Title>Trainers</Title>
         <Button onClick={() => toggleAddForm()}>
-          {!showAddForm ? "Add Teacher" : "Cancel"}
+          {!showAddForm ? "Add Trainer" : "Cancel"}
         </Button>
       </Group>
       <Transition

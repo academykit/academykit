@@ -14,6 +14,13 @@ namespace Lingtren.Application.Common.Interfaces
         Task<string> UploadFileAsync(MediaRequestModel model);
 
         /// <summary>
+        /// Handle to upload the file path
+        /// </summary>
+        /// <param name="filePath"> the file path </param>
+        /// <returns> the new file path </returns>
+        Task<string> UploadRecordingFileAsync(string filePath,int fileSize);
+
+        /// <summary>
         /// Handle to get file presigned url
         /// </summary>
         /// <param name="key"> the file key </param>

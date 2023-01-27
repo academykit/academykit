@@ -16,6 +16,7 @@ import {
   Checkbox,
   Text,
   Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
 import { Link, useParams } from "react-router-dom";
 import ProgressBar from "@components/Ui/ProgressBar";
@@ -51,6 +52,7 @@ const Rows = ({
   const { id } = useParams();
   const course_id = id as string;
   const postUserData = usePostStatisticsCertificate(course_id, searchParams);
+  const theme = useMantineTheme();
 
   const handleSubmit = async (dataUser: string[]) => {
     try {
@@ -121,7 +123,9 @@ const Rows = ({
             <div style={{ marginTop: "10px" }}>
               <Text>
                 Issued on{" "}
-                {moment(item?.certificateIssuedDate + "Z").format("YYYY-MM-DD")}
+                {moment(item?.certificateIssuedDate + "Z").format(
+                  theme.dateFormat
+                )}
               </Text>
               <Flex justify={"center"} mt={8}>
                 <Tooltip label="View Certificate">
@@ -225,6 +229,9 @@ const ManageStudents = ({
     }
   };
 
+  if (getStudentStat.data?.totalCount === 0)
+    return <Box>No trainees found.</Box>;
+
   return (
     <ScrollArea>
       <ConfirmationModal
@@ -240,7 +247,7 @@ const ManageStudents = ({
         onConfirm={handleSubmit}
       />
       <Group position="apart" mb={"lg"}>
-        <Title>Students</Title>
+        <Title>Trainee</Title>
         <Flex>
           {getStudentStat.data && getStudentStat.data?.items.length >= 1 && (
             <Button
@@ -267,10 +274,10 @@ const ManageStudents = ({
 
       <div style={{ display: "flex" }}>
         <Box mx={3} sx={{ width: "100%" }}>
-          {searchComponent("Search for students")}
+          {searchComponent("Search for trainees")}
         </Box>
       </div>
-      {getStudentStat.data && getStudentStat.data?.totalCount > 0 ? (
+      {getStudentStat.data && getStudentStat.data?.totalCount > 0 && (
         <Paper mt={10}>
           <Table
             sx={{ minWidth: 800 }}
@@ -304,8 +311,6 @@ const ManageStudents = ({
             </tbody>
           </Table>
         </Paper>
-      ) : (
-        <Box mt={5}>No Students Found</Box>
       )}
 
       {getStudentStat.data && pagination(getStudentStat.data?.totalPage)}

@@ -198,7 +198,8 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                   about {x.duration} hrs.
                 </Text>
                 <Text>
-                  {x.institute}, {x.location}
+                  {x.institute}
+                  {x.location && `, ${x.location}`}
                 </Text>
               </Box>
               <Box

@@ -26,7 +26,7 @@ const filterValue = [
   },
   {
     value: CourseUserStatus.Teacher.toString(),
-    label: "Teacher",
+    label: "Trainer",
   },
 ];
 

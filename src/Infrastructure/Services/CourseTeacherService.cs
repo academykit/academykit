@@ -74,29 +74,25 @@
                 throw new ForbiddenException("User with trainee role is not allowed to add as training trainer.");
             }
 
-            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(entity.UserId).ConfigureAwait(false);
-            if (isSuperAdminOrAdmin)
-            {
-                _logger.LogWarning("User having Id: {userId} with superadmin or admin role is not allowed to added as training trainer of training with id {courseId}.",
-                                            entity.UserId, course.Id);
-                throw new ForbiddenException("User with superadmin or admin role is not allowed to add as training trainer.");
-            }
-
             if (course.CourseTeachers.Any(p => p.UserId == entity.UserId))
             {
                 _logger.LogWarning("User with Id {userId} is already training trainer of training with id {courseId}.", entity.UserId, course.Id);
                 throw new ForbiddenException("User is already found as training trainer.");
             }
-            if (course.GroupId.HasValue)
+
+            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(entity.UserId).ConfigureAwait(false);
+            if (!isSuperAdminOrAdmin)
             {
-                var canAccess = await ValidateUserCanAccessGroupCourse(course, entity.UserId).ConfigureAwait(false);
-                if (!canAccess)
+                if (course.GroupId.HasValue)
                 {
-                    _logger.LogWarning("User with Id {userId} can't access training with id {courseId}.", entity.UserId, course.Id);
-                    throw new ForbiddenException("Unauthorized user to added as trainer in group course.");
+                    var canAccess = await ValidateUserCanAccessGroupCourse(course, entity.UserId).ConfigureAwait(false);
+                    if (!canAccess)
+                    {
+                        _logger.LogWarning("User with Id {userId} can't access training with id {courseId}.", entity.UserId, course.Id);
+                        throw new ForbiddenException("Unauthorized user to added as trainer in group course.");
+                    }
                 }
             }
-
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == entity.UserId).ConfigureAwait(false);
             CommonHelper.CheckFoundEntity(user);
             await Task.FromResult(0);

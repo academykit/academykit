@@ -16,7 +16,7 @@ import {
   useCreateLesson,
   useUpdateLesson,
 } from "@utils/services/courseService";
-import { ILessonAssignment } from "@utils/services/types";
+import { ILessonFeedback } from "@utils/services/types";
 import { useParams } from "react-router-dom";
 import errorType from "@utils/services/axiosError";
 import * as Yup from "yup";
@@ -34,7 +34,7 @@ const AddFeedback = ({
   setIsEditing,
 }: {
   setAddState: Function;
-  item?: ILessonAssignment;
+  item?: ILessonFeedback;
   isEditing?: boolean;
   sectionId: string;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
@@ -74,7 +74,7 @@ const AddFeedback = ({
       };
       if (!isEditing) {
         const response: any = await lesson.mutateAsync(
-          assignmentData as ILessonAssignment
+          assignmentData as ILessonFeedback
         );
         setLessonId(response?.data?.id);
         form.reset();
@@ -83,13 +83,13 @@ const AddFeedback = ({
         await updateLesson.mutateAsync({
           ...assignmentData,
           lessonIdentity: item?.id,
-        } as ILessonAssignment);
+        } as ILessonFeedback);
+        setIsEditing(false);
       }
       showNotification({
         title: "Success",
-        message: `Assignment ${isEditing ? "Edited" : "Added"} successfully!`,
+        message: `Feedback ${isEditing ? "Edited" : "Added"} successfully!`,
       });
-      setIsEditing(false);
     } catch (error: any) {
       const err = errorType(error);
 

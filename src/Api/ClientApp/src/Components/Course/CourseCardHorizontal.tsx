@@ -150,7 +150,9 @@ const CourseCardHorizontal = ({
                 {/* {auth?.auth && auth?.auth?.role > UserRole.Admin && ( */}
                 <Badge>{CourseUserStatusValue[course.userStatus]}</Badge>
                 {/* )} */}
-                {auth?.auth && auth?.auth?.role <= UserRole.Admin && (
+                {((auth?.auth && auth?.auth?.role <= UserRole.Admin) ||
+                  course.userStatus === CourseUserStatus.Author ||
+                  course.userStatus === CourseUserStatus.Teacher) && (
                   <>
                     <Badge ml={10} color={"teal"}>
                       {CourseStatus[course?.status]}
@@ -212,7 +214,7 @@ const CourseCardHorizontal = ({
             </Title>
 
             <Group spacing={70}>
-              <Group>
+              {/* <Group>
                 {!matches ? (
                   <Box>
                     <IconClock />
@@ -226,7 +228,7 @@ const CourseCardHorizontal = ({
                     .utc(course.duration * 1000)
                     .format("H[h] mm[m] ss[s]")}
                 </Text>
-              </Group>
+              </Group> */}
               <Group sx={{ justifyContent: "center", alignItems: "center" }}>
                 {!matches ? (
                   <Box>

@@ -6,8 +6,10 @@ import {
   Button,
   Group,
   Modal,
+  Textarea,
   Tooltip,
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { IconEdit, IconEye, IconFileCheck } from "@tabler/icons";
@@ -21,38 +23,56 @@ import { Link } from "react-router-dom";
 const color = (status: CourseStatus) => {
   switch (status) {
     case CourseStatus.Draft:
-      return "red";
+      return "violet";
     case CourseStatus.Published:
       return "green";
     case CourseStatus.Review:
       return "yellow";
+    case CourseStatus.Rejected:
+      return "red";
   }
-  //   ColorS: "green",
-  //   Review: "yellow",
-  //   Draft: "red",
 };
 
-const CourseRow = ({ course }: { course: ICourse }) => {
+const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
   const [confirmPublish, togglePublish] = useToggle();
-  const courseStatus = useCourseStatus(course.id);
+  const [isRejected, toggleRejected] = useToggle();
+
+  const courseStatus = useCourseStatus(course.id, search);
   const auth = useAuth();
+
+  const form = useForm({
+    initialValues: {
+      message: "",
+    },
+    validate: {
+      message: (value) =>
+        value.length === 0 ? "Rejection message is required!" : null,
+    },
+  });
+
+  const togglePublished = () => {
+    togglePublish();
+    toggleRejected(false);
+    form.reset();
+  };
 
   const canPreviewEdit =
     auth?.auth?.role === UserRole.Admin ||
     auth?.auth?.role === UserRole.SuperAdmin ||
     course.userStatus === CourseUserStatus.Author;
 
-  const onPublish = async () => {
+  const onPublish = async (message?: string) => {
     try {
       await courseStatus.mutateAsync({
-        id: course.id as string,
-        status: CourseStatus.Published,
+        identity: course.id as string,
+        status: message ? CourseStatus.Rejected : CourseStatus.Published,
+        message: message ?? "",
       });
       showNotification({
-        message: "Training has been successfully published!",
+        message: `Training has been ${
+          message ? "rejected!" : "successfully published!"
+        }`,
       });
-
-      course.status = CourseStatus.Published;
     } catch (err) {
       const error = errorType(err);
       showNotification({
@@ -60,22 +80,50 @@ const CourseRow = ({ course }: { course: ICourse }) => {
         color: "red",
       });
     }
-    togglePublish();
+    togglePublished();
   };
   return (
     <tr>
       <td>
         <Modal
           opened={confirmPublish}
-          onClose={togglePublish}
-          title={`Are you sure you want to publish "${course.name}"?`}
+          onClose={togglePublished}
+          title={
+            isRejected
+              ? `Leave a message for your rejection`
+              : `Are you sure you want to publish "${course.name}"?`
+          }
         >
-          <Group mt={10}>
-            <Button onClick={onPublish}>Yes</Button>
-            <Button variant="outline" onClick={() => togglePublish()}>
-              No
-            </Button>
-          </Group>
+          {!isRejected ? (
+            <Group mt={10}>
+              <Button
+                onClick={() => onPublish()}
+                loading={courseStatus.isLoading}
+              >
+                Publish
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  toggleRejected();
+                }}
+              >
+                Reject
+              </Button>
+            </Group>
+          ) : (
+            <form onSubmit={form.onSubmit((value) => onPublish(value.message))}>
+              <Group>
+                <Textarea {...form.getInputProps("message")} w={"100%"} />
+                <Button loading={courseStatus.isLoading} type="submit">
+                  Submit
+                </Button>
+                <Button variant="outline" onClick={() => toggleRejected()}>
+                  Cancel
+                </Button>
+              </Group>
+            </form>
+          )}
         </Modal>
         {course.name}
       </td>
@@ -114,7 +162,7 @@ const CourseRow = ({ course }: { course: ICourse }) => {
           )}
           {course.status === CourseStatus.Review && (
             <Tooltip label="Publish this course">
-              <ActionIcon onClick={() => togglePublish()} color={"green"}>
+              <ActionIcon onClick={togglePublished} color={"green"}>
                 <IconFileCheck />
               </ActionIcon>
             </Tooltip>

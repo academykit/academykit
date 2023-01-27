@@ -10,6 +10,7 @@ import { api } from "./service-api";
 import { httpClient } from "./service-axios";
 import {
   ILessonAssignment,
+  ILessonFeedback,
   ILessonLecture,
   ILessonMCQ,
   ILessonMeeting,
@@ -53,11 +54,11 @@ export interface IMyCourse extends ICourse {
     percentage: number
   }
 
-  const getMyCourse = async (userId:string) =>
-  await httpClient.get<IPaginated<IMyCourse>>(api.course.userList(userId));
+  const getMyCourse = async (userId:string,search: string) =>
+  await httpClient.get<IPaginated<IMyCourse>>(api.course.userList(userId) +`?${search}`);
 
-export const useMyCourse = (userId:string) =>
-  useQuery([api.course.userList(userId), ], () => getMyCourse(userId), {
+export const useMyCourse = (userId:string, search:string) =>
+  useQuery([api.course.userList(userId), search], () => getMyCourse(userId,search), {
     select: (data) => data.data,
   });
 
@@ -241,7 +242,7 @@ export interface ILessons {
   id: string;
   slug: string;
   name: string;
-  description: string;
+  description?: string;
   videoUrl: string;
   thumbnailUrl: string;
   documentUrl: string;
@@ -328,7 +329,7 @@ export const useDeleteSection = (slug: string) => {
 };
 
 const createLesson = async (
-  data: ILessonLecture | ILessonMCQ | ILessonAssignment | ILessonMeeting
+  data: ILessonLecture | ILessonMCQ | ILessonAssignment | ILessonMeeting | ILessonFeedback
 ) => {
   return await httpClient.post(api.lesson.addLesson(data.courseId), data);
 };
@@ -343,7 +344,7 @@ export const useCreateLesson = (slug: string) => {
 };
 
 const updateLesson = async (
-  data: ILessonLecture | ILessonMCQ | ILessonAssignment | ILessonMeeting
+  data: ILessonLecture | ILessonMCQ | ILessonAssignment | ILessonMeeting | ILessonFeedback
 ) => {
   return await httpClient.put(
     api.lesson.updateLesson(data.courseId, data.lessonIdentity),
@@ -377,14 +378,15 @@ export const useDeleteLesson = (slug: string) => {
 };
 
 // courses status
-const courseStatus = async (data: { id: string; status: CourseStatus }) => {
-  return await httpClient.patch(api.course.status(data.id, data.status));
+const courseStatus = async (data: { identity: string; status: CourseStatus, message? : string }) => {
+  return await httpClient.patch(api.course.status,data);
 };
-export const useCourseStatus = (id: string) => {
+export const useCourseStatus = (id: string, search: string) => {
   const queryClient = useQueryClient();
   return useMutation([api.course.enroll(id)], courseStatus, {
     onSuccess: () => {
       queryClient.invalidateQueries([api.course.detail(id)]);
+      queryClient.invalidateQueries([api.course.list, search])
     },
   });
 };

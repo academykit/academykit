@@ -43,7 +43,7 @@ const AdminCourseList = ({
                 </thead>
                 <tbody>
                   {data.items.map((x) => (
-                    <CourseRow course={x} key={x.id} />
+                    <CourseRow course={x} key={x.id} search={searchParams} />
                   ))}
                 </tbody>
               </Table>

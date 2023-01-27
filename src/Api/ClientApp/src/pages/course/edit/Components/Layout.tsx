@@ -30,7 +30,7 @@ function CourseEditNav() {
       role: UserRole.Trainer,
     },
     {
-      label: "Teachers",
+      label: "Trainers",
       to: RoutePath.manageCourse.teachers(params.id).route,
       role: UserRole.Trainer,
     },
@@ -45,7 +45,7 @@ function CourseEditNav() {
       role: UserRole.Trainer,
     },
     {
-      label: "Students",
+      label: "Trainee",
       to: RoutePath.manageCourse.student(params.id).route,
       role: UserRole.Trainer,
     },

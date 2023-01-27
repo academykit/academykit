@@ -3,9 +3,11 @@ import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import { Box } from "@mantine/core";
+import { Box, Text } from "@mantine/core";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import { FileAccess, uploadVideo } from "@utils/services/fileService";
+import { UseFormReturnType } from "@mantine/form";
+import "./LessonVideoUpload.css";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -17,10 +19,12 @@ const LessonVideoUpload = ({
   setUrl,
   currentVideo,
   marginy = 10,
+  formContext,
 }: {
   setUrl: Function;
   currentVideo?: string;
   marginy?: number;
+  formContext: () => UseFormReturnType<any, (values: any) => any>;
 }) => {
   useEffect(() => {
     if (currentVideo) {
@@ -34,15 +38,14 @@ const LessonVideoUpload = ({
       ]);
     }
   }, [currentVideo]);
-
+  const form = formContext();
   const [files, setFiles] = useState<any>([]);
   return (
-    <Box my={marginy} sx={{ maxWidth: 470 }}>
-     
+    <Box my={marginy} sx={{ maxWidth: 470 }} pos="relative">
       <FilePond
-      
         files={files}
         onaddfile={(error, file) => {}}
+        onremovefile={() => form.setFieldValue("videoUrl", "")}
         fileValidateTypeLabelExpectedTypes="Expected .mp4 .avi .mov"
         chunkSize={2 * 1024 * 1024} // 2MB
         acceptedFileTypes={["video/mp4", "video/avi", "video/mov"]}
@@ -64,12 +67,10 @@ const LessonVideoUpload = ({
             abort
           ) => {
             try {
-              const res = await uploadVideo(
-                file as File,
-                FileAccess.Private
-              );
+              const res = await uploadVideo(file as File, FileAccess.Private);
               load(res.data);
               setUrl(() => res.data);
+              form.setFieldValue("videoUrl", res.data);
             } catch (e) {
               error("Unable to upload file");
             }
@@ -98,6 +99,11 @@ const LessonVideoUpload = ({
         name="files"
         labelIdle='Drag & Drop your Video or <span class="filepond--label-action">Browse</span>'
       />
+      {form.errors["videoUrl"] && (
+        <Text color={"red"} size={"xs"} pos="absolute" top={"100%"}>
+          {form.errors["videoUrl"]}
+        </Text>
+      )}
     </Box>
   );
 };

@@ -15,7 +15,7 @@ const LessonDetails = () => {
       <Table striped withBorder>
         <thead>
           <tr>
-            <th>Students</th>
+            <th>Trainees</th>
             <th>
               <Center>Status</Center>
             </th>

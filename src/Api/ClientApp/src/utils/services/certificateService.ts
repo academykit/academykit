@@ -114,14 +114,14 @@ const updateCertificateStatus = ({
   httpClient.patch(
     api.externalCertificate.updateStatus(id )+ "?status=" + status
   );
-export const useUpdateCertificateStatus = (id: string) =>
+export const useUpdateCertificateStatus = (id: string, search: string) =>
  { 
   const queryClient = useQueryClient();
   return useMutation(
     [api.externalCertificate.updateStatus(id)],
     updateCertificateStatus,{
       onSuccess: () => {
-queryClient.invalidateQueries([api.externalCertificate.list, ''])
+queryClient.invalidateQueries([api.externalCertificate.list, search])
       }
     }
   );

@@ -156,12 +156,12 @@ const AddAssignment = ({
           ...assignmentData,
           lessonIdentity: item?.id,
         } as ILessonAssignment);
+        setIsEditing(false);
       }
       showNotification({
         title: "Success",
         message: `Assignment ${isEditing ? "Edited" : "Added"} successfully!`,
       });
-      setIsEditing(false);
     } catch (error: any) {
       const err = errorType(error);
 
@@ -235,6 +235,7 @@ const AddAssignment = ({
                 label="Start date"
                 icon={<IconCalendar size={16} />}
                 minDate={moment(new Date()).toDate()}
+                withAsterisk
                 {...form.getInputProps("eventStartDate")}
               />
             </Grid.Col>
@@ -242,6 +243,7 @@ const AddAssignment = ({
               <TimeInput
                 label="Start Time"
                 format="12"
+                withAsterisk
                 clearable
                 {...form.getInputProps("startTime")}
               />
@@ -254,6 +256,7 @@ const AddAssignment = ({
                 label="End date"
                 minDate={form.values.eventStartDate}
                 icon={<IconCalendar size={16} />}
+                withAsterisk
                 {...form.getInputProps("eventEndDate")}
               />
             </Grid.Col>
@@ -262,6 +265,7 @@ const AddAssignment = ({
                 label="End Time"
                 format="12"
                 clearable
+                withAsterisk
                 {...form.getInputProps("endTime")}
               />
             </Grid.Col>

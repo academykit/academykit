@@ -11,7 +11,7 @@ import {
   Tabs,
 } from "@mantine/core";
 import CourseContent from "@components/Course/CourseDescription/CourseContent/CourseContent";
-import { useMediaQuery } from "@mantine/hooks";
+import { useMediaQuery, useToggle } from "@mantine/hooks";
 import { IconFileDescription, IconMessage } from "@tabler/icons";
 import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import {
@@ -97,6 +97,7 @@ const Classes = () => {
   >("loading");
 
   const { data, isLoading } = useCourseDescription(params.id as string);
+
   const courseLesson = useGetCourseLesson(
     params.id as string,
     params.lessonId === "1" ? undefined : params.lessonId
@@ -129,7 +130,9 @@ const Classes = () => {
         courseId: courseLesson.data?.courseId ?? "",
         lessonId: courseLesson.data?.id ?? "",
       });
-      goToNextLesson(nextLesson);
+      if (nextLesson) {
+        goToNextLesson(nextLesson);
+      }
     } catch (err) {
       const error = errorType(err);
       showNotification({
@@ -162,6 +165,7 @@ const Classes = () => {
             {courseLesson.isError && (
               <Box className={cx(classes.videoSection, classes.errorSection)}>
                 <Box>{errorType(courseLesson.error)}</Box>
+
                 {courseLesson.error?.response?.status &&
                   courseLesson.error?.response?.status === 403 && (
                     <Button
@@ -265,14 +269,12 @@ const Classes = () => {
             }
           >
             <Tabs.List>
-              {courseLesson.data?.type !== LessonType.LiveClass && (
-                <Tabs.Tab
-                  value="description"
-                  icon={<IconFileDescription size={14} />}
-                >
-                  Description
-                </Tabs.Tab>
-              )}
+              <Tabs.Tab
+                value="description"
+                icon={<IconFileDescription size={14} />}
+              >
+                Description
+              </Tabs.Tab>
               <Tabs.Tab value="comments" icon={<IconMessage size={14} />}>
                 Comments
               </Tabs.Tab>
