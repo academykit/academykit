@@ -24,6 +24,8 @@ import { showNotification } from "@mantine/notifications";
 const AddUpdateUserForm = lazyWithRetry(
   () => import("../../Components/Users/AddUpdateUserForm")
 );
+import * as Yup from "yup";
+import { useForm, yupResolver } from "@mantine/form";
 
 const sortByObject = [
   { value: "firstName:Ascending", label: "Name (A-Z)" },
@@ -31,6 +33,10 @@ const sortByObject = [
   { value: "email:Ascending", label: "Email (A-Z)" },
   { value: "email:Descending", label: "Email (Z-A)" },
 ];
+
+const schema = Yup.object().shape({
+  fileUpload: Yup.mixed().required("CSV file is required!"),
+});
 
 const UsersList = ({
   searchParams,
@@ -42,17 +48,25 @@ const UsersList = ({
   const { data, isLoading: loading, isError: error } = useUsers(searchParams);
   const addUser = useAddUser(searchParams);
   const [currentTab, setCurrentTab] = useState<string | null>("user");
-  const [file, setFile] = useState<File | null>(null);
   const [csvLoad, setCsvLoad] = useState<boolean>(false);
 
-  const onSubmit = async () => {
+  const form = useForm<{ fileUpload: File | null }>({
+    initialValues: {
+      fileUpload: null,
+    },
+    validate: yupResolver(schema),
+  });
+
+  const onSubmit = async (values: { fileUpload: File | null }) => {
+    setCsvLoad(true);
     try {
-      setCsvLoad(true);
-      await uploadUserCsv(file);
+      await uploadUserCsv(values.fileUpload);
       showNotification({
         message: "User imported successfully!",
         title: "Successful",
       });
+      setOpened(false);
+      form.reset()
     } catch (error) {
       const err = errorType(error);
       showNotification({
@@ -62,7 +76,6 @@ const UsersList = ({
       });
     }
     setCsvLoad(false);
-    setOpened(false);
   };
 
   return (
@@ -83,7 +96,7 @@ const UsersList = ({
             <Tabs.Panel value="user">
               <Box mt={10}>
                 <AddUpdateUserForm
-                  setOpened={setOpened}
+                  setOpened={() => setOpened(false)}
                   opened={opened}
                   apiHooks={addUser}
                   isEditing={false}
@@ -104,21 +117,27 @@ const UsersList = ({
                 </Anchor>
                 to download sample CSV.
               </Text>
-              <FileInput
-                label="Upload your CSV file"
-                value={file}
-                onChange={setFile}
-                placeholder="Your CSV file"
-                mt={10}
-                description="Note: It only accepts CSV file"
-                accept="text/csv,
+              <form onSubmit={form.onSubmit(onSubmit)}>
+                <FileInput
+                  label="Upload your CSV file"
+                  name="fileUpload"
+                  withAsterisk
+                  // value={file}
+                  // onChange={setFile}
+                  placeholder="Your CSV file"
+                  mt={10}
+                  clearable
+                  description="Note: It only accepts CSV file"
+                  accept="text/csv,
           application/vnd.openxmlformats-officedocument.presentationml.presentation,
           application/vnd.ms-excel,
           application/csv"
-              />
-              <Button loading={csvLoad} mt={10} onClick={onSubmit}>
-                Submit
-              </Button>
+                  {...form.getInputProps("fileUpload")}
+                />
+                <Button loading={csvLoad} mt={10} type="submit">
+                  Submit
+                </Button>
+              </form>
             </Tabs.Panel>
           </Tabs>
         </Suspense>
