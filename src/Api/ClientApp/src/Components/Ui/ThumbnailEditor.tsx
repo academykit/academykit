@@ -69,6 +69,7 @@ const ThumbnailEditor = ({
         labelIdle={`Drag & Drop your ${label} or <span class="filepond--label-action">Browse</span>`}
         onaddfile={(error, file) => {}}
         onupdatefiles={setFiles}
+        onremovefile={() => form.setFieldValue(FormField, "")}
         allowMultiple={false}
         maxFiles={1}
         credits={false}

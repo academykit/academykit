@@ -44,7 +44,7 @@ const schema = Yup.object().shape({
     .when(["type"], {
       is: QuestionType.MultipleChoice.toString(),
       then: Yup.array()
-        .min(2, "Options should be more than two.")
+        .min(2, "Options should be more than one.")
         .test(
           "test",
           "On Multiple Choice at least one option should be selected.",
@@ -62,7 +62,7 @@ const schema = Yup.object().shape({
     .when(["type"], {
       is: QuestionType.SingleChoice.toString(),
       then: Yup.array()
-        .min(2, "Option should be more than two.")
+        .min(2, "Options should be more than one.")
         .test(
           "test",
           "On Single choice, only one option should be selected.",

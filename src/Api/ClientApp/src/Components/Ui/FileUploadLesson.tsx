@@ -47,6 +47,7 @@ const FileUploadLesson = ({
         files={files}
         labelIdle={`Drag & Drop your File or <span class="filepond--label-action">Browse</span>`}
         onaddfile={(error, file) => {}}
+        onremovefile={() => form.setFieldValue("documentUrl", "")}
         onupdatefiles={setFiles}
         acceptedFileTypes={["application/pdf"]}
         allowMultiple={false}

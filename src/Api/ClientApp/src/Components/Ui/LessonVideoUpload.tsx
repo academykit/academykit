@@ -45,6 +45,7 @@ const LessonVideoUpload = ({
       <FilePond
         files={files}
         onaddfile={(error, file) => {}}
+        onremovefile={() => form.setFieldValue("videoUrl", "")}
         fileValidateTypeLabelExpectedTypes="Expected .mp4 .avi .mov"
         chunkSize={2 * 1024 * 1024} // 2MB
         acceptedFileTypes={["video/mp4", "video/avi", "video/mov"]}

@@ -134,7 +134,7 @@ const AddDocument = ({
             </Grid.Col>
           </Grid>
           <Text size={"sm"} mt={10}>
-            Video <span style={{ color: "red" }}>*</span>
+            File <span style={{ color: "red" }}>*</span>
           </Text>
           <FileUploadLesson
             currentFile={item?.documentUrl}
