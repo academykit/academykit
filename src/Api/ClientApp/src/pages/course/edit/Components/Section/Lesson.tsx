@@ -233,6 +233,17 @@ const LessonEditCase = ({
           setIsEditing={setIsEditing}
         />
       );
+    case LessonType.RecordedVideo:
+      return (
+        <AddLecture
+          sectionId={sectionId}
+          item={item}
+          isEditing={true}
+          setAddLessonClick={setAddLessonClick}
+          setAddState={setAddState}
+          setIsEditing={setIsEditing}
+        />
+      );
     default:
       break;
   }
