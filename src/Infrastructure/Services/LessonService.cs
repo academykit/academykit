@@ -227,7 +227,7 @@ namespace Lingtren.Infrastructure.Services
             responseModel.IsCompleted = currentLessonWatchHistory != null ? currentLessonWatchHistory.IsCompleted : false;
             responseModel.IsPassed = currentLessonWatchHistory != null ? currentLessonWatchHistory.IsPassed : false;
 
-            if(lesson.Type == LessonType.Document && !string.IsNullOrEmpty(lesson.DocumentUrl))
+            if (lesson.Type == LessonType.Document && !string.IsNullOrEmpty(lesson.DocumentUrl))
             {
                 responseModel.DocumentUrl = await _fileServerService.GetFilePresignedUrl(lesson.DocumentUrl).ConfigureAwait(false);
             }
@@ -238,7 +238,7 @@ namespace Lingtren.Infrastructure.Services
                 responseModel.NextLessonSlug = lessons.GetItemByIndex(nextLessonIndex)?.Slug;
             }
 
-            if(lesson.Type == LessonType.Assignment && lesson.EndDate.HasValue)
+            if (lesson.Type == LessonType.Assignment && lesson.EndDate.HasValue)
             {
                 responseModel.AssignmentExpired = lesson.EndDate <= DateTime.UtcNow;
             }
@@ -710,35 +710,43 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="identity"> the lesson identity </param>
         /// <param name="userId"> the user id </param>
         /// <param name="currentUserId"> the current user id </param>
-        /// <returns> the instance of <see cref="MeetingReportResponseModel" /> .</returns>
-        public async Task<MeetingReportResponseModel> GetMeetingReportAsync(string identity, string lessonIdentity, string userId, Guid currentUserId)
+        /// <returns> the list of <see cref="MeetingReportResponseModel" /> .</returns>
+        public async Task<IList<MeetingReportResponseModel>> GetMeetingReportAsync(string identity, string lessonIdentity, string userId, Guid currentUserId)
         {
-            var response = new MeetingReportResponseModel();
+            var response = new List<MeetingReportResponseModel>();
             var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
             var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p => (p.Id.ToString() == lessonIdentity || p.Slug.Equals(lessonIdentity)) &&
             (p.Type == LessonType.LiveClass || p.Type == LessonType.RecordedVideo) && p.MeetingId != null).ConfigureAwait(false);
             if (lesson == default)
             {
-                _logger.LogError($"GetMeetingReportAsync() : Lesson with identity : {identity} not found.");
+                _logger.LogError($"GetMeetingReportAsync: Lesson with identity : {identity} not found.");
                 throw new EntityNotFoundException("Lesson not found.");
             }
-            var report = await _unitOfWork.GetRepository<MeetingReport>().GetFirstOrDefaultAsync(predicate: p => p.MeetingId == lesson.MeetingId &&
-                          p.UserId.ToString() == userId, include: s => s.Include(x => x.User)).ConfigureAwait(false);
-            if (report == default)
+
+            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate : x => x.Id.ToString().Equals(userId)).ConfigureAwait(false);
+            if(user == default)
             {
-                _logger.LogError($"GetMeetingReportAsync() : Meeting report of user with id {userId} not found.");
+                throw new EntityNotFoundException("User not found.");
+            }
+            var reports = await _unitOfWork.GetRepository<MeetingReport>().GetAllAsync(predicate: p => p.MeetingId == lesson.MeetingId &&
+                          p.UserId.ToString() == userId).ConfigureAwait(false);
+            if (reports == default)
+            {
+                _logger.LogError($"GetMeetingReportAsync : Meeting report of user with id {userId} not found.");
                 throw new EntityNotFoundException("Meeting report not found.");
             }
-            response.UserId = report.UserId;
-            response.Name = $"{report.User?.FirstName} {report.User?.LastName}";
-            response.Email = report.User?.Email;
-            response.MobileNumber = report.User?.MobileNumber;
-            response.Date = report.StartTime;
-            response.JoinedTime = report.JoinTime.ToShortTimeString();
-            response.LeftTime = report.LeftTime.HasValue ? report.LeftTime.Value.ToShortTimeString() : string.Empty;
-            response.LessonId = lesson.Id;
-            response.Duration = report.Duration;
-            return response;
+            return reports.Select(x => new MeetingReportResponseModel
+            {
+                UserId = x.UserId,
+                Name = user.FullName,
+                Email = user.Email,
+                MobileNumber = user.MobileNumber,
+                StartDate = x.StartTime,
+                JoinedTime = x.JoinTime.ToShortTimeString(),
+                LeftTime = x.LeftTime.HasValue ? x.LeftTime.Value.ToShortTimeString() : string.Empty,
+                LessonId = lesson.Id,
+                Duration = x.Duration,
+            }).ToList();
         }
 
         /// <summary>

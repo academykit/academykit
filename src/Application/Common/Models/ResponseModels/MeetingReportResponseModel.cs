@@ -6,7 +6,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string Name { get; set; }
         public string Email { get; set; } 
         public string MobileNumber { get; set; } 
-        public DateTime Date { get; set; }
+        public DateTime StartDate { get; set; }
         public string JoinedTime { get; set; }
         public string LeftTime { get; set; } 
         public TimeSpan? Duration { get; set; } 
