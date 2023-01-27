@@ -1349,7 +1349,7 @@ namespace Lingtren.Infrastructure.Services
                 var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
                     predicate: p => p.CourseId == course.Id
                     ).ConfigureAwait(false);
-                var existingCertificateUrlKey = courseCertificate.SampleUrl;
+                var existingCertificateUrlKey = courseCertificate?.SampleUrl;
 
                 if (courseCertificate != null)
                 {
@@ -1380,7 +1380,7 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to upload signature in the training.");
+                _logger.LogError(ex, $"An error occurred while trying to upload signature in the training.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to upload signature in the training.");
             }
         }

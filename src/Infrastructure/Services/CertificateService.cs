@@ -86,6 +86,7 @@ namespace Lingtren.Infrastructure.Services
                 ceritificate.Location = model.Location;
                 ceritificate.Institute = model.Institute;
                 ceritificate.Duration = model.Duration;
+                ceritificate.Status = CertificateStatus.Draft;
                 ceritificate.UpdatedBy = currentUserId;
                 ceritificate.UpdatedOn = DateTime.UtcNow;
                 _unitOfWork.GetRepository<Certificate>().Update(ceritificate);
