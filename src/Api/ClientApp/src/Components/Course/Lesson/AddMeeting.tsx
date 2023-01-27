@@ -79,8 +79,9 @@ const AddMeeting = ({
         meetingStartDate: startDateTime,
         meetingStartTime: startDateTime,
         isMandatory: data?.isMandatory,
-        description: data?.description,
+        description: data?.description ?? "",
       });
+      changeZoomLiscense();
     }
   }, [lessonDetails.isSuccess]);
 
@@ -123,6 +124,7 @@ const AddMeeting = ({
     };
     delete meeting.isMandatory;
     delete meeting.meetingStartTime;
+
     try {
       if (isEditing) {
         await updateLesson.mutateAsync({

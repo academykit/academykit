@@ -80,11 +80,9 @@ const Lesson = ({
                 {index + 1}. {lesson.name}
               </Title>
               <Badge color="blue" variant="light" ml={10}>
-                {
-                  ReadableEnum[
-                    LessonType[lesson.type] as keyof typeof ReadableEnum
-                  ]
-                }
+                {ReadableEnum[
+                  LessonType[lesson.type] as keyof typeof ReadableEnum
+                ] ?? LessonType[lesson.type]}
               </Badge>
             </Box>
           </Group>

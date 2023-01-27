@@ -32,7 +32,7 @@ export enum ReadableEnum {
   SingleChoice = "Single Choice",
   MultipleChoice = "Multiple Choice",
   LiveClass = "Live Class",
-  RecordedVideo= "Recorded Video "
+  RecordedVideo= "Recordings"
 
 }
 

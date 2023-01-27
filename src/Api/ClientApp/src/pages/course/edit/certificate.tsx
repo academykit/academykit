@@ -121,8 +121,8 @@ const Certificate = () => {
             breakpoints={[{ maxWidth: 1050, cols: 1, spacing: "sm" }]}
           >
             <Box sx={{ width: "300px", margin: "auto" }}>
-              {getCertificateDetails.data?.data?.sampleUrl &&
-                getCertificateDetails.isSuccess && (
+              {getCertificateDetails.isSuccess &&
+                getCertificateDetails.data?.data?.sampleUrl && (
                   <div
                     style={{ position: "relative", backgroundColor: "black" }}
                   >
@@ -171,6 +171,13 @@ const Certificate = () => {
                       </Tooltip>
                     </div>
                   </div>
+                )}
+              {getCertificateDetails.isSuccess &&
+                getCertificateDetails.data?.data?.sampleUrl && (
+                  <Text size={"xs"} c="dimmed">
+                    Note: You need atleast one signature to be able to issue to
+                    students.
+                  </Text>
                 )}
             </Box>
 
