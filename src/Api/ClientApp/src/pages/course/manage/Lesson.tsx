@@ -8,6 +8,8 @@ import {
   Tooltip,
   Button,
   Anchor,
+  Loader,
+  Box,
 } from "@mantine/core";
 import { IconEye } from "@tabler/icons";
 import RoutePath from "@utils/routeConstants";
@@ -67,6 +69,11 @@ function TableReviews() {
       </tr>
     );
   };
+
+  if (getLessonStatistics.isLoading) return <Loader />;
+
+  if (getLessonStatistics.data?.length === 0)
+    return <Box>No Lessons found</Box>;
 
   return (
     <ScrollArea>

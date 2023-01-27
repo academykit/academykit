@@ -32,15 +32,15 @@ export interface IReportDetail {
   name: string;
   email: string;
   mobileNumber: string;
-  date: string;
+  startDate: string;
   joinedTime: string;
   leftTime: string;
-  duration: string;
+  duration: number;
   lessonId: string;
 }
 
 const getMeetingReport = (courseId: string, lessonId: string, userId: string) =>
-  httpClient.get<IReportDetail>(
+  httpClient.get<IReportDetail[]>(
     api.meeting.meetingReport(courseId, lessonId, userId)
   );
 

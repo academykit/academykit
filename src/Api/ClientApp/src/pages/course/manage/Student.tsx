@@ -225,6 +225,9 @@ const ManageStudents = ({
     }
   };
 
+  if (getStudentStat.data?.totalCount === 0)
+    return <Box>No trainees found.</Box>;
+
   return (
     <ScrollArea>
       <ConfirmationModal
@@ -240,7 +243,7 @@ const ManageStudents = ({
         onConfirm={handleSubmit}
       />
       <Group position="apart" mb={"lg"}>
-        <Title>Students</Title>
+        <Title>Trainee</Title>
         <Flex>
           {getStudentStat.data && getStudentStat.data?.items.length >= 1 && (
             <Button
@@ -267,10 +270,10 @@ const ManageStudents = ({
 
       <div style={{ display: "flex" }}>
         <Box mx={3} sx={{ width: "100%" }}>
-          {searchComponent("Search for students")}
+          {searchComponent("Search for trainees")}
         </Box>
       </div>
-      {getStudentStat.data && getStudentStat.data?.totalCount > 0 ? (
+      {getStudentStat.data && getStudentStat.data?.totalCount > 0 && (
         <Paper mt={10}>
           <Table
             sx={{ minWidth: 800 }}
@@ -304,8 +307,6 @@ const ManageStudents = ({
             </tbody>
           </Table>
         </Paper>
-      ) : (
-        <Box mt={5}>No Students Found</Box>
       )}
 
       {getStudentStat.data && pagination(getStudentStat.data?.totalPage)}

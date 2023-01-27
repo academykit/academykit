@@ -9,7 +9,7 @@ import { Button, createStyles, Grid, Group, Modal, Text } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { IconTrashX } from "@tabler/icons";
-import { LessonType } from "@utils/enums";
+import { LessonType, ReadableEnum } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
 import { ILessons, useDeleteLesson } from "@utils/services/courseService";
 import {
@@ -108,7 +108,11 @@ const Lesson = ({
           </Grid.Col>
           <Grid.Col span={4}>
             <Group position="center">
-              <Text m={"auto"}>{LessonType[lesson.type]}</Text>
+              <Text m={"auto"}>
+                {ReadableEnum[
+                  LessonType[lesson.type] as keyof typeof ReadableEnum
+                ] ?? LessonType[lesson.type]}
+              </Text>
             </Group>
           </Grid.Col>
           <Grid.Col span={4}>
@@ -224,6 +228,17 @@ const LessonEditCase = ({
           setAddState={setAddState}
           isEditing={true}
           item={item as ILessonFile}
+          setIsEditing={setIsEditing}
+        />
+      );
+    case LessonType.RecordedVideo:
+      return (
+        <AddLecture
+          sectionId={sectionId}
+          item={item}
+          isEditing={true}
+          setAddLessonClick={setAddLessonClick}
+          setAddState={setAddState}
           setIsEditing={setIsEditing}
         />
       );

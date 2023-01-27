@@ -6,6 +6,10 @@ import {
   Modal,
   Text,
   Tooltip,
+  SimpleGrid,
+  Box,
+  Table,
+  useMantineTheme,
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import UserResults from "@pages/course/exam/Components/UserResults";
@@ -16,8 +20,24 @@ import { Link, useParams } from "react-router-dom";
 import { useWatchHistoryUser } from "@utils/services/watchHistory";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
-import { useGetMeetingReport } from "@utils/services/liveSessionService";
+import {
+  IReportDetail,
+  useGetMeetingReport,
+} from "@utils/services/liveSessionService";
 import moment from "moment";
+import formatDuration from "@utils/formatDuration";
+
+const TableRow = ({ values }: { values: IReportDetail }) => {
+  const theme = useMantineTheme();
+  return (
+    <tr>
+      <td>{moment(values.startDate).format(theme.dateFormat)}</td>
+      <td>{values.joinedTime}</td>
+      <td>{values.leftTime}</td>
+      <td>{formatDuration(values.duration ?? 0, true)}</td>
+    </tr>
+  );
+};
 
 const StudentLessonDetails = ({
   type,
@@ -166,13 +186,15 @@ const StudentLessonDetails = ({
         </Group>
       </Modal>
       <Modal
+        size={"xl"}
+        overflow="inside"
         opened={liveClassReportModal}
         onClose={() => setLiveClassReportModal()}
-        title={`Meeting Report for ${lessonName}`}
+        title={`Meeting Report`}
         styles={{
           title: {
             fontWeight: "bold",
-            fontSize: "25px",
+            fontSize: "22px",
           },
         }}
       >
@@ -182,28 +204,24 @@ const StudentLessonDetails = ({
           ) : (
             <>
               {!meetingReport.isError && (
-                <Group style={{ gap: "6px" }}>
-                  <Text w={"100%"}>
-                    Date:{" "}
-                    {moment(meetingReport.data?.date + "Z").format(
-                      "YYYY-MM-DD HH:mm:ss"
-                    )}
-                  </Text>
-                  <Text w={"100%"}>
-                    Joined Time: {meetingReport.data?.joinedTime}
-                  </Text>
-                  <Text w={"100%"}>
-                    {" "}
-                    Left Time: {meetingReport.data?.leftTime}
-                  </Text>
-                  <Text w={"100%"}>
-                    Duration : {meetingReport.data?.duration}
-                  </Text>
-                </Group>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Start Date</th>
+                      <th>Joined Time</th>
+                      <th>Left Time</th>
+                      <th>Duration</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {meetingReport.data.map((x) => (
+                      <TableRow values={x} />
+                    ))}
+                  </tbody>
+                </Table>
               )}
-              {meetingReport.isError && (
-                <Group>User has not attended this live class.</Group>
-              )}
+              {meetingReport.isError && <Box>Something went wrong.</Box>}
             </>
           )}
         </>

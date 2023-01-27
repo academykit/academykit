@@ -1,4 +1,4 @@
-import { LessonType } from "@utils/enums";
+import { LessonType, ReadableEnum } from "@utils/enums";
 import { IStudentInfoLesson } from "@utils/services/manageCourseService";
 import { useState } from "react";
 import ManageCourseModal from "./mangeCourseModal";
@@ -30,7 +30,11 @@ const CourseStudentLessons = ({
           type={element.lessonType}
         />
       </td>
-      <td>{LessonType[element.lessonType]}</td>
+      <td>
+        {ReadableEnum[
+          LessonType[element.lessonType] as keyof typeof ReadableEnum
+        ] ?? LessonType[element.lessonType]}
+      </td>
       <td>
         <StudentLessonDetails
           questionSetId={element.questionSetId}
