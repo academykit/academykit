@@ -208,7 +208,7 @@
                     throw new ArgumentException("Context not found.");
                 }
                 var tokenString = await GetZoomJWTAccessToken().ConfigureAwait(false);
-                var client = new RestClient($"{zoomAPIPath}/meetings/{meetingId}/recordings?action=trash");
+                var client = new RestClient($"{zoomAPIPath}/meetings/{meetingId}/recordings?action=delete");
                 var request = new RestRequest().AddHeader("Authorization", String.Format("Bearer {0}", tokenString));
                 await client.DeleteAsync(request).ConfigureAwait(false);
             }

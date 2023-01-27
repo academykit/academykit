@@ -148,7 +148,7 @@ namespace Lingtren.Infrastructure.Services
                     _unitOfWork.GetRepository<Lesson>().Update(meeting.Lesson);
                 }
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                BackgroundJob.Schedule<IZoomLicenseService>(x => x.DeleteZoomMeetingRecordingAsync(dto.Payload.Object.Id,null),TimeSpan.FromMinutes(5));
+                BackgroundJob.Schedule<IZoomLicenseService>(x => x.DeleteZoomMeetingRecordingAsync(dto.Payload.Object.Id,null),TimeSpan.FromMinutes(60));
             }
             catch (Exception ex)
             {
