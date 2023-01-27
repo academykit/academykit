@@ -272,14 +272,12 @@ const Classes = () => {
             }
           >
             <Tabs.List>
-              {courseLesson.data?.type !== LessonType.LiveClass && (
-                <Tabs.Tab
-                  value="description"
-                  icon={<IconFileDescription size={14} />}
-                >
-                  Description
-                </Tabs.Tab>
-              )}
+              <Tabs.Tab
+                value="description"
+                icon={<IconFileDescription size={14} />}
+              >
+                Description
+              </Tabs.Tab>
               <Tabs.Tab value="comments" icon={<IconMessage size={14} />}>
                 Comments
               </Tabs.Tab>
