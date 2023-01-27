@@ -14,6 +14,7 @@ import {
   Badge,
   Image,
   ActionIcon,
+  useMantineTheme,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { IconDownload, IconEye } from "@tabler/icons";
@@ -40,6 +41,7 @@ const CertificateCard = ({
   search: string;
 }) => {
   const updateStatus = useUpdateCertificateStatus(item.id, search);
+  const theme = useMantineTheme();
 
   const handleSubmit = async (approve: boolean) => {
     try {
@@ -68,8 +70,8 @@ const CertificateCard = ({
             <Badge ml={20}>{CertificateStatus[item.status]}</Badge>
           </Text>
           <Text mt={5}>
-            From {moment(item.startDate).format("YYYY-MM-DD")} to{" "}
-            {moment(item.endDate).format("YYYY-MM-DD")} completed about{" "}
+            From {moment(item.startDate).format(theme.dateFormat)} to{" "}
+            {moment(item.endDate).format(theme.dateFormat)}, Completed in about{" "}
             {item.duration} hrs.
           </Text>
           <Text>

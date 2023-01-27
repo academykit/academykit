@@ -214,7 +214,7 @@ const CourseCardHorizontal = ({
             </Title>
 
             <Group spacing={70}>
-              <Group>
+              {/* <Group>
                 {!matches ? (
                   <Box>
                     <IconClock />
@@ -228,7 +228,7 @@ const CourseCardHorizontal = ({
                     .utc(course.duration * 1000)
                     .format("H[h] mm[m] ss[s]")}
                 </Text>
-              </Group>
+              </Group> */}
               <Group sx={{ justifyContent: "center", alignItems: "center" }}>
                 {!matches ? (
                   <Box>

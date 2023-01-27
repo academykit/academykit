@@ -16,6 +16,7 @@ import {
   Checkbox,
   Text,
   Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
 import { Link, useParams } from "react-router-dom";
 import ProgressBar from "@components/Ui/ProgressBar";
@@ -51,6 +52,7 @@ const Rows = ({
   const { id } = useParams();
   const course_id = id as string;
   const postUserData = usePostStatisticsCertificate(course_id, searchParams);
+  const theme = useMantineTheme();
 
   const handleSubmit = async (dataUser: string[]) => {
     try {
@@ -121,7 +123,9 @@ const Rows = ({
             <div style={{ marginTop: "10px" }}>
               <Text>
                 Issued on{" "}
-                {moment(item?.certificateIssuedDate + "Z").format("YYYY-MM-DD")}
+                {moment(item?.certificateIssuedDate + "Z").format(
+                  theme.dateFormat
+                )}
               </Text>
               <Flex justify={"center"} mt={8}>
                 <Tooltip label="View Certificate">
