@@ -112,8 +112,6 @@ const Lesson = ({
                 {ReadableEnum[
                   LessonType[lesson.type] as keyof typeof ReadableEnum
                 ] ?? LessonType[lesson.type]}
-
-                {/* {LessonType[lesson.type]} */}
               </Text>
             </Group>
           </Grid.Col>

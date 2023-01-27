@@ -164,11 +164,8 @@ const Classes = () => {
             )}
             {courseLesson.isError && (
               <Box className={cx(classes.videoSection, classes.errorSection)}>
-                {/* { courseLesson.data?.nextLessonSlug ? ( */}
                 <Box>{errorType(courseLesson.error)}</Box>
-                {/* ) : ( */}
-                {/* <Box>No Lessons found</Box> */}
-                {/* )} */}
+
                 {courseLesson.error?.response?.status &&
                   courseLesson.error?.response?.status === 403 && (
                     <Button
