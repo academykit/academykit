@@ -48,6 +48,7 @@
             }
             return Ok(result);
         }
+
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout([FromBody] RefreshTokenRequestModel model)
         {

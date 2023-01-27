@@ -1,5 +1,7 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using Hangfire;
+    using Hangfire.Server;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -188,6 +190,33 @@
             var request = new RestRequest().AddHeader("Authorization", String.Format("Bearer {0}", tokenString));
 
             await client.DeleteAsync(request).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Handle to delete zoom meeting recording
+        /// </summary>
+        /// <param name="meetingId"> the meeting id </param>
+        /// <param name="context"> the instance of <see cref="PerformContext" /> .</param>
+        /// <returns> the task complete </returns>
+        [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
+        public async Task DeleteZoomMeetingRecordingAsync(long meetingId, PerformContext context = null)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    throw new ArgumentException("Context not found.");
+                }
+                var tokenString = await GetZoomJWTAccessToken().ConfigureAwait(false);
+                var client = new RestClient($"{zoomAPIPath}/meetings/{meetingId}/recordings?action=trash");
+                var request = new RestRequest().AddHeader("Authorization", String.Format("Bearer {0}", tokenString));
+                await client.DeleteAsync(request).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message, ex);
+            }
         }
 
         private async Task<string> GetZoomJWTAccessToken()

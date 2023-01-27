@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Application.Common.Interfaces
 {
+    using Hangfire.Server;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
@@ -22,6 +23,14 @@
         /// <param name="zoomLicense"></param>
         /// <returns></returns>
         Task CreateZoomMeetingAsync(Lesson lesson);
+
+        /// <summary>
+        /// Handle to delete zoom meeting recording
+        /// </summary>
+        /// <param name="meetingId"> the meeting id </param>
+        /// <param name="context"> the instance of <see cref="PerformContext" /> .</param>
+        /// <returns> the task complete </returns>
+        Task DeleteZoomMeetingRecordingAsync(long meetingId,PerformContext context = null);
 
         /// <summary>
         /// Create zoom meeting
