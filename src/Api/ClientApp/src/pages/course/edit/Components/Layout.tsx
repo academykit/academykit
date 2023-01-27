@@ -45,7 +45,7 @@ function CourseEditNav() {
       role: UserRole.Trainer,
     },
     {
-      label: "Students",
+      label: "Trainee",
       to: RoutePath.manageCourse.student(params.id).route,
       role: UserRole.Trainer,
     },

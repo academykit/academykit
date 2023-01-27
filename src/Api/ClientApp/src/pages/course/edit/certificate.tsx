@@ -176,7 +176,7 @@ const Certificate = () => {
                 getCertificateDetails.data?.data?.sampleUrl && (
                   <Text size={"xs"} c="dimmed">
                     Note: You need atleast one signature to be able to issue to
-                    students.
+                    trainee.
                   </Text>
                 )}
             </Box>

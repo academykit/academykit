@@ -8,6 +8,8 @@ import {
   Tooltip,
   SimpleGrid,
   Box,
+  Table,
+  useMantineTheme,
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import UserResults from "@pages/course/exam/Components/UserResults";
@@ -18,8 +20,24 @@ import { Link, useParams } from "react-router-dom";
 import { useWatchHistoryUser } from "@utils/services/watchHistory";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
-import { useGetMeetingReport } from "@utils/services/liveSessionService";
+import {
+  IReportDetail,
+  useGetMeetingReport,
+} from "@utils/services/liveSessionService";
 import moment from "moment";
+import formatDuration from "@utils/formatDuration";
+
+const TableRow = ({ values }: { values: IReportDetail }) => {
+  const theme = useMantineTheme();
+  return (
+    <tr>
+      <td>{moment(values.startDate).format(theme.dateFormat)}</td>
+      <td>{values.joinedTime}</td>
+      <td>{values.leftTime}</td>
+      <td>{formatDuration(values.duration ?? 0, true)}</td>
+    </tr>
+  );
+};
 
 const StudentLessonDetails = ({
   type,
@@ -168,9 +186,10 @@ const StudentLessonDetails = ({
         </Group>
       </Modal>
       <Modal
+        size={"xl"}
         opened={liveClassReportModal}
         onClose={() => setLiveClassReportModal()}
-        title={`Meeting Report for ${lessonName}`}
+        title={`Meeting Report`}
         styles={{
           title: {
             fontWeight: "bold",
@@ -184,7 +203,23 @@ const StudentLessonDetails = ({
           ) : (
             <>
               {!meetingReport.isError && (
-                <SimpleGrid cols={2} style={{ gap: "6px" }}>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Start Date</th>
+                      <th>Joined Time</th>
+                      <th>Left Time</th>
+                      <th>Duration</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {meetingReport.data.map((x) => (
+                      <TableRow values={x} />
+                    ))}
+                  </tbody>
+
+                  {/* <SimpleGrid cols={2} style={{ gap: "6px" }}>
                   <Box>
                     <Text weight={"bold"} size="lg">
                       Date
@@ -214,7 +249,8 @@ const StudentLessonDetails = ({
                     </Text>
                     <Text>{meetingReport.data?.duration}</Text>
                   </Box>
-                </SimpleGrid>
+                </SimpleGrid> */}
+                </Table>
               )}
               {meetingReport.isError && (
                 <Group>User has not attended this live class.</Group>

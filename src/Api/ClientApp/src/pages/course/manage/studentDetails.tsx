@@ -15,7 +15,7 @@ const StudentDetails = () => {
   }
 
   if (studentDetails.data?.length === 0)
-    return <Box>Student has not started any lesson.</Box>;
+    return <Box>Trainee has not started any lesson.</Box>;
 
   if (studentDetails.isLoading) return <Loader />;
 
