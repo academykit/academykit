@@ -225,6 +225,9 @@ const ManageStudents = ({
     }
   };
 
+  if (getStudentStat.data?.totalCount === 0)
+    return <Box>No students found.</Box>;
+
   return (
     <ScrollArea>
       <ConfirmationModal
@@ -270,7 +273,7 @@ const ManageStudents = ({
           {searchComponent("Search for students")}
         </Box>
       </div>
-      {getStudentStat.data && getStudentStat.data?.totalCount > 0 ? (
+      {getStudentStat.data && getStudentStat.data?.totalCount > 0 && (
         <Paper mt={10}>
           <Table
             sx={{ minWidth: 800 }}
@@ -304,8 +307,6 @@ const ManageStudents = ({
             </tbody>
           </Table>
         </Paper>
-      ) : (
-        <Box mt={5}>No Students Found</Box>
       )}
 
       {getStudentStat.data && pagination(getStudentStat.data?.totalPage)}

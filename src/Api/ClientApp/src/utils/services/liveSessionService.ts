@@ -32,7 +32,7 @@ export interface IReportDetail {
   name: string;
   email: string;
   mobileNumber: string;
-  date: string;
+  startDate: string;
   joinedTime: string;
   leftTime: string;
   duration: string;

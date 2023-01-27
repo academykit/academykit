@@ -6,6 +6,8 @@ import {
   Modal,
   Text,
   Tooltip,
+  SimpleGrid,
+  Box,
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import UserResults from "@pages/course/exam/Components/UserResults";
@@ -172,7 +174,7 @@ const StudentLessonDetails = ({
         styles={{
           title: {
             fontWeight: "bold",
-            fontSize: "25px",
+            fontSize: "22px",
           },
         }}
       >
@@ -182,24 +184,37 @@ const StudentLessonDetails = ({
           ) : (
             <>
               {!meetingReport.isError && (
-                <Group style={{ gap: "6px" }}>
-                  <Text w={"100%"}>
-                    Date:{" "}
-                    {moment(meetingReport.data?.date + "Z").format(
-                      "YYYY-MM-DD HH:mm:ss"
-                    )}
-                  </Text>
-                  <Text w={"100%"}>
-                    Joined Time: {meetingReport.data?.joinedTime}
-                  </Text>
-                  <Text w={"100%"}>
-                    {" "}
-                    Left Time: {meetingReport.data?.leftTime}
-                  </Text>
-                  <Text w={"100%"}>
-                    Duration : {meetingReport.data?.duration}
-                  </Text>
-                </Group>
+                <SimpleGrid cols={2} style={{ gap: "6px" }}>
+                  <Box>
+                    <Text weight={"bold"} size="lg">
+                      Date
+                    </Text>
+                    <Text>
+                      {moment(meetingReport.data?.startDate + "Z").format(
+                        "YYYY-MM-DD HH:mm:ss"
+                      )}
+                    </Text>
+                  </Box>
+                  <Box>
+                    <Text weight={"bold"} size="lg">
+                      Joined Time
+                    </Text>
+                    <Text>{meetingReport.data?.joinedTime}</Text>
+                  </Box>
+
+                  <Box>
+                    <Text weight={"bold"} size="lg">
+                      Left Time
+                    </Text>
+                    <Text>{meetingReport.data?.leftTime}</Text>
+                  </Box>
+                  <Box>
+                    <Text weight={"bold"} size="lg">
+                      Duration
+                    </Text>
+                    <Text>{meetingReport.data?.duration}</Text>
+                  </Box>
+                </SimpleGrid>
               )}
               {meetingReport.isError && (
                 <Group>User has not attended this live class.</Group>
