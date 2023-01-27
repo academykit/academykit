@@ -236,8 +236,6 @@ namespace Lingtren.Infrastructure.Services
                     _logger.LogWarning("Meeting id : {id} not found.", model.Payload.Object.Id);
                     return;
                 }
-
-
                 var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p =>
                              p.Id.ToString() == model.Payload.Object.Participant.Customer_Key).ConfigureAwait(false);
 
@@ -258,8 +256,7 @@ namespace Lingtren.Infrastructure.Services
                     return;
                 }
                 var LeftTime = DateTime.Parse(model.Payload.Object.Participant.Leave_Time);
-                var duration = LeftTime.Subtract(report.JoinTime);
-                report.Duration = duration;
+                report.Duration = LeftTime.Subtract(report.JoinTime);
                 report.LeftTime = LeftTime;
                 report.UpdatedOn = DateTime.UtcNow;
                 _unitOfWork.GetRepository<MeetingReport>().Update(report);
