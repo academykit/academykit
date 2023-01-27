@@ -21,5 +21,8 @@ namespace Lingtren.Application.Common.Dtos
 
         [Name("Role")]
         public string Role { get; set; }
+
+        [Name("Profession")]
+        public  string Profession { get; set; }
     }
 }

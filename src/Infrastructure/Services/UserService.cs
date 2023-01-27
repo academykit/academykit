@@ -306,6 +306,7 @@
                                 LastName = user.LastName,
                                 Email = user.Email,
                                 IsActive = true,
+                                Profession = user.Profession,
                                 MobileNumber = user.MobileNumber,
                                 Role = Enum.Parse<UserRole>(user.Role),
                                 CreatedBy = currentUserId,
