@@ -187,6 +187,7 @@ const StudentLessonDetails = ({
       </Modal>
       <Modal
         size={"xl"}
+        overflow="inside"
         opened={liveClassReportModal}
         onClose={() => setLiveClassReportModal()}
         title={`Meeting Report`}
@@ -218,43 +219,9 @@ const StudentLessonDetails = ({
                       <TableRow values={x} />
                     ))}
                   </tbody>
-
-                  {/* <SimpleGrid cols={2} style={{ gap: "6px" }}>
-                  <Box>
-                    <Text weight={"bold"} size="lg">
-                      Date
-                    </Text>
-                    <Text>
-                      {moment(meetingReport.data?.startDate + "Z").format(
-                        "YYYY-MM-DD HH:mm:ss"
-                      )}
-                    </Text>
-                  </Box>
-                  <Box>
-                    <Text weight={"bold"} size="lg">
-                      Joined Time
-                    </Text>
-                    <Text>{meetingReport.data?.joinedTime}</Text>
-                  </Box>
-
-                  <Box>
-                    <Text weight={"bold"} size="lg">
-                      Left Time
-                    </Text>
-                    <Text>{meetingReport.data?.leftTime}</Text>
-                  </Box>
-                  <Box>
-                    <Text weight={"bold"} size="lg">
-                      Duration
-                    </Text>
-                    <Text>{meetingReport.data?.duration}</Text>
-                  </Box>
-                </SimpleGrid> */}
                 </Table>
               )}
-              {meetingReport.isError && (
-                <Group>User has not attended this live class.</Group>
-              )}
+              {meetingReport.isError && <Box>Something went wrong.</Box>}
             </>
           )}
         </>
