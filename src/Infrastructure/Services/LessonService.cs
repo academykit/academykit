@@ -734,10 +734,10 @@ namespace Lingtren.Infrastructure.Services
             response.Email = report.User?.Email;
             response.MobileNumber = report.User?.MobileNumber;
             response.Date = report.StartTime;
-            response.JoinedTime = report.JoinTime.ToShortDateString();
+            response.JoinedTime = report.JoinTime.ToShortTimeString();
             response.LeftTime = report.LeftTime.HasValue ? report.LeftTime.Value.ToShortTimeString() : string.Empty;
             response.LessonId = lesson.Id;
-            report.Duration = report.Duration;
+            response.Duration = report.Duration;
             return response;
         }
 
