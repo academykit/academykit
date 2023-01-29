@@ -1,8 +1,8 @@
 // @ts-nocheck
-const BASE_URL = `https://standalone.apps.vurilo.com`;
+const BASE_URL = ``;
 const BASE_URL_Local = `http://localhost:5173`;
 const api = (courseId: string, lessonId: string) =>
-  `${BASE_URL}/api/course/${courseId}/lesson/${lessonId}/join`;
+  `/api/course/${courseId}/lesson/${lessonId}/join`;
 
 ZoomMtg.setZoomJSLib("https://jssdk.zoomus.cn/2.9.5/lib", "/av"); // china cdn option
 ZoomMtg.preLoadWasm();
