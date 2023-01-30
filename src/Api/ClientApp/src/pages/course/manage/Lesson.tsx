@@ -12,9 +12,13 @@ import {
   Box,
 } from "@mantine/core";
 import { IconEye } from "@tabler/icons";
+import { LessonType } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
 import { ICourseLesson } from "@utils/services/courseService";
-import { useGetLessonStatistics } from "@utils/services/manageCourseService";
+import {
+  ILessonStats,
+  useGetLessonStatistics,
+} from "@utils/services/manageCourseService";
 import { Link, useParams } from "react-router-dom";
 
 function TableReviews() {
@@ -23,7 +27,7 @@ function TableReviews() {
 
   const getLessonStatistics = useGetLessonStatistics(course_id);
 
-  const Rows = ({ item }: { item: ICourseLesson }) => {
+  const Rows = ({ item }: { item: ILessonStats }) => {
     return (
       <tr key={item?.id}>
         <td>
@@ -34,6 +38,7 @@ function TableReviews() {
             {item.name}
           </Anchor>
         </td>
+        <td>{LessonType[item.lessonType]}</td>
         <td>
           <ProgressBar
             total={item?.enrolledStudent}
@@ -87,6 +92,7 @@ function TableReviews() {
           <thead>
             <tr>
               <th>Lesson Name</th>
+              <th>Lesson Type</th>
               <th>
                 <Center>Progress</Center>
               </th>
@@ -99,7 +105,7 @@ function TableReviews() {
             </tr>
           </thead>
           <tbody>
-            {getLessonStatistics.data?.map((item: ICourseLesson) => (
+            {getLessonStatistics.data?.map((item: ILessonStats) => (
               <Rows item={item} key={item.id} />
             ))}
           </tbody>
