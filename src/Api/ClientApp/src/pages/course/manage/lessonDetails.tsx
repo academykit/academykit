@@ -1,4 +1,12 @@
-import { Button, Center, Group, Paper, Table } from "@mantine/core";
+import {
+  Button,
+  Center,
+  Group,
+  Paper,
+  Table,
+  Box,
+  Loader,
+} from "@mantine/core";
 import { LessonType } from "@utils/enums";
 import { useGetLessonStatisticsDetails } from "@utils/services/manageCourseService";
 import { useParams } from "react-router-dom";
@@ -10,6 +18,12 @@ const LessonDetails = () => {
     id as string,
     lessonId as string
   );
+
+  if (lessonDetails.data && lessonDetails.data?.totalCount < 1) {
+    return <Box>No enrolled student found.</Box>;
+  }
+
+  if (lessonDetails.isLoading) return <Loader />;
 
   return (
     <>
