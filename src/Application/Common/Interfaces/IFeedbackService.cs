@@ -41,5 +41,13 @@
         /// <param name="searchCriteria">the instance of <see cref="FeedbackBaseSearchCriteria"/></param>
         /// <returns>the list of <see cref="FeedbackResponseModel"/></returns>
         Task<IList<FeedbackResponseModel>> SearchAsync(FeedbackBaseSearchCriteria searchCriteria);
+
+        /// <summary>
+        /// Handle to get feedback report
+        /// </summary>
+        /// <param name="lessonIdentity"> the lesson id or slug </param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the list of <see cref="FeedBackReportDto" /> .</returns>
+        Task<IList<FeedBackReportDto>> GetFeedBackReportAsync(string lessonIdentity,Guid currentUserId);
     }
 }

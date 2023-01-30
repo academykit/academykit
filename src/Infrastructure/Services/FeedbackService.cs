@@ -13,6 +13,7 @@
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
+    using System.Text.RegularExpressions;
 
     public class FeedbackService : BaseGenericService<Feedback, FeedbackBaseSearchCriteria>, IFeedbackService
     {
@@ -368,6 +369,91 @@
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to submit the feedback.");
             }
         }
+
+        /// <summary>
+        /// Handle to get feedback report
+        /// </summary>
+        /// <param name="lessonIdentity"> the lesson id or slug </param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the list of <see cref="" /> .</returns>
+        public async Task<IList<FeedBackReportDto>> GetFeedBackReportAsync(string lessonIdentity, Guid currentUserId)
+        {
+            try
+            {
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
+               predicate: p => p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity
+               ).ConfigureAwait(false);
+
+            if (lesson == null)
+            {
+                _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
+                throw new EntityNotFoundException("Lesson not found.");
+            }
+            if (lesson.Type != LessonType.Feedback)
+            {
+                _logger.LogWarning("Lesson type not matched for Feedback fetch for lesson with id: {id} and user with id: {userId}.",
+                                    lesson.Id, currentUserId);
+                throw new ForbiddenException($"Invalid lesson type :{lesson.Type}.");
+            }
+
+            await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
+
+            var feedbackSubmissions = await _unitOfWork.GetRepository<FeedbackSubmission>().GetAllAsync(predicate : p => p.LessonId == lesson.Id,
+            include : source => source.Include(x => x.User).Include(x => x.Feedback).ThenInclude(x => x.FeedbackQuestionOptions)).ConfigureAwait(false);
+
+            if(feedbackSubmissions.Count == default)
+             {
+                    throw new EntityNotFoundException("Feedback report not found.");      
+             }
+
+            var response = new List<FeedBackReportDto>();
+            foreach(var feedback in feedbackSubmissions)
+            {
+                    var feedbackDto = new FeedBackReportDto
+                    {
+                        FullName = feedback.User?.FullName,
+                        Email = feedback.User?.Email,
+                        Date = feedback.CreatedOn.ToShortDateString(),
+                        Question = feedback.Feedback.Name,
+                    };
+
+                     if(feedback.Feedback?.Type == FeedbackTypeEnum.Subjective)
+                    {
+                        feedbackDto.Answer = Regex.Replace(feedback.Answer, "<[a-zA-Z/].*?>", string.Empty);
+                        feedbackDto.Type = FeedbackTypeEnum.Subjective.ToString();
+                    }
+
+                     if(feedback.Feedback?.Type == FeedbackTypeEnum.Rating)
+                    {
+                        feedbackDto.Answer = feedback.Rating.ToString();
+                        feedbackDto.Type = FeedbackTypeEnum.Rating.ToString();
+                    }
+
+                     if(feedback.Feedback?.Type == FeedbackTypeEnum.SingleChoice)
+                    {
+                        feedbackDto.Type = FeedbackTypeEnum.SingleChoice.ToString();
+                        var singleAnswer = feedback.Feedback.FeedbackQuestionOptions.FirstOrDefault(x => x.Id.ToString() == feedback.SelectedOption).Option;
+                        feedback.Answer = Regex.Replace(singleAnswer,"<[a-zA-Z/].*?>", string.Empty);
+                    }
+
+                     if(feedback.Feedback?.Type == FeedbackTypeEnum.MultipleChoice)
+                    {
+                        feedbackDto.Type = FeedbackTypeEnum.MultipleChoice.ToString();
+                        feedback.Answer = feedback.SelectedOption.ToString();
+                    }
+
+                    response.Add(feedbackDto);
+            }
+
+            return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error on GetFeedBackReportAsync method : {ex.Message}");
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message,ex);
+            }
+        }
+
         #region Private Methods
 
         /// <summary>
