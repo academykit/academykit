@@ -33,10 +33,10 @@ const StudentDetails = () => {
           </tr>
         </thead>
         <tbody>
-          {studentDetails.data?.map((x) => (
+          {studentDetails.data?.map((x, i) => (
             <CourseStudentLessons
               element={x}
-              key={x.lessonId}
+              key={x.lessonId + i}
               studentId={studentId ?? ""}
               courseId={id as string}
             />

@@ -9,8 +9,24 @@ import { api } from "./service-api";
 import { httpClient } from "./service-axios";
 import { IPaginated, IUser } from "./types";
 
+export interface ILessonStats {
+  id: string,
+slug: string,
+name: string,
+lessonType: number,
+courseId: string,
+courseSlug: string,
+courseName: string,
+sectionId: string,
+sectionSlug: string,
+sectionName: string,
+enrolledStudent: number,
+lessonWatched: number,
+isMandatory: boolean
+}
+
 const getLessonStatistics = async (courseIdentity: string) => {
-  return await httpClient.get<ICourseLesson[]>(
+  return await httpClient.get<ILessonStats[]>(
     api.course.lessonStat(courseIdentity)
   );
 };
