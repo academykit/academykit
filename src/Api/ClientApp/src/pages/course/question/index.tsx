@@ -11,7 +11,6 @@ import {
   createStyles,
   Button,
   Paper,
-  Anchor,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { usePools } from "@utils/services/poolService";
@@ -102,19 +101,20 @@ const Questions = () => {
 
   useEffect(() => {
     if (poolValue) {
-      const i: any = questions.data?.items.map((e, i) => {
-        return {
-          value: e.questionPoolQuestionId,
-          label: e.name,
-          description: e.description,
-        };
-      });
+      const i: IQuestionListData[] | undefined = questions.data?.items.map(
+        (e, i) => {
+          return {
+            value: e.questionPoolQuestionId,
+            label: e.name,
+            description: e.description,
+          };
+        }
+      );
 
       if (i) {
         const difference = i?.filter(
           (x: any) => !data[1].some((e: any) => x.value === e.value)
         );
-
         setData([difference, data[1]]);
       }
     } else {
@@ -170,7 +170,7 @@ const Questions = () => {
   return (
     <div>
       <Breadcrumb hide={3} />
-      <Paper p={10} withBorder h={"1000px"}>
+      <Paper p={10} withBorder>
         <Grid mb={10}>
           <Grid.Col span={matches ? 3 : 6}>
             <Select
@@ -192,9 +192,9 @@ const Questions = () => {
           value={data}
           onChange={setData}
           searchPlaceholder="Search for questions"
-          nothingFound="No Questions Found!"
+          nothingFound={"No Questions Found!"}
           titles={["Questions List", `Selected Questions (${data[1].length})`]}
-          listHeight={300}
+          listHeight={600}
           breakpoint="sm"
           //@ts-ignore
           itemComponent={ItemComponent}
