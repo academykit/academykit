@@ -57,7 +57,6 @@ const FeedbackPage = () => {
 
   return (
     <Container my={50}>
-      hi
       {feedback.isSuccess && (
         <FeedbackForm item={feedback.data} lessonId={id as string} />
       )}

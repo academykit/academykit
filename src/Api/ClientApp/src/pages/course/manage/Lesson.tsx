@@ -12,6 +12,7 @@ import {
   Box,
 } from "@mantine/core";
 import { IconEye } from "@tabler/icons";
+import { LessonType } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
 import { ICourseLesson } from "@utils/services/courseService";
 import { useGetLessonStatistics } from "@utils/services/manageCourseService";
@@ -34,6 +35,7 @@ function TableReviews() {
             {item.name}
           </Anchor>
         </td>
+        <td>{LessonType[item.type]}</td>
         <td>
           <ProgressBar
             total={item?.enrolledStudent}
@@ -87,6 +89,7 @@ function TableReviews() {
           <thead>
             <tr>
               <th>Lesson Name</th>
+              <th>Lesson Type</th>
               <th>
                 <Center>Progress</Center>
               </th>

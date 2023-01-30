@@ -34,14 +34,12 @@ const StudentDetails = () => {
         </thead>
         <tbody>
           {studentDetails.data?.map((x) => (
-            <div key={x.lessonId}>
-              <CourseStudentLessons
-                element={x}
-                key={x.lessonId}
-                studentId={studentId ?? ""}
-                courseId={id as string}
-              />
-            </div>
+            <CourseStudentLessons
+              element={x}
+              key={x.lessonId}
+              studentId={studentId ?? ""}
+              courseId={id as string}
+            />
           ))}
         </tbody>
       </Table>
