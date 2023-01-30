@@ -186,6 +186,7 @@ export const api = {
         ? "/api/feedback" +
           `?${search}&LessonIdentity=${lessonId}&UserId=${userId}`
         : "/api/feedback" + `?LessonIdentity=${lessonId}&UserId=${userId}`,
+    exportFeedback : (lessonId: string) => `/api/Feedback/${lessonId}/export`
   },
   exam: {
     startExam: (id: string) => `/api/QuestionSet/${id}/startExam`,

@@ -155,7 +155,6 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
     setPlaying(false);
     setCurrentPlayerState("completed");
     if (onEnded) {
-      console.log("ended video");
       onEnded();
     }
   };

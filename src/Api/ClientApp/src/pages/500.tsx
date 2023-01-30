@@ -64,7 +64,11 @@ const ServerError = () => {
           development team was already notified. Try refreshing the page.
         </Text>
         <Group position="center">
-          <Button variant="white" size="md">
+          <Button
+            variant="white"
+            size="md"
+            onClick={() => window.location.reload()}
+          >
             Refresh the page
           </Button>
         </Group>
