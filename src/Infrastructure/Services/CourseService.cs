@@ -869,6 +869,7 @@ namespace Lingtren.Infrastructure.Services
                     CourseId = course.Id,
                     CourseSlug = course.Slug,
                     CourseName = course.Name,
+                    LessonType = x.Type,
                     SectionId = x.SectionId,
                     SectionSlug = x.Section?.Slug,
                     SectionName = x.Section?.Name,
