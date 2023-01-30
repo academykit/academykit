@@ -7,8 +7,12 @@ import {
   Box,
   Loader,
 } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 import { LessonType } from "@utils/enums";
+import errorType from "@utils/services/axiosError";
+import { exportFeedback } from "@utils/services/feedbackService";
 import { useGetLessonStatisticsDetails } from "@utils/services/manageCourseService";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import CourseLessonDetails from "./Components/CourseLessonDetails";
 
@@ -18,6 +22,7 @@ const LessonDetails = () => {
     id as string,
     lessonId as string
   );
+  const [loading, setLoading] = useState(false);
 
   if (lessonDetails.data && lessonDetails.data?.totalCount < 1) {
     return <Box>No enrolled student found.</Box>;
@@ -25,11 +30,40 @@ const LessonDetails = () => {
 
   if (lessonDetails.isLoading) return <Loader />;
 
+  const handleExport = async () => {
+    setLoading(true);
+    try {
+      const res = await exportFeedback(lessonId as string);
+
+      var element = document.createElement("a");
+      setLoading(false);
+
+      element.setAttribute(
+        "href",
+        "data:text/plain;charset=utf-8," +
+          encodeURIComponent(res.data as string)
+      );
+      element.setAttribute("download", "Feedback-" + lessonId + ".csv");
+      document.body.appendChild(element);
+      element.click();
+    } catch (err) {
+      const error = errorType(err);
+      showNotification({
+        message: error,
+        title: "Error!",
+        color: "red",
+      });
+    }
+    setLoading(false);
+  };
+
   return (
     <>
       {lessonDetails.data?.items[0].lessonType === LessonType.Feedback && (
         <Group position="right" my="md">
-          <Button>Export</Button>
+          <Button onClick={handleExport} loading={loading}>
+            Export
+          </Button>
         </Group>
       )}
       <Paper>
