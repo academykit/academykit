@@ -409,13 +409,12 @@
             var response = new List<FeedBackReportDto>();
             foreach(var feedback in feedbackSubmissions)
             {
-                    var feedbackDto = new FeedBackReportDto
-                    {
-                        FullName = feedback.User?.FullName,
-                        Email = feedback.User?.Email,
-                        Date = feedback.CreatedOn.ToShortDateString(),
-                        Question = feedback.Feedback.Name,
-                    };
+
+                    var feedbackDto = new FeedBackReportDto();
+                    feedbackDto.FullName = feedback.User?.FullName;
+                    feedbackDto.Email = feedback.User?.Email;
+                    feedbackDto.Date = feedback.CreatedOn.ToShortDateString();
+                    feedbackDto.Question = feedback.Feedback.Name;
 
                      if(feedback.Feedback?.Type == FeedbackTypeEnum.Subjective)
                     {
@@ -432,16 +431,23 @@
                      if(feedback.Feedback?.Type == FeedbackTypeEnum.SingleChoice)
                     {
                         feedbackDto.Type = FeedbackTypeEnum.SingleChoice.ToString();
-                        var singleAnswer = feedback.Feedback.FeedbackQuestionOptions.FirstOrDefault(x => x.Id.ToString() == feedback.SelectedOption).Option;
-                        feedback.Answer = Regex.Replace(singleAnswer,"<[a-zA-Z/].*?>", string.Empty);
+                        var singleAnswer = feedback.Feedback?.FeedbackQuestionOptions?.FirstOrDefault(x => x.Id.ToString() == feedback.SelectedOption)?.Option;
+                        feedbackDto.Answer = Regex.Replace(singleAnswer,"<[a-zA-Z/].*?>", string.Empty);
                     }
 
                      if(feedback.Feedback?.Type == FeedbackTypeEnum.MultipleChoice)
                     {
                         feedbackDto.Type = FeedbackTypeEnum.MultipleChoice.ToString();
-                        feedback.Answer = feedback.SelectedOption.ToString();
+                        var options = feedback.SelectedOption.Split(",");
+                        var answers = new List<string>();
+                        foreach(var opt in options)
+                        {
+                            var optAnswer = feedback.Feedback?.FeedbackQuestionOptions?.FirstOrDefault(x => x.Id.ToString() == opt)?.Option;
+                            var removeHtml = Regex.Replace(optAnswer, "<[a-zA-Z/].*?>", string.Empty);
+                            answers.Add(removeHtml);
+                        }
+                        feedbackDto.Answer = string.Join(",", answers);
                     }
-
                     response.Add(feedbackDto);
             }
 
