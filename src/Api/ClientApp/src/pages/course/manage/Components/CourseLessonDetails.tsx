@@ -21,17 +21,15 @@ const CourseLessonDetails = ({ element }: { element: LessonStatDetails }) => {
       </td>
 
       <td>
-        <UnstyledButton>
-          <StudentLessonDetails
-            questionSetId={element.questionSetId}
-            type={element.lessonType}
-            studentId={element.user.id}
-            lessonId={element.lessonId}
-            isCompleted={element.isPassed}
-            courseId={courseId as string}
-            lessonName={element.lessonName}
-          />
-        </UnstyledButton>
+        <StudentLessonDetails
+          questionSetId={element.questionSetId}
+          type={element.lessonType}
+          studentId={element.user.id}
+          lessonId={element.lessonId}
+          isCompleted={element.isPassed}
+          courseId={courseId as string}
+          lessonName={element.lessonName}
+        />
       </td>
     </tr>
   );

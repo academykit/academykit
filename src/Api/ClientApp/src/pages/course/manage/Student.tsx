@@ -17,6 +17,7 @@ import {
   Text,
   Tooltip,
   useMantineTheme,
+  Loader,
 } from "@mantine/core";
 import { Link, useParams } from "react-router-dom";
 import ProgressBar from "@components/Ui/ProgressBar";
@@ -231,6 +232,8 @@ const ManageStudents = ({
 
   if (getStudentStat.data?.totalCount === 0)
     return <Box>No trainees found.</Box>;
+
+  if (getStudentStat.isLoading) return <Loader />;
 
   return (
     <ScrollArea>

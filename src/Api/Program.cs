@@ -2,6 +2,9 @@
 using HangfireBasicAuthenticationFilter;
 using Lingtren.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.HttpOverrides;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,11 +49,18 @@ else
     app.UseHsts();
 }
 
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
-app.UseHttpsRedirection();
+
+// app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+
 app.UseCors(x => x
               .AllowAnyMethod()
               .AllowAnyHeader()

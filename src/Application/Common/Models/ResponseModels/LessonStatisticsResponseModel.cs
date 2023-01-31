@@ -7,6 +7,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public Guid Id { get; set; }
         public string Slug { get; set; }
         public string Name { get; set; }
+        public LessonType LessonType { get; set; }
         public Guid CourseId { get; set; }
         public string CourseSlug { get; set; }
         public string CourseName { get; set; }

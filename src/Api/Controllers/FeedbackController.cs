@@ -1,5 +1,7 @@
 ﻿namespace Lingtren.Api.Controllers
 {
+    using System.Globalization;
+    using CsvHelper;
     using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
@@ -146,5 +148,26 @@
         [HttpGet("{lessonIdentity}/users")]
         public async Task<IList<FeedbackSubmissionStudentResponseModel>> SubmissionAsync(string lessonIdentity) =>
             await _feedbackService.GetFeedbackSubmittedStudent(lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
+
+        /// <summary>
+        /// feedback export api
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug </param>
+        /// <returns> the task complete </returns>
+        [HttpGet("{lessonIdentity}/export")]
+        public async Task<IActionResult> Export(string lessonIdentity)
+        {
+            var feedBackReport = await _feedbackService.GetFeedBackReportAsync(lessonIdentity,CurrentUser.Id).ConfigureAwait(false);
+            byte[] report = null;
+            using (var memory = new MemoryStream())
+            using (var writer = new StreamWriter(memory))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(feedBackReport);
+                csv.Flush();
+                report = memory.ToArray();
+            }
+            return File(report, "text/csv", $"{lessonIdentity}.csv");
+        }
     }
 }

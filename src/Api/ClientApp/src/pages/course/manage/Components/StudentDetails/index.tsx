@@ -216,7 +216,7 @@ const StudentLessonDetails = ({
 
                   <tbody>
                     {meetingReport.data.map((x) => (
-                      <TableRow values={x} />
+                      <TableRow values={x} key={x.joinedTime} />
                     ))}
                   </tbody>
                 </Table>

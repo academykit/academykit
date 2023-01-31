@@ -13,25 +13,13 @@ import { useForm } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { IconEdit, IconEye, IconFileCheck } from "@tabler/icons";
+import { color } from "@utils/constants";
 import { CourseStatus, UserRole, CourseUserStatus } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
 import errorType from "@utils/services/axiosError";
 import { ICourse, useCourseStatus } from "@utils/services/courseService";
 import moment from "moment";
 import { Link } from "react-router-dom";
-
-const color = (status: CourseStatus) => {
-  switch (status) {
-    case CourseStatus.Draft:
-      return "violet";
-    case CourseStatus.Published:
-      return "green";
-    case CourseStatus.Review:
-      return "yellow";
-    case CourseStatus.Rejected:
-      return "red";
-  }
-};
 
 const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
   const [confirmPublish, togglePublish] = useToggle();

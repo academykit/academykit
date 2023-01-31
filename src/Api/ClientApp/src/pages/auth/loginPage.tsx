@@ -41,8 +41,8 @@ const LoginPage = () => {
   useEffect(() => {
     if (login.isError) {
       showNotification({
-        // @ts-ignore
         message:
+          // @ts-ignore
           login.error?.response?.data?.message ?? "Something went wrong!",
         title: "Login Failed",
         color: "red",

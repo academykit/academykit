@@ -26,6 +26,7 @@ import {
   IconClock,
   IconDotsVertical,
 } from "@tabler/icons";
+import { color } from "@utils/constants";
 import {
   CourseLanguage,
   CourseStatus,
@@ -154,7 +155,7 @@ const CourseCardHorizontal = ({
                   course.userStatus === CourseUserStatus.Author ||
                   course.userStatus === CourseUserStatus.Teacher) && (
                   <>
-                    <Badge ml={10} color={"teal"}>
+                    <Badge ml={10} color={color(course?.status)}>
                       {CourseStatus[course?.status]}
                     </Badge>
                   </>
