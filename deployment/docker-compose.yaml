@@ -1,0 +1,30 @@
+version: "3.7"
+
+services:
+  reverseproxy:
+  
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+  api:
+    depends_on:
+      - reverseproxy
+    environment:
+      ConnectionStrings__DefaultConnection: 'Server=159.89.163.233;Database=standalone_uat_db;User=dev;Password=4ubiY2A163@f;Convert Zero Datetime=True;Allow User Variables=True;'
+      JWT__DurationInMinutes: 60
+      ConnectionStrings__Hangfireconnection: 'Server=159.89.163.233;Database=standalonehangfire;User=dev;Password=4ubiY2A163@f;Convert Zero Datetime=True;Allow User Variables=True;'
+      Hangfire__User: standalone
+      Hangfire__Password: Admino12
+      AppUrls__App: api
+      image: 762344227131.dkr.ecr.ap-south-1.amazonaws.com/standalone:latest
+    # ports:
+    #   - '8080:80'
+
+    expose:
+      - "80"
+    restart: always
+
