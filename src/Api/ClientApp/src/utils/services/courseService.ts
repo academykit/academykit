@@ -54,11 +54,11 @@ export interface IMyCourse extends ICourse {
     percentage: number
   }
 
-  const getMyCourse = async (userId:string) =>
-  await httpClient.get<IPaginated<IMyCourse>>(api.course.userList(userId));
+  const getMyCourse = async (userId:string,search: string) =>
+  await httpClient.get<IPaginated<IMyCourse>>(api.course.userList(userId) +`?${search}`);
 
-export const useMyCourse = (userId:string) =>
-  useQuery([api.course.userList(userId), ], () => getMyCourse(userId), {
+export const useMyCourse = (userId:string, search:string) =>
+  useQuery([api.course.userList(userId), search], () => getMyCourse(userId,search), {
     select: (data) => data.data,
   });
 
@@ -378,14 +378,15 @@ export const useDeleteLesson = (slug: string) => {
 };
 
 // courses status
-const courseStatus = async (data: { id: string; status: CourseStatus }) => {
-  return await httpClient.patch(api.course.status(data.id, data.status));
+const courseStatus = async (data: { identity: string; status: CourseStatus, message? : string }) => {
+  return await httpClient.patch(api.course.status,data);
 };
-export const useCourseStatus = (id: string) => {
+export const useCourseStatus = (id: string, search: string) => {
   const queryClient = useQueryClient();
   return useMutation([api.course.enroll(id)], courseStatus, {
     onSuccess: () => {
       queryClient.invalidateQueries([api.course.detail(id)]);
+      queryClient.invalidateQueries([api.course.list, search])
     },
   });
 };

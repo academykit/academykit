@@ -1,4 +1,4 @@
-import { Center, Paper, Table } from "@mantine/core";
+import { Center, Paper, Table, Box, Loader } from "@mantine/core";
 import { useGetStudentStatisticsDetails } from "@utils/services/manageCourseService";
 import { useParams } from "react-router-dom";
 import CourseStudentLessons from "./Components/CourseStudentLessons";
@@ -14,6 +14,11 @@ const StudentDetails = () => {
     throw studentDetails.error;
   }
 
+  if (studentDetails.data?.length === 0)
+    return <Box>Trainee has not started any lesson.</Box>;
+
+  if (studentDetails.isLoading) return <Loader />;
+
   return (
     <Paper>
       <Table striped withBorder>
@@ -28,10 +33,10 @@ const StudentDetails = () => {
           </tr>
         </thead>
         <tbody>
-          {studentDetails.data?.map((x) => (
+          {studentDetails.data?.map((x, i) => (
             <CourseStudentLessons
               element={x}
-              key={x.lessonId}
+              key={x.lessonId + i}
               studentId={studentId ?? ""}
               courseId={id as string}
             />

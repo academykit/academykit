@@ -74,8 +74,8 @@ export const api = {
     reorderSection: (id: string) => `/api/course/${id}/section/reorder`,
     update: (id: string) => `/api/course/${id}`,
     enroll: (id: string) => `/api/Course/${id}/enroll`,
-    status: (id: string, status: CourseStatus) =>
-      `/api/Course/${id}/status?status=${status}`,
+    status: 
+      `/api/Course/status`,
     lessonStat: (id: string) => `/api/course/${id}/lessonStatistics`,
     lessonStatDetails: (id: string, lessonId: string) =>
       `/api/course/${id}/lessonStatistics/${lessonId}`,
@@ -186,6 +186,7 @@ export const api = {
         ? "/api/feedback" +
           `?${search}&LessonIdentity=${lessonId}&UserId=${userId}`
         : "/api/feedback" + `?LessonIdentity=${lessonId}&UserId=${userId}`,
+    exportFeedback : (lessonId: string) => `/api/Feedback/${lessonId}/export`
   },
   exam: {
     startExam: (id: string) => `/api/QuestionSet/${id}/startExam`,

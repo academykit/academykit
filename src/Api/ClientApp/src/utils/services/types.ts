@@ -58,6 +58,10 @@ export interface ILessonLecture extends ILessons {
   name: string;
   description: string;
 }
+export interface ILessonRecording extends ILessons {
+  videoUrl: string;
+  name: string;
+}
 export interface ILessonMCQ extends ILessons {
   questionSet: {
     name: string;
@@ -96,4 +100,5 @@ export interface ILessonMeeting extends ILessons {
     meetingDuration: number;
     zoomLicenseId: string;
   };
+  description?: string
 }

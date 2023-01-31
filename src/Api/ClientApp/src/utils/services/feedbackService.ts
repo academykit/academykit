@@ -154,3 +154,6 @@ export const useFeedbackSubmission = ({ lessonId }: { lessonId: string }) => {
     },
   });
 };
+
+
+export const exportFeedback = (lessonId: string) =>  httpClient.get(api.feedback.exportFeedback(lessonId)) 

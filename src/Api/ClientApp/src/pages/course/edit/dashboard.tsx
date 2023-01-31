@@ -47,7 +47,7 @@ const Dashboard = () => {
   const { classes } = useStyles();
   const { id } = useParams();
   const course = useCourseDescription(id as string);
-  const courseStatus = useCourseStatus(id as string);
+  const courseStatus = useCourseStatus(id as string, "");
   const courseUpdateStatus = useCourseUpdateStatus(id as string);
   const [courseButton, setCourseButton] = useState(
     course.data?.status === CourseStatus.Published
@@ -55,7 +55,7 @@ const Dashboard = () => {
   const onPublish = async () => {
     try {
       await courseStatus.mutateAsync({
-        id: id as string,
+        identity: id as string,
         status: CourseStatus.Review,
       });
       showNotification({
@@ -94,7 +94,7 @@ const Dashboard = () => {
   const handleCompleted = async () => {
     try {
       await courseStatus.mutateAsync({
-        id: id as string,
+        identity: id as string,
         status: CourseStatus.Completed,
       });
       showNotification({
@@ -175,6 +175,28 @@ const Dashboard = () => {
 
   if (course.data?.status === CourseStatus.Review) {
     return <>Training is under Review</>;
+  }
+
+  if (course.data?.status === CourseStatus.Rejected) {
+    return (
+      <>
+        <Card
+          shadow={"sm"}
+          className={classes.center}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <Text mb={10}>
+            Your training has been rejected. If you wish to edit your training,
+            Please update training to Draft.
+          </Text>
+          <Button onClick={() => onUpdatePublish()}>Update to Draft</Button>
+        </Card>
+      </>
+    );
   }
 
   if (course.data?.status === CourseStatus.Draft) {

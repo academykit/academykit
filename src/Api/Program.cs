@@ -38,10 +38,14 @@ builder.Logging.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot",
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+
+if (app.Environment.IsDevelopment())
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+else
+{
     app.UseHsts();
 }
 
@@ -50,13 +54,10 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
 
+
 // app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
-app.UseSwagger();
-app.UseSwaggerUI();
-
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 
@@ -68,7 +69,7 @@ app.UseCors(x => x
 
 app.UseHangfireDashboard("/jobs", new DashboardOptions
 {
-   Authorization = new[] { new HangfireCustomBasicAuthenticationFilter
+    Authorization = new[] { new HangfireCustomBasicAuthenticationFilter
        {
            User = builder.Configuration.GetSection("Hangfire").GetSection("User").Value,
            Pass = builder.Configuration.GetSection("Hangfire").GetSection("Password").Value

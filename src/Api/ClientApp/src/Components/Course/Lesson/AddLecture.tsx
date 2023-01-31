@@ -19,13 +19,23 @@ import {
   useCreateLesson,
   useUpdateLesson,
 } from "@utils/services/courseService";
-import { ILessonLecture } from "@utils/services/types";
+import { ILessonLecture, ILessonRecording } from "@utils/services/types";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Video Name is required."),
+  videoUrl: Yup.string().required("Video is required!"),
 });
+
+type IProps = {
+  setAddState: Function;
+  item?: ILessons;
+  setAddLessonClick: Function;
+  isEditing?: boolean;
+  sectionId: string;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
 
@@ -36,18 +46,12 @@ const AddLecture = ({
   isEditing,
   sectionId,
   setIsEditing,
-}: {
-  setAddState: Function;
-  item?: ILessons;
-  setAddLessonClick: Function;
-  isEditing?: boolean;
-  sectionId: string;
-  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+}: IProps) => {
   const { id: slug } = useParams();
   const [videoUrl, setVideoUrl] = React.useState<string>(item?.videoUrl ?? "");
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
+  const isRecordedVideo = item?.type === LessonType.RecordedVideo;
 
   const form = useForm({
     initialValues: {
@@ -61,9 +65,16 @@ const AddLecture = ({
 
   const handleSubmit = async (values: any) => {
     form.setFieldValue("videoUrl", videoUrl);
-    try {
-      if (isEditing) {
-        await updateLesson.mutateAsync({
+    const data = isRecordedVideo
+      ? ({
+          courseId: slug as string,
+          sectionIdentity: sectionId,
+          lessonIdentity: item?.id,
+          type: LessonType.RecordedVideo,
+          name: values?.name,
+          videoUrl,
+        } as ILessonRecording)
+      : ({
           courseId: slug as string,
           sectionIdentity: sectionId,
           lessonIdentity: item?.id,
@@ -71,6 +82,9 @@ const AddLecture = ({
           ...values,
           videoUrl,
         } as ILessonLecture);
+    try {
+      if (isEditing) {
+        await updateLesson.mutateAsync(data);
         setIsEditing(false);
       } else {
         await lesson.mutateAsync({
@@ -83,7 +97,7 @@ const AddLecture = ({
       }
       showNotification({
         title: "Success!",
-        message: `Lesson ${isEditing ? "Edited" : "Added"} successfully`,
+        message: `Lesson ${isEditing ? "edited" : "added"} successfully.`,
       });
       setAddLessonClick(true);
     } catch (error: any) {
@@ -111,10 +125,12 @@ const AddLecture = ({
               />
             </Grid.Col>
             <Grid.Col span={4}>
-              <Switch
-                label="Is Mandatory"
-                {...form.getInputProps("isMandatory")}
-              />
+              {!isRecordedVideo && (
+                <Switch
+                  label="Is Mandatory"
+                  {...form.getInputProps("isMandatory")}
+                />
+              )}
             </Grid.Col>
           </Grid>
           <Text size={"sm"} mt={10}>
@@ -122,15 +138,18 @@ const AddLecture = ({
           </Text>
           <LessonVideoUpload
             setUrl={setVideoUrl}
+            formContext={useFormContext}
             currentVideo={videoUrl}
             marginy={1}
           />
-          <Textarea
-            placeholder="Video's Description"
-            label="Video Description"
-            mb={10}
-            {...form.getInputProps("description")}
-          />
+          {!isRecordedVideo && (
+            <Textarea
+              placeholder="Video's Description"
+              label="Video Description"
+              my={form.errors["videoUrl"] ? 20 : 10}
+              {...form.getInputProps("description")}
+            />
+          )}
           <Group position="left" mt="md">
             <Button
               type="submit"

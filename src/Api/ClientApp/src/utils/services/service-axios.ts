@@ -109,7 +109,7 @@ function handleRefreshToken(refreshToken: string) {
   isRefreshing = true;
 
   axios
-    .post(`${baseURL}${api.auth.refreshToken}`, { token: refreshToken })
+    .post(`${api.auth.refreshToken}`, { token: refreshToken })
     .then((res) => {
       const { token } = res.data;
 

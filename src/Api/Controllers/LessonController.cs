@@ -131,9 +131,9 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="identity"> the lesson identity </param>
         /// <param name="userId"> the user id </param>
-        /// <returns> the instance of <see cref="MeetingReportResponseModel" />. </returns>
+        /// <returns> the list of  <see cref="MeetingReportResponseModel" />. </returns>
         [HttpGet("{lessonidentity}/meetingreport/{userId}")]
-        public async Task<MeetingReportResponseModel> MeetingReport(string identity, string lessonidentity, string userId)
+        public async Task<IList<MeetingReportResponseModel>> MeetingReport(string identity, string lessonidentity, string userId)
         {
             var report = await _lessonService.GetMeetingReportAsync(identity, lessonidentity, userId, CurrentUser.Id).ConfigureAwait(false);
             return report;

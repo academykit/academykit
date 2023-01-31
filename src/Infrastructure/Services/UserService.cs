@@ -20,6 +20,7 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
+    using MimeKit;
     using System;
     using System.Globalization;
     using System.IdentityModel.Tokens.Jwt;
@@ -268,53 +269,67 @@
         {
             try
             {
-               var users = new List<UserImportDto>();
+
+                 MimeTypes.TryGetExtension(file.ContentType, out var extension);
+                 if (extension != ".csv")
+                 {
+                    throw new ArgumentException("File extension should be csv format");
+                  }
+                var users = new List<UserImportDto>();
                 using (var reader = new StreamReader(file.OpenReadStream()))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
-                    while(csv.Read())
+                    while (csv.Read())
                     {
-                       var user = csv.GetRecord<UserImportDto>();
+                        var user = csv.GetRecord<UserImportDto>();
                         users.Add(user);
                     }
-
                 }
                 var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
-               if(users.Count != default)
-               {
-                  var newUsers = new List<User>();
-                  var userEmails = new List<UserEmailDto>();
-                  foreach(var user in users)
-                  {
-                     var userEntity = new User()
+                if (users.Count != default)
+                {
+
+                    var userEmails = users.ConvertAll(x => x.Email);
+                    var duplicateUser = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: p => userEmails.Contains(p.Email), selector: x => x.Email).ConfigureAwait(false);
+                    var newUsersList = users.Where(x => !duplicateUser.Contains(x.Email)).ToList();
+                    var newUsers = new List<User>();
+                    var newUserEmails = new List<UserEmailDto>();
+                    if (newUsersList.Count != default)
                     {
-                        Id = Guid.NewGuid(),
-                        FirstName = user.FirstName,
-                        MiddleName = user.MiddleName,
-                        LastName = user.LastName,
-                        Email = user.Email,
-                        MobileNumber = user.MobileNumber,
-                        Role = System.Enum.Parse<UserRole>(user.Role),
-                        CreatedBy = currentUserId,
-                        CreatedOn = DateTime.UtcNow
-                     };
-                     var password = await GenerateRandomPassword(8).ConfigureAwait(false);
-                     userEntity.HashPassword = HashPassword(password);
+                        foreach (var user in newUsersList)
+                        {
+                            var userEntity = new User()
+                            {
+                                Id = Guid.NewGuid(),
+                                FirstName = user.FirstName,
+                                MiddleName = user.MiddleName,
+                                LastName = user.LastName,
+                                Email = user.Email,
+                                IsActive = true,
+                                Profession = user.Profession,
+                                MobileNumber = user.MobileNumber,
+                                Role = Enum.Parse<UserRole>(user.Role),
+                                CreatedBy = currentUserId,
+                                CreatedOn = DateTime.UtcNow
+                            };
+                            var password = await GenerateRandomPassword(8).ConfigureAwait(false);
+                            userEntity.HashPassword = HashPassword(password);
 
-                     var userEmailDto = new UserEmailDto{
-                        FullName = userEntity.FullName,
-                        Email = userEntity.Email,
-                        Password = password,
-                        CompanyName = company.CompanyName
-                     };
-                     newUsers.Add(userEntity);
-                     userEmails.Add(userEmailDto);
-                  }
-
-               //   await _unitOfWork.GetRepository<User>().InsertAsync(newUsers).ConfigureAwait(false);
-                  await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                  BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailImportedUserAsync(userEmails,null));
-               }
+                            var userEmailDto = new UserEmailDto
+                            {
+                                FullName = userEntity.FullName,
+                                Email = userEntity.Email,
+                                Password = password,
+                                CompanyName = company.CompanyName
+                            };
+                            newUsers.Add(userEntity);
+                            newUserEmails.Add(userEmailDto);
+                        }
+                        await _unitOfWork.GetRepository<User>().InsertAsync(newUsers).ConfigureAwait(false);
+                        await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                        BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailImportedUserAsync(newUserEmails, null));
+                    }
+                }
             }
             catch (Exception ex)
             {

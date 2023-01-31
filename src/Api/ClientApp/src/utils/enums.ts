@@ -31,6 +31,9 @@ export enum FeedbackType {
 export enum ReadableEnum {
   SingleChoice = "Single Choice",
   MultipleChoice = "Multiple Choice",
+  LiveClass = "Live Class",
+  RecordedVideo= "Recordings"
+
 }
 
 export enum LessonType {
@@ -62,7 +65,7 @@ export const CourseUserStatusValue = {
   [CourseUserStatus.Author]: "Author",
   [CourseUserStatus.Enrolled]: "Enrolled",
   [CourseUserStatus.NotEnrolled]: "Not Enrolled",
-  [CourseUserStatus.Teacher]: "Teacher",
+  [CourseUserStatus.Teacher]: "Trainer",
 };
 
 export enum EFileStorageType {
