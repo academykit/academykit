@@ -1,7 +1,7 @@
 import { ActionIcon, Box, createStyles, Flex, Group } from "@mantine/core";
 import fscreen from "fscreen";
 import "rc-slider/assets/index.css";
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import ReactPlayer, { Config, ReactPlayerProps } from "react-player";
 import PlayerIcon from "./controls/PlayerIcon";
 import RemainingTimeDisplay from "./controls/RemaningTimeDisplay";
@@ -96,6 +96,9 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
   const togglePlay = () => {
     setPlaying(!playing);
   };
+  useEffect(() => {
+    setPip(pip);
+  }, [pip]);
 
   const seek = (value: number) => {
     setPlayed(value / 100);
@@ -196,16 +199,6 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
       setInFullscreenMode(true);
     }
   };
-
-  // React.useEffect(() => {
-  //   const handleRouteChange = () => {
-  //     setPlaying(false);
-  //   };
-  //   router.events.on("routeChangeStart", handleRouteChange);
-  //   return () => {
-  //     router.events.off("routeChangeStart", handleRouteChange);
-  //   };
-  // }, [router.events, setCurrentPlayerState]);
   return (
     <Box
       ref={wrapperElement}
