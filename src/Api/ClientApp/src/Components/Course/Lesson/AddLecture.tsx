@@ -134,7 +134,6 @@ const AddLecture = ({
             Video <span style={{ color: "red" }}>*</span>
           </Text>
           <LessonVideoUpload
-            setUrl={setVideoUrl}
             formContext={useFormContext}
             currentVideo={videoUrl}
             marginy={1}

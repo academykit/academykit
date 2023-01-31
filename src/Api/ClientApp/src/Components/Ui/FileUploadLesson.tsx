@@ -5,6 +5,7 @@ import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import { Box, Text } from "@mantine/core";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import FilePondPluginImageValidateSize from "filepond-plugin-image-validate-size";
 import {
   FileAccess,
   uploadFile,
@@ -15,7 +16,8 @@ import { UseFormReturnType } from "@mantine/form";
 registerPlugin(
   FilePondPluginImageExifOrientation,
   FilePondPluginImagePreview,
-  FilePondPluginFileValidateType
+  FilePondPluginFileValidateType,
+  FilePondPluginImageValidateSize
 );
 
 const FileUploadLesson = ({

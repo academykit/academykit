@@ -11,6 +11,7 @@ import {
   useDeleteSignature,
   useEditSignature,
 } from "@utils/services/courseService";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
@@ -34,8 +35,14 @@ const CreateSignature = ({
   const createCertificate = useAddSignature(id as string);
   const deleteSignature = useDeleteSignature(id as string);
   const editSignature = useEditSignature(id as string);
-
+  const [signatureUrl, setSignatureUrl] = useState(data?.fileUrl ?? "");
   const [confirmDelete, setConfirmDelete] = useToggle();
+
+  const form = useForm({
+    initialValues: data,
+    validate: yupResolver(schema),
+  });
+  const edit = !!form.values.id;
 
   const handleSubmit = async (data: IGetSignature) => {
     try {
@@ -89,12 +96,6 @@ const CreateSignature = ({
     setConfirmDelete();
   };
 
-  const form = useForm({
-    initialValues: data,
-    validate: yupResolver(schema),
-  });
-  const edit = !!form.values.id;
-
   return (
     <FormProvider form={form}>
       {data && (
@@ -132,7 +133,7 @@ const CreateSignature = ({
             formContext={useFormContext}
             label="Signature"
             FormField={`fileUrl`}
-            currentThumbnail={form.values.fileUrl}
+            currentThumbnail={signatureUrl}
             width="48.5%"
           />
           <Group mt={30}>
