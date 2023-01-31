@@ -69,7 +69,6 @@ const LessonVideoUpload = ({
             try {
               const res = await uploadVideo(file as File, FileAccess.Private);
               load(res.data);
-              setUrl(() => res.data);
               form.setFieldValue("videoUrl", res.data);
             } catch (e) {
               error("Unable to upload file");

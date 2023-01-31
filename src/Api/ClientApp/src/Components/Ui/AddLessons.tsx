@@ -25,20 +25,32 @@ const LessonAddList = ({
           setAddState={setAddState}
           isEditing={false}
           setAddLessonClick={setAddLessonClick}
+          setIsEditing={() => {}}
         />
       );
       break;
     case "mcq":
-      returnDiv = <AddExam setAddState={setAddState} sectionId={sectionId} />;
+      returnDiv = (
+        <AddExam
+          setIsEditing={() => {}}
+          setAddState={setAddState}
+          sectionId={sectionId}
+        />
+      );
       break;
     case "assignment":
       returnDiv = (
-        <AddAssignment setAddState={setAddState} sectionId={sectionId} />
+        <AddAssignment
+          setIsEditing={() => {}}
+          setAddState={setAddState}
+          sectionId={sectionId}
+        />
       );
       break;
     case "meeting":
       returnDiv = (
         <AddMeeting
+          setIsEditing={() => {}}
           setAddState={setAddState}
           sectionId={sectionId}
           setAddLessonClick={setAddLessonClick}
@@ -48,12 +60,17 @@ const LessonAddList = ({
       break;
     case "feedback":
       returnDiv = (
-        <AddFeedback setAddState={setAddState} sectionId={sectionId} />
+        <AddFeedback
+          setIsEditing={() => {}}
+          setAddState={setAddState}
+          sectionId={sectionId}
+        />
       );
       break;
     case "document":
       returnDiv = (
         <AddDocument
+          setIsEditing={() => {}}
           setAddState={setAddState}
           sectionId={sectionId}
           setAddLessonClick={setAddLessonClick}

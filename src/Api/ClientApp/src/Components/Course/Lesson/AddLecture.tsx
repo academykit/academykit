@@ -64,7 +64,6 @@ const AddLecture = ({
   });
 
   const handleSubmit = async (values: any) => {
-    form.setFieldValue("videoUrl", videoUrl);
     const data = isRecordedVideo
       ? ({
           courseId: slug as string,
@@ -80,7 +79,6 @@ const AddLecture = ({
           lessonIdentity: item?.id,
           type: LessonType.Video,
           ...values,
-          videoUrl,
         } as ILessonLecture);
     try {
       if (isEditing) {
@@ -92,7 +90,6 @@ const AddLecture = ({
           sectionIdentity: sectionId,
           type: LessonType.Video,
           ...values,
-          videoUrl,
         } as ILessonLecture);
       }
       showNotification({
