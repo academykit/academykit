@@ -25,24 +25,12 @@ registerPlugin(
 );
 
 type IProps = {
-  formContext: () => UseFormReturnType<any, (values: any) => any>;
   label?: string;
-  formField?: string;
   url?: string | null;
-  onRemoveSuccess: Function;
-  onUploadSuccess: Function;
+  formContext: () => UseFormReturnType<any, (values: any) => any>;
 };
 
-const AvatarEditor = ({
-  formContext,
-  label = "files",
-  formField = "imageUrl",
-  url,
-  onRemoveSuccess,
-  onUploadSuccess,
-}: IProps) => {
-  const form = formContext();
-  const [files, setFiles] = useState<any>([]);
+const AvatarEditor = ({ label = "files", url, formContext }: IProps) => {
   useEffect(() => {
     if (url) {
       setFiles([
@@ -55,12 +43,10 @@ const AvatarEditor = ({
       ]);
     }
   }, [url]);
-  const handleToRemoveImage = (errRes: any, file: any) => {
-    setFiles([]);
-    if (errRes == null) {
-      onRemoveSuccess();
-    }
-  };
+
+  const form = formContext();
+
+  const [files, setFiles] = useState<any>([]);
   return (
     <div style={{ maxWidth: 200 }}>
       <FilePond
@@ -68,7 +54,7 @@ const AvatarEditor = ({
         imageCropAspectRatio="1:1"
         styleLoadIndicatorPosition="center bottom"
         instantUpload={true}
-        onremovefile={(errRes, file) => handleToRemoveImage(errRes, file)}
+        onremovefile={() => form.setFieldValue("imageUrl", "")}
         acceptedFileTypes={["image/png", "image/jpeg", "image/gif"]}
         // imageValidateSizeMinWidth={639}
         // imageValidateSizeMinHeight={359}
@@ -97,9 +83,7 @@ const AvatarEditor = ({
             try {
               const res = await uploadFile(file as File, FileAccess.Public);
               load(res.data);
-              if (onUploadSuccess) {
-                onUploadSuccess(res.data);
-              }
+              form.setFieldValue("imageUrl", res.data);
             } catch (e) {
               error("Unable to upload file");
             }

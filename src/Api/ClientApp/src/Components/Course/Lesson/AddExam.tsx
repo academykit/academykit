@@ -79,56 +79,33 @@ const AddExam = ({
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
 
-  const lessonDetails = useGetCourseLesson(
-    item?.courseId || "",
-    item?.id,
-    isEditing
-  );
   const [isMandatory, setIsMandatory] = useState<boolean>(false);
-  const course = lessonDetails.data;
 
-  useEffect(() => {
-    if (lessonDetails.isSuccess && isEditing) {
-      const data = course?.questionSet;
-      const startDateTime = moment(data?.startTime + "z")
+  const startDateTime = item?.startDate
+    ? moment(item?.startDate + "z")
         .local()
-        .toDate();
-      const endDateTime = moment(data?.endTime + "z")
+        .toDate()
+    : new Date();
+  const endDateTime = item?.endDate
+    ? moment(item?.endDate + "z")
         .local()
-        .toDate();
-
-      form.setValues({
-        name: course?.name ?? "",
-        description: data?.description ?? "",
-        negativeMarking: data?.negativeMarking ?? 0,
-        questionMarking: data?.questionMarking ?? 0,
-        passingWeightage: data?.passingWeightage ?? 1,
-        allowedRetake: data?.allowedRetake ?? 0,
-        duration: data?.duration ? data.duration / 60 : 1,
-        startTime: startDateTime,
-        startDate: startDateTime,
-        endDate: endDateTime,
-        endTime: endDateTime,
-        isMandatory: course?.isMandatory,
-      });
-      setIsMandatory(course?.isMandatory ?? false);
-    }
-  }, [lessonDetails.isSuccess]);
+        .toDate()
+    : new Date();
 
   const form = useForm({
     initialValues: {
-      name: "",
-      description: "",
-      negativeMarking: 0,
-      questionMarking: 1,
-      passingWeightage: 0,
-      allowedRetake: 0,
-      duration: 0,
-      endDate: new Date(),
-      endTime: new Date(),
-      startTime: new Date(),
-      startDate: new Date(),
-      isMandatory: false,
+      name: item?.name ?? "",
+      description: item?.description ?? "",
+      negativeMarking: item?.negativeMarking ?? 0,
+      questionMarking: item?.questionMarking ?? 1,
+      passingWeightage: item?.passingWeightage ?? 0,
+      allowedRetake: item?.allowedRetake ?? 0,
+      duration: item?.duration ? item?.duration / 60 : 1,
+      endDate: endDateTime,
+      endTime: endDateTime,
+      startTime: startDateTime,
+      startDate: startDateTime,
+      isMandatory: item?.isMandatory ?? false,
     },
     validate: yupResolver(schema),
   });

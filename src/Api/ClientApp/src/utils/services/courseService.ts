@@ -1,4 +1,4 @@
-import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   CourseLanguage,
   CourseStatus,
@@ -43,7 +43,7 @@ export interface ICourse {
 }
 
 const getCourse = async (search: string) =>
-  await httpClient.get<IPaginated<ICourse >>(api.course.list + `?${search}`);
+  await httpClient.get<IPaginated<ICourse>>(api.course.list + `?${search}`);
 
 export const useCourse = (search: string) =>
   useQuery([api.course.list, search], () => getCourse(search), {
@@ -51,17 +51,22 @@ export const useCourse = (search: string) =>
   });
 
 export interface IMyCourse extends ICourse {
-    percentage: number
-  }
+  percentage: number;
+}
 
-  const getMyCourse = async (userId:string,search: string) =>
-  await httpClient.get<IPaginated<IMyCourse>>(api.course.userList(userId) +`?${search}`);
+const getMyCourse = async (userId: string, search: string) =>
+  await httpClient.get<IPaginated<IMyCourse>>(
+    api.course.userList(userId) + `?${search}`
+  );
 
-export const useMyCourse = (userId:string, search:string) =>
-  useQuery([api.course.userList(userId), search], () => getMyCourse(userId,search), {
-    select: (data) => data.data,
-  });
-
+export const useMyCourse = (userId: string, search: string) =>
+  useQuery(
+    [api.course.userList(userId), search],
+    () => getMyCourse(userId, search),
+    {
+      select: (data) => data.data,
+    }
+  );
 
 const getCourseTeacher = async (course_id: string) =>
   await httpClient.get<IPaginated<ICreateCourseTeacher>>(
@@ -159,30 +164,30 @@ export const useCourseDescription = (id: string) =>
     retry: 2,
   });
 
-
-const lessonReorder = async ({id,data}: { id:string,data:{sectionIdentity:string,ids:string[]| undefined }}) =>
-  await httpClient.put(api.course.reorder(id),data);
-
+const lessonReorder = async ({
+  id,
+  data,
+}: {
+  id: string;
+  data: { sectionIdentity: string; ids: string[] | undefined };
+}) => await httpClient.put(api.course.reorder(id), data);
 
 export const useLessonReorder = (id: string) => {
-  const queryClient = useQueryClient()    
+  const queryClient = useQueryClient();
   return useMutation([], lessonReorder, {
-    onSuccess: ()=>queryClient.invalidateQueries([api.course.detail(id)])
-  })
-}
-  
+    onSuccess: () => queryClient.invalidateQueries([api.course.detail(id)]),
+  });
+};
 
-const sectionReorder = async ({id,data}: { id:string,data:string[]}) =>
-  await httpClient.put(api.course.reorderSection(id),data);
-
+const sectionReorder = async ({ id, data }: { id: string; data: string[] }) =>
+  await httpClient.put(api.course.reorderSection(id), data);
 
 export const useSectionReorder = (id: string) => {
-  const queryClient = useQueryClient()    
+  const queryClient = useQueryClient();
   return useMutation([], sectionReorder, {
-    onSuccess: ()=>queryClient.invalidateQueries([api.course.detail(id)])
-  })
-  }
-
+    onSuccess: () => queryClient.invalidateQueries([api.course.detail(id)]),
+  });
+};
 
 export const useUpdateCourse = (id: string) => {
   const queryClient = useQueryClient();
@@ -261,6 +266,12 @@ export interface ILessons {
   meetingId: string;
   meetingName: string;
   user: IUser;
+  startDate: string;
+  endDate: string;
+  negativeMarking: number;
+  questionMarking: number;
+  passingWeightage: number;
+  allowedRetake: number;
 }
 
 const createSection = async (data: { courseIdentity: string; name: string }) =>
@@ -329,7 +340,12 @@ export const useDeleteSection = (slug: string) => {
 };
 
 const createLesson = async (
-  data: ILessonLecture | ILessonMCQ | ILessonAssignment | ILessonMeeting | ILessonFeedback
+  data:
+    | ILessonLecture
+    | ILessonMCQ
+    | ILessonAssignment
+    | ILessonMeeting
+    | ILessonFeedback
 ) => {
   return await httpClient.post(api.lesson.addLesson(data.courseId), data);
 };
@@ -344,7 +360,12 @@ export const useCreateLesson = (slug: string) => {
 };
 
 const updateLesson = async (
-  data: ILessonLecture | ILessonMCQ | ILessonAssignment | ILessonMeeting | ILessonFeedback
+  data:
+    | ILessonLecture
+    | ILessonMCQ
+    | ILessonAssignment
+    | ILessonMeeting
+    | ILessonFeedback
 ) => {
   return await httpClient.put(
     api.lesson.updateLesson(data.courseId, data.lessonIdentity),
@@ -378,15 +399,19 @@ export const useDeleteLesson = (slug: string) => {
 };
 
 // courses status
-const courseStatus = async (data: { identity: string; status: CourseStatus, message? : string }) => {
-  return await httpClient.patch(api.course.status,data);
+const courseStatus = async (data: {
+  identity: string;
+  status: CourseStatus;
+  message?: string;
+}) => {
+  return await httpClient.patch(api.course.status, data);
 };
 export const useCourseStatus = (id: string, search: string) => {
   const queryClient = useQueryClient();
   return useMutation([api.course.enroll(id)], courseStatus, {
     onSuccess: () => {
       queryClient.invalidateQueries([api.course.detail(id)]);
-      queryClient.invalidateQueries([api.course.list, search])
+      queryClient.invalidateQueries([api.course.list, search]);
     },
   });
 };
@@ -484,8 +509,8 @@ export interface ICourseLesson {
   remainingAttempt: number;
   hasReviewedAssignment: boolean;
   assignmentReview?: ICourseLessonAssignmentReview;
-  assignmentExpired: boolean
-  startDate: string
+  assignmentExpired: boolean;
+  startDate: string;
 }
 
 const getCourseLesson = async (
@@ -510,9 +535,7 @@ export const useGetCourseLesson = (
       },
       enabled,
       retry: 0,
-      onError: (err) => {
-        
-      },
+      onError: (err) => {},
       refetchOnMount: false,
       refetchOnWindowFocus: false,
     }
@@ -609,15 +632,16 @@ const addCertificate = ({
   return httpClient.post(api.course.addCertificateDetails(id), data);
 };
 export const useAddCertificate = (courseId: string) => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   return useMutation(
     [api.course.addCertificateDetails(courseId)],
     addCertificate,
     {
-      onSuccess : () => {
-        queryClient.invalidateQueries([api.course.getCertificateDetails(courseId)])
-
-      }
+      onSuccess: () => {
+        queryClient.invalidateQueries([
+          api.course.getCertificateDetails(courseId),
+        ]);
+      },
     }
   );
 };
