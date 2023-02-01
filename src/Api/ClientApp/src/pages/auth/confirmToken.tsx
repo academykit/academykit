@@ -2,7 +2,7 @@ import {
   TextInput,
   PasswordInput,
   Paper,
-  Title,
+  Image,
   Container,
   Button,
   Center,
@@ -32,6 +32,7 @@ import RoutePath from "@utils/routeConstants";
 import { useTimeout, useToggle } from "@mantine/hooks";
 import { AxiosResponse } from "axios";
 import errorType from "@utils/services/axiosError";
+import { useCompanySetting } from "@utils/services/adminService";
 
 const ConfirmToken = () => {
   const location = useLocation();
@@ -111,11 +112,50 @@ const ConfirmToken = () => {
     }
   }, [auth?.auth]);
 
+  const companySettings = useCompanySetting();
+
+  const setHeader = () => {
+    const info =
+      localStorage.getItem("app-info") &&
+      JSON.parse(localStorage.getItem("app-info") ?? "");
+    if (info) {
+      let link = document.querySelector("link[rel~='icon']");
+      document.title = info.name;
+      if (!link) {
+        link = document.createElement("link");
+        // @ts-ignore
+        link.rel = "icon";
+        document.getElementsByTagName("head")[0].appendChild(info.logo);
+      }
+      // @ts-ignore
+      link.href = info.logo;
+    }
+  };
+
+  useEffect(() => {
+    setHeader();
+
+    if (companySettings.isSuccess) {
+      localStorage.setItem(
+        "app-info",
+        JSON.stringify({
+          name: companySettings.data.data.name,
+          logo: companySettings.data.data.imageUrl,
+        })
+      );
+      setHeader();
+    }
+  }, [companySettings.isSuccess]);
+
   return (
     <Container size={470} my={40} sx={{ position: "relative" }}>
       <Center m={"lg"}>
         <Link to={"/"}>
-          <Logo />
+          <Image
+            height={100}
+            width={100}
+            src={companySettings?.data?.data?.imageUrl}
+          ></Image>
         </Link>
       </Center>
 

@@ -126,7 +126,7 @@ const GeneralSettings = () => {
             placeholder="Your mail signature"
             {...form.getInputProps("emailSignature")}
           />
-          <Button mt={10} type="submit">
+          <Button mt={10} type="submit" loading={updateGeneral.isLoading}>
             Submit
           </Button>
         </Container>

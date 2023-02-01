@@ -15,6 +15,7 @@ import { LayoutProvider } from "@context/LayoutProvider";
 import ErrorBoundary from "@components/ErrorBoundry";
 import { BrowserRouter } from "react-router-dom";
 import ScrollToTop from "@components/ScrollToTop";
+import "./App.css";
 
 const App = () => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>(

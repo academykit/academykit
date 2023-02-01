@@ -114,6 +114,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
       JSON.parse(localStorage.getItem("app-info") ?? "");
     if (info) {
       let link = document.querySelector("link[rel~='icon']");
+      document.title = info.name;
       if (!link) {
         link = document.createElement("link");
         // @ts-ignore

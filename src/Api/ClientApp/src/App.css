@@ -1,0 +1,7 @@
+.filepond--file-info .filepond--file-info-sub {
+    display: none;
+  }
+  
+  .filepond--file-status-sub {
+    visibility: hidden;
+  }
