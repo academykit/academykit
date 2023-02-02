@@ -5,7 +5,7 @@ import moment from "moment";
 const Meetings = ({ data }: { data: ICourseLesson }) => {
   const EndTime = moment
     .utc(data.meeting.startDate)
-    .add(data.meeting.duration, "minutes");
+    .add(data.meeting.duration, "seconds");
   const StartTime = moment.utc(data.meeting.startDate);
   return (
     <Group px={40} sx={{ flexDirection: "column" }}>

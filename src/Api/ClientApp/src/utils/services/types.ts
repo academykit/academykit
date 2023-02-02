@@ -80,8 +80,6 @@ export interface ILessonMCQ extends ILessons {
 export interface ILessonAssignment extends ILessons {
   name: string;
   description: string;
-  startDate? : string;
-  endDate?: string;
 }
 
 export interface ILessonFeedback extends ILessons {
@@ -100,5 +98,5 @@ export interface ILessonMeeting extends ILessons {
     meetingDuration: number;
     zoomLicenseId: string;
   };
-  description?: string
+  description?: string;
 }
