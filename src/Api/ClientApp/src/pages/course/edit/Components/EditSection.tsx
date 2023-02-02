@@ -97,25 +97,27 @@ const AddSectionForm = ({ slug }: { slug: string }) => {
   return (
     <form
       onSubmit={form.onSubmit(async (values) => {
-        try {
-          const data = await addSection.mutateAsync({
-            name: values.name,
-            courseIdentity: slug,
-          });
-          section?.setActiveSection(data.data.slug);
-          section?.setIsAddSection(!section?.isAddSection);
-          showNotification({
-            message: "Section Added successfully!",
-          });
-        } catch (error) {
-          const err = errorType(error);
-          showNotification({
-            message: err,
-            color: "red",
-            title: "Error!",
-          });
+        if (!addSection.isLoading) {
+          try {
+            const data = await addSection.mutateAsync({
+              name: values.name,
+              courseIdentity: slug,
+            });
+            section?.setActiveSection(data.data.slug);
+            section?.setIsAddSection(!section?.isAddSection);
+            showNotification({
+              message: "Section Added successfully!",
+            });
+          } catch (error) {
+            const err = errorType(error);
+            showNotification({
+              message: err,
+              color: "red",
+              title: "Error!",
+            });
+          }
+          form.reset();
         }
-        form.reset();
       })}
     >
       <InlineInput
