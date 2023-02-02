@@ -63,7 +63,11 @@ const AddMeeting = ({
     isEditing
   );
 
-  const updateLesson = useUpdateLesson(slug as string);
+  const updateLesson = useUpdateLesson(
+    slug as string,
+    item?.courseId,
+    item?.id
+  );
 
   useEffect(() => {
     if (lessonDetails.isSuccess && isEditing) {
@@ -120,7 +124,9 @@ const AddMeeting = ({
   const handleSubmit = async (values: any) => {
     const meeting = {
       ...values,
-      meetingStartDate: new Date(dateTime).toISOString(),
+      meetingStartDate: isEditing
+        ? new Date(values?.meetingStartTime).toISOString()
+        : new Date(dateTime).toISOString(),
     };
     delete meeting.isMandatory;
     delete meeting.meetingStartTime;

@@ -373,12 +373,19 @@ const updateLesson = async (
   );
 };
 
-export const useUpdateLesson = (courseIdentity: string) => {
+export const useUpdateLesson = (
+  courseIdentity: string,
+  courseId?: string,
+  lessonId?: string
+) => {
   const queryClient = useQueryClient();
 
   return useMutation(["update" + api.lesson.common], updateLesson, {
     onSuccess: () => {
       queryClient.invalidateQueries([api.lesson.courseLesson(courseIdentity)]);
+      queryClient.invalidateQueries([
+        api.lesson.courseLesson(courseId ?? "", lessonId),
+      ]);
       queryClient.invalidateQueries([api.course.detail(courseIdentity)]);
     },
   });

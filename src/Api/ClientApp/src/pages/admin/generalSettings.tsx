@@ -12,6 +12,17 @@ import errorType from "@utils/services/axiosError";
 import useAuth from "@hooks/useAuth";
 import { PHONE_VALIDATION } from "@utils/constants";
 
+const schema = Yup.object().shape({
+  companyName: Yup.string().required("Company Name is required."),
+  companyAddress: Yup.string().required("Company Address required."),
+  companyContactNumber: Yup.string().nullable().matches(PHONE_VALIDATION, {
+    message: "Please enter valid phone number.",
+    excludeEmptyString: true,
+  }),
+  emailSignature: Yup.string().required("Signature is required."),
+  logoUrl: Yup.string().required("Company Logo is required!"),
+});
+
 interface ICompanySettings {
   thumbnail?: string;
   companyName: string;
@@ -39,15 +50,6 @@ const GeneralSettings = () => {
     });
   }, [generalSettings.isSuccess]);
 
-  const schema = Yup.object().shape({
-    companyName: Yup.string().required("Company Name is required."),
-    companyAddress: Yup.string().required("Company Address required."),
-    companyContactNumber: Yup.string().nullable().matches(PHONE_VALIDATION, {
-      message: "Please enter valid phone number.",
-      excludeEmptyString: true,
-    }),
-    emailSignature: Yup.string().required("Signature is required."),
-  });
   const form = useForm({
     initialValues: {
       logoUrl: "",
@@ -85,7 +87,7 @@ const GeneralSettings = () => {
             marginLeft: "0px",
           }}
         >
-          Company Logo
+          Company Logo <sup style={{ color: "red" }}>*</sup>
           <ThumbnailEditor
             formContext={useFormContext}
             label="image"
