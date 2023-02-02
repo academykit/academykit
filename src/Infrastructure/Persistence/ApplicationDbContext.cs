@@ -177,6 +177,9 @@
                 },
                 new Setting{
                     Key = "Server_EndPoint",
+                },
+                new Setting{
+                    Key = "Server_PresignedUrl",
                 }
             );
             base.OnModelCreating(builder);
