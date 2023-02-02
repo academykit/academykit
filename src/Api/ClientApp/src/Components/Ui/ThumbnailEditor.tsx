@@ -31,8 +31,6 @@ const ThumbnailEditor = ({
   currentThumbnail,
   width,
 }: IProps) => {
-  const form = formContext();
-  const [files, setFiles] = useState<any>([]);
   useEffect(() => {
     if (currentThumbnail) {
       setFiles([
@@ -45,6 +43,8 @@ const ThumbnailEditor = ({
       ]);
     }
   }, [currentThumbnail]);
+  const form = formContext();
+  const [files, setFiles] = useState<any>([]);
 
   return (
     <div
@@ -74,10 +74,7 @@ const ThumbnailEditor = ({
         maxFiles={1}
         credits={false}
         server={{
-          remove: () => {
-            setFiles([]);
-            form.setFieldValue(FormField, "");
-          },
+          remove: null,
           revert: null,
           //processing a file
           process: async (

@@ -7,21 +7,20 @@ import { Box, Text } from "@mantine/core";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import { FileAccess, uploadVideo } from "@utils/services/fileService";
 import { UseFormReturnType } from "@mantine/form";
-import "./LessonVideoUpload.css";
+import FilePondPluginImageValidateSize from "filepond-plugin-image-validate-size";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
   FilePondPluginImagePreview,
-  FilePondPluginFileValidateType
+  FilePondPluginFileValidateType,
+  FilePondPluginImageValidateSize
 );
 
 const LessonVideoUpload = ({
-  setUrl,
   currentVideo,
   marginy = 10,
   formContext,
 }: {
-  setUrl: Function;
   currentVideo?: string;
   marginy?: number;
   formContext: () => UseFormReturnType<any, (values: any) => any>;
@@ -40,6 +39,7 @@ const LessonVideoUpload = ({
   }, [currentVideo]);
   const form = formContext();
   const [files, setFiles] = useState<any>([]);
+
   return (
     <Box my={marginy} sx={{ maxWidth: 470 }} pos="relative">
       <FilePond
@@ -69,7 +69,6 @@ const LessonVideoUpload = ({
             try {
               const res = await uploadVideo(file as File, FileAccess.Private);
               load(res.data);
-              setUrl(() => res.data);
               form.setFieldValue("videoUrl", res.data);
             } catch (e) {
               error("Unable to upload file");

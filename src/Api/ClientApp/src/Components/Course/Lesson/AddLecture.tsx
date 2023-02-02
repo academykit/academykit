@@ -64,7 +64,6 @@ const AddLecture = ({
   });
 
   const handleSubmit = async (values: any) => {
-    form.setFieldValue("videoUrl", videoUrl);
     const data = isRecordedVideo
       ? ({
           courseId: slug as string,
@@ -80,7 +79,6 @@ const AddLecture = ({
           lessonIdentity: item?.id,
           type: LessonType.Video,
           ...values,
-          videoUrl,
         } as ILessonLecture);
     try {
       if (isEditing) {
@@ -92,7 +90,6 @@ const AddLecture = ({
           sectionIdentity: sectionId,
           type: LessonType.Video,
           ...values,
-          videoUrl,
         } as ILessonLecture);
       }
       showNotification({
@@ -118,8 +115,10 @@ const AddLecture = ({
             <Grid.Col span={12} lg={8}>
               <TextInput
                 sx={{ width: "100%" }}
-                label="Video Name"
-                placeholder="Video Name"
+                label={isRecordedVideo ? "Recording's Name" : "Video Name"}
+                placeholder={
+                  isRecordedVideo ? "Recording's Name" : "Video Name"
+                }
                 withAsterisk
                 {...form.getInputProps("name")}
               />
@@ -134,22 +133,25 @@ const AddLecture = ({
             </Grid.Col>
           </Grid>
           <Text size={"sm"} mt={10}>
-            Video <span style={{ color: "red" }}>*</span>
+            {isRecordedVideo ? "Recordings" : "Video"}{" "}
+            <span style={{ color: "red" }}>*</span>
           </Text>
           <LessonVideoUpload
-            setUrl={setVideoUrl}
             formContext={useFormContext}
             currentVideo={videoUrl}
             marginy={1}
           />
-          {!isRecordedVideo && (
-            <Textarea
-              placeholder="Video's Description"
-              label="Video Description"
-              my={form.errors["videoUrl"] ? 20 : 10}
-              {...form.getInputProps("description")}
-            />
-          )}
+          <Textarea
+            placeholder={
+              isRecordedVideo ? "Recording's Description" : "Video Description"
+            }
+            label={
+              isRecordedVideo ? "Recording's Description" : "Video Description"
+            }
+            my={form.errors["videoUrl"] ? 20 : 10}
+            {...form.getInputProps("description")}
+          />
+
           <Group position="left" mt="md">
             <Button
               type="submit"

@@ -50,6 +50,7 @@ const schema = Yup.object().shape({
 const UserInfo = () => {
   const userId = localStorage.getItem("id");
   const { data, isLoading, isSuccess } = useReAuth();
+  const [imageURL, setImageURL] = useState(data?.imageUrl ?? "");
 
   const formData = useForm({
     initialValues: {
@@ -67,24 +68,6 @@ const UserInfo = () => {
     },
     validate: yupResolver(schema),
   });
-  const updateUser = useUpdateUser(userId as string);
-  const [imageURL, setImageURL] = useState(data?.imageUrl ?? "");
-  const navigator = useNavigate();
-  const handleSubmit = async (data: FormValues) => {
-    try {
-      const withImage = { ...data };
-      withImage.imageUrl = imageURL;
-      await updateUser.mutateAsync({ id: userId as string, data: withImage });
-      navigator(`/userProfile/${userId as string}`);
-      showNotification({
-        title: "Successful",
-        message: "Profile Successfully Updated.",
-      });
-    } catch (err) {
-      const error = errorType(err);
-      showNotification({ message: error, title: "Error!", color: "red" });
-    }
-  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -105,6 +88,24 @@ const UserInfo = () => {
     }
   }, [isSuccess]);
 
+  const updateUser = useUpdateUser(userId as string);
+  const navigator = useNavigate();
+  const handleSubmit = async (data: FormValues) => {
+    try {
+      const withImage = { ...data };
+      withImage.imageUrl = imageURL;
+      await updateUser.mutateAsync({ id: userId as string, data });
+      navigator(`/userProfile/${userId as string}`);
+      showNotification({
+        title: "Successful",
+        message: "Profile Successfully Updated.",
+      });
+    } catch (err) {
+      const error = errorType(err);
+      showNotification({ message: error, title: "Error!", color: "red" });
+    }
+  };
+
   return (
     <Paper shadow={"xl"} radius="md" p="xl" withBorder>
       Profile Section
@@ -118,16 +119,9 @@ const UserInfo = () => {
       <FormProvider form={formData}>
         <form onSubmit={formData.onSubmit(handleSubmit)}>
           <AvatarEditor
-            formContext={useFormContext}
             url={imageURL}
             label={"image"}
-            onUploadSuccess={(imageURLUp: string) => {
-              setImageURL(imageURLUp);
-              formData.setFieldValue("imageUrl", imageURLUp);
-            }}
-            onRemoveSuccess={() => {
-              formData.setFieldValue("imageUrl", null);
-            }}
+            formContext={useFormContext}
           />
 
           <Grid>
