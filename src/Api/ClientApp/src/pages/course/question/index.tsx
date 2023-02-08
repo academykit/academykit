@@ -86,7 +86,7 @@ const Questions = () => {
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.sm}px)`);
   const questionPools = usePools("");
   const questionPoolTags = useTags("");
-  const questions = useQuestion(poolValue ?? "", "");
+  const questions = useQuestion(poolValue ?? "", "", 1000);
   const addQuestions = useAddQuestionQuestionSet(lessonSlug as string);
   const navigate = useNavigate();
 
