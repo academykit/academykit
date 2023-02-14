@@ -427,6 +427,8 @@ namespace Lingtren.Infrastructure.Services
                     existing.QuestionSet = new QuestionSet();
                     existing.QuestionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(predicate: p => p.Id == existing.QuestionSetId).ConfigureAwait(false);
                     existing.Duration = model.QuestionSet.Duration * 60; //convert duration from minutes to seconds;
+                    existing.QuestionSet.StartTime = model.QuestionSet.StartTime;
+                    existing.QuestionSet.EndTime = model.QuestionSet.EndTime;
                     await UpdateQuestionSetAsync(model, existing).ConfigureAwait(false);
                 }
 

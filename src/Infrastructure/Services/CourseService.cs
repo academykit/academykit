@@ -593,7 +593,7 @@ namespace Lingtren.Infrastructure.Services
                 course.Sections = new List<Section>();
                 course.Sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
                     predicate: p => p.CourseId == course.Id && !p.IsDeleted,
-                    include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
+                    include: src => src.Include(x => x.Lessons).ThenInclude(p => p.QuestionSet)).ConfigureAwait(false);
 
                 course.CourseTags = new List<CourseTag>();
                 course.CourseTags = await _unitOfWork.GetRepository<CourseTag>().GetAllAsync(
