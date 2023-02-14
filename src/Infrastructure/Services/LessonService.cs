@@ -657,18 +657,21 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var isModerator = course.CreatedBy == currentUserId || lesson.CreatedBy == currentUserId || course.CourseTeachers.Any(x => x.UserId == currentUserId);
-
-                //validate user is enroll in the course or not
-                if (!isModerator)
+                var hasAccess =await IsSuperAdminOrAdmin(currentUserId);
+                if(!hasAccess)
                 {
-                    var isMember = course.CourseEnrollments.Any(x => x.UserId == currentUserId && !x.IsDeleted
-                                    && (x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled));
-                    if (!isMember)
+                    if(!isModerator)
                     {
-                        _logger.LogWarning("User with id : {currentUserId} is invalid user to attend this meeting having lesson with id :{id}.", currentUserId, lesson.Id);
-                        throw new ForbiddenException("You are not allowed to access this meeting.");
+                        var isMember = course.CourseEnrollments.Any(x => x.UserId == currentUserId && !x.IsDeleted
+                                    && (x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled));
+                        if (!isMember)
+                        {
+                            _logger.LogWarning("User with id : {currentUserId} is invalid user to attend this meeting having lesson with id :{id}.", currentUserId, lesson.Id);
+                            throw new ForbiddenException("You are not allowed to access this meeting.");
+                        }
                     }
                 }
+               
 
                 var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
                 if (zoomSetting == null)
