@@ -292,6 +292,7 @@
                     var userEmails = users.ConvertAll(x => x.Email);
                     var duplicateUser = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: p => userEmails.Contains(p.Email), selector: x => x.Email).ConfigureAwait(false);
                     var newUsersList = users.Where(x => !duplicateUser.Contains(x.Email)).ToList();
+                    newUsersList = newUsersList.DistinctBy(x => x.Email).ToList();
                     var newUsers = new List<User>();
                     var newUserEmails = new List<UserEmailDto>();
                     if (newUsersList.Count != default)
