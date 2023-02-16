@@ -593,7 +593,7 @@ namespace Lingtren.Infrastructure.Services
                 course.Sections = new List<Section>();
                 course.Sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
                     predicate: p => p.CourseId == course.Id && !p.IsDeleted,
-                    include: src => src.Include(x => x.Lessons).ThenInclude(p => p.QuestionSet)).ConfigureAwait(false);
+                    include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
 
                 course.CourseTags = new List<CourseTag>();
                 course.CourseTags = await _unitOfWork.GetRepository<CourseTag>().GetAllAsync(
@@ -661,7 +661,7 @@ namespace Lingtren.Infrastructure.Services
                         Status = l.Status,
                         Duration = l.Duration,
                         IsMandatory = l.IsMandatory,
-                        QuestionSet = l.QuestionSet != null ? new QuestionSetResponseModel(l.QuestionSet) : null,
+                        QuestionSet = l.Type == LessonType.Exam ? new QuestionSetResponseModel(_unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefault(predicate: x => x.Id == l.QuestionSetId)) : null,
                         Meeting = l.Meeting != null ? new MeetingResponseModel(l.Meeting) : null,
                         IsCompleted = currentUserWatchHistories.Any(h => h.LessonId == h.LessonId && h.IsCompleted),
                         IsPassed = currentUserWatchHistories.Any(h => h.LessonId == h.LessonId && h.IsPassed),
