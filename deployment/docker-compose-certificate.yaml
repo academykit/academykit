@@ -1,0 +1,8 @@
+version: "3.7"
+services:
+  web:
+    image: 762344227131.dkr.ecr.ap-south-1.amazonaws.com/certificate:latest
+    ports: 
+      - "3000:80"
+    environment:
+      APP_URL : http://192.168.21.142:3000 
