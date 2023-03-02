@@ -178,6 +178,7 @@
             existing.DepartmentId = model.DepartmentId;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
+            existing.Email = model.Email;
 
             if (CurrentUser.Role == UserRole.SuperAdmin || CurrentUser.Role == UserRole.Admin)
             {

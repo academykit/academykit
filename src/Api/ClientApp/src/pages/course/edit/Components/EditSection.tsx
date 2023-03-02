@@ -14,7 +14,6 @@ import {
   ISection,
   useCourseDescription,
   useCreateSection,
-  useGetSection,
 } from "@utils/services/courseService";
 import { useParams } from "react-router-dom";
 import { showNotification } from "@mantine/notifications";
@@ -36,10 +35,6 @@ const EditSection = () => {
 
   const { id: slug } = useParams();
 
-  const getSection: UseQueryResult<IPaginated<ISection>> = useGetSection(
-    slug as string
-  );
-
   const getCourseDetails: any = useCourseDescription(slug as string);
 
   return (
@@ -58,7 +53,7 @@ const EditSection = () => {
 
       <Box className={classes.section}>
         <Box mt={20}>
-          {getSection.data && (
+          {getCourseDetails.data && (
             <CourseSection
               data={getCourseDetails.data?.sections}
               slug={slug as string}

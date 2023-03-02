@@ -81,13 +81,13 @@ const AddExam = ({
 
   const [isMandatory, setIsMandatory] = useState<boolean>(false);
 
-  const startDateTime = item?.startDate
-    ? moment(item?.startDate + "z")
+  const startDateTime = item?.questionSet?.startTime
+    ? moment(item?.questionSet?.startTime + "z")
         .local()
         .toDate()
     : new Date();
-  const endDateTime = item?.endDate
-    ? moment(item?.endDate + "z")
+  const endDateTime = item?.questionSet?.endTime
+    ? moment(item?.questionSet?.endTime + "z")
         .local()
         .toDate()
     : new Date();
