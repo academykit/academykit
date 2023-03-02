@@ -3,6 +3,9 @@
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
+    using Microsoft.EntityFrameworkCore.ChangeTracking;
+    using System.Security.Cryptography;
+
     public class CourseResponseModel
     {
         public Guid Id { get; set; }
@@ -49,6 +52,7 @@
                 model.Sections.ToList().ForEach(item => Sections.Add(new SectionResponseModel(item, fetchLesson: true)));
             }
         }
+
         public CourseResponseModel()
         {
         }
