@@ -193,8 +193,7 @@
                         CourseId = course.Id,
                         LessonId = lesson.Id,
                         UserId = userId,
-                        IsCompleted = false,
-                        IsPassed = true,
+                        IsCompleted = true,
                         CreatedBy = currentUserId,
                         CreatedOn = currentTimeStamp,
                         UpdatedBy = currentUserId,
@@ -204,7 +203,7 @@
                 }
                 else
                 {
-                    watchHistory.IsCompleted = true;
+                    
                     watchHistory.IsPassed = true;
                     watchHistory.UpdatedBy = currentUserId;
                     watchHistory.UpdatedOn = DateTime.UtcNow;
