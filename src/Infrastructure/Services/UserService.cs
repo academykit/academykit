@@ -285,6 +285,11 @@
                         users.Add(user);
                     }
                 }
+
+                var inValidUsers = users.Where(x => string.IsNullOrWhiteSpace(x.FirstName) || string.IsNullOrWhiteSpace(x.LastName) || string.IsNullOrWhiteSpace(x.Email)).ToList();
+
+                users = users.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && !string.IsNullOrWhiteSpace(x.LastName) && !string.IsNullOrWhiteSpace(x.Email)).ToList();
+                
                 var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
                 var stringBuilder = new StringBuilder();
                 if (users.Count != default)
