@@ -77,6 +77,12 @@ namespace Lingtren.Api.Controllers
             {
                 throw new EntityNotFoundException("Training was not found.");
             }
+            
+            if(course.Status == CourseStatus.Completed)
+            {
+                throw new ArgumentException("Course is completed.");
+            }
+
             var entity = new Section()
             {
                 Id = Guid.NewGuid(),

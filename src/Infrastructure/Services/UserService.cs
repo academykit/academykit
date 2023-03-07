@@ -284,7 +284,7 @@
                         var user = csv.GetRecord<UserImportDto>();
                         users.Add(user);
                     }
-                }
+                } 
 
                 var inValidUsers = users.Where(x => string.IsNullOrWhiteSpace(x.FirstName) || string.IsNullOrWhiteSpace(x.LastName) || string.IsNullOrWhiteSpace(x.Email)).ToList();
 
