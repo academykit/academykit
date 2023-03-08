@@ -265,7 +265,7 @@
         /// <param name="file"> the instance of <see cref="IFormFile" /> .</param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
-        public async Task ImportUserAsync(IFormFile file, Guid currentUserId)
+        public async Task<string> ImportUserAsync(IFormFile file, Guid currentUserId)
         {
             try
             {
@@ -284,14 +284,26 @@
                         var user = csv.GetRecord<UserImportDto>();
                         users.Add(user);
                     }
-                }
+                } 
+
+                var inValidUsers = users.Where(x => string.IsNullOrWhiteSpace(x.FirstName) || string.IsNullOrWhiteSpace(x.LastName) || string.IsNullOrWhiteSpace(x.Email)).ToList();
+
+                users = users.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && !string.IsNullOrWhiteSpace(x.LastName) && !string.IsNullOrWhiteSpace(x.Email)).ToList();
+                
                 var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
+                var stringBuilder = new StringBuilder();
                 if (users.Count != default)
                 {
 
                     var userEmails = users.ConvertAll(x => x.Email);
                     var duplicateUser = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: p => userEmails.Contains(p.Email), selector: x => x.Email).ConfigureAwait(false);
+                    foreach (var entity in duplicateUser)
+                    {
+                        stringBuilder.Append($"{entity} is already registered.");
+                        stringBuilder.Append(Environment.NewLine);
+                    }
                     var newUsersList = users.Where(x => !duplicateUser.Contains(x.Email)).ToList();
+                    newUsersList = newUsersList.DistinctBy(x => x.Email).ToList();
                     var newUsers = new List<User>();
                     var newUserEmails = new List<UserEmailDto>();
                     if (newUsersList.Count != default)
@@ -330,6 +342,7 @@
                         BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailImportedUserAsync(newUserEmails, null));
                     }
                 }
+                return string.IsNullOrEmpty(stringBuilder.ToString()) ? "Successfully user imported." : $"{stringBuilder.ToString()}";
             }
             catch (Exception ex)
             {

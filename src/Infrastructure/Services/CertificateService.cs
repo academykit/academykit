@@ -226,7 +226,7 @@ namespace Lingtren.Infrastructure.Services
                     ImageUrl = x.ImageUrl,
                     Duration = x.Duration != default ? x.Duration.ToString() : null,
                     Location = x.Location,
-                   Status = x.Status,
+                    Status = x.Status,
                     User = new UserModel(x.User)
                 }).ToList();
                 return response;

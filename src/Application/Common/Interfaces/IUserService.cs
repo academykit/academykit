@@ -125,6 +125,6 @@
         /// <param name="file"> the instance of <see cref="IFormFile" /> .</param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
-        Task ImportUserAsync(IFormFile file, Guid currentUserId);
+        Task<string> ImportUserAsync(IFormFile file, Guid currentUserId);
     }
 }

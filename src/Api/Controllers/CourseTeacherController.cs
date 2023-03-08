@@ -43,7 +43,7 @@
             CommonHelper.ValidateArgumentNotNullOrEmpty(criteria.CourseIdentity, nameof(criteria.CourseIdentity));
             criteria.CurrentUserId = CurrentUser.Id;
             var searchResult = await _courseTeacherService.SearchAsync(criteria).ConfigureAwait(false);
-
+            
             var response = new SearchResult<CourseTeacherResponseModel>
             {
                 Items = new List<CourseTeacherResponseModel>(),
@@ -52,11 +52,11 @@
                 TotalCount = searchResult.TotalCount,
                 TotalPage = searchResult.TotalPage,
             };
-
+            
             searchResult.Items.ForEach(p =>
-                 response.Items.Add(new CourseTeacherResponseModel(p))
-             );
-
+                response.Items.Add(new CourseTeacherResponseModel(p))
+            );
+            
             return response;
         }
 

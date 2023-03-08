@@ -661,7 +661,7 @@ namespace Lingtren.Infrastructure.Services
                         Status = l.Status,
                         Duration = l.Duration,
                         IsMandatory = l.IsMandatory,
-                        QuestionSet = l.QuestionSet != null ? new QuestionSetResponseModel(l.QuestionSet) : null,
+                        QuestionSet = l.Type == LessonType.Exam ? new QuestionSetResponseModel(_unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefault(predicate: x => x.Id == l.QuestionSetId)) : null,
                         Meeting = l.Meeting != null ? new MeetingResponseModel(l.Meeting) : null,
                         IsCompleted = currentUserWatchHistories.Any(h => h.LessonId == h.LessonId && h.IsCompleted),
                         IsPassed = currentUserWatchHistories.Any(h => h.LessonId == h.LessonId && h.IsPassed),

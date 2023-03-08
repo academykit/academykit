@@ -62,7 +62,7 @@
             }
             if (criteria.IsActive != null)
             {
-                predicate.And(p => p.IsActive == criteria.IsActive);
+              predicate =  predicate.And(p => p.IsActive == criteria.IsActive);
             }
             return predicate;
         }
