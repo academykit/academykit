@@ -1567,14 +1567,15 @@ namespace Lingtren.Infrastructure.Services
                        predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
             var courseCertificate = new CourseCertificate();
+            var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
             if (model.Id.HasValue)
             {
                 courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == model.Id.Value
                     ).ConfigureAwait(false);
                 courseCertificate.Title = model.Title;
-                courseCertificate.EventStartDate = model.EventStartDate;
-                courseCertificate.EventEndDate = model.EventEndDate;
+                courseCertificate.EventStartDate = TimeZoneInfo.ConvertTimeFromUtc(model.EventStartDate, cstZone);
+                courseCertificate.EventEndDate = TimeZoneInfo.ConvertTimeFromUtc(model.EventEndDate, cstZone);
                 courseCertificate.UpdatedBy = currentUserId;
                 courseCertificate.UpdatedOn = currentTimeStamp;
                 courseCertificate.SampleUrl = await GetImageFile(courseCertificate, "User Name", signatures).ConfigureAwait(false);
@@ -1588,8 +1589,8 @@ namespace Lingtren.Infrastructure.Services
                     Id = Guid.NewGuid(),
                     CourseId = course.Id,
                     Title = model.Title,
-                    EventStartDate = model.EventStartDate,
-                    EventEndDate = model.EventEndDate,
+                    EventStartDate = TimeZoneInfo.ConvertTimeFromUtc(model.EventStartDate, TimeZoneInfo.Local),
+                    EventEndDate = TimeZoneInfo.ConvertTimeFromUtc(model.EventEndDate, TimeZoneInfo.Local),
                     CreatedBy = currentUserId,
                     CreatedOn = currentTimeStamp,
                     UpdatedBy = currentUserId,
