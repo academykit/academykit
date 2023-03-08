@@ -193,7 +193,7 @@
                         CourseId = course.Id,
                         LessonId = lesson.Id,
                         UserId = userId,
-                        IsCompleted = true,
+                        IsCompleted = false,
                         IsPassed = true,
                         CreatedBy = currentUserId,
                         CreatedOn = currentTimeStamp,
