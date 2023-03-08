@@ -26,6 +26,7 @@ import {
 } from "@utils/services/liveSessionService";
 import moment from "moment";
 import formatDuration from "@utils/formatDuration";
+import { getType } from "./LessonStatusColor";
 
 const TableRow = ({ values }: { values: IReportDetail }) => {
   const theme = useMantineTheme();
@@ -229,7 +230,7 @@ const StudentLessonDetails = ({
       <Group>
         {getViewButton()}
         {!isCompleted && (
-          <Tooltip label="Mark completed">
+          <Tooltip label={`Mark as ${getType(type).true}`}>
             <ActionIcon
               onClick={() => setConfirmComplete()}
               variant="subtle"

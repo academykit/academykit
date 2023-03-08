@@ -16,6 +16,7 @@ import {
   IconPencilMinus,
   IconTrashX,
 } from "@tabler/icons";
+import { CourseStatus } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
 import {
   ISection,
@@ -41,11 +42,13 @@ const SectionItem = ({
   slug,
   dragHandleProps,
   snapshot,
+  status,
 }: {
   item: ISection;
   slug: string;
   dragHandleProps: any;
   snapshot: DraggableStateSnapshot;
+  status: CourseStatus;
 }) => {
   const { theme, cx, classes } = useStyle();
   const [value, toggle] = useToggle();
@@ -143,7 +146,11 @@ const SectionItem = ({
         </Group>
       </Container>
       {active() && item.lessons && (
-        <Lessons lessons={item.lessons} sectionId={item.slug} />
+        <Lessons
+          lessons={item.lessons}
+          sectionId={item.slug}
+          courseStatus={status}
+        />
       )}
     </Paper>
   );
