@@ -241,8 +241,10 @@ const CourseCardHorizontal = ({
                 <Text color={"dimmed"}>
                   {moment(course.createdOn).format(theme.dateFormat)}
                 </Text>
-                <Text ml="sm">Group:</Text>
-                <Text lineClamp={1}>
+                <Text ml="sm" color={"dimmed"}>
+                  Group:
+                </Text>
+                <Text lineClamp={1} color="dimmed">
                   <TypographyStylesProvider>
                     {course.groupName}
                   </TypographyStylesProvider>

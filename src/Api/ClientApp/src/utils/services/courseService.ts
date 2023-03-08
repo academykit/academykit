@@ -48,6 +48,7 @@ const getCourse = async (search: string) =>
 export const useCourse = (search: string) =>
   useQuery([api.course.list, search], () => getCourse(search), {
     select: (data) => data.data,
+    enabled: !!search,
   });
 
 export interface IMyCourse extends ICourse {
