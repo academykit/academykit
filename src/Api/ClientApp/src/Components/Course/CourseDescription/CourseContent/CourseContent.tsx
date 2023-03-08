@@ -25,7 +25,6 @@ const CourseContent = ({
     <Box my={20}>
       <Group my={4} position="apart">
         {user && <UserShortProfile user={user} size={"md"} />}
-        {user && user?.role <= UserRole.Trainer && <Button>Manage</Button>}
       </Group>
       <Title size={"h5"}>Course Content of {courseName}</Title>
       <Text size={10} color={"dimmed"}>
