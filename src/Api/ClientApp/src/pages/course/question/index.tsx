@@ -89,7 +89,7 @@ const Questions = () => {
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.sm}px)`);
   const questionPools = usePools("");
   const questionPoolTags = useTags("");
-  const questions = useQuestion(poolValue ?? "", activePage, 10);
+  const questions = useQuestion(poolValue ?? "", activePage, 12);
   const addQuestions = useAddQuestionQuestionSet(lessonSlug as string);
   const navigate = useNavigate();
 
