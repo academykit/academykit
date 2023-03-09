@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LessonVideoUpload from "@components/Ui/LessonVideoUpload";
 import {
   Button,
@@ -37,7 +37,15 @@ type IProps = {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const [FormProvider, useFormContext, useForm] = createFormContext();
+interface IFormValues {
+  videoUrl: string;
+  name: string;
+  description: string;
+  isMandatory?: boolean;
+}
+
+const [FormProvider, useFormContext, useForm] =
+  createFormContext<IFormValues>();
 
 const AddLecture = ({
   setAddState,
@@ -58,7 +66,7 @@ const AddLecture = ({
       videoUrl: item?.videoUrl ?? "",
       name: item?.name ?? "",
       description: item?.description ?? "",
-      isMandatory: item?.isMandatory ?? false,
+      isMandatory: item?.isMandatory,
     },
     validate: yupResolver(schema),
   });
