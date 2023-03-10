@@ -76,7 +76,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
                     <Badge>Completed</Badge>
                   )}
                   <FullScreen toolbarSlot={toolbarSlot} />
-                  <Download toolbarSlot={toolbarSlot} />
+                  {/* <Download toolbarSlot={toolbarSlot} /> */}
                   {/* <Menu
                     width={300}
                     withArrow

@@ -17,9 +17,7 @@ const CourseList = ({
     return (
       <>
         {courses.map((d) => (
-          <>
-            <CourseCardHorizontal key={d.id} course={d} search={search} />
-          </>
+          <CourseCardHorizontal key={d.id} course={d} search={search} />
         ))}
       </>
     );

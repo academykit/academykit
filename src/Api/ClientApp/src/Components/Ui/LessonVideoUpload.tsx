@@ -48,7 +48,12 @@ const LessonVideoUpload = ({
         onremovefile={() => form.setFieldValue("videoUrl", "")}
         fileValidateTypeLabelExpectedTypes="Expected .mp4 .avi .mov"
         chunkSize={2 * 1024 * 1024} // 2MB
-        acceptedFileTypes={["video/mp4", "video/avi", "video/mov"]}
+        acceptedFileTypes={[
+          "video/mp4",
+          "video/avi",
+          "video/mov",
+          "video/quicktime",
+        ]}
         onupdatefiles={setFiles}
         allowMultiple={false}
         maxFiles={1}

@@ -49,8 +49,7 @@ const CompletedCourseList = ({
         </Flex>
       </Container>
 
-      {data &&
-        data?.items &&
+      {data?.items &&
         (data.totalCount >= 1 ? (
           <CourseList role={role} courses={data.items} search={searchParams} />
         ) : (

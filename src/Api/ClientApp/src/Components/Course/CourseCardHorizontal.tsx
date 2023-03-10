@@ -10,7 +10,7 @@ import {
   Flex,
   Group,
   Image,
-  Modal,
+  TypographyStylesProvider,
   NavLink,
   Paper,
   Popover,
@@ -240,6 +240,14 @@ const CourseCardHorizontal = ({
                 )}
                 <Text color={"dimmed"}>
                   {moment(course.createdOn).format(theme.dateFormat)}
+                </Text>
+                <Text ml="sm" color={"dimmed"}>
+                  Group:
+                </Text>
+                <Text lineClamp={1} color="dimmed">
+                  <TypographyStylesProvider>
+                    {course.groupName}
+                  </TypographyStylesProvider>
                 </Text>
               </Group>
             </Group>

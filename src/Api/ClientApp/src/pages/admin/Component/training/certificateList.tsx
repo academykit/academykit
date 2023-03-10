@@ -161,6 +161,11 @@ const CertificateList = ({
         ))}
       {listCertificate.isSuccess &&
         pagination(listCertificate.data.data.totalPage)}
+
+      {listCertificate.isSuccess &&
+        listCertificate.data?.data.totalCount < 1 && (
+          <Box>No External trainings found!</Box>
+        )}
     </Container>
   );
 };

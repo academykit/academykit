@@ -16,16 +16,16 @@ export interface IQuestion {
   tags: ITag[];
 }
 
-const getAssignmentQuestion = (poolId: string, search: string) => {
+const getAssignmentQuestion = (poolId: string, page: number, size: number) => {
   return httpClient.get<IPaginated<IQuestion>>(
-    api.questions.list(poolId) + `?${search}`
+    api.questions.list(poolId) + `?page=${page}&size=${size}`
   );
 };
 
-export const useQuestion = (poolId: string, search: string) =>
+export const useQuestion = (poolId: string, page: number, size: number) =>
   useQuery(
-    [api.questions.list(poolId) + `?${search}`],
-    () => getAssignmentQuestion(poolId, search),
+    [api.questions.list(poolId) + `?page=${page}` + `&size=${size}`],
+    () => getAssignmentQuestion(poolId, page, size),
     {
       select: (data) => data.data,
       enabled: poolId ? true : false,
