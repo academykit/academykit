@@ -17,11 +17,10 @@ import {
 } from "@utils/services/courseService";
 import { useParams } from "react-router-dom";
 import { showNotification } from "@mantine/notifications";
-import { UseQueryResult } from "@tanstack/react-query";
-import { IPaginated } from "@utils/services/types";
 import { useForm } from "@mantine/form";
 import errorType from "@utils/services/axiosError";
 import { IconDragDrop } from "@tabler/icons";
+import { CourseStatus } from "@utils/enums";
 
 const useStyle = createStyles((theme) => ({
   section: {
@@ -56,26 +55,29 @@ const EditSection = () => {
           {getCourseDetails.data && (
             <CourseSection
               data={getCourseDetails.data?.sections}
+              status={getCourseDetails.data?.status}
               slug={slug as string}
             />
           )}
         </Box>
       </Box>
 
-      <div style={{ marginTop: "20px" }}>
-        {!section?.isAddSection ? (
-          <Button
-            onClick={() => {
-              section?.setIsAddSection(!section?.isAddSection);
-              section?.setAddLessonClick(false);
-            }}
-          >
-            Add New Section
-          </Button>
-        ) : (
-          <AddSectionForm slug={slug as string} />
-        )}
-      </div>
+      {getCourseDetails.data?.status !== CourseStatus.Completed && (
+        <div style={{ marginTop: "20px" }}>
+          {!section?.isAddSection ? (
+            <Button
+              onClick={() => {
+                section?.setIsAddSection(!section?.isAddSection);
+                section?.setAddLessonClick(false);
+              }}
+            >
+              Add New Section
+            </Button>
+          ) : (
+            <AddSectionForm slug={slug as string} />
+          )}
+        </div>
+      )}
     </Container>
   );
 };

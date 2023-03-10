@@ -22,7 +22,7 @@ const feedBackType = {
   false: "Not Submitted",
 };
 
-const getType = (type: LessonType) => {
+export const getType = (type: LessonType) => {
   switch (type) {
     case LessonType.Exam:
       return examType;

@@ -1,3 +1,4 @@
+import { CourseStatus } from "@utils/enums";
 import { ILessons } from "@utils/services/courseService";
 
 import {
@@ -15,7 +16,15 @@ import {
 
 import SectionItem from "./Section/SectionItem";
 
-const CourseSection = ({ data, slug }: { data: ISection[]; slug: string }) => {
+const CourseSection = ({
+  data,
+  slug,
+  status,
+}: {
+  data: ISection[];
+  slug: string;
+  status: CourseStatus;
+}) => {
   const [lessonData, setLessonData] = useState<ISection[]>(data);
   useMemo(() => setLessonData(data), [data]);
 
@@ -68,6 +77,7 @@ const CourseSection = ({ data, slug }: { data: ISection[]; slug: string }) => {
       {(provided, snapshot) => (
         <div {...provided.draggableProps} ref={provided.innerRef}>
           <SectionItem
+            status={status}
             dragHandleProps={provided.dragHandleProps}
             snapshot={snapshot}
             key={item.id}

@@ -11,6 +11,7 @@ import {
   TextInput,
   Title,
   Transition,
+  Loader,
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
@@ -113,17 +114,21 @@ const MCQPool = ({
           </Box>
         )}
       </Transition>
-      <Box mt={20}>
-        {searchComponent()}
-        {pools.data && pools.data.items.length >= 1 ? (
-          pools.data?.items.map((x) => (
-            <PoolCard search={searchParams} pool={x} key={x.id} />
-          ))
-        ) : (
-          <Box mt={10}>No Question Pools Found!</Box>
-        )}
-        {pools.data && pagination(pools.data.totalPage)}
-      </Box>
+      {pools.isLoading && <Loader />}
+
+      {pools.isSuccess && (
+        <Box mt={20}>
+          {searchComponent()}
+          {pools.data.items.length >= 1 &&
+            pools.data?.items.map((x) => (
+              <PoolCard search={searchParams} pool={x} key={x.id} />
+            ))}
+          {pools.data?.items.length < 1 && (
+            <Box mt={10}>No Question Pools Found!</Box>
+          )}
+          {pools.data && pagination(pools.data.totalPage)}
+        </Box>
+      )}
     </Container>
   );
 };
