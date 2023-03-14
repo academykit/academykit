@@ -441,6 +441,11 @@ namespace Lingtren.Infrastructure.Services
                     EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Enrolled,
                 };
 
+                if (courseEnrollment.EnrollmentMemberStatus.Equals(EnrollmentMemberStatusEnum.Enrolled))
+                {
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.sendCourseEnrollmentMailAsync(course.Id,course.Name,null));
+                }
+
                 await _unitOfWork.GetRepository<CourseEnrollment>().InsertAsync(courseEnrollment).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             });

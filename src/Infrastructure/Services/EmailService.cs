@@ -119,6 +119,7 @@
                 var html = $"Dear {firstName},<br><br>";
                 html += $"Your account has been created in Vurilo Team. <br> Your Login Password is <b><u>{password}</u></b><br><br>";
                 html += $"Thank You,<br> {companyName}";
+                html += @$"<a href = '{this._appUrl}' > <u  style='color:blue;'> Click Here </u></a>";
 
                 var mail = new EmailRequestDto
                 {
