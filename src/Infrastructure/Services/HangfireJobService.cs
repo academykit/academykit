@@ -295,7 +295,7 @@ namespace Lingtren.Infrastructure.Services
                 }
               
                  foreach (var teacher in course.CourseTeachers)
-                    {
+                {
                         var fullName = string.IsNullOrEmpty(teacher.User?.MiddleName) ? $"{teacher.User?.FirstName} {teacher.User?.LastName}" : $"{teacher.User?.FirstName} {teacher.User?.MiddleName} {teacher.User?.LastName}";
                         var html = $"Dear {fullName},<br><br>";
                         html += $"Your lecture video named '{course.Name}' have been enrolled " +
@@ -309,9 +309,50 @@ namespace Lingtren.Infrastructure.Services
                             Message = html,
                         };
                         await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
-                    }
+                  }
              
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handle to send user certificate issue mail 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="courseName"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public async Task sendCertificateIssueMailAsync(IList<CertificateUserIssuedDto> certificateUserIssuedDtos, PerformContext context = null)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    throw new ArgumentNullException("context not found.");
+                }
+                var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
+
+                foreach (var user in certificateUserIssuedDtos)
+                {
+                    var fullName = user.UserName;
+                    var html = $"Dear {fullName},<br><br>";
+                    html += $"Your certificate of couse named '{user.CourseName}' have been issued ";
+                    html += $"<br><br>Thank You, <br> {settings.CompanyName}";
+
+                    var model = new EmailRequestDto
+                    {
+                        To = user?.Email,
+                        Subject = "Certificate Issued",
+                        Message = html,
+                    };
+                    await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+                }
+            }
+
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);

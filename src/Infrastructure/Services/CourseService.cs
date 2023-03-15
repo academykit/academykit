@@ -1,5 +1,6 @@
 namespace Lingtren.Infrastructure.Services
 {
+    using Application.Common.Dtos;
     using Hangfire;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
@@ -12,10 +13,12 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Routing.Constraints;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Minio.DataModel;
     using RestSharp;
     using System.Collections;
     using System.Data;
@@ -1210,6 +1213,7 @@ namespace Lingtren.Infrastructure.Services
 
                 var currentTimeStamp = DateTime.UtcNow;
                 var response = new List<CourseCertificateIssuedResponseModel>();
+                var certificateissueduser = new List<CertificateUserIssuedDto>();
                 foreach (var item in results)
                 {
                     item.CertificateUrl = await GetImageFile(course.CourseCertificate, item.User.FullName, course.Signatures).ConfigureAwait(false);
@@ -1226,9 +1230,19 @@ namespace Lingtren.Infrastructure.Services
                         Percentage = item.Percentage,
                         User = new UserModel(item.User)
                     });
+                    certificateissueduser.Add(new CertificateUserIssuedDto
+                    {
+                        UserName = item.User.FullName,
+                        CourseName = course.Name,
+                        Email= item.User.Email
+                    });
                 }
                 _unitOfWork.GetRepository<CourseEnrollment>().Update(results);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                if (certificateissueduser.Count != default)
+                {
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.sendCertificateIssueMailAsync(certificateissueduser, null));
+                }
                 return response;
             }
             catch (Exception ex)
