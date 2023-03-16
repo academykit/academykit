@@ -12,6 +12,7 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Routing.Constraints;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Configuration;
@@ -1060,9 +1061,11 @@ namespace Lingtren.Infrastructure.Services
                     ).ConfigureAwait(false);
 
                 var trainings = await _unitOfWork.GetRepository<Course>().GetAllAsync(
-                    predicate: p => p.CourseTeachers.Any(x => x.UserId == currentUserId)
-                    ).ConfigureAwait(false);
+                    predicate: p => p.CourseTeachers.Any(x => x.UserId == currentUserId)).ConfigureAwait(false);
 
+                responseModel.TotalEnrolledCourses = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(predicate: p => p.EnrollmentMemberStatus.Equals(EnrollmentMemberStatusEnum.Enrolled) &&
+                    p.UserId.Equals(currentUserId));
+            
                 responseModel.TotalActiveTrainings = trainings.Count(predicate: p => p.Status == CourseStatus.Published || p.IsUpdate);
                 responseModel.TotalCompletedTrainings = trainings.Count(predicate: p => p.Status == CourseStatus.Completed);
             }
