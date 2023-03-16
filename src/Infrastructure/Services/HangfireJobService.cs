@@ -326,6 +326,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="courseName"></param>
         /// <param name="context"></param>
         /// <returns></returns>
+        [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
         public async Task sendCertificateIssueMailAsync(IList<CertificateUserIssuedDto> certificateUserIssuedDtos, PerformContext context = null)
         {
             try
