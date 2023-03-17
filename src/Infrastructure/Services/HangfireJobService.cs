@@ -361,6 +361,13 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
+        /// <summary>
+        /// handle to send lesson edit email
+        /// </summary>
+        /// <param name="courseName"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
         public async Task sendLessonAddedMailAsync(string courseName, PerformContext context = null)
         {
             try

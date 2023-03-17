@@ -362,7 +362,7 @@ namespace Lingtren.Infrastructure.Services
 
             if (model.Status == CourseStatus.Published)
             {
-                if (course.CourseEnrollments == null)
+                if (course.CourseEnrollments.Count == default)
                 {
                     BackgroundJob.Enqueue<IHangfireJobService>(job => job.GroupCoursePublishedMailAsync(course.GroupId.Value, course.Name, null));
                 }
