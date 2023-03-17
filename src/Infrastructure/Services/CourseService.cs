@@ -1,5 +1,6 @@
 namespace Lingtren.Infrastructure.Services
 {
+    using AngleSharp.Common;
     using Application.Common.Dtos;
     using Hangfire;
     using Lingtren.Application.Common.Exceptions;
@@ -14,6 +15,7 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Routing.Constraints;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Conventions;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
@@ -21,6 +23,7 @@ namespace Lingtren.Infrastructure.Services
     using System.Collections;
     using System.Data;
     using System.IO;
+    using System.Linq;
     using System.Linq.Expressions;
 
     public class CourseService : BaseGenericService<Course, CourseBaseSearchCriteria>, ICourseService
@@ -351,7 +354,7 @@ namespace Lingtren.Infrastructure.Services
             _unitOfWork.GetRepository<Lesson>().Update(lessons);
             _unitOfWork.GetRepository<Course>().Update(course);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-
+                   
             if (model.Status == CourseStatus.Review)
             {
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseReviewMailAsync(course.Name, null));
@@ -359,7 +362,15 @@ namespace Lingtren.Infrastructure.Services
 
             if (model.Status == CourseStatus.Published)
             {
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.GroupCoursePublishedMailAsync(course.GroupId.Value, course.Name, null));
+                if (course.CourseEnrollments == null)
+                {
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.GroupCoursePublishedMailAsync(course.GroupId.Value, course.Name, null));
+                }
+                else
+                {
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.sendLessonAddedMailAsync(course.Name, null));
+                }
+                
             }
 
             if(model.Status == CourseStatus.Rejected)

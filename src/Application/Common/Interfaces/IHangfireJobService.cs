@@ -65,5 +65,15 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="StudentName">the lis of student whose certificate has been issued</param>
         ///<returns>the tasl complete </returns>
         Task sendCertificateIssueMailAsync(IList<CertificateUserIssuedDto> certificateUserIssuedDtos, PerformContext context = null);
+
+        ///<summary>
+        ///Handle to send cretificate issued mail
+        ///</summary>
+        /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
+        /// <param name="courseName"> Name of the course </param>
+        ///<returns>the tasl complete </returns
+        Task sendLessonAddedMailAsync(string courseName,PerformContext context = null);
+
+        
     }
 }

@@ -341,7 +341,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var fullName = user.UserName;
                     var html = $"Dear {fullName},<br><br>";
-                    html += $"Your certificate of couse named '{user.CourseName}' have been issued ";
+                    html += $"Your certificate of couse named '{user.CourseName}' have been issued";
                     html += $"<br><br>Thank You, <br> {settings.CompanyName}";
 
                     var model = new EmailRequestDto
@@ -352,6 +352,49 @@ namespace Lingtren.Infrastructure.Services
                     };
                     await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
                 }
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        public async Task sendLessonAddedMailAsync(string courseName, PerformContext context = null)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    throw new ArgumentNullException("context not found.");
+                }
+
+                var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
+                var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate: p => p.Name == courseName,
+                include: source => source.Include(x => x.CourseEnrollments).ThenInclude(x => x.User)).ConfigureAwait(false);
+                if (course.CourseEnrollments == null)
+                {
+                    throw new ArgumentException("No enrollments");
+                }
+                foreach(var users in course.CourseEnrollments.AsList()) 
+                {
+                    
+                    var fullName = users.User.FullName;
+                    var html = $"Dear {fullName},<br><br>";
+                    html += $"Your enrolled course titled '{courseName}' have uploaded new content<br><br>" +
+                        @$"<a href='{this._appUrl}/trainings/{courseName}' ><u  style='color:blue;'>Click Here </u></a> to watch the course";
+                    html += $"<br><br>Thank You, <br> {settings.CompanyName}";
+
+                    var model = new EmailRequestDto
+                    {
+                        To = users.User?.Email,
+                        Subject = "New content",
+                        Message = html,
+                    };
+                    await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+                }
+
             }
 
             catch (Exception ex)
