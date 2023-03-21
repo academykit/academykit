@@ -126,5 +126,13 @@
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
         Task<string> ImportUserAsync(IFormFile file, Guid currentUserId);
+
+        /// <summary>
+        /// get user by id
+        /// </summary>
+        /// <param name="userId"> the user id </param>
+        /// <param name="CourseID">the current course id </param>
+        /// <returns> the instance of <see cref="UserResponseModel" /> .</returns>
+        Task<List<UserResponseModel>>GetUserForCourseEnrollment(Guid userId,string courseId);
     }
 }

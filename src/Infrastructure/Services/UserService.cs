@@ -270,11 +270,11 @@
             try
             {
 
-                 MimeTypes.TryGetExtension(file.ContentType, out var extension);
-                 if (extension != ".csv")
-                 {
+                MimeTypes.TryGetExtension(file.ContentType, out var extension);
+                if (extension != ".csv")
+                {
                     throw new ArgumentException("File extension should be csv format");
-                  }
+                }
                 var users = new List<UserImportDto>();
                 using (var reader = new StreamReader(file.OpenReadStream()))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
@@ -284,12 +284,12 @@
                         var user = csv.GetRecord<UserImportDto>();
                         users.Add(user);
                     }
-                } 
+                }
 
                 var inValidUsers = users.Where(x => string.IsNullOrWhiteSpace(x.FirstName) || string.IsNullOrWhiteSpace(x.LastName) || string.IsNullOrWhiteSpace(x.Email)).ToList();
 
                 users = users.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && !string.IsNullOrWhiteSpace(x.LastName) && !string.IsNullOrWhiteSpace(x.Email)).ToList();
-                
+
                 var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
                 var stringBuilder = new StringBuilder();
                 if (users.Count != default)
@@ -860,5 +860,80 @@
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to fetch user detail information.");
             }
         }
+
+
+        /// <summary>
+        /// get user by id
+        /// </summary>
+        /// <param name="userId"> the user id </param>
+        /// <param name="CourseID">the current course id </param>
+        /// <returns> the instance of <see cref="UserResponseModel" /> .</returns>
+        public async Task<List<UserResponseModel>> GetUserForCourseEnrollment(Guid userId, string courseId)
+        {
+            try
+            {
+                var course = await ValidateAndGetCourse(userId, courseId, validateForModify: false).ConfigureAwait(false);
+                if (course == null)
+                {
+                    _logger.LogWarning("Training with identity : {identity} not found for user with id : {currentUserId}.", courseId, userId);
+                    throw new EntityNotFoundException("Training not found.");
+                }
+                var users = await _unitOfWork.GetRepository<User>().GetAllAsync().ConfigureAwait(false);
+                var user = users.FirstOrDefault(x => x.Id == userId);
+                if (user.Role == UserRole.Admin || user.Role == UserRole.SuperAdmin)
+                {
+
+                    var trimedUsers = users.Where(x => x.Id != userId && x.CourseEnrollments != course.CourseEnrollments && x.Role != UserRole.SuperAdmin && x.Role != UserRole.Admin &&
+                    x.Id != course.CreatedBy && x.CourseTeachers != course.CourseTeachers);
+
+                    var responses = new List<UserResponseModel>();
+
+
+                    foreach (var trimedUser in trimedUsers)
+                    {
+                        responses.Add(new UserResponseModel
+                        {
+                            response.Id = trimedUser.Id;
+                        response.FullName = trimedUser.FullName;
+                        response.Address = trimedUser.Address;
+                        response.Email = trimedUser.Email;
+                        response.FirstName = trimedUser.FirstName;
+                        response.LastName = trimedUser.LastName;
+                        response.MobileNumber = trimedUser.MobileNumber;
+                        response.Bio = trimedUser.Bio;
+                        response.Role = trimedUser.Role;
+                        response.DepartmentId = trimedUser.DepartmentId;
+                        response.IsActive = trimedUser.IsActive;
+                        response.PublicUrls = trimedUser.PublicUrls;
+                    });
+                    var response = new UserResponseModel();
+                    response.Id = trimedUser.Id;
+                    response.FullName = trimedUser.FullName;
+                    response.Address = trimedUser.Address;
+                    response.Email = trimedUser.Email;
+                    response.FirstName = trimedUser.FirstName;
+                    response.LastName = trimedUser.LastName;
+                    response.MobileNumber = trimedUser.MobileNumber;
+                    response.Bio = trimedUser.Bio;
+                    response.Role = trimedUser.Role;
+                    response.DepartmentId = trimedUser.DepartmentId;
+                    response.IsActive = trimedUser.IsActive;
+                    response.PublicUrls = trimedUser.PublicUrls;
+                    responses.Add(response);
+                }
+
+                return responses;
+            }
+                else
+            {
+                throw new UnauthorizedAccessException("Trainee are not Aloowed to excess this feature");
+            }
+        }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to fetch user detail information.");
+                throw ex is ServiceException? ex : new ServiceException("An error occurred while attempting to fetch user detail information.");
+    }
+}
     }
 }
