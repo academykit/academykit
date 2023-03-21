@@ -368,7 +368,7 @@ namespace Lingtren.Infrastructure.Services
                 }
                 else
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.sendLessonAddedMailAsync(course.Name, null));
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendLessonAddedMailAsync(course.Name, null));
                 }
                 
             }
@@ -455,7 +455,7 @@ namespace Lingtren.Infrastructure.Services
 
                 if (courseEnrollment.EnrollmentMemberStatus.Equals(EnrollmentMemberStatusEnum.Enrolled))
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.sendCourseEnrollmentMailAsync(course.Id,course.Name,null));
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseEnrollmentMailAsync(course.Id,course.Name,null));
                 }
 
                 await _unitOfWork.GetRepository<CourseEnrollment>().InsertAsync(courseEnrollment).ConfigureAwait(false);
@@ -1252,7 +1252,7 @@ namespace Lingtren.Infrastructure.Services
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 if (certificateissueduser.Count != default)
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.sendCertificateIssueMailAsync(certificateissueduser, null));
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCertificateIssueMailAsync(certificateissueduser, null));
                 }
                 return response;
             }

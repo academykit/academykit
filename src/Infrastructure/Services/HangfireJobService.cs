@@ -276,7 +276,7 @@ namespace Lingtren.Infrastructure.Services
         ////// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
         ///<returns>the tasl complete </returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task sendCourseEnrollmentMailAsync(Guid courseId, string courseName, PerformContext context = null)
+        public async Task SendCourseEnrollmentMailAsync(Guid courseId, string courseName, PerformContext context = null)
         {
             try
             {
@@ -327,7 +327,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="context"></param>
         /// <returns></returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task sendCertificateIssueMailAsync(IList<CertificateUserIssuedDto> certificateUserIssuedDtos, PerformContext context = null)
+        public async Task SendCertificateIssueMailAsync(IList<CertificateUserIssuedDto> certificateUserIssuedDtos, PerformContext context = null)
         {
             try
             {
@@ -368,7 +368,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="context"></param>
         /// <returns></returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task sendLessonAddedMailAsync(string courseName, PerformContext context = null)
+        public async Task SendLessonAddedMailAsync(string courseName, PerformContext context = null)
         {
             try
             {
