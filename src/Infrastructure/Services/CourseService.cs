@@ -1,7 +1,8 @@
 namespace Lingtren.Infrastructure.Services
 {
+    using AngleSharp.Common;
+    using Application.Common.Dtos;
     using Hangfire;
-    using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
@@ -12,7 +13,9 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Routing.Constraints;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Conventions;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
@@ -20,6 +23,7 @@ namespace Lingtren.Infrastructure.Services
     using System.Collections;
     using System.Data;
     using System.IO;
+    using System.Linq;
     using System.Linq.Expressions;
 
     public class CourseService : BaseGenericService<Course, CourseBaseSearchCriteria>, ICourseService
@@ -350,7 +354,7 @@ namespace Lingtren.Infrastructure.Services
             _unitOfWork.GetRepository<Lesson>().Update(lessons);
             _unitOfWork.GetRepository<Course>().Update(course);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-
+                   
             if (model.Status == CourseStatus.Review)
             {
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseReviewMailAsync(course.Name, null));
@@ -358,7 +362,15 @@ namespace Lingtren.Infrastructure.Services
 
             if (model.Status == CourseStatus.Published)
             {
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.GroupCoursePublishedMailAsync(course.GroupId.Value, course.Name, null));
+                if (course.CourseEnrollments.Count == default)
+                {
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.GroupCoursePublishedMailAsync(course.GroupId.Value, course.Name, null));
+                }
+                else
+                {
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendLessonAddedMailAsync(course.Name, null));
+                }
+                
             }
 
             if(model.Status == CourseStatus.Rejected)
@@ -440,6 +452,11 @@ namespace Lingtren.Infrastructure.Services
                     UpdatedOn = currentTimeStamp,
                     EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Enrolled,
                 };
+
+                if (courseEnrollment.EnrollmentMemberStatus.Equals(EnrollmentMemberStatusEnum.Enrolled))
+                {
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseEnrollmentMailAsync(course.Id,course.Name,null));
+                }
 
                 await _unitOfWork.GetRepository<CourseEnrollment>().InsertAsync(courseEnrollment).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -1055,9 +1072,11 @@ namespace Lingtren.Infrastructure.Services
                     ).ConfigureAwait(false);
 
                 var trainings = await _unitOfWork.GetRepository<Course>().GetAllAsync(
-                    predicate: p => p.CourseTeachers.Any(x => x.UserId == currentUserId)
-                    ).ConfigureAwait(false);
+                    predicate: p => p.CourseTeachers.Any(x => x.UserId == currentUserId)).ConfigureAwait(false);
 
+                responseModel.TotalEnrolledCourses = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(predicate: p => p.EnrollmentMemberStatus.Equals(EnrollmentMemberStatusEnum.Enrolled) &&
+                    p.UserId.Equals(currentUserId));
+            
                 responseModel.TotalActiveTrainings = trainings.Count(predicate: p => p.Status == CourseStatus.Published || p.IsUpdate);
                 responseModel.TotalCompletedTrainings = trainings.Count(predicate: p => p.Status == CourseStatus.Completed);
             }
@@ -1205,6 +1224,7 @@ namespace Lingtren.Infrastructure.Services
 
                 var currentTimeStamp = DateTime.UtcNow;
                 var response = new List<CourseCertificateIssuedResponseModel>();
+                var certificateissueduser = new List<CertificateUserIssuedDto>();
                 foreach (var item in results)
                 {
                     item.CertificateUrl = await GetImageFile(course.CourseCertificate, item.User.FullName, course.Signatures).ConfigureAwait(false);
@@ -1221,9 +1241,19 @@ namespace Lingtren.Infrastructure.Services
                         Percentage = item.Percentage,
                         User = new UserModel(item.User)
                     });
+                    certificateissueduser.Add(new CertificateUserIssuedDto
+                    {
+                        UserName = item.User.FullName,
+                        CourseName = course.Name,
+                        Email= item.User.Email
+                    });
                 }
                 _unitOfWork.GetRepository<CourseEnrollment>().Update(results);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                if (certificateissueduser.Count != default)
+                {
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCertificateIssueMailAsync(certificateissueduser, null));
+                }
                 return response;
             }
             catch (Exception ex)
@@ -1259,8 +1289,8 @@ namespace Lingtren.Infrastructure.Services
                     {
                         name = fullName,
                         training = certificate?.Title,
-                        startDate = certificate?.EventStartDate.ToShortDateString(),
-                        endDate = certificate?.EventEndDate.ToShortDateString(),
+                        startDate = certificate?.EventStartDate.ToString("dd MMMM yyyy"),
+                        endDate = certificate?.EventEndDate.ToString("dd MMMM yyyy"),
                         authors,
                     });
 
@@ -1567,14 +1597,15 @@ namespace Lingtren.Infrastructure.Services
                        predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
             var courseCertificate = new CourseCertificate();
+            var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
             if (model.Id.HasValue)
             {
                 courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == model.Id.Value
                     ).ConfigureAwait(false);
                 courseCertificate.Title = model.Title;
-                courseCertificate.EventStartDate = model.EventStartDate;
-                courseCertificate.EventEndDate = model.EventEndDate;
+                courseCertificate.EventStartDate = TimeZoneInfo.ConvertTimeFromUtc(model.EventStartDate, cstZone);
+                courseCertificate.EventEndDate = TimeZoneInfo.ConvertTimeFromUtc(model.EventEndDate, cstZone);
                 courseCertificate.UpdatedBy = currentUserId;
                 courseCertificate.UpdatedOn = currentTimeStamp;
                 courseCertificate.SampleUrl = await GetImageFile(courseCertificate, "User Name", signatures).ConfigureAwait(false);
@@ -1588,8 +1619,8 @@ namespace Lingtren.Infrastructure.Services
                     Id = Guid.NewGuid(),
                     CourseId = course.Id,
                     Title = model.Title,
-                    EventStartDate = model.EventStartDate,
-                    EventEndDate = model.EventEndDate,
+                    EventStartDate = TimeZoneInfo.ConvertTimeFromUtc(model.EventStartDate, TimeZoneInfo.Local),
+                    EventEndDate = TimeZoneInfo.ConvertTimeFromUtc(model.EventEndDate, TimeZoneInfo.Local),
                     CreatedBy = currentUserId,
                     CreatedOn = currentTimeStamp,
                     UpdatedBy = currentUserId,

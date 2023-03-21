@@ -48,5 +48,32 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="dtos"> the list of <see cref="UserEmailDto" /> .</param>
         /// <returns> the task complete </returns>
         Task SendEmailImportedUserAsync(IList<UserEmailDto> dtos, PerformContext context = null);
+
+        ///<summary>
+        ///Handle to send course enrollment mail
+        ///</summary>
+        ///<param name="coursename"> the course name</param>
+        /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
+        ///<returns>the tasl complete </returns>
+        Task SendCourseEnrollmentMailAsync(Guid courseId, string courseName, PerformContext context =null);
+
+        ///<summary>
+        ///Handle to send cretificate issued mail
+        ///</summary>
+        ///<param name="coursename"> the course name</param>
+        /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
+        /// <param name="StudentName">the lis of student whose certificate has been issued</param>
+        ///<returns>the tasl complete </returns>
+        Task SendCertificateIssueMailAsync(IList<CertificateUserIssuedDto> certificateUserIssuedDtos, PerformContext context = null);
+
+        ///<summary>
+        ///Handle to send cretificate issued mail
+        ///</summary>
+        /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
+        /// <param name="courseName"> Name of the course </param>
+        ///<returns>the tasl complete </returns
+        Task SendLessonAddedMailAsync(string courseName,PerformContext context = null);
+
+        
     }
 }

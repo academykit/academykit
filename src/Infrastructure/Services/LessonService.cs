@@ -1,6 +1,7 @@
 namespace Lingtren.Infrastructure.Services
 {
     using AngleSharp.Common;
+    using Hangfire;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -278,7 +279,6 @@ namespace Lingtren.Infrastructure.Services
                     throw new EntityNotFoundException("Training not found.");
                 }
                 var currentTimeStamp = DateTime.UtcNow;
-
                 var lesson = new Lesson
                 {
                     Id = Guid.NewGuid(),
@@ -296,7 +296,8 @@ namespace Lingtren.Infrastructure.Services
                     CreatedOn = currentTimeStamp,
                     UpdatedBy = currentUserId,
                     UpdatedOn = currentTimeStamp,
-                };
+                };               
+
                 if (lesson.Type == LessonType.Exam)
                 {
                     lesson.Name = model.QuestionSet.Name;
@@ -335,6 +336,7 @@ namespace Lingtren.Infrastructure.Services
                 lesson.Order = order;
                 await _unitOfWork.GetRepository<Lesson>().InsertAsync(lesson).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
                 return lesson;
             }
             catch (Exception ex)
