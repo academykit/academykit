@@ -886,54 +886,41 @@
                     var trimedUsers = users.Where(x => x.Id != userId && x.CourseEnrollments != course.CourseEnrollments && x.Role != UserRole.SuperAdmin && x.Role != UserRole.Admin &&
                     x.Id != course.CreatedBy && x.CourseTeachers != course.CourseTeachers);
 
-                    var responses = new List<UserResponseModel>();
+                    var response = new List<UserResponseModel>();
 
 
                     foreach (var trimedUser in trimedUsers)
                     {
-                        responses.Add(new UserResponseModel
+                        response.Add(new UserResponseModel
                         {
-                            response.Id = trimedUser.Id;
-                        response.FullName = trimedUser.FullName;
-                        response.Address = trimedUser.Address;
-                        response.Email = trimedUser.Email;
-                        response.FirstName = trimedUser.FirstName;
-                        response.LastName = trimedUser.LastName;
-                        response.MobileNumber = trimedUser.MobileNumber;
-                        response.Bio = trimedUser.Bio;
-                        response.Role = trimedUser.Role;
-                        response.DepartmentId = trimedUser.DepartmentId;
-                        response.IsActive = trimedUser.IsActive;
-                        response.PublicUrls = trimedUser.PublicUrls;
-                    });
-                    var response = new UserResponseModel();
-                    response.Id = trimedUser.Id;
-                    response.FullName = trimedUser.FullName;
-                    response.Address = trimedUser.Address;
-                    response.Email = trimedUser.Email;
-                    response.FirstName = trimedUser.FirstName;
-                    response.LastName = trimedUser.LastName;
-                    response.MobileNumber = trimedUser.MobileNumber;
-                    response.Bio = trimedUser.Bio;
-                    response.Role = trimedUser.Role;
-                    response.DepartmentId = trimedUser.DepartmentId;
-                    response.IsActive = trimedUser.IsActive;
-                    response.PublicUrls = trimedUser.PublicUrls;
-                    responses.Add(response);
-                }
+                            Id=trimedUser.Id,
+                            FullName=trimedUser.FullName,
+                            Address = trimedUser.Address,
+                            Email = trimedUser.Email,
+                            FirstName = trimedUser.FirstName,
+                            LastName = trimedUser.LastName, 
+                            MobileNumber = trimedUser.MobileNumber,
+                            Bio = trimedUser.Bio,
+                            Role = trimedUser.Role,
+                            DepartmentId = trimedUser.DepartmentId,
+                            IsActive = trimedUser.IsActive,
+                            PublicUrls = trimedUser.PublicUrls,
 
-                return responses;
-            }
+                        });
+                    }
+
+                    return response;
+                }
                 else
-            {
-                throw new UnauthorizedAccessException("Trainee are not Aloowed to excess this feature");
+                {
+                    throw new UnauthorizedAccessException("Trainee are not Aloowed to excess this feature");
+                }
             }
-        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to fetch user detail information.");
-                throw ex is ServiceException? ex : new ServiceException("An error occurred while attempting to fetch user detail information.");
-    }
-}
+                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to fetch user detail information.");
+            }
+        }
     }
 }
