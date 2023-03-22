@@ -841,7 +841,8 @@ namespace Lingtren.Infrastructure.Services
                 var response = new CourseStatisticsResponseModel();
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.CourseId == course.Id &&
-                !p.IsDeleted && (p.Status == CourseStatus.Published || p.Status == CourseStatus.Completed)).ConfigureAwait(false);
+                !p.IsDeleted && (p.Status == CourseStatus.Published || p.Status == CourseStatus.Completed),
+                include: src =>src.Include(x =>x.Meeting)).ConfigureAwait(false);
                 response.TotalTeachers = course.CourseTeachers.Count;
                 response.TotalLessons = lessons.Count;
                 response.TotalMeetings = lessons.Count(x => (x.Type == LessonType.LiveClass || x.Type == LessonType.RecordedVideo) && x.MeetingId != null);
@@ -851,7 +852,16 @@ namespace Lingtren.Infrastructure.Services
                 response.TotalDocuments = lessons.Count(x => x.Type == LessonType.Document);
                 response.TotalEnrollments = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(predicate: p => p.CourseId == course.Id &&
                 (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed));
-                return response;
+                if (lessons.Any(x => x.Meeting == null))
+                {
+                    return response;
+                }
+                else
+                {
+                    response.LiveSessionStats = lessons.ToList();
+                    return response;
+                }
+                
             }
             catch (Exception ex)
             {
