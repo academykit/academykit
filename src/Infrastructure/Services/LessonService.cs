@@ -935,6 +935,7 @@ namespace Lingtren.Infrastructure.Services
                 CreatedOn = lesson.CreatedOn,
                 UpdatedBy = lesson.UpdatedBy,
                 UpdatedOn = lesson.UpdatedOn
+                
             };
             lesson.MeetingId = lesson.Meeting.Id;
 
