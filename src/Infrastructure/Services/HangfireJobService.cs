@@ -145,9 +145,10 @@ namespace Lingtren.Infrastructure.Services
                 foreach (var emailDto in dtos)
                 {
                     var html = $"Dear {emailDto.FullName},<br><br>";
-                    html += $"Your account has been created in {emailDto.CompanyName}. <br> Your Login Password is <b><u>{emailDto.Password}</u></b><br><br>";
-                    html += $"Thank You,<br> {emailDto.CompanyName}";
-                    html += @$"<a href ='{this._appUrl}' ><u  style='color:blue;'> Click Here </u></a>";                    
+                    html += $"Your account has been created in {emailDto.CompanyName}." +
+                        @$"<a href ='{this._appUrl}' ><u  style='color:blue;'> Click Here </u></a> to got to application" +
+                        $"<br> Your Login Password is <b><u>{emailDto.Password}</u></b><br><br>";
+                    html += $"<br><br>Thank You,<br> {emailDto.CompanyName}";
                     var model = new EmailRequestDto
                     {
                         To = emailDto.Email,
@@ -198,7 +199,7 @@ namespace Lingtren.Infrastructure.Services
                     var html = $"Dear {fullName},<br><br>";
                     html += $"You have been added to the {gropName}. Now you can find the Training Materials which has been created for this {gropName}. <br><br>";
                     html += $"Link to the group :";
-                    html += $"<a href = '{this._appUrl}/groups/{gropName}' > Click here </a>";
+                    html += $"<a href = '{this._appUrl}/groups/{gropName}' ><u  style='color:blue;'> Click here </u> </a>";
                     html += $"<br>Thank You, <br> {settings.CompanyName}";
                     
                     var model = new EmailRequestDto
