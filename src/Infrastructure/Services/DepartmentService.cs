@@ -196,8 +196,7 @@
                     var department = await _unitOfWork.GetRepository<Department>().GetAllAsync(predicate: p => p.Name == departmentName,
                         include: src=>src.Include(x =>x.Users)).ConfigureAwait(false);
                     var resopnse = new List<UserResponseModel>();
-                    var departmentUsers = department.SelectMany(x => x.Users.Where(x=>x.Role != UserRole.Admin));
-                    foreach(var departmentUser in department.SelectMany(x=>x.Users))
+                    foreach(var departmentUser in department.SelectMany(x=>x.Users.Where(x=>x.Role != UserRole.Admin && x.Role !=UserRole.SuperAdmin)))
                     {
                         resopnse.Add(new UserResponseModel
                         {

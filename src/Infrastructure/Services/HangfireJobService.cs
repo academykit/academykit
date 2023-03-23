@@ -342,7 +342,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var fullName = user.UserName;
                     var html = $"Dear {fullName},<br><br>";
-                    html += $"Your certificate of couse named '{user.CourseName}' have been issued";
+                    html += $"Your certificate of couse named '{user.CourseName}' have been issued.";
                     html += $"<br><br>Thank You, <br> {settings.CompanyName}";
 
                     var model = new EmailRequestDto
