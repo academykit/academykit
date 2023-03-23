@@ -16,5 +16,12 @@
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns></returns>
         Task<SearchResult<UserResponseModel>> GetUsers(string identity, BaseSearchCriteria searchCriteria, Guid currentUserId);
+
+        /// <summary>
+        /// Get Department 
+        /// </summary>
+        /// <param name ="departmentName">the group id or slug</param>
+        /// <returns>the instance of <see cref="UserResponseModel"/></returns>
+        Task<List<UserResponseModel>> GetUserByDepartmentName(Guid CurrentUserId, string departmentName);
     }
 }

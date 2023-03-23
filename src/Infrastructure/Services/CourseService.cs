@@ -852,15 +852,9 @@ namespace Lingtren.Infrastructure.Services
                 response.TotalDocuments = lessons.Count(x => x.Type == LessonType.Document);
                 response.TotalEnrollments = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(predicate: p => p.CourseId == course.Id &&
                 (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed));
-                if (lessons.Any(x => x.Meeting == null))
-                {
+               
                     return response;
-                }
-                else
-                {
-                    response.LiveSessionStats = lessons.ToList();
-                    return response;
-                }
+                
                 
             }
             catch (Exception ex)

@@ -146,7 +146,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var html = $"Dear {emailDto.FullName},<br><br>";
                     html += $"Your account has been created in {emailDto.CompanyName}." +
-                        @$"<a href ='{this._appUrl}' ><u  style='color:blue;'> Click Here </u></a> to got to application" +
+                        @$"<a href ='{this._appUrl}' ><u  style='color:blue;'> Click Here </u></a> to go to application" +
                         $"<br> Your Login Password is <b><u>{emailDto.Password}</u></b><br><br>";
                     html += $"<br><br>Thank You,<br> {emailDto.CompanyName}";
                     var model = new EmailRequestDto
