@@ -863,25 +863,10 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var response = new CourseStatisticsResponseModel();
-                //var meetings = new List<(string LessonSlug, string Passcode,DateTime? StartDate,Guid ZoomId)>();
-                //foreach (var meeting1 in responses.Select(x => x.Meetings1))
-                //{
-                //    meetings.Add((LessonSlug: meeting1.LessonSlug, Passcode: meeting1.Passcode, StartDate: meeting1.StartDate, ZoomId: meeting1.ZoomId));
-
-                //}
-                //response.MeetingsList = new List<MeetingDashboardResponseMpodel>();
+               
                 var newMeeting = new List<MeetingDashboardResponseMpodel>();
                 foreach (var meetings12 in responses.Select(x => x.Meetings1))
                 {
-                    //response.MeetingsList.Append(new MeetingDashboardResponseMpodel
-                    //{
-                    //    Passcode = meetings12.Passcode,
-                    //    LessonSlug = meetings12.LessonSlug,
-                    //    StartDate = meetings12.StartDate,
-                    //    ZoomId = meetings12.ZoomId
-                    //});
-
-
                     newMeeting.Add(new MeetingDashboardResponseMpodel
                     {
                         Passcode = meetings12.Passcode,
@@ -889,7 +874,6 @@ namespace Lingtren.Infrastructure.Services
                         StartDate = meetings12.StartDate,
                         ZoomId = meetings12.ZoomId
                     }) ;
-
                 }
 
                 response.MeetingsList = newMeeting;
