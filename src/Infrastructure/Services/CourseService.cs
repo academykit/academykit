@@ -1,26 +1,25 @@
 namespace Lingtren.Infrastructure.Services
 {
-    using AngleSharp.Common;
     using Application.Common.Dtos;
+    using Application.Common.Models.ResponseModels;
     using Hangfire;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Routing.Constraints;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Conventions;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using RestSharp;
+    using System;
     using System.Collections;
+    using System.Collections.Immutable;
     using System.Data;
     using System.IO;
     using System.Linq;
@@ -838,12 +837,63 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var response = new CourseStatisticsResponseModel();
+                var responses = new List<CourseStatisticsResponseModel>();
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.CourseId == course.Id &&
                 !p.IsDeleted && (p.Status == CourseStatus.Published || p.Status == CourseStatus.Completed),
                 include: src =>src.Include(x =>x.Meeting)).ConfigureAwait(false);
-                response.TotalTeachers = course.CourseTeachers.Count;
+                var meeting = lessons.Select(x => x.Meeting);
+                var meetingName = meeting.Select(x => x.Lesson.Name).ToList();
+                var lessonSlug = lessons.Select(x => x.Slug).ToList();
+                var passcode = meeting.Select(x => x.Passcode).ToList();
+                var startdate = meeting.Select(x=>x.StartDate).ToList();
+                var ZoomId = meeting.Select(x=>x.Id).ToList();
+
+                var meetingCredential1 = new Dictionary<string, (string LessonSlug, string Passcode, DateTime? StartDate, Guid ZoomId)>();
+                for (int i = 0; i < meetingName.Count; i++)
+                {
+                    meetingCredential1.Add(meetingName[i], (LessonSlug : lessonSlug[i], Passcode : passcode[i], StartDate : startdate[i], ZoomId : ZoomId[i]));
+                }
+
+                foreach (var metingcredential in meetingCredential1)
+                {
+                    responses.Add(new CourseStatisticsResponseModel {
+                    Meetings1 = (LessonSlug: metingcredential.Value.LessonSlug, Passcode: metingcredential.Value.Passcode, StartDate: metingcredential.Value.StartDate, ZoomId: metingcredential.Value.ZoomId)
+                    });
+                }
+
+                var response = new CourseStatisticsResponseModel();
+                //var meetings = new List<(string LessonSlug, string Passcode,DateTime? StartDate,Guid ZoomId)>();
+                //foreach (var meeting1 in responses.Select(x => x.Meetings1))
+                //{
+                //    meetings.Add((LessonSlug: meeting1.LessonSlug, Passcode: meeting1.Passcode, StartDate: meeting1.StartDate, ZoomId: meeting1.ZoomId));
+
+                //}
+                //response.MeetingsList = new List<MeetingDashboardResponseMpodel>();
+                var newMeeting = new List<MeetingDashboardResponseMpodel>();
+                foreach (var meetings12 in responses.Select(x => x.Meetings1))
+                {
+                    //response.MeetingsList.Append(new MeetingDashboardResponseMpodel
+                    //{
+                    //    Passcode = meetings12.Passcode,
+                    //    LessonSlug = meetings12.LessonSlug,
+                    //    StartDate = meetings12.StartDate,
+                    //    ZoomId = meetings12.ZoomId
+                    //});
+
+
+                    newMeeting.Add(new MeetingDashboardResponseMpodel
+                    {
+                        Passcode = meetings12.Passcode,
+                        LessonSlug = meetings12.LessonSlug,
+                        StartDate = meetings12.StartDate,
+                        ZoomId = meetings12.ZoomId
+                    }) ;
+
+                }
+
+                response.MeetingsList = newMeeting;
+               
                 response.TotalLessons = lessons.Count;
                 response.TotalMeetings = lessons.Count(x => (x.Type == LessonType.LiveClass || x.Type == LessonType.RecordedVideo) && x.MeetingId != null);
                 response.TotalLectures = lessons.Count(x => x.Type == LessonType.Video || x.Type == LessonType.RecordedVideo);
@@ -852,10 +902,8 @@ namespace Lingtren.Infrastructure.Services
                 response.TotalDocuments = lessons.Count(x => x.Type == LessonType.Document);
                 response.TotalEnrollments = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(predicate: p => p.CourseId == course.Id &&
                 (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed));
-               
-                    return response;
-                
-                
+                return response;
+    
             }
             catch (Exception ex)
             {
