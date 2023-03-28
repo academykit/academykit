@@ -1,5 +1,9 @@
 namespace Lingtren.Infrastructure.Services
 {
+    using Amazon.Runtime.Internal;
+    using Amazon.S3.Model.Internal.MarshallTransformations;
+    using AngleSharp.Io;
+    using AngleSharp.Text;
     using Application.Common.Dtos;
     using Application.Common.Models.ResponseModels;
     using Hangfire;
@@ -12,6 +16,7 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Routing.Constraints;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Configuration;
@@ -298,7 +303,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="model">the instance of <see cref="CourseStatusRequestModel" /> .</param>
         /// <param name="currentUserId">the current id</param>
         /// <returns></returns>
-        public async Task ChangeStatusAsync(CourseStatusRequestModel model ,Guid currentUserId)
+        public async Task ChangeStatusAsync(CourseStatusRequestModel model, Guid currentUserId)
         {
             var course = await ValidateAndGetCourse(currentUserId, model.Identity, validateForModify: true).ConfigureAwait(false);
 
@@ -353,7 +358,7 @@ namespace Lingtren.Infrastructure.Services
             _unitOfWork.GetRepository<Lesson>().Update(lessons);
             _unitOfWork.GetRepository<Course>().Update(course);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                   
+
             if (model.Status == CourseStatus.Review)
             {
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseReviewMailAsync(course.Name, null));
@@ -369,12 +374,12 @@ namespace Lingtren.Infrastructure.Services
                 {
                     BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendLessonAddedMailAsync(course.Name, null));
                 }
-                
+
             }
 
-            if(model.Status == CourseStatus.Rejected)
+            if (model.Status == CourseStatus.Rejected)
             {
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.CourseRejectedMailAsync(course.Id,model.Message,null));
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.CourseRejectedMailAsync(course.Id, model.Message, null));
             }
         }
 
@@ -454,7 +459,7 @@ namespace Lingtren.Infrastructure.Services
 
                 if (courseEnrollment.EnrollmentMemberStatus.Equals(EnrollmentMemberStatusEnum.Enrolled))
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseEnrollmentMailAsync(course.Id,course.Name,null));
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseEnrollmentMailAsync(course.Id, course.Name, null));
                 }
 
                 await _unitOfWork.GetRepository<CourseEnrollment>().InsertAsync(courseEnrollment).ConfigureAwait(false);
@@ -841,29 +846,29 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
                 var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.CourseId == course.Id &&
                 !p.IsDeleted && (p.Status == CourseStatus.Published || p.Status == CourseStatus.Completed),
-                include: src =>src.Include(x =>x.Meeting)).ConfigureAwait(false);
+                include: src => src.Include(x => x.Meeting)).ConfigureAwait(false);
                 var meeting = lessons.Select(x => x.Meeting);
                 var meetingName = meeting.Select(x => x.Lesson.Name).ToList();
                 var lessonSlug = lessons.Select(x => x.Slug).ToList();
                 var passcode = meeting.Select(x => x.Passcode).ToList();
-                var startdate = meeting.Select(x=>x.StartDate).ToList();
-                var ZoomId = meeting.Select(x=>x.Id).ToList();
+                var startdate = meeting.Select(x => x.StartDate).ToList();
+                var ZoomId = meeting.Select(x => x.Id).ToList();
 
                 var meetingCredential1 = new Dictionary<string, (string LessonSlug, string Passcode, DateTime? StartDate, Guid ZoomId)>();
                 for (int i = 0; i < meetingName.Count; i++)
                 {
-                    meetingCredential1.Add(meetingName[i], (LessonSlug : lessonSlug[i], Passcode : passcode[i], StartDate : startdate[i], ZoomId : ZoomId[i]));
+                    meetingCredential1.Add(meetingName[i], (LessonSlug: lessonSlug[i], Passcode: passcode[i], StartDate: startdate[i], ZoomId: ZoomId[i]));
                 }
 
                 foreach (var metingcredential in meetingCredential1)
                 {
                     responses.Add(new CourseStatisticsResponseModel {
-                    Meetings1 = (LessonSlug: metingcredential.Value.LessonSlug, Passcode: metingcredential.Value.Passcode, StartDate: metingcredential.Value.StartDate, ZoomId: metingcredential.Value.ZoomId)
+                        Meetings1 = (LessonSlug: metingcredential.Value.LessonSlug, Passcode: metingcredential.Value.Passcode, StartDate: metingcredential.Value.StartDate, ZoomId: metingcredential.Value.ZoomId)
                     });
                 }
 
                 var response = new CourseStatisticsResponseModel();
-               
+
                 var newMeeting = new List<MeetingDashboardResponseMpodel>();
                 foreach (var meetings12 in responses.Select(x => x.Meetings1))
                 {
@@ -873,11 +878,11 @@ namespace Lingtren.Infrastructure.Services
                         LessonSlug = meetings12.LessonSlug,
                         StartDate = meetings12.StartDate,
                         ZoomId = meetings12.ZoomId
-                    }) ;
+                    });
                 }
 
-                response.MeetingsList = newMeeting;
-               
+                response.MeetingsList = newMeeting.OrderByDescending(x => x.StartDate);
+
                 response.TotalLessons = lessons.Count;
                 response.TotalMeetings = lessons.Count(x => (x.Type == LessonType.LiveClass || x.Type == LessonType.RecordedVideo) && x.MeetingId != null);
                 response.TotalLectures = lessons.Count(x => x.Type == LessonType.Video || x.Type == LessonType.RecordedVideo);
@@ -886,8 +891,10 @@ namespace Lingtren.Infrastructure.Services
                 response.TotalDocuments = lessons.Count(x => x.Type == LessonType.Document);
                 response.TotalEnrollments = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(predicate: p => p.CourseId == course.Id &&
                 (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed));
+
+
                 return response;
-    
+
             }
             catch (Exception ex)
             {
@@ -1112,7 +1119,7 @@ namespace Lingtren.Infrastructure.Services
 
                 responseModel.TotalEnrolledCourses = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(predicate: p => p.EnrollmentMemberStatus.Equals(EnrollmentMemberStatusEnum.Enrolled) &&
                     p.UserId.Equals(currentUserId));
-            
+
                 responseModel.TotalActiveTrainings = trainings.Count(predicate: p => p.Status == CourseStatus.Published || p.IsUpdate);
                 responseModel.TotalCompletedTrainings = trainings.Count(predicate: p => p.Status == CourseStatus.Completed);
             }
@@ -1211,6 +1218,166 @@ namespace Lingtren.Infrastructure.Services
             }
             return response;
         }
+
+
+        /// <summary>
+        /// Handles to get upcomming lesson
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <returns> the list of lesson <see cref="Lesson" /> .</returns>
+        public async Task<List<DashboardLessonResponseModel>> GetUpcommingLesson(Guid currentUserId)
+        {
+            try
+            {
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == currentUserId,
+                    include : src =>src.Include(x =>x.CourseEnrollments)).ConfigureAwait(false);
+                   
+                    if (user.Role == UserRole.SuperAdmin || user.Role == UserRole.Admin)
+                    {
+                        var course = await _unitOfWork.GetRepository<Course>().GetAllAsync(include: src => src.Include(x => x.Lessons).ThenInclude(x => x.Meeting)).ConfigureAwait(false);
+                        var currentDateTime = DateTime.Now;
+                        var response = new List<DashboardLessonResponseModel>();
+                        var upcommingLessons = course.SelectMany(x => x.Lessons).Where(x => x.Meeting.StartDate > currentDateTime).ToList();
+                        foreach (var lesson in upcommingLessons)
+                        {
+                            response.Add(new DashboardLessonResponseModel
+                            {
+                                LessonSlug = lesson.Slug,
+                                LessonType = lesson.Type,
+                                LessonName = lesson.Name,
+                                StartDate = lesson.Meeting.StartDate,
+                            });
+                        }
+
+                        response = response.OrderByDescending(x => x.StartDate).Reverse().ToList();
+                        return response;
+                    }
+
+                if (user.Role == UserRole.Trainer)
+                {
+                    var courseLiveLessons = await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p => p.CourseTeachers.Any(x => x.UserId == currentUserId ||
+                    p.CourseEnrollments.Any(x => x.UserId == currentUserId)),
+                        include: src => src.Include(x => x.CourseEnrollments).Include(x => x.Lessons).ThenInclude(x => x.Meeting)).ConfigureAwait(false);
+
+                    var courseExamLessons = await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p => p.CourseTeachers.Any(x => x.UserId == currentUserId ||
+                    p.CourseEnrollments.Any(x => x.UserId == currentUserId)),
+                        include: src => src.Include(x => x.CourseEnrollments).Include(x => x.Lessons).ThenInclude(x => x.QuestionSet)).ConfigureAwait(false);
+
+                    var CourseAssignmentLesson = await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p => p.CourseTeachers.Any(x => x.UserId == currentUserId ||
+                    p.CourseEnrollments.Any(x => x.UserId == currentUserId)),
+                        include: src => src.Include(x => x.CourseEnrollments).Include(x => x.Lessons).ThenInclude(x => x.Assignments)).ConfigureAwait(false);
+
+
+                    var currentDateTime = DateTime.Now;
+                    var upcommingLiveLessons = courseLiveLessons.SelectMany(x => x.Lessons).Where(x => x.Meeting.StartDate > currentDateTime).ToList();
+                    var upcommingLessonExams = courseExamLessons.SelectMany(x => x.Lessons).Where(x => x.QuestionSet.StartTime > currentDateTime).ToList();
+                    var upcommingAssignments = CourseAssignmentLesson.SelectMany(x => x.Lessons).Where(x => x.StartDate > currentDateTime).ToList();
+
+                    var response = new List<DashboardLessonResponseModel>();
+
+                    foreach (var lesson in upcommingLiveLessons)
+                    {
+                        response.Add(new DashboardLessonResponseModel
+                        {
+                            LessonSlug = lesson.Slug,
+                            LessonType = lesson.Type,
+                            LessonName = lesson.Name,
+                            StartDate = lesson.Meeting.StartDate,
+                            CourseEnrollmentBool = courseLiveLessons.Any(x => x.CourseEnrollments.Any(x => x.CourseId == lesson.CourseId && x.UserId == currentUserId))
+                        }) ;
+                    }
+
+                    foreach (var lesson in upcommingAssignments)
+                    {
+                        response.Add(new DashboardLessonResponseModel
+                        {
+                            LessonSlug = lesson.Slug,
+                            LessonType = lesson.Type,
+                            LessonName = lesson.Name,
+                            StartDate = lesson.StartDate,
+                            CourseEnrollmentBool = CourseAssignmentLesson.Any(x => x.CourseEnrollments.Any(x => x.CourseId == lesson.CourseId && x.UserId == currentUserId))
+                        });
+                    }
+
+                    foreach (var lesson in upcommingLessonExams)
+                    {
+                        response.Add(new DashboardLessonResponseModel
+                        {
+                            LessonSlug = lesson.Slug,
+                            LessonType = lesson.Type,
+                            LessonName = lesson.Name,
+                            StartDate = lesson.QuestionSet.StartTime,
+                            CourseEnrollmentBool = courseExamLessons.Any(x => x.CourseEnrollments.Any(x => x.CourseId == lesson.CourseId && x.UserId == currentUserId))
+                        });
+                    }
+                    response = response.OrderByDescending(x => x.StartDate).Reverse().ToList();
+                    return response;
+                }
+             
+
+                if (user.Role == UserRole.Trainee)
+                {
+                    var lessonLiveClass= await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.Course.CourseEnrollments.All(x => x.UserId == currentUserId),
+                       include: src =>src.Include(x=>x.Meeting)).ConfigureAwait(false);
+                    var lessonExam = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.Course.CourseEnrollments.All(x => x.UserId == currentUserId),
+                       include: src => src.Include(x => x.QuestionSet)).ConfigureAwait(false);
+                    var lessonAssignments = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.Course.CourseEnrollments.All(x => x.UserId == currentUserId),
+                      include: src => src.Include(x => x.Assignments)).ConfigureAwait(false);
+
+                    var currentDateTime = DateTime.Now;
+
+                    var upcommingAssignments = lessonAssignments.Where(x => x.StartDate > currentDateTime).ToList();
+                    var upcommingLiveLessons = lessonLiveClass.Where(x => x.Meeting.StartDate > currentDateTime).ToList();
+                    var upcommingLessonExams = lessonExam.Where(x => x.QuestionSet.StartTime > currentDateTime).ToList();
+
+                    var response = new List<DashboardLessonResponseModel>();
+                    foreach (var lesson in upcommingLiveLessons)
+                    { 
+                        response.Add(new DashboardLessonResponseModel
+                            {
+                                LessonSlug = lesson.Slug,
+                                LessonType = lesson.Type,
+                                LessonName = lesson.Name,
+                                StartDate = lesson.Meeting.StartDate,
+                            });   
+                    }
+
+                    foreach (var lesson in upcommingAssignments)
+                    {
+                        response.Add(new DashboardLessonResponseModel
+                        {
+                            LessonSlug = lesson.Slug,
+                            LessonType = lesson.Type,
+                            LessonName = lesson.Name,
+                            StartDate = lesson.StartDate,
+                        });
+                    }
+
+                    foreach (var lesson in upcommingLessonExams)
+                    {
+                        response.Add(new DashboardLessonResponseModel
+                        {
+                            LessonSlug = lesson.Slug,
+                            LessonType = lesson.Type,
+                            LessonName = lesson.Name,
+                            StartDate = lesson.QuestionSet.StartTime
+                        });
+                    }
+                    response = response.OrderByDescending(x => x.StartDate).Reverse().ToList();
+                    return response;
+                }
+
+                else
+                {
+                    throw new UnauthorizedAccessException("This feature doesnot supports to Superadmin");
+                }
+            }
+            catch
+            {
+                throw new NullReferenceException("Not authorized ,Please register your userid first");
+            }
+        }
+
         #endregion Dashboard
 
         #region Certificate
@@ -1689,6 +1856,7 @@ namespace Lingtren.Infrastructure.Services
 
             return courseCertificate == null ? null : new CourseCertificateResponseModel(courseCertificate);
         }
+
 
 
 

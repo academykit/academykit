@@ -3,7 +3,9 @@
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.ResponseModels;
+    using Lingtren.Domain.Entities;
     using Microsoft.AspNetCore.Mvc;
+    using Org.BouncyCastle.Bcpg;
 
     public class DashboardController : BaseApiController
     {
@@ -31,6 +33,17 @@
         public async Task<SearchResult<DashboardCourseResponseModel>> GetCourses([FromQuery] BaseSearchCriteria searchCriteria)
         {
             return await _courseService.GetDashboardCourses(CurrentUser.Id, CurrentUser.Role, searchCriteria).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// dashboard api to get upcomming lesson
+        /// </summary>
+        
+        /// <returns> the list of lesson <see cref="Lesson" /> .</returns>
+        [HttpGet("UpcomminLesson")]
+        public async Task<List<DashboardLessonResponseModel>> GetUpcomminLesson()
+        {
+            return await _courseService.GetUpcommingLesson(CurrentUser.Id).ConfigureAwait(false);
         }
     }
 }
