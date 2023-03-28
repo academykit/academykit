@@ -50,6 +50,7 @@ const withSearchPagination =
     ]);
 
     let page = parseInt(params.get("page") ?? "1");
+    console.log(params.get("page"), params);
     let search = params.get("s") ?? null;
     let size = 12;
     const [searchParams, setSearchParams] = useState("");
@@ -106,6 +107,7 @@ const withSearchPagination =
     };
 
     const setPage = (pageNumber: number) => {
+      console.log(pageNumber);
       params.set("page", pageNumber.toString());
       setParams(params);
     };
@@ -113,6 +115,7 @@ const withSearchPagination =
     useEffect(() => {
       const sortBy = (sortValue && sortValue.split(":")[0]) ?? "";
       const sortType = (sortValue && sortValue.split(":")[1]) ?? "";
+      console.log(page);
 
       const data = {
         page,
