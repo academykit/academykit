@@ -121,6 +121,7 @@ const Questions = () => {
         setData([difference, data[1]]);
       }
     } else {
+      setPage(1);
       setData([[], data[1]]);
     }
   }, [questions.isSuccess, poolValue, activePage]);
@@ -186,7 +187,10 @@ const Questions = () => {
               nothingFound="No options"
               maxDropdownHeight={280}
               data={poolData}
-              onChange={setPoolValue}
+              onChange={(e) => {
+                setPoolValue(e);
+                setPage(1);
+              }}
             />
           </Grid.Col>
         </Grid>

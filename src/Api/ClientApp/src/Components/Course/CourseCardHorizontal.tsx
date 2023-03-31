@@ -244,11 +244,11 @@ const CourseCardHorizontal = ({
                 <Text ml="sm" color={"dimmed"}>
                   Group:
                 </Text>
-                <Text lineClamp={1} color="dimmed">
-                  <TypographyStylesProvider>
+                <TypographyStylesProvider>
+                  <Text lineClamp={1} color="dimmed">
                     {course.groupName}
-                  </TypographyStylesProvider>
-                </Text>
+                  </Text>
+                </TypographyStylesProvider>
               </Group>
             </Group>
           </Group>

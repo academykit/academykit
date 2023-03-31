@@ -8,7 +8,7 @@ import {
   Badge,
   Box,
   Button,
-  Container,
+  Flex,
   createStyles,
   Group,
   Modal,
@@ -46,6 +46,7 @@ const Department = ({
   searchParams,
   pagination,
   searchComponent,
+  filterComponent,
 }: IWithSearchPagination) => {
   const useStyles = createStyles((theme) => ({
     paper: {
@@ -280,7 +281,19 @@ const Department = ({
           </Paper>
         )}
       </Transition>
-      {searchComponent("Search Department")}
+      <Flex mb={10}>
+        {searchComponent("Search Department")}
+        <Flex>
+          {filterComponent(
+            [
+              { value: "true", label: "Active" },
+              { value: "false", label: "Inactive" },
+            ],
+            "Department Status",
+            "IsActive"
+          )}
+        </Flex>
+      </Flex>
 
       {getDepartment.data && getDepartment.data.totalCount > 0 ? (
         <Paper>

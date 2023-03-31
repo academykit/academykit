@@ -65,7 +65,6 @@ const AddMeeting = ({
   const [isMandatory, setIsMandatory] = useState<boolean>(
     item?.isMandatory ?? false
   );
-  console.log(item);
 
   const updateLesson = useUpdateLesson(
     slug as string,
