@@ -1,4 +1,6 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿using Lingtren.Domain.Enums;
+
+namespace Lingtren.Application.Common.Models.ResponseModels
 {
     public class DashboardResponseModel
     {
@@ -23,5 +25,17 @@
         public decimal? Percentage { get; set; }
         public UserModel User { get; set; }
         public IList<UserModel>? Students { get; set; }
+    }
+
+    public class DashboardLessonResponseModel
+    {
+        public string LessonSlug { get; set; }
+        public LessonType LessonType { get; set; }
+        public string LessonName { get; set; }
+        public DateTime? StartDate { get; set; }
+
+        
+        public bool? CourseEnrollmentBool { get; set; }  
+
     }
 }

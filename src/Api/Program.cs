@@ -3,8 +3,7 @@ using HangfireBasicAuthenticationFilter;
 using Lingtren.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.HttpOverrides;
-
-
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 

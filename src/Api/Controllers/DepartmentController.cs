@@ -85,6 +85,18 @@
         }
 
         /// <summary>
+        /// Get Department 
+        /// </summary>
+        /// <param name ="departmentName">the group id or slug</param>
+        /// <returns>the instance of <see cref="UserResponseModel"/></returns>
+
+        [HttpGet("{departmentName}/identity")]
+        public async Task<List<UserResponseModel>> GetUserBuDepartmentName(string departmentName)
+        {
+            return await _departmentService.GetUserByDepartmentName(CurrentUser.Id, departmentName).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// update department api
         /// </summary>
         /// <param name="identity"> id or slug </param>
