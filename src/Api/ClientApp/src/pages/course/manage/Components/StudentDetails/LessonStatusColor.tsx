@@ -1,5 +1,6 @@
 import { Badge, Group } from "@mantine/core";
 import { LessonType } from "@utils/enums";
+import { IStudentInfoLesson } from "@utils/services/manageCourseService";
 
 const videoType = {
   true: "Watched",
@@ -44,13 +45,9 @@ export const getType = (type: LessonType) => {
 };
 
 const LessonStatusColor = ({
-  type,
-  isPassed,
-  isCompleted,
+  status: { isPassed, isCompleted, lessonType: type },
 }: {
-  type: LessonType;
-  isPassed: boolean;
-  isCompleted: boolean;
+  status: IStudentInfoLesson;
 }) => (
   <>
     <Group position="center">

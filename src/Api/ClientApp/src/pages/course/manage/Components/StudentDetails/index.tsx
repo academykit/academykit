@@ -27,6 +27,7 @@ import {
 import moment from "moment";
 import formatDuration from "@utils/formatDuration";
 import { getType } from "./LessonStatusColor";
+import { IStudentInfoLesson } from "@utils/services/manageCourseService";
 
 const TableRow = ({ values }: { values: IReportDetail }) => {
   const theme = useMantineTheme();
@@ -41,21 +42,19 @@ const TableRow = ({ values }: { values: IReportDetail }) => {
 };
 
 const StudentLessonDetails = ({
-  type,
-  questionSetId,
-  studentId,
-  lessonId,
-  isCompleted,
+  studentInfo: {
+    lessonType: type,
+    isCompleted,
+    lessonId,
+    lessonName,
+    questionSetId,
+  },
   courseId,
-  lessonName,
+  studentId,
 }: {
-  type: LessonType;
-  questionSetId?: string;
-  studentId: string;
-  lessonId: string;
-  isCompleted: boolean;
+  studentInfo: IStudentInfoLesson;
   courseId: string;
-  lessonName: string;
+  studentId: string;
 }) => {
   const slug = useParams();
   const watchHistory = useWatchHistoryUser(
