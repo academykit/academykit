@@ -51,7 +51,7 @@ namespace Lingtren.Api.Controllers
             };
 
             searchResult.Items.ForEach(p =>
-                 response.Items.Add(new CourseResponseModel(p, _courseService.GetUserCourseEnrollmentStatus(p, CurrentUser.Id)))
+                 response.Items.Add(new CourseResponseModel(p, searchCriteria.EnrollmentStatus == null ? _courseService.GetUserCourseEnrollmentStatus(p, CurrentUser.Id) : searchCriteria.EnrollmentStatus.FirstOrDefault()))
              );
             return response;
         }

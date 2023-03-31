@@ -30,7 +30,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient().WithEndpoint(credentails.EndPoint).
-                            WithCredentials(credentails.AccessKey, credentails.SecretKey).Build();
+                            WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
                 var fileName = string.Concat(model.File.FileName.Where(c => !char.IsWhiteSpace(c)));
                 var extension = Path.GetExtension(fileName);
                 fileName = $"{Guid.NewGuid()}_{fileName}";
@@ -73,7 +73,7 @@ namespace Lingtren.Infrastructure.Services
             {
                  var credentails = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient().WithEndpoint(credentails.EndPoint).
-                            WithCredentials(credentails.AccessKey, credentails.SecretKey).Build();
+                            WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
                 var fileName = $"private/{Guid.NewGuid()}.mp4";
                 var objectArgs = new Minio.PutObjectArgs().WithObject(fileName).WithBucket(credentails.Bucket).WithFileName(filePath).
                     WithContentType("video/mp4").WithObjectSize(fileSize);
@@ -121,7 +121,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient().WithEndpoint(credentails.EndPoint).
-                            WithCredentials(credentails.AccessKey, credentails.SecretKey).Build();
+                            WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
 
 
                 var objectArgs = new Minio.RemoveObjectArgs().WithBucket(credentails.Bucket).WithObject(key);

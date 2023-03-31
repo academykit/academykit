@@ -1,3 +1,5 @@
+
+
 namespace Lingtren.Application.Common.Models.ResponseModels
 {
     public class CourseStatisticsResponseModel
@@ -9,6 +11,16 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public int TotalLectures { get; set; }
         public int TotalExams { get; set; }
         public int TotalMeetings { get; set; }
-        public int TotalDocuments { get; set; }
+        public int TotalDocuments { get; set; }   
+        public (string LessonSlug, string Passcode, DateTime? StartDate, Guid ZoomId) Meetings1 { get; set; }
+        public IEnumerable<MeetingDashboardResponseMpodel> MeetingsList { get; set; }
+
+    }
+    public class MeetingDashboardResponseMpodel
+    {
+        public string LessonSlug { get; set; }
+        public string Passcode { get; set; }
+        public DateTime? StartDate { get; set; }
+        public Guid ZoomId { get; set; }
     }
 }

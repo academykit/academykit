@@ -11,6 +11,7 @@ import {
   Anchor,
   Tabs,
   FileInput,
+  Flex,
 } from "@mantine/core";
 import UserMemberTable from "@components/Users/UserMemberTable";
 import { useAddUser, useUsers } from "@utils/services/adminService";
@@ -66,7 +67,7 @@ const UsersList = ({
         title: "Successful",
       });
       setOpened(false);
-      form.reset()
+      form.reset();
     } catch (error) {
       const err = errorType(error);
       showNotification({
@@ -152,12 +153,10 @@ const UsersList = ({
           <Button onClick={() => setOpened(true)}>Add User</Button>
         </div>
       </Group>
-      <div style={{ display: "flex", marginBottom: "10px" }}>
+      <Flex mb={10}>
         {searchComponent("Search for users")}
-        <div style={{ display: "flex" }}>
-          {sortComponent(sortByObject, "Sort BY")}
-        </div>
-      </div>
+        <Flex>{sortComponent(sortByObject, "Sort BY")}</Flex>
+      </Flex>
       {loading && <Loader />}
       {error && <Box>{errorType(error)}</Box>}
 

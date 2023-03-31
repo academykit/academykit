@@ -17,11 +17,11 @@ import { Link } from "react-router-dom";
 const ExamDetails = ({
   exam,
   hasResult,
-  remainingAttempt
+  remainingAttempt,
 }: {
   exam: ICourseMcq;
   hasResult: boolean;
-  remainingAttempt: number
+  remainingAttempt: number;
 }) => {
   const auth = useAuth();
   const userId = auth?.auth?.id ?? "";
@@ -43,7 +43,7 @@ const ExamDetails = ({
           </Title>
           {exam.startTime && (
             <Text>
-              Starts at {moment(exam.startTime).format(theme.dateFormat)}{" "}
+              Start Date: {moment(exam.startTime).format(theme.dateFormat)}{" "}
             </Text>
           )}
           {exam.duration ? (
@@ -51,7 +51,7 @@ const ExamDetails = ({
           ) : (
             ""
           )}
-          {exam.allowedRetake && <Text>Retake: {exam.allowedRetake}</Text>}
+          <Text>Retake: {exam.allowedRetake}</Text>
           {exam.negativeMarking ? (
             <Text>Negative marking {exam.negativeMarking}</Text>
           ) : (
@@ -72,23 +72,27 @@ const ExamDetails = ({
           </Box>
           {moment().isBetween(exam.startTime + "z", exam.endTime + "z") ? (
             <>
-            {remainingAttempt > 0 ? <Button
-              mt={10}
-              component={Link}
-              to={RoutePath.exam.details(exam.slug).route}
-            >
-              Start Exam
-            </Button>: <Text mt={15}>You have exceeded attempt count.</Text>}
+              {remainingAttempt > 0 ? (
+                <Button
+                  mt={10}
+                  component={Link}
+                  to={RoutePath.exam.details(exam.slug).route}
+                >
+                  Start Exam
+                </Button>
+              ) : (
+                <Text mt={15}>You have exceeded attempt count.</Text>
+              )}
             </>
           ) : (
             <Box mt={10}>
-              {moment.utc().isBefore(exam.startTime + "z") ? `Starts ${moment(exam.startTime + "z")
-        
-                .utc()
-                .fromNow()}`: `Ended ${moment(exam.endTime + "z")
-                .utc()
-                .fromNow()}`}
-              
+              {moment.utc().isBefore(exam.startTime + "z")
+                ? `Starts ${moment(exam.startTime + "z")
+                    .utc()
+                    .fromNow()}`
+                : `Ended ${moment(exam.endTime + "z")
+                    .utc()
+                    .fromNow()}`}
             </Box>
           )}
         </div>

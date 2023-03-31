@@ -12,6 +12,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
+    using System.Data;
     using System.Linq.Expressions;
 
     public class DepartmentService : BaseGenericService<Department, DepartmentBaseSearchCriteria>, IDepartmentService
@@ -62,7 +63,7 @@
             }
             if (criteria.IsActive != null)
             {
-                predicate.And(p => p.IsActive == criteria.IsActive);
+              predicate =  predicate.And(p => p.IsActive == criteria.IsActive);
             }
             return predicate;
         }
@@ -177,6 +178,60 @@
                   response.Items.Add(new UserResponseModel(p))
               );
             return response;
+        }
+
+        /// <summary>
+        /// Get Department 
+        /// </summary>
+        /// <param name ="departmentName">the group id or slug</param>
+        /// <returns>the instance of <see cref="UserResponseModel"/></returns>
+        public async Task<List<UserResponseModel>> GetUserByDepartmentName(Guid CurrentUserId, string departmentName)
+        {
+            try
+            {
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == CurrentUserId);
+                if (user.Role == UserRole.SuperAdmin || user.Role == UserRole.Admin || user.Role == UserRole.Trainer)
+                {
+                    var department = await _unitOfWork.GetRepository<Department>().GetAllAsync(predicate: p => p.Name == departmentName,
+                        include: src=>src.Include(x =>x.Users)).ConfigureAwait(false);
+                    var resopnse = new List<UserResponseModel>();
+                    foreach(var departmentUser in department.SelectMany(x=>x.Users.Where(x=>x.Role != UserRole.Admin && x.Role !=UserRole.SuperAdmin)))
+                    {
+                        resopnse.Add(new UserResponseModel
+                        {
+                            Id = departmentUser.Id,
+                            FirstName = departmentUser.FirstName,
+                            MiddleName = departmentUser.MiddleName,
+                            LastName = departmentUser.LastName,
+                            Email = departmentUser.Email,
+                            MobileNumber = departmentUser.MobileNumber,
+                            Role = departmentUser.Role,
+                            Profession = departmentUser.Profession,
+                            Address = departmentUser.Address,
+                            Bio = departmentUser.Bio,
+                            ImageUrl = departmentUser.ImageUrl,
+                            PublicUrls = departmentUser.PublicUrls,
+                            IsActive = departmentUser.IsActive,
+                            CreatedOn = departmentUser.CreatedOn,
+                            FullName = departmentUser.FullName,
+                            DepartmentId = departmentUser.DepartmentId,
+                            DepartmentName = departmentUser.Department?.Name
+                        });
+                    }
+                    return resopnse;
+                }
+                else
+                {
+                    throw new UnauthorizedAccessException("Trainee are not allowed to see department user");
+                }
+
+
+            }
+
+            catch
+            {
+                throw new UnauthorizedAccessException("Cannot excess");
+            }
         }
     }
 }

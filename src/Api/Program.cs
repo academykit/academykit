@@ -3,8 +3,7 @@ using HangfireBasicAuthenticationFilter;
 using Lingtren.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.HttpOverrides;
-
-
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +48,7 @@ else
     app.UseHsts();
 }
 
+
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
@@ -81,4 +81,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapFallbackToFile("index.html");
+// app.MigrateDatabase();
 app.Run();

@@ -27,8 +27,8 @@
         /// </summary>
         /// <returns> the list of <see cref="DepartmentResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<SearchResult<DepartmentResponseModel>> SearchAsync([FromQuery] DepartmentBaseSearchCriteria searchCriteria)
-        {
+        public async Task<SearchResult<DepartmentResponseModel>> SearchAsync([FromQuery] DepartmentBaseSearchCriteria searchCriteria )
+        { 
             var searchResult = await _departmentService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             var response = new SearchResult<DepartmentResponseModel>
@@ -82,6 +82,18 @@
         {
             var model = await _departmentService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
             return new DepartmentResponseModel(model);
+        }
+
+        /// <summary>
+        /// Get Department 
+        /// </summary>
+        /// <param name ="departmentName">the group id or slug</param>
+        /// <returns>the instance of <see cref="UserResponseModel"/></returns>
+
+        [HttpGet("{departmentName}/identity")]
+        public async Task<List<UserResponseModel>> GetUserBuDepartmentName(string departmentName)
+        {
+            return await _departmentService.GetUserByDepartmentName(CurrentUser.Id, departmentName).ConfigureAwait(false);
         }
 
         /// <summary>

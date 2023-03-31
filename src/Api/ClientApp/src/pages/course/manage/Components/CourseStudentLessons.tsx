@@ -24,11 +24,7 @@ const CourseStudentLessons = ({
       </td>
 
       <td>
-        <LessonStatusColor
-          isCompleted={element.isCompleted}
-          isPassed={element.isPassed}
-          type={element.lessonType}
-        />
+        <LessonStatusColor status={element} />
       </td>
       <td>
         {ReadableEnum[
@@ -37,13 +33,9 @@ const CourseStudentLessons = ({
       </td>
       <td>
         <StudentLessonDetails
-          questionSetId={element.questionSetId}
-          type={element.lessonType}
+          studentInfo={element}
           studentId={studentId}
-          lessonId={element.lessonId}
-          isCompleted={element.isPassed}
           courseId={courseId}
-          lessonName={element.lessonName}
         />
       </td>
     </tr>

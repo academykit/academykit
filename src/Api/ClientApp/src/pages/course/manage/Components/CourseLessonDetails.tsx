@@ -13,22 +13,14 @@ const CourseLessonDetails = ({ element }: { element: LessonStatDetails }) => {
         <UserShortProfile user={element.user} size="sm" />
       </td>
       <td>
-        <LessonStatusColor
-          isCompleted={element.isCompleted}
-          isPassed={element.isPassed}
-          type={element.lessonType}
-        />
+        <LessonStatusColor status={element} />
       </td>
 
       <td>
         <StudentLessonDetails
-          questionSetId={element.questionSetId}
-          type={element.lessonType}
-          studentId={element.user.id}
-          lessonId={element.lessonId}
-          isCompleted={element.isPassed}
+          studentInfo={element}
           courseId={courseId as string}
-          lessonName={element.lessonName}
+          studentId={element.user.id}
         />
       </td>
     </tr>

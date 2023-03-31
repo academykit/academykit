@@ -268,7 +268,7 @@
 
                 var predicate = PredicateBuilder.New<T>(true);
                 // construct query conditions
-                predicate = ConstructQueryConditions(predicate, criteria);
+                 predicate = ConstructQueryConditions(predicate, criteria);
 
                 // execute query and set result properties
                 var query = _unitOfWork.GetRepository<T>().GetAll(predicate: predicate, include: includeProperties ? IncludeNavigationProperties : null);

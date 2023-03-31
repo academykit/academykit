@@ -8,6 +8,7 @@ import {
   Button,
   Center,
   Container,
+  Flex,
   Group,
   Loader,
   Modal,
@@ -32,57 +33,53 @@ const MCQQuestions = ({
   pagination,
 }: IWithSearchPagination) => {
   const { id } = useParams();
-  const questions = useQuestion(id as string, searchParams);
+  const { data, isLoading, isSuccess, isError } = useQuestion(
+    id as string,
+    searchParams
+  );
   const navigate = useNavigate();
 
   return (
     <Container fluid>
-      {questions.isLoading && <Loader />}
-      {questions.isSuccess && (
-        <>
-          <div style={{ display: "flex" }}>
-            {searchComponent("Search for questions")}
-            <Button component={Link} ml={5} to="create">
-              Add Question
-            </Button>
-          </div>
+      <Flex>
+        {searchComponent("Search for questions")}
+        <Button component={Link} ml={5} to="create">
+          Add Question
+        </Button>
+      </Flex>
 
-          {questions.data && questions.data.totalCount > 0 ? (
-            <Paper mt={10}>
-              <Table striped>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Tags</th>
-                    <th>Type</th>
-                    <th>
-                      <Center>Actions</Center>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {questions.data?.items?.map((x) => (
-                    <QuestionRow
-                      data={x}
-                      search={searchParams}
-                      poolId={id as string}
-                      key={x.id}
-                      navigate={navigate}
-                    />
-                  ))}
-                </tbody>
-              </Table>
-            </Paper>
-          ) : (
-            <Box mt={10}>No Questions found!</Box>
-          )}
+      {data && data.items && data.totalCount > 0 && (
+        <Paper mt={10}>
+          <Table striped>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Tags</th>
+                <th>Type</th>
+                <th>
+                  <Center>Actions</Center>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {data?.items?.map((x) => (
+                <QuestionRow
+                  data={x}
+                  search={searchParams}
+                  poolId={id as string}
+                  key={x.id}
+                  navigate={navigate}
+                />
+              ))}
+            </tbody>
+          </Table>
+        </Paper>
+      )}
+      {isLoading && <Loader />}
 
-          {pagination(questions.data?.totalPage)}
-        </>
-      )}
-      {questions.isError && (
-        <Box>Something went wrong! Please try again later</Box>
-      )}
+      {data && pagination(data.totalPage)}
+      {isError && <Box>Something went wrong! Please try again later</Box>}
+      {data && data?.totalCount < 1 && <Box mt={10}>No Questions found!</Box>}
     </Container>
   );
 };

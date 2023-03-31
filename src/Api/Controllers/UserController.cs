@@ -132,6 +132,19 @@
         }
 
         /// <summary>
+        /// get user by id
+        /// </summary>
+        /// <param name="userId"> the user id </param>
+        /// <param name="CourseID">the current course id </param>
+        /// <returns> the instance of <see cref="UserResponseModel" /> .</returns>
+        [HttpGet("{userId}/{courseId}")]
+        public async Task<List<UserResponseModel>> GetUsersForCouseEnrollment(Guid userId,string courseId)
+        {
+            return await _userService.GetUserForCourseEnrollment(userId, courseId).ConfigureAwait(false);
+        }
+        
+
+        /// <summary>
         /// import bulk user api
         /// </summary>
         /// <param name="model"> the instance of <see cref="UserImportRequestModel" /> . </param>
@@ -140,8 +153,8 @@
         public async Task<IActionResult> BulkUser([FromForm]UserImportRequestModel model)
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
-            await _userService.ImportUserAsync(model.File,CurrentUser.Id).ConfigureAwait(false);
-            return Ok();
+           var response =  await _userService.ImportUserAsync(model.File,CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new { statusCode = 200, message = $"{response}" });
         }
 
         /// <summary>
@@ -178,6 +191,7 @@
             existing.DepartmentId = model.DepartmentId;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
+            existing.Email = model.Email;
 
             if (CurrentUser.Role == UserRole.SuperAdmin || CurrentUser.Role == UserRole.Admin)
             {

@@ -11,6 +11,8 @@ import {
   createStyles,
   Button,
   Paper,
+  Pagination,
+  Loader,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { usePools } from "@utils/services/poolService";
@@ -80,13 +82,14 @@ const Questions = () => {
 
   const firstList: any = [];
   const secondList: any = [];
+  const [activePage, setPage] = useState(1);
 
   const [data, setData] = useState<TransferListData>([firstList, secondList]);
   const [poolValue, setPoolValue] = useState<string | null>(null);
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.sm}px)`);
   const questionPools = usePools("");
   const questionPoolTags = useTags("");
-  const questions = useQuestion(poolValue ?? "", "");
+  const questions = useQuestion(poolValue ?? "", `page=${activePage}&size=12`);
   const addQuestions = useAddQuestionQuestionSet(lessonSlug as string);
   const navigate = useNavigate();
 
@@ -118,9 +121,10 @@ const Questions = () => {
         setData([difference, data[1]]);
       }
     } else {
+      setPage(1);
       setData([[], data[1]]);
     }
-  }, [questions.isSuccess, poolValue]);
+  }, [questions.isSuccess, poolValue, activePage]);
 
   useEffect(() => {
     const i: any = questionList.data?.map((e, i) => {
@@ -183,24 +187,47 @@ const Questions = () => {
               nothingFound="No options"
               maxDropdownHeight={280}
               data={poolData}
-              onChange={setPoolValue}
+              onChange={(e) => {
+                setPoolValue(e);
+                setPage(1);
+              }}
             />
           </Grid.Col>
         </Grid>
 
-        <TransferList
-          value={data}
-          onChange={setData}
-          searchPlaceholder="Search for questions"
-          nothingFound={"No Questions Found!"}
-          titles={["Questions List", `Selected Questions (${data[1].length})`]}
-          listHeight={600}
-          breakpoint="sm"
-          //@ts-ignore
-          itemComponent={ItemComponent}
-          sx={{ height: "85%" }}
-        />
-        <Group position="left" mt={10}>
+        {questions.fetchStatus !== "idle" && questions.isLoading ? (
+          <Loader />
+        ) : (
+          <>
+            <TransferList
+              value={data}
+              onChange={setData}
+              searchPlaceholder="Search for questions"
+              nothingFound={
+                questionList.isLoading ? <Loader /> : "No Questions Found!"
+              }
+              titles={[
+                "Questions List",
+                `Selected Questions (${data[1].length})`,
+              ]}
+              listHeight={600}
+              breakpoint="sm"
+              //@ts-ignore
+              itemComponent={ItemComponent}
+              sx={{ height: "85%" }}
+            />
+
+            {questions.data && questions.data.totalPage > 1 && (
+              <Pagination
+                mt={10}
+                page={activePage}
+                onChange={setPage}
+                total={questions.data?.totalPage ?? 1}
+              />
+            )}
+          </>
+        )}
+        <Group position="left" mt={30}>
           <Button onClick={addQuestion}>Submit</Button>
           <Button
             variant="outline"

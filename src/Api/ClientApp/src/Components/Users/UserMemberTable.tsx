@@ -83,7 +83,7 @@ const UserRow = ({
       </td>
 
       <td>
-        {auth?.auth?.id !== item.id && (
+        {item.role !== UserRole.SuperAdmin && auth?.auth?.id !== item.id && (
           <IconEdit
             onClick={() => setOpened(true)}
             style={{ cursor: "pointer" }}

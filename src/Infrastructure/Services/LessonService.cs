@@ -1,6 +1,7 @@
 namespace Lingtren.Infrastructure.Services
 {
     using AngleSharp.Common;
+    using Hangfire;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -278,7 +279,6 @@ namespace Lingtren.Infrastructure.Services
                     throw new EntityNotFoundException("Training not found.");
                 }
                 var currentTimeStamp = DateTime.UtcNow;
-
                 var lesson = new Lesson
                 {
                     Id = Guid.NewGuid(),
@@ -296,7 +296,8 @@ namespace Lingtren.Infrastructure.Services
                     CreatedOn = currentTimeStamp,
                     UpdatedBy = currentUserId,
                     UpdatedOn = currentTimeStamp,
-                };
+                };               
+
                 if (lesson.Type == LessonType.Exam)
                 {
                     lesson.Name = model.QuestionSet.Name;
@@ -335,6 +336,7 @@ namespace Lingtren.Infrastructure.Services
                 lesson.Order = order;
                 await _unitOfWork.GetRepository<Lesson>().InsertAsync(lesson).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
                 return lesson;
             }
             catch (Exception ex)
@@ -657,18 +659,21 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var isModerator = course.CreatedBy == currentUserId || lesson.CreatedBy == currentUserId || course.CourseTeachers.Any(x => x.UserId == currentUserId);
-
-                //validate user is enroll in the course or not
-                if (!isModerator)
+                var hasAccess =await IsSuperAdminOrAdmin(currentUserId);
+                if(!hasAccess)
                 {
-                    var isMember = course.CourseEnrollments.Any(x => x.UserId == currentUserId && !x.IsDeleted
-                                    && (x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled));
-                    if (!isMember)
+                    if(!isModerator)
                     {
-                        _logger.LogWarning("User with id : {currentUserId} is invalid user to attend this meeting having lesson with id :{id}.", currentUserId, lesson.Id);
-                        throw new ForbiddenException("You are not allowed to access this meeting.");
+                        var isMember = course.CourseEnrollments.Any(x => x.UserId == currentUserId && !x.IsDeleted
+                                    && (x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled));
+                        if (!isMember)
+                        {
+                            _logger.LogWarning("User with id : {currentUserId} is invalid user to attend this meeting having lesson with id :{id}.", currentUserId, lesson.Id);
+                            throw new ForbiddenException("You are not allowed to access this meeting.");
+                        }
                     }
                 }
+               
 
                 var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
                 if (zoomSetting == null)
@@ -930,6 +935,7 @@ namespace Lingtren.Infrastructure.Services
                 CreatedOn = lesson.CreatedOn,
                 UpdatedBy = lesson.UpdatedBy,
                 UpdatedOn = lesson.UpdatedOn
+                
             };
             lesson.MeetingId = lesson.Meeting.Id;
 
