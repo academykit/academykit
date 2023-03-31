@@ -115,6 +115,7 @@ const CourseDescription = () => {
   const { classes } = useStyles();
   const { id } = useParams();
   const auth = useAuth();
+
   const courseStatus = useCourseStatus(id as string, "");
   const onPublish = async () => {
     try {
@@ -276,9 +277,8 @@ const CourseDescription = () => {
                   course.data?.status !==
                     (CourseStatus.Draft || CourseStatus.Review) &&
                   (auth?.auth?.role <= UserRole.Admin ||
-                    course.data?.userStatus ===
-                      (CourseUserStatus.Author ||
-                        CourseUserStatus.Teacher)) && (
+                    course.data?.userStatus === CourseUserStatus.Author ||
+                    course.data?.userStatus === CourseUserStatus.Teacher) && (
                     <Link to={RoutePath.manageCourse.dashboard(id).route}>
                       <Button radius="xl" size="md" className={classes.control}>
                         Manage

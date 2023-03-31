@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import LessonVideoUpload from "@components/Ui/LessonVideoUpload";
 import {
   Button,
@@ -60,6 +60,9 @@ const AddLecture = ({
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
   const isRecordedVideo = item?.type === LessonType.RecordedVideo;
+  const [isMandatory, setIsMandatory] = useState<boolean>(
+    item?.isMandatory ?? false
+  );
 
   const form = useForm({
     initialValues: {
@@ -136,6 +139,11 @@ const AddLecture = ({
                 <Switch
                   label="Is Mandatory"
                   {...form.getInputProps("isMandatory")}
+                  checked={isMandatory}
+                  onChange={() => {
+                    setIsMandatory(() => !isMandatory);
+                    form.setFieldValue("isMandatory", !isMandatory);
+                  }}
                 />
               )}
             </Grid.Col>

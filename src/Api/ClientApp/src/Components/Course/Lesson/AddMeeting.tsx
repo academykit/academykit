@@ -62,6 +62,9 @@ const AddMeeting = ({
     item?.id,
     isEditing
   );
+  const [isMandatory, setIsMandatory] = useState<boolean>(
+    item?.isMandatory ?? false
+  );
 
   const updateLesson = useUpdateLesson(
     slug as string,
@@ -182,7 +185,15 @@ const AddMeeting = ({
           />
         </Grid.Col>
         <Grid.Col span={6} lg={3}>
-          <Switch label="Is Mandatory" {...form.getInputProps("isMandatory")} />
+          <Switch
+            label="Is Mandatory"
+            {...form.getInputProps("isMandatory")}
+            checked={isMandatory}
+            onChange={() => {
+              setIsMandatory(() => !isMandatory);
+              form.setFieldValue("isMandatory", !isMandatory);
+            }}
+          />
         </Grid.Col>
       </Grid>
       <Group grow>

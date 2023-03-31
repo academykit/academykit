@@ -79,7 +79,9 @@ const AddExam = ({
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
 
-  const [isMandatory, setIsMandatory] = useState<boolean>(false);
+  const [isMandatory, setIsMandatory] = useState<boolean>(
+    item?.isMandatory ?? false
+  );
 
   const startDateTime = item?.questionSet?.startTime
     ? moment(item?.questionSet?.startTime + "z")
@@ -96,10 +98,10 @@ const AddExam = ({
     initialValues: {
       name: item?.name ?? "",
       description: item?.description ?? "",
-      negativeMarking: item?.negativeMarking ?? 0,
-      questionMarking: item?.questionMarking ?? 1,
-      passingWeightage: item?.passingWeightage ?? 0,
-      allowedRetake: item?.allowedRetake ?? 0,
+      negativeMarking: item?.questionSet?.negativeMarking ?? 0,
+      questionMarking: item?.questionSet?.questionMarking ?? 1,
+      passingWeightage: item?.questionSet?.passingWeightage ?? 0,
+      allowedRetake: item?.questionSet?.allowedRetake ?? 0,
       duration: item?.duration ? item?.duration / 60 : 1,
       endDate: endDateTime,
       endTime: endDateTime,
