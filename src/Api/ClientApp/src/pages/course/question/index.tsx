@@ -89,7 +89,7 @@ const Questions = () => {
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.sm}px)`);
   const questionPools = usePools("");
   const questionPoolTags = useTags("");
-  const questions = useQuestion(poolValue ?? "", activePage, 12);
+  const questions = useQuestion(poolValue ?? "", `page=${activePage}&size=12`);
   const addQuestions = useAddQuestionQuestionSet(lessonSlug as string);
   const navigate = useNavigate();
 
@@ -190,8 +190,10 @@ const Questions = () => {
             />
           </Grid.Col>
         </Grid>
-        {questions.isLoading && <Loader />}
-        {questions.isSuccess && (
+
+        {questions.fetchStatus !== "idle" && questions.isLoading ? (
+          <Loader />
+        ) : (
           <>
             <TransferList
               value={data}
@@ -211,26 +213,27 @@ const Questions = () => {
               sx={{ height: "85%" }}
             />
 
-            <Pagination
-              mt={10}
-              page={activePage}
-              onChange={setPage}
-              total={questions.data?.totalPage}
-            />
-
-            <Group position="left" mt={30}>
-              <Button onClick={addQuestion}>Submit</Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  navigate(-1);
-                }}
-              >
-                Cancel
-              </Button>
-            </Group>
+            {questions.data && questions.data.totalPage > 1 && (
+              <Pagination
+                mt={10}
+                page={activePage}
+                onChange={setPage}
+                total={questions.data?.totalPage ?? 1}
+              />
+            )}
           </>
         )}
+        <Group position="left" mt={30}>
+          <Button onClick={addQuestion}>Submit</Button>
+          <Button
+            variant="outline"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            Cancel
+          </Button>
+        </Group>
       </Paper>
     </div>
   );
