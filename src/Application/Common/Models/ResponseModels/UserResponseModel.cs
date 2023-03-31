@@ -43,5 +43,9 @@
             DepartmentId = user.DepartmentId;
             DepartmentName = user.Department?.Name;
         }
+
+        public UserResponseModel()
+        {
+        }
     }
 }

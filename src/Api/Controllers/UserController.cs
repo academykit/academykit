@@ -132,6 +132,19 @@
         }
 
         /// <summary>
+        /// get user by id
+        /// </summary>
+        /// <param name="userId"> the user id </param>
+        /// <param name="CourseID">the current course id </param>
+        /// <returns> the instance of <see cref="UserResponseModel" /> .</returns>
+        [HttpGet("{userId}/{courseId}")]
+        public async Task<List<UserResponseModel>> GetUsersForCouseEnrollment(Guid userId,string courseId)
+        {
+            return await _userService.GetUserForCourseEnrollment(userId, courseId).ConfigureAwait(false);
+        }
+        
+
+        /// <summary>
         /// import bulk user api
         /// </summary>
         /// <param name="model"> the instance of <see cref="UserImportRequestModel" /> . </param>

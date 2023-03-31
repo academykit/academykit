@@ -144,6 +144,14 @@ namespace Lingtren.Application.Common.Interfaces
         /// <returns>the search result of <see cref="DashboardResponseModel"/></returns>
         Task<SearchResult<DashboardCourseResponseModel>> GetDashboardCourses(Guid currentUserId, UserRole currentUserRole, BaseSearchCriteria criteria);
 
+        /// <summary>
+        /// Handles to get upcomming lesson
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <returns> the list of lesson <see cref="Lesson" /> .</returns>
+
+        Task<List<DashboardLessonResponseModel>> GetUpcommingLesson(Guid currentUserId);
+
         #endregion Dashboard
 
         #region Certificate
