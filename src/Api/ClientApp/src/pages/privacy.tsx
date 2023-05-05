@@ -1,4 +1,4 @@
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import  ReactMarkdown  from "react-markdown";
 import { Container } from "@mantine/core";
 
 export const PrivacyPage = () => {
