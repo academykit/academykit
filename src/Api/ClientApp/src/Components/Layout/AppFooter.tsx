@@ -45,9 +45,9 @@ const useStyles = createStyles((theme) => ({
 
 export function AppFooter({ name }: { name: string }) {
   const { classes } = useStyles();
-  const location = useLocation()
+  const location = useLocation();
 
-  if(location.pathname.split('/')[1] === "exam") return <></>
+  if (location.pathname.split("/")[1] === "exam") return <></>;
 
   return (
     <footer className={classes.footer}>
@@ -56,34 +56,16 @@ export function AppFooter({ name }: { name: string }) {
           Copyright © {new Date().getFullYear()} {name}.
         </Text>
         <Group>
-          <Anchor
-            size={"xs"}
-            component={Link}
-            to="#"
-            color={"dimmed"}
-            target="_blank"
-          >
+          <Anchor size={"xs"} component={Link} to="/privacy" color={"dimmed"}>
             Privacy
           </Anchor>
           <Divider orientation="vertical" />
-          <Anchor
-            size={"xs"}
-            component={Link}
-            to={"#"}
-            color={"dimmed"}
-            target="_blank"
-          >
+          <Anchor size={"xs"} component={Link} to={"/terms"} color={"dimmed"}>
             Terms
           </Anchor>
           <Divider orientation="vertical" />
-          <Anchor
-            size={"xs"}
-            component={Link}
-            to="#"
-            color={"dimmed"}
-            target="_blank"
-          >
-            Contact Us
+          <Anchor size={"xs"} component={Link} to="/about" color={"dimmed"}>
+            About Us
           </Anchor>
         </Group>
         <Group spacing={0} position="right" noWrap>

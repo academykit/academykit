@@ -19,6 +19,10 @@ import { Navigate } from "react-router-dom";
 import Layout from "@components/Layout/Layout";
 import AdminAuthRoute from "./AdminRoute";
 import lazyWithRetry from "@utils/lazyImportWithReload";
+import PrivacyPage from "@pages/privacy";
+import AboutPage from "@pages/about";
+import TermsPage from "@pages/terms";
+import PrivacyLayout from "@components/Layout/PrivacyLayout";
 const MyFeedback = lazyWithRetry(
   () => import("@pages/course/feedback/myfeedback")
 );
@@ -87,6 +91,11 @@ const AppRoutes = () => {
       }
     >
       <Routes>
+        <Route element={<PrivacyLayout />}>
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+        </Route>
         <Route element={<NotRequiredAuth />}>
           <Route path={RoutePath.login} element={<LoginPage />} />
           <Route path={RoutePath.forgotPassword} element={<ForgotPassword />} />
@@ -96,6 +105,7 @@ const AppRoutes = () => {
         <Route path={RoutePath[500]} element={<ServerError />} />
         <Route path={RoutePath[401]} element={<UnAuthorize />} />
         <Route path={RoutePath[403]} element={<Forbidden />} />
+
         <Route element={<RequireAuth />}>
           <Route path={RoutePath.verify} element={<Verify />} />
           <Route path={RoutePath.verifyChangeEmail} element={<ChangeEmail />} />
