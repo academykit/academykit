@@ -170,11 +170,12 @@ namespace Lingtren.Infrastructure.Services
         /// Handle to send mail to new group member
         /// </summary>
         /// <param name="gropName"> the group name </param>
+        /// <param name="groupSlug"> the group slug </param>
         /// <param name="userIds"> the list of <see cref="Guid" /> .</param>
         /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
         /// <returns> the task complete </returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task SendMailNewGroupMember(string gropName, IList<Guid> userIds, PerformContext context = null)
+        public async Task SendMailNewGroupMember(string gropName,string groupSlug ,IList<Guid> userIds, PerformContext context = null)
         {
             try
             {
@@ -199,7 +200,7 @@ namespace Lingtren.Infrastructure.Services
                     var html = $"Dear {fullName},<br><br>";
                     html += $"You have been added to the {gropName}. Now you can find the Training Materials which has been created for this {gropName}. <br><br>";
                     html += $"Link to the group :";
-                    html += $"<a href = '{this._appUrl}/groups/{gropName}' ><u  style='color:blue;'> Click here </u> </a>";
+                    html += $"<a href = '{this._appUrl}/groups/{groupSlug}' ><u  style='color:blue;'> Click here </u> </a>";
                     html += $"<br>Thank You, <br> {settings.CompanyName}";
                     
                     var model = new EmailRequestDto
@@ -223,10 +224,11 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="groupId"> the group id</param>
         /// <param name="courseName"> the course name </param>
+        /// <param name="courseSlug"> the course slug </param>
         /// <param name="context"> the instance of <see cref="PerformContext"/></param>
         /// <returns> the task complete </returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task GroupCoursePublishedMailAsync(Guid groupId, string courseName, PerformContext context = null)
+        public async Task GroupCoursePublishedMailAsync(Guid groupId, string courseName,string courseSlug ,PerformContext context = null)
         {
             try
             {
@@ -247,7 +249,7 @@ namespace Lingtren.Infrastructure.Services
                         var fullName = string.IsNullOrEmpty(member.User?.MiddleName) ? $"{member.User?.FirstName} {member.User?.LastName}" : $"{member.User?.FirstName} {member.User?.MiddleName} {member.User?.LastName}";
                         var html = $"Dear {fullName},<br><br>";
                         html += $"You have new {courseName} training available for the {group.Name} group. Please, go to {group.Name} group or " +
-                                @$"<a href ='{this._appUrl}/trainings/{courseName}'><u  style='color:blue;'>Click Here </u></a> to find the training there. <br>";
+                                @$"<a href ='{this._appUrl}/trainings/{courseSlug}'><u  style='color:blue;'>Click Here </u></a> to find the training there. <br>";
                         html += $"<br><br>Thank You, <br> {settings.CompanyName}";
                         
 
@@ -366,10 +368,11 @@ namespace Lingtren.Infrastructure.Services
         /// handle to send lesson edit email
         /// </summary>
         /// <param name="courseName"></param>
+        /// <param name="courseSlug"></param>
         /// <param name="context"></param>
         /// <returns></returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task SendLessonAddedMailAsync(string courseName, PerformContext context = null)
+        public async Task SendLessonAddedMailAsync(string courseName,string courseSlug, PerformContext context = null)
         {
             try
             {
@@ -391,7 +394,7 @@ namespace Lingtren.Infrastructure.Services
                     var fullName = users.User.FullName;
                     var html = $"Dear {fullName},<br><br>";
                     html += $"Your enrolled course titled '{courseName}' have uploaded new content<br><br>" +
-                        @$"<a href='{this._appUrl}/trainings/{courseName}' ><u  style='color:blue;'>Click Here </u></a> to watch the course";
+                        @$"<a href='{this._appUrl}/trainings/{courseSlug}' ><u  style='color:blue;'>Click Here </u></a> to watch the course";
                     html += $"<br><br>Thank You, <br> {settings.CompanyName}";
 
                     var model = new EmailRequestDto

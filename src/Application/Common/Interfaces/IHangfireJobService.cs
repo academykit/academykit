@@ -11,19 +11,21 @@ namespace Lingtren.Application.Common.Interfaces
         /// Handle to send mail to new group member
         /// </summary>
         /// <param name="gropName"> the group name </param>
+        /// <param name="groupSlug"> the group slug </param>
         /// <param name="userIds"> the list of <see cref="Guid" /> .</param>
         /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
         /// <returns> the task complete </returns>
-        Task SendMailNewGroupMember(string gropName, IList<Guid> userIds, PerformContext context = null);
+        Task SendMailNewGroupMember(string gropName,string groupSlug, IList<Guid> userIds, PerformContext context = null);
 
         /// <summary>
         /// Handle to send group course published mail
         /// </summary>
         /// <param name="groupId"> the group id</param>
         /// <param name="courseName"> the course name </param>
+        /// <param name="courseSlug"> the course slug </param>
         /// <param name="context"> the instance of <see cref="PerformContext"/></param>
         /// <returns> the task complete </returns>
-        Task GroupCoursePublishedMailAsync(Guid groupId, string courseName, PerformContext context = null);
+        Task GroupCoursePublishedMailAsync(Guid groupId, string courseName,string courseSlug ,PerformContext context = null);
 
         /// <summary>
         /// Handle to send course rejected mail
@@ -66,14 +68,13 @@ namespace Lingtren.Application.Common.Interfaces
         ///<returns>the tasl complete </returns>
         Task SendCertificateIssueMailAsync(IList<CertificateUserIssuedDto> certificateUserIssuedDtos, PerformContext context = null);
 
-        ///<summary>
-        ///Handle to send cretificate issued mail
-        ///</summary>
-        /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
-        /// <param name="courseName"> Name of the course </param>
-        ///<returns>the tasl complete </returns
-        Task SendLessonAddedMailAsync(string courseName,PerformContext context = null);
-
-        
+        /// <summary>
+        /// Handle to send lesson added mail
+        /// </summary>
+        /// <param name="courseName"> the course name </param>
+        /// <param name="courseSlug"> the course slug </param>
+        /// <param name="context"> the instance of <see cref="PerformContext" /> .</param>
+        /// <returns> the task complete </returns>
+        Task SendLessonAddedMailAsync(string courseName,string courseSlug,PerformContext context = null);
     }
 }
