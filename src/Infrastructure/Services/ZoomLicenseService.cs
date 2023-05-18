@@ -1,6 +1,5 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
-    using AngleSharp.Html;
     using Hangfire;
     using Hangfire.Server;
     using Lingtren.Application.Common.Dtos;
@@ -105,7 +104,7 @@
                  (p.StartDate.HasValue && p.StartDate.Value >= startDateTime && p.StartDate.Value < endTime) ||
                  (p.StartDate.HasValue && p.StartDate.Value.AddMinutes(p.Duration) > startDateTime && p.StartDate.Value.AddMinutes(p.Duration) <= endTime)
                            ).ConfigureAwait(false);
-                if (meetings.Count != null)
+                if (meetings?.Count != null)
                 {
                     throw new InvalidDataException("Time span is already used , try another instance");
                 
