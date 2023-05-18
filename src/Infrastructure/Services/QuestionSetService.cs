@@ -216,7 +216,7 @@
                             ).ConfigureAwait(false);
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
 
-                if (!isEnrolled && !isSuperAdminOrAdmin)
+                if (!isEnrolled && !isSuperAdminOrAdmin && !currentUserId.Equals(questionSet.CreatedBy))
                 {
                     _logger.LogWarning("User with id:{currentUserId} has not enrolled in training with id: {courseId} and question set id with id: {questionSetId}."
                                                 , currentUserId, lesson.CourseId, questionSet.Id);
