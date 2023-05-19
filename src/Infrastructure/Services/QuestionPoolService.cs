@@ -102,27 +102,9 @@
         /// <summary>
         /// Check the validations required for delete
         /// </summary>
-        /// <param name="entity">the instance of <see cref="Assignment"/></param>
+        /// <param name="identity">the instance of <see cref="Assignment"/></param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
-        //protected override async Task CheckDeletePermissionsAsync(QuestionPool entity, Guid currentUserId)
-        //{
-        //    var questionPoolQuestionExists = await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetAllAsync(
-        //        predicate: p => p.QuestionPoolId == entity.Id
-        //        ).ConfigureAwait(false);
-
-        //    var questionsetsubmission = await _unitOfWork.GetRepository<QuestionSetSubmission>().GetAllAsync(predicate: p => p.QuestionSet.QuestionSetQuestions.Any(x => x.QuestionPoolQuestionId.
-        //    Equals(questionPoolQuestionExists.Select(x => x.QuestionId)))).ConfigureAwait(false);
-
-
-
-        //    if (questionPoolQuestionExists.Count() != 0 && questionsetsubmission.Count() != 0)
-        //    {
-        //        _logger.LogWarning("Question pool with id: {poolId} contains questions. So, it cannot be deleted.", entity.Id);
-        //        throw new ForbiddenException("Question pool contains questions. So, to delete question pool remove all the questions from pool.");
-        //    }
-        //}
-
         public override async Task DeleteAsync(string identity, Guid currentUserId)
         {
             await ExecuteAsync(async () =>
