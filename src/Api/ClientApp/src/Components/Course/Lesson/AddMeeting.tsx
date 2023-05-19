@@ -219,6 +219,7 @@ const AddMeeting = ({
           min={1}
           {...form.getInputProps("meetingDuration")}
         />
+
         <Select
           onClick={changeZoomLiscense}
           onKeyDown={(e) => {
