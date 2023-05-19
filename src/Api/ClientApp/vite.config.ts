@@ -53,7 +53,7 @@ export default defineConfig({
       input: {
         main: path.resolve(dir, "index.html"),
         connect: path.resolve(dir, "meet.html"),
-        verify: path.resolve(dir, "verifyzoom.html"),
+        verify: path.resolve(dir, "zoomverify/verifyzoom.html"),
 
       },
     },

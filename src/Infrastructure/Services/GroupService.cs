@@ -230,7 +230,7 @@
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 if(usersToBeAdded.ToList().Count != default)
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendMailNewGroupMember(group.Name,usersToBeAdded.ToList(),null));
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendMailNewGroupMember(group.Name,group.Slug,usersToBeAdded.ToList(),null));
                 }
 
                 var result = new GroupAddMemberResponseModel();

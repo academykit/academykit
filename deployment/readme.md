@@ -1,32 +1,72 @@
-# Deployment guide for standalone linux server
+# Database Server
 
-This guide is for the deployment of this codebase on client's linux environments using docker with their own SSL certificate.
+## Install mysql server
 
-## Prerequisites
+```bash'
+    sudo apt update
+    sudo apt install mysql-server
+    sudo systemctl start mysql.service
+```
 
-1. Docker with docker compose installed on the machine with version 20
-2. Access to ECR to pull the image of this codebase
-3. Permission on the server with sudo access
+## start mysql service
 
-## Deployment Steps
+```bash'
+    sudo systemctl enable mysql.service
+    sudo systemctl start mysql.service
+    # check if mysql is running ro not
+    sudo systemctl status mysql.service
+```
 
-1. Get the certificates from client and put inside the `/nginx/ssl.cert` and `./nginx/ssl.key` name should be matched else you have to update the `./nginx/Dockerfile` and `./nginx/nginx.conf` to match the .cert and .key file name.
-2. Update the docker-compose.yml file with appropriate environments variables. Following are required configuration
+### Output should look like
 
-| Environment Variable                    | Values                                                  |
-| --------------------------------------- | ------------------------------------------------------- |
-| ConnectionStrings\_\_DefaultConnection  | MySQL connection string for EF Core for main APIs       |
-| JWT\_\_DurationInMinutes                | Expiration duration of JWT token in minutes             |
-| ConnectionStrings\_\_Hangfireconnection | ySQL connection string for EF Core for Hangfire service |
-| Hangfire\_\_User                        | Username for the hangfire dashboard                     |
-| Hangfire\_\_Password                    | Password for the hangfire dashboard                     |
-| AppUrls\_\_App                          | Domain name for the application                         |
+```
+● mysql.service - MySQL Community Server
+     Loaded: loaded (/lib/systemd/system/mysql.service; enabled Vendor
+     preset: enabled)
+     Active: active (running) since Tue 2020-04-21 12:56:48 UTC; 6min ago
+     Main PID: 10382 (mysqld)
+     Status: "Server is operational"
+      Tasks: 39 (limit: 1137)
+     Memory: 370.0M
+     CGroup: /system.slice/mysql.service
+             └─10382 /usr/sbin/mysqld
 
-1. Run following commands
+```
 
-   ```bash'
-   docker compose build
-   docker compose up -d
-   ```
+## Configure mysql server
 
-2. Go the your domain or IP address on browser or localhost to verify the site is up and running well.
+```bash'
+sudo mysql
+
+CREATE USER 'user'@'%' IDENTIFIED BY 'password';
+
+## "%" should be replaced by ip address of main backend
+CREATE DATABASE database_name;
+
+GRANT CREATE, ALTER, DROP, INSERT, UPDATE, INDEX, DELETE, SELECT, REFERENCES, RELOAD on database_name.* TO 'user'@'%';
+```
+
+    >Note: % in mysql query enables database connection for all host. please add ip address of server for security purpose.
+
+# Application Server
+
+### Install docker
+
+```bash
+sudo apt-get update
+curl https://desktop.docker.com/linux/main/amd64/docker-desktop-4.17.0-amd64.deb?utm_source=docker&utm_medium=webreferral&utm_campaign=docs-driven-download-linux-amd64
+sudo apt-get install ./docker-desktop-<version>-<arch>.deb
+systemctl --user start docker-desktop
+docker compose version
+docker version
+```
+
+Follow **[Application deployment guide](./application-deployment.md)** for application server
+
+# Certificate Server
+
+Follow **[Certificate deployment guide](./certificate-deployment.md)** for certificate server'
+
+# minio server
+
+Follow **[Minio deployment guide](./minio-deployment.md)** for minio server

@@ -98,14 +98,14 @@ namespace Lingtren.Infrastructure.Services
             try
             {
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
-                var minio = new Minio.MinioClient().WithEndpoint(credentails.EndPoint).
+                var minio = new Minio.MinioClient().WithEndpoint(credentails.PresignedUrl).
                             WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
                 var objectArgs = new Minio.PresignedGetObjectArgs().WithObject(key).WithBucket(credentails.Bucket).WithExpiry(credentails.ExpiryTime);
                 return await minio.PresignedGetObjectAsync(objectArgs).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting file presigned url.");
+                _logger.LogError(ex.Message, "An error occurred while getting file presigned url.");
                 throw ex is ServiceException ? ex : new ServiceException("An error occurred while getting file presigned url.");
             }
         }
@@ -159,12 +159,12 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var url = settings.FirstOrDefault(x => x.Key == "Server_Url")?.Value;
-                if (string.IsNullOrEmpty(secretKey))
+                if (string.IsNullOrEmpty(url))
                 {
                     throw new EntityNotFoundException("Server url not found.");
                 }
                 var bucket = settings.FirstOrDefault(x => x.Key == "Server_Bucket")?.Value;
-                if (string.IsNullOrEmpty(secretKey))
+                if (string.IsNullOrEmpty(bucket))
                 {
                     throw new EntityNotFoundException("Server bucket not found.");
                 }
@@ -174,14 +174,19 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new EntityNotFoundException("Server end point not found.");
                 }
-
+                var preSigned = settings.FirstOrDefault(x => x.Key == "Server_PresignedUrl")?.Value;
+                if (string.IsNullOrEmpty(preSigned))
+                {
+                    throw new EntityNotFoundException("Server pre-signed url  not found.");
+                }
                 var expiryTime = settings.FirstOrDefault(x => x.Key == "Server_PresignedExpiryTime")?.Value;
-                if (string.IsNullOrEmpty(secretKey))
+                if (string.IsNullOrEmpty(expiryTime))
                 {
                     throw new EntityNotFoundException("Server end point not found.");
                 }
                 miniodto.AccessKey = accessKey;
                 miniodto.SecretKey = secretKey;
+                miniodto.PresignedUrl = preSigned;
                 miniodto.Url = url;
                 miniodto.ExpiryTime = Convert.ToInt32(expiryTime);
                 miniodto.EndPoint = endPoint;

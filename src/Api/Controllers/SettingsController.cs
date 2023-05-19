@@ -211,6 +211,7 @@ namespace Lingtren.Api.Controllers
             existing.SenderName = model.SenderName;
             existing.SenderEmail = model.SenderEmail;
             existing.UserName = model.UserName;
+            existing.ReplyTo = model.ReplyTo;
             existing.Password = model.Password;
             existing.UseSSL = model.UseSSL;
             existing.UpdatedBy = CurrentUser.Id;

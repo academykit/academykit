@@ -364,11 +364,11 @@ namespace Lingtren.Infrastructure.Services
             {
                 if (course.CourseEnrollments.Count == default)
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.GroupCoursePublishedMailAsync(course.GroupId.Value, course.Name, null));
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.GroupCoursePublishedMailAsync(course.GroupId.Value, course.Name,course.Slug, null));
                 }
                 else
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendLessonAddedMailAsync(course.Name, null));
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendLessonAddedMailAsync(course.Name,course.Slug, null));
                 }
 
             }
