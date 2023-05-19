@@ -104,10 +104,9 @@
                  (p.StartDate.HasValue && p.StartDate.Value >= startDateTime && p.StartDate.Value < endTime) ||
                  (p.StartDate.HasValue && p.StartDate.Value.AddMinutes(p.Duration) > startDateTime && p.StartDate.Value.AddMinutes(p.Duration) <= endTime)
                            ).ConfigureAwait(false);
-                if (meetings?.Count != null)
+                if (meetings?.Count != 0)
                 {
                     throw new InvalidDataException("Time span is already used , try another instance");
-                
                 }
 
                 var data = from zoomLicense in zoomLicenses
