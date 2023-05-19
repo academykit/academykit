@@ -93,38 +93,52 @@
         /// <returns></returns>
         public async Task<IList<ZoomLicenseResponseModel>> GetActiveLicenses(DateTime startDateTime, int duration)
         {
-            var zoomLicenses = await _unitOfWork.GetRepository<ZoomLicense>().GetAllAsync(
-                predicate: p => p.IsActive).ConfigureAwait(false);
-
-            var meetings = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(
-                predicate: p => p.StartDate.HasValue
-                   && ((startDateTime > p.StartDate.Value && startDateTime < p.StartDate.Value.AddSeconds(p.Duration))
-                        || (startDateTime.AddSeconds(duration * 60) > p.StartDate.Value && startDateTime.AddSeconds(duration * 60) < p.StartDate.Value.AddSeconds(p.Duration)))).ConfigureAwait(false);
-
-            var data = from zoomLicense in zoomLicenses
-                       join meeting in meetings on zoomLicense.Id equals meeting.ZoomLicenseId
-                       into zoomMeeting
-                       from m in zoomMeeting.DefaultIfEmpty()
-                       group m by zoomLicense into g
-                       select new
-                       {
-                           g.Key.Id,
-                           g.Key.HostId,
-                           g.Key.Capacity,
-                           g.Key.LicenseEmail,
-                           g.Key.IsActive,
-                           Count = g.Count()
-                       };
-
-            var response = data.Where(x => x.Count < 2).Select(x => new ZoomLicenseResponseModel
+            try
             {
-                Id = x.Id,
-                HostId = x.HostId,
-                Capacity = x.Capacity,
-                LicenseEmail = x.LicenseEmail,
-                IsActive = x.IsActive,
-            }).ToList();
-            return await Task.FromResult(response);
+                var zoomLicenses = await _unitOfWork.GetRepository<ZoomLicense>().GetAllAsync(
+                    predicate: p => p.IsActive).ConfigureAwait(false);
+
+                var endTime = startDateTime.AddMinutes(duration);
+
+                var meetings = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(predicate: p =>
+                 (p.StartDate.HasValue && p.StartDate.Value >= startDateTime && p.StartDate.Value < endTime) ||
+                 (p.StartDate.HasValue && p.StartDate.Value.AddMinutes(p.Duration) > startDateTime && p.StartDate.Value.AddMinutes(p.Duration) <= endTime)
+                           ).ConfigureAwait(false);
+                if (meetings?.Count != null)
+                {
+                    throw new InvalidDataException("Time span is already used , try another instance");
+                
+                }
+
+                var data = from zoomLicense in zoomLicenses
+                           join meeting in meetings on zoomLicense.Id equals meeting.ZoomLicenseId
+                           into zoomMeeting
+                           from m in zoomMeeting.DefaultIfEmpty()
+                           group m by zoomLicense into g
+                           select new
+                           {
+                               g.Key.Id,
+                               g.Key.HostId,
+                               g.Key.Capacity,
+                               g.Key.LicenseEmail,
+                               g.Key.IsActive,
+                               Count = g.Count()
+                           };
+
+                var response = data.Where(x => x.Count < 2).Select(x => new ZoomLicenseResponseModel
+                {
+                    Id = x.Id,
+                    HostId = x.HostId,
+                    Capacity = x.Capacity,
+                    LicenseEmail = x.LicenseEmail,
+                    IsActive = x.IsActive,
+                }).ToList();
+                return await Task.FromResult(response);
+            }
+            catch(Exception ex)
+            {
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
         }
 
         /// <summary>

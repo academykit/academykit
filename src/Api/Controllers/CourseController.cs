@@ -4,7 +4,6 @@ namespace Lingtren.Api.Controllers
     using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
@@ -38,7 +37,14 @@ namespace Lingtren.Api.Controllers
         [HttpGet]
         public async Task<SearchResult<CourseResponseModel>> SearchAsync([FromQuery] CourseBaseSearchCriteria searchCriteria)
         {
-            searchCriteria.CurrentUserId = CurrentUser.Id;
+            if (searchCriteria.UserId != Guid.Empty)
+            {
+                searchCriteria.CurrentUserId = searchCriteria.UserId;
+            }
+            else
+            {
+                searchCriteria.CurrentUserId = CurrentUser.Id;
+            }
             var searchResult = await _courseService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             var response = new SearchResult<CourseResponseModel>
@@ -51,7 +57,7 @@ namespace Lingtren.Api.Controllers
             };
 
             searchResult.Items.ForEach(p =>
-                 response.Items.Add(new CourseResponseModel(p, searchCriteria.EnrollmentStatus == null ? _courseService.GetUserCourseEnrollmentStatus(p, CurrentUser.Id) : searchCriteria.EnrollmentStatus.FirstOrDefault()))
+                 response.Items.Add(new CourseResponseModel(p, searchCriteria.EnrollmentStatus == null ? _courseService.GetUserCourseEnrollmentStatus(p,searchCriteria.CurrentUserId) : searchCriteria.EnrollmentStatus.FirstOrDefault()))
              );
             return response;
         }
