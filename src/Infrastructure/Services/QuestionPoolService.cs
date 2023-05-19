@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using AngleSharp.Dom;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -11,6 +12,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
+    using System.Linq;
     using System.Linq.Expressions;
 
     public class QuestionPoolService : BaseGenericService<QuestionPool, BaseSearchCriteria>, IQuestionPoolService
@@ -100,20 +102,52 @@
         /// <summary>
         /// Check the validations required for delete
         /// </summary>
-        /// <param name="entity">the instance of <see cref="Assignment"/></param>
+        /// <param name="identity">the instance of <see cref="Assignment"/></param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
-        protected override async Task CheckDeletePermissionsAsync(QuestionPool entity, Guid currentUserId)
+        public override async Task DeleteAsync(string identity, Guid currentUserId)
         {
-            var questionPoolQuestionExists = await _unitOfWork.GetRepository<QuestionPoolQuestion>().ExistsAsync(
-                predicate: p => p.QuestionPoolId == entity.Id
+            await ExecuteAsync(async () =>
+            {
+                var questionPool = await _unitOfWork.GetRepository<QuestionPool>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == identity || p.Slug == identity).ConfigureAwait(false);
+
+                var questionPoolQuestions = await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetAllAsync(
+                predicate: p => p.QuestionPoolId == questionPool.Id
                 ).ConfigureAwait(false);
 
-            if (questionPoolQuestionExists)
-            {
-                _logger.LogWarning("Question pool with id: {poolId} contains questions. So, it cannot be deleted.", entity.Id);
-                throw new ForbiddenException("Question pool contains questions. So, to delete question pool remove all the questions from pool.");
-            }
+
+                var questionsetsubmission = await _unitOfWork.GetRepository<QuestionSetSubmission>().GetAllAsync(predicate: p => p.QuestionSet.QuestionSetQuestions.Any(x => x.QuestionPoolQuestionId.
+                Equals(questionPoolQuestions.Select(x => x.QuestionId)))).ConfigureAwait(false);
+
+                if (questionPoolQuestions.Count() != 0 && questionsetsubmission.Count() != 0 && questionsetsubmission.Any(x=>x.QuestionSetResults.Count != 0))
+                {
+                    _logger.LogWarning("Question pool with id: {poolId} contains questions. So, it cannot be deleted.", identity);
+                    throw new ForbiddenException("Question pool contains questions. So, to delete question pool remove all the questions from pool.");
+                }
+
+                var ids = questionPoolQuestions.Select(x => x.Id).ToList();  
+                var questionsetquestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(predicate:p=> ids.Contains(p.QuestionPoolQuestionId.Value)).ConfigureAwait(false);
+
+
+                foreach (var questionsetquestion in questionsetquestions)
+                {
+                    _unitOfWork.GetRepository<QuestionSetQuestion>().Delete(questionsetquestion);
+                }
+
+                foreach (var questionPoolQuestion in questionPoolQuestions)
+                {
+                    _unitOfWork.GetRepository<QuestionPoolQuestion>().Delete(questionPoolQuestion);
+                }
+
+                
+                foreach (var submission in questionsetsubmission)
+                {
+                    _unitOfWork.GetRepository<QuestionSetSubmission>().Delete(submission);
+                }
+
+                _unitOfWork.GetRepository<QuestionPool>().Delete(questionPool);
+                _unitOfWork.SaveChanges();
+            });
         }
 
         #endregion Protected Methods
