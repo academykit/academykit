@@ -182,6 +182,8 @@
             try
             {
                 var currentTimeStamp = DateTime.UtcNow;
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate : p=> p.Id == currentUserId).ConfigureAwait(false);
+                var userRole = user.Role;
                 var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
                     predicate: x => x.Id.ToString() == identity || x.Slug == identity,include: src=>src.Include(x=>x.Lesson)).ConfigureAwait(false);
 
@@ -275,6 +277,7 @@
                     Duration = duration,
                     Name = questionSet.Name,
                     Description = questionSet.Description,
+                    Role = userRole,
                     Questions = new List<QuestionResponseModel>()
                 };
                 questionSetQuestions.ForEach(x => response.Questions.Add(new QuestionResponseModel(x.QuestionPoolQuestion.Question, questionSetQuestionId: x.Id, showHints: false)));
