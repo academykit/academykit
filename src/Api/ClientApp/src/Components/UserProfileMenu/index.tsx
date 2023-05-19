@@ -76,7 +76,7 @@ const UserProfileMenu: FC<Props> = ({
 
           <Menu.Item
             component={Link}
-            to={`/userProfile/${id}`}
+            to={`/userProfile/${id}/certificate`}
             className={classes.item}
             icon={<IconUser size={14} />}
           >

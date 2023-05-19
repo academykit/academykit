@@ -14,8 +14,8 @@ interface ILayoutContext {
 
 const initialState = {
   examPage: false,
-  examPageTitle: <>W</>,
-  examPageAction: <>1 sec</>,
+  examPageTitle: <></>,
+  examPageAction: <></>,
   meetPage: false,
 };
 const LayoutContext = createContext<ILayoutContext>(initialState);

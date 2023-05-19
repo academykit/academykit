@@ -20,13 +20,16 @@ import { IconEdit } from "@tabler/icons";
 import RoutePath from "@utils/routeConstants";
 import { CourseLanguage, UserRole } from "@utils/enums";
 import moment from "moment";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
 const MyTrainings = () => {
   const auth = useReAuth();
   const theme = useMantineTheme();
   const [page, setPage] = useState(1);
-  const authorCourse = useCourse(`Enrollmentstatus=1&size=12&page=${page}`);
+  const { id } = useParams();
+  const authorCourse = useCourse(
+    `UserId=${id}&Enrollmentstatus=1&size=12&page=${page}`
+  );
 
   return (
     <>
@@ -50,7 +53,7 @@ const MyTrainings = () => {
                 {authorCourse.data &&
                   authorCourse.data.totalCount > 0 &&
                   authorCourse.data.items.map((x) => (
-                    <tr>
+                    <tr key={x.id}>
                       <td>
                         <Anchor
                           component={Link}
