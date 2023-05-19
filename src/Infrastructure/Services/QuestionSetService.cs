@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using CsvHelper;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -12,6 +13,8 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
+    using Microsoft.VisualBasic;
+    using Org.BouncyCastle.Math.EC.Rfc7748;
     using System.Linq.Expressions;
 
     public class QuestionSetService : BaseGenericService<QuestionSet, BaseSearchCriteria>, IQuestionSetService
@@ -180,7 +183,11 @@
             {
                 var currentTimeStamp = DateTime.UtcNow;
                 var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
-                    predicate: x => x.Id.ToString() == identity || x.Slug == identity).ConfigureAwait(false);
+                    predicate: x => x.Id.ToString() == identity || x.Slug == identity,include: src=>src.Include(x=>x.Lesson)).ConfigureAwait(false);
+
+                var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate : p => p.Id.Equals(questionSet.Lesson.CourseId),
+                    include:src=>src.Include(x=>x.CourseTeachers)).ConfigureAwait(false);
+
                 if (questionSet == null)
                 {
                     _logger.LogWarning("Question set not found with identity: {identity} for user with id : {currentUserId}.", identity, currentUserId);
@@ -216,7 +223,9 @@
                             ).ConfigureAwait(false);
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
 
-                if (!isEnrolled && !isSuperAdminOrAdmin && !currentUserId.Equals(questionSet.CreatedBy))
+                var isValidUser = await ValdiateUserAsync(currentUserId, questionSet,course).ConfigureAwait(false);
+
+                if (!isValidUser)
                 {
                     _logger.LogWarning("User with id:{currentUserId} has not enrolled in training with id: {courseId} and question set id with id: {questionSetId}."
                                                 , currentUserId, lesson.CourseId, questionSet.Id);
@@ -418,6 +427,38 @@
         #endregion Start Exam and Submission
 
         #region Exam Result Reports
+
+        /// <summary>
+        /// Handle to validate user 
+        /// </summary>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <param name="questionSet"> the instance of <see cref="QuestionSet"/> </param>
+        /// <param name="course"></param>
+        /// <returns></returns>
+        private async Task<bool> ValdiateUserAsync(Guid currentUserId , QuestionSet questionSet,Course course)
+        {
+            var isAdmin = await IsSuperAdminOrAdmin(currentUserId);
+            if(isAdmin)
+            {
+                return true;
+            }
+
+            if(questionSet.CreatedBy == currentUserId)
+            {
+                return true;
+            }
+
+            if(course.CreatedBy == currentUserId)
+            {
+                return true;
+            }
+
+            if(course.CourseTeachers.Any(x=>x.UserId == currentUserId))
+            {
+                return true;
+            }
+            return false;
+        }
 
         /// <summary>
         /// Handles to fetch result of a particular question set
