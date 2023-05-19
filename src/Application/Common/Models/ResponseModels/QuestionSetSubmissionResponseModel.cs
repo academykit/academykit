@@ -1,3 +1,4 @@
+using Lingtren.Application.Common.Dtos;
 using Lingtren.Domain.Enums;
 
 namespace Lingtren.Application.Common.Models.ResponseModels
@@ -11,6 +12,6 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string Description { get; set; }
         public IList<QuestionResponseModel> Questions { get; set; }
 
-        public UserRole Role { get; set; }
+        public CourseEnrollmentStatus Role { get; set; }
     }
 }
