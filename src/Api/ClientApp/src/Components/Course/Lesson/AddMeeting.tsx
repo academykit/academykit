@@ -111,7 +111,13 @@ const AddMeeting = ({
     ? meeting.data.data.map((e) => {
         return { value: e.id, label: e.licenseEmail };
       })
-    : [""];
+    : [
+        {
+          label: "Please select different time!",
+          value: "null",
+          disabled: true,
+        },
+      ];
 
   const changeZoomLiscense = () => {
     const { meetingDuration, meetingStartTime, meetingStartDate } = form.values;
@@ -219,6 +225,7 @@ const AddMeeting = ({
           min={1}
           {...form.getInputProps("meetingDuration")}
         />
+
         <Select
           onClick={changeZoomLiscense}
           onKeyDown={(e) => {

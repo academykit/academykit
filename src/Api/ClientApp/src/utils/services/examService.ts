@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { QuestionType } from "@utils/enums";
+import { CourseUserStatus, QuestionType } from "@utils/enums";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
 import { IUser } from "./types";
@@ -30,6 +30,7 @@ export interface ILessonExamStart {
   name: string;
   description: string;
   questions: ILessonStartQuestion<ILessonStartQuestionOption>[];
+  role: CourseUserStatus;
 }
 
 const getStartExam = (lessonId: string) =>
@@ -38,7 +39,6 @@ const getStartExam = (lessonId: string) =>
 export const useStartExam = (lessonId: string) =>
   useMutation([api.exam.startExam(lessonId)], () => getStartExam(lessonId), {
     retry: false,
-    
   });
 
 export interface ILessonExamSubmit {
