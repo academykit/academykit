@@ -216,7 +216,7 @@
                             ).ConfigureAwait(false);
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
 
-                if (!isEnrolled && !isSuperAdminOrAdmin)
+                if (!isEnrolled && !isSuperAdminOrAdmin && !currentUserId.Equals(questionSet.CreatedBy))
                 {
                     _logger.LogWarning("User with id:{currentUserId} has not enrolled in training with id: {courseId} and question set id with id: {questionSetId}."
                                                 , currentUserId, lesson.CourseId, questionSet.Id);
@@ -226,7 +226,7 @@
                 var questionSetSubmissionCount = await _unitOfWork.GetRepository<QuestionSetSubmission>().CountAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id && p.UserId == currentUserId).ConfigureAwait(false);
 
-                if (questionSetSubmissionCount >= questionSet.AllowedRetake)
+                if (questionSetSubmissionCount >= questionSet.AllowedRetake && !isSuperAdminOrAdmin && !currentUserId.Equals(questionSet.CreatedBy))
                 {
                     _logger.LogWarning("User with Id {currentUserId} has already taken exam of Question Set with Id {questionSetId}.", currentUserId, questionSet.Id);
                     throw new ForbiddenException("Exam already taken.");
