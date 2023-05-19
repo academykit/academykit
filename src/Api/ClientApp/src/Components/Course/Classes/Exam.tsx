@@ -15,7 +15,7 @@ import { useForm } from "@mantine/form";
 import { useMediaQuery, useToggle } from "@mantine/hooks";
 import RichTextEditor from "@mantine/rte";
 import RadioType from "@pages/course/assignment/Component/RadioType";
-import { QuestionType, UserRole } from "@utils/enums";
+import { CourseUserStatus, QuestionType, UserRole } from "@utils/enums";
 import {
   ILessonExamStart,
   ILessonExamSubmit,
@@ -28,6 +28,7 @@ import { useNavigate } from "react-router-dom";
 import ExamCounter from "./ExamCounter";
 import ExamCheckBox from "./ExamOptions/ExamCheckBox";
 import ExamRadio from "./ExamOptions/ExamRadio";
+import useAuth from "@hooks/useAuth";
 
 const useStyle = createStyles((theme) => ({
   option: {
@@ -91,6 +92,7 @@ const Exam = ({
   const customLayout = useCustomLayout();
   const questions = data.questions;
   const examSubmission = useSubmitExam();
+  const auth = useAuth();
 
   const form = useForm({
     initialValues: questions,
@@ -100,10 +102,15 @@ const Exam = ({
   const [showConfirmation, setShowConfirmation] = useToggle();
 
   useEffect(() => {
+    const isAuthorOrTeacher =
+      data.role === CourseUserStatus.Author ||
+      data.role === CourseUserStatus.Teacher;
     customLayout.setExamPage && customLayout.setExamPage(true);
     customLayout.setExamPageAction &&
       customLayout.setExamPageAction(
-        data?.user?.role <= UserRole.Admin ? (
+        auth?.auth &&
+          auth?.auth?.role >= UserRole.Trainer &&
+          !isAuthorOrTeacher ? (
           <ExamCounter
             duration={data.duration}
             // @ts-ignore
