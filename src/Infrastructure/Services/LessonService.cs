@@ -658,10 +658,7 @@ namespace Lingtren.Infrastructure.Services
                     throw new ServiceException("Zoom license not found.");
                 }
 
-                var isModerator = course.CreatedBy == currentUserId || lesson.CreatedBy == currentUserId || course.CourseTeachers.Any(x => x.UserId == currentUserId);
-                var hasAccess =await IsSuperAdminOrAdmin(currentUserId);
-                if(!hasAccess)
-                {
+                var isModerator = await IsLiveClassModerator(currentUserId, course).ConfigureAwait(false);
                     if(!isModerator)
                     {
                         var isMember = course.CourseEnrollments.Any(x => x.UserId == currentUserId && !x.IsDeleted
@@ -672,7 +669,6 @@ namespace Lingtren.Infrastructure.Services
                             throw new ForbiddenException("You are not allowed to access this meeting.");
                         }
                     }
-                }
                
 
                 var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
@@ -971,6 +967,32 @@ namespace Lingtren.Infrastructure.Services
                 predicate: x => x.CourseId == entity.CourseId && x.SectionId == entity.SectionId && !x.IsDeleted,
                 orderBy: x => x.OrderByDescending(x => x.Order)).ConfigureAwait(false);
             return lesson != null ? lesson.Order + 1 : 1;
+        }
+
+        /// <summary>
+        /// Handle to validate isLiveClassModerator
+        /// </summary>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <param name="course"> the instance of <see cref="Course"/></param>
+        /// <returns> the boolean value </returns>
+        private async Task<bool> IsLiveClassModerator(Guid currentUserId, Course course)
+        {
+            var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+            if (isAdmin)
+            {
+                return true;
+            }
+
+            if (course.CreatedBy == currentUserId)
+            {
+                return true;
+            }
+
+            if (course.CourseTeachers.Any(x => x.UserId == currentUserId))
+            {
+                return true;
+            }
+            return false;
         }
 
         #endregion Private Methods
