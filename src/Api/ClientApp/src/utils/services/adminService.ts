@@ -68,9 +68,9 @@ export interface IGeneralSetting {
   updatedOn: string;
   user: IUser;
 }
-export interface ICompanySetting{
-  name:string;
-  imageUrl:string
+export interface ICompanySetting {
+  name: string;
+  imageUrl: string;
 }
 
 export interface IGeneralSettingUpdate {
@@ -415,14 +415,11 @@ export const useGeneralSetting = () => {
   );
 };
 // company settings
-export const useCompanySetting=()=>{
-  return useQuery(
-    [api.adminUser.getCompanySettings],()=>{
-      return httpClient.get<ICompanySetting>(api.adminUser.getCompanySettings)
-    }
-  )
-  }
-
+export const useCompanySetting = () => {
+  return useQuery([api.adminUser.getCompanySettings], () => {
+    return httpClient.get<ICompanySetting>(api.adminUser.getCompanySettings);
+  });
+};
 
 export const useUpdateGeneralSetting = (id: string | undefined) => {
   const queryClient = useQueryClient();
@@ -452,10 +449,15 @@ export const useZoomLicense = () => {
   );
 };
 
-const getActiveZoomLicense = (startDateTime: string, duration: number) => {
+const getActiveZoomLicense = (
+  startDateTime: string,
+  duration: number,
+  lessonIdentity?: string
+) => {
   const query = queryStringGenerator({
     startDateTime,
     duration,
+    lessonIdentity,
   });
   return httpClient.get<IZoomLicense<IUser>[]>(
     api.adminUser.getActiveZoomLicense(query)
@@ -463,14 +465,15 @@ const getActiveZoomLicense = (startDateTime: string, duration: number) => {
 };
 export const useActiveZoomLicense = (
   startDateTime: string,
-  duration: number
+  duration: number,
+  lessonIdentity?: string
 ) => {
   return useQuery(
     ["active" + api.adminUser.getZoomLicense, startDateTime, duration],
-    () => getActiveZoomLicense(startDateTime, duration),
+    () => getActiveZoomLicense(startDateTime, duration, lessonIdentity),
     {
       select: (data) => data,
-      enabled: startDateTime && duration ? true : false,
+      enabled: !!startDateTime && !!duration,
     }
   );
 };

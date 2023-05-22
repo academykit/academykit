@@ -105,7 +105,11 @@ const AddMeeting = ({
     validate: yupResolver(schema),
   });
 
-  const meeting = useActiveZoomLicense(dateTime, form.values.meetingDuration);
+  const meeting = useActiveZoomLicense(
+    dateTime,
+    form.values.meetingDuration,
+    lessonDetails?.data?.id
+  );
 
   const selectItem = meeting.data?.data
     ? meeting.data.data.map((e) => {
