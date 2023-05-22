@@ -19,10 +19,12 @@
 
     public class QuestionSetService : BaseGenericService<QuestionSet, BaseSearchCriteria>, IQuestionSetService
     {
-        public QuestionSetService(
+        private readonly ICourseService _courseService;  
+        public QuestionSetService(ICourseService courseService,
             IUnitOfWork unitOfWork,
             ILogger<QuestionSetService> logger) : base(unitOfWork, logger)
         {
+            _courseService = courseService;
         }
 
         /// <summary>
@@ -182,13 +184,14 @@
             try
             {
                 var currentTimeStamp = DateTime.UtcNow;
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate : p=> p.Id == currentUserId).ConfigureAwait(false);
-                var userRole = user.Role;
+               
                 var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
                     predicate: x => x.Id.ToString() == identity || x.Slug == identity,include: src=>src.Include(x=>x.Lesson)).ConfigureAwait(false);
 
                 var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate : p => p.Id.Equals(questionSet.Lesson.CourseId),
                     include:src=>src.Include(x=>x.CourseTeachers)).ConfigureAwait(false);
+
+                
 
                 if (questionSet == null)
                 {
@@ -276,8 +279,8 @@
                     StartDateTime = Convert.ToDateTime(questionSetSubmission.StartTime),
                     Duration = duration,
                     Name = questionSet.Name,
+                    Role =  _courseService.GetUserCourseEnrollmentStatus(course, currentUserId),
                     Description = questionSet.Description,
-                    Role = userRole,
                     Questions = new List<QuestionResponseModel>()
                 };
                 questionSetQuestions.ForEach(x => response.Questions.Add(new QuestionResponseModel(x.QuestionPoolQuestion.Question, questionSetQuestionId: x.Id, showHints: false)));
