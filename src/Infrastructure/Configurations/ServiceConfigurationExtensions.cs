@@ -1,12 +1,12 @@
 ﻿namespace Lingtren.Infrastructure.Configurations
 {
+    using Application.Common.Validators;
     using FluentValidation;
     using Hangfire;
     using Hangfire.MySql;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Validators;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Persistence;
     using Lingtren.Infrastructure.Services;
@@ -73,6 +73,7 @@
 
             #region Validator DI
 
+            services.AddSingleton<IValidator<LiveClassLicenseRequestModel>,ZoomLicenseIdValidator>();
             services.AddSingleton<IValidator<LoginRequestModel>, LoginValidator>();
             services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();
             services.AddSingleton<IValidator<GroupRequestModel>, GroupValidator>();

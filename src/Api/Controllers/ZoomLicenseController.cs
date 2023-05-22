@@ -15,12 +15,15 @@
     {
         private readonly IZoomLicenseService _zoomLicenseService;
         private readonly IValidator<ZoomLicenseRequestModel> _validator;
+        private readonly IValidator<LiveClassLicenseRequestModel> _validator1; 
         public ZoomLicenseController(
             IZoomLicenseService zoomLicenseService,
+            IValidator<LiveClassLicenseRequestModel> validator1,
             IValidator<ZoomLicenseRequestModel> validator)
         {
             _zoomLicenseService = zoomLicenseService;
             _validator = validator;
+            _validator1 = validator1;
         }
 
         /// <summary>
@@ -157,19 +160,11 @@
         /// <returns>the instance of <see cref="ZoomLicenseResponseModel"/></returns>
         /// <exception cref="ForbiddenException"></exception>
         [HttpGet("Active")]
-        public async Task<List<ZoomLicenseResponseModel>> Active([FromQuery]LiveClassLicenseRequestModel zoomLicenseIdRequestModel)
+        public async Task<List<ZoomLicenseResponseModel>> Active([FromQuery]LiveClassLicenseRequestModel model)
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
-           
-            if (zoomLicenseIdRequestModel.StartDateTime == default)
-            {
-                throw new ForbiddenException("Start date is required.");
-            }
-            if (zoomLicenseIdRequestModel.Duration < 0 || zoomLicenseIdRequestModel.Duration == default)
-            {
-                throw new ForbiddenException("Duration is required.");
-            }
-            var zoomLicenses = await _zoomLicenseService.GetActiveLicensesAsync(zoomLicenseIdRequestModel).ConfigureAwait(false);
+            await _validator1.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            var zoomLicenses = await _zoomLicenseService.GetActiveLicensesAsync(model).ConfigureAwait(false);
             return zoomLicenses.ToList();
         }
     }
