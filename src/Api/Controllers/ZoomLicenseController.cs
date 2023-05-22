@@ -1,11 +1,11 @@
 ﻿namespace Lingtren.Api.Controllers
 {
+    using Application.Common.Models.RequestModels;
     using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using LinqKit;
@@ -150,20 +150,26 @@
             return new ZoomLicenseResponseModel(savedEntity);
         }
 
+        /// <summary>
+        /// Gets Active LicenseId 
+        /// </summary>
+        /// <param name="zoomLicenseIdRequestModel">the instance of <see cref="LiveClassLicenseRequestModel"></param>
+        /// <returns>the instance of <see cref="ZoomLicenseResponseModel"/></returns>
+        /// <exception cref="ForbiddenException"></exception>
         [HttpGet("Active")]
-        public async Task<List<ZoomLicenseResponseModel>> Active([FromQuery] DateTime startDateTime, [FromQuery] int duration)
+        public async Task<List<ZoomLicenseResponseModel>> Active([FromQuery]LiveClassLicenseRequestModel zoomLicenseIdRequestModel)
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
-
-            if (startDateTime == default)
+           
+            if (zoomLicenseIdRequestModel.StartDateTime == default)
             {
                 throw new ForbiddenException("Start date is required.");
             }
-            if (duration < 0 || duration == default)
+            if (zoomLicenseIdRequestModel.Duration < 0 || zoomLicenseIdRequestModel.Duration == default)
             {
                 throw new ForbiddenException("Duration is required.");
             }
-            var zoomLicenses = await _zoomLicenseService.GetActiveLicenses(startDateTime, duration).ConfigureAwait(false);
+            var zoomLicenses = await _zoomLicenseService.GetActiveLicensesAsync(zoomLicenseIdRequestModel).ConfigureAwait(false);
             return zoomLicenses.ToList();
         }
     }

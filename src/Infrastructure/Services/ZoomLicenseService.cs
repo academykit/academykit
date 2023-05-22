@@ -5,6 +5,7 @@
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
@@ -14,6 +15,7 @@
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Tokens;
+    using Minio.DataModel;
     using Newtonsoft.Json.Linq;
     using RestSharp;
     using System.IdentityModel.Tokens.Jwt;
@@ -86,59 +88,92 @@
         #endregion Protected Methods
 
         /// <summary>
-        /// Handle to get active available zoom license with in given time period
+        /// Handels to get ZoomLicenseId
         /// </summary>
-        /// <param name="startDateTime">meeting start date</param>
-        /// <param name="duration">meeting duration</param>
-        /// <returns></returns>
-        public async Task<IList<ZoomLicenseResponseModel>> GetActiveLicenses(DateTime startDateTime, int duration)
+        /// <param name="zoomLicenseIdRequestModel"> the instance of <see cref="LiveClassLicenseRequestModel"/></param>
+        /// <returns>the instance of <see cref="ZoomLicenseResponseModel"/></returns>
+        public async Task<IList<ZoomLicenseResponseModel>> GetActiveLicensesAsync(LiveClassLicenseRequestModel zoomLicenseIdRequestModel)
         {
             try
             {
-                var zoomLicenses = await _unitOfWork.GetRepository<ZoomLicense>().GetAllAsync(
-                    predicate: p => p.IsActive).ConfigureAwait(false);
-
-                var endTime = startDateTime.AddMinutes(duration);
-
-                var meetings = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(predicate: p =>
-                 (p.StartDate.HasValue && p.StartDate.Value >= startDateTime && p.StartDate.Value < endTime) ||
-                 (p.StartDate.HasValue && p.StartDate.Value.AddMinutes(p.Duration) > startDateTime && p.StartDate.Value.AddMinutes(p.Duration) <= endTime)
-                           ).ConfigureAwait(false);
-                if (meetings?.Count != 0)
+                var startDate = zoomLicenseIdRequestModel.StartDateTime.Date;
+                if (!string.IsNullOrEmpty(zoomLicenseIdRequestModel.LessonIdentity))
                 {
-                    throw new InvalidDataException("Time span is already used , try another instance");
+                    var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p=>p.Lesson.Id.ToString() == zoomLicenseIdRequestModel.LessonIdentity || p.Lesson.Slug == zoomLicenseIdRequestModel.LessonIdentity).ConfigureAwait(false);
+                    return await LessonZoomIdGetAsync(new List<Meeting> { meeting }, zoomLicenseIdRequestModel.StartDateTime, zoomLicenseIdRequestModel.Duration);
+                }else
+                {
+                    var meetings = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(predicate: p => p.StartDate.Value.Date == startDate).ConfigureAwait(false);
+                    return await LessonZoomIdGetAsync(meetings, zoomLicenseIdRequestModel.StartDateTime, zoomLicenseIdRequestModel.Duration);
                 }
-
-                var data = from zoomLicense in zoomLicenses
-                           join meeting in meetings on zoomLicense.Id equals meeting.ZoomLicenseId
-                           into zoomMeeting
-                           from m in zoomMeeting.DefaultIfEmpty()
-                           group m by zoomLicense into g
-                           select new
-                           {
-                               g.Key.Id,
-                               g.Key.HostId,
-                               g.Key.Capacity,
-                               g.Key.LicenseEmail,
-                               g.Key.IsActive,
-                               Count = g.Count()
-                           };
-
-                var response = data.Where(x => x.Count < 2).Select(x => new ZoomLicenseResponseModel
-                {
-                    Id = x.Id,
-                    HostId = x.HostId,
-                    Capacity = x.Capacity,
-                    LicenseEmail = x.LicenseEmail,
-                    IsActive = x.IsActive,
-                }).ToList();
-                return await Task.FromResult(response);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Handels to retrive ZoomID 
+        /// </summary>
+        /// <param name="meetings">the instance of <see cref="Meeting"/></param>
+        /// <param name="startDateTime">startDate and Time of the live session</param>
+        /// <param name="duration">Duration of live session</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidDataException"></exception>
+        public async Task<List<ZoomLicenseResponseModel>> LessonZoomIdGetAsync(IList<Meeting> meetings,DateTime startDateTime, int duration)
+        {
+            var zoomLicenses = await _unitOfWork.GetRepository<ZoomLicense>().GetAllAsync(
+            predicate: p => p.IsActive).ConfigureAwait(false);
+
+            var endTime = startDateTime.AddMinutes(duration);
+
+            var meetinglist = meetings.ToList();
+
+            var userMeetings = (await _unitOfWork.GetRepository<Meeting>()
+                .GetAllAsync().ConfigureAwait(false))
+                .AsEnumerable()
+                .Where(p => meetinglist.Any(m =>
+                    m.StartDate.HasValue && p.StartDate.HasValue && m.StartDate.Value.Date == p.StartDate.Value.Date))
+                .ToList();
+
+            var hasOverlappingMeetings = userMeetings.Where(m =>
+                (m.StartDate.HasValue && m.StartDate.Value >= startDateTime && m.StartDate.Value < endTime) ||
+                (m.StartDate.HasValue && m.StartDate.Value.AddMinutes(m.Duration) > startDateTime && m.StartDate.Value.AddMinutes(m.Duration) <= endTime)
+            );
+
+            if (hasOverlappingMeetings.Count() != 0)
+            {
+                throw new InvalidDataException("Time span is already used, try another instance");
+            }
+
+            var data = from zoomLicense in zoomLicenses
+                       join meeting in userMeetings on zoomLicense.Id equals meeting.ZoomLicenseId
+                       into zoomMeeting
+                       from m in zoomMeeting.DefaultIfEmpty()
+                       group m by zoomLicense into g
+                       select new
+                       {
+                           g.Key.Id,
+                           g.Key.HostId,
+                           g.Key.Capacity,
+                           g.Key.LicenseEmail,
+                           g.Key.IsActive,
+                           Count = g.Count()
+                       };
+
+            var response = data.Where(x => x.Count < 2).Select(x => new ZoomLicenseResponseModel
+            {
+                Id = x.Id,
+                HostId = x.HostId,
+                Capacity = x.Capacity,
+                LicenseEmail = x.LicenseEmail,
+                IsActive = x.IsActive,
+            }).ToList();
+
+            return response;
+        }
+
 
         /// <summary>
         /// Handle to create zoom meeting
