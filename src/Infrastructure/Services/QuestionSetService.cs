@@ -213,7 +213,7 @@
 
                 var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id,
-                    include: src => src.Include(x => x.Course)).ConfigureAwait(false);
+                    include: src => src.Include(x => x.Course).Include(x=>x.CourseEnrollments)).ConfigureAwait(false);
 
                 if (lesson.Course.Status == CourseStatus.Completed)
                 {
@@ -222,13 +222,9 @@
                     throw new ForbiddenException($"Cannot give exam to the training having {lesson.Course.Status} status.");
                 }
 
-                var isEnrolled = await _unitOfWork.GetRepository<CourseEnrollment>().ExistsAsync(
-                    predicate: p => p.CourseId == lesson.CourseId && p.UserId == currentUserId && !p.IsDeleted
-                            && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)
-                            ).ConfigureAwait(false);
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
 
-                var isValidUser = await ValdiateUserAsync(currentUserId, questionSet,course).ConfigureAwait(false);
+                var isValidUser = await ValdiateUserAsync(currentUserId, questionSet,course,lesson).ConfigureAwait(false);
 
                 if (!isValidUser)
                 {
@@ -441,7 +437,7 @@
         /// <param name="questionSet"> the instance of <see cref="QuestionSet"/> </param>
         /// <param name="course"></param>
         /// <returns></returns>
-        private async Task<bool> ValdiateUserAsync(Guid currentUserId , QuestionSet questionSet,Course course)
+        private async Task<bool> ValdiateUserAsync(Guid currentUserId , QuestionSet questionSet,Course course,Lesson lesson)
         {
             var isAdmin = await IsSuperAdminOrAdmin(currentUserId);
             if(isAdmin)
@@ -463,6 +459,16 @@
             {
                 return true;
             }
+
+            var isEnrolled = await _unitOfWork.GetRepository<CourseEnrollment>().ExistsAsync(
+                    predicate: p => p.CourseId == lesson.CourseId && p.UserId == currentUserId && !p.IsDeleted
+                            && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)
+                            ).ConfigureAwait(false);
+            if(isEnrolled == true)
+            {
+                return true;
+            }
+
             return false;
         }
 
