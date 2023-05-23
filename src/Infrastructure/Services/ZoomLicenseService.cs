@@ -92,20 +92,42 @@
         /// </summary>
         /// <param name="zoomLicenseIdRequestModel"> the instance of <see cref="LiveClassLicenseRequestModel"/></param>
         /// <returns>the instance of <see cref="ZoomLicenseResponseModel"/></returns>
-        public async Task<IList<ZoomLicenseResponseModel>> GetActiveLicensesAsync(LiveClassLicenseRequestModel zoomLicenseIdRequestModel)
+        public async Task<IList<ZoomLicenseResponseModel>> GetActiveLicensesAsync(LiveClassLicenseRequestModel model)
         {
             try
             {
-                var startDate = zoomLicenseIdRequestModel.StartDateTime.Date;
-                if (!string.IsNullOrEmpty(zoomLicenseIdRequestModel.LessonIdentity))
+                var zoomLicenses = await _unitOfWork.GetRepository<ZoomLicense>().GetAllAsync(
+                predicate: p => p.IsActive).ConfigureAwait(false);
+
+                var meetings = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(
+                    predicate: p => p.StartDate.HasValue
+                       && ((model.StartDateTime > p.StartDate.Value && model.StartDateTime < p.StartDate.Value.AddSeconds(p.Duration))
+                            || (model.StartDateTime.AddSeconds(model.Duration * 60) > p.StartDate.Value && model.StartDateTime.AddSeconds(model.Duration * 60) < p.StartDate.Value.AddSeconds(p.Duration)))).ConfigureAwait(false);
+
+                var data = from zoomLicense in zoomLicenses
+                           join meeting in meetings on zoomLicense.Id equals meeting.ZoomLicenseId
+                           into zoomMeeting
+                           from m in zoomMeeting.DefaultIfEmpty()
+                           group m by zoomLicense into g
+                           select new
+                           {
+                               g.Key.Id,
+                               g.Key.HostId,
+                               g.Key.Capacity,
+                               g.Key.LicenseEmail,
+                               g.Key.IsActive,
+                               Count = g.Count()
+                           };
+
+                var response = data.Where(x => x.Count < 2).Select(x => new ZoomLicenseResponseModel
                 {
-                    var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p=>p.Lesson.Id.ToString() == zoomLicenseIdRequestModel.LessonIdentity || p.Lesson.Slug == zoomLicenseIdRequestModel.LessonIdentity).ConfigureAwait(false);
-                    return await LessonZoomIdGetAsync(new List<Meeting> { meeting }, zoomLicenseIdRequestModel.StartDateTime, zoomLicenseIdRequestModel.Duration);
-                }else
-                {
-                    var meetings = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(predicate: p => p.StartDate.Value.Date == startDate).ConfigureAwait(false);
-                    return await LessonZoomIdGetAsync(meetings, zoomLicenseIdRequestModel.StartDateTime, zoomLicenseIdRequestModel.Duration);
-                }
+                    Id = x.Id,
+                    HostId = x.HostId,
+                    Capacity = x.Capacity,
+                    LicenseEmail = x.LicenseEmail,
+                    IsActive = x.IsActive,
+                }).ToList();
+                return response;
             }
             catch (Exception ex)
             {
@@ -121,7 +143,7 @@
         /// <param name="duration">Duration of live session</param>
         /// <returns></returns>
         /// <exception cref="InvalidDataException"></exception>
-        public async Task<List<ZoomLicenseResponseModel>> LessonZoomIdGetAsync(IList<Meeting> meetings,DateTime startDateTime, int duration)
+        public async Task<List<ZoomLicenseResponseModel>> LessonZoomIdGetAsync(IList<Meeting> meetings, DateTime startDateTime, int duration)
         {
             var zoomLicenses = await _unitOfWork.GetRepository<ZoomLicense>().GetAllAsync(
             predicate: p => p.IsActive).ConfigureAwait(false);
