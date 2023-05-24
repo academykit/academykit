@@ -97,14 +97,18 @@
             try
             {
                 var startDate = zoomLicenseIdRequestModel.StartDateTime.Date;
+                var meetingsWithStartDate = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(predicate: p => p.StartDate.Value.Date == startDate).ConfigureAwait(false);
                 if (!string.IsNullOrEmpty(zoomLicenseIdRequestModel.LessonIdentity))
                 {
-                    var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p=>p.Lesson.Id.ToString() == zoomLicenseIdRequestModel.LessonIdentity || p.Lesson.Slug == zoomLicenseIdRequestModel.LessonIdentity).ConfigureAwait(false);
-                    return await LessonZoomIdGetAsync(new List<Meeting> { meeting }, zoomLicenseIdRequestModel.StartDateTime, zoomLicenseIdRequestModel.Duration);
+                    var meeting = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(predicate: p=>(p.Lesson.Id.ToString() == zoomLicenseIdRequestModel.LessonIdentity 
+                    || p.Lesson.Slug == zoomLicenseIdRequestModel.LessonIdentity) || (p.StartDate.Value == startDate && p.Lesson.Id.ToString() != zoomLicenseIdRequestModel.LessonIdentity)).ConfigureAwait(false);
+                   
+                    var meetings = meeting.Union(meetingsWithStartDate).ToList();
+                    return await LessonZoomIdGetAsync(meetings, zoomLicenseIdRequestModel.StartDateTime, zoomLicenseIdRequestModel.Duration).ConfigureAwait(false);
                 }else
                 {
-                    var meetings = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(predicate: p => p.StartDate.Value.Date == startDate).ConfigureAwait(false);
-                    return await LessonZoomIdGetAsync(meetings, zoomLicenseIdRequestModel.StartDateTime, zoomLicenseIdRequestModel.Duration);
+                    
+                    return await LessonZoomIdGetAsync(meetingsWithStartDate, zoomLicenseIdRequestModel.StartDateTime, zoomLicenseIdRequestModel.Duration).ConfigureAwait (false);
                 }
             }
             catch (Exception ex)
@@ -125,30 +129,17 @@
         {
             var zoomLicenses = await _unitOfWork.GetRepository<ZoomLicense>().GetAllAsync(
             predicate: p => p.IsActive).ConfigureAwait(false);
-
             var endTime = startDateTime.AddMinutes(duration);
-
-            var meetinglist = meetings.ToList();
-
-            var userMeetings = (await _unitOfWork.GetRepository<Meeting>()
-                .GetAllAsync().ConfigureAwait(false))
-                .AsEnumerable()
-                .Where(p => meetinglist.Any(m =>
-                    m.StartDate.HasValue && p.StartDate.HasValue && m.StartDate.Value.Date == p.StartDate.Value.Date))
-                .ToList();
-
-            var hasOverlappingMeetings = userMeetings.Where(m =>
+            var hasOverlappingMeetings = meetings.Where(m =>
                 (m.StartDate.HasValue && m.StartDate.Value >= startDateTime && m.StartDate.Value < endTime) ||
                 (m.StartDate.HasValue && m.StartDate.Value.AddMinutes(m.Duration) > startDateTime && m.StartDate.Value.AddMinutes(m.Duration) <= endTime)
             );
-
-            if (hasOverlappingMeetings.Count() != 0)
+            if (hasOverlappingMeetings.Count() != 0 )
             {
                 throw new InvalidDataException("Time span is already used, try another instance");
             }
-
             var data = from zoomLicense in zoomLicenses
-                       join meeting in userMeetings on zoomLicense.Id equals meeting.ZoomLicenseId
+                       join meeting in meetings on zoomLicense.Id equals meeting.ZoomLicenseId
                        into zoomMeeting
                        from m in zoomMeeting.DefaultIfEmpty()
                        group m by zoomLicense into g
