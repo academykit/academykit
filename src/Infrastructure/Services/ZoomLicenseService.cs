@@ -153,7 +153,7 @@
                            Count = g.Count()
                        };
 
-            var response = data.Where(x => x.Count < 2).Select(x => new ZoomLicenseResponseModel
+            var response = data.Where(x => x.Count < 1).Select(x => new ZoomLicenseResponseModel
             {
                 Id = x.Id,
                 HostId = x.HostId,
