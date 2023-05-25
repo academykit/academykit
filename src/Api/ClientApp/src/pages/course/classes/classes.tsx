@@ -216,9 +216,10 @@ const Classes = () => {
                 sx={{ overflowY: "hidden" }}
               >
                 <ExamDetails
-                  exam={courseLesson.data.questionSet}
-                  hasResult={courseLesson.data.hasResult}
-                  remainingAttempt={courseLesson.data.remainingAttempt}
+                  id={params.id as string}
+                  lessonId={
+                    params.lessonId === "1" ? undefined : params.lessonId
+                  }
                 />
               </Box>
             )}

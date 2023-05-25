@@ -5,9 +5,11 @@
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
 
@@ -15,7 +17,8 @@
     {
         public GroupMemberService(
             IUnitOfWork unitOfWork,
-            ILogger<GroupMemberService> logger) : base(unitOfWork, logger)
+            ILogger<GroupMemberService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
         }
 

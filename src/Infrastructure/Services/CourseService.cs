@@ -1,27 +1,33 @@
-using Lingtren.Application.Common.Dtos;
-using Lingtren.Application.Common.Models.ResponseModels;
-using Hangfire;
-using Lingtren.Application.Common.Exceptions;
-using Lingtren.Application.Common.Interfaces;
-using Lingtren.Application.Common.Models.RequestModels;
-using Lingtren.Domain.Entities;
-using Lingtren.Domain.Enums;
-using Lingtren.Infrastructure.Common;
-using Lingtren.Infrastructure.Helpers;
-using LinqKit;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using RestSharp;
-using System.Collections;
-using System.Collections.Immutable;
-using System.Data;
-using System.Linq.Expressions;
-
 namespace Lingtren.Infrastructure.Services
 {
+    using Application.Common.Dtos;
+    using Application.Common.Models.ResponseModels;
+    using Hangfire;
+    using Lingtren.Application.Common.Exceptions;
+    using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Domain.Entities;
+    using Lingtren.Domain.Enums;
+    using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
+    using LinqKit;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Routing.Constraints;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Logging;
+    using RestSharp;
+    using System;
+    using System.Collections;
+    using System.Collections.Immutable;
+    using System.Data;
+    using System.IO;
+    using System.Linq;
+    using System.Linq.Expressions;
+
     public class CourseService : BaseGenericService<Course, CourseBaseSearchCriteria>, ICourseService
     {
         private readonly string imageApi;
@@ -32,7 +38,8 @@ namespace Lingtren.Infrastructure.Services
             ILogger<CourseService> logger,
             IConfiguration configuration,
             IMediaService mediaService,
-            IFileServerService fileServerService) : base(unitOfWork, logger)
+            IFileServerService fileServerService,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
             imageApi = configuration.GetSection("AppUrls:ImageApi").Value;
             _mediaService = mediaService;

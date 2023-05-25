@@ -4,12 +4,15 @@
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Domain.Entities;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Localization;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
 
     public class RefreshTokenService : BaseService, IRefreshTokenService
     {
         public RefreshTokenService(IUnitOfWork unitOfWork,
-            ILogger<RefreshTokenService> logger) : base(unitOfWork, logger)
+            ILogger<RefreshTokenService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
         }
 

@@ -11,10 +11,13 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     public class LevelService : BaseGenericService<Level, BaseSearchCriteria>, ILevelService
     {
-        public LevelService(IUnitOfWork unitOfWork, ILogger<LevelService> logger) : base(unitOfWork, logger)
+        public LevelService(IUnitOfWork unitOfWork, ILogger<LevelService> logger,
+        IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
         }
 

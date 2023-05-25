@@ -8,9 +8,11 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using System.Data;
     using System.Linq.Expressions;
@@ -19,7 +21,8 @@
     {
         public DepartmentService(
             IUnitOfWork unitOfWork,
-            ILogger<DepartmentService> logger) : base(unitOfWork, logger)
+            ILogger<DepartmentService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
         }
         #region Protected Methods
