@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using Amazon.S3.Model.Internal.MarshallTransformations;
     using Hangfire;
     using Hangfire.Server;
     using Lingtren.Application.Common.Dtos;
@@ -23,6 +24,7 @@
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq.Expressions;
     using System.Text;
+    using static Dapper.SqlMapper;
 
     public class ZoomLicenseService : BaseGenericService<ZoomLicense, ZoomLicenseBaseSearchCriteria>, IZoomLicenseService
     {
