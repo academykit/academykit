@@ -9,9 +9,11 @@
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Microsoft.VisualBasic;
     using Org.BouncyCastle.Math.EC.Rfc7748;
@@ -22,7 +24,8 @@
         private readonly ICourseService _courseService;  
         public QuestionSetService(ICourseService courseService,
             IUnitOfWork unitOfWork,
-            ILogger<QuestionSetService> logger) : base(unitOfWork, logger)
+            ILogger<QuestionSetService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
             _courseService = courseService;
         }

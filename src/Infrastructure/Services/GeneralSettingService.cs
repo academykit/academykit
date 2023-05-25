@@ -4,15 +4,18 @@
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Domain.Entities;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Localization;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
 
     public class GeneralSettingService : BaseGenericService<GeneralSetting, BaseSearchCriteria>, IGeneralSettingService
     {
         public GeneralSettingService(
             IUnitOfWork unitOfWork,
-            ILogger<GeneralSettingService> logger) : base(unitOfWork, logger)
+            ILogger<GeneralSettingService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
         }
         /// <summary>

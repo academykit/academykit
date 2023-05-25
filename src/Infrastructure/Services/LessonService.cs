@@ -11,9 +11,11 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using System;
     using System.Linq.Expressions;
@@ -28,7 +30,8 @@ namespace Lingtren.Infrastructure.Services
             ILogger<LessonService> logger,
             IZoomLicenseService zoomLicenseService,
             IFileServerService fileServerService,
-            IZoomSettingService zoomSettingService) : base(unitOfWork, logger)
+            IZoomSettingService zoomSettingService,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
             _zoomLicenseService = zoomLicenseService;
             _zoomSettingService = zoomSettingService;

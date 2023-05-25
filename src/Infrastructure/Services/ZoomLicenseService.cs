@@ -10,9 +10,11 @@
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Tokens;
     using Minio.DataModel;
@@ -27,7 +29,8 @@
         private const string zoomAPIPath = "https://api.zoom.us/v2";
         public ZoomLicenseService(
             IUnitOfWork unitOfWork,
-            ILogger<ZoomLicenseService> logger) : base(unitOfWork, logger)
+            ILogger<ZoomLicenseService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
         }
 

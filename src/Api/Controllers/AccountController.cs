@@ -6,8 +6,10 @@
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
+    using Lingtren.Infrastructure.Localization;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
     using System.IdentityModel.Tokens.Jwt;
 
     public class AccountController : BaseApiController
@@ -16,17 +18,20 @@
         private readonly IValidator<LoginRequestModel> _validator;
         private readonly IValidator<ResetPasswordRequestModel> _resetPasswordValidator;
         private readonly IValidator<ChangePasswordRequestModel> _changePasswordValidator;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
 
         public AccountController(
             IUserService userService,
             IValidator<LoginRequestModel> validator,
             IValidator<ResetPasswordRequestModel> resetPasswordValidator,
-            IValidator<ChangePasswordRequestModel> changePasswordValidator)
+            IValidator<ChangePasswordRequestModel> changePasswordValidator,
+            IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _userService = userService;
             _validator = validator;
             _resetPasswordValidator = resetPasswordValidator;
             _changePasswordValidator = changePasswordValidator;
+            _localizer = localizer;
         }
 
         [HttpGet]
@@ -54,14 +59,14 @@
         {
             if (string.IsNullOrWhiteSpace(model.Token))
             {
-                return BadRequest(new CommonResponseModel { Message = "Token is required." });
+                return BadRequest(new CommonResponseModel { Message = _localizer.GetString("TokenRequired") });
             }
             var response = await _userService.Logout(model.Token, CurrentUser.Id);
             if (!response)
             {
-                return NotFound(new CommonResponseModel { Message = "Token not matched." });
+                return NotFound(new CommonResponseModel { Message = _localizer.GetString("TokenNotMatched") });
             }
-            return Ok(new { message = "Logout successfully." });
+            return Ok(new { message = _localizer.GetString("LogoutSuccess") });
         }
 
         [HttpPost("ForgotPassword")]
@@ -71,10 +76,10 @@
             var user = await _userService.GetUserByEmailAsync(model.Email);
             if (user == null)
             {
-                return BadRequest(new CommonResponseModel { Message = "User not found." });
+                return BadRequest(new CommonResponseModel { Message = _localizer.GetString("UserNotFound") });
             }
             await _userService.ResetPasswordAsync(user).ConfigureAwait(false);
-            return Ok(new { message = "Forgot password executed successfully.", success = true });
+            return Ok(new { message = _localizer.GetString("ForgetPasswordExecuted"), success = true });
         }
 
         [HttpPost("VerifyResetToken")]
@@ -82,7 +87,7 @@
         public async Task<IActionResult> VerifyResetToken([FromBody] VerifyResetTokenModel model)
         {
             var passwordResetToken = await _userService.VerifyPasswordResetTokenAsync(model).ConfigureAwait(false);
-            return Ok(new { message = "Password reset token matched successfully.", data = passwordResetToken });
+            return Ok(new { message = _localizer.GetString("PasswordResetTokenMatched"), data = passwordResetToken });
         }
 
         [HttpPost("ResetPassword")]
@@ -97,18 +102,18 @@
 
             if (DateTimeOffset.FromUnixTimeSeconds(exp).ToUniversalTime() <= DateTimeOffset.UtcNow)
             {
-                return BadRequest(new CommonResponseModel { Message = "Token expired" });
+                return BadRequest(new CommonResponseModel { Message = _localizer.GetString("TokenExpired") });
             }
 
             var user = await _userService.GetUserByEmailAsync(email.Trim().ToLower());
 
             if (user == null)
             {
-                return BadRequest(new CommonResponseModel { Message = "User not found." });
+                return BadRequest(new CommonResponseModel { Message = _localizer.GetString("UserNotFound") });
             }
             user.HashPassword = _userService.HashPassword(model.NewPassword);
             await _userService.UpdateAsync(user, includeProperties: false);
-            return Ok(new { message = "Password reset successfully." });
+            return Ok(new { message = _localizer.GetString("PasswordResetSuccess"), success = true });
         }
 
         [HttpPost("RefreshToken")]
@@ -131,7 +136,7 @@
         {
             await _changePasswordValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             await _userService.ChangePasswordAsync(model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new { message = "Password changed successfully.", success = true });
+            return Ok(new { message = _localizer.GetString("PasswordChanged"), success = true });
         }
     }
 }

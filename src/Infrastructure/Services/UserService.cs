@@ -11,12 +11,14 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Configurations;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Cryptography.KeyDerivation;
     using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
@@ -44,7 +46,8 @@
             IEmailService emailService,
             IRefreshTokenService refreshTokenService,
             IOptions<JWT> jwt,
-            IConfiguration configuration) : base(unitOfWork, logger)
+            IConfiguration configuration,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
             _emailService = emailService;
             _refreshTokenService = refreshTokenService;
@@ -70,14 +73,14 @@
             if (user == null)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = "Account not registered.";
+                authenticationModel.Message = _localizer.GetString("AccountNotRegistered");
                 return authenticationModel;
             }
 
             if (!user.IsActive)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = "Inactive user account";
+                authenticationModel.Message = _localizer.GetString("AccountNotActive");
                 return authenticationModel;
             }
 
@@ -85,7 +88,7 @@
             if (!isUserAuthenticated)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = "Incorrect User Credentials.";
+                authenticationModel.Message = _localizer.GetString("IncorrectCredentials");
                 return authenticationModel;
             }
             var currentTimeStamp = DateTime.UtcNow;
@@ -155,21 +158,21 @@
             if (user == null)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = "Token did not match any users.";
+                authenticationModel.Message = _localizer.GetString("TokenNotMatched");
                 return authenticationModel;
             }
             var refreshToken = await GetUserRefreshToken(token);
             if (refreshToken == null)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = "Token not found.";
+                authenticationModel.Message = _localizer.GetString("TokenNotFound");
                 return authenticationModel;
             }
 
             if (!refreshToken.IsActive)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = "Token Not Active.";
+                authenticationModel.Message = _localizer.GetString("TokenNotActive");
                 return authenticationModel;
             }
             refreshToken.IsActive = false;
@@ -273,7 +276,7 @@
                 MimeTypes.TryGetExtension(file.ContentType, out var extension);
                 if (extension != ".csv")
                 {
-                    throw new ArgumentException("File extension should be csv format");
+                    throw new ArgumentException(_localizer.GetString("CSVFileExtension"));
                 }
                 var users = new List<UserImportDto>();
                 using (var reader = new StreamReader(file.OpenReadStream()))
@@ -299,7 +302,7 @@
                     var duplicateUser = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: p => userEmails.Contains(p.Email), selector: x => x.Email).ConfigureAwait(false);
                     foreach (var entity in duplicateUser)
                     {
-                        stringBuilder.Append($"{entity} is already registered.");
+                        stringBuilder.Append($"{entity}").Append(_localizer.GetString("AlreadyRegistered"));
                         stringBuilder.Append(Environment.NewLine);
                     }
                     var newUsersList = users.Where(x => !duplicateUser.Contains(x.Email)).ToList();
