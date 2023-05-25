@@ -14,7 +14,6 @@ import {
 import { useForm } from "@mantine/form";
 import { useMediaQuery, useToggle } from "@mantine/hooks";
 import RichTextEditor from "@mantine/rte";
-import RadioType from "@pages/course/assignment/Component/RadioType";
 import { CourseUserStatus, QuestionType, UserRole } from "@utils/enums";
 import {
   ILessonExamStart,
@@ -24,7 +23,7 @@ import {
   useSubmitExam,
 } from "@utils/services/examService";
 import { RefObject, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ExamCounter from "./ExamCounter";
 import ExamCheckBox from "./ExamOptions/ExamCheckBox";
 import ExamRadio from "./ExamOptions/ExamRadio";
@@ -93,6 +92,7 @@ const Exam = ({
   const questions = data.questions;
   const examSubmission = useSubmitExam();
   const auth = useAuth();
+  const location = useLocation();
 
   const form = useForm({
     initialValues: questions,
@@ -186,10 +186,18 @@ const Exam = ({
       </Modal>
       <Modal
         opened={examSubmission.isSuccess}
-        onClose={() => navigate(-1)}
+        onClose={() => {
+          navigate(location.state + "?invalidate=true" ?? "/");
+        }}
         title="Exam submitted successfully. Please be patient for your result."
       >
-        <Button onClick={() => navigate(-1)}>Close</Button>
+        <Button
+          onClick={() => {
+            navigate(location.state + "?invalidate=true" ?? "/");
+          }}
+        >
+          Close
+        </Button>
       </Modal>
       <Grid m={20}>
         <Grid.Col span={matches ? 9 : 12}>

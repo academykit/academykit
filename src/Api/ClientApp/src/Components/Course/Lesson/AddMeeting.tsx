@@ -135,10 +135,13 @@ const AddMeeting = ({
   };
 
   const handleSubmit = async (values: any) => {
+    const time = new Date(values?.meetingStartTime).toLocaleTimeString();
+    const date = new Date(values?.meetingStartDate).toLocaleDateString();
+
     const meeting = {
       ...values,
       meetingStartDate: isEditing
-        ? new Date(values?.meetingStartTime).toISOString()
+        ? new Date(date + " " + time)
         : new Date(dateTime).toISOString(),
     };
     delete meeting.isMandatory;
