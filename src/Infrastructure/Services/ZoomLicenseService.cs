@@ -135,7 +135,7 @@
 
                 if (hasOverlappingMeetings.Count() == 0)
                 {
-                    response.ForEach(x => response.Add(new ZoomLicenseResponseModel
+                    zoomLiscenses.ForEach(x => response.Add(new ZoomLicenseResponseModel
                     {
                         Id = x.Id,
                         HostId = x.HostId,
@@ -147,16 +147,24 @@
                 }
                 else
                 {
-                    var Commonlist = zoomLiscenses.Where(x => hasOverlappingMeetings.Select(x => x.ZoomLicenseId).Contains(x.Id)).ToList();
-                    var filtered = Commonlist.Except(zoomLiscenses);
-                    filtered.ForEach(x => response.Add(new ZoomLicenseResponseModel
+
+                    var filter = zoomLiscenses.Select(x => x.Id).ToList();
+                    var overlapping = hasOverlappingMeetings.Select(x => x.ZoomLicenseId);
+                    var data = filter.Except(overlapping).ToList();
+                   
+                    foreach ( var x in data)
                     {
-                        Id = x.Id,
-                        HostId = x.HostId,
-                        Capacity = x.Capacity,
-                        LicenseEmail = x.LicenseEmail,
-                        IsActive = x.IsActive,
-                    }));
+                        var zoomId = zoomLiscenses.FirstOrDefault(y=> y.Id == x);
+                       response.Add( new ZoomLicenseResponseModel
+                        {
+                            Id = zoomId.Id,
+                            HostId = zoomId.HostId,
+                            Capacity = zoomId.Capacity,
+                            LicenseEmail = zoomId.LicenseEmail,
+                            IsActive = zoomId.IsActive,
+                        });
+                    }
+                    
                     return response;
                 }
             }
