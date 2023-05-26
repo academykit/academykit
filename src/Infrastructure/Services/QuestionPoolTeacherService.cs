@@ -7,9 +7,11 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Linq.Expressions;
@@ -17,7 +19,8 @@
     public class QuestionPoolTeacherService : BaseGenericService<QuestionPoolTeacher, QuestionPoolTeacherBaseSearchCriteria>, IQuestionPoolTeacherService
     {
         public QuestionPoolTeacherService(IUnitOfWork unitOfWork,
-            ILogger<QuestionPoolTeacherService> logger) : base(unitOfWork, logger)
+            ILogger<QuestionPoolTeacherService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
         }
 

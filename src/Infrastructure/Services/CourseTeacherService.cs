@@ -7,9 +7,11 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
 
@@ -22,8 +24,9 @@
         /// <param name="logger">The logger</param>
         public CourseTeacherService(
             IUnitOfWork unitOfWork,
-            ILogger<CourseTeacherService> logger)
-            : base(unitOfWork, logger)
+            ILogger<CourseTeacherService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer)
+            : base(unitOfWork, logger,localizer)
         {
         }
 

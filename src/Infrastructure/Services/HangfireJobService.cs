@@ -9,8 +9,10 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Localization;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Org.BouncyCastle.Crypto.Parameters;
     using System;
@@ -24,7 +26,7 @@ namespace Lingtren.Infrastructure.Services
         private readonly string _appUrl;
         private readonly IEmailService _emailService;
         public HangfireJobService(IConfiguration configuration, IUnitOfWork unitOfWork, ILogger<HangfireJobService> logger,
-        IEmailService emailService) : base(unitOfWork, logger)
+        IEmailService emailService,IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
             _emailService = emailService;
             _appUrl = configuration.GetSection("AppUrls:App").Value;

@@ -13,13 +13,16 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.EntityFrameworkCore;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Helpers;
+    using Microsoft.Extensions.Localization;
+    using Lingtren.Infrastructure.Localization;
 
     public class WebhookService : BaseService, IWebhookService
     {
         private readonly IMediaService _mediaService;
         public WebhookService(IUnitOfWork unitOfWork,
-        ILogger<WebhookService> logger, IMediaService mediaService)
-         : base(unitOfWork, logger)
+        ILogger<WebhookService> logger, IMediaService mediaService,
+        IStringLocalizer<ExceptionLocalizer> localizer)
+         : base(unitOfWork, logger,localizer)
         {
             _mediaService = mediaService;
         }

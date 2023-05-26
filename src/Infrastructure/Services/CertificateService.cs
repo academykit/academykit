@@ -10,10 +10,14 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.EntityFrameworkCore;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Domain.Enums;
+    using Microsoft.Extensions.Localization;
+    using Lingtren.Infrastructure.Localization;
 
     public class CertificateService : BaseService, ICertificateService
     {
-        public CertificateService(IUnitOfWork unitOfWork, ILogger<CertificateService> logger) : base(unitOfWork, logger)
+        public CertificateService(IUnitOfWork unitOfWork, 
+        ILogger<CertificateService> logger,
+        IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
         }
 

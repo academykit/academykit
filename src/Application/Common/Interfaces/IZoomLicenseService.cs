@@ -12,9 +12,9 @@
         /// <summary>
         /// Handels to get Active LessonID 
         /// </summary>
-        /// <param name="zoomLicenseIdRequestModel">the instance of <see cref="LiveClassLicenseRequestModel"/></param>
+        /// <param name="model">the instance of <see cref="LiveClassLicenseRequestModel"/></param>
         /// <returns>Instance of zoomid <see cref="ZoomLicenseResponseModel"/></returns>
-        Task<IList<ZoomLicenseResponseModel>> GetActiveLicensesAsync(LiveClassLicenseRequestModel zoomLicenseIdRequestModel);
+        Task<IList<ZoomLicenseResponseModel>> GetActiveLicensesAsync(LiveClassLicenseRequestModel model);
 
         /// <summary>
         /// Handle to create zoom meeting

@@ -4,6 +4,8 @@ using Lingtren.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.HttpOverrides;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddJWTConfigurationServices(builder.Configuration);
 
+builder.Services.AddRequestLocalization(x =>
+{
+    x.DefaultRequestCulture = new RequestCulture("en");
+    x.ApplyCurrentCultureToResponseHeaders = true;
+    x.SupportedCultures = new List<CultureInfo> { new("ne"), new("en") };
+    x.SupportedUICultures = new List<CultureInfo> { new("ne"), new("en") };
+    x.SupportedCultures = new List<CultureInfo> { new("ja"), new("ja") };
+});
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddCors(options => options.AddDefaultPolicy(
                builder => builder
