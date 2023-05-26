@@ -17,6 +17,7 @@ import { useGroups } from "@utils/services/groupService";
 
 import AddGroups from "./Components/AddGroups";
 import GroupCard from "./Components/GroupCard";
+import { useTranslation } from "react-i18next";
 
 const a = {
   in: { opacity: 1 },
@@ -40,7 +41,7 @@ const GroupsPage = ({
 
   const { isLoading, data } = useGroups(searchParams);
   const auth = useAuth();
-
+  const { t } = useTranslation();
   return (
     <Container fluid>
       <Box my={10}>
@@ -48,7 +49,7 @@ const GroupsPage = ({
           sx={{ justifyContent: "space-between", alignItems: "center" }}
           mb={15}
         >
-          <Title>Groups</Title>
+          <Title>{t("groups")}</Title>
 
           {auth?.auth && auth.auth.role <= UserRole.Admin && (
             <Transition mounted={!showAddGroups} transition={b} duration={400}>
@@ -57,7 +58,7 @@ const GroupsPage = ({
                   style={{ ...styles }}
                   onClick={(e: any) => setShowAddGroups()}
                 >
-                  Add Group
+                  {t("add_group")}
                 </Button>
               )}
             </Transition>
@@ -76,7 +77,7 @@ const GroupsPage = ({
 
         <div style={{ display: "flex" }}>
           <Box mx={3} sx={{ width: "100%" }}>
-            {searchComponent("Search for groups")}
+            {searchComponent(t("search_groups") as string)}
           </Box>
         </div>
       </Box>
@@ -88,7 +89,7 @@ const GroupsPage = ({
               <GroupCard search={searchParams} group={x} key={x.id} />
             ))
           ) : (
-            <Box>No Groups Found!</Box>
+            <Box>{t("no_groups")}</Box>
           ))}
       </Group>
       {data && pagination(data.data.totalPage)}

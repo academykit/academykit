@@ -27,6 +27,7 @@ const AddUpdateUserForm = lazyWithRetry(
 );
 import * as Yup from "yup";
 import { useForm, yupResolver } from "@mantine/form";
+import { useTranslation } from "react-i18next";
 
 const sortByObject = [
   { value: "firstName:Ascending", label: "Name (A-Z)" },
@@ -78,6 +79,7 @@ const UsersList = ({
     }
     setCsvLoad(false);
   };
+  const { t } = useTranslation();
 
   return (
     <>
@@ -148,14 +150,14 @@ const UsersList = ({
         sx={{ justifyContent: "space-between", alignItems: "center" }}
         mb={15}
       >
-        <Title>Users</Title>
+        <Title>{t("Users")}</Title>
         <div>
-          <Button onClick={() => setOpened(true)}>Add User</Button>
+          <Button onClick={() => setOpened(true)}>{t("add_user")}</Button>
         </div>
       </Group>
       <Flex mb={10}>
-        {searchComponent("Search for users")}
-        <Flex>{sortComponent(sortByObject, "Sort BY")}</Flex>
+        {searchComponent(t("search_users") as string)}
+        <Flex>{sortComponent(sortByObject, t("sort_by"))}</Flex>
       </Flex>
       {loading && <Loader />}
       {error && <Box>{errorType(error)}</Box>}
@@ -164,7 +166,7 @@ const UsersList = ({
         {data &&
           data?.items &&
           (data.items.length < 1 ? (
-            <Box>No Users Found!</Box>
+            <Box>{t("no_users")}</Box>
           ) : (
             <UserMemberTable users={data?.items} search={searchParams} />
           ))}
