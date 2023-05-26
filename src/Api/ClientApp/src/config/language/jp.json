@@ -1,0 +1,30 @@
+    {
+        "welcome_back": "おかえり",
+        "email": "Eメール",
+        "password": "パスワード",
+        "forgot_password": "パスワードをお忘れですか",
+        "overview": "概要",
+    "sign_in": "ログイン",
+    "your_password": "あなたのパスワード",
+    "successful": "成功",
+    "error": "エラー",
+    "something_wrong":"何か問題が発生しました",
+    "login_success": "正常にログインしました",
+    "password_reset":"パスワードが正常にリセットされました",
+    "check_email":"メールを確認してください",
+
+
+
+    "change_email_title": "パスワードを変更するにはメールアドレスを入力してください",
+    "your_email":"あなたのメールアドレス",
+    "want_login": "ログインしたい",
+    "proceed": "続行",
+    "token": "トークン",
+    "add_token_email": "電子メールで送信されたトークンを追加する",
+
+    "add_new_password": "新しいパスワードを追加します",
+    "confirm_password": "パスワードを認証する",
+    "repeat_password": "パスワードを再度入力してください"
+
+    
+      }

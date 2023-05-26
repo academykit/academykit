@@ -10,6 +10,7 @@ import {
 
 import { Link, useLocation } from "react-router-dom";
 import { ColorSchemeToggle } from "./ColorSchemeToggle";
+import LanguageSelector from "@components/Ui/LanguageSelector";
 
 const useStyles = createStyles((theme) => ({
   footer: {
@@ -69,7 +70,8 @@ export function AppFooter({ name }: { name: string }) {
           </Anchor>
         </Group>
         <Group spacing={0} position="right" noWrap>
-          <ColorSchemeToggle size="lg"></ColorSchemeToggle>
+          <LanguageSelector />
+          <ColorSchemeToggle size="lg" />
         </Group>
       </Container>
       <Center>

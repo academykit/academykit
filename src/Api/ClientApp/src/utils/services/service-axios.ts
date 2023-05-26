@@ -10,12 +10,15 @@ import { api } from "./service-api";
 
 type RequestData = Record<string, any>;
 
+const lang = localStorage.getItem("lang");
+
 const THREE_MINUTES = 3 * 60 * 1000;
 const baseURL = "/";
 const baseConfig = {
   baseURL,
   timeout: THREE_MINUTES,
   "Content-Type": "Application/json",
+  "Accept-Language": (lang as string) ?? "en",
 };
 /**
  * Axios HTTP Client
@@ -74,8 +77,10 @@ export const httpClient = {
 axiosInstance.interceptors.request.use(
   async function (config: AxiosRequestConfig) {
     const token = localStorage.getItem("token");
+    const lang = localStorage.getItem("lang");
     if (token && config.headers) {
       config.headers["Authorization"] = `Bearer ${token}`;
+      config.headers["Accept-Language"] = (lang as string) ?? "en";
     }
 
     config.data = filterFalseyValues(config.data);

@@ -1,0 +1,26 @@
+{
+    "welcome_back": "Welcome Back",
+    "email": "Email",
+    "password": "Password",
+    "your_password": "Your Password",
+    "forgot_password": "Forgot Password",
+    "overview": "Overview",
+    "sign_in": "Sign In",
+    "successful": "Successful",
+    "error": "Error",
+    "something_wrong":"Something went wrong",
+    "login_success":"Successfully logged in",
+    "password_reset":"Password reset successfully",
+    "check_email":"Please check your email",
+
+    "change_email_title": "Enter email to change password",
+    "your_email":"Your email address",
+    "want_login": "Want to Login",
+    "proceed": "Proceed",
+    "token": "Token",
+    "add_token_email": "Add token sent on email",
+
+    "add_new_password": "Add your new password",
+    "confirm_password": "Confirm Password",
+    "repeat_password": "Repeat Password"
+  }
