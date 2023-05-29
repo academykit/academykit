@@ -276,13 +276,28 @@
   <data name="AtleastOneQuestionRequired" xml:space="preserve">
     <value>少なくとも 1 つの質問が必要です</value>
   </data>
+  <data name="CourseCompleted" xml:space="preserve">
+    <value>コースが完了しました</value>
+  </data>
+  <data name="GeneralSettingNotFound" xml:space="preserve">
+    <value>一般設定が見つかりませんでした</value>
+  </data>
+  <data name="OnlySameUserOrAdmin" xml:space="preserve">
+    <value>同じユーザーのみがユーザーまたは管理者のみを更新できます</value>
+  </data>
   <data name="QuestionPoolNotFound" xml:space="preserve">
     <value>質問プールが見つかりません</value>
   </data>
   <data name="SectionNotFound" xml:space="preserve">
     <value>セクションが見つかりません</value>
   </data>
+  <data name="SMTPSettingNotFound" xml:space="preserve">
+    <value>SMTP設定が見つかりませんでした</value>
+  </data>
   <data name="TraineeRoleNotAllowed" xml:space="preserve">
     <value>研修生ロールを持つユーザーは試験プール作成者として追加できません</value>
+  </data>
+  <data name="ZoomSettingNotFound" xml:space="preserve">
+    <value>ズーム設定が見つかりませんでした</value>
   </data>
 </root>

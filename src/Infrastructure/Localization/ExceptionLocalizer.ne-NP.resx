@@ -273,13 +273,28 @@
   <data name="AtleastOneQuestionRequired" xml:space="preserve">
     <value>कम्तिमा एउटा प्रश्न आवश्यक छ।</value>
   </data>
+  <data name="CourseCompleted" xml:space="preserve">
+    <value>पाठ्यक्रम पूरा भएको छ।</value>
+  </data>
+  <data name="GeneralSettingNotFound" xml:space="preserve">
+    <value>सामान्य सेटिङ फेला परेन।</value>
+  </data>
+  <data name="OnlySameUserOrAdmin" xml:space="preserve">
+    <value>केवल एउटै प्रयोगकर्तालाई प्रयोगकर्ता वा प्रशासक द्वारा मात्र अद्यावधिक गर्न अनुमति छ।</value>
+  </data>
   <data name="QuestionPoolNotFound" xml:space="preserve">
     <value>प्रश्न पोखरी फेला परेन।</value>
   </data>
   <data name="SectionNotFound" xml:space="preserve">
     <value>खण्ड फेला परेन।</value>
   </data>
+  <data name="SMTPSettingNotFound" xml:space="preserve">
+    <value>SMTP सेटिङ फेला परेन।</value>
+  </data>
   <data name="TraineeRoleNotAllowed" xml:space="preserve">
     <value>प्रशिक्षार्थी भूमिका भएका प्रयोगकर्तालाई परीक्षा पूल सिर्जनाकर्ताको रूपमा थप्न अनुमति छैन।</value>
+  </data>
+  <data name="ZoomSettingNotFound" xml:space="preserve">
+    <value>जुम सेटिङ फेला परेन।</value>
   </data>
 </root>

@@ -198,7 +198,7 @@
 
             if (hasOverlappingMeetings.Count() != 0)
             {
-                throw new InvalidDataException("Time span is already used, try another instance");
+                throw new InvalidDataException(_localizer.GetString("TimeSpanAlreadyUsed"));
             }
 
             var data = from zoomLicense in zoomLicenses
@@ -326,7 +326,7 @@
             var zoomSetting = await _unitOfWork.GetRepository<ZoomSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
             if (zoomSetting == null)
             {
-                throw new EntityNotFoundException("Zoom setting not found.");
+                throw new EntityNotFoundException(_localizer.GetString("ZoomSettingNotFound"));
             }
             var tokenHandler = new JwtSecurityTokenHandler();
             var currentTimeStamp = DateTime.UtcNow;
@@ -361,7 +361,7 @@
             var zoomSetting = await _unitOfWork.GetRepository<ZoomSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
             if (zoomSetting == null)
             {
-                throw new EntityNotFoundException("Zoom setting not found.");
+                throw new EntityNotFoundException(_localizer.GetString("ZoomSettingNotFound"));
             }
 
             // Get the current epoch time-stamp
@@ -427,7 +427,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to generate zak token.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to generate zak token.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("GenerateZakTokenError"));
             }
         }
 

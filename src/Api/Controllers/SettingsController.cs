@@ -3,8 +3,10 @@ using Lingtren.Application.Common.Exceptions;
 using Lingtren.Application.Common.Interfaces;
 using Lingtren.Application.Common.Models.RequestModels;
 using Lingtren.Application.Common.Models.ResponseModels;
+using Lingtren.Infrastructure.Localization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace Lingtren.Api.Controllers
 {
@@ -19,6 +21,7 @@ namespace Lingtren.Api.Controllers
         private readonly IValidator<GeneralSettingRequestModel> _generalSettingValidator;
         private readonly IValidator<ZoomSettingRequestModel> _zoomSettingValidator;
         private readonly IValidator<SMTPSettingRequestModel> _smtpSettingValidator;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
 
         public SettingsController(
             ILogger<SettingsController> logger,
@@ -28,6 +31,7 @@ namespace Lingtren.Api.Controllers
             IFileServerService fileServerService,
             IValidator<GeneralSettingRequestModel> generalSettingValidator,
             IValidator<ZoomSettingRequestModel> zoomSettingValidator,
+            IStringLocalizer<ExceptionLocalizer> localizer,
             IValidator<SMTPSettingRequestModel> smtpSettingValidator)
         {
             _logger = logger;
@@ -38,6 +42,7 @@ namespace Lingtren.Api.Controllers
             _generalSettingValidator = generalSettingValidator;
             _zoomSettingValidator = zoomSettingValidator;
             _smtpSettingValidator = smtpSettingValidator;
+            _localizer = localizer;
         }
 
         #region General settings
@@ -85,7 +90,7 @@ namespace Lingtren.Api.Controllers
             if (existing == null)
             {
                 _logger.LogWarning("General setting with id : {id} was not found.", id);
-                throw new EntityNotFoundException("General setting was not found.");
+                throw new EntityNotFoundException(_localizer.GetString("GeneralSettingNotFound"));
             }
             var currentTimeStamp = DateTime.UtcNow;
 
@@ -148,7 +153,7 @@ namespace Lingtren.Api.Controllers
             if (existing == null)
             {
                 _logger.LogWarning("Zoom setting with id : {id} was not found.", id);
-                throw new EntityNotFoundException("Zoom setting was not found.");
+                throw new EntityNotFoundException(_localizer.GetString("ZoomSettingNotFound"));
             }
             var currentTimeStamp = DateTime.UtcNow;
 
@@ -200,7 +205,7 @@ namespace Lingtren.Api.Controllers
             if (existing == null)
             {
                 _logger.LogWarning("SMTP setting with id : {id} was not found.", id);
-                throw new EntityNotFoundException("SMTP setting was not found.");
+                throw new EntityNotFoundException(_localizer.GetString("SMTPSettingNotFound"));
             }
             var currentTimeStamp = DateTime.UtcNow;
 

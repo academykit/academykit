@@ -276,13 +276,28 @@
   <data name="AtleastOneQuestionRequired" xml:space="preserve">
     <value>At least one question is required.</value>
   </data>
+  <data name="CourseCompleted" xml:space="preserve">
+    <value>Course is completed.</value>
+  </data>
+  <data name="GeneralSettingNotFound" xml:space="preserve">
+    <value>General setting was not found.</value>
+  </data>
+  <data name="OnlySameUserOrAdmin" xml:space="preserve">
+    <value>Only same user is allowed to update user or by admin only.</value>
+  </data>
   <data name="QuestionPoolNotFound" xml:space="preserve">
     <value>Question pool not found.</value>
   </data>
   <data name="SectionNotFound" xml:space="preserve">
     <value>Section not found.</value>
   </data>
+  <data name="SMTPSettingNotFound" xml:space="preserve">
+    <value>SMTP setting was not found.</value>
+  </data>
   <data name="TraineeRoleNotAllowed" xml:space="preserve">
     <value>User with trainee role is not allowed to add as exam pool creator.</value>
+  </data>
+  <data name="ZoomSettingNotFound" xml:space="preserve">
+    <value>Zoom setting was not found.</value>
   </data>
 </root>
