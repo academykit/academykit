@@ -66,7 +66,7 @@
         {
             var authenticationModel = new AuthenticationModel();
 
-            var user = await GetUserByEmailAsync(email: model.Email);
+            var user = await GetUserByEmailAsync(email: model.Email.Trim());
             if (user == null)
             {
                 authenticationModel.IsAuthenticated = false;
