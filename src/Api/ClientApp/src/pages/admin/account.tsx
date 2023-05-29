@@ -12,6 +12,7 @@ import { showNotification } from "@mantine/notifications";
 import { useChangeEmail, useChangePassword } from "@utils/services/authService";
 import errorType from "@utils/services/axiosError";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 
@@ -108,49 +109,49 @@ const Account = () => {
       });
     }
   };
-
+  const { t } = useTranslation();
   return (
     <>
       <Modal
         opened={opened}
         onClose={() => setOpened(false)}
-        title="Change Your Email Address"
+        title={t("change_email_address")}
       >
         <form onSubmit={changeEmailForm.onSubmit(onChangeEmail)}>
           <TextInput
             withAsterisk
             mb={10}
-            label="Current Email"
+            label={t("current_email")}
             name="oldEmail"
-            placeholder="Enter your Email"
+            placeholder={t("enter_email") as string}
             {...changeEmailForm.getInputProps("oldEmail")}
           />
           <PasswordInput
-            placeholder="Enter your password"
+            placeholder={t("enter_password") as string}
             withAsterisk
             mb={10}
             name="password"
-            label="Your Password"
+            label={t("your_password")}
             {...changeEmailForm.getInputProps("password")}
           />
           <TextInput
             withAsterisk
             mb={10}
             name="newEmail"
-            label="Your New Email"
-            placeholder="Enter your new Email"
+            label={t("new_email")}
+            placeholder={t("your_new_email") as string}
             {...changeEmailForm.getInputProps("newEmail")}
           />
           <TextInput
             withAsterisk
             mb={10}
             name="confirmEmail"
-            label="Confirm New Email"
-            placeholder="Confirm your new Email"
+            label={t("confirm_new_email")}
+            placeholder={t("confirm_your_new_email") as string}
             {...changeEmailForm.getInputProps("confirmEmail")}
           />
           <Button type="submit" mt={10} loading={changeEmail.isLoading}>
-            Change Email
+            {t("change_email")}
           </Button>
         </form>
       </Modal>
@@ -166,39 +167,39 @@ const Account = () => {
               mb={10}
               withAsterisk
               name="currentPassword"
-              label="Current Password"
+              label={t("current_password")}
               {...form.getInputProps("currentPassword")}
             />
             <PasswordInput
               mb={10}
               name="newPassword"
               withAsterisk
-              label="New Password"
+              label={t("new_password")}
               {...form.getInputProps("newPassword")}
             />
             <PasswordInput
               mb={10}
               withAsterisk
               name="confirmPassword"
-              label="Confirm Password"
+              label={t("confirm_password")}
               {...form.getInputProps("confirmPassword")}
             />
-            <Button type="submit">Save</Button>
+            <Button type="submit">{t("save")}</Button>
           </Container>
         </form>
         {/* email section */}
 
         <Container fluid style={{ width: "100%" }}>
           <TextInput
-            label="Your Email"
+            label={t("your_email")}
             disabled
             sx={{
               marginBottom: "15px",
             }}
-            placeholder="your@email.com"
+            placeholder={t("placeholder_email") as string}
             value={auth?.auth?.email}
           />
-          <Button onClick={() => setOpened(true)}>Change Email</Button>
+          <Button onClick={() => setOpened(true)}> {t("change_email")} </Button>
         </Container>
       </SimpleGrid>
     </>

@@ -20,6 +20,7 @@ import errorType from "@utils/services/axiosError";
 import { useAddPool, usePools } from "@utils/services/poolService";
 import PoolCard from "./Components/PoolCard";
 import * as Yup from "yup";
+import { useTranslation } from "react-i18next";
 const useStyle = createStyles((theme) => ({
   paper: {
     [theme.fn.smallerThan("md")]: {
@@ -63,12 +64,13 @@ const MCQPool = ({
       showNotification({ message: error, color: "red" });
     }
   };
+  const { t } = useTranslation();
   return (
     <Container fluid>
       <Group sx={{ justifyContent: "space-between", alignItems: "center" }}>
-        <Title>MCQ Pools</Title>
+        <Title>{t("mcq_pools")}</Title>
         {!showAddForm && (
-          <Button onClick={() => toggleAddForm()}>Create Pool</Button>
+          <Button onClick={() => toggleAddForm()}>{t("create_pool")}</Button>
         )}
       </Group>
       <Transition
@@ -89,14 +91,14 @@ const MCQPool = ({
                   className={classes.paper}
                 >
                   <TextInput
-                    label={"Pool Name"}
-                    placeholder="Enter the pool name"
+                    label={t("pool_name")}
+                    placeholder={t("enter_pool_name") as string}
                     name="name"
                     {...form.getInputProps("name")}
                   ></TextInput>
                   <Group mt={10}>
                     <Button type="submit" top={5}>
-                      Create
+                      {t("create")}
                     </Button>
                     {showAddForm && (
                       <Button
@@ -104,7 +106,7 @@ const MCQPool = ({
                         onClick={() => toggleAddForm()}
                         variant="outline"
                       >
-                        Cancel
+                        {t("cancel")}
                       </Button>
                     )}
                   </Group>
@@ -124,7 +126,7 @@ const MCQPool = ({
               <PoolCard search={searchParams} pool={x} key={x.id} />
             ))}
           {pools.data?.items.length < 1 && (
-            <Box mt={10}>No Question Pools Found!</Box>
+            <Box mt={10}>{t("no_pools")}</Box>
           )}
           {pools.data && pagination(pools.data.totalPage)}
         </Box>
