@@ -24,7 +24,6 @@ builder.Services.AddVersionedApiExplorer(options =>
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddJWTConfigurationServices(builder.Configuration);
-builder.Services.AddControllers().AddViewLocalization().AddDataAnnotationsLocalization();
 builder.Services.AddLocalization();
 builder.Services.AddRequestLocalization(x =>
 {
@@ -50,15 +49,15 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // app.UseSwagger();
+    // app.UseSwaggerUI();
 }
 else
 {
     app.UseHsts();
 }
-
-
+ app.UseSwagger();
+ app.UseSwaggerUI();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
