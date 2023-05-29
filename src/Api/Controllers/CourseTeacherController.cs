@@ -9,8 +9,10 @@
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
 
     public class CourseTeacherController : BaseApiController
     {
@@ -18,17 +20,19 @@
         private readonly ICourseService _courseService;
         private readonly IUserService _userService;
         private readonly IValidator<CourseTeacherRequestModel> _validator;
-
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
         public CourseTeacherController(
                 ICourseTeacherService courseTeacherService,
                 ICourseService courseService,
                 IUserService userService,
-                IValidator<CourseTeacherRequestModel> validator)
+                IValidator<CourseTeacherRequestModel> validator,
+                IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _courseTeacherService = courseTeacherService;
             _courseService = courseService;
             _userService = userService;
             _validator = validator;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -101,7 +105,7 @@
         public async Task<IActionResult> Delete(Guid id)
         {
             await _courseTeacherService.DeleteAsync(id.ToString(), CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel { Success = true, Message = "Training trainer removed successfully." });
+            return Ok(new CommonResponseModel { Success = true, Message = _localizer.GetString("TrainingTrainer") });
         }
     }
 }

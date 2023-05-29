@@ -6,19 +6,24 @@
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
+    using Lingtren.Infrastructure.Localization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
 
     [Route("api/course/{identity}/comments")]
     public class CommentController : BaseApiController
     {
         private readonly ICommentService _commentService;
         private readonly IValidator<CommentRequestModel> _validator;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
         public CommentController(
-            ICommentService commentService,
-            IValidator<CommentRequestModel> validator)
+            ICommentService commentService,    
+            IValidator<CommentRequestModel> validator,
+            IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _commentService = commentService;
             _validator = validator;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -65,7 +70,7 @@
         public async Task<IActionResult> DeleteAsync(string identity, Guid id)
         {
             await _commentService.DeleteAsync(identity, id, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Comment removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("CommentRemoved") });
         }
 
         /// <summary>
@@ -113,7 +118,7 @@
         public async Task<IActionResult> DeleteReplyAsync(string identity, Guid id, Guid replyId)
         {
             await _commentService.DeleteReplyAsync(identity, id, replyId, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Comment reply removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("CommentReplyRemoved") });
         }
     }
 }

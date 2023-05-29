@@ -10,9 +10,11 @@
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
 
     public class UserController : BaseApiController
     {
@@ -23,6 +25,7 @@
         private readonly IGeneralSettingService _generalSettingService;
         private readonly IValidator<UserRequestModel> _validator;
         private readonly IValidator<ChangeEmailRequestModel> _changeEmailValidator;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
 
         public UserController(
                             ILogger<UserController> logger,
@@ -31,7 +34,8 @@
                             IEmailService emailService,
                             IValidator<UserRequestModel> validator,
                             IGeneralSettingService generalSettingService,
-                            IValidator<ChangeEmailRequestModel> changeEmailValidator
+                            IValidator<ChangeEmailRequestModel> changeEmailValidator,
+                            IStringLocalizer<ExceptionLocalizer> localizer
                            )
         {
             _fileServerService = fileServerService;
@@ -41,6 +45,7 @@
             _validator = validator;
             _changeEmailValidator = changeEmailValidator;
             _generalSettingService = generalSettingService;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -251,7 +256,7 @@
         {
             CommonHelper.ValidateArgumentNotNullOrEmpty(token, nameof(token));
             await _userService.VerifyChangeEmailAsync(token).ConfigureAwait(false);
-            return Ok(new CommonResponseModel { Success = true, Message = "Email changed successfully." });
+            return Ok(new CommonResponseModel { Success = true, Message = _localizer.GetString("EmailChanged") });
         }
     }
 }
