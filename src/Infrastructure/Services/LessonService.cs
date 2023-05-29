@@ -126,7 +126,7 @@ namespace Lingtren.Infrastructure.Services
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
                 predicate: p => p.CourseId == lesson.CourseId,
                 orderBy: o => o.OrderBy(x => x.Order),
-                include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
+                include: src => src.Include(x => x.Lessons).ThenInclude(x=>x.QuestionSet).ThenInclude(x=>x.QuestionSetSubmissions)).ConfigureAwait(false);
 
             var lessons = new List<Lesson>();
             lessons = sections.SelectMany(x => x.Lessons.OrderBy(x => x.Order)).ToList();
@@ -160,7 +160,7 @@ namespace Lingtren.Infrastructure.Services
                     ).ConfigureAwait(false);
 
                 var submissionCount = await _unitOfWork.GetRepository<QuestionSetSubmission>().CountAsync(
-                    predicate: p => p.QuestionSetId == lesson.QuestionSetId && p.StartTime != default && p.EndTime != default
+                    predicate: p => p.QuestionSetId == lesson.QuestionSetId && p.UserId == currentUserId && p.StartTime != default && p.EndTime != default
                     ).ConfigureAwait(false);
 
                 remainingAttempt = lesson.QuestionSet.AllowedRetake > 0 ? lesson.QuestionSet.AllowedRetake - submissionCount : submissionCount > 0 ? 0 : 1;
