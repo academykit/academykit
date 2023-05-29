@@ -12,8 +12,8 @@ i18n.use(initReactI18next).init({
   },
   resources: {
     en: { translation: en },
-    np: { translation: np },
-    jp: { translation: jp },
+    ne: { translation: np },
+    ja: { translation: jp },
   },
 });
 
