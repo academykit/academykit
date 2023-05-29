@@ -366,4 +366,46 @@
   <data name="UserFoundasTrainingTrainer" xml:space="preserve">
     <value>प्रयोगकर्ता पहिले नै प्रशिक्षण प्रशिक्षकको रूपमा फेला परेको छ।</value>
   </data>
+  <data name="AssignmentReviewDeleted" xml:space="preserve">
+    <value>असाइनमेन्ट समीक्षा सफलतापूर्वक मेटाइयो।</value>
+  </data>
+  <data name="AssignmentReviewed" xml:space="preserve">
+    <value>असाइनमेन्ट सफलतापूर्वक समीक्षा गरियो।</value>
+  </data>
+  <data name="AssignmentReviewUpdate" xml:space="preserve">
+    <value>असाइनमेन्ट समीक्षा सफलतापूर्वक अद्यावधिक गरियो।</value>
+  </data>
+  <data name="AtleastOneQuestionRequired" xml:space="preserve">
+    <value>कम्तिमा एउटा प्रश्न आवश्यक छ।</value>
+  </data>
+  <data name="CourseCompleted" xml:space="preserve">
+    <value>पाठ्यक्रम पूरा भएको छ।</value>
+  </data>
+  <data name="GeneralSettingNotFound" xml:space="preserve">
+    <value>सामान्य सेटिङ फेला परेन।</value>
+  </data>
+  <data name="GenerateZakTokenError" xml:space="preserve">
+    <value>zak टोकन उत्पन्न गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="OnlySameUserOrAdmin" xml:space="preserve">
+    <value>केवल एउटै प्रयोगकर्तालाई प्रयोगकर्ता वा प्रशासक द्वारा मात्र अद्यावधिक गर्न अनुमति छ।</value>
+  </data>
+  <data name="QuestionPoolNotFound" xml:space="preserve">
+    <value>प्रश्न पोखरी फेला परेन।</value>
+  </data>
+  <data name="SectionNotFound" xml:space="preserve">
+    <value>खण्ड फेला परेन।</value>
+  </data>
+  <data name="SMTPSettingNotFound" xml:space="preserve">
+    <value>SMTP सेटिङ फेला परेन।</value>
+  </data>
+  <data name="TimeSpanAlreadyUsed" xml:space="preserve">
+    <value>समय अवधि पहिले नै प्रयोग गरिएको छ, अर्को उदाहरण प्रयास गर्नुहोस्।</value>
+  </data>
+  <data name="TraineeRoleNotAllowed" xml:space="preserve">
+    <value>प्रशिक्षार्थी भूमिका भएका प्रयोगकर्तालाई परीक्षा पूल सिर्जनाकर्ताको रूपमा थप्न अनुमति छैन।</value>
+  </data>
+  <data name="ZoomSettingNotFound" xml:space="preserve">
+    <value>जुम सेटिङ फेला परेन।</value>
+  </data>
 </root>

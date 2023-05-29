@@ -107,7 +107,7 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
               {data.students.length > 0 ? (
                 data.students.map((x, idx) => {
                   if (idx === 2) return;
-                  return <StudentAvatar data={x} />;
+                  return <StudentAvatar data={x} key={x.id} />;
                 })
               ) : (
                 <Text size="xs">No Users Enrolled.</Text>

@@ -11,13 +11,7 @@ import {
   Group,
   Transition,
 } from "@mantine/core";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { useEffect, useState } from "react";
@@ -27,18 +21,16 @@ import {
   useResetPassword,
   useResetPasswordToken,
 } from "@utils/services/authService";
-import Logo from "@components/Logo";
 import RoutePath from "@utils/routeConstants";
-import { useTimeout, useToggle } from "@mantine/hooks";
-import { AxiosResponse } from "axios";
+import { useToggle } from "@mantine/hooks";
 import errorType from "@utils/services/axiosError";
 import { useCompanySetting } from "@utils/services/adminService";
+import { useTranslation } from "react-i18next";
 
 const ConfirmToken = () => {
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
   const navigate = useNavigate();
   const [passwordReset, setPasswordReset] = useState("");
+  const { t } = useTranslation();
 
   const { mutateAsync } = useResetPasswordToken();
   const confirmReset = useResetPassword();
@@ -77,7 +69,7 @@ const ConfirmToken = () => {
 
       showNotification({
         message: err,
-        title: "Error!",
+        title: t("error"),
         color: "red",
       });
     }
@@ -93,7 +85,7 @@ const ConfirmToken = () => {
         passwordChangeToken: passwordReset,
       });
       showNotification({
-        message: "Password reset successfully!",
+        message: t("password_reset"),
       });
       navigate(RoutePath.login);
     } catch (error) {
@@ -172,8 +164,8 @@ const ConfirmToken = () => {
                 <Paper withBorder shadow="md" p={30} mt={30} radius="md">
                   <TextInput
                     {...form.getInputProps("token")}
-                    label="Token"
-                    placeholder="Add token sent on email"
+                    label={t("token")}
+                    placeholder={t("add_token_email") as string}
                     required
                   />
 
@@ -186,7 +178,7 @@ const ConfirmToken = () => {
                         color="dimmed"
                         size="xs"
                       >
-                        Want to Login?
+                        {t("want_login")}
                       </Anchor>
                     </Link>
                   </Group>
@@ -196,7 +188,7 @@ const ConfirmToken = () => {
                     mt="xl"
                     type="submit"
                   >
-                    Proceed
+                    {t("proceed")}
                   </Button>
                 </Paper>
               </form>
@@ -218,16 +210,16 @@ const ConfirmToken = () => {
                 <Paper withBorder shadow="md" p={30} mt={30} radius="md">
                   <PasswordInput
                     {...passwordForm.getInputProps("newPassword")}
-                    label="Password"
-                    placeholder="Add your new password"
+                    label={t("password")}
+                    placeholder={t("add_new_password") as string}
                     required
                   />
 
                   <PasswordInput
                     mt={20}
                     {...passwordForm.getInputProps("confirmPassword")}
-                    label="Confirm Password"
-                    placeholder="Repeat Password"
+                    label={t("confirm_password")}
+                    placeholder={t("repeat_password") as string}
                     required
                   />
 
@@ -240,7 +232,7 @@ const ConfirmToken = () => {
                         color="dimmed"
                         size="xs"
                       >
-                        Want to Login?
+                        {t("want_login")}?
                       </Anchor>
                     </Link>
                   </Group>
@@ -250,7 +242,7 @@ const ConfirmToken = () => {
                     mt="xl"
                     type="submit"
                   >
-                    Proceed
+                    {t("proceed")}
                   </Button>
                 </Paper>
               </form>

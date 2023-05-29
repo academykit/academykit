@@ -85,12 +85,12 @@
             if (user == null)
             {
                 _logger.LogWarning("User with email: {email} not found while adding user in pool creator with poolId: {poolId}.", model.Email, questionPool.Id);
-                throw new EntityNotFoundException("User not found.");
+                throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
             }
             if (user.Role == UserRole.Trainee)
             {
                 _logger.LogWarning("User with id: {id} having role: {role} cannot added as exam pool creator with poolId: {poolId}.", user.Id, user.Role, questionPool.Id);
-                throw new EntityNotFoundException($"User with {user.Role} role is not allowed to add as exam pool creator.");
+                throw new ForbiddenException(_localizer.GetString("TraineeRoleNotAllowed"));
             }
 
             var currentTimeStamp = DateTime.UtcNow;
@@ -125,7 +125,7 @@
             if (!statusExists)
             {
                 _logger.LogWarning("Invalid question pool teacher role : {role} requested for role change by the user with id : {userId}", role, CurrentUser.Id);
-                throw new ForbiddenException("Invalid question pool teacher role requested.");
+                throw new ForbiddenException( _localizer.GetString("InvalidQuestionPoolTeacherRole"));
             }
             var existing = await _questionPoolTeacherService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
 

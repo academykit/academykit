@@ -37,7 +37,7 @@
         {
             if (model.QuestionPoolQuestionIds.Count == 0)
             {
-                throw new ForbiddenException("At least one question is required.");
+                throw new ForbiddenException(_localizer.GetString("AtleastOneQuestionRequired"));
             }
             await _questionSetService.AddQuestionsAsync(identity, model, CurrentUser.Id);
             return Ok();

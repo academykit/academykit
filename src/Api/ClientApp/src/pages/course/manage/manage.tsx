@@ -1,51 +1,52 @@
 import { StatsCard } from "@components/Dashboard/StatsCard";
 import { SimpleGrid } from "@mantine/core";
 import { useGetCourseManageStatistics } from "@utils/services/manageCourseService";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 const ManageCourse = () => {
   const params = useParams();
   const course_id = params.id as string;
   const getStat = useGetCourseManageStatistics(course_id);
-
+  const { t } = useTranslation();
   const incomingData = [
     {
       key: "totalEnrollments",
-      label: "Total Enrollments",
+      label: t("total_enrollments"),
       icon: "userEnrollment",
     },
     {
       key: "totalLessons",
-      label: "Total Lessons",
+      label: t("total_lessons"),
       icon: "school",
     },
     {
       key: "totalTeachers",
-      label: "Total Trainers",
+      label: t("total_trainers"),
       icon: "groups",
     },
     {
       key: "totalAssignments",
-      label: "Total Assignments",
+      label: t("total_assignments"),
       icon: "book",
     },
     {
       key: "totalLectures",
-      label: "Total Videos",
+      label: t("total_videos"),
       icon: "lecture",
     },
     {
       key: "totalExams",
-      label: "Total Exams",
+      label: t("total_exams"),
       icon: "trainings",
     },
     {
       key: "totalMeetings",
-      label: "Total Meetings",
+      label: t("total_meetings"),
       icon: "meeting",
     },
     {
       key: "totalDocuments",
-      label: "Total Documents",
+      label: t("total_documents"),
       icon: "document",
     },
   ];

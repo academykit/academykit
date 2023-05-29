@@ -14,16 +14,17 @@ import downloadImage from "@utils/downloadImage";
 import { useGetInternalCertificate } from "@utils/services/certificateService";
 import moment from "moment";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Route, Routes, useLocation, useNavigate } from "react-router";
 
 const MyTrainingInternal = () => {
   const internal = useGetInternalCertificate();
   const theme = useMantineTheme();
-
+  const { t } = useTranslation();
   return (
     <Container fluid>
       {internal.isSuccess && internal.data.data.length <= 0 && (
-        <Box>No Certificates Found.</Box>
+        <Box>{t("no_certificates")} </Box>
       )}
       {internal.isSuccess &&
         internal.data.data.map((x) => (
@@ -32,10 +33,13 @@ const MyTrainingInternal = () => {
               <Box>
                 <Text weight={"bold"}>{x.courseName}</Text>
                 <Text weight={"bold"}>
-                  Certificate Issued Date:{" "}
+                  {t("certificate_issue_date")}{" "}
                   {moment(x.certificateIssuedDate).format(theme.dateFormat)}
                 </Text>
-                <Text>Total {x.percentage}% completed</Text>
+                <Text>
+                  {t("total")} {x.percentage}
+                  {t("percent_completed")}
+                </Text>
               </Box>
               <Box
                 style={{ width: 150, marginTop: "auto", marginBottom: "auto" }}
@@ -62,7 +66,7 @@ const MyTrainingInternal = () => {
                         display: "flex",
                       }}
                     >
-                      <Tooltip label="View Certificate">
+                      <Tooltip label={t("view_certificate")}>
                         <ActionIcon
                           onClick={() => window.open(x.certificateUrl)}
                           mr={10}
@@ -70,7 +74,7 @@ const MyTrainingInternal = () => {
                           <IconEye color="black" />
                         </ActionIcon>
                       </Tooltip>
-                      <Tooltip label="Download Certificate">
+                      <Tooltip label={t("download_certificate")}>
                         <ActionIcon
                           onClick={() =>
                             downloadImage(
