@@ -9,22 +9,27 @@
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
 
     public class AssignmentController : BaseApiController
     {
         private readonly IAssignmentService _assignmentService;
         private readonly IValidator<AssignmentRequestModel> _validator;
         private readonly IValidator<AssignmentReviewRequestModel> _reviewValidator;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
         public AssignmentController(
             IAssignmentService assignmentService,
             IValidator<AssignmentRequestModel> validator,
-            IValidator<AssignmentReviewRequestModel> reviewValidator
+            IValidator<AssignmentReviewRequestModel> reviewValidator,
+            IStringLocalizer<ExceptionLocalizer> localizer
             )
         {
             _assignmentService = assignmentService;
             _validator = validator;
             _reviewValidator = reviewValidator;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -143,7 +148,7 @@
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await _assignmentService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Assignment removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message =_localizer.GetString("AssignmentRemoved") });
         }
 
         /// <summary>
@@ -155,7 +160,7 @@
         public async Task<IActionResult> SubmissionAsync(string lessonIdentity, IList<AssignmentSubmissionRequestModel> model)
         {
             await _assignmentService.AssignmentSubmissionAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Assignment submitted successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("AssignmentSubmitted") });
         }
 
         /// <summary>

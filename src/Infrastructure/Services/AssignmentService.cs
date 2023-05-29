@@ -8,9 +8,11 @@
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using System.Linq;
     using System.Linq.Expressions;
@@ -21,7 +23,8 @@
         public AssignmentService(
             IUnitOfWork unitOfWork,
             ILogger<AssignmentService> logger,
-            ICourseService courseService) : base(unitOfWork, logger)
+            ICourseService courseService,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
             _courseService = courseService;
         }

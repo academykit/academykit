@@ -16,6 +16,7 @@ import { IconChevronRight, IconDotsVertical } from "@tabler/icons";
 import RoutePath from "@utils/routeConstants";
 import errorType from "@utils/services/axiosError";
 import { IPool, useDeleteQuestionPool } from "@utils/services/poolService";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const PoolCard = ({
@@ -27,18 +28,19 @@ const PoolCard = ({
 }) => {
   const [deleteModal, setDeleteModal] = useToggle();
   const deletePool = useDeleteQuestionPool(poolId, search);
+  const { t } = useTranslation();
   const handleDelete = async () => {
     try {
       await deletePool.mutateAsync(poolId);
       showNotification({
-        title: "Success",
-        message: "Question Pool Deleted successfully.",
+        title: t("successful"),
+        message: t("Question Pool Deleted successfully."),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
         color: "red",
-        title: "Error",
+        title: t("error"),
         message: error as string,
       });
     }
@@ -66,7 +68,7 @@ const PoolCard = ({
       </Link>
       <Card my={10} radius={"lg"}>
         <DeleteModal
-          title={`Do you want to delete this question pool?`}
+          title={t(`pool_delete_confirmation`)}
           open={deleteModal}
           onClose={setDeleteModal}
           onConfirm={handleDelete}
@@ -122,7 +124,7 @@ const PoolCard = ({
             <UserShortProfile size={"sm"} user={user} />
           </div>
           <Text color={"dimmed"} size={"sm"}>
-            Total Questions: {questionCount}
+            {t("total_question")} {questionCount}
           </Text>
         </Group>
       </Card>

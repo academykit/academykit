@@ -17,16 +17,17 @@ import { showNotification } from "@mantine/notifications";
 import { useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
 import { useForgotPassword, useLogin } from "@utils/services/authService";
-import Logo from "@components/Logo";
 import RoutePath from "@utils/routeConstants";
 import errorType from "@utils/services/axiosError";
 import { useCompanySetting } from "@utils/services/adminService";
+import { useTranslation } from "react-i18next";
 
 const ForgotPassword = () => {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
   const navigate = useNavigate();
   const forgotPassword = useForgotPassword();
+  const { t } = useTranslation();
   const form = useForm({
     initialValues: {
       email: "",
@@ -40,7 +41,7 @@ const ForgotPassword = () => {
       await forgotPassword.mutateAsync({ email: values.email });
 
       showNotification({
-        message: "Please check your email!",
+        message: t("check_email"),
       });
       navigate(RoutePath.confirmToken + `?email=${values.email}`, {
         replace: true,
@@ -51,7 +52,7 @@ const ForgotPassword = () => {
       showNotification({
         color: "red",
         message: err,
-        title: "Error!",
+        title: t("error"),
       });
     }
   };
@@ -113,14 +114,14 @@ const ForgotPassword = () => {
           fontWeight: 500,
         })}
       >
-        Enter email to change password!
+        {t("change_email_title")}!
       </Title>
       <form onSubmit={form.onSubmit(onFormSubmit)}>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <TextInput
             {...form.getInputProps("email")}
-            label="Email"
-            placeholder="Your email address"
+            label={t("email")}
+            placeholder={t("your_email") as string}
             required
           />
 
@@ -133,7 +134,7 @@ const ForgotPassword = () => {
                 color="dimmed"
                 size="xs"
               >
-                Want to Login?
+                {t("want_login")}?
               </Anchor>
             </Link>
           </Group>
@@ -143,7 +144,7 @@ const ForgotPassword = () => {
             mt="xl"
             type="submit"
           >
-            Proceed
+            {t("proceed")}
           </Button>
         </Paper>
       </form>

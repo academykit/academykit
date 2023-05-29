@@ -11,22 +11,28 @@
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
+
     public class FeedbackController : BaseApiController
     {
         private readonly IFeedbackService _feedbackService;
         private readonly IValidator<FeedbackRequestModel> _validator;
         private readonly IValidator<IList<FeedbackSubmissionRequestModel>> _submissionValidator;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
 
         public FeedbackController(
             IFeedbackService feedbackService,
             IValidator<FeedbackRequestModel> validator,
-            IValidator<IList<FeedbackSubmissionRequestModel>> submissionValidator
-            )
+            IValidator<IList<FeedbackSubmissionRequestModel>> submissionValidator,
+            IStringLocalizer<ExceptionLocalizer> localizer)
+            
         {
             _feedbackService = feedbackService;
             _validator = validator;
             _submissionValidator = submissionValidator;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -124,7 +130,7 @@
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await _feedbackService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Feedback removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("FeedbackRemoved")  });
         }
 
         /// <summary>
@@ -137,7 +143,7 @@
         {
             await _submissionValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             await _feedbackService.FeedbackSubmissionAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Feedback submitted Successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("FeedbackSubmitted") });
         }
 
         /// <summary>

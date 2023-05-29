@@ -8,8 +8,10 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
 
     public class CourseController : BaseApiController
     {
@@ -17,17 +19,20 @@ namespace Lingtren.Api.Controllers
         private readonly IValidator<CourseRequestModel> _validator;
         private readonly IValidator<CourseStatusRequestModel> _courseStatusValidator;
         private readonly ILogger<CourseController> _logger;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
 
         public CourseController(
             ICourseService courseService,
             IValidator<CourseRequestModel> validator,
             ILogger<CourseController> logger,
-            IValidator<CourseStatusRequestModel> courseStatusValidator)
+            IValidator<CourseStatusRequestModel> courseStatusValidator,
+            IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _courseService = courseService;
             _validator = validator;
             _courseStatusValidator = courseStatusValidator;
             _logger = logger;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -155,7 +160,7 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> DeleteAsync(string identity)
         {
             await _courseService.DeleteCourseAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Training removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("TrainingRemoved") });
         }
 
         /// <summary>
@@ -167,7 +172,7 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> UpdateCourse(string identity)
         {
             await _courseService.UpdateCourseStatusAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Training updated successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("TrainingUpdated") });
         }
 
         /// <summary>
@@ -180,7 +185,7 @@ namespace Lingtren.Api.Controllers
         {
             await _courseStatusValidator.ValidateAsync(model,options => options.ThrowOnFailures()).ConfigureAwait(false);
             await _courseService.ChangeStatusAsync(model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Training status changed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("TrainingStatus") });
         }
 
         /// <summary>
@@ -191,7 +196,7 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> Enroll(string identity)
         {
             await _courseService.EnrollmentAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "User successfully enrolled in the training." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("UserEnrolled") });
         }
 
         /// <summary>

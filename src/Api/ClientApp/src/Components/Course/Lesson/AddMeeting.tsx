@@ -105,7 +105,11 @@ const AddMeeting = ({
     validate: yupResolver(schema),
   });
 
-  const meeting = useActiveZoomLicense(dateTime, form.values.meetingDuration);
+  const meeting = useActiveZoomLicense(
+    dateTime,
+    form.values.meetingDuration,
+    lessonDetails?.data?.id
+  );
 
   const selectItem = meeting.data?.data
     ? meeting.data.data.map((e) => {
@@ -131,10 +135,13 @@ const AddMeeting = ({
   };
 
   const handleSubmit = async (values: any) => {
+    const time = new Date(values?.meetingStartTime).toLocaleTimeString();
+    const date = new Date(values?.meetingStartDate).toLocaleDateString();
+
     const meeting = {
       ...values,
       meetingStartDate: isEditing
-        ? new Date(values?.meetingStartTime).toISOString()
+        ? new Date(date + " " + time)
         : new Date(dateTime).toISOString(),
     };
     delete meeting.isMandatory;

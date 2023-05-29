@@ -11,9 +11,11 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using System;
     using System.Linq.Expressions;
@@ -28,7 +30,8 @@ namespace Lingtren.Infrastructure.Services
             ILogger<LessonService> logger,
             IZoomLicenseService zoomLicenseService,
             IFileServerService fileServerService,
-            IZoomSettingService zoomSettingService) : base(unitOfWork, logger)
+            IZoomSettingService zoomSettingService,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
             _zoomLicenseService = zoomLicenseService;
             _zoomSettingService = zoomSettingService;
@@ -123,7 +126,7 @@ namespace Lingtren.Infrastructure.Services
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
                 predicate: p => p.CourseId == lesson.CourseId,
                 orderBy: o => o.OrderBy(x => x.Order),
-                include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
+                include: src => src.Include(x => x.Lessons).ThenInclude(x=>x.QuestionSet).ThenInclude(x=>x.QuestionSetSubmissions)).ConfigureAwait(false);
 
             var lessons = new List<Lesson>();
             lessons = sections.SelectMany(x => x.Lessons.OrderBy(x => x.Order)).ToList();
@@ -157,7 +160,7 @@ namespace Lingtren.Infrastructure.Services
                     ).ConfigureAwait(false);
 
                 var submissionCount = await _unitOfWork.GetRepository<QuestionSetSubmission>().CountAsync(
-                    predicate: p => p.QuestionSetId == lesson.QuestionSetId && p.StartTime != default && p.EndTime != default
+                    predicate: p => p.QuestionSetId == lesson.QuestionSetId && p.UserId == currentUserId && p.StartTime != default && p.EndTime != default
                     ).ConfigureAwait(false);
 
                 remainingAttempt = lesson.QuestionSet.AllowedRetake > 0 ? lesson.QuestionSet.AllowedRetake - submissionCount : submissionCount > 0 ? 0 : 1;
@@ -658,10 +661,7 @@ namespace Lingtren.Infrastructure.Services
                     throw new ServiceException("Zoom license not found.");
                 }
 
-                var isModerator = course.CreatedBy == currentUserId || lesson.CreatedBy == currentUserId || course.CourseTeachers.Any(x => x.UserId == currentUserId);
-                var hasAccess =await IsSuperAdminOrAdmin(currentUserId);
-                if(!hasAccess)
-                {
+                var isModerator = await IsLiveClassModerator(currentUserId, course).ConfigureAwait(false);
                     if(!isModerator)
                     {
                         var isMember = course.CourseEnrollments.Any(x => x.UserId == currentUserId && !x.IsDeleted
@@ -672,7 +672,6 @@ namespace Lingtren.Infrastructure.Services
                             throw new ForbiddenException("You are not allowed to access this meeting.");
                         }
                     }
-                }
                
 
                 var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
@@ -971,6 +970,32 @@ namespace Lingtren.Infrastructure.Services
                 predicate: x => x.CourseId == entity.CourseId && x.SectionId == entity.SectionId && !x.IsDeleted,
                 orderBy: x => x.OrderByDescending(x => x.Order)).ConfigureAwait(false);
             return lesson != null ? lesson.Order + 1 : 1;
+        }
+
+        /// <summary>
+        /// Handle to validate isLiveClassModerator
+        /// </summary>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <param name="course"> the instance of <see cref="Course"/></param>
+        /// <returns> the boolean value </returns>
+        private async Task<bool> IsLiveClassModerator(Guid currentUserId, Course course)
+        {
+            var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+            if (isAdmin)
+            {
+                return true;
+            }
+
+            if (course.CreatedBy == currentUserId)
+            {
+                return true;
+            }
+
+            if (course.CourseTeachers.Any(x => x.UserId == currentUserId))
+            {
+                return true;
+            }
+            return false;
         }
 
         #endregion Private Methods

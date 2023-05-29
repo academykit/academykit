@@ -1,26 +1,34 @@
 ﻿namespace Lingtren.Api.Controllers
 {
+    using Application.Common.Models.RequestModels;
     using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
 
     public class ZoomLicenseController : BaseApiController
     {
         private readonly IZoomLicenseService _zoomLicenseService;
         private readonly IValidator<ZoomLicenseRequestModel> _validator;
+        private readonly IValidator<LiveClassLicenseRequestModel> _validator1;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
         public ZoomLicenseController(
             IZoomLicenseService zoomLicenseService,
-            IValidator<ZoomLicenseRequestModel> validator)
+            IValidator<LiveClassLicenseRequestModel> validator1,
+            IValidator<ZoomLicenseRequestModel> validator,
+            IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _zoomLicenseService = zoomLicenseService;
             _validator = validator;
+            _validator1 = validator1;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -125,7 +133,7 @@
             IsSuperAdminOrAdmin(CurrentUser.Role);
 
             await _zoomLicenseService.DeleteAsync(id.ToString(), CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "ZoomLicense removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("ZoomLicense") });
         }
 
         /// <summary>
@@ -150,20 +158,18 @@
             return new ZoomLicenseResponseModel(savedEntity);
         }
 
+        /// <summary>
+        /// Gets Active LicenseId 
+        /// </summary>
+        /// <param name="zoomLicenseIdRequestModel">the instance of <see cref="LiveClassLicenseRequestModel"></param>
+        /// <returns>the instance of <see cref="ZoomLicenseResponseModel"/></returns>
+        /// <exception cref="ForbiddenException"></exception>
         [HttpGet("Active")]
-        public async Task<List<ZoomLicenseResponseModel>> Active([FromQuery] DateTime startDateTime, [FromQuery] int duration)
+        public async Task<List<ZoomLicenseResponseModel>> Active([FromQuery]LiveClassLicenseRequestModel model)
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
-
-            if (startDateTime == default)
-            {
-                throw new ForbiddenException("Start date is required.");
-            }
-            if (duration < 0 || duration == default)
-            {
-                throw new ForbiddenException("Duration is required.");
-            }
-            var zoomLicenses = await _zoomLicenseService.GetActiveLicenses(startDateTime, duration).ConfigureAwait(false);
+            await _validator1.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            var zoomLicenses = await _zoomLicenseService.GetActiveLicensesAsync(model).ConfigureAwait(false);
             return zoomLicenses.ToList();
         }
     }

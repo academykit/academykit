@@ -9,9 +9,11 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
 
     [Route("api/QuestionPool/{identity}/Question")]
     public class QuestionController : BaseApiController
@@ -19,14 +21,17 @@
         private readonly IQuestionPoolService _questionPoolService;
         private readonly IQuestionService _questionService;
         private readonly IValidator<QuestionRequestModel> _validator;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
         public QuestionController(
             IQuestionPoolService questionPoolService,
             IQuestionService questionService,
-            IValidator<QuestionRequestModel> validator)
+            IValidator<QuestionRequestModel> validator,
+            IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _questionPoolService = questionPoolService;
             _questionService = questionService;
             _validator = validator;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -135,7 +140,7 @@
                 throw new EntityNotFoundException("Question pool not found.");
             }
             await _questionService.DeleteQuestionAsync(poolIdentity: identity, questionId: id, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Question removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("QuestionRemoved") });
         }
     }
 }

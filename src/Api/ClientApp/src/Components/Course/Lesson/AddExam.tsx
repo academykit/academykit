@@ -234,6 +234,10 @@ const AddExam = ({
             <NumberInput
               label="Negative Marking"
               placeholder="Negative Marking"
+              min={0}
+              step={0.05}
+              precision={2}
+              max={100}
               {...form.getInputProps("negativeMarking")}
             />
           </Grid.Col>

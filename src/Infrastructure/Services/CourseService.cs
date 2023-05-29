@@ -10,12 +10,14 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Routing.Constraints;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using RestSharp;
     using System;
@@ -36,7 +38,8 @@ namespace Lingtren.Infrastructure.Services
             ILogger<CourseService> logger,
             IConfiguration configuration,
             IMediaService mediaService,
-            IFileServerService fileServerService) : base(unitOfWork, logger)
+            IFileServerService fileServerService,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
             imageApi = configuration.GetSection("AppUrls:ImageApi").Value;
             _mediaService = mediaService;

@@ -2,18 +2,19 @@
 {
     using Hangfire.Server;
     using Lingtren.Application.Common.Dtos;
+    using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
 
     public interface IZoomLicenseService : IGenericService<ZoomLicense, ZoomLicenseBaseSearchCriteria>
     {
+
         /// <summary>
-        /// Handle to get active available zoom license with in given time period
+        /// Handels to get Active LessonID 
         /// </summary>
-        /// <param name="startDateTime">meeting start date</param>
-        /// <param name="duration">meeting duration</param>
-        /// <returns></returns>
-        Task<IList<ZoomLicenseResponseModel>> GetActiveLicenses(DateTime startDateTime, int duration);
+        /// <param name="model">the instance of <see cref="LiveClassLicenseRequestModel"/></param>
+        /// <returns>Instance of zoomid <see cref="ZoomLicenseResponseModel"/></returns>
+        Task<IList<ZoomLicenseResponseModel>> GetActiveLicensesAsync(LiveClassLicenseRequestModel model);
 
         /// <summary>
         /// Handle to create zoom meeting

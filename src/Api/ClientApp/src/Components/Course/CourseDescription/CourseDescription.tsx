@@ -31,6 +31,7 @@ import {
 } from "@utils/services/courseService";
 import { Link, useParams } from "react-router-dom";
 import CourseContent from "./CourseContent/CourseContent";
+import { useTranslation } from "react-i18next";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -136,7 +137,7 @@ const CourseDescription = () => {
   };
 
   const course = useCourseDescription(id as string);
-
+  const { t } = useTranslation();
   const enrollCourse = useEnrollCourse(id as string);
   const onEnroll = async () => {
     try {
@@ -159,7 +160,7 @@ const CourseDescription = () => {
     );
   }
   if (course.isError) {
-    <Center>Unable to get course details</Center>;
+    <Center>{t("unable_get_course")}</Center>;
   }
 
   return (
@@ -214,7 +215,7 @@ const CourseDescription = () => {
                     }`}
                   >
                     <Button radius="xl" size="md" className={classes.control}>
-                      Preview
+                      {t("preview")}
                     </Button>
                   </Link>
                 ) : course.data?.userStatus === CourseUserStatus.NotEnrolled ? (
@@ -225,7 +226,7 @@ const CourseDescription = () => {
                     loading={enrollCourse.isLoading}
                     onClick={onEnroll}
                   >
-                    Enroll Course
+                    {t("enroll_course")}
                   </Button>
                 ) : course.data?.userStatus === CourseUserStatus.Author ? (
                   <Link
@@ -236,7 +237,7 @@ const CourseDescription = () => {
                     }`}
                   >
                     <Button radius="xl" size="md" className={classes.control}>
-                      Preview
+                      {t("preview")}
                     </Button>
                   </Link>
                 ) : (
@@ -248,7 +249,7 @@ const CourseDescription = () => {
                     }`}
                   >
                     <Button radius="xl" size="md" className={classes.control}>
-                      Watch Course
+                      {t("watch_course")}
                     </Button>
                   </Link>
                 )}
@@ -261,7 +262,7 @@ const CourseDescription = () => {
                       size="md"
                       className={classes.control}
                     >
-                      Publish
+                      {t("publish")}
                     </Button>
                   )}
                 {auth?.auth &&
@@ -269,7 +270,7 @@ const CourseDescription = () => {
                   course.data?.status === CourseStatus.Draft && (
                     <Link to={RoutePath.manageCourse.edit(id).route}>
                       <Button radius="xl" size="md" className={classes.control}>
-                        Edit
+                        {t("edit")}
                       </Button>
                     </Link>
                   )}
@@ -281,7 +282,7 @@ const CourseDescription = () => {
                     course.data?.userStatus === CourseUserStatus.Teacher) && (
                     <Link to={RoutePath.manageCourse.dashboard(id).route}>
                       <Button radius="xl" size="md" className={classes.control}>
-                        Manage
+                        {t("manage")}
                       </Button>
                     </Link>
                   )}

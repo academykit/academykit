@@ -9,16 +9,19 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
 
     public class CommentService : BaseGenericService<Comment, BaseSearchCriteria>, ICommentService
     {
         public CommentService(IUnitOfWork unitOfWork,
-            ILogger<CommentService> logger) : base(unitOfWork, logger)
+            ILogger<CommentService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
         }
 

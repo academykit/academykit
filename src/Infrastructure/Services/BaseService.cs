@@ -6,8 +6,10 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using System;
     using System.Data;
@@ -25,15 +27,19 @@
         /// </summary>
         protected readonly ILogger _logger;
 
+        protected readonly IStringLocalizer<ExceptionLocalizer> _localizer;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseService"/> class.
         /// </summary>
         /// <param name="unitOfWork">The unit of work</param>
         /// <param name="logger">The logger</param>
-        protected BaseService(IUnitOfWork unitOfWork, ILogger logger)
+        protected BaseService(IUnitOfWork unitOfWork, ILogger logger,
+        IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _localizer = localizer;
         }
 
         protected TResult ExecuteWithResult<TResult>(Func<TResult> delegateFunc)

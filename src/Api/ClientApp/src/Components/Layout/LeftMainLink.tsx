@@ -11,6 +11,7 @@ import { ThemeIcon, NavLink } from "@mantine/core";
 import { Link, useLocation } from "react-router-dom";
 import useAuth from "@hooks/useAuth";
 import { UserRole } from "@utils/enums";
+import { useTranslation } from "react-i18next";
 
 type MainLinkProps = {
   icon: React.ReactNode;
@@ -54,12 +55,13 @@ type LeftMainLinksProps = {
 
 export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
   const auth = useAuth();
+  const { t } = useTranslation();
 
   const data = [
     {
       icon: <IconDashboard size={16} />,
       color: "purple",
-      label: "Dashboard",
+      label: t("dashboard"),
       href: "/",
       replace: true,
       role: UserRole.Trainee,
@@ -67,7 +69,7 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
     {
       icon: <IconUser size={16} />,
       color: "blue",
-      label: "Users",
+      label: t("users"),
       href: "/users",
       replace: true,
       role: UserRole.Admin,
@@ -75,7 +77,7 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
     {
       icon: <IconUsers size={16} />,
       color: "yellow",
-      label: "Groups",
+      label: t("groups"),
       href: "/groups",
       replace: true,
       role: UserRole.Trainee,
@@ -83,7 +85,7 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
     {
       icon: <IconCertificate size={16} />,
       color: "red",
-      label: "Trainings",
+      label: t("trainings"),
       href: "/trainings/list",
       replace: true,
       role: UserRole.Trainee,
@@ -91,17 +93,16 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
     {
       icon: <IconListDetails size={16} />,
       color: "violet",
-      label: "MCQ Pools",
+      label: t("mcq_pools"),
       href: "/pools",
       replace: true,
       role: UserRole.Trainer,
     },
 
-
     {
       icon: <IconSettings size={16} />,
       color: "teal",
-      label: "Settings",
+      label: t("settings"),
       href: "/settings",
       replace: false,
       role: UserRole.Trainee,
