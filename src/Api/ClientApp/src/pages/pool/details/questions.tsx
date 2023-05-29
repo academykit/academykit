@@ -25,6 +25,8 @@ import {
   useDeleteQuestion,
   useQuestion,
 } from "@utils/services/questionService";
+import { TFunction } from "i18next";
+import { useTranslation } from "react-i18next";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
 const MCQQuestions = ({
@@ -38,13 +40,14 @@ const MCQQuestions = ({
     searchParams
   );
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <Container fluid>
       <Flex>
-        {searchComponent("Search for questions")}
+        {searchComponent(t("search_for_questions") as string)}
         <Button component={Link} ml={5} to="create">
-          Add Question
+          {t("add_question")}
         </Button>
       </Flex>
 
@@ -53,11 +56,11 @@ const MCQQuestions = ({
           <Table striped>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Tags</th>
-                <th>Type</th>
+                <th>{t("name")}</th>
+                <th>{t("tags")}</th>
+                <th>{t("type")}</th>
                 <th>
-                  <Center>Actions</Center>
+                  <Center>{t("actions")}</Center>
                 </th>
               </tr>
             </thead>
@@ -69,6 +72,7 @@ const MCQQuestions = ({
                   poolId={id as string}
                   key={x.id}
                   navigate={navigate}
+                  t={t}
                 />
               ))}
             </tbody>
@@ -78,8 +82,10 @@ const MCQQuestions = ({
       {isLoading && <Loader />}
 
       {data && pagination(data.totalPage)}
-      {isError && <Box>Something went wrong! Please try again later</Box>}
-      {data && data?.totalCount < 1 && <Box mt={10}>No Questions found!</Box>}
+      {isError && <Box>{t("something_wrong")}</Box>}
+      {data && data?.totalCount < 1 && (
+        <Box mt={10}>{t("no_question_found")}</Box>
+      )}
     </Container>
   );
 };
@@ -89,11 +95,13 @@ const QuestionRow = ({
   search,
   poolId,
   navigate,
+  t,
 }: {
   data: IQuestion;
   search: string;
   poolId: string;
   navigate: Function;
+  t: TFunction;
 }) => {
   const [showDelete, setShowDelete] = useToggle();
   const deleteService = useDeleteQuestion(poolId, search);
@@ -101,7 +109,7 @@ const QuestionRow = ({
     try {
       await deleteService.mutateAsync({ poolId: poolId, questionId: data.id });
       showNotification({
-        message: `Successfully Deleted Question ${data.name}`,
+        message: `${t("success_delete_question")} ${data.name}`,
       });
     } catch (err) {
       const error = errorType(err);
@@ -116,7 +124,7 @@ const QuestionRow = ({
   return (
     <tr>
       <DeleteModal
-        title={`Are you sure you want to delete question?`}
+        title={t(`question_delete_confirmation`)}
         open={showDelete}
         onClose={setShowDelete}
         onConfirm={confirmDelete}
@@ -132,7 +140,7 @@ const QuestionRow = ({
         ))}
       </td>
 
-      <td>{QuestionType[data.type]}</td>
+      <td>{t(`${QuestionType[data.type]}`)}</td>
       <td>
         <Center>
           <Button

@@ -6,6 +6,7 @@ import {
 
 import { StatsCard } from "./StatsCard";
 import TrainingCards from "./TrainingCards";
+import { useTranslation } from "react-i18next";
 
 const incomingData = [
   {
@@ -42,6 +43,36 @@ const Admin = ({
   dashboard: DashboardStats;
   dashboardCourses: DashboardCourses[];
 }) => {
+  const { t } = useTranslation();
+
+  const incomingData = [
+    {
+      key: "totalUsers",
+      label: t("total_users"),
+      icon: "userEnrollment",
+    },
+    {
+      key: "totalActiveUsers",
+      label: t("active_users"),
+      icon: "active",
+    },
+    {
+      key: "totalGroups",
+      label: t("total_groups"),
+      icon: "groups",
+    },
+    {
+      key: "totalTrainers",
+      label: t("total_trainers"),
+      icon: "trainers",
+    },
+    {
+      key: "totalTrainings",
+      label: t("total_trainings"),
+      icon: "trainings",
+    },
+  ];
+
   return (
     <div>
       <SimpleGrid
@@ -59,15 +90,15 @@ const Admin = ({
           ))}
       </SimpleGrid>
       <Text size={"xl"} weight="bold">
-        My Trainings
+        {t("my_trainings")}
       </Text>
 
       {dashboardCourses.length > 0 ? (
         <Text c="dimmed" mb={10}>
-          Trainings you're moderating/operating on:
+          {t("training_on_operations")}
         </Text>
       ) : (
-        <Text c="dimmed">You are not moderating on any Trainings.</Text>
+        <Text c="dimmed">{t("no_trainings")}</Text>
       )}
 
       <Group sx={{ justifyContent: "space-evenly" }}>

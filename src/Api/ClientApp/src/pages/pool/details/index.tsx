@@ -14,6 +14,7 @@ import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
 import { useAddOnePool, useOnePool } from "@utils/services/poolService";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
@@ -28,6 +29,7 @@ const MCQDetails = () => {
   const pool = useOnePool(id as string);
   const addPool = useAddOnePool(id as string);
   const [edit, setEdit] = useState(false);
+  const { t } = useTranslation();
 
   const { theme } = useStyle();
   const form = useForm({
@@ -59,11 +61,11 @@ const MCQDetails = () => {
   return (
     <Container fluid>
       <Flex justify={"space-between"} w={"100%"}>
-        <Title>Pool Details</Title>
+        <Title>{t("pool_details")}</Title>
 
         {!edit && (
           <Button onClick={() => setEdit(true)} variant="outline">
-            Edit
+            {t("edit")}
           </Button>
         )}
       </Flex>
@@ -73,7 +75,7 @@ const MCQDetails = () => {
           <Paper withBorder p={10} mt={10}>
             <Flex direction="column">
               <Text size="lg" weight={"bold"}>
-                Pool Name
+                {t("pool_name")}{" "}
               </Text>
               <Text>{pool?.data?.name}</Text>
             </Flex>
@@ -84,15 +86,15 @@ const MCQDetails = () => {
               <TextInput
                 sx={{ maxWidth: theme.breakpoints.xs }}
                 name="name"
-                label="Pool Name"
-                placeholder="Please enter your pool name."
+                label={t("pool_name")}
+                placeholder={t("enter_pool_name") as string}
                 {...form.getInputProps("name")}
               />
               <Button loading={addPool.isLoading} mt={20} type="submit">
-                Save
+                {t("save")}
               </Button>
               <Button variant="outline" onClick={() => setEdit(false)} ml={10}>
-                Cancel
+                {t("cancel")}
               </Button>
             </Box>
           </Paper>

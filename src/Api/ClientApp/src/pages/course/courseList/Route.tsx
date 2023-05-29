@@ -13,6 +13,7 @@ import { UserRole } from "@utils/enums";
 import lazyWithRetry from "@utils/lazyImportWithReload";
 import RoutePath from "@utils/routeConstants";
 import React, { Suspense } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Link,
   Outlet,
@@ -52,7 +53,7 @@ const CourseListPageNav = () => {
   const auth = useAuth();
 
   const role = auth?.auth?.role ?? UserRole.Trainee;
-
+  const { t } = useTranslation();
   return (
     <Container fluid>
       <Box
@@ -60,11 +61,11 @@ const CourseListPageNav = () => {
         sx={{ justifyContent: "space-between", alignItems: "center" }}
       >
         <Group position="apart">
-          <Title sx={{ flexGrow: 2 }}>Trainings</Title>
+          <Title sx={{ flexGrow: 2 }}>{t("trainings")}</Title>
           {role != UserRole.Trainee && (
             <Link to={RoutePath.courses.create}>
               <Button my={10} ml={5}>
-                Create New Training
+                {t("new_training")}
               </Button>
             </Link>
           )}
@@ -75,13 +76,13 @@ const CourseListPageNav = () => {
           onTabChange={(value) => navigate(`${value}`)}
         >
           <Tabs.List>
-            <Tabs.Tab value="/trainings/list">All Trainings</Tabs.Tab>
+            <Tabs.Tab value="/trainings/list">{t("all_trainings")}</Tabs.Tab>
             <Tabs.Tab value="/trainings/list/completed">
-              Completed Trainings
+              {t("completed_trainings")}
             </Tabs.Tab>
             {role <= UserRole.Admin && (
               <Tabs.Tab value="/trainings/list/review">
-                Review Trainings
+                {t("review_trainings")}
               </Tabs.Tab>
             )}
           </Tabs.List>

@@ -20,6 +20,7 @@ import {
   useCourseUpdateStatus,
 } from "@utils/services/courseService";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
@@ -59,7 +60,7 @@ const Dashboard = () => {
         status: CourseStatus.Review,
       });
       showNotification({
-        message: "Training has been sent to be reviewed!",
+        message: t("training_sent_to_review"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -69,14 +70,14 @@ const Dashboard = () => {
       });
     }
   };
-
+  const { t } = useTranslation();
   const onUpdatePublish = async () => {
     try {
       await courseUpdateStatus.mutateAsync({
         id: id as string,
       });
       showNotification({
-        message: "Training has been sent to be draft!",
+        message: t("training_sent_to_draft"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -98,7 +99,7 @@ const Dashboard = () => {
         status: CourseStatus.Completed,
       });
       showNotification({
-        message: "Training has been sent to completed!",
+        message: t("training_sent_to_complete"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -114,45 +115,42 @@ const Dashboard = () => {
         <Modal
           opened={opened}
           onClose={() => setOpened(false)}
-          title="Want to change status of this Training to Completed?"
+          title={t("status_change_completed") as string}
         >
           <Button mr={5} onClick={handleCompleted}>
-            Yes
+            {t("yes")}
           </Button>
           <Button variant="outline" onClick={() => setOpened(false)}>
-            No
+            {t("no")}
           </Button>
         </Modal>
         <Group className={classes.group}>
           <Card shadow={"sm"} className={classes.right}>
-            <Box>Your Training is in published Mode.</Box>
+            <Box>{t("training_in_published_mode")}</Box>
             <Button
               mt={20}
               component={Link}
               onClick={onUpdatePublish}
               to={RoutePath.manageCourse.edit(id).route}
             >
-              Update Training
+              {t("update_training")}
             </Button>
           </Card>
-          <Text>Or</Text>
+          <Text>{t("or")}</Text>
           <Card shadow={"sm"} className={classes.left}>
-            <Text>
-              If you are done editing, you may publish your training. Before
-              publishing, make sure that the following are done.
-            </Text>
+            <Text>{t("done_editing_training")}</Text>
             <ol>
-              <li>Training detail is correct.</li>
-              <li>All lessons and sections are properly added.</li>
+              <li>{t("correct_training_detail")}</li>
+              <li>{t("lessons_sections_properly_added")}</li>
 
-              <li>The lesson description is added.</li>
+              <li>{t("lesson_description_added")}</li>
             </ol>
             <Button
               loading={courseStatus.isLoading}
               onClick={onPublish}
               disabled={courseButton}
             >
-              Update Publish
+              {t("update_publish")}
             </Button>
           </Card>
         </Group>
@@ -166,15 +164,17 @@ const Dashboard = () => {
             flexDirection: "column",
           }}
         >
-          <Text mb={10}>Do you wish to complete your Training?</Text>
-          <Button onClick={() => setOpened(true)}>Complete Training</Button>
+          <Text mb={10}>{t("complete_your_training")}</Text>
+          <Button onClick={() => setOpened(true)}>
+            {t("complete_training")}
+          </Button>
         </Card>
       </Container>
     );
   }
 
   if (course.data?.status === CourseStatus.Review) {
-    return <>Training is under Review</>;
+    return <>{t("training_under_review")}</>;
   }
 
   if (course.data?.status === CourseStatus.Rejected) {
@@ -189,11 +189,10 @@ const Dashboard = () => {
             flexDirection: "column",
           }}
         >
-          <Text mb={10}>
-            Your training has been rejected. If you wish to edit your training,
-            Please update training to Draft.
-          </Text>
-          <Button onClick={() => onUpdatePublish()}>Update to Draft</Button>
+          <Text mb={10}>{t("training_rejected")}</Text>
+          <Button onClick={() => onUpdatePublish()}>
+            {t("update_to_draft")}
+          </Button>
         </Card>
       </>
     );
@@ -204,28 +203,25 @@ const Dashboard = () => {
       <Container fluid>
         <Group className={classes.group}>
           <Card shadow={"sm"} className={classes.right}>
-            <Box>Your Training is in draft mode.</Box>
+            <Box>{t("training_in_draft_mode")}</Box>
             <Button
               mt={20}
               component={Link}
               to={RoutePath.manageCourse.edit(id).route}
             >
-              Continue Edit
+              {t("continue_edit")}
             </Button>
           </Card>
-          <Text>Or</Text>
+          <Text>{t("or")}</Text>
           <Card shadow={"sm"} className={classes.left}>
-            <Text>
-              If you are done editing, you may publish your course. Before
-              publishing, make sure that the following are done.
-            </Text>
+            <Text>{t("done_editing_course")}</Text>
             <ol>
-              <li>Training detail is correct.</li>
-              <li>All lessons and sections are properly added.</li>
-              <li>The lesson description is added.</li>
+              <li>{t("correct_training_detail")}</li>
+              <li>{t("lessons_sections_properly_added")}</li>
+              <li>{t("lesson_description_added")}</li>
             </ol>
             <Button loading={courseStatus.isLoading} onClick={onPublish}>
-              Publish
+              {t("publish")}{" "}
             </Button>
           </Card>
         </Group>
@@ -233,12 +229,7 @@ const Dashboard = () => {
     );
   }
 
-  return (
-    <Box>
-      This Training has been marked as Completed. No Further changes can be made
-      in this Training.
-    </Box>
-  );
+  return <Box>{t("training_marked_completed")}</Box>;
 };
 
 export default Dashboard;

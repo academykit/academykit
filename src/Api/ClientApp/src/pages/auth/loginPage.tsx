@@ -13,7 +13,7 @@ import {
 import { Link } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import { useEffect } from "react";
+import { useEffect, useTransition } from "react";
 import useAuth from "../../hooks/useAuth";
 import { useLogin } from "@utils/services/authService";
 import Logo from "@components/Logo";
@@ -23,6 +23,7 @@ import {
   useCompanySetting,
   useGeneralSetting,
 } from "@utils/services/adminService";
+import { useTranslation } from "react-i18next";
 
 const LoginPage = () => {
   const form = useForm({
@@ -33,6 +34,7 @@ const LoginPage = () => {
   });
 
   const login = useLogin();
+  const { t } = useTranslation();
   const auth = useAuth();
   const onFormSubmit = (values: { email: string; password: string }) => {
     login.mutate({ email: values.email, password: values.password });
@@ -43,8 +45,8 @@ const LoginPage = () => {
       showNotification({
         message:
           // @ts-ignore
-          login.error?.response?.data?.message ?? "Something went wrong!",
-        title: "Login Failed",
+          login.error?.response?.data?.message ?? t("something_wrong"),
+        title: t("error"),
         color: "red",
       });
       login.reset();
@@ -62,8 +64,8 @@ const LoginPage = () => {
         email: login.data.data.email,
       } as IUserProfile);
       showNotification({
-        message: "Successfully logged in.",
-        title: "Login Success",
+        message: t("login_success"),
+        title: t("successful"),
       });
     }
   }, [login.isError, login.isSuccess]);
@@ -120,24 +122,24 @@ const LoginPage = () => {
           fontWeight: 900,
         })}
       >
-        Welcome back!
+        {t("welcome_back")}!
       </Title>
       <form onSubmit={form.onSubmit(onFormSubmit)}>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <TextInput
             {...form.getInputProps("email")}
             autoComplete={"email"}
-            label="Email"
+            label={t("email")}
             type={"email"}
-            placeholder="Your email address"
+            placeholder={t("your_email") as string}
             required
             name="email"
           />
           <PasswordInput
             {...form.getInputProps("password")}
-            label="Password"
+            label={t("password")}
             autoComplete={"password"}
-            placeholder="Your password"
+            placeholder={t("your_password") as string}
             required
             mt="md"
             name="password"
@@ -151,12 +153,12 @@ const LoginPage = () => {
                 color="dimmed"
                 size="xs"
               >
-                Forgot password?
+                {t("forgot_password")}?
               </Anchor>
             </Link>
           </Group>
           <Button loading={login.isLoading} fullWidth mt="xl" type="submit">
-            Sign in
+            {t("sign_in")}
           </Button>
         </Paper>
       </form>

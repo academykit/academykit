@@ -139,7 +139,7 @@ const withSearchPagination =
       <SearchBar
         search={search ?? ""}
         setSearch={setSearch}
-        placeholder={placeholder ?? "Search for MCQ pools "}
+        placeholder={placeholder}
       />
     );
 

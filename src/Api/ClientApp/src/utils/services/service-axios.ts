@@ -7,8 +7,11 @@ import axios, {
   AxiosResponse,
 } from "axios";
 import { api } from "./service-api";
+import { LanguageString } from "@utils/enums";
 
 type RequestData = Record<string, any>;
+
+console.log();
 
 const THREE_MINUTES = 3 * 60 * 1000;
 const baseURL = "/";
@@ -74,8 +77,11 @@ export const httpClient = {
 axiosInstance.interceptors.request.use(
   async function (config: AxiosRequestConfig) {
     const token = localStorage.getItem("token");
+    const lang = localStorage.getItem("lang");
     if (token && config.headers) {
       config.headers["Authorization"] = `Bearer ${token}`;
+      config.headers["Accept-Language"] =
+        LanguageString[lang as keyof typeof LanguageString] ?? "en-US";
     }
 
     config.data = filterFalseyValues(config.data);

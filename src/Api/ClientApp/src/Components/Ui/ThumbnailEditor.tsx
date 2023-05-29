@@ -9,6 +9,7 @@ import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { FileAccess, uploadFile } from "@utils/services/fileService";
 import { Text } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -45,7 +46,7 @@ const ThumbnailEditor = ({
   }, [currentThumbnail]);
   const form = formContext();
   const [files, setFiles] = useState<any>([]);
-
+  const { t } = useTranslation();
   return (
     <div
       style={{
@@ -66,7 +67,11 @@ const ThumbnailEditor = ({
         // imageValidateSizeMinHeight={359}
         // imageValidateSizeMinResolution={229401}
         files={files}
-        labelIdle={`Drag & Drop your ${label} or <span class="filepond--label-action">Browse</span>`}
+        labelIdle={`${t(
+          "drag_and_drop"
+        )} ${label} or <span class="filepond--label-action">${t(
+          "browse"
+        )}</span>`}
         onaddfile={(error, file) => {}}
         onupdatefiles={setFiles}
         onremovefile={() => form.setFieldValue(FormField, "")}
@@ -91,7 +96,7 @@ const ThumbnailEditor = ({
               load(res.data);
               form.setFieldValue(FormField, res.data);
             } catch (e) {
-              error("Unable to upload file");
+              error(t("unable_to_upload"));
             }
             return {
               abort: () => {
