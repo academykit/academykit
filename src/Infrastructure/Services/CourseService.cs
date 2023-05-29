@@ -1,5 +1,6 @@
 namespace Lingtren.Infrastructure.Services
 {
+    using AngleSharp.Text;
     using Application.Common.Dtos;
     using Application.Common.Models.ResponseModels;
     using Hangfire;
@@ -12,7 +13,6 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Infrastructure.Helpers;
     using LinqKit;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Routing.Constraints;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Configuration;
@@ -26,7 +26,7 @@ namespace Lingtren.Infrastructure.Services
     using System.Linq;
     using System.Linq.Expressions;
 
-    public class CourseService : BaseGenericService<Course, CourseBaseSearchCriteria>, ICourseService
+    public class CourseService : BaseGenericService<Course, CourseBaseSearchCriteria>, ICourseService 
     {
         private readonly string imageApi;
         private readonly IMediaService _mediaService;
@@ -955,8 +955,50 @@ namespace Lingtren.Infrastructure.Services
         {
             var course = await ValidateAndGetCourse(criteria.CurrentUserId, identity, validateForModify: true).ConfigureAwait(false);
             var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
-                predicate: p => p.CourseId == course.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity))
-               .ConfigureAwait(false);
+                predicate: p => p.CourseId == course.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),include: src => src.Include(x=>x.CourseEnrollments).
+                ThenInclude(x=>x.User)).ConfigureAwait(false);
+            var enrolledUserlist = lesson.CourseEnrollments.Select(x => x.User);
+
+            var userScore = new List<QuestionSetResultDetailModel>();
+            decimal totalMarks = 0;
+            List<(Guid UserId, bool UserResult)> userResults = new List<(Guid, bool)>();
+            if (lesson.QuestionSetId != Guid.Empty)
+            {
+                lesson.QuestionSet = new QuestionSet();
+                lesson.QuestionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(predicate: p => p.Id == lesson.QuestionSetId,
+                include: src => src.Include(x => x.QuestionSetSubmissions).Include(x => x.QuestionSetResults).Include(x => x.QuestionSetQuestions)).ConfigureAwait(false);
+                totalMarks = lesson.QuestionSet.QuestionMarking * lesson.QuestionSet.QuestionSetQuestions.Count();
+                foreach (var user in enrolledUserlist)
+                {
+                    var userQuestionSubmissionSet = lesson.QuestionSet.QuestionSetResults.Where(x => x.UserId == user.Id).ToList();
+                    userScore.Add(new QuestionSetResultDetailModel
+                    {
+                        ObtainedMarks = userQuestionSubmissionSet.Count > 0 ? ((userQuestionSubmissionSet.Max(x=>x.TotalMark) - userQuestionSubmissionSet.Max(x=>x.NegativeMark))
+                           > 0 ? (userQuestionSubmissionSet.Max(x=>x.TotalMark) - userQuestionSubmissionSet.Max(x=>x.NegativeMark)) : 0).ToString() : "",
+                        Duration = lesson.QuestionSet.Duration != 0 ? TimeSpan.FromSeconds(lesson.QuestionSet.Duration).ToString(@"hh\:mm\:ss") : string.Empty,
+                    });
+                    if (userScore.Count() != 0)
+                    {
+                        var maxScore = userScore.Where(x => x.ObtainedMarks == userScore.Max(y => y.ObtainedMarks)).ToList();
+                        var maxnumber = maxScore.Max(x => decimal.Parse(x.ObtainedMarks));
+                        if (maxnumber != 0)
+                        {
+                            bool userResult = maxnumber / totalMarks >= lesson.QuestionSet.PassingWeightage;
+                            userResults.Add((user.Id, userResult));
+                        }
+                        if(maxnumber == 0 & lesson.QuestionSet.PassingWeightage != 0)
+                        {
+                            bool userResult = false;
+                            userResults.Add((user.Id, userResult));
+                        }
+                        if(maxnumber == 0 && lesson.QuestionSet.PassingWeightage == 0)
+                        {
+                            bool userResult = true;
+                            userResults.Add((user.Id, userResult));
+                        }
+                    }              
+                }
+            }
 
             var students = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
                 predicate: p => p.CourseId == course.Id,
@@ -981,13 +1023,24 @@ namespace Lingtren.Infrastructure.Services
                            LessonType = lesson.Type,
                            QuestionSetId = lesson.Type == LessonType.Exam ? lesson.QuestionSetId : null,
                            IsCompleted = m?.IsCompleted,
-                           IsPassed = m?.IsPassed,
+                           IsPassed = GetIsPassed(userResults, student.UserId),
                            UpdatedOn = m?.UpdatedOn ?? m?.CreatedOn,
                        };
 
             return data.ToList().ToIPagedList(criteria.Page, criteria.Size);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userResults"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        private bool GetIsPassed(IEnumerable<(Guid UserId, bool UserResult)> userResults, Guid userId)
+        {
+            var userResult = userResults.FirstOrDefault(ur => ur.UserId == userId);
+            return userResult != default && userResult.UserResult ? userResult.UserResult : false;
+        }
         /// <summary>
         /// Handle to fetch student course statistics report
         /// </summary>
