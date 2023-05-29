@@ -4,15 +4,18 @@
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Domain.Entities;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Localization;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
 
     public class SMTPSettingService : BaseGenericService<SMTPSetting, BaseSearchCriteria>, ISMTPSettingService
     {
         public SMTPSettingService(
             IUnitOfWork unitOfWork,
-            ILogger<SMTPSettingService> logger) : base(unitOfWork, logger)
+            ILogger<SMTPSettingService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
         }
         /// <summary>

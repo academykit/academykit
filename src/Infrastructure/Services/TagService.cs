@@ -9,13 +9,16 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
 
     public class TagService : BaseGenericService<Tag, BaseSearchCriteria>, ITagService
     {
-        public TagService(IUnitOfWork unitOfWork, ILogger<TagService> logger)
-        : base(unitOfWork, logger)
+        public TagService(IUnitOfWork unitOfWork, ILogger<TagService> logger,
+        IStringLocalizer<ExceptionLocalizer> localizer)
+        : base(unitOfWork, logger,localizer)
         {
         }
 

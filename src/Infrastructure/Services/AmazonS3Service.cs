@@ -9,12 +9,15 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Localization;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using MimeKit;
 
     public class AmazonS3Service : BaseService, IAmazonS3Service
     {
-        public AmazonS3Service(IUnitOfWork unitOfWork, ILogger<AmazonS3Service> logger) : base(unitOfWork, logger)
+        public AmazonS3Service(IUnitOfWork unitOfWork, ILogger<AmazonS3Service> 
+        logger,IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
 
         }

@@ -6,6 +6,8 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Localization;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using MimeKit;
     using System;
@@ -14,7 +16,8 @@ namespace Lingtren.Infrastructure.Services
     {
 
         public FileServerService(IUnitOfWork unitOfWork,
-        ILogger<FileServerService> logger) : base(unitOfWork, logger)
+        ILogger<FileServerService> logger,
+        IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
 
         }

@@ -9,8 +9,10 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Localization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using MimeKit;
     using System.Net.Http.Headers;
@@ -23,7 +25,8 @@ namespace Lingtren.Infrastructure.Services
 
         public MediaService(IUnitOfWork unitOfWork,
         ILogger<MediaService> logger, IFileServerService fileServerService,
-        IAmazonS3Service amazonService, IWebHostEnvironment webHostEnvironment) : base(unitOfWork, logger)
+        IAmazonS3Service amazonService, IWebHostEnvironment webHostEnvironment,
+        IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
             _amazonService = amazonService;
             _fileServerService = fileServerService;

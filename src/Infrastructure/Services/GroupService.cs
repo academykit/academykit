@@ -10,9 +10,11 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
     using System.Net;
@@ -25,7 +27,8 @@
             IUnitOfWork unitOfWork,
             ILogger<GroupService> logger,
             IMediaService mediaService,
-            IFileServerService fileServerService) : base(unitOfWork, logger)
+            IFileServerService fileServerService,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
             _mediaService = mediaService;
             _fileServerService = fileServerService;

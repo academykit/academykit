@@ -10,8 +10,10 @@
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
 
     public class QuestionPoolTeacherController : BaseApiController
     {
@@ -20,18 +22,22 @@
         private readonly IUserService _userService;
         private readonly IValidator<QuestionPoolTeacherRequestModel> _validator;
         private readonly ILogger<QuestionPoolTeacherController> _logger;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
         public QuestionPoolTeacherController(
             IQuestionPoolService questionPoolService,
             IQuestionPoolTeacherService questionPoolTeacherService,
             IUserService userService,
             IValidator<QuestionPoolTeacherRequestModel> validator,
-            ILogger<QuestionPoolTeacherController> logger)
+            ILogger<QuestionPoolTeacherController> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _questionPoolService = questionPoolService;
             _questionPoolTeacherService = questionPoolTeacherService;
             _userService = userService;
             _validator = validator;
             _logger = logger;
+            _localizer = localizer;
+
         }
 
         /// <summary>
@@ -140,7 +146,7 @@
         public async Task<IActionResult> Delete(Guid id)
         {
             await _questionPoolTeacherService.DeleteAsync(id.ToString(), CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel { Success = true, Message = "Question pool teacher removed successfully." });
+            return Ok(new CommonResponseModel { Success = true, Message = _localizer.GetString("QuestionpoolTeacherRemoved") });
         }
     }
 }

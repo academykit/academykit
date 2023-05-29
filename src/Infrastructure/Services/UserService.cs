@@ -11,12 +11,14 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Configurations;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Cryptography.KeyDerivation;
     using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
@@ -44,7 +46,8 @@
             IEmailService emailService,
             IRefreshTokenService refreshTokenService,
             IOptions<JWT> jwt,
-            IConfiguration configuration) : base(unitOfWork, logger)
+            IConfiguration configuration,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
             _emailService = emailService;
             _refreshTokenService = refreshTokenService;
@@ -70,14 +73,14 @@
             if (user == null)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = "Account not registered.";
+                authenticationModel.Message = _localizer.GetString("AccountNotRegistered");
                 return authenticationModel;
             }
 
             if (!user.IsActive)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = "Inactive user account";
+                authenticationModel.Message = _localizer.GetString("AccountNotActive");
                 return authenticationModel;
             }
 
@@ -85,7 +88,7 @@
             if (!isUserAuthenticated)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = "Incorrect User Credentials.";
+                authenticationModel.Message = _localizer.GetString("IncorrectCredentials");
                 return authenticationModel;
             }
             var currentTimeStamp = DateTime.UtcNow;
@@ -155,21 +158,21 @@
             if (user == null)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = "Token did not match any users.";
+                authenticationModel.Message = _localizer.GetString("TokenNotMatched");
                 return authenticationModel;
             }
             var refreshToken = await GetUserRefreshToken(token);
             if (refreshToken == null)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = "Token not found.";
+                authenticationModel.Message = _localizer.GetString("TokenNotFound");
                 return authenticationModel;
             }
 
             if (!refreshToken.IsActive)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = "Token Not Active.";
+                authenticationModel.Message = _localizer.GetString("TokenNotActive");
                 return authenticationModel;
             }
             refreshToken.IsActive = false;
@@ -226,7 +229,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to fetch user by email.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to fetch user by email.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UserNotFound"));
             }
         }
 
@@ -273,7 +276,7 @@
                 MimeTypes.TryGetExtension(file.ContentType, out var extension);
                 if (extension != ".csv")
                 {
-                    throw new ArgumentException("File extension should be csv format");
+                    throw new ArgumentException(_localizer.GetString("CSVFileExtension"));
                 }
                 var users = new List<UserImportDto>();
                 using (var reader = new StreamReader(file.OpenReadStream()))
@@ -299,7 +302,7 @@
                     var duplicateUser = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: p => userEmails.Contains(p.Email), selector: x => x.Email).ConfigureAwait(false);
                     foreach (var entity in duplicateUser)
                     {
-                        stringBuilder.Append($"{entity} is already registered.");
+                        stringBuilder.Append($"{entity}").Append(_localizer.GetString("AlreadyRegistered"));
                         stringBuilder.Append(Environment.NewLine);
                     }
                     var newUsersList = users.Where(x => !duplicateUser.Contains(x.Email)).ToList();
@@ -412,17 +415,17 @@
                 if (user == null)
                 {
                     _logger.LogWarning("User not found with email: {email}.", model.Email);
-                    throw new EntityNotFoundException("User not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
                 }
                 if (currentTimeStamp > user.PasswordResetTokenExpiry)
                 {
                     _logger.LogWarning("Password reset token expired for the user with id : {id}.", user.Id);
-                    throw new ForbiddenException("Password reset token expired.");
+                    throw new ForbiddenException(_localizer.GetString("ResetTokenExpired"));
                 }
                 if (model.Token != user.PasswordResetToken)
                 {
                     _logger.LogWarning("User not found with email: {email}.", model.Email);
-                    throw new ForbiddenException("Reset token not matched.");
+                    throw new ForbiddenException(_localizer.GetString("ResetTokenNotMatched"));
                 }
                 user.PasswordChangeToken = await BuildResetPasswordJWTToken(user.Email).ConfigureAwait(false);
                 _unitOfWork.GetRepository<User>().Update(user);
@@ -463,7 +466,7 @@
             if (!currentPasswordMatched)
             {
                 _logger.LogWarning("User with userId : {id} current password does not matched while changing password.", currentUserId);
-                throw new ForbiddenException("Current Password does not matched.");
+                throw new ForbiddenException(_localizer.GetString("CurrentPasswordNotMatched"));
             }
             user.HashPassword = HashPassword(model.NewPassword);
             user.UpdatedOn = DateTime.UtcNow;
@@ -494,7 +497,7 @@
             if (!isUserAuthenticated)
             {
                 _logger.LogWarning("User with id : {userId} password not matched for email change.", user.Id);
-                throw new ForbiddenException("User password not matched.");
+                throw new ForbiddenException(_localizer.GetString("PasswordNotMatched"));
             }
             if (user.Id != currentUserId)
             {
@@ -793,11 +796,11 @@
         private async Task CheckDuplicateEmailAsync(User entity)
         {
             var checkDuplicateEmail = await _unitOfWork.GetRepository<User>().ExistsAsync(
-                predicate: p => p.Id != entity.Id && p.Email.ToLower() == entity.Email.ToLower()).ConfigureAwait(false);
+                predicate: p => p.Id != entity.Id && string.Equals(p.Email, entity.Email, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false);
             if (checkDuplicateEmail)
             {
                 _logger.LogWarning("Duplicate user email : {email} is found.", entity.Email);
-                throw new ServiceException("Duplicate email is found.");
+                throw new ServiceException(_localizer.GetString("DuplicateEmailFound"));
             }
         }
 
@@ -812,7 +815,6 @@
         {
             try
             {
-
                 var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == userId,
                     include: src => src.Include(x => x.Department)
@@ -876,7 +878,7 @@
                 if (course == null)
                 {
                     _logger.LogWarning("Training with identity : {identity} not found for user with id : {currentUserId}.", courseId, userId);
-                    throw new EntityNotFoundException("Training not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
                 var users = await _unitOfWork.GetRepository<User>().GetAllAsync().ConfigureAwait(false);
                 var user = users.FirstOrDefault(x => x.Id == userId);
@@ -913,7 +915,7 @@
                 }
                 else
                 {
-                    throw new UnauthorizedAccessException("Trainee are not Aloowed to excess this feature");
+                    throw new UnauthorizedAccessException("Trainee are not allowed to excess this feature.");
                 }
             }
             catch (Exception ex)

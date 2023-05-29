@@ -10,8 +10,10 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
 
     [Route("api/course/{identity}/section")]
     public class SectionController : BaseApiController
@@ -19,14 +21,17 @@ namespace Lingtren.Api.Controllers
         private readonly ICourseService _courseService;
         private readonly ISectionService _sectionService;
         private readonly IValidator<SectionRequestModel> _validator;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
         public SectionController(
             ICourseService courseService,
             ISectionService sectionService,
-            IValidator<SectionRequestModel> validator)
+            IValidator<SectionRequestModel> validator,
+            IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _courseService = courseService;
             _sectionService = sectionService;
             _validator = validator;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -153,7 +158,7 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> Delete(string identity, string sectionIdentity)
         {
             await _sectionService.DeleteSectionAsync(identity, sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Section removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("SectionRemoved") });
         }
 
         /// <summary>
@@ -166,7 +171,7 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> SectionOrder(string identity, IList<Guid> Ids)
         {
             await _sectionService.ReorderAsync(identity, Ids, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Section reorder successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("SectionReorder") });
         }
     }
 }

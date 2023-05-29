@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="TrainingRemoved" xml:space="preserve">
+    <value>トレーニングは正常に削除されました。</value>
+  </data>
+  <data name="TokenRequired" xml:space="preserve">
+    <value> トークンが必要です。</value>
+  </data>
+  <data name="TokenNotMatched" xml:space="preserve">
+    <value> トークンが一致しません。</value>
+  </data>
+  <data name="LogoutSuccess" xml:space="preserve">
+    <value> ログアウトに成功しました。</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value> ユーザーが見つかりません。</value>
+  </data>
+  <data name="ForgetPasswordExecuted" xml:space="preserve">
+    <value> パスワードを忘れた場合は正常に実行されました。</value>
+  </data>
+  <data name="PasswordResetTokenMatched" xml:space="preserve">
+    <value> パスワード リセット トークンが正常に一致しました。</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value> トークンの有効期限が切れました。</value>
+  </data>
+  <data name="PasswordResetSuccess" xml:space="preserve">
+    <value> パスワードが正常にリセットされました。</value>
+  </data>
+  <data name="PasswordChanged" xml:space="preserve">
+    <value> パスワードは正常に変更されました。</value>
+  </data>
+  <data name="AccountNotRegistered" xml:space="preserve">
+    <value> アカウントが登録されていません。</value>
+  </data>
+  <data name="AccountNotActive" xml:space="preserve">
+    <value> 非アクティブなユーザー アカウント。</value>
+  </data>
+  <data name="IncorrectCredentials" xml:space="preserve">
+    <value>ユーザー認証情報が正しくありません。</value>
+  </data>
+  <data name="TokenNotFound" xml:space="preserve">
+    <value>トークンが見つかりません。</value>
+  </data>
+  <data name="TokenNotActive" xml:space="preserve">
+    <value> トークンがアクティブではありません。</value>
+  </data>
+  <data name="CSVFileExtension" xml:space="preserve">
+    <value> ファイルの拡張子はcsv形式にしてください。</value>
+  </data>
+  <data name="AlreadyRegistered" xml:space="preserve">
+    <value>はすでに登録されています。</value>
+  </data>
+  <data name="ResetTokenNotMatched" xml:space="preserve">
+    <value> リセットトークンが一致しません。</value>
+  </data>
+  <data name="ResetTokenExpired" xml:space="preserve">
+    <value> リセットトークンの有効期限が切れました。</value>
+  </data>
+  <data name="CurrentPasswordNotMatched" xml:space="preserve">
+    <value> 現在のパスワードが一致しません。</value>
+  </data>
+  <data name="PasswordNotMatched" xml:space="preserve">
+    <value>パスワードが一致しません。</value>
+  </data>
+  <data name="DuplicateEmailFound" xml:space="preserve">
+    <value> 重複したメールが見つかりました</value>
+  </data>
+  <data name="TrainingNotFound" xml:space="preserve">
+    <value>トレーニングが見つかりません</value>
+  </data>
+  <data name="AssignmentRemoved" xml:space="preserve">
+    <value>割り当ては正常に削除されました</value>
+  </data>
+  <data name="AssignmentSubmitted" xml:space="preserve">
+    <value>課題は正常に提出されました</value>
+  </data>
+  <data name="CommentRemoved" xml:space="preserve">
+    <value>コメントは正常に削除されました</value>
+  </data>
+  <data name="CommentReplyRemoved" xml:space="preserve">
+    <value>コメント返信は正常に削除されました</value>
+  </data>
+  <data name="DepartmentRemoved" xml:space="preserve">
+    <value>部門が正常に削除されました</value>
+  </data>
+  <data name="EmailChanged" xml:space="preserve">
+    <value>メールアドレスが正常に変更されました</value>
+  </data>
+  <data name="FeedbackRemoved" xml:space="preserve">
+    <value>フィードバックは正常に削除されました</value>
+  </data>
+  <data name="FeedbackSubmitted" xml:space="preserve">
+    <value>フィードバックは正常に送信されました</value>
+  </data>
+  <data name="GroupRemoved" xml:space="preserve">
+    <value>グループは正常に削除されました</value>
+  </data>
+  <data name="LessonRemoved" xml:space="preserve">
+    <value>レッスンは正常に削除されました</value>
+  </data>
+  <data name="LessonReorder" xml:space="preserve">
+    <value>レッスンの再注文が正常に完了しました</value>
+  </data>
+  <data name="MemberRemoved" xml:space="preserve">
+    <value>メンバーが正常に削除されました</value>
+  </data>
+  <data name="MemberStatus" xml:space="preserve">
+    <value>メンバーステータスが正常に変更されました</value>
+  </data>
+  <data name="QuestionpoolRemoved" xml:space="preserve">
+    <value>質問プールは正常に削除されました</value>
+  </data>
+  <data name="QuestionpoolTeacherRemoved" xml:space="preserve">
+    <value>質問プールの教師が正常に削除されました</value>
+  </data>
+  <data name="QuestionRemoved" xml:space="preserve">
+    <value>質問は正常に削除されました</value>
+  </data>
+  <data name="QuestionSetAnswer" xml:space="preserve">
+    <value>質問セットの回答が正常に送信されました</value>
+  </data>
+  <data name="SectionRemoved" xml:space="preserve">
+    <value>セクションが正常に削除されました</value>
+  </data>
+  <data name="SectionReorder" xml:space="preserve">
+    <value>セクションの並べ替えが正常に完了しました</value>
+  </data>
+  <data name="SignatureRemoved" xml:space="preserve">
+    <value>署名は正常に削除されました</value>
+  </data>
+  <data name="TrainingStatus" xml:space="preserve">
+    <value>トレーニングステータスが正常に変更されました</value>
+  </data>
+  <data name="TrainingTrainer" xml:space="preserve">
+    <value>トレーニング トレーナーが正常に削除されました</value>
+  </data>
+  <data name="TrainingUpdated" xml:space="preserve">
+    <value>トレーニングが正常に更新されました</value>
+  </data>
+  <data name="UserEnrolled" xml:space="preserve">
+    <value>ユーザーはトレーニングに正常に登録されました</value>
+  </data>
+  <data name="WatchHistory" xml:space="preserve">
+    <value>視聴履歴が正常に更新されました</value>
+  </data>
+  <data name="ZoomLicense" xml:space="preserve">
+    <value>ズームライセンスが正常に削除されました</value>
+  </data>
+</root>

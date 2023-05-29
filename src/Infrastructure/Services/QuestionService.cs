@@ -6,9 +6,11 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
 
@@ -16,7 +18,8 @@
     {
         public QuestionService(
             IUnitOfWork unitOfWork,
-            ILogger<QuestionService> logger) : base(unitOfWork, logger)
+            ILogger<QuestionService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
         }
 

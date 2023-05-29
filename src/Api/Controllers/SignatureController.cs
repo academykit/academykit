@@ -5,19 +5,24 @@
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
+    using Lingtren.Infrastructure.Localization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
 
     [Route("api/course/{identity}/signature")]
     public class SignatureController : BaseApiController
     {
         private readonly ICourseService _courseService;
         private readonly IValidator<SignatureRequestModel> _validator;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
         public SignatureController(
             ICourseService courseService,
-            IValidator<SignatureRequestModel> validator)
+            IValidator<SignatureRequestModel> validator,
+            IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _courseService = courseService;
             _validator = validator;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -66,7 +71,7 @@
         public async Task<IActionResult> DeleteAsync(string identity, Guid id)
         {
             await _courseService.DeleteSignatureAsync(identity, id, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Signature removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("SignatureRemoved") });
         }
     }
 }

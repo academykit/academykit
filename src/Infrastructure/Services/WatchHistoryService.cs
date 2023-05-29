@@ -8,8 +8,10 @@
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Localization;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
 
@@ -17,7 +19,9 @@
     {
         public WatchHistoryService(
             IUnitOfWork unitOfWork,
-            ILogger<WatchHistoryService> logger) : base(unitOfWork, logger)
+            ILogger<WatchHistoryService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer) 
+            : base(unitOfWork, logger,localizer)
         {
         }
 

@@ -4,15 +4,18 @@
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Domain.Entities;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Localization;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
 
     public class ZoomSettingService : BaseGenericService<ZoomSetting, BaseSearchCriteria>, IZoomSettingService
     {
         public ZoomSettingService(
             IUnitOfWork unitOfWork,
-            ILogger<ZoomSettingService> logger) : base(unitOfWork, logger)
+            ILogger<ZoomSettingService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
         }
         /// <summary>
