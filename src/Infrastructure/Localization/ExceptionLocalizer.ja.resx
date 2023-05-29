@@ -185,4 +185,28 @@
     <value>はすでに登録されています。</value>
     <comment/>
   </data>
+  <data name="ResetTokenNotMatched" xml:space="preserve">
+    <value> リセットトークンが一致しません。</value>
+    <comment/>
+  </data>
+  <data name="ResetTokenExpired" xml:space="preserve">
+    <value> リセットトークンの有効期限が切れました。</value>
+    <comment/>
+  </data>
+  <data name="CurrentPasswordNotMatched" xml:space="preserve">
+    <value> 現在のパスワードが一致しません。</value>
+    <comment/>
+  </data>
+  <data name="PasswordNotMatched" xml:space="preserve">
+    <value>パスワードが一致しません。</value>
+    <comment/>
+  </data>
+  <data name="DuplicateEmailFound" xml:space="preserve">
+    <value> 重複したメールが見つかりました</value>
+    <comment/>
+  </data>
+  <data name="TrainingNotFound" xml:space="preserve">
+    <value>トレーニングが見つかりません</value>
+    <comment/>
+  </data>
 </root>

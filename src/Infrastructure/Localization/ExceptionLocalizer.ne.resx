@@ -185,4 +185,24 @@
     <value> पहिले नै दर्ता छ।</value>
     <comment/>
   </data>
+  <data name="ResetTokenNotMatched" xml:space="preserve">
+    <value> हालको पासवर्ड मिलेको छैन।</value>
+    <comment/>
+  </data>
+  <data name="ResetTokenExpired" xml:space="preserve">
+    <value> रिसेट टोकनको म्याद सकियो।</value>
+    <comment/>
+  </data>
+  <data name="PasswordNotMatched" xml:space="preserve">
+    <value> पासवर्ड मिलेन।</value>
+    <comment/>
+  </data>
+  <data name="DuplicateEmailFound" xml:space="preserve">
+    <value>डुप्लिकेट इमेल भेटियो।</value>
+    <comment/>
+  </data>
+  <data name="TrainingNotFound" xml:space="preserve">
+    <value> तालिम भेटिएन।</value>
+    <comment/>
+  </data>
 </root>

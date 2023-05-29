@@ -185,4 +185,28 @@
     <value>is already registered.</value>
     <comment/>
   </data>
+  <data name="ResetTokenNotMatched" xml:space="preserve">
+    <value>Reset token not matched.</value>
+    <comment/>
+  </data>
+  <data name="ResetTokenExpired" xml:space="preserve">
+    <value>Reset token expired.</value>
+    <comment/>
+  </data>
+  <data name="CurrentPasswordNotMatched" xml:space="preserve">
+    <value>Current Password does not matched.</value>
+    <comment/>
+  </data>
+  <data name="PasswordNotMatched" xml:space="preserve">
+    <value>Password not matched.</value>
+    <comment/>
+  </data>
+  <data name="DuplicateEmailFound" xml:space="preserve">
+    <value>Duplicate email found.</value>
+    <comment/>
+  </data>
+  <data name="TrainingNotFound" xml:space="preserve">
+    <value>Training not found.</value>
+    <comment/>
+  </data>
 </root>

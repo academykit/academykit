@@ -415,17 +415,17 @@
                 if (user == null)
                 {
                     _logger.LogWarning("User not found with email: {email}.", model.Email);
-                    throw new EntityNotFoundException("User not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
                 }
                 if (currentTimeStamp > user.PasswordResetTokenExpiry)
                 {
                     _logger.LogWarning("Password reset token expired for the user with id : {id}.", user.Id);
-                    throw new ForbiddenException("Password reset token expired.");
+                    throw new ForbiddenException(_localizer.GetString("ResetTokenExpired"));
                 }
                 if (model.Token != user.PasswordResetToken)
                 {
                     _logger.LogWarning("User not found with email: {email}.", model.Email);
-                    throw new ForbiddenException("Reset token not matched.");
+                    throw new ForbiddenException(_localizer.GetString("ResetTokenNotMatched"));
                 }
                 user.PasswordChangeToken = await BuildResetPasswordJWTToken(user.Email).ConfigureAwait(false);
                 _unitOfWork.GetRepository<User>().Update(user);
@@ -466,7 +466,7 @@
             if (!currentPasswordMatched)
             {
                 _logger.LogWarning("User with userId : {id} current password does not matched while changing password.", currentUserId);
-                throw new ForbiddenException("Current Password does not matched.");
+                throw new ForbiddenException(_localizer.GetString("CurrentPasswordNotMatched"));
             }
             user.HashPassword = HashPassword(model.NewPassword);
             user.UpdatedOn = DateTime.UtcNow;
@@ -497,7 +497,7 @@
             if (!isUserAuthenticated)
             {
                 _logger.LogWarning("User with id : {userId} password not matched for email change.", user.Id);
-                throw new ForbiddenException("User password not matched.");
+                throw new ForbiddenException(_localizer.GetString("PasswordNotMatched"));
             }
             if (user.Id != currentUserId)
             {
@@ -796,11 +796,11 @@
         private async Task CheckDuplicateEmailAsync(User entity)
         {
             var checkDuplicateEmail = await _unitOfWork.GetRepository<User>().ExistsAsync(
-                predicate: p => p.Id != entity.Id && p.Email.ToLower() == entity.Email.ToLower()).ConfigureAwait(false);
+                predicate: p => p.Id != entity.Id && string.Equals(p.Email, entity.Email, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false);
             if (checkDuplicateEmail)
             {
                 _logger.LogWarning("Duplicate user email : {email} is found.", entity.Email);
-                throw new ServiceException("Duplicate email is found.");
+                throw new ServiceException(_localizer.GetString("DuplicateEmailFound"));
             }
         }
 
@@ -815,7 +815,6 @@
         {
             try
             {
-
                 var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == userId,
                     include: src => src.Include(x => x.Department)
@@ -879,7 +878,7 @@
                 if (course == null)
                 {
                     _logger.LogWarning("Training with identity : {identity} not found for user with id : {currentUserId}.", courseId, userId);
-                    throw new EntityNotFoundException("Training not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
                 var users = await _unitOfWork.GetRepository<User>().GetAllAsync().ConfigureAwait(false);
                 var user = users.FirstOrDefault(x => x.Id == userId);
@@ -916,7 +915,7 @@
                 }
                 else
                 {
-                    throw new UnauthorizedAccessException("Trainee are not Aloowed to excess this feature");
+                    throw new UnauthorizedAccessException("Trainee are not allowed to excess this feature.");
                 }
             }
             catch (Exception ex)
