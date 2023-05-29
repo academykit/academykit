@@ -24,14 +24,14 @@ builder.Services.AddVersionedApiExplorer(options =>
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddJWTConfigurationServices(builder.Configuration);
-
+builder.Services.AddControllers().AddViewLocalization().AddDataAnnotationsLocalization();
+builder.Services.AddLocalization();
 builder.Services.AddRequestLocalization(x =>
 {
-    x.DefaultRequestCulture = new RequestCulture("en");
+    x.DefaultRequestCulture = new RequestCulture("en-US");
     x.ApplyCurrentCultureToResponseHeaders = true;
-    x.SupportedCultures = new List<CultureInfo> { new("ne"), new("en") };
-    x.SupportedUICultures = new List<CultureInfo> { new("ne"), new("en") };
-    x.SupportedCultures = new List<CultureInfo> { new("ja"), new("ja") };
+    x.SupportedCultures = new List<CultureInfo> { new("ne-NP"), new("en-US"),new("ja-JP")};
+    x.SupportedUICultures = new List<CultureInfo> { new("ne-NP"), new("en-US"),new("ja-JP")};
 });
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddCors(options => options.AddDefaultPolicy(
@@ -85,7 +85,7 @@ app.UseHangfireDashboard("/jobs", new DashboardOptions
            Pass = builder.Configuration.GetSection("Hangfire").GetSection("Password").Value
        }}
 });
-
+app.UseRequestLocalization();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

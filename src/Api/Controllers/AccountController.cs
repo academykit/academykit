@@ -76,7 +76,7 @@
             var user = await _userService.GetUserByEmailAsync(model.Email);
             if (user == null)
             {
-                return BadRequest(new CommonResponseModel { Message = _localizer.GetString("UserNotFound") });
+                return BadRequest(new CommonResponseModel { Message = _localizer.GetString("UserNotFound")});
             }
             await _userService.ResetPasswordAsync(user).ConfigureAwait(false);
             return Ok(new { message = _localizer.GetString("ForgetPasswordExecuted"), success = true });

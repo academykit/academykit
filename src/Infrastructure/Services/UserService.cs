@@ -229,7 +229,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to fetch user by email.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to fetch user by email.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UserNotFound"));
             }
         }
 
