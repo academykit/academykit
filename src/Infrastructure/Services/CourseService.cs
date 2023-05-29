@@ -1023,7 +1023,7 @@ namespace Lingtren.Infrastructure.Services
                            LessonType = lesson.Type,
                            QuestionSetId = lesson.Type == LessonType.Exam ? lesson.QuestionSetId : null,
                            IsCompleted = m?.IsCompleted,
-                           IsPassed = GetIsPassed(userResults, student.UserId),
+                           IsPassed = GetIsPassed(userResults, student.UserId) ? true : m?.IsPassed ?? false,
                            UpdatedOn = m?.UpdatedOn ?? m?.CreatedOn,
                        };
 
