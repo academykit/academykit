@@ -26,6 +26,7 @@ import {
 } from "@utils/services/questionService";
 import { useAddTag, useTags } from "@utils/services/tagService";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 const [FormProvider, useFormContext, useForm] =
@@ -74,7 +75,7 @@ const schema = Yup.object().shape({
     }),
 });
 const Create = () => {
-  const navigate = useNavigate();
+  const { t } = useTranslation();
   const { id, slug } = useParams();
   const { mutate, data: addTagData, isSuccess } = useAddTag();
   const getQuestion = useGetQuestion(id as string, slug as string);
@@ -97,17 +98,16 @@ const Create = () => {
 
   const fieldSize = "md";
   const getQuestionType = () => {
-    return Object.entries(QuestionType)
-      .splice(0, Object.entries(QuestionType).length / 2)
-      .map(([key, value]) => {
-        return {
-          value: key,
-          label:
-            ReadableEnum[value as keyof typeof ReadableEnum] ??
-            value.toString(),
-        };
-      })
-      .filter((x) => x.value !== QuestionType.Subjective.toString());
+    return [
+      {
+        value: QuestionType.MultipleChoice.toString(),
+        label: t(`MultipleChoice`),
+      },
+      {
+        value: QuestionType.SingleChoice.toString(),
+        label: t(`SingleChoice`),
+      },
+    ];
   };
 
   const onSubmit = async (data: IAddQuestionType) => {
@@ -119,8 +119,8 @@ const Create = () => {
       });
 
       showNotification({
-        title: "Success",
-        message: "Question has been Edited successfully",
+        title: t("successful"),
+        message: t("question_edit_success"),
       });
     } catch (err) {
       const error = errorType(err);

@@ -11,6 +11,7 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { ColorSchemeToggle } from "./ColorSchemeToggle";
 import LanguageSelector from "@components/Ui/LanguageSelector";
+import { useTranslation } from "react-i18next";
 
 const useStyles = createStyles((theme) => ({
   footer: {
@@ -47,6 +48,7 @@ const useStyles = createStyles((theme) => ({
 export function AppFooter({ name }: { name: string }) {
   const { classes } = useStyles();
   const location = useLocation();
+  const { t } = useTranslation();
 
   if (location.pathname.split("/")[1] === "exam") return <></>;
 
@@ -54,19 +56,19 @@ export function AppFooter({ name }: { name: string }) {
     <footer className={classes.footer}>
       <Container fluid={true} className={classes.inner}>
         <Text color="dimmed" size="xs">
-          Copyright © {new Date().getFullYear()} {name}.
+          {t("copyright")} © {new Date().getFullYear()} {name}.
         </Text>
         <Group>
           <Anchor size={"xs"} component={Link} to="/privacy" color={"dimmed"}>
-            Privacy
+            {t("privacy")}
           </Anchor>
           <Divider orientation="vertical" />
           <Anchor size={"xs"} component={Link} to={"/terms"} color={"dimmed"}>
-            Terms
+            {t("terms")}
           </Anchor>
           <Divider orientation="vertical" />
           <Anchor size={"xs"} component={Link} to="/about" color={"dimmed"}>
-            About Us
+            {t("about_us")}
           </Anchor>
         </Group>
         <Group spacing={0} position="right" noWrap>
@@ -76,7 +78,7 @@ export function AppFooter({ name }: { name: string }) {
       </Container>
       <Center>
         <Text size={"xs"} color={"dimmed"} mr={3}>
-          Powered By
+          {t("powered_by")}
         </Text>
         <Anchor href={"https://vurilo.com"} style={{ textDecoration: "none" }}>
           <Text size={"xs"} color={"dimmed"}>

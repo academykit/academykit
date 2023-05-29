@@ -120,14 +120,12 @@ const MCQPool = ({
 
       {pools.isSuccess && (
         <Box mt={20}>
-          {searchComponent()}
+          {searchComponent(t("search_pools") as string)}
           {pools.data.items.length >= 1 &&
             pools.data?.items.map((x) => (
               <PoolCard search={searchParams} pool={x} key={x.id} />
             ))}
-          {pools.data?.items.length < 1 && (
-            <Box mt={10}>{t("no_pools")}</Box>
-          )}
+          {pools.data?.items.length < 1 && <Box mt={10}>{t("no_pools")}</Box>}
           {pools.data && pagination(pools.data.totalPage)}
         </Box>
       )}

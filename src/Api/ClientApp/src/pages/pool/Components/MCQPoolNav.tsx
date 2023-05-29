@@ -2,23 +2,24 @@ import { useParams } from "react-router-dom";
 import RoutePath from "@utils/routeConstants";
 import NavOutlet from "@components/Layout/NavOutlet";
 import { UserRole } from "@utils/enums";
+import i18next from "i18next";
 
 function MCQPoolNav() {
   const params = useParams();
 
   const navLink = [
     {
-      label: "Details",
+      label: i18next.t("details"),
       to: RoutePath.pool.details(params.id).route,
       role: UserRole.Trainer,
     },
     {
-      label: "Trainer",
+      label: i18next.t("Trainer"),
       to: RoutePath.pool.teachers(params.id).route,
       role: UserRole.Trainer,
     },
     {
-      label: "Questions",
+      label: i18next.t("questions"),
       to: RoutePath.pool.questions(params.id).route,
       role: UserRole.Trainer,
     },

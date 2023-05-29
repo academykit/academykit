@@ -25,55 +25,50 @@ import {
 } from "@utils/services/questionService";
 import { useAddTag, useTags } from "@utils/services/tagService";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IAddQuestionType>();
 
 const schema = Yup.object().shape({
-  name: Yup.string().required("Title of Question is required!"),
-  type: Yup.string().required("Question type is required!").nullable(),
+  name: Yup.string().required("question_title_required"),
+  type: Yup.string().required("question_type_required").nullable(),
 
   answers: Yup.array()
     .when(["type"], {
       is: QuestionType.MultipleChoice.toString(),
       then: Yup.array()
-        .min(1, "Options should be more than one!")
-        .test(
-          "test",
-          "On Multiple Choice at least one option should be selected! ",
-          function (value: any) {
-            const a = value?.filter((x: any) => x.isCorrect).length > 0;
-            return a;
-          }
-        )
+        .min(1, "option_more_than_one")
+        .test("test", "multiple_choice_option_atleast", function (value: any) {
+          const a = value?.filter((x: any) => x.isCorrect).length > 0;
+          return a;
+        })
         .of(
           Yup.object().shape({
-            option: Yup.string().trim().required("Options is required!"),
+            option: Yup.string().trim().required("option_required"),
           })
         ),
     })
     .when(["type"], {
       is: QuestionType.SingleChoice.toString(),
       then: Yup.array()
-        .test(
-          "test",
-          "On Single choice, only one option should be selected! ",
-          function (value: any) {
-            const length: number =
-              value && value.filter((e: any) => e.isCorrect).length;
-            return length === 1;
-          }
-        )
+        .test("test", "single_choice_option_atleast", function (value: any) {
+          const length: number =
+            value && value.filter((e: any) => e.isCorrect).length;
+          return length === 1;
+        })
         .of(
           Yup.object().shape({
-            option: Yup.string().trim().required("Options is required!"),
+            option: Yup.string().trim().required("option_required"),
           })
         ),
     }),
 });
+
 const Create = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const form = useForm({
     initialValues: {
@@ -87,21 +82,17 @@ const Create = () => {
     validate: yupResolver(schema),
   });
 
-  const fieldSize = "md";
   const getQuestionType = () => {
-    const dropdownValue = Object.entries(QuestionType)
-      .splice(0, Object.entries(QuestionType).length / 2)
-      .map(([key, value]) => {
-        return {
-          value: key,
-          label:
-            ReadableEnum[value as keyof typeof ReadableEnum] ??
-            value.toString(),
-        };
-      })
-      .filter((x) => x.value !== QuestionType.Subjective.toString());
-
-    return dropdownValue;
+    return [
+      {
+        value: QuestionType.MultipleChoice.toString(),
+        label: t(`MultipleChoice`),
+      },
+      {
+        value: QuestionType.SingleChoice.toString(),
+        label: t(`SingleChoice`),
+      },
+    ];
   };
 
   const { id } = useParams();
@@ -118,7 +109,8 @@ const Create = () => {
       }
       form.setFieldValue("tags", tags);
       showNotification({
-        message: "Question has been created successfully.",
+        title: t("successful"),
+        message: t("question_created_success"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -163,12 +155,12 @@ const Create = () => {
             <TextInput
               size={"lg"}
               withAsterisk
-              label="Title for question"
-              placeholder="Enter Title of Question"
+              label={t("title_question")}
+              placeholder={t("enter_question_title") as string}
               {...form.getInputProps("name")}
             ></TextInput>
             <Box mt={20}>
-              <Text size={"lg"}>Description</Text>
+              <Text size={"lg"}>{t("description")}</Text>
               <TextEditor formContext={useFormContext} />
             </Box>
 
@@ -182,37 +174,37 @@ const Create = () => {
                 data={tagsList}
                 value={[]}
                 {...form.getInputProps("tags")}
-                getCreateLabel={(query) => `+ Create ${query}`}
+                getCreateLabel={(query) => `+ ${t("create")} ${query}`}
                 onCreate={(query) => {
                   mutate(query);
                 }}
                 size={"lg"}
-                label="Tags"
-                placeholder="Please select Tags."
+                label={t("tags")}
+                placeholder={t("select_tags") as string}
               />
             ) : (
               <Loader />
             )}
 
             <Box mt={20}>
-              <Text size={"lg"}>Hint</Text>
+              <Text size={"lg"}>{t("hint")}</Text>
               <TextEditor label="hints" formContext={useFormContext} />
             </Box>
 
             <Select
               mt={20}
-              placeholder={"Please select question type"}
+              placeholder={t("select_question_type") as string}
               size={"lg"}
               allowDeselect
               withAsterisk
-              label="Question Type"
+              label={t("question_type")}
               {...form.getInputProps("type")}
               data={getQuestionType()}
             ></Select>
             {(form.values.type === QuestionType.MultipleChoice.toString() ||
               form.values.type === QuestionType.SingleChoice.toString()) && (
               <Box>
-                <Text mt={20}>Options</Text>
+                <Text mt={20}>{t("options")}</Text>
                 {form.values.answers.map((x, i) => (
                   <Group key={i} mb={30}>
                     <Checkbox
@@ -260,10 +252,10 @@ const Create = () => {
             )}
             <Group mt={20}>
               <Button type="submit" onClick={() => setIsReset(false)}>
-                Save
+                {t("save")}
               </Button>
               <Button type="submit" onClick={() => setIsReset(true)}>
-                Save and add more
+                {t("save_more")}
               </Button>
             </Group>
           </form>
