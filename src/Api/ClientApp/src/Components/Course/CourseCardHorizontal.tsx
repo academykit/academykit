@@ -39,6 +39,7 @@ import RoutePath from "@utils/routeConstants";
 import errorType from "@utils/services/axiosError";
 import { ICourse, useDeleteCourse } from "@utils/services/courseService";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const CourseCardHorizontal = ({
@@ -70,7 +71,7 @@ const CourseCardHorizontal = ({
   const theme = useMantineTheme();
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.md}px)`);
   const matchesSmall = useMediaQuery(`(min-width: ${theme.breakpoints.xs}px)`);
-
+  const { t } = useTranslation();
   const auth = useAuth();
 
   return (
@@ -98,7 +99,7 @@ const CourseCardHorizontal = ({
         }}
       >
         <DeleteModal
-          title={`Do you want to delete "${course.name}" course?`}
+          title={`${t("want_to_delete")} "${course.name}" ${t("course?")}`}
           open={deleteModal}
           onClose={setDeleteModal}
           onConfirm={handleDelete}
@@ -187,7 +188,7 @@ const CourseCardHorizontal = ({
                       >
                         <NavLink
                           variant="subtle"
-                          label="Manage"
+                          label={t("manage")}
                           component={Link}
                           to={RoutePath.manageCourse.manage(course.slug).route}
                           rightSection={
@@ -198,7 +199,7 @@ const CourseCardHorizontal = ({
                         <NavLink
                           onClick={() => setDeleteModal()}
                           variant="subtle"
-                          label="Delete"
+                          label={t("delete")}
                           component={"button"}
                           rightSection={
                             <IconChevronRight size={12} stroke={1.5} />
@@ -236,13 +237,13 @@ const CourseCardHorizontal = ({
                     <IconCalendar />
                   </Box>
                 ) : (
-                  <Text color="dimmed">Created On:</Text>
+                  <Text color="dimmed">{t("created_on")}</Text>
                 )}
                 <Text color={"dimmed"}>
                   {moment(course.createdOn).format(theme.dateFormat)}
                 </Text>
                 <Text ml="sm" color={"dimmed"}>
-                  Group:
+                  {t("group")}
                 </Text>
                 <TypographyStylesProvider>
                   <Text lineClamp={1} color="dimmed">
