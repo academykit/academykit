@@ -81,5 +81,9 @@
   "change_email": "Change Email",
   "current_password": "Current Password",
   "new_password": "New Password",
-  "placeholder_email": "your@email.com"
+  "placeholder_email": "your@email.com",
+  "no_certificates": "No Certificates Found.",
+  "ceritficate_issue_date": "Certificate Issued Date:",
+  "total": "Total",
+  "percent_completed": "% completed"
 }

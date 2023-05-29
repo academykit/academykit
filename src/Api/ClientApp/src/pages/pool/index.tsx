@@ -92,7 +92,7 @@ const MCQPool = ({
                 >
                   <TextInput
                     label={t("pool_name")}
-                    placeholder={t("enter_poolname") as string}
+                    placeholder={t("enter_pool_name") as string}
                     name="name"
                     {...form.getInputProps("name")}
                   ></TextInput>
@@ -126,7 +126,7 @@ const MCQPool = ({
               <PoolCard search={searchParams} pool={x} key={x.id} />
             ))}
           {pools.data?.items.length < 1 && (
-            <Box mt={10}>No Question Pools Found!</Box>
+            <Box mt={10}>{t("no_pools")}</Box>
           )}
           {pools.data && pagination(pools.data.totalPage)}
         </Box>
