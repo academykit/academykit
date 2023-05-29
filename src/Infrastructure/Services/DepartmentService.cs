@@ -225,7 +225,7 @@
                 }
                 else
                 {
-                    throw new UnauthorizedAccessException("Trainee are not allowed to see department user");
+                    throw new UnauthorizedAccessException(_localizer.GetString("TrainerNotAllowedDepartmentUser"));
                 }
 
 
@@ -233,7 +233,7 @@
 
             catch
             {
-                throw new UnauthorizedAccessException("Cannot excess");
+                throw new UnauthorizedAccessException(_localizer.GetString("CannotAccess"));
             }
         }
     }

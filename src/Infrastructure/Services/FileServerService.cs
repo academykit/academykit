@@ -60,7 +60,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, "An error occurred while attempting to upload file to the server.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to upload file to the server.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UploadFileinServerError"));
             }
         }
 
@@ -109,7 +109,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, "An error occurred while getting file presigned url.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while getting file presigned url.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("FilePresignedUrlError"));
             }
         }
 
@@ -133,7 +133,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, "An error occurred while attempting to upload file to the server.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to upload file to the server.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UploadFileinServerError"));
             }
         }
 

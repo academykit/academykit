@@ -131,7 +131,7 @@
             if (existing.CreatedBy != currentUserId)
             {
                 _logger.LogWarning("User with id: {currentUserId} is not authorized user to edit comment with id :{id}.", currentUserId, commentId);
-                throw new ForbiddenException("Unauthorized user to edit comment.");
+                throw new ForbiddenException(_localizer.GetString("UnauthorizedUserEditComment"));
             }
             existing.Content = model.Content;
             existing.UpdatedBy = currentUserId;
@@ -169,20 +169,20 @@
             if (comment == null)
             {
                 _logger.LogWarning("Comment with id :{id} not found.", id);
-                throw new EntityNotFoundException("Comment not found.");
+                throw new EntityNotFoundException(_localizer.GetString("CommentNotFound"));
             }
             var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
             if (comment.CreatedBy != currentUserId && !isSuperAdminOrAdmin && !isTeacher)
             {
                 _logger.LogWarning("User with id: {currentUserId} is not authorized user to delete comment with id :{id}.", currentUserId, id);
-                throw new ForbiddenException("Unauthorized user to delete comment.");
+                throw new ForbiddenException(_localizer.GetString("UnauthorizedUserDeleteComment"));
             }
             var existReply = await _unitOfWork.GetRepository<CommentReply>().ExistsAsync(p => p.CommentId == comment.Id && !p.IsDeleted).ConfigureAwait(false);
             if (existReply)
             {
                 _logger.LogWarning("Comment with id:{commentId} contains replies to remove comment by user with id: {userId}.", id, currentUserId);
-                throw new ForbiddenException("Please remove the reply before removing comment.");
+                throw new ForbiddenException(_localizer.GetString("RemoveReplyBeforeComment"));
             }
 
             comment.IsDeleted = true;
@@ -255,7 +255,7 @@
             if (user == null)
             {
                 _logger.LogWarning("User with id :{id} not found.", currentUserId);
-                throw new EntityNotFoundException("User not found.");
+                throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
             }
 
             var reply = new CommentReply
@@ -303,13 +303,13 @@
             if (existing == null)
             {
                 _logger.LogWarning("Comment reply with id :{id} and comment with id :{commentId} not found.", replyId, commentId);
-                throw new EntityNotFoundException("Comment reply not found.");
+                throw new EntityNotFoundException(_localizer.GetString("CommentReplyNotFound"));
             }
             if (existing.CreatedBy != currentUserId)
             {
                 _logger.LogWarning("User with id: {currentUserId} is not authorized user to edit reply with id: {replyId} comment with id :{id}.",
                     currentUserId, replyId, commentId);
-                throw new ForbiddenException("Unauthorized user to edit comment.");
+                throw new ForbiddenException(_localizer.GetString("CommentReplyNotFound"));
             }
 
             existing.Content = model.Content;
@@ -352,14 +352,14 @@
             if (commentReply == null)
             {
                 _logger.LogWarning("Comment reply with id :{id} and comment with id :{commentId} not found.", replyId, id);
-                throw new EntityNotFoundException("Comment reply not found.");
+                throw new EntityNotFoundException(_localizer.GetString("CommentReplyNotFound"));
             }
             var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
             if (commentReply.CreatedBy != currentUserId && !isSuperAdminOrAdmin && !isTeacher)
             {
                 _logger.LogWarning("User with id: {currentUserId} is not authorized user to delete comment reply with id :{replyId} having comment with id :{id}.", currentUserId, replyId, id);
-                throw new ForbiddenException("Unauthorized user to delete comment reply.");
+                throw new ForbiddenException(_localizer.GetString("UnauthorizedUserDeleteComment"));
             }
             commentReply.IsDeleted = true;
             commentReply.UpdatedBy = currentUserId;

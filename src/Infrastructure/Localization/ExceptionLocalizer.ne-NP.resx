@@ -261,4 +261,109 @@
   <data name="ZoomLicense" xml:space="preserve">
     <value>जुम लाइसेन्स सफलतापूर्वक हटाइयो।</value>
   </data>
+  <data name="AssignmentSubmission" xml:space="preserve">
+    <value>असाइनमेन्टमा असाइनमेन्ट सबमिशनहरू समावेश छन्।</value>
+  </data>
+  <data name="CannotAccess" xml:space="preserve">
+    <value>अति गर्न मिल्दैन</value>
+  </data>
+  <data name="CertificateNotFound" xml:space="preserve">
+    <value>प्रमाणपत्र फेला परेन।</value>
+  </data>
+  <data name="CertificateNotVerified" xml:space="preserve">
+    <value>प्रमाणपत्र प्रमाणित छैन।</value>
+  </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>टिप्पणी फेला परेन</value>
+  </data>
+  <data name="CommentReplyNotFound" xml:space="preserve">
+    <value>टिप्पणी जवाफ फेला परेन।</value>
+  </data>
+  <data name="FeedBackCannotReSubmit" xml:space="preserve">
+    <value>प्रतिक्रिया पुन: पेस गर्न सकिँदैन।</value>
+  </data>
+  <data name="FeedBackReportNotFound" xml:space="preserve">
+    <value>प्रतिक्रिया रिपोर्ट फेला परेन।</value>
+  </data>
+  <data name="FilePresignedUrlError" xml:space="preserve">
+    <value>फाइल presigned url प्राप्त गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>समूह फेला परेन।</value>
+  </data>
+  <data name="LessonNotFound" xml:space="preserve">
+    <value>पाठ फेला परेन।</value>
+  </data>
+  <data name="LessonNotpublished" xml:space="preserve">
+    <value>पाठ प्रकाशित भएको छैन।</value>
+  </data>
+  <data name="QuestionpoolModifynotallowed" xml:space="preserve">
+    <value>तपाइँलाई यो प्रश्न पूल परिमार्जन गर्न अनुमति छैन।</value>
+  </data>
+  <data name="RecordingFileinS3BucketSave" xml:space="preserve">
+    <value>s3 बाल्टीमा रेकर्डिङ फाइल बचत गर्ने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="RemoveReplyBeforeComment" xml:space="preserve">
+    <value>कृपया टिप्पणी हटाउनु अघि जवाफ हटाउनुहोस्।</value>
+  </data>
+  <data name="S3BucketSave" xml:space="preserve">
+    <value>s3 बाल्टीमा फाइल बचत गर्ने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="S3PreSigned" xml:space="preserve">
+    <value>s3 पूर्व-हस्ताक्षरित फाइल url प्राप्त गर्ने प्रयास गर्दा त्रुटि भयो</value>
+  </data>
+  <data name="SameUserRemoved" xml:space="preserve">
+    <value>प्रयोगकर्ता एउटै प्रयोगकर्ता हटाउन सकिँदैन।</value>
+  </data>
+  <data name="StudentListFetchError" xml:space="preserve">
+    <value>प्रतिक्रिया पेस गर्ने विद्यार्थी सूची ल्याउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="SubmitFeedBackError" xml:space="preserve">
+    <value>प्रतिक्रिया पेश गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="TraineeAsTrainingTrainerNotAdded" xml:space="preserve">
+    <value>प्रशिक्षार्थी भूमिका भएका प्रयोगकर्तालाई प्रशिक्षण प्रशिक्षकको रूपमा थप्न अनुमति छैन।</value>
+  </data>
+  <data name="TrainerNotAllowedDepartmentUser" xml:space="preserve">
+    <value>प्रशिक्षार्थीलाई विभाग प्रयोगकर्ता हेर्न अनुमति छैन।</value>
+  </data>
+  <data name="Trainingaccessnotallowed" xml:space="preserve">
+    <value>तपाइँलाई यो प्रशिक्षण पहुँच गर्न अनुमति छैन।</value>
+  </data>
+  <data name="TrainingAuthorAdded" xml:space="preserve">
+    <value>प्रशिक्षण लेखक थप्न सकिँदैन।</value>
+  </data>
+  <data name="TrainingAuthorRemoved" xml:space="preserve">
+    <value>प्रशिक्षण लेखक हटाउन सकिँदैन।</value>
+  </data>
+  <data name="TrainingCompletePercentage" xml:space="preserve">
+    <value>तालिम पूरा भएको प्रतिशत गणना गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="TrainingModifynotallowed" xml:space="preserve">
+    <value>तपाईंलाई यो प्रशिक्षण परिमार्जन गर्न अनुमति छैन।</value>
+  </data>
+  <data name="TrainingTrainerCannotSubmitFeedback" xml:space="preserve">
+    <value>तालिम प्रशिक्षकले प्रतिक्रिया पेश गर्न सक्दैन।</value>
+  </data>
+  <data name="UnauthorizedUser" xml:space="preserve">
+    <value>अनाधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UnauthorizedUserAddedTrainer" xml:space="preserve">
+    <value>समूह पाठ्यक्रममा प्रशिक्षकको रूपमा थपिने अनधिकृत प्रयोगकर्ता</value>
+  </data>
+  <data name="UnauthorizedUserDeleteComment" xml:space="preserve">
+    <value>टिप्पणी मेटाउन अनाधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UnauthorizedUserEditComment" xml:space="preserve">
+    <value>टिप्पणी सम्पादन गर्न अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UpdateFeedBackError" xml:space="preserve">
+    <value>प्रतिक्रिया अद्यावधिक गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="UploadFileinServerError" xml:space="preserve">
+    <value>सर्भरमा फाइल अपलोड गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="UserFoundasTrainingTrainer" xml:space="preserve">
+    <value>प्रयोगकर्ता पहिले नै प्रशिक्षण प्रशिक्षकको रूपमा फेला परेको छ।</value>
+  </data>
 </root>

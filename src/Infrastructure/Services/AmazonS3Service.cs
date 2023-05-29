@@ -56,7 +56,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to save file in s3 bucket.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to save file in s3 bucket.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("S3BucketSave"));
             }
         }
 
@@ -82,7 +82,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to get s3 pre-signed file url.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to get s3 pre-signed file url");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("S3PreSigned"));
             }
         }
 
@@ -110,7 +110,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to save recording file in s3 bucket.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to save recording file in s3 bucket.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("RecordingFileinS3BucketSave"));
             }
         }
 
