@@ -27,6 +27,7 @@ import {
   useDeleteCourseTeacher,
 } from "@utils/services/courseService";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
@@ -36,10 +37,11 @@ const TeacherCards = ({
   teacher: ICreateCourseTeacher;
 }) => {
   const deleteTeacher = useDeleteCourseTeacher();
+  const { t } = useTranslation();
   const handleDelete = async () => {
     try {
       await deleteTeacher.mutateAsync(id);
-      showNotification({ message: "Course trainer deleted successfully." });
+      showNotification({ message: t("trainer_deleted") });
     } catch (err) {
       const error = errorType(err);
       showNotification({ message: error, color: "red" });
@@ -51,7 +53,7 @@ const TeacherCards = ({
   return (
     <>
       <DeleteModal
-        title={`Do you want to delete trainer?`}
+        title={`${t("delete_trainer?")}`}
         open={deletePopup}
         onClose={setDeletePopUP}
         onConfirm={handleDelete}
@@ -79,6 +81,8 @@ const TeacherCards = ({
 };
 
 const Teacher = () => {
+  const { t } = useTranslation();
+
   const schema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required."),
   });
@@ -101,7 +105,7 @@ const Teacher = () => {
         email: email,
       });
       showNotification({
-        message: "Trainer has been added successfully!",
+        message: t("add_trainer_success"),
       });
       form.reset();
 
@@ -111,13 +115,12 @@ const Teacher = () => {
       showNotification({ message: error, color: "red" });
     }
   };
-
   return (
     <Container fluid>
       <Group sx={{ justifyContent: "space-between", alignItems: "center" }}>
-        <Title>Trainers</Title>
+        <Title>{t("trainers")}</Title>
         <Button onClick={() => toggleAddForm()}>
-          {!showAddForm ? "Add Trainer" : "Cancel"}
+          {!showAddForm ? t("add_trainer") : t("cancel")}
         </Button>
       </Group>
       <Transition
@@ -131,12 +134,12 @@ const Teacher = () => {
             <form onSubmit={form.onSubmit(onSubmitForm)}>
               <Group>
                 <TextInput
-                  placeholder="Enter the email"
+                  placeholder={t("enter_the_email") as string}
                   name="email"
                   type={"email"}
                   {...form.getInputProps("email")}
                 ></TextInput>
-                <Button type="submit">Add</Button>
+                <Button type="submit">{t("add")}</Button>
               </Group>
             </form>
           </Box>

@@ -21,6 +21,7 @@ import { useForm } from "@mantine/form";
 import errorType from "@utils/services/axiosError";
 import { IconDragDrop } from "@tabler/icons";
 import { CourseStatus } from "@utils/enums";
+import { useTranslation } from "react-i18next";
 
 const useStyle = createStyles((theme) => ({
   section: {
@@ -35,17 +36,14 @@ const EditSection = () => {
   const { id: slug } = useParams();
 
   const getCourseDetails: any = useCourseDescription(slug as string);
-
+  const { t } = useTranslation();
   return (
     <Container fluid>
       <Grid mt={20}>
         <Grid.Col span={section?.matches ? 10 : 12}>
-          <Title mb={10}>Sections and Lessons</Title>
+          <Title mb={10}>{t("sections_and_lessons")}</Title>
           <Text>
-            You can add lessons and group them into sections. Add section, then
-            add lessons within the section. You can arrange the order of the
-            sections and lessons by dragging & dropping them by using the
-            "Sorting Icon" {<IconDragDrop />}
+            {t("group_lessons_sections")} {<IconDragDrop />}
           </Text>
         </Grid.Col>
       </Grid>
@@ -71,7 +69,7 @@ const EditSection = () => {
                 section?.setAddLessonClick(false);
               }}
             >
-              Add New Section
+              {t("add_new_section")}
             </Button>
           ) : (
             <AddSectionForm slug={slug as string} />
@@ -90,6 +88,7 @@ const AddSectionForm = ({ slug }: { slug: string }) => {
     },
   });
   const addSection = useCreateSection(slug);
+  const { t } = useTranslation();
 
   return (
     <form
@@ -103,14 +102,14 @@ const AddSectionForm = ({ slug }: { slug: string }) => {
             section?.setActiveSection(data.data.slug);
             section?.setIsAddSection(!section?.isAddSection);
             showNotification({
-              message: "Section Added successfully!",
+              message: t("section_add_success") as string,
             });
           } catch (error) {
             const err = errorType(error);
             showNotification({
               message: err,
               color: "red",
-              title: "Error!",
+              title: t("error"),
             });
           }
           form.reset();
@@ -118,7 +117,7 @@ const AddSectionForm = ({ slug }: { slug: string }) => {
       })}
     >
       <InlineInput
-        placeholder="Enter section name"
+        placeholder={t("section_name_placeholder")}
         onCloseEdit={() => section?.setIsAddSection(!section?.isAddSection)}
         {...form.getInputProps("name")}
       ></InlineInput>
