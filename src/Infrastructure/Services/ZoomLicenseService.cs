@@ -91,14 +91,14 @@
         /// </summary>
         /// <param name="zoomLicenseIdRequestModel"> the instance of <see cref="LiveClassLicenseRequestModel"/></param>
         /// <returns>the instance of <see cref="ZoomLicenseResponseModel"/></returns>
-        public async Task<IList<ZoomLicenseResponseModel>> GetActiveLicensesAsync(LiveClassLicenseRequestModel zoomLicenseIdRequestModel)
+        public async Task<IList<ZoomLicenseResponseModel>> GetActiveLicensesAsync(LiveClassLicenseRequestModel model)
         {
             try
             {
                 var zoomLicenses = await _unitOfWork.GetRepository<ZoomLicense>().GetAllAsync(
                 predicate: p => p.IsActive).ConfigureAwait(false);
-                var startDate = zoomLicenseIdRequestModel.StartDateTime.Date;
-                var endTime = zoomLicenseIdRequestModel.StartDateTime.AddMinutes(zoomLicenseIdRequestModel.Duration);
+                var startDate = model.StartDateTime.Date;
+                var endTime = model.StartDateTime.AddMinutes(model.Duration);
                 var response = new List<ZoomLicenseResponseModel>();
                 var meetingsWithStartDate = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(predicate: p => p.StartDate.Value.Date == startDate).ConfigureAwait(false);
                 if (meetingsWithStartDate.Count == 0)
@@ -113,10 +113,10 @@
                     }));
                     return response;
                 }
-                if (!string.IsNullOrEmpty(zoomLicenseIdRequestModel.LessonIdentity))
+                if (!string.IsNullOrEmpty(model.LessonIdentity))
                 {
-                    var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.Lesson.Id.ToString() == zoomLicenseIdRequestModel.LessonIdentity
-                    || p.Lesson.Slug == zoomLicenseIdRequestModel.LessonIdentity, include: src => src.Include(x => x.Lesson)).ConfigureAwait(false);
+                    var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.Lesson.Id.ToString() == model.LessonIdentity
+                    || p.Lesson.Slug == model.LessonIdentity, include: src => src.Include(x => x.Lesson)).ConfigureAwait(false);
                     if (meetingsWithStartDate.Any(x => x.Id == meeting.Id) == true)
                     {
                         meetingsWithStartDate.Add(meeting);
@@ -124,8 +124,8 @@
                 }
 
                 var hasOverlappingMeetings = meetingsWithStartDate.Where(m =>
-                (m.StartDate.HasValue && m.StartDate.Value >= zoomLicenseIdRequestModel.StartDateTime && m.StartDate.Value < endTime) ||
-                (m.StartDate.HasValue && m.StartDate.Value.AddMinutes(m.Duration) > zoomLicenseIdRequestModel.StartDateTime && m.StartDate.Value.AddMinutes(m.Duration) <= endTime)
+                (m.StartDate.HasValue && m.StartDate.Value >= model.StartDateTime && m.StartDate.Value < endTime) ||
+                (m.StartDate.HasValue && m.StartDate.Value.AddMinutes(m.Duration) > model.StartDateTime && m.StartDate.Value.AddMinutes(m.Duration) <= endTime)
                 );
                 if (hasOverlappingMeetings.ToList().Count == 0)
                 {
