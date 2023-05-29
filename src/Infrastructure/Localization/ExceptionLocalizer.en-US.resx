@@ -282,6 +282,9 @@
   <data name="GeneralSettingNotFound" xml:space="preserve">
     <value>General setting was not found.</value>
   </data>
+  <data name="GenerateZakTokenError" xml:space="preserve">
+    <value>An error occurred while attempting to generate zak token.</value>
+  </data>
   <data name="OnlySameUserOrAdmin" xml:space="preserve">
     <value>Only same user is allowed to update user or by admin only.</value>
   </data>
@@ -293,6 +296,9 @@
   </data>
   <data name="SMTPSettingNotFound" xml:space="preserve">
     <value>SMTP setting was not found.</value>
+  </data>
+  <data name="TimeSpanAlreadyUsed" xml:space="preserve">
+    <value>Time span is already used, try another instance.</value>
   </data>
   <data name="TraineeRoleNotAllowed" xml:space="preserve">
     <value>User with trainee role is not allowed to add as exam pool creator.</value>

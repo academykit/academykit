@@ -279,6 +279,9 @@
   <data name="GeneralSettingNotFound" xml:space="preserve">
     <value>सामान्य सेटिङ फेला परेन।</value>
   </data>
+  <data name="GenerateZakTokenError" xml:space="preserve">
+    <value>zak टोकन उत्पन्न गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
   <data name="OnlySameUserOrAdmin" xml:space="preserve">
     <value>केवल एउटै प्रयोगकर्तालाई प्रयोगकर्ता वा प्रशासक द्वारा मात्र अद्यावधिक गर्न अनुमति छ।</value>
   </data>
@@ -290,6 +293,9 @@
   </data>
   <data name="SMTPSettingNotFound" xml:space="preserve">
     <value>SMTP सेटिङ फेला परेन।</value>
+  </data>
+  <data name="TimeSpanAlreadyUsed" xml:space="preserve">
+    <value>समय अवधि पहिले नै प्रयोग गरिएको छ, अर्को उदाहरण प्रयास गर्नुहोस्।</value>
   </data>
   <data name="TraineeRoleNotAllowed" xml:space="preserve">
     <value>प्रशिक्षार्थी भूमिका भएका प्रयोगकर्तालाई परीक्षा पूल सिर्जनाकर्ताको रूपमा थप्न अनुमति छैन।</value>

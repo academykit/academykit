@@ -282,6 +282,9 @@
   <data name="GeneralSettingNotFound" xml:space="preserve">
     <value>一般設定が見つかりませんでした</value>
   </data>
+  <data name="GenerateZakTokenError" xml:space="preserve">
+    <value>ZAK トークンを生成しようとしたときにエラーが発生しました</value>
+  </data>
   <data name="OnlySameUserOrAdmin" xml:space="preserve">
     <value>同じユーザーのみがユーザーまたは管理者のみを更新できます</value>
   </data>
@@ -293,6 +296,9 @@
   </data>
   <data name="SMTPSettingNotFound" xml:space="preserve">
     <value>SMTP設定が見つかりませんでした</value>
+  </data>
+  <data name="TimeSpanAlreadyUsed" xml:space="preserve">
+    <value>期間はすでに使用されています。別のインスタンスを試してください</value>
   </data>
   <data name="TraineeRoleNotAllowed" xml:space="preserve">
     <value>研修生ロールを持つユーザーは試験プール作成者として追加できません</value>
