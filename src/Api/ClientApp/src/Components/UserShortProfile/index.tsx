@@ -12,6 +12,7 @@ import { PoolRole, UserRole } from "@utils/enums";
 import { getInitials } from "@utils/getInitialName";
 import { IUser } from "@utils/services/types";
 import { CSSProperties, FC } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 type Props = {
@@ -27,6 +28,7 @@ const UserShortProfile: FC<Props> = ({
   direction = undefined,
   page = "Pool",
 }) => {
+  const { t } = useTranslation();
   return (
     <Anchor
       component={Link}
@@ -42,11 +44,7 @@ const UserShortProfile: FC<Props> = ({
             {fullName}
           </Text>
           <Text size={"sm"} color={"dimmed"}>
-            {page === "Pool"
-              ? PoolRole[role]
-              : role === UserRole.SuperAdmin
-              ? "Super Admin"
-              : UserRole[role]}
+            {page === "Pool" ? t(`${PoolRole[role]}`) : t(`${UserRole[role]}}`)}
           </Text>
         </Box>
       </Flex>

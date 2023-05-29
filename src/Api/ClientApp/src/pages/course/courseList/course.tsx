@@ -10,25 +10,7 @@ import { CourseUserStatus } from "@utils/enums";
 
 import { Link } from "react-router-dom";
 import CourseList from "./component/List";
-
-const filterValue = [
-  {
-    value: CourseUserStatus.Author.toString(),
-    label: "Author",
-  },
-  {
-    value: CourseUserStatus.Enrolled.toString(),
-    label: "Enrolled",
-  },
-  {
-    value: CourseUserStatus.NotEnrolled.toString(),
-    label: "Not Enrolled",
-  },
-  {
-    value: CourseUserStatus.Teacher.toString(),
-    label: "Trainer",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 const CoursePage = ({
   filterComponent,
@@ -39,6 +21,26 @@ const CoursePage = ({
   const { data, isSuccess, isLoading } = useCourse(searchParams);
   const auth = useAuth();
   const role = auth?.auth?.role ?? UserRole.Trainee;
+  const { t } = useTranslation();
+
+  const filterValue = [
+    {
+      value: CourseUserStatus.Author.toString(),
+      label: t("author"),
+    },
+    {
+      value: CourseUserStatus.Enrolled.toString(),
+      label: t("enrolled"),
+    },
+    {
+      value: CourseUserStatus.NotEnrolled.toString(),
+      label: t("not_enrolled"),
+    },
+    {
+      value: CourseUserStatus.Teacher.toString(),
+      label: t("trainer"),
+    },
+  ];
   return (
     <Container fluid>
       <Container fluid>
@@ -49,10 +51,10 @@ const CoursePage = ({
             alignItems: "center",
           }}
         >
-          {searchComponent("Search for trainings")}
+          {searchComponent(t("search_trainings") as string)}
           {filterComponent(
             filterValue,
-            "Enrollment Status",
+            t("enrollment_status"),
             "Enrollmentstatus"
           )}
           {/* {role != UserRole.Trainee && (
@@ -70,7 +72,7 @@ const CoursePage = ({
         (data.totalCount >= 1 ? (
           <CourseList role={role} courses={data.items} search={searchParams} />
         ) : (
-          <Box>No Trainings Found!</Box>
+          <Box>{t("no_trainings_found")}</Box>
         ))}
       {isLoading && <Loader />}
       {data && pagination(data.totalPage)}

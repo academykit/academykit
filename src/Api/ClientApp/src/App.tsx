@@ -5,7 +5,7 @@ import {
 } from "@mantine/core";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NotificationsProvider } from "@mantine/notifications";
 import AppRoutes from "@routes/AppRoutes";
 import { AuthProvider } from "@context/AuthProvider";
@@ -16,6 +16,7 @@ import ErrorBoundary from "@components/ErrorBoundry";
 import { BrowserRouter } from "react-router-dom";
 import ScrollToTop from "@components/ScrollToTop";
 import "./App.css";
+import { useTranslation } from "react-i18next";
 
 const App = () => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>(
@@ -28,6 +29,13 @@ const App = () => {
     localStorage.setItem(COLOR_SCHEME_KEY, nextColorScheme);
   };
   const queryClient = new QueryClient();
+  const { i18n } = useTranslation();
+
+  const lang = localStorage.getItem("lang");
+
+  useEffect(() => {
+    i18n.changeLanguage(lang ?? "en");
+  }, [lang]);
 
   return (
     <ColorSchemeProvider

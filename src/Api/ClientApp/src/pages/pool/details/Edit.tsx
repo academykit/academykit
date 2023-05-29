@@ -26,6 +26,7 @@ import {
 } from "@utils/services/questionService";
 import { useAddTag, useTags } from "@utils/services/tagService";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 const [FormProvider, useFormContext, useForm] =
@@ -74,7 +75,7 @@ const schema = Yup.object().shape({
     }),
 });
 const Create = () => {
-  const navigate = useNavigate();
+  const { t } = useTranslation();
   const { id, slug } = useParams();
   const { mutate, data: addTagData, isSuccess } = useAddTag();
   const getQuestion = useGetQuestion(id as string, slug as string);
@@ -97,17 +98,16 @@ const Create = () => {
 
   const fieldSize = "md";
   const getQuestionType = () => {
-    return Object.entries(QuestionType)
-      .splice(0, Object.entries(QuestionType).length / 2)
-      .map(([key, value]) => {
-        return {
-          value: key,
-          label:
-            ReadableEnum[value as keyof typeof ReadableEnum] ??
-            value.toString(),
-        };
-      })
-      .filter((x) => x.value !== QuestionType.Subjective.toString());
+    return [
+      {
+        value: QuestionType.MultipleChoice.toString(),
+        label: t(`MultipleChoice`),
+      },
+      {
+        value: QuestionType.SingleChoice.toString(),
+        label: t(`SingleChoice`),
+      },
+    ];
   };
 
   const onSubmit = async (data: IAddQuestionType) => {
@@ -119,8 +119,8 @@ const Create = () => {
       });
 
       showNotification({
-        title: "Success",
-        message: "Question has been Edited successfully",
+        title: t("successful"),
+        message: t("question_edit_success"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -186,12 +186,12 @@ const Create = () => {
             <TextInput
               size={fieldSize}
               withAsterisk
-              label="Title for question"
-              placeholder="Enter Title of Question"
+              label={t("title_question")}
+              placeholder={t("enter_question_title") as string}
               {...form.getInputProps("name")}
             ></TextInput>
             <Box mt={20}>
-              <Text size={"md"}>Description</Text>
+              <Text size={"md"}>{t("description")}</Text>
               <TextEditor label="description" formContext={useFormContext} />
             </Box>
 
@@ -210,30 +210,30 @@ const Create = () => {
                   mutate(query);
                 }}
                 size={"md"}
-                label="Tags"
-                placeholder="Please select Tags."
+                label={t("tags")}
+                placeholder={t("select_tags") as string}
               />
             ) : (
               <Loader />
             )}
 
             <Box mt={20}>
-              <Text size={"md"}>Hint</Text>
+              <Text size={"md"}>{t("hint")}</Text>
               <TextEditor label="hints" formContext={useFormContext} />
             </Box>
             <Select
               mt={20}
-              placeholder={"Please Question Type"}
+              placeholder={t("select_question_type") as string}
               size={fieldSize}
               withAsterisk
-              label="Question Type"
+              label={t("question_type")}
               data={getQuestionType()}
               {...form.getInputProps("type")}
             ></Select>
             {(form.values.type === QuestionType.MultipleChoice.toString() ||
               form.values.type === QuestionType.SingleChoice.toString()) && (
               <Box>
-                <Text mt={20}>Options</Text>
+                <Text mt={20}>{t("options")}</Text>
                 {form.values.answers.map((x, i) => (
                   <Group key={i} mb={30}>
                     <Checkbox
@@ -282,7 +282,7 @@ const Create = () => {
             )}
             <Group mt={20}>
               <Button size="sm" type="submit" loading={editQuestion.isLoading}>
-                Save
+                {t("save")}
               </Button>
             </Group>
           </form>

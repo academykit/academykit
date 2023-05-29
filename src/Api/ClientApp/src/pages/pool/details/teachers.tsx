@@ -18,6 +18,7 @@ import {
 
 import { useParams } from "react-router-dom";
 import TeacherCard from "./Component/TeacherCard";
+import { useTranslation } from "react-i18next";
 
 const MCQTeacher = () => {
   const form = useForm({
@@ -28,6 +29,7 @@ const MCQTeacher = () => {
   const slug = useParams();
   const getPoolsTeacher = usePoolsTeacher(slug.id as string);
   const createPoolTeacher = useCreateTeacherPool(slug.id as string);
+  const { t } = useTranslation();
 
   const [showAddForm, toggleAddForm] = useToggle();
 
@@ -47,9 +49,9 @@ const MCQTeacher = () => {
   return (
     <Container fluid>
       <Group sx={{ justifyContent: "space-between", alignItems: "center" }}>
-        <Title>Trainers</Title>
+        <Title>{t("trainers")}</Title>
         <Button onClick={() => toggleAddForm()}>
-          {!showAddForm ? "Add Trainer" : "Cancel"}
+          {!showAddForm ? t("add_trainer") : t("cancel")}
         </Button>
       </Group>
       <Transition
@@ -63,13 +65,13 @@ const MCQTeacher = () => {
             <form onSubmit={form.onSubmit(onSubmitForm)}>
               <Group>
                 <TextInput
-                  placeholder="Enter the email"
+                  placeholder={t("enter_email_trainer") as string}
                   name="email"
                   type={"email"}
                   {...form.getInputProps("email")}
                 ></TextInput>
                 <Button type="submit" loading={createPoolTeacher.isLoading}>
-                  Add
+                  {t("add")}
                 </Button>
               </Group>
             </form>

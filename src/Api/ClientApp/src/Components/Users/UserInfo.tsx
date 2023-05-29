@@ -16,6 +16,7 @@ import { useUpdateUser } from "@utils/services/adminService";
 import { useReAuth } from "@utils/services/authService";
 import errorType from "@utils/services/axiosError";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 
@@ -105,22 +106,20 @@ const UserInfo = () => {
       showNotification({ message: error, title: "Error!", color: "red" });
     }
   };
-
+  const { t } = useTranslation();
   return (
     <Paper shadow={"xl"} radius="md" p="xl" withBorder>
-      Profile Section
+      {t("profile_section")}
       <Divider mb={10} />
       <Text variant="text" size={"xl"}>
-        Introduction
+        {t("introduction")}
       </Text>
-      <div style={{ marginBottom: "3px" }}>
-        Let other learners and instructors recognize you.
-      </div>
+      <div style={{ marginBottom: "3px" }}>{t("recognize_you")}</div>
       <FormProvider form={formData}>
         <form onSubmit={formData.onSubmit(handleSubmit)}>
           <AvatarEditor
             url={imageURL}
-            label={"image"}
+            label={t("image") as string}
             formContext={useFormContext}
           />
 
@@ -128,26 +127,26 @@ const UserInfo = () => {
             <Grid.Col xs={6} lg={4}>
               <TextInput
                 withAsterisk
-                label="First Name"
-                placeholder="Your First Name"
+                label={t("firstname") as string}
+                placeholder={t("your_firstname") as string}
                 name="firstName"
                 {...formData.getInputProps("firstName")}
               />
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
-                label="Middle Name"
+                label={t("middlename") as string}
                 name="middleName"
-                placeholder="Your Middle Name"
+                placeholder={t("your_middlename") as string}
                 {...formData.getInputProps("middleName")}
               />
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
                 withAsterisk
-                label="Last Name"
+                label={t("lastname")}
                 name="lastName"
-                placeholder="Your Last Name"
+                placeholder={t("your_lastname") as string}
                 {...formData.getInputProps("lastName")}
               />
             </Grid.Col>
@@ -155,46 +154,43 @@ const UserInfo = () => {
               <TextInput
                 withAsterisk
                 disabled
-                label="Email"
+                label={t("email")}
                 type="email"
                 name="email"
-                placeholder="Your Email Name"
+                placeholder={t("your_email") as string}
                 {...formData.getInputProps("email")}
               />
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
                 name="mobileNumber"
-                label="Mobile Number"
-                placeholder="Your Phone number"
+                label={t("mobilenumber")}
+                placeholder={t("your_number") as string}
                 {...formData.getInputProps("mobileNumber")}
               />
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
-                label="Profession"
+                label={t("profession")}
                 name="profession"
-                placeholder="Your Profession"
+                placeholder={t("your_profession") as string}
                 {...formData.getInputProps("profession")}
               />
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
-                label="Address"
-                placeholder="Your Address "
+                label={t("address")}
+                placeholder={t("your_address") as string}
                 {...formData.getInputProps("address")}
               />
             </Grid.Col>
             <Grid.Col xs={12} lg={12}>
-              <Text size="sm">Bio</Text>
-              <RichTextEditor
-                placeholder="Your bio "
-                {...formData.getInputProps("bio")}
-              />
+              <Text size="sm">{t("bio")}</Text>
+              <RichTextEditor {...formData.getInputProps("bio")} />
             </Grid.Col>
             <Grid.Col lg={12}>
               <Button loading={updateUser.isLoading} type="submit">
-                Save
+                {t("save")}
               </Button>
             </Grid.Col>
           </Grid>

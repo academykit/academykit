@@ -32,8 +32,7 @@ export enum ReadableEnum {
   SingleChoice = "Single Choice",
   MultipleChoice = "Multiple Choice",
   LiveClass = "Live Class",
-  RecordedVideo= "Recordings"
-
+  RecordedVideo = "Recordings",
 }
 
 export enum LessonType {
@@ -81,4 +80,10 @@ export enum EFIleUploadType {
 export enum LessonFileType {
   File = 1,
   Video = 2,
+}
+
+export enum LanguageString {
+  ne = "ne-NP",
+  en = "en-US",
+  ja = "ja-JP",
 }
