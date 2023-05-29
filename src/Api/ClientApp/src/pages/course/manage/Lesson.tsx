@@ -19,6 +19,7 @@ import {
   ILessonStats,
   useGetLessonStatistics,
 } from "@utils/services/manageCourseService";
+import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
 function TableReviews() {
@@ -27,6 +28,7 @@ function TableReviews() {
 
   const getLessonStatistics = useGetLessonStatistics(course_id);
 
+  const { t } = useTranslation();
   const Rows = ({ item }: { item: ILessonStats }) => {
     return (
       <tr key={item?.id}>
@@ -49,11 +51,11 @@ function TableReviews() {
           <Center>
             {item?.isMandatory ? (
               <Badge color="green" variant="outline">
-                yes
+                {t("yes")}
               </Badge>
             ) : (
               <Badge color="red" variant="outline">
-                no
+                {t("no")}
               </Badge>
             )}
           </Center>
@@ -65,7 +67,9 @@ function TableReviews() {
             justifyContent: "center",
           }}
         >
-          <Tooltip label={`View Details for ${item.name} lesson`}>
+          <Tooltip
+            label={`${t("view_details_for")} ${item.name} ${t("lesson")}`}
+          >
             <Button component={Link} variant="subtle" to={`${item.slug}`}>
               <IconEye />
             </Button>
@@ -78,8 +82,7 @@ function TableReviews() {
   if (getLessonStatistics.isLoading) return <Loader />;
 
   if (getLessonStatistics.data?.length === 0)
-    return <Box>No Lessons found</Box>;
-
+    return <Box>{t("no_lessons")}</Box>;
   return (
     <ScrollArea>
       <Paper>
@@ -91,16 +94,16 @@ function TableReviews() {
         >
           <thead>
             <tr>
-              <th>Lesson Name</th>
-              <th>Lesson Type</th>
+              <th>{t("lesson_name")}</th>
+              <th>{t("lesson_type")}</th>
               <th>
-                <Center>Progress</Center>
+                <Center>{t("progress")}</Center>
               </th>
               <th>
-                <Center>Is mandatory</Center>
+                <Center>{t("is_mandatory")}</Center>
               </th>
               <th>
-                <Center>Action</Center>
+                <Center>{t("action")}</Center>
               </th>
             </tr>
           </thead>

@@ -16,19 +16,29 @@ import {
   useZoomSetting,
 } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { TFunction } from "i18next";
+import { useTranslation } from "react-i18next";
 
 const mapData = {
-  apiKey: "API Key",
-  apiSecret: "API Secret",
-  sdkKey: "SDK Key",
-  sdkSecret: "SDK Secret",
-  webhookSecret: "Webhook Secret",
-  webhookVerification: "Webhook Verification Key",
-  isRecordingEnabled: "Recording Enabled?",
+  apiKey: "zoom_api_key",
+  apiSecret: "zoom_api_secret",
+  sdkKey: "zoom_sdk_key",
+  sdkSecret: "zoom_sdk_secret",
+  webhookSecret: "zoom_webhook_secret",
+  webhookVerification: "zoom_webhook_verification",
+  isRecordingEnabled: "zoom_recording_enabled",
 };
 
-const Row = ({ label, data }: { label: string; data: string }) => {
+const Row = ({
+  label,
+  data,
+  t,
+}: {
+  label: string;
+  data: string;
+  t: TFunction;
+}) => {
   return (
     <Box mt={10} ml={10}>
       {data && (
@@ -37,7 +47,7 @@ const Row = ({ label, data }: { label: string; data: string }) => {
             {
               //@ts-ignore
 
-              mapData[label]
+              t(`${mapData[label]}`)
             }
           </Text>
           <Text fz="sm">{String(data)}</Text>
@@ -47,17 +57,11 @@ const Row = ({ label, data }: { label: string; data: string }) => {
   );
 };
 
-const ReadonlyData = ({
-  data,
-  form,
-}: {
-  data: IZoomSetting | undefined;
-  form: any;
-}) => {
+const ReadonlyData = ({ t, form }: { t: TFunction; form: any }) => {
   return (
     <>
       {Object.keys(form?.values).map((key, index) => (
-        <Row key={index} label={key} data={form?.values[key]} />
+        <Row key={index} label={key} data={form?.values[key]} t={t} />
       ))}
     </>
   );
@@ -68,6 +72,7 @@ const ZoomSettings = () => {
   const updateZoom = useUpdateZoomSetting(zoom.data?.data.id);
   const [isChecked, setIsChecked] = useState<boolean | undefined>();
   const [edit, setEdit] = useState(true);
+  const { t } = useTranslation();
 
   const form = useForm({
     initialValues: {
@@ -123,51 +128,51 @@ const ZoomSettings = () => {
             }}
           >
             <TextInput
-              label="API Key"
+              label={t("zoom_api_key")}
               name="apiKey"
-              placeholder="Please enter your API Key"
+              placeholder={t("enter_zoom_api_key") as string}
               mb={10}
               {...form.getInputProps("apiKey")}
             />
             <TextInput
-              label="API Secret"
+              label={t("zoom_api_secret")}
               name="apiSecret"
-              placeholder="Please enter your client secret"
+              placeholder={t("enter_zoom_api_secret") as string}
               mb={10}
               {...form.getInputProps("apiSecret")}
             />
             <TextInput
-              label="SDK Key"
+              label={t("zoom_sdk_key")}
               name="sdkKey"
-              placeholder="Please enter your SDK Key"
+              placeholder={t("enter_zoom_sdk_key") as string}
               mb={10}
               {...form.getInputProps("sdkKey")}
             />
             <TextInput
-              label="SDK Secret"
+              label={t("zoom_sdk_secret")}
               name="sdkSecret"
-              placeholder="Please enter your SDK Secret"
+              placeholder={t("enter_zoom_sdk_secret") as string}
               mb={10}
               {...form.getInputProps("sdkSecret")}
             />
             <TextInput
-              label="Webhook Secret"
+              label={t("zoom_webhook_secret")}
               name="webhookSecret"
-              placeholder="Please enter your Webhook Secret"
+              placeholder={t("enter_zoom_webhook_secret") as string}
               mb={10}
               {...form.getInputProps("webhookSecret")}
             />
             <TextInput
-              label="Webhook Verification Key"
+              label={t("zoom_webhook_verification")}
               name="webhookVerification"
-              placeholder="Please enter your Webhook verification key"
+              placeholder={t("enter_zoom_webhook_verification") as string}
               mb={10}
               {...form.getInputProps("webhookVerification")}
             />
             <Switch
               sx={{ input: { cursor: "pointer" } }}
               checked={isChecked}
-              label="Recording Enabled"
+              label={t("zoom_recording_enabled")}
               labelPosition="left"
               onChange={(e) => {
                 setIsChecked(e.currentTarget.checked);
@@ -179,10 +184,15 @@ const ZoomSettings = () => {
             />
           </Container>
         )}
-        {edit && <ReadonlyData data={zoom.data?.data} form={form} />}
+        {edit && <ReadonlyData form={form} t={t} />}
         <Group mt={30} mb={15} ml={10}>
-          {edit && <Button onClick={() => setEdit(!edit)}>Edit</Button>}
-          {!edit && <Button type="submit">Save</Button>}
+          {edit && <Button onClick={() => setEdit(!edit)}>{t("edit")}</Button>}
+          {!edit && <Button type="submit">{t("save")}</Button>}
+          {!edit && (
+            <Button onClick={() => setEdit(true)} variant="outline">
+              {t("cancel")}
+            </Button>
+          )}
         </Group>
       </form>
     </Paper>

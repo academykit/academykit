@@ -17,6 +17,7 @@ import AdminNav from "./Component/AdminNav";
 import AdminViewCertificate from "./Component/training/adminViewCertificate";
 import CertificateList from "./Component/training/certificateList";
 import MyTrainingInternal from "./Component/training/myTrainingInternal";
+import { useTranslation } from "react-i18next";
 
 const AdminCourseList = lazyWithRetry(() => import("./course"));
 const Department = lazyWithRetry(() => import("./department"));
@@ -73,6 +74,7 @@ const AdminRoutesChild = () => {
 const MyTrainings = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
   return (
     <Container fluid>
@@ -82,8 +84,10 @@ const MyTrainings = () => {
         onTabChange={(value) => navigate(`${value}`)}
       >
         <Tabs.List>
-          <Tabs.Tab value="/settings/mytraining">Internal</Tabs.Tab>
-          <Tabs.Tab value="/settings/mytraining/external">External</Tabs.Tab>
+          <Tabs.Tab value="/settings/mytraining">{t("internal")}</Tabs.Tab>
+          <Tabs.Tab value="/settings/mytraining/external">
+            {t("external")}
+          </Tabs.Tab>
         </Tabs.List>
       </Tabs>
       <Suspense fallback={<Loader />}>

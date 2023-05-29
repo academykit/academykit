@@ -144,7 +144,7 @@ const CourseCardHorizontal = ({
             <Group sx={{ justifyContent: "space-between" }}>
               <Group spacing={10}>
                 <Badge color="pink" variant="light">
-                  {CourseLanguage[course.language]}
+                  {t(`${CourseLanguage[course.language]}`)}
                 </Badge>
                 <Badge color="blue" variant="light">
                   {course?.levelName}
@@ -157,7 +157,8 @@ const CourseCardHorizontal = ({
                   course.userStatus === CourseUserStatus.Teacher) && (
                   <>
                     <Badge ml={10} color={color(course?.status)}>
-                      {CourseStatus[course?.status]}
+                  {t(`${CourseStatus[course?.status]}`)}
+
                     </Badge>
                   </>
                 )}

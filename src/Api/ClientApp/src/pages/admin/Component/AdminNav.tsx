@@ -43,7 +43,7 @@ const AdminNav = () => {
       role: UserRole.Admin,
     },
     {
-      label: t("smpt"),
+      label: t("smtp"),
       to: RoutePath.settings.smtp(),
       role: UserRole.Admin,
     },

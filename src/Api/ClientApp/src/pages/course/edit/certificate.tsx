@@ -29,6 +29,7 @@ import errorType from "@utils/services/axiosError";
 import { useEffect } from "react";
 import moment from "moment";
 import downloadImage from "@utils/downloadImage";
+import { useTranslation } from "react-i18next";
 
 const schema = Yup.object().shape({
   title: Yup.string().required("Course Title is required."),
@@ -76,7 +77,7 @@ const Certificate = () => {
   }, [getCertificateDetails.isSuccess]);
 
   const [addSignatureForm, setAddSignatureForm] = useToggle();
-
+  const { t } = useTranslation();
   const handleSubmit = async (values: any) => {
     const isEditing = !(
       getCertificateDetails.isError || !getCertificateDetails.data
@@ -92,15 +93,15 @@ const Certificate = () => {
         id: params.id as string,
       });
       showNotification({
-        title: "Success",
-        message: `Certificate Details ${
-          isEditing ? "Updated" : "Added"
+        title: t("success"),
+        message: `${t("certificate_details")} ${
+          isEditing ? t("updated") : t("added")
         } successfully!`,
       });
     } catch (error) {
       const err = errorType(error);
       showNotification({
-        title: "Error",
+        title: t("error"),
         message: err,
         color: "red",
       });
@@ -109,11 +110,8 @@ const Certificate = () => {
 
   return (
     <>
-      <Title>Certificates</Title>
-      <Text>
-        You can add the contents and signature of essential persons regarding
-        the certificates here by viewing the default template.
-      </Text>
+      <Title>{t("certificates")}</Title>
+      <Text>{t("certificates_description")}</Text>
       <Box mt={20}>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <SimpleGrid
@@ -146,7 +144,7 @@ const Certificate = () => {
                         display: "flex",
                       }}
                     >
-                      <Tooltip label="View Certificate">
+                      <Tooltip label={t("view_certificate")}>
                         <ActionIcon
                           variant="default"
                           onClick={() => window.open(data?.sampleUrl)}
@@ -156,7 +154,7 @@ const Certificate = () => {
                           <IconEye />
                         </ActionIcon>
                       </Tooltip>
-                      <Tooltip label="Download Certificate">
+                      <Tooltip label={t("download_certificate")}>
                         <ActionIcon
                           variant="default"
                           onClick={() => {
@@ -175,8 +173,7 @@ const Certificate = () => {
               {getCertificateDetails.isSuccess &&
                 getCertificateDetails.data?.data?.sampleUrl && (
                   <Text size={"xs"} c="dimmed">
-                    Note: You need atleast one signature to be able to issue to
-                    trainee.
+                    {t("certificate_note")}
                   </Text>
                 )}
             </Box>
@@ -185,9 +182,9 @@ const Certificate = () => {
               <Flex>
                 <TextInput
                   w={"100%"}
-                  label="Title"
+                  label={t("title")}
                   withAsterisk
-                  placeholder="Course Title for certificate"
+                  placeholder={t("course_certificate_title") as string}
                   {...form.getInputProps("title")}
                 />
               </Flex>
@@ -195,8 +192,8 @@ const Certificate = () => {
                 <Grid.Col span={6}>
                   <DatePicker
                     w={"100%"}
-                    placeholder="Pick Starting Date"
-                    label="Start date"
+                    placeholder={t("start_date_placeholder") as string}
+                    label={t("start_date")}
                     withAsterisk
                     icon={<IconCalendar size={16} />}
                     {...form.getInputProps("eventStartDate")}
@@ -206,8 +203,8 @@ const Certificate = () => {
                 <Grid.Col span={6}>
                   <DatePicker
                     w={"100%"}
-                    placeholder="Pick Ending Date"
-                    label="End date"
+                    placeholder={t("end_date_placeholder") as string}
+                    label={t("end_date")}
                     withAsterisk
                     minDate={form.values.eventStartDate}
                     icon={<IconCalendar size={16} />}
@@ -216,7 +213,7 @@ const Certificate = () => {
                 </Grid.Col>
               </Grid>
               <Button mt={20} type="submit" loading={addCertificate.isLoading}>
-                Submit
+                {t("submit")}
               </Button>
             </Container>
           </SimpleGrid>
@@ -224,7 +221,7 @@ const Certificate = () => {
         <div style={{ marginTop: "30px" }}>
           <Flex justify={"space-between"} mb={10}>
             <Text size={"xl"} weight="bold">
-              Add Signatures
+              {t("add_signatures")}
             </Text>
           </Flex>
           {getSignature.data?.map((cert) => (
@@ -241,7 +238,9 @@ const Certificate = () => {
         ) : (
           getSignature.data &&
           getSignature.data?.length < 3 && (
-            <Button onClick={() => setAddSignatureForm()}>Add More</Button>
+            <Button onClick={() => setAddSignatureForm()}>
+              {t("add_more")}
+            </Button>
           )
         )}
       </Box>

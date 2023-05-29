@@ -164,8 +164,8 @@ const EditCourse = () => {
       });
       navigator(RoutePath.manageCourse.lessons(slug.id).route);
       showNotification({
-        title: "Success",
-        message: "Training updated successfully.",
+        title: t("success"),
+        message: t("training_update_success"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -185,12 +185,12 @@ const EditCourse = () => {
             <ThumbnailEditor
               formContext={useFormContext}
               currentThumbnail={courseSingleData?.thumbnailUrl}
-              label="thumbnail"
+              label={t("thumbnail") as string}
             />
             <Group mt={10} grow>
               <TextInput
-                placeholder="Course Title awsdfas"
-                label="Title"
+                placeholder={t("title_course") as string}
+                label={t("title")}
                 withAsterisk
                 {...form.getInputProps("title")}
                 size="lg"
@@ -211,8 +211,8 @@ const EditCourse = () => {
                     mutate(query);
                   }}
                   size={"lg"}
-                  label="Tags"
-                  placeholder="Please select Tags."
+                  label={t("tags")}
+                  placeholder={t("tags_placeholder") as string}
                 />
               ) : (
                 <Loader />
