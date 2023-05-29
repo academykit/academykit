@@ -157,7 +157,7 @@ namespace Lingtren.Infrastructure.Services
                     ).ConfigureAwait(false);
 
                 var submissionCount = await _unitOfWork.GetRepository<QuestionSetSubmission>().CountAsync(
-                    predicate: p => p.QuestionSetId == lesson.QuestionSetId && p.StartTime != default && p.EndTime != default
+                    predicate: p => p.QuestionSetId == lesson.QuestionSetId && p.UserId == currentUserId && p.StartTime != default && p.EndTime != default
                     ).ConfigureAwait(false);
 
                 remainingAttempt = lesson.QuestionSet.AllowedRetake > 0 ? lesson.QuestionSet.AllowedRetake - submissionCount : submissionCount > 0 ? 0 : 1;
