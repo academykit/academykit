@@ -4,15 +4,19 @@
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
+    using Lingtren.Infrastructure.Localization;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
 
     public class QuestionSetController : BaseApiController
     {
         private readonly IQuestionSetService _questionSetService;
-        public QuestionSetController(IQuestionSetService questionSetService)
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
+        public QuestionSetController(IQuestionSetService questionSetService, IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _questionSetService = questionSetService;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -67,7 +71,7 @@
         public async Task<IActionResult> AnswerSubmission(string identity, Guid questionSetSubmissionId, IList<AnswerSubmissionRequestModel> answers)
         {
             await _questionSetService.AnswerSubmission(identity, questionSetSubmissionId, answers, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new { statusCode = 200, message = "Question set answer submitted successfully." });
+            return Ok(new { statusCode = 200, message = _localizer.GetString("QuestionSetAnswer") });
         }
     }
 }

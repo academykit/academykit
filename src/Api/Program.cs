@@ -24,7 +24,7 @@ builder.Services.AddVersionedApiExplorer(options =>
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddJWTConfigurationServices(builder.Configuration);
-
+builder.Services.AddLocalization();
 builder.Services.AddRequestLocalization(x =>
 {
     x.DefaultRequestCulture = new RequestCulture("en");

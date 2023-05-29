@@ -6,20 +6,25 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
 
     [Route("api/course/{identity}/lesson")]
     public class LessonController : BaseApiController
     {
         private readonly ILessonService _lessonService;
         private readonly IValidator<LessonRequestModel> _validator;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
         public LessonController(
             ILessonService lessonService,
-            IValidator<LessonRequestModel> validator)
+            IValidator<LessonRequestModel> validator,
+            IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _lessonService = lessonService;
             _validator = validator;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -83,7 +88,7 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> LessonReorder(string identity, LessonReorderRequestModel model)
         {
             await _lessonService.ReorderAsync(identity, model, CurrentUser.Id);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Lesson reorder successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("LessonReorder") });
         }
 
         /// <summary>
@@ -110,7 +115,7 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> DeleteAsync(string identity, string lessonIdentity)
         {
             await _lessonService.DeleteLessonAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Lesson removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("LessonRemoved") });
         }
 
         /// <summary>

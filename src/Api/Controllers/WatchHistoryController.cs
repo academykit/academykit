@@ -6,17 +6,23 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Infrastructure.Helpers;
+    using Lingtren.Infrastructure.Localization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
+
     public class WatchHistoryController : BaseApiController
     {
         private readonly IWatchHistoryService _watchHistoryService;
         private readonly IValidator<WatchHistoryRequestModel> _validator;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
         public WatchHistoryController(
             IWatchHistoryService watchHistoryService,
-            IValidator<WatchHistoryRequestModel> validator)
+            IValidator<WatchHistoryRequestModel> validator,
+            IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _watchHistoryService = watchHistoryService;
             _validator = validator;
+            _localizer = localizer;
         }
         /// <summary>
         /// add watch history api
@@ -43,7 +49,7 @@
             CommonHelper.ValidateArgumentNotNullOrEmpty(model.LessonIdentity, nameof(model.LessonIdentity));
 
             await _watchHistoryService.PassAsync(userId, model, CurrentUser.Id).ConfigureAwait(false);
-            return new CommonResponseModel { Success = true, Message = "Watch history updated successfully." };
+            return new CommonResponseModel { Success = true, Message = _localizer.GetString("WatchHistory") };
         }
     }
 }

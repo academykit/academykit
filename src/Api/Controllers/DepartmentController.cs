@@ -7,19 +7,24 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
 
     public class DepartmentController : BaseApiController
     {
         private readonly IDepartmentService _departmentService;
         private readonly IValidator<DepartmentRequestModel> _validator;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
         public DepartmentController(
             IDepartmentService departmentService,
-            IValidator<DepartmentRequestModel> validator)
+            IValidator<DepartmentRequestModel> validator,
+            IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _departmentService = departmentService;
             _validator = validator;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -132,7 +137,7 @@
             IsSuperAdminOrAdmin(CurrentUser.Role);
 
             await _departmentService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Department removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("DepartmentRemoved") });
         }
 
         /// <summary>

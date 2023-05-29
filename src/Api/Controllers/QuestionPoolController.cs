@@ -8,19 +8,24 @@
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
 
     public class QuestionPoolController : BaseApiController
     {
         private readonly IQuestionPoolService _questionPoolService;
         private readonly IValidator<QuestionPoolRequestModel> _validator;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
         public QuestionPoolController(
             IQuestionPoolService questionPoolService,
-            IValidator<QuestionPoolRequestModel> validator)
+            IValidator<QuestionPoolRequestModel> validator,
+            IStringLocalizer<ExceptionLocalizer> localizer )
         {
             _questionPoolService = questionPoolService;
             _validator = validator;
+            _localizer = localizer;
         }
         /// <summary>
         /// get QuestionPool api
@@ -131,7 +136,7 @@
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await _questionPoolService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "QuestionPool removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("QuestionpoolRemoved") });
         }
     }
 }

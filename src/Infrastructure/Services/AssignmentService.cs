@@ -23,7 +23,7 @@
         public AssignmentService(
             IUnitOfWork unitOfWork,
             ILogger<AssignmentService> logger,
-            ICourseService courseService,
+            ICourseService courseService,dde
             IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
         {
             _courseService = courseService;

@@ -9,8 +9,10 @@
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
 
     public class GroupController : BaseApiController
     {
@@ -19,18 +21,22 @@
         private readonly IValidator<GroupRequestModel> _validator;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseService _courseService;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
         public GroupController(
             IGroupService groupService,
             IGroupMemberService groupMemberService,
             IValidator<GroupRequestModel> validator,
             IUnitOfWork unitOfWork,
-            ICourseService courseService)
+            ICourseService courseService,
+            IStringLocalizer<ExceptionLocalizer> localizer)
+        
         {
             _groupService = groupService;
             _groupMemberService = groupMemberService;
             _validator = validator;
             _unitOfWork = unitOfWork;
             _courseService = courseService;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -136,7 +142,7 @@
             IsSuperAdminOrAdmin(CurrentUser.Role);
 
             await _groupService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Group removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("GroupRemoved") });
         }
 
         /// <summary>
@@ -218,7 +224,7 @@
         public async Task<IActionResult> ChangeStatus(string identity, Guid id, [FromQuery] bool enabled)
         {
             await _groupService.ChangeMemberStatusAsync(identity, id, enabled, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Member status changed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("MemberStatus") });
         }
 
         /// <summary>
@@ -231,7 +237,7 @@
         public async Task<IActionResult> RemoveMember(string identity, Guid id)
         {
             await _groupService.RemoveMemberAsync(identity, id, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = "Member removed successfully." });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("MemberRemoved") });
         }
 
         /// <summary>
