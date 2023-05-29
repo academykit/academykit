@@ -114,7 +114,7 @@ namespace Lingtren.Infrastructure.Services
                 var storage = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: p => p.Key == "Storage").ConfigureAwait(false);
                 if (string.IsNullOrEmpty(storage.Value))
                 {
-                    throw new ArgumentException("Storage setting is not configured");
+                    throw new ArgumentException(_localizer.GetString("StorageSettingNotConfigured"));
                 }
                 var url = "";
                 if (Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
@@ -131,7 +131,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to get file.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to get file.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("FileGetError"));
             }
         }
 
@@ -147,7 +147,7 @@ namespace Lingtren.Infrastructure.Services
                 var storage = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: p => p.Key == "Storage").ConfigureAwait(false);
                 if (string.IsNullOrEmpty(storage.Value))
                 {
-                    throw new ArgumentException("Storage setting is not configured");
+                    throw new ArgumentException(_localizer.GetString("StorageSettingNotConfigured"));
                 }
                 var key = "";
                 if (Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
@@ -163,7 +163,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to upload file.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to upload file.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UploadFileError"));
             }
         }
 
@@ -179,7 +179,7 @@ namespace Lingtren.Infrastructure.Services
                 var storage = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: p => p.Key == "Storage").ConfigureAwait(false);
                 if (string.IsNullOrEmpty(storage.Value))
                 {
-                    throw new ArgumentException("Storage setting is not configured");
+                    throw new ArgumentException(_localizer.GetString("StorageSettingNotConfigured"));
                 }
                 var model = new MediaRequestModel
                 {
@@ -216,7 +216,7 @@ namespace Lingtren.Infrastructure.Services
                 var storage = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: p => p.Key == "Storage").ConfigureAwait(false);
                 if (string.IsNullOrEmpty(storage.Value))
                 {
-                    throw new ArgumentException("Storage setting is not configured");
+                    throw new ArgumentException(_localizer.GetString("StorageSettingNotConfigured"));
                 }
 
                 var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.mp4");

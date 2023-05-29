@@ -35,14 +35,14 @@ namespace Lingtren.Infrastructure.Services
                 var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (!isAdmin)
                 {
-                    throw new ForbiddenException("Unauthorized user.");
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
                 var slug = CommonHelper.GetEntityTitleSlug<Level>(_unitOfWork, (slug) => q => q.Slug == slug, levelName);
                 var level = await _unitOfWork.GetRepository<Level>().GetFirstOrDefaultAsync(predicate: x => x.Name.ToLower() == levelName.ToLower()
                           && x.IsActive).ConfigureAwait(false);
                 if (level != default)
                 {
-                    throw new ForbiddenException("Level already exist.");
+                    throw new ForbiddenException(_localizer.GetString("LevelAlreadyExist"));
                 }
                 var entity = new Level()
                 {
@@ -60,7 +60,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to create level.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to create level.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("LevelCreateError"));
             }
         }
 
@@ -79,7 +79,7 @@ namespace Lingtren.Infrastructure.Services
                 var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (!isAdmin)
                 {
-                    throw new ForbiddenException("Unauthorized user.");
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
 
                 var levels = await _unitOfWork.GetRepository<Level>().GetAllAsync(predicate: x => x.IsActive).ConfigureAwait(false);
@@ -87,13 +87,13 @@ namespace Lingtren.Infrastructure.Services
                 var level = levels.FirstOrDefault(x => x.Id.ToString() == identity || x.Slug.Equals(identity));
                 if (level == null)
                 {
-                    throw new EntityNotFoundException("Level not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("LevelNotFound"));
                 }
 
                 var levelNameExist = levels.Any(x => x.Id != level.Id && x.Name.ToLower() == levelName.ToLower());
                 if (levelNameExist)
                 {
-                    throw new ForbiddenException("Level name already exist.");
+                    throw new ForbiddenException(_localizer.GetString("LevelNameAlreadyExist"));
                 }
 
                 level.Name = levelName;
@@ -106,7 +106,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to update level");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update level");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("LevelUpdate"));
             }
         }
 
@@ -123,13 +123,13 @@ namespace Lingtren.Infrastructure.Services
                 var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (!isAdmin)
                 {
-                    throw new ForbiddenException("Unauthorized user.");
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
                 var level = await _unitOfWork.GetRepository<Level>().GetFirstOrDefaultAsync(predicate: x => x.Id.ToString() == identity ||
                 x.Slug.Equals(identity)).ConfigureAwait(false);
                 if (level == default)
                 {
-                    throw new EntityNotFoundException("Tag not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TagNotFound"));
                 }
 
                 level.IsActive = false;
@@ -142,7 +142,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to delete level.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to delete level.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("DeleteLevelError"));
             }
         }
 
@@ -160,7 +160,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to fetch levels.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch levels.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("FetchLevelError"));
             }
         }
 

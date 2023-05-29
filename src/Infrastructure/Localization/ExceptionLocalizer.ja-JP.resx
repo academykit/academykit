@@ -411,4 +411,79 @@
   <data name="ZoomSettingNotFound" xml:space="preserve">
     <value>ズーム設定が見つかりませんでした</value>
   </data>
+  <data name="CompleteMandatoryLesson" xml:space="preserve">
+    <value>現在のレッスンを表示する前に、残りの必須レッスンを完了してください</value>
+  </data>
+  <data name="ContextNotFound" xml:space="preserve">
+    <value>コンテキストが見つかりません</value>
+  </data>
+  <data name="CourseNotFound" xml:space="preserve">
+    <value>コースが見つかりません</value>
+  </data>
+  <data name="CreateLessonError" xml:space="preserve">
+    <value>レッスンを作成しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="DeleteLevelError" xml:space="preserve">
+    <value>レベルを削除しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="FetchLevelError" xml:space="preserve">
+    <value>レベルを取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="FileGetError" xml:space="preserve">
+    <value>ファイルを取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="LessonReorderError" xml:space="preserve">
+    <value>レッスンを並べ替えようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="LessonTypeNotMatched" xml:space="preserve">
+    <value>レッスンタイプが一致しません</value>
+  </data>
+  <data name="LessonTypeNotMatchMeeting" xml:space="preserve">
+    <value>レッスンのタイプがミーティングに参加するには一致しません</value>
+  </data>
+  <data name="LevelAlreadyExist" xml:space="preserve">
+    <value>レベルはすでに存在します</value>
+  </data>
+  <data name="LevelCreateError" xml:space="preserve">
+    <value>レベルを作成しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="LevelNameAlreadyExist" xml:space="preserve">
+    <value>レベル名はすでに存在します</value>
+  </data>
+  <data name="LevelNotFound" xml:space="preserve">
+    <value>レベルが見つかりません</value>
+  </data>
+  <data name="LevelUpdate" xml:space="preserve">
+    <value>レベルを更新しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="LiveClassJoinError" xml:space="preserve">
+    <value>ライブクラスに参加しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="MeetingNotAccessed" xml:space="preserve">
+    <value>この会議へのアクセスは許可されていません</value>
+  </data>
+  <data name="MeetingNotFound" xml:space="preserve">
+    <value>会議が見つかりません</value>
+  </data>
+  <data name="MeetingReportNotFound" xml:space="preserve">
+    <value>会議レポートが見つかりません</value>
+  </data>
+  <data name="StorageSettingNotConfigured" xml:space="preserve">
+    <value>ストレージ設定が構成されていません</value>
+  </data>
+  <data name="TagNotFound" xml:space="preserve">
+    <value>タグが見つかりません</value>
+  </data>
+  <data name="TeacherNotFound" xml:space="preserve">
+    <value>先生が見つかりません</value>
+  </data>
+  <data name="UpdateLessonInformationError" xml:space="preserve">
+    <value>レッスン情報の更新中にエラーが発生しました</value>
+  </data>
+  <data name="UploadFileError" xml:space="preserve">
+    <value>ファイルをアップロードしようとしているときにエラーが発生しました</value>
+  </data>
+  <data name="ZoomLisenceNotFound" xml:space="preserve">
+    <value>ズームライセンスが見つかりません</value>
+  </data>
 </root>
