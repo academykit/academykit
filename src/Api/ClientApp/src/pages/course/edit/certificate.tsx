@@ -93,15 +93,15 @@ const Certificate = () => {
         id: params.id as string,
       });
       showNotification({
-        title: "Success",
-        message: `Certificate Details ${
-          isEditing ? "Updated" : "Added"
+        title: t("success"),
+        message: `${t("certificate_details")} ${
+          isEditing ? t("updated") : t("added")
         } successfully!`,
       });
     } catch (error) {
       const err = errorType(error);
       showNotification({
-        title: "Error",
+        title: t("error"),
         message: err,
         color: "red",
       });
@@ -144,7 +144,7 @@ const Certificate = () => {
                         display: "flex",
                       }}
                     >
-                      <Tooltip label="View Certificate">
+                      <Tooltip label={t("view_certificate")}>
                         <ActionIcon
                           variant="default"
                           onClick={() => window.open(data?.sampleUrl)}
@@ -154,7 +154,7 @@ const Certificate = () => {
                           <IconEye />
                         </ActionIcon>
                       </Tooltip>
-                      <Tooltip label="Download Certificate">
+                      <Tooltip label={t("download_certificate")}>
                         <ActionIcon
                           variant="default"
                           onClick={() => {
@@ -182,9 +182,9 @@ const Certificate = () => {
               <Flex>
                 <TextInput
                   w={"100%"}
-                  label="Title"
+                  label={t("title")}
                   withAsterisk
-                  placeholder="Course Title for certificate"
+                  placeholder={t("course_certificate_title") as string}
                   {...form.getInputProps("title")}
                 />
               </Flex>
@@ -192,8 +192,8 @@ const Certificate = () => {
                 <Grid.Col span={6}>
                   <DatePicker
                     w={"100%"}
-                    placeholder="Pick Starting Date"
-                    label="Start date"
+                    placeholder={t("start_date_placeholder") as string}
+                    label={t("start_date")}
                     withAsterisk
                     icon={<IconCalendar size={16} />}
                     {...form.getInputProps("eventStartDate")}
@@ -203,8 +203,8 @@ const Certificate = () => {
                 <Grid.Col span={6}>
                   <DatePicker
                     w={"100%"}
-                    placeholder="Pick Ending Date"
-                    label="End date"
+                    placeholder={t("end_date_placeholder") as string}
+                    label={t("end_date")}
                     withAsterisk
                     minDate={form.values.eventStartDate}
                     icon={<IconCalendar size={16} />}
