@@ -261,4 +261,25 @@
   <data name="ZoomLicense" xml:space="preserve">
     <value>जुम लाइसेन्स सफलतापूर्वक हटाइयो।</value>
   </data>
+  <data name="AssignmentReviewDeleted" xml:space="preserve">
+    <value>असाइनमेन्ट समीक्षा सफलतापूर्वक मेटाइयो।</value>
+  </data>
+  <data name="AssignmentReviewed" xml:space="preserve">
+    <value>असाइनमेन्ट सफलतापूर्वक समीक्षा गरियो।</value>
+  </data>
+  <data name="AssignmentReviewUpdate" xml:space="preserve">
+    <value>असाइनमेन्ट समीक्षा सफलतापूर्वक अद्यावधिक गरियो।</value>
+  </data>
+  <data name="AtleastOneQuestionRequired" xml:space="preserve">
+    <value>कम्तिमा एउटा प्रश्न आवश्यक छ।</value>
+  </data>
+  <data name="QuestionPoolNotFound" xml:space="preserve">
+    <value>प्रश्न पोखरी फेला परेन।</value>
+  </data>
+  <data name="SectionNotFound" xml:space="preserve">
+    <value>खण्ड फेला परेन।</value>
+  </data>
+  <data name="TraineeRoleNotAllowed" xml:space="preserve">
+    <value>प्रशिक्षार्थी भूमिका भएका प्रयोगकर्तालाई परीक्षा पूल सिर्जनाकर्ताको रूपमा थप्न अनुमति छैन।</value>
+  </data>
 </root>

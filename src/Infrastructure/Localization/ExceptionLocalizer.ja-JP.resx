@@ -264,4 +264,25 @@
   <data name="ZoomLicense" xml:space="preserve">
     <value>ズームライセンスが正常に削除されました</value>
   </data>
+  <data name="AssignmentReviewDeleted" xml:space="preserve">
+    <value>課題レビューが正常に削除されました</value>
+  </data>
+  <data name="AssignmentReviewed" xml:space="preserve">
+    <value>課題のレビューが正常に完了しました</value>
+  </data>
+  <data name="AssignmentReviewUpdate" xml:space="preserve">
+    <value>課題レビューが正常に更新されました</value>
+  </data>
+  <data name="AtleastOneQuestionRequired" xml:space="preserve">
+    <value>少なくとも 1 つの質問が必要です</value>
+  </data>
+  <data name="QuestionPoolNotFound" xml:space="preserve">
+    <value>質問プールが見つかりません</value>
+  </data>
+  <data name="SectionNotFound" xml:space="preserve">
+    <value>セクションが見つかりません</value>
+  </data>
+  <data name="TraineeRoleNotAllowed" xml:space="preserve">
+    <value>研修生ロールを持つユーザーは試験プール作成者として追加できません</value>
+  </data>
 </root>

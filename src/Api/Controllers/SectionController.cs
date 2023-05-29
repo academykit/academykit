@@ -112,7 +112,7 @@ namespace Lingtren.Api.Controllers
             var course = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             if (course == null)
             {
-                throw new EntityNotFoundException("Training was not found.");
+                throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             }
             var model = await _sectionService.GetByIdOrSlugAsync(sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
             return new SectionResponseModel(model, fetchLesson: true);
@@ -131,13 +131,13 @@ namespace Lingtren.Api.Controllers
             var course = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             if (course == null)
             {
-                throw new EntityNotFoundException("Training was not found.");
+                throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             }
             var entity = await _sectionService.GetByIdOrSlugAsync(sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
 
             if (entity == null)
             {
-                throw new EntityNotFoundException("Section not found.");
+                throw new EntityNotFoundException(_localizer.GetString("SectionNotFound"));
             }
 
             entity.Name = model.Name;

@@ -264,4 +264,25 @@
   <data name="ZoomLicense" xml:space="preserve">
     <value>zoomlicense removed successfully.</value>
   </data>
+  <data name="AssignmentReviewDeleted" xml:space="preserve">
+    <value>Assignment review deleted successfully.</value>
+  </data>
+  <data name="AssignmentReviewed" xml:space="preserve">
+    <value>Assignment reviewed successfully.</value>
+  </data>
+  <data name="AssignmentReviewUpdate" xml:space="preserve">
+    <value>Assignment review update successfully.</value>
+  </data>
+  <data name="AtleastOneQuestionRequired" xml:space="preserve">
+    <value>At least one question is required.</value>
+  </data>
+  <data name="QuestionPoolNotFound" xml:space="preserve">
+    <value>Question pool not found.</value>
+  </data>
+  <data name="SectionNotFound" xml:space="preserve">
+    <value>Section not found.</value>
+  </data>
+  <data name="TraineeRoleNotAllowed" xml:space="preserve">
+    <value>User with trainee role is not allowed to add as exam pool creator.</value>
+  </data>
 </root>
