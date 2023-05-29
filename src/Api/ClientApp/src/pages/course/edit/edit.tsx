@@ -24,6 +24,7 @@ import { useGroups } from "@utils/services/groupService";
 import { useLevels } from "@utils/services/levelService";
 import { useAddTag, useTags } from "@utils/services/tagService";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 
@@ -174,6 +175,7 @@ const EditCourse = () => {
       });
     }
   };
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -219,8 +221,8 @@ const EditCourse = () => {
                 <Select
                   withAsterisk
                   size="lg"
-                  label="Level"
-                  placeholder="Please select Level."
+                  label={t("level")}
+                  placeholder={t("level_placeholder") as string}
                   {...form.getInputProps("level")}
                   data={label.data.map((x) => ({ value: x.id, label: x.name }))}
                 ></Select>
@@ -244,19 +246,19 @@ const EditCourse = () => {
                 }
                 {...form.getInputProps("groups")}
                 size={"lg"}
-                label="Group"
-                placeholder="Please select Group."
+                label={t("group")}
+                placeholder={t("group_placeholder") as string}
               />
             ) : (
               <Loader />
             )}
             <Box mt={20}>
-              <Text>Description</Text>
+              <Text>{t("description")}</Text>
               <TextEditor formContext={useFormContext} />
             </Box>
             <Box mt={20}>
               <Button size="lg" type="submit" loading={updateCourse.isLoading}>
-                Submit
+                {t("submit")}
               </Button>
             </Box>
           </Box>
