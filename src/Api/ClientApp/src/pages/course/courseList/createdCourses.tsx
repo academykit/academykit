@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import CourseList from "./component/List";
 import { CourseStatus } from "@utils/enums";
+import { useTranslation } from "react-i18next";
 
 const ReviewedCourse = ({
   setInitialSearch,
@@ -28,7 +29,7 @@ const ReviewedCourse = ({
   const auth = useAuth();
   const { data, isSuccess, isLoading } = useCourse(searchParams);
   const role = auth?.auth?.role ?? UserRole.Trainee;
-
+  const { t } = useTranslation();
   return (
     <Container fluid>
       <Container fluid>
@@ -39,7 +40,7 @@ const ReviewedCourse = ({
             alignItems: "center",
           }}
         >
-          {searchComponent("Search for trainings")}
+          {searchComponent(t("search_trainings") as string)}
           {/* {role != UserRole.Trainee && (
             <Link to={RoutePath.courses.create}>
               <Button my={10} variant="outline" ml={5}>
@@ -55,7 +56,7 @@ const ReviewedCourse = ({
         (data.totalCount >= 1 ? (
           <CourseList role={role} courses={data.items} search={searchParams} />
         ) : (
-          <Box>No Trainings Found!</Box>
+          <Box>{t("no_trainings_found")}</Box>
         ))}
       {isLoading && <Loader />}
       {data && pagination(data.totalPage)}
