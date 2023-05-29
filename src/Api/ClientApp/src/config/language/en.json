@@ -242,7 +242,12 @@
   "enter_the_email": "Enter the email",
   "trainer_deleted": "Course trainer deleted successfully.",
   "delete_trainer?": "Do you want to delete trainer?",
-  "add_trainer_success": "Trainer has been added successfully!"
+  "add_trainer_success": "Trainer has been added successfully!",
+
+  "internal": "Internal",
+  "external": "External",
+  "training_certificate_added": "Training certification added successfully",
+  "training_certificate_edited": "Training certification edited successfully"
 
 
 

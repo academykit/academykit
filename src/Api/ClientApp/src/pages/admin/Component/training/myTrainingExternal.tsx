@@ -30,6 +30,7 @@ import {
 } from "@utils/services/certificateService";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
@@ -52,6 +53,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
   const [idd, setIdd] = useState<any>();
   const [updates, setUpdates] = useState(false);
   const { theme } = useStyles();
+  const { t } = useTranslation();
 
   const form = useForm({
     initialValues: {
@@ -86,9 +88,9 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
         await addCertificate.mutateAsync(data);
       }
       showNotification({
-        message: `Training certification ${
-          updates ? "edited" : "added"
-        } successfully.`,
+        message: updates
+          ? t("training_certificate_edited")
+          : t("training_certificate_added"),
       });
       form.reset();
     } catch (error) {
