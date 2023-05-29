@@ -264,6 +264,111 @@
   <data name="ZoomLicense" xml:space="preserve">
     <value>zoomlicense removed successfully.</value>
   </data>
+  <data name="AssignmentSubmission" xml:space="preserve">
+    <value>Assignment contains assignment submissions. So, it cannot be deleted.</value>
+  </data>
+  <data name="CannotAccess" xml:space="preserve">
+    <value>Cannot excess</value>
+  </data>
+  <data name="CertificateNotFound" xml:space="preserve">
+    <value>Certificate not found.</value>
+  </data>
+  <data name="CertificateNotVerified" xml:space="preserve">
+    <value>Certificate is not verified.</value>
+  </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>Comment not found.</value>
+  </data>
+  <data name="CommentReplyNotFound" xml:space="preserve">
+    <value>Comment reply not found.</value>
+  </data>
+  <data name="FeedBackCannotReSubmit" xml:space="preserve">
+    <value>Feedback cannot be re-submitted.</value>
+  </data>
+  <data name="FeedBackReportNotFound" xml:space="preserve">
+    <value>Feedback report not found.</value>
+  </data>
+  <data name="FilePresignedUrlError" xml:space="preserve">
+    <value>An error occurred while getting file presigned url.</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>Group not found.</value>
+  </data>
+  <data name="LessonNotFound" xml:space="preserve">
+    <value>Lesson not found.</value>
+  </data>
+  <data name="LessonNotpublished" xml:space="preserve">
+    <value>Lesson not published.</value>
+  </data>
+  <data name="QuestionpoolModifynotallowed" xml:space="preserve">
+    <value>You are not allowed to modify this question pool.</value>
+  </data>
+  <data name="RecordingFileinS3BucketSave" xml:space="preserve">
+    <value>An error occurred while trying to save recording file in s3 bucket.</value>
+  </data>
+  <data name="RemoveReplyBeforeComment" xml:space="preserve">
+    <value>Please remove the reply before removing comment.</value>
+  </data>
+  <data name="S3BucketSave" xml:space="preserve">
+    <value>An error occurred while trying to save file in s3 bucket.</value>
+  </data>
+  <data name="S3PreSigned" xml:space="preserve">
+    <value>An error occurred while trying to get s3 pre-signed file url</value>
+  </data>
+  <data name="SameUserRemoved" xml:space="preserve">
+    <value>User cannot be removed same user.</value>
+  </data>
+  <data name="StudentListFetchError" xml:space="preserve">
+    <value>An error occurred while trying to fetch the student list who has submitted feedback.</value>
+  </data>
+  <data name="SubmitFeedBackError" xml:space="preserve">
+    <value>An error occurred while trying to submit the feedback.</value>
+  </data>
+  <data name="TraineeAsTrainingTrainerNotAdded" xml:space="preserve">
+    <value>User with trainee role is not allowed to add as training trainer.</value>
+  </data>
+  <data name="TrainerNotAllowedDepartmentUser" xml:space="preserve">
+    <value>Trainee are not allowed to see department user.</value>
+  </data>
+  <data name="Trainingaccessnotallowed" xml:space="preserve">
+    <value>You are not allowed to access this training.</value>
+  </data>
+  <data name="TrainingAuthorAdded" xml:space="preserve">
+    <value>Training author cannot be added.</value>
+  </data>
+  <data name="TrainingAuthorRemoved" xml:space="preserve">
+    <value>Training author cannot be removed.</value>
+  </data>
+  <data name="TrainingCompletePercentage" xml:space="preserve">
+    <value>An error occurred while trying to calculate training completed percentage.</value>
+  </data>
+  <data name="TrainingModifynotallowed" xml:space="preserve">
+    <value>You are not allowed to modify this training.</value>
+  </data>
+  <data name="TrainingTrainerCannotSubmitFeedback" xml:space="preserve">
+    <value>Training trainer cannot submit the feedback.</value>
+  </data>
+  <data name="UnauthorizedUser" xml:space="preserve">
+    <value>Unauthorized user.</value>
+  </data>
+  <data name="UnauthorizedUserAddedTrainer" xml:space="preserve">
+    <value>Unauthorized user to added as trainer in group course</value>
+  </data>
+  <data name="UnauthorizedUserDeleteComment" xml:space="preserve">
+    <value>Unauthorized user to delete comment.</value>
+  </data>
+  <data name="UnauthorizedUserEditComment" xml:space="preserve">
+    <value>Unauthorized user to edit comment.</value>
+  </data>
+  <data name="UpdateFeedBackError" xml:space="preserve">
+    <value>An error occurred while trying to update feedback.</value>
+  </data>
+  <data name="UploadFileinServerError" xml:space="preserve">
+    <value>An error occurred while attempting to upload file to the server.</value>
+  </data>
+  <data name="UserFoundasTrainingTrainer" xml:space="preserve">
+    <value>User is already found as training trainer.</value>
+  </data>
   <data name="AssignmentReviewDeleted" xml:space="preserve">
     <value>Assignment review deleted successfully.</value>
   </data>

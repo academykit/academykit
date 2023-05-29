@@ -522,7 +522,7 @@
             var group = await GetByIdOrSlugAsync(identity, criteria.CurrentUserId).ConfigureAwait(false);
             if (group == null)
             {
-                throw new EntityNotFoundException("Group not found.");
+                throw new EntityNotFoundException(_localizer.GetString("GroupNotFound"));
             }
 
             var predicate = PredicateBuilder.New<User>(true);

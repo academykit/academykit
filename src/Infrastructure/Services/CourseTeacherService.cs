@@ -41,14 +41,14 @@
             if (teacher.UserId == currentUserId)
             {
                 _logger.LogWarning("User with id : {id} cannot remove own-self from training trainer with course id : {courseId}", currentUserId, teacher.CourseId);
-                throw new ForbiddenException("User cannot be removed same user.");
+                throw new ForbiddenException(_localizer.GetString("SameUserRemoved"));
             }
 
             var course = await ValidateAndGetCourse(currentUserId, courseIdentity: teacher.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
             if (course.CreatedBy == teacher.UserId)
             {
                 _logger.LogWarning("Training with id {id} creator User Id {userId} can't be delete from training trainer.", course.Id, teacher.UserId);
-                throw new ForbiddenException("Training author cannot be removed.");
+                throw new ForbiddenException(_localizer.GetString("TrainingAuthorRemoved"));
             }
         }
 
@@ -67,20 +67,20 @@
             if (course.CreatedBy == entity.UserId)
             {
                 _logger.LogWarning("Training with id {courseId} creator User Id {userId} can't be training trainer.", course.Id, entity.UserId);
-                throw new ForbiddenException("Training author cannot be added.");
+                throw new ForbiddenException(_localizer.GetString("TrainingAuthorAdded"));
             }
             var hasAccess = await IsSuperAdminOrAdminOrTrainer(entity.UserId).ConfigureAwait(false);
             if (!hasAccess)
             {
                 _logger.LogWarning("User having Id: {userId} with trainee role is not allowed to added as training trainer of training with id {courseId}.",
                                             entity.UserId, course.Id);
-                throw new ForbiddenException("User with trainee role is not allowed to add as training trainer.");
+                throw new ForbiddenException(_localizer.GetString("TraineeAsTrainingTrainerNotAdded"));
             }
 
             if (course.CourseTeachers.Any(p => p.UserId == entity.UserId))
             {
                 _logger.LogWarning("User with Id {userId} is already training trainer of training with id {courseId}.", entity.UserId, course.Id);
-                throw new ForbiddenException("User is already found as training trainer.");
+                throw new ForbiddenException(_localizer.GetString("UserFoundasTrainingTrainer"));
             }
 
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(entity.UserId).ConfigureAwait(false);
@@ -92,7 +92,7 @@
                     if (!canAccess)
                     {
                         _logger.LogWarning("User with Id {userId} can't access training with id {courseId}.", entity.UserId, course.Id);
-                        throw new ForbiddenException("Unauthorized user to added as trainer in group course.");
+                        throw new ForbiddenException(_localizer.GetString("UnauthorizedUserAddedTrainer"));
                     }
                 }
             }

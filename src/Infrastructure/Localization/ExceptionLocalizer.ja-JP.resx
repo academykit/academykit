@@ -264,6 +264,111 @@
   <data name="ZoomLicense" xml:space="preserve">
     <value>ズームライセンスが正常に削除されました</value>
   </data>
+  <data name="AssignmentSubmission" xml:space="preserve">
+    <value>課題には課題の提出が含まれます。したがって、削除することはできません</value>
+  </data>
+  <data name="CannotAccess" xml:space="preserve">
+    <value>を超えることはできません</value>
+  </data>
+  <data name="CertificateNotFound" xml:space="preserve">
+    <value>証明書が見つかりません</value>
+  </data>
+  <data name="CertificateNotVerified" xml:space="preserve">
+    <value>証明書が検証されていません</value>
+  </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>コメントが見つかりません</value>
+  </data>
+  <data name="CommentReplyNotFound" xml:space="preserve">
+    <value>コメント返信が見つかりません</value>
+  </data>
+  <data name="FeedBackCannotReSubmit" xml:space="preserve">
+    <value>フィードバックは再送信できません</value>
+  </data>
+  <data name="FeedBackReportNotFound" xml:space="preserve">
+    <value>フィードバックレポートが見つかりません</value>
+  </data>
+  <data name="FilePresignedUrlError" xml:space="preserve">
+    <value>ファイル署名付き URL の取得中にエラーが発生しました</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>グループが見つかりません</value>
+  </data>
+  <data name="LessonNotFound" xml:space="preserve">
+    <value>レッスンが見つかりませんでした</value>
+  </data>
+  <data name="LessonNotpublished" xml:space="preserve">
+    <value>レッスンは公開されていません</value>
+  </data>
+  <data name="QuestionpoolModifynotallowed" xml:space="preserve">
+    <value>この質問プールを変更することはできません</value>
+  </data>
+  <data name="RecordingFileinS3BucketSave" xml:space="preserve">
+    <value>録画ファイルを s3 バケットに保存しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="RemoveReplyBeforeComment" xml:space="preserve">
+    <value>コメントを削除する前に返信を削除してください</value>
+  </data>
+  <data name="S3BucketSave" xml:space="preserve">
+    <value>s3 バケットにファイルを保存しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="S3PreSigned" xml:space="preserve">
+    <value>s3 署名済みファイルの URL を取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="SameUserRemoved" xml:space="preserve">
+    <value>同じユーザーを削除することはできません</value>
+  </data>
+  <data name="StudentListFetchError" xml:space="preserve">
+    <value>フィードバックを送信した学生リストを取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="SubmitFeedBackError" xml:space="preserve">
+    <value>フィードバックを送信しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="TraineeAsTrainingTrainerNotAdded" xml:space="preserve">
+    <value>研修生の役割を持つユーザーはトレーニング トレーナーとして追加できません</value>
+  </data>
+  <data name="TrainerNotAllowedDepartmentUser" xml:space="preserve">
+    <value>研修生は部門のユーザーと会うことはできません</value>
+  </data>
+  <data name="Trainingaccessnotallowed" xml:space="preserve">
+    <value>このトレーニングへのアクセスは許可されていません</value>
+  </data>
+  <data name="TrainingAuthorAdded" xml:space="preserve">
+    <value>トレーニング作成者を追加できません</value>
+  </data>
+  <data name="TrainingAuthorRemoved" xml:space="preserve">
+    <value>トレーニング作成者は削除できません</value>
+  </data>
+  <data name="TrainingCompletePercentage" xml:space="preserve">
+    <value>トレーニング完了率を計算中にエラーが発生しました</value>
+  </data>
+  <data name="TrainingModifynotallowed" xml:space="preserve">
+    <value>このトレーニングを変更することはできません</value>
+  </data>
+  <data name="TrainingTrainerCannotSubmitFeedback" xml:space="preserve">
+    <value>トレーニング トレーナーはフィードバックを送信できません</value>
+  </data>
+  <data name="UnauthorizedUser" xml:space="preserve">
+    <value>不正なユーザー</value>
+  </data>
+  <data name="UnauthorizedUserAddedTrainer" xml:space="preserve">
+    <value>グループコースにトレーナーとして追加する権限のないユーザー</value>
+  </data>
+  <data name="UnauthorizedUserDeleteComment" xml:space="preserve">
+    <value>権限のないユーザーがコメントを削除できます</value>
+  </data>
+  <data name="UnauthorizedUserEditComment" xml:space="preserve">
+    <value>権限のないユーザーがコメントを編集できます</value>
+  </data>
+  <data name="UpdateFeedBackError" xml:space="preserve">
+    <value>フィードバックを更新しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="UploadFileinServerError" xml:space="preserve">
+    <value>ファイルをサーバーにアップロードしようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="UserFoundasTrainingTrainer" xml:space="preserve">
+    <value>ユーザーはすでにトレーニング トレーナーとして検出されています</value>
+  </data>
   <data name="AssignmentReviewDeleted" xml:space="preserve">
     <value>課題レビューが正常に削除されました</value>
   </data>

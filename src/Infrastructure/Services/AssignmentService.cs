@@ -46,7 +46,7 @@
             if (assignmentSubmissions)
             {
                 _logger.LogWarning("Assignment with id : {id} having type : {type} contains assignment submissions.", entity.Id, entity.Type);
-                throw new ForbiddenException("Assignment contains assignment submissions. So, it cannot be deleted.");
+                throw new ForbiddenException(_localizer.GetString("AssignmentSubmission"));
             }
 
             _unitOfWork.GetRepository<AssignmentAttachment>().Delete(entity.AssignmentAttachments);

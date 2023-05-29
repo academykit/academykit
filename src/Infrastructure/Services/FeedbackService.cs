@@ -172,7 +172,7 @@
                 if (lesson == null)
                 {
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
                 if (lesson.Type != LessonType.Feedback)
                 {
@@ -205,7 +205,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to fetch the student list who has submitted feedback.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch the student list who has submitted feedback.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("StudentListFetchError"));
             }
         }
 
@@ -264,7 +264,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to update feedback.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update feedback.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UpdateFeedBackError"));
             }
         }
 
@@ -284,7 +284,7 @@
                 if (lesson == null)
                 {
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
                 if (lesson.Type != LessonType.Feedback)
                 {
@@ -295,7 +295,7 @@
                 if (lesson.Status != CourseStatus.Published)
                 {
                     _logger.LogWarning("Lesson with id: {id} not published for user with id: {userId}.", lesson.Id, currentUserId);
-                    throw new EntityNotFoundException("Lesson not published.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotpublished"));
                 }
 
                 var course = await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
@@ -309,7 +309,7 @@
                 {
                     _logger.LogWarning("User with id: {userId} is a teacher of the training with id: {courseId} and lesson with id: {lessonId} to submit the feedback.",
                         currentUserId, course.Id, lesson.Id);
-                    throw new ForbiddenException("Training trainer cannot submit the feedback.");
+                    throw new ForbiddenException(_localizer.GetString("TrainingTrainerCannotSubmitFeedback"));
                 }
 
                 var feedbacks = await _unitOfWork.GetRepository<Feedback>().GetAllAsync(
@@ -326,7 +326,7 @@
                 if (feebackSubmissionExists)
                 {
                     _logger.LogWarning("User with id: {userId} cannot resubmit the feedback having id: {feedbackId}.", currentUserId, lesson.Id);
-                    throw new ForbiddenException("Feedback cannot be re-submitted.");
+                    throw new ForbiddenException(_localizer.GetString("FeedBackCannotReSubmit"));
                 }
 
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
@@ -369,7 +369,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to submit the feedback.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to submit the feedback.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("SubmitFeedBackError"));
             }
         }
 
@@ -390,7 +390,7 @@
             if (lesson == null)
             {
                 _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
-                throw new EntityNotFoundException("Lesson not found.");
+                throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
             }
             if (lesson.Type != LessonType.Feedback)
             {
@@ -406,7 +406,7 @@
 
             if(feedbackSubmissions.Count == default)
              {
-                    throw new EntityNotFoundException("Feedback report not found.");      
+                    throw new EntityNotFoundException(_localizer.GetString("FeedBackReportNotFound"));      
              }
 
             var response = new List<FeedBackReportDto>();
@@ -519,7 +519,7 @@
             if (lesson == null)
             {
                 _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", searchCriteria.LessonIdentity, searchCriteria.CurrentUserId);
-                throw new EntityNotFoundException("Lesson not found.");
+                throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
             }
             if (lesson.Type != LessonType.Feedback)
             {
