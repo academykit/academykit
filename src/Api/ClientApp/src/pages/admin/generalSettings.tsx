@@ -9,8 +9,8 @@ import {
 import { showNotification } from "@mantine/notifications";
 import * as Yup from "yup";
 import errorType from "@utils/services/axiosError";
-import useAuth from "@hooks/useAuth";
 import { PHONE_VALIDATION } from "@utils/constants";
+import { useTranslation } from "react-i18next";
 
 const schema = Yup.object().shape({
   companyName: Yup.string().required("Company Name is required."),
@@ -39,6 +39,7 @@ const GeneralSettings = () => {
   const generalSettings = useGeneralSetting();
   const updateGeneral = useUpdateGeneralSetting(generalSettings.data?.data.id);
   const data = generalSettings.data?.data;
+  const { t } = useTranslation();
 
   useEffect(() => {
     form.setValues({
@@ -65,7 +66,8 @@ const GeneralSettings = () => {
     try {
       await updateGeneral.mutateAsync(values);
       showNotification({
-        message: "Settings updated successfully!",
+        title: t("successful"),
+        message: t("setting_updated"),
       });
       window.scrollTo(0, 0);
     } catch (error) {
@@ -87,7 +89,7 @@ const GeneralSettings = () => {
             marginLeft: "0px",
           }}
         >
-          Company Logo <sup style={{ color: "red" }}>*</sup>
+          {t("company_logo")} <sup style={{ color: "red" }}>*</sup>
           <ThumbnailEditor
             formContext={useFormContext}
             label="image"
@@ -95,41 +97,41 @@ const GeneralSettings = () => {
             currentThumbnail={data?.logoUrl}
           />
           <Text c="dimmed" size="xs">
-            Note : Image minimum resolution size should be 640 * 360
+            {t("image_dimension")}
           </Text>
           <TextInput
-            label="Company Name"
+            label={t("company_name")}
             withAsterisk
             mt={20}
             name="companyName"
-            placeholder="Please enter your company name"
+            placeholder={t("enter_company_name") as string}
             {...form.getInputProps("companyName")}
           />
           <TextInput
-            label="Company Address"
+            label={t("company_address")}
             withAsterisk
             name="companyAddress"
-            placeholder="Please enter your company address"
+            placeholder={t("enter_company_address") as string}
             {...form.getInputProps("companyAddress")}
           />
           <TextInput
-            label="Company Contact Number"
+            label={t("company_contact")}
             withAsterisk
             type={"number"}
             name="ContactNumber"
-            placeholder="Please enter your company contact number"
+            placeholder={t("enter_company_contact") as string}
             {...form.getInputProps("companyContactNumber")}
           />
           <Textarea
             mt="md"
-            label="Mail Signature"
+            label={t("mail_signature")}
             withAsterisk
             name="signature"
-            placeholder="Your mail signature"
+            placeholder={t("enter_mail_signature") as string}
             {...form.getInputProps("emailSignature")}
           />
           <Button mt={10} type="submit" loading={updateGeneral.isLoading}>
-            Submit
+            {t("submit")}
           </Button>
         </Container>
       </form>
