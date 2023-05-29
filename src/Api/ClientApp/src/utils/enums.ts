@@ -32,8 +32,7 @@ export enum ReadableEnum {
   SingleChoice = "Single Choice",
   MultipleChoice = "Multiple Choice",
   LiveClass = "Live Class",
-  RecordedVideo= "Recordings"
-
+  RecordedVideo = "Recordings",
 }
 
 export enum LessonType {

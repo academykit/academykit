@@ -187,7 +187,7 @@ const EditCourse = () => {
             />
             <Group mt={10} grow>
               <TextInput
-                placeholder="Course Title"
+                placeholder="Course Title awsdfas"
                 label="Title"
                 withAsterisk
                 {...form.getInputProps("title")}
