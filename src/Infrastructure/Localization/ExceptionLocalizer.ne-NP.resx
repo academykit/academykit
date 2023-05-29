@@ -408,4 +408,79 @@
   <data name="ZoomSettingNotFound" xml:space="preserve">
     <value>जुम सेटिङ फेला परेन।</value>
   </data>
+  <data name="CompleteMandatoryLesson" xml:space="preserve">
+    <value>हालको पाठ हेर्नु अघि कृपया माथिको बाँकी अनिवार्य पाठ पूरा गर्नुहोस्।</value>
+  </data>
+  <data name="ContextNotFound" xml:space="preserve">
+    <value>सन्दर्भ फेला परेन।</value>
+  </data>
+  <data name="CourseNotFound" xml:space="preserve">
+    <value>पाठ्यक्रम फेला परेन।</value>
+  </data>
+  <data name="CreateLessonError" xml:space="preserve">
+    <value>पाठ सिर्जना गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="DeleteLevelError" xml:space="preserve">
+    <value>स्तर मेटाउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="FetchLevelError" xml:space="preserve">
+    <value>स्तरहरू ल्याउन प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="FileGetError" xml:space="preserve">
+    <value>फाइल प्राप्त गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="LessonReorderError" xml:space="preserve">
+    <value>पाठहरू पुन: क्रमबद्ध गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="LessonTypeNotMatched" xml:space="preserve">
+    <value>पाठको प्रकार मेल खाएन।</value>
+  </data>
+  <data name="LessonTypeNotMatchMeeting" xml:space="preserve">
+    <value>बैठकमा सामेल हुनका लागि पाठको प्रकार मेल खाँदैन।</value>
+  </data>
+  <data name="LevelAlreadyExist" xml:space="preserve">
+    <value>स्तर पहिले नै अवस्थित छ।</value>
+  </data>
+  <data name="LevelCreateError" xml:space="preserve">
+    <value>स्तर सिर्जना गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="LevelNameAlreadyExist" xml:space="preserve">
+    <value>स्तर नाम पहिले नै अवस्थित छ।</value>
+  </data>
+  <data name="LevelNotFound" xml:space="preserve">
+    <value>स्तर फेला परेन</value>
+  </data>
+  <data name="LevelUpdate" xml:space="preserve">
+    <value>स्तर अद्यावधिक गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="LiveClassJoinError" xml:space="preserve">
+    <value>लाइभ कक्षामा सामेल हुन प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="MeetingNotAccessed" xml:space="preserve">
+    <value>तपाईंलाई यो बैठकमा पहुँच गर्न अनुमति छैन।</value>
+  </data>
+  <data name="MeetingNotFound" xml:space="preserve">
+    <value>बैठक भेटिएन।</value>
+  </data>
+  <data name="MeetingReportNotFound" xml:space="preserve">
+    <value>बैठक रिपोर्ट फेला परेन।</value>
+  </data>
+  <data name="StorageSettingNotConfigured" xml:space="preserve">
+    <value>भण्डारण सेटिङ कन्फिगर गरिएको छैन।</value>
+  </data>
+  <data name="TagNotFound" xml:space="preserve">
+    <value>ट्याग फेला परेन।</value>
+  </data>
+  <data name="TeacherNotFound" xml:space="preserve">
+    <value>शिक्षक भेटिएन ।</value>
+  </data>
+  <data name="UpdateLessonInformationError" xml:space="preserve">
+    <value>पाठ जानकारी अपडेट गर्ने प्रयास गर्दा त्रुटि भयो</value>
+  </data>
+  <data name="UploadFileError" xml:space="preserve">
+    <value>फाइल अपलोड गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ZoomLisenceNotFound" xml:space="preserve">
+    <value>जुम लाइसेन्स फेला परेन</value>
+  </data>
 </root>

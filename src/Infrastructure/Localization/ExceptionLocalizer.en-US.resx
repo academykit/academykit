@@ -411,4 +411,79 @@
   <data name="ZoomSettingNotFound" xml:space="preserve">
     <value>Zoom setting was not found.</value>
   </data>
+  <data name="CompleteMandatoryLesson" xml:space="preserve">
+    <value>Please complete above remaining mandatory lesson before viewing current lesson.</value>
+  </data>
+  <data name="ContextNotFound" xml:space="preserve">
+    <value>Context not found.</value>
+  </data>
+  <data name="CourseNotFound" xml:space="preserve">
+    <value>Course not found.</value>
+  </data>
+  <data name="CreateLessonError" xml:space="preserve">
+    <value>An error occurred while attempting to create the lesson.</value>
+  </data>
+  <data name="DeleteLevelError" xml:space="preserve">
+    <value>An error occurred while trying to delete level.</value>
+  </data>
+  <data name="FetchLevelError" xml:space="preserve">
+    <value>An error occurred while trying to fetch levels.</value>
+  </data>
+  <data name="FileGetError" xml:space="preserve">
+    <value>An error occurred while trying to get file.</value>
+  </data>
+  <data name="LessonReorderError" xml:space="preserve">
+    <value>An error occurred while attempting to reorder the lessons.</value>
+  </data>
+  <data name="LessonTypeNotMatched" xml:space="preserve">
+    <value>Lesson type not matched.</value>
+  </data>
+  <data name="LessonTypeNotMatchMeeting" xml:space="preserve">
+    <value>Lesson type not match for join meeting.</value>
+  </data>
+  <data name="LevelAlreadyExist" xml:space="preserve">
+    <value>Level already exist.</value>
+  </data>
+  <data name="LevelCreateError" xml:space="preserve">
+    <value>An error occurred while trying to create level.</value>
+  </data>
+  <data name="LevelNameAlreadyExist" xml:space="preserve">
+    <value>Level name already exist.</value>
+  </data>
+  <data name="LevelNotFound" xml:space="preserve">
+    <value>Level not found.</value>
+  </data>
+  <data name="LevelUpdate" xml:space="preserve">
+    <value>An error occurred while trying to update level</value>
+  </data>
+  <data name="LiveClassJoinError" xml:space="preserve">
+    <value>An error occurred while trying to join live class.</value>
+  </data>
+  <data name="MeetingNotAccessed" xml:space="preserve">
+    <value>You are not allowed to access this meeting.</value>
+  </data>
+  <data name="MeetingNotFound" xml:space="preserve">
+    <value>Meeting not found.</value>
+  </data>
+  <data name="MeetingReportNotFound" xml:space="preserve">
+    <value>Meeting report not found.</value>
+  </data>
+  <data name="StorageSettingNotConfigured" xml:space="preserve">
+    <value>Storage setting is not configured</value>
+  </data>
+  <data name="TagNotFound" xml:space="preserve">
+    <value>Tag not found.</value>
+  </data>
+  <data name="TeacherNotFound" xml:space="preserve">
+    <value>Teacher not found.</value>
+  </data>
+  <data name="UpdateLessonInformationError" xml:space="preserve">
+    <value>An error occurred while attempting to update the lesson information</value>
+  </data>
+  <data name="UploadFileError" xml:space="preserve">
+    <value>An error occurred while trying to upload file.</value>
+  </data>
+  <data name="ZoomLisenceNotFound" xml:space="preserve">
+    <value>Zoom license not found.</value>
+  </data>
 </root>

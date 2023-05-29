@@ -46,7 +46,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 if (context == null)
                 {
-                    throw new ArgumentException("Context not found.");
+                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
                 }
 
                 var users = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: p => p.Role == UserRole.Admin || p.Role == UserRole.SuperAdmin).ConfigureAwait(false);
@@ -92,7 +92,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 if (context == null)
                 {
-                    throw new ArgumentException("Context not found.");
+                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
                 }
 
                 var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate: p => p.Id == courseId,
@@ -100,7 +100,7 @@ namespace Lingtren.Infrastructure.Services
 
                 if (course == default)
                 {
-                    throw new EntityNotFoundException("Course not found");
+                    throw new EntityNotFoundException(_localizer.GetString("CourseNotFound"));
                 }
 
                  var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
@@ -141,7 +141,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 if (context == null)
                 {
-                    throw new ArgumentException("Context not found.");
+                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
                 }
 
                 foreach (var emailDto in dtos)
@@ -183,7 +183,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 if (context == null)
                 {
-                    throw new ArgumentException("Context not found.");
+                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
                 }
 
                 var users = await _unitOfWork.GetRepository<User>().GetAllAsync(
@@ -236,7 +236,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 if (context == null)
                 {
-                    throw new ArgumentException("Context not found.");
+                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
                 }
 
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
@@ -287,7 +287,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 if(context ==null)
                 {
-                    throw new ArgumentNullException("context not found.");
+                    throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
                 }
 
                 var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate: p => p.Id == courseId,
@@ -296,7 +296,7 @@ namespace Lingtren.Infrastructure.Services
 
                 if (course.CourseTeachers ==null)
                 {
-                    throw new ArgumentException("Teacher not found");
+                    throw new ArgumentException(_localizer.GetString("TeacherNotFound"));
                 }
               
                  foreach (var teacher in course.CourseTeachers)
@@ -338,7 +338,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 if (context == null)
                 {
-                    throw new ArgumentNullException("context not found.");
+                    throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
                 }
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
 
@@ -380,7 +380,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 if (context == null)
                 {
-                    throw new ArgumentNullException("context not found.");
+                    throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
                 }
 
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
