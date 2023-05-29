@@ -15,7 +15,6 @@
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Tokens;
-    using Minio.DataModel;
     using Newtonsoft.Json.Linq;
     using RestSharp;
     using System.IdentityModel.Tokens.Jwt;
@@ -98,35 +97,62 @@
             {
                 var zoomLicenses = await _unitOfWork.GetRepository<ZoomLicense>().GetAllAsync(
                 predicate: p => p.IsActive).ConfigureAwait(false);
+                var startDate = model.StartDateTime.Date;
+                var endTime = model.StartDateTime.AddMinutes(model.Duration);
+                var response = new List<ZoomLicenseResponseModel>();
+                var meetingsWithStartDate = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(predicate: p => p.StartDate.Value.Date == startDate).ConfigureAwait(false);
+                if (meetingsWithStartDate.Count == 0)
+                {
+                    zoomLicenses.ForEach(x => response.Add(new ZoomLicenseResponseModel
+                    {
+                        Id = x.Id,
+                        HostId = x.HostId,
+                        Capacity = x.Capacity,
+                        LicenseEmail = x.LicenseEmail,
+                        IsActive = x.IsActive,
+                    }));
+                    return response;
+                }
+                if (!string.IsNullOrEmpty(model.LessonIdentity))
+                {
+                    var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.Lesson.Id.ToString() == model.LessonIdentity
+                    || p.Lesson.Slug == model.LessonIdentity, include: src => src.Include(x => x.Lesson)).ConfigureAwait(false);
+                    if (meetingsWithStartDate.Any(x => x.Id == meeting.Id) == true)
+                    {
+                        meetingsWithStartDate.Add(meeting);
+                    }
+                }
 
-                var meetings = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(
-                    predicate: p => p.StartDate.HasValue
-                       && ((model.StartDateTime > p.StartDate.Value && model.StartDateTime < p.StartDate.Value.AddSeconds(p.Duration))
-                            || (model.StartDateTime.AddSeconds(model.Duration * 60) > p.StartDate.Value && model.StartDateTime.AddSeconds(model.Duration * 60) < p.StartDate.Value.AddSeconds(p.Duration)))).ConfigureAwait(false);
+                var hasOverlappingMeetings = meetingsWithStartDate.Where(m =>
+                (m.StartDate.HasValue && m.StartDate.Value >= model.StartDateTime && m.StartDate.Value < endTime) ||
+                (m.StartDate.HasValue && m.StartDate.Value.AddMinutes(m.Duration) > model.StartDateTime && m.StartDate.Value.AddMinutes(m.Duration) <= endTime)
+                );
+                if (hasOverlappingMeetings.ToList().Count == 0)
+                {
+                    zoomLicenses.ForEach(x => response.Add(new ZoomLicenseResponseModel
+                    {
+                        Id = x.Id,
+                        HostId = x.HostId,
+                        Capacity = x.Capacity,
+                        LicenseEmail = x.LicenseEmail,
+                        IsActive = x.IsActive,
+                    }));
+                    return response;
+                }
 
-                var data = from zoomLicense in zoomLicenses
-                           join meeting in meetings on zoomLicense.Id equals meeting.ZoomLicenseId
-                           into zoomMeeting
-                           from m in zoomMeeting.DefaultIfEmpty()
-                           group m by zoomLicense into g
-                           select new
-                           {
-                               g.Key.Id,
-                               g.Key.HostId,
-                               g.Key.Capacity,
-                               g.Key.LicenseEmail,
-                               g.Key.IsActive,
-                               Count = g.Count()
-                           };
-
-                var response = data.Where(x => x.Count < 2).Select(x => new ZoomLicenseResponseModel
+                var filteredZoomLicenses = zoomLicenses.Where(z => !hasOverlappingMeetings.Any(m => m.ZoomLicenseId == z.Id));
+                filteredZoomLicenses.ForEach(x => response.Add(new ZoomLicenseResponseModel
                 {
                     Id = x.Id,
                     HostId = x.HostId,
                     Capacity = x.Capacity,
                     LicenseEmail = x.LicenseEmail,
                     IsActive = x.IsActive,
-                }).ToList();
+                }));
+                if (response.Count == 0)
+                {
+                    throw new NullReferenceException("All Liscense Id have been booked, please select another instance");
+                }
                 return response;
             }
             catch (Exception ex)
@@ -134,68 +160,6 @@
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
-
-        /// <summary>
-        /// Handels to retrive ZoomID 
-        /// </summary>
-        /// <param name="meetings">the instance of <see cref="Meeting"/></param>
-        /// <param name="startDateTime">startDate and Time of the live session</param>
-        /// <param name="duration">Duration of live session</param>
-        /// <returns></returns>
-        /// <exception cref="InvalidDataException"></exception>
-        public async Task<List<ZoomLicenseResponseModel>> LessonZoomIdGetAsync(IList<Meeting> meetings, DateTime startDateTime, int duration)
-        {
-            var zoomLicenses = await _unitOfWork.GetRepository<ZoomLicense>().GetAllAsync(
-            predicate: p => p.IsActive).ConfigureAwait(false);
-
-            var endTime = startDateTime.AddMinutes(duration);
-
-            var meetinglist = meetings.ToList();
-
-            var userMeetings = (await _unitOfWork.GetRepository<Meeting>()
-                .GetAllAsync().ConfigureAwait(false))
-                .AsEnumerable()
-                .Where(p => meetinglist.Any(m =>
-                    m.StartDate.HasValue && p.StartDate.HasValue && m.StartDate.Value.Date == p.StartDate.Value.Date))
-                .ToList();
-
-            var hasOverlappingMeetings = userMeetings.Where(m =>
-                (m.StartDate.HasValue && m.StartDate.Value >= startDateTime && m.StartDate.Value < endTime) ||
-                (m.StartDate.HasValue && m.StartDate.Value.AddMinutes(m.Duration) > startDateTime && m.StartDate.Value.AddMinutes(m.Duration) <= endTime)
-            );
-
-            if (hasOverlappingMeetings.Count() != 0)
-            {
-                throw new InvalidDataException("Time span is already used, try another instance");
-            }
-
-            var data = from zoomLicense in zoomLicenses
-                       join meeting in userMeetings on zoomLicense.Id equals meeting.ZoomLicenseId
-                       into zoomMeeting
-                       from m in zoomMeeting.DefaultIfEmpty()
-                       group m by zoomLicense into g
-                       select new
-                       {
-                           g.Key.Id,
-                           g.Key.HostId,
-                           g.Key.Capacity,
-                           g.Key.LicenseEmail,
-                           g.Key.IsActive,
-                           Count = g.Count()
-                       };
-
-            var response = data.Where(x => x.Count < 2).Select(x => new ZoomLicenseResponseModel
-            {
-                Id = x.Id,
-                HostId = x.HostId,
-                Capacity = x.Capacity,
-                LicenseEmail = x.LicenseEmail,
-                IsActive = x.IsActive,
-            }).ToList();
-
-            return response;
-        }
-
 
         /// <summary>
         /// Handle to create zoom meeting
