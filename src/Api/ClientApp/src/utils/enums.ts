@@ -81,3 +81,9 @@ export enum LessonFileType {
   File = 1,
   Video = 2,
 }
+
+export enum LanguageString {
+  ne = "ne-NP",
+  en = "en-US",
+  ja = "ja-JP",
+}

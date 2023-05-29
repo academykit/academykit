@@ -186,12 +186,12 @@ const Create = () => {
             <TextInput
               size={fieldSize}
               withAsterisk
-              label="Title for question"
-              placeholder="Enter Title of Question"
+              label={t("title_question")}
+              placeholder={t("enter_question_title") as string}
               {...form.getInputProps("name")}
             ></TextInput>
             <Box mt={20}>
-              <Text size={"md"}>Description</Text>
+              <Text size={"md"}>{t("description")}</Text>
               <TextEditor label="description" formContext={useFormContext} />
             </Box>
 
@@ -210,30 +210,30 @@ const Create = () => {
                   mutate(query);
                 }}
                 size={"md"}
-                label="Tags"
-                placeholder="Please select Tags."
+                label={t("tags")}
+                placeholder={t("select_tags") as string}
               />
             ) : (
               <Loader />
             )}
 
             <Box mt={20}>
-              <Text size={"md"}>Hint</Text>
+              <Text size={"md"}>{t("hint")}</Text>
               <TextEditor label="hints" formContext={useFormContext} />
             </Box>
             <Select
               mt={20}
-              placeholder={"Please Question Type"}
+              placeholder={t("select_question_type") as string}
               size={fieldSize}
               withAsterisk
-              label="Question Type"
+              label={t("question_type")}
               data={getQuestionType()}
               {...form.getInputProps("type")}
             ></Select>
             {(form.values.type === QuestionType.MultipleChoice.toString() ||
               form.values.type === QuestionType.SingleChoice.toString()) && (
               <Box>
-                <Text mt={20}>Options</Text>
+                <Text mt={20}>{t("options")}</Text>
                 {form.values.answers.map((x, i) => (
                   <Group key={i} mb={30}>
                     <Checkbox
@@ -282,7 +282,7 @@ const Create = () => {
             )}
             <Group mt={20}>
               <Button size="sm" type="submit" loading={editQuestion.isLoading}>
-                Save
+                {t("save")}
               </Button>
             </Group>
           </form>

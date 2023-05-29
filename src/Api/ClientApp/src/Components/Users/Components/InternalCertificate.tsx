@@ -16,10 +16,18 @@ import {
 import { IconCheck, IconCopy, IconDownload } from "@tabler/icons";
 import { useProfileAuth } from "@utils/services/authService";
 import { ICertificateList } from "@utils/services/manageCourseService";
+import { TFunction } from "i18next";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-const RowsCompleted = ({ item }: { item: ICertificateList }) => {
+const RowsCompleted = ({
+  item,
+  t,
+}: {
+  item: ICertificateList;
+  t: TFunction;
+}) => {
   const [opened, setOpened] = useState(false);
   const handleDownload = () => {
     window.open(item?.certificateUrl);
@@ -30,7 +38,11 @@ const RowsCompleted = ({ item }: { item: ICertificateList }) => {
 
       <td>{item?.percentage}%</td>
       <td>
-        {item?.hasCertificateIssued ? <Badge>Yes</Badge> : <Badge>No</Badge>}
+        {item?.hasCertificateIssued ? (
+          <Badge>{t("yes")}</Badge>
+        ) : (
+          <Badge>{t("no")}</Badge>
+        )}
       </td>
       <td style={{ maxWidth: "0px" }}>
         <Modal
@@ -76,9 +88,10 @@ const RowsCompleted = ({ item }: { item: ICertificateList }) => {
 const InternalCertificate = () => {
   const { id } = useParams();
   const { data, isSuccess } = useProfileAuth(id as string);
+  const { t } = useTranslation();
   return (
     <>
-      <Title mt={"xl"}>Certificate</Title>
+      <Title mt={"xl"}>{t("certificate")}</Title>
       {data && data?.certificates.length > 0 ? (
         <ScrollArea>
           <Paper mt={10}>
@@ -91,23 +104,23 @@ const InternalCertificate = () => {
             >
               <thead>
                 <tr>
-                  <th>Trainings Name</th>
-                  <th>Completion</th>
-                  <th>isIssued</th>
-                  <th>Certificate URL</th>
+                  <th>{t("training_name")}</th>
+                  <th>{t("completion")}</th>
+                  <th>{t("is_issued")}</th>
+                  <th>{t("certificate_url")}</th>
                 </tr>
               </thead>
               <tbody>
                 {data?.certificates &&
                   data?.certificates.map((x: any) => (
-                    <RowsCompleted key={x.userId} item={x} />
+                    <RowsCompleted key={x.userId} item={x} t={t} />
                   ))}
               </tbody>
             </Table>
           </Paper>
         </ScrollArea>
       ) : (
-        <Box mt={10}>No Certificates found.</Box>
+        <Box mt={10}>{t("no_certificate")}</Box>
       )}
     </>
   );

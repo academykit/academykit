@@ -186,10 +186,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={12} lg={12}>
               <Text size="sm">{t("bio")}</Text>
-              <RichTextEditor
-                placeholder={t("your_bio") as string}
-                {...formData.getInputProps("bio")}
-              />
+              <RichTextEditor {...formData.getInputProps("bio")} />
             </Grid.Col>
             <Grid.Col lg={12}>
               <Button loading={updateUser.isLoading} type="submit">

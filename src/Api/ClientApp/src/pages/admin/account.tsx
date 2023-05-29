@@ -168,6 +168,7 @@ const Account = () => {
               withAsterisk
               name="currentPassword"
               label={t("current_password")}
+              placeholder={t("enter_current_password") as string}
               {...form.getInputProps("currentPassword")}
             />
             <PasswordInput
@@ -175,12 +176,14 @@ const Account = () => {
               name="newPassword"
               withAsterisk
               label={t("new_password")}
+              placeholder={t("enter_new_password") as string}
               {...form.getInputProps("newPassword")}
             />
             <PasswordInput
               mb={10}
               withAsterisk
               name="confirmPassword"
+              placeholder={t("confirm_new_password") as string}
               label={t("confirm_password")}
               {...form.getInputProps("confirmPassword")}
             />

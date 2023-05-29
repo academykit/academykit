@@ -23,8 +23,16 @@ import moment from "moment";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import downloadImage from "@utils/downloadImage";
+import { TFunction } from "i18next";
+import { useTranslation } from "react-i18next";
 
-const RowsExternal = ({ item }: { item: GetExternalCertificate }) => {
+const RowsExternal = ({
+  item,
+  t,
+}: {
+  item: GetExternalCertificate;
+  t: TFunction;
+}) => {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const handleDownload = () => {
@@ -34,7 +42,13 @@ const RowsExternal = ({ item }: { item: GetExternalCertificate }) => {
     <tr key={item?.user?.id}>
       <td>{item?.name}</td>
 
-      <td>{item?.status === 2 ? <Badge>Yes</Badge> : <Badge>No</Badge>}</td>
+      <td>
+        {item?.status === 2 ? (
+          <Badge>{t("yes")}</Badge>
+        ) : (
+          <Badge>{t("No")}</Badge>
+        )}
+      </td>
       <td>{moment(item?.startDate).format(theme.dateFormat)}</td>
       <td>{moment(item?.endDate).format(theme.dateFormat)}</td>
       <td>{item?.duration} Hour(s)</td>
@@ -84,7 +98,7 @@ const RowsExternal = ({ item }: { item: GetExternalCertificate }) => {
               </div>
             </div>
           ) : (
-            <Text>No Certificate</Text>
+            <Text>{t("no_certificate")}</Text>
           )}
         </Box>
       </td>
@@ -94,12 +108,13 @@ const RowsExternal = ({ item }: { item: GetExternalCertificate }) => {
 const ExternalCertificate = () => {
   const { id } = useParams();
   const externalCertificate = useGetUserCertificate(id as string);
+  const { t } = useTranslation();
 
   return (
     <>
       {externalCertificate.data && externalCertificate.data.length > 0 && (
         <>
-          <Title mt={"xl"}>External Certificate</Title>
+          <Title mt={"xl"}>{t("external_certificate")}</Title>
           <ScrollArea>
             <Paper mt={10}>
               <Table
@@ -111,19 +126,19 @@ const ExternalCertificate = () => {
               >
                 <thead>
                   <tr>
-                    <th>Trainings Name</th>
-                    <th>Verified</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Duration</th>
-                    <th>Issued by</th>
-                    <th>Issuer location</th>
-                    <th>Certificate</th>
+                    <th>{t("training_name")}</th>
+                    <th>{t("verified")}</th>
+                    <th>{t("start_date")}</th>
+                    <th>{t("end_date")}</th>
+                    <th>{t("duration")}</th>
+                    <th>{t("issued_by")}</th>
+                    <th>{t("issuer_location")}</th>
+                    <th>{t("certificate")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {externalCertificate?.data.map((x: any) => (
-                    <RowsExternal key={x.userId} item={x} />
+                    <RowsExternal key={x.userId} item={x} t={t} />
                   ))}
                 </tbody>
               </Table>
