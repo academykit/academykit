@@ -36,7 +36,7 @@ const schema = () => {
 const GroupDetail = () => {
   const { id } = useParams();
   const { theme } = useStyle();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const form = useForm({
     initialValues: {
       name: "",
@@ -44,7 +44,7 @@ const GroupDetail = () => {
     validate: yupResolver(schema()),
   });
   const [edit, setEdit] = useState(false);
-  const formErrors = useFormErrorHooks(form);
+  useFormErrorHooks(form);
 
   const groupDetail = useGetGroupDetail(id as string);
   const updateGroups = useUpdateGroup(id as string);
@@ -79,10 +79,6 @@ const GroupDetail = () => {
       });
     }
   };
-
-  i18n.on("languageChanged", () => {
-    console.log("first");
-  });
 
   return (
     <Container fluid>
