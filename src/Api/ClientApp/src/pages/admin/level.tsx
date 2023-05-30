@@ -126,8 +126,8 @@ const Level = () => {
               >
                 <TextInput
                   withAsterisk
-                  label="Level Name"
-                  placeholder="Enter Level Name"
+                  label={t("level_name")}
+                  placeholder={t("level_name_placeholder") as string}
                   name="eName"
                   {...form.getInputProps("eName")}
                 />
@@ -135,7 +135,7 @@ const Level = () => {
 
               <Group mt={20} ml={10}>
                 <Button type="submit" variant="outline">
-                  Save
+                  {t("save")}
                 </Button>
               </Group>
             </form>

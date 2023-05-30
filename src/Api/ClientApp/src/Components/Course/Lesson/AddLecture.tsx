@@ -60,6 +60,7 @@ const AddLecture = ({
   setIsEditing,
 }: IProps) => {
   const { id: slug } = useParams();
+  const { t } = useTranslation();
   const [videoUrl, setVideoUrl] = React.useState<string>(item?.videoUrl ?? "");
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
@@ -108,15 +109,17 @@ const AddLecture = ({
         } as ILessonLecture);
       }
       showNotification({
-        title: "Success!",
-        message: `Lesson ${isEditing ? "edited" : "added"} successfully.`,
+        title: t("successful"),
+        message: isEditing
+          ? t("lesson_edit_successful")
+          : t("lesson_add_successful"),
       });
       setAddLessonClick(true);
     } catch (error: any) {
       const err = errorType(error);
       showNotification({
         color: "red",
-        title: "Error!",
+        title: t("error"),
         message: err,
       });
     }
@@ -130,9 +133,11 @@ const AddLecture = ({
             <Grid.Col span={12} lg={8}>
               <TextInput
                 sx={{ width: "100%" }}
-                label={isRecordedVideo ? "Recording's Name" : "Video Name"}
+                label={isRecordedVideo ? t("recording_name") : t("video_name")}
                 placeholder={
-                  isRecordedVideo ? "Recording's Name" : "Video Name"
+                  isRecordedVideo
+                    ? (t("recording_name") as string)
+                    : (t("video_name") as string)
                 }
                 withAsterisk
                 {...form.getInputProps("name")}
@@ -141,7 +146,7 @@ const AddLecture = ({
             <Grid.Col span={4}>
               {!isRecordedVideo && (
                 <Switch
-                  label="Is Mandatory"
+                  label={t("is_mandatory")}
                   {...form.getInputProps("isMandatory")}
                   checked={isMandatory}
                   onChange={() => {
@@ -153,7 +158,7 @@ const AddLecture = ({
             </Grid.Col>
           </Grid>
           <Text size={"sm"} mt={10}>
-            {isRecordedVideo ? "Recordings" : "Video"}{" "}
+            {isRecordedVideo ? t("recordings") : t("video")}{" "}
             <span style={{ color: "red" }}>*</span>
           </Text>
           <LessonVideoUpload
@@ -163,10 +168,14 @@ const AddLecture = ({
           />
           <Textarea
             placeholder={
-              isRecordedVideo ? "Recording's Description" : "Video Description"
+              isRecordedVideo
+                ? (t("recording_description") as string)
+                : (t("video_description") as string)
             }
             label={
-              isRecordedVideo ? "Recording's Description" : "Video Description"
+              isRecordedVideo
+                ? t("recording_description")
+                : t("video_description")
             }
             my={form.errors["videoUrl"] ? 20 : 10}
             {...form.getInputProps("description")}
@@ -177,7 +186,7 @@ const AddLecture = ({
               type="submit"
               loading={lesson.isLoading || updateLesson.isLoading}
             >
-              Submit
+              {t("submit")}
             </Button>
             {!isEditing && (
               <Button
@@ -186,7 +195,7 @@ const AddLecture = ({
                 }}
                 variant="outline"
               >
-                Close
+                {t("close")}
               </Button>
             )}
           </Group>

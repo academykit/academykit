@@ -8,9 +8,11 @@ import {
 } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
   const form = useForm({ initialValues: data });
+  const { t } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(
     data.findIndex((x) => x.isActive)
   );
@@ -41,7 +43,7 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
             setActiveIndex(0);
           }}
           checked={form.values[0].isActive}
-          label={EFileStorageType[form.values[0].type]}
+          label={t(`${EFileStorageType[form.values[0].type]}`)}
         />
         {/* @ts-ignore */}
         <Radio
@@ -51,7 +53,7 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
             form.setFieldValue(`1.isActive`, true);
           }}
           checked={form.values[1].isActive}
-          label={EFileStorageType[form.values[1].type]}
+          label={t(`${EFileStorageType[form.values[1].type]}`)}
         />
       </Group>
       <Card>
@@ -64,7 +66,7 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
           />
         ))}
         <Button mt={20} type="submit">
-          Save
+          {t("save")}
         </Button>
       </Card>
     </form>
