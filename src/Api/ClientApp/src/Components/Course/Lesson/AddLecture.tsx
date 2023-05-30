@@ -109,7 +109,6 @@ const AddLecture = ({
         } as ILessonLecture);
       }
       showNotification({
-
         title: t("successful"),
         message: isEditing
           ? t("lesson_edit_successful")
@@ -125,7 +124,6 @@ const AddLecture = ({
       });
     }
   };
-  const { t } = useTranslation();
   return (
     <FormProvider form={form}>
       <form onSubmit={form.onSubmit(handleSubmit)}>
