@@ -14,15 +14,20 @@ import {
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
+import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IGetSignature>();
 
-const schema = Yup.object().shape({
-  fullName: Yup.string().required("Signature name is required."),
-  designation: Yup.string().required("Designation is required."),
-  fileUrl: Yup.string().required("File Url is required!"),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    fullName: Yup.string().required(t("signature_name_required") as string),
+    designation: Yup.string().required(t("designation_required") as string),
+    fileUrl: Yup.string().required(t("file_url_required") as string),
+  });
+};
 
 const CreateSignature = ({
   data,
@@ -42,6 +47,7 @@ const CreateSignature = ({
     initialValues: data,
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
   const edit = !!form.values.id;
 
   const handleSubmit = async (data: IGetSignature) => {

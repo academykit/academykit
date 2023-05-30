@@ -30,16 +30,20 @@ import { useEffect } from "react";
 import moment from "moment";
 import downloadImage from "@utils/downloadImage";
 import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
-const schema = Yup.object().shape({
-  title: Yup.string().required("Course Title is required."),
-  eventStartDate: Yup.string()
-    .required("Event Start Date is required.")
-    .typeError("Event Start Date is required."),
-  eventEndDate: Yup.string()
-    .required("Event End Date is required.")
-    .typeError("Event End Date is required."),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    title: Yup.string().required(t("course_title_required") as string),
+    eventStartDate: Yup.string()
+      .required(t("event_start_date_required") as string)
+      .typeError(t("event_start_date_required") as string),
+    eventEndDate: Yup.string()
+      .required(t("event_end_date_required") as string)
+      .typeError(t("event_end_date_required") as string),
+  });
+};
 
 const Certificate = () => {
   const params = useParams();
@@ -56,6 +60,7 @@ const Certificate = () => {
       eventEndDate: new Date(),
     },
   });
+  useFormErrorHooks(form);
 
   useEffect(() => {
     if (

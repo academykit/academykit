@@ -30,6 +30,16 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
+
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    email: Yup.string()
+      .email(t("invalid_email") as string)
+      .required(t("email_required") as string),
+  });
+};
 
 const TeacherCards = ({
   teacher: { id, user },
@@ -83,15 +93,13 @@ const TeacherCards = ({
 const Teacher = () => {
   const { t } = useTranslation();
 
-  const schema = Yup.object().shape({
-    email: Yup.string().email("Invalid email").required("Email is required."),
-  });
   const form = useForm({
     initialValues: {
       email: "",
     },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
   const slug = useParams();
   const getTeacher = useCourseTeacher(slug.id as string);
   const createTeacher = useCreateTeacherCourse();

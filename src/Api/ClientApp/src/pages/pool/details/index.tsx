@@ -17,12 +17,16 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
 const useStyle = createStyles({});
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Group name is required!"),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    name: Yup.string().required(t("group_name_required") as string),
+  });
+};
 
 const MCQDetails = () => {
   const { id } = useParams();
@@ -38,6 +42,7 @@ const MCQDetails = () => {
     },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
   useEffect(() => {
     if (pool.isSuccess) {
       form.setFieldValue("name", pool.data.name);

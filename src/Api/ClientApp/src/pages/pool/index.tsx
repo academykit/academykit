@@ -20,6 +20,7 @@ import errorType from "@utils/services/axiosError";
 import { useAddPool, usePools } from "@utils/services/poolService";
 import PoolCard from "./Components/PoolCard";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import { useTranslation } from "react-i18next";
 const useStyle = createStyles((theme) => ({
   paper: {
@@ -34,9 +35,12 @@ const useStyle = createStyles((theme) => ({
     marginBottom: "20px",
   },
 }));
-const schema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    name: Yup.string().required(t("name_required") as string),
+  });
+};
 
 const MCQPool = ({
   searchParams,
@@ -54,6 +58,7 @@ const MCQPool = ({
     },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
   const onSubmitForm = async ({ name }: { name: string }) => {
     try {
       await addPool.mutateAsync(name);
