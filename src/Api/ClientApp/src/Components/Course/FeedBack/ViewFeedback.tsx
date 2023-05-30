@@ -54,7 +54,7 @@ const FeedbackForm = ({
         data: finalData,
       });
       showNotification({
-        message: t("Thank you for your feedback."),
+        message: t("thankyou_feedback"),
       });
       navigation(-1);
     } catch (err) {
