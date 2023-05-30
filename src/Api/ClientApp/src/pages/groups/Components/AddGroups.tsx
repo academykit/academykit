@@ -20,7 +20,7 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
     initialValues: {
       name: "",
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
   const useStyles = createStyles((theme) => ({

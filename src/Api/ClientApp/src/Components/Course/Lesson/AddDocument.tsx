@@ -73,7 +73,7 @@ const AddDocument = ({
       documentUrl: item?.documentUrl ?? "",
       isMandatory: item?.isMandatory ?? false,
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
 

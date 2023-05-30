@@ -97,7 +97,7 @@ const Teacher = () => {
     initialValues: {
       email: "",
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
   const slug = useParams();

@@ -63,7 +63,7 @@ const Level = () => {
     initialValues: {
       name: "",
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
   const { t } = useTranslation();

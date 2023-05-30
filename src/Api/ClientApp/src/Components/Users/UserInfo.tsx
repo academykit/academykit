@@ -73,7 +73,7 @@ const UserInfo = () => {
       role: 1,
       isActive: false,
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(formData);
 

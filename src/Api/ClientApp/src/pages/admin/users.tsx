@@ -61,7 +61,7 @@ const UsersList = ({
     initialValues: {
       fileUpload: null,
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
 

@@ -67,7 +67,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
       institute: "",
       imageUrl: "",
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
   useEffect(() => {

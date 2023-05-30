@@ -76,7 +76,7 @@ const AddLecture = ({
       description: item?.description ?? "",
       isMandatory: item?.isMandatory,
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
   const handleSubmit = async (values: any) => {

@@ -71,7 +71,7 @@ const Account = () => {
       newPassword: "",
       confirmPassword: "",
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
 

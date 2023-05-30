@@ -120,7 +120,7 @@ const EditAssignment = ({
           }))
         : [{ option: "", isCorrect: false }],
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
 

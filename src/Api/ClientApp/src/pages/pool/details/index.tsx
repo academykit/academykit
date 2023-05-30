@@ -40,7 +40,7 @@ const MCQDetails = () => {
     initialValues: {
       name: "",
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
   useEffect(() => {

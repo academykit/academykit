@@ -107,7 +107,7 @@ const AddMeeting = ({
       isMandatory: false,
       description: "",
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
 

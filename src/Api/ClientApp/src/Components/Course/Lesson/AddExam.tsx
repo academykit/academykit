@@ -116,7 +116,7 @@ const AddExam = ({
       startDate: startDateTime,
       isMandatory: item?.isMandatory ?? false,
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
 

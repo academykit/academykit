@@ -66,7 +66,7 @@ const AddFeedback = ({
       description: item?.description ?? "",
       isMandatory: item?.isMandatory ?? false,
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
 

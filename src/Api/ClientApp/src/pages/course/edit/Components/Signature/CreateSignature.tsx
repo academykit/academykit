@@ -45,7 +45,7 @@ const CreateSignature = ({
 
   const form = useForm({
     initialValues: data,
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
   const edit = !!form.values.id;

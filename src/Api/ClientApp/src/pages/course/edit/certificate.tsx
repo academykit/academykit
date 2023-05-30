@@ -53,7 +53,7 @@ const Certificate = () => {
   const data = getCertificateDetails.data?.data;
 
   const form = useForm({
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
     initialValues: {
       title: "",
       eventStartDate: new Date(),

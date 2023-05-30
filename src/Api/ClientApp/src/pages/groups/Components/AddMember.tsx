@@ -39,7 +39,7 @@ const AddMember = ({
     initialValues: {
       email: [],
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
   const ref = useRef<HTMLInputElement>(null);

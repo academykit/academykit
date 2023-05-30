@@ -118,7 +118,7 @@ const AddAssignment = ({
       endTime: endDateTime ?? new Date(),
       startTime: startDateTime ?? new Date(),
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
 

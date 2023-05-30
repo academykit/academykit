@@ -201,7 +201,7 @@ const Department = ({
 
   const form = useForm({
     initialValues: { name: "", isActive: false },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
   const getDepartment = useDepartmentSetting(searchParams);

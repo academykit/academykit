@@ -56,7 +56,7 @@ const AddUpdateUserForm = ({
   const { t } = useTranslation();
   const form = useForm<IUserProfile>({
     initialValues: item,
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
 

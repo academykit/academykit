@@ -67,7 +67,7 @@ const GeneralSettings = () => {
       companyContactNumber: "",
       emailSignature: "",
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
 

@@ -56,7 +56,7 @@ const MCQPool = ({
     initialValues: {
       name: "",
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
   const onSubmitForm = async ({ name }: { name: string }) => {

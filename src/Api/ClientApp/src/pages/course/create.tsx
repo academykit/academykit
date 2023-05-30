@@ -82,7 +82,7 @@ const CreateCoursePage = () => {
       description: "",
       tags: [],
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
 
