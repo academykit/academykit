@@ -30,6 +30,7 @@ import {
 import moment from "moment";
 import React from "react";
 import UserShortProfile from "@components/UserShortProfile";
+import { useTranslation } from "react-i18next";
 
 const CertificateCard = ({
   auth,
@@ -42,7 +43,7 @@ const CertificateCard = ({
 }) => {
   const updateStatus = useUpdateCertificateStatus(item.id, search);
   const theme = useMantineTheme();
-
+  const { t } = useTranslation();
   const handleSubmit = async (approve: boolean) => {
     try {
       const status = approve
@@ -50,7 +51,9 @@ const CertificateCard = ({
         : CertificateStatus.Rejected;
       await updateStatus.mutateAsync({ id: item.id, status });
       showNotification({
-        message: `Training ${approve ? "approved" : "rejected"} successfully.`,
+        message: `${t("training")} ${
+          approve ? t("approved") : t("rejected")
+        } ${t("successfully")}`,
       });
     } catch (error) {
       const err = errorType(error);
@@ -70,9 +73,9 @@ const CertificateCard = ({
             <Badge ml={20}>{CertificateStatus[item.status]}</Badge>
           </Text>
           <Text mt={5}>
-            From {moment(item.startDate).format(theme.dateFormat)} to{" "}
-            {moment(item.endDate).format(theme.dateFormat)}, Completed in about{" "}
-            {item.duration} hrs.
+            {t("from")} {moment(item.startDate).format(theme.dateFormat)}{" "}
+            {t("to")} {moment(item.endDate).format(theme.dateFormat)}
+            {t("completed_in_about")} {item.duration} {t("hrs")}
           </Text>
           <Text>
             {item.institute}
@@ -126,7 +129,7 @@ const CertificateCard = ({
               loading={updateStatus.isLoading}
               onClick={() => handleSubmit(true)}
             >
-              Approve
+              {t("approve")}
             </Button>
             <Button
               ml={10}
@@ -135,7 +138,7 @@ const CertificateCard = ({
               onClick={() => handleSubmit(false)}
               loading={updateStatus.isLoading}
             >
-              Reject
+              {t("reject")}
             </Button>
           </Box>
         )}
@@ -150,9 +153,10 @@ const CertificateList = ({
 }: IWithSearchPagination) => {
   const listCertificate = useGetListCertificate(searchParams);
   const auth = useAuth();
+  const { t } = useTranslation();
   return (
     <Container fluid>
-      <Title>List of External Trainings</Title>
+      <Title>{t("external_trainings_list")}</Title>
       {/* {searchComponent("Search for trainings")} */}
 
       {listCertificate.isSuccess &&
@@ -164,7 +168,7 @@ const CertificateList = ({
 
       {listCertificate.isSuccess &&
         listCertificate.data?.data.totalCount < 1 && (
-          <Box>No External trainings found!</Box>
+          <Box>{t("no_external_trainings")}</Box>
         )}
     </Container>
   );
