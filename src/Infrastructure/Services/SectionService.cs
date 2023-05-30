@@ -208,7 +208,7 @@ namespace Lingtren.Infrastructure.Services
             if (sectionExist)
             {
                 _logger.LogWarning("Duplicate section name : {name} is found for the section with id : {id}.", entity.Name, entity.Id);
-                throw new ServiceException("Duplicate section name is found.");
+                throw new ServiceException(_localizer.GetString("DuplicateSectionNameFound"));
             }
         }
 

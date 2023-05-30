@@ -509,7 +509,7 @@ namespace Lingtren.Infrastructure.Services
                     if (questionSet == null)
                     {
                         _logger.LogWarning("DeleteLessonAsync(): Lesson with id:{lessonId} and type: {lessonType} does not contain question set with id : {questionSetId}.", lesson.Id, lesson.Type, lesson.QuestionSetId);
-                        throw new EntityNotFoundException($"Question set not found for lesson with type: {lesson.Type}.");
+                        throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                     }
 
                     var hasAnyAttempt = await _unitOfWork.GetRepository<QuestionSetSubmission>().ExistsAsync(
@@ -532,7 +532,7 @@ namespace Lingtren.Infrastructure.Services
                     {
                         _logger.LogWarning("DeleteLessonAsync(): Lesson with id:{lessonId} and type: {type} does not contain meeting with id : {meetingId}.",
                                            lesson.Id, lesson.Type, lesson.MeetingId);
-                        throw new EntityNotFoundException($"Meeting not found for lesson with type: {lesson.Type}.");
+                        throw new EntityNotFoundException(_localizer.GetString("MeetingNotFound"));
                     }
                 }
 

@@ -567,4 +567,112 @@
   <data name="UpdateTagError" xml:space="preserve">
     <value>An error occurred while trying to update tag.</value>
   </data>
+  <data name="AllLiscensePlaced" xml:space="preserve">
+    <value>All Liscense Id have been booked, please select another instance.</value>
+  </data>
+  <data name="DuplicateQuestionPoolName" xml:space="preserve">
+    <value>Duplicate question pool name is found.</value>
+  </data>
+  <data name="DuplicateSectionNameFound" xml:space="preserve">
+    <value>Duplicate section name is found.</value>
+  </data>
+  <data name="ErrorAttemptingRetrievingResult" xml:space="preserve">
+    <value>An error occurred while attempting to retrieving the results.</value>
+  </data>
+  <data name="ErrorAttemptingSubmitExam" xml:space="preserve">
+    <value>An error occurred while attempting to submit the exam.</value>
+  </data>
+  <data name="ErrorGettingResult" xml:space="preserve">
+    <value>An error occurred while getting result details.</value>
+  </data>
+  <data name="ErrorOccurredAttemptingStartExam" xml:space="preserve">
+    <value>An error occurred while attempting to start exam.</value>
+  </data>
+  <data name="ErrorOccurredOnMinioCredentails" xml:space="preserve">
+    <value>An error occurred while attempting to get the minio credentials.</value>
+  </data>
+  <data name="ErrorOccurredOnUploadFile" xml:space="preserve">
+    <value>An error occurred while attempting to upload file to the server.</value>
+  </data>
+  <data name="ErrorOccurredVerifyResetToken" xml:space="preserve">
+    <value>An error occurred while attempting to verify reset token.</value>
+  </data>
+  <data name="ErrorOnCalculateTrainingPercentage" xml:space="preserve">
+    <value>An error occurred while trying to calculate training completed percentage.</value>
+  </data>
+  <data name="ErrorRetrievingStudentResult" xml:space="preserve">
+    <value>An error occurred while attempting to retrieving the student result.</value>
+  </data>
+  <data name="ErrorUpdateWatchHistory" xml:space="preserve">
+    <value>An error occurred while trying to update watch history.</value>
+  </data>
+  <data name="ExamAlreadyFinished" xml:space="preserve">
+    <value>Exam already finished.</value>
+  </data>
+  <data name="ExamAlreadySubmitted" xml:space="preserve">
+    <value>Exam already submitted.</value>
+  </data>
+  <data name="ExamAlreadyTaken" xml:space="preserve">
+    <value>Exam already taken.</value>
+  </data>
+  <data name="ExamResultNotFound" xml:space="preserve">
+    <value>Exam result not found.</value>
+  </data>
+  <data name="ExamSubmissionNotFound" xml:space="preserve">
+    <value>Exam submission not found.</value>
+  </data>
+  <data name="ExamSubmissionNotMatchQuestionSet" xml:space="preserve">
+    <value>Exam submission question doesn't match with question set question.</value>
+  </data>
+  <data name="FeedbackContainsFeedbackSubmissions" xml:space="preserve">
+    <value>Feedback contains feedback submissions.</value>
+  </data>
+  <data name="LateSubmission" xml:space="preserve">
+    <value>Late Submission.</value>
+  </data>
+  <data name="QuestionPoolAuhorCannotRemoved" xml:space="preserve">
+    <value>Question pool author cannot be removed.</value>
+  </data>
+  <data name="QuestionPoolAuthorCanNotAdded" xml:space="preserve">
+    <value>Question pool author cannot be added.</value>
+  </data>
+  <data name="QuestionPoolContainQuestion" xml:space="preserve">
+    <value>Question pool contains questions. So, to delete question pool remove all the questions from pool.</value>
+  </data>
+  <data name="QuestionSetEnded" xml:space="preserve">
+    <value>Question set has ended.</value>
+  </data>
+  <data name="QuestionSetNotStarted" xml:space="preserve">
+    <value>Question set has not started yet.</value>
+  </data>
+  <data name="ServerAccessKeyNotFound" xml:space="preserve">
+    <value>Server Access key not found.</value>
+  </data>
+  <data name="ServerBucketNotFound" xml:space="preserve">
+    <value>Server bucket not found.</value>
+  </data>
+  <data name="ServerEndPointNotFound" xml:space="preserve">
+    <value>Server end point not found.</value>
+  </data>
+  <data name="ServerPreSignedExpiryTimeNotFound" xml:space="preserve">
+    <value>Server pre-signed expiry time not found.</value>
+  </data>
+  <data name="ServerPreSignedUlrNotFound" xml:space="preserve">
+    <value>Server pre-signed url  not found.</value>
+  </data>
+  <data name="ServerSecretKeyNotFound" xml:space="preserve">
+    <value>Server secret key not found.</value>
+  </data>
+  <data name="ServerUrlNotFound" xml:space="preserve">
+    <value>Server url not found.</value>
+  </data>
+  <data name="UserCanNotRemoveSameUser" xml:space="preserve">
+    <value>User cannot be removed same user.</value>
+  </data>
+  <data name="UserImported" xml:space="preserve">
+    <value>Successfully user imported.</value>
+  </data>
+  <data name="UserNotEnrolledTraining" xml:space="preserve">
+    <value>User is not enrolled in this training.</value>
+  </data>
 </root>

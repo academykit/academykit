@@ -108,14 +108,14 @@
             if (teacher.UserId == currentUserId)
             {
                 _logger.LogWarning("User with id : {userId} cannot remove own-self from question pool teacher with pool id : {poolId}.", currentUserId, teacher.QuestionPoolId);
-                throw new ForbiddenException("User cannot be removed same user.");
+                throw new ForbiddenException(_localizer.GetString("UserCanNotRemoveSameUser"));
             }
 
             var questionPool = await ValidateAndGetQuestionPool(currentUserId, questionPoolIdentity: teacher.QuestionPoolId.ToString()).ConfigureAwait(false);
             if (questionPool.CreatedBy == teacher.UserId)
             {
                 _logger.LogWarning("QuestionPool with Id {id} creator User Id {userId} can't be delete from questionPool teacher.", questionPool.Id, teacher.UserId);
-                throw new ForbiddenException("Question pool author cannot be removed.");
+                throw new ForbiddenException(_localizer.GetString("QuestionPoolAuhorCannotRemoved"));
             }
         }
 
@@ -134,7 +134,7 @@
             if (questionPool.CreatedBy == entity.UserId)
             {
                 _logger.LogWarning("QuestionPool with Id : {id} creator User Id : {userId} can't be questionPool teacher.", questionPool.Id, entity.UserId);
-                throw new ForbiddenException("Question pool author cannot be added.");
+                throw new ForbiddenException(_localizer.GetString("QuestionPoolAuthorCanNotAdded"));
             }
             if (questionPool.QuestionPoolTeachers.Any(p => p.UserId == entity.UserId))
             {

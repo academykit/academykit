@@ -345,7 +345,7 @@
                         BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailImportedUserAsync(newUserEmails, null));
                     }
                 }
-                return string.IsNullOrEmpty(stringBuilder.ToString()) ? "Successfully user imported." : $"{stringBuilder.ToString()}";
+                return string.IsNullOrEmpty(stringBuilder.ToString()) ? _localizer.GetString("UserImported") : $"{stringBuilder.ToString()}";
             }
             catch (Exception ex)
             {
@@ -397,7 +397,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to verify reset token.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to verify reset token.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredVerifyResetToken"));
             }
         }
 
@@ -435,7 +435,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to verify reset token.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to verify reset token.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredVerifyResetToken"));
             }
         }
 

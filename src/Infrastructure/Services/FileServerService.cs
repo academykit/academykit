@@ -87,7 +87,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, "An error occurred while attempting to upload file to the server.");
-                throw ex is ServiceException ? ex : new ServiceException($"An error occurred while attempting to upload file to the server. {ex.Message}");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredOnUploadFile"));
             }
         }
 
@@ -152,40 +152,40 @@ namespace Lingtren.Infrastructure.Services
                 var accessKey = settings.FirstOrDefault(x => x.Key == "Server_AccessKey")?.Value;
                 if (string.IsNullOrEmpty(accessKey))
                 {
-                    throw new EntityNotFoundException("Server Access key not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("ServerAccessKeyNotFound"));
                 }
 
                 var secretKey = settings.FirstOrDefault(x => x.Key == "Server_SecretKey")?.Value;
                 if (string.IsNullOrEmpty(secretKey))
                 {
-                    throw new EntityNotFoundException("Server secret key not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("ServerSecretKeyNotFound"));
                 }
 
                 var url = settings.FirstOrDefault(x => x.Key == "Server_Url")?.Value;
                 if (string.IsNullOrEmpty(url))
                 {
-                    throw new EntityNotFoundException("Server url not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("ServerUrlNotFound"));
                 }
                 var bucket = settings.FirstOrDefault(x => x.Key == "Server_Bucket")?.Value;
                 if (string.IsNullOrEmpty(bucket))
                 {
-                    throw new EntityNotFoundException("Server bucket not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("ServerBucketNotFound"));
                 }
 
                 var endPoint = settings.FirstOrDefault(x => x.Key == "Server_EndPoint")?.Value;
                 if (string.IsNullOrEmpty(secretKey))
                 {
-                    throw new EntityNotFoundException("Server end point not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("ServerEndPointNotFound"));
                 }
                 var preSigned = settings.FirstOrDefault(x => x.Key == "Server_PresignedUrl")?.Value;
                 if (string.IsNullOrEmpty(preSigned))
                 {
-                    throw new EntityNotFoundException("Server pre-signed url  not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("ServerPreSignedUlrNotFound"));
                 }
                 var expiryTime = settings.FirstOrDefault(x => x.Key == "Server_PresignedExpiryTime")?.Value;
                 if (string.IsNullOrEmpty(expiryTime))
                 {
-                    throw new EntityNotFoundException("Server end point not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("ServerPreSignedExpiryTimeNotFound"));
                 }
                 miniodto.AccessKey = accessKey;
                 miniodto.SecretKey = secretKey;
@@ -199,7 +199,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to get the minio credential.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to get the minio credential.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredOnMinioCredentails"));
             }
         }
 

@@ -567,4 +567,112 @@
   <data name="UpdateTagError" xml:space="preserve">
     <value>タグを更新しようとしたときにエラーが発生しました</value>
   </data>
+  <data name="AllLiscensePlaced" xml:space="preserve">
+    <value>すべてのライセンス ID が予約されています。別のインスタンスを選択してください</value>
+  </data>
+  <data name="DuplicateQuestionPoolName" xml:space="preserve">
+    <value>重複する質問プール名が見つかりました</value>
+  </data>
+  <data name="DuplicateSectionNameFound" xml:space="preserve">
+    <value>重複したセクション名が見つかりました</value>
+  </data>
+  <data name="ErrorAttemptingRetrievingResult" xml:space="preserve">
+    <value>結果を取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorAttemptingSubmitExam" xml:space="preserve">
+    <value>試験を提出しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorGettingResult" xml:space="preserve">
+    <value>結果の詳細を取得中にエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredAttemptingStartExam" xml:space="preserve">
+    <value>試験を開始しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredOnMinioCredentails" xml:space="preserve">
+    <value>Minio 資格情報を取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredOnUploadFile" xml:space="preserve">
+    <value>ファイルをサーバーにアップロードしようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredVerifyResetToken" xml:space="preserve">
+    <value>リセット トークンを検証しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOnCalculateTrainingPercentage" xml:space="preserve">
+    <value>トレーニング完了率を計算しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorRetrievingStudentResult" xml:space="preserve">
+    <value>生徒の結果を取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorUpdateWatchHistory" xml:space="preserve">
+    <value>視聴履歴を更新しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ExamAlreadyFinished" xml:space="preserve">
+    <value>試験はもう終わった</value>
+  </data>
+  <data name="ExamAlreadySubmitted" xml:space="preserve">
+    <value>試験はすでに提出済みです</value>
+  </data>
+  <data name="ExamAlreadyTaken" xml:space="preserve">
+    <value>試験はすでに受けられています</value>
+  </data>
+  <data name="ExamResultNotFound" xml:space="preserve">
+    <value>試験結果が見つかりませんでした</value>
+  </data>
+  <data name="ExamSubmissionNotFound" xml:space="preserve">
+    <value>試験の提出物が見つかりません</value>
+  </data>
+  <data name="ExamSubmissionNotMatchQuestionSet" xml:space="preserve">
+    <value>試験提出の質問が問題集の質問と一致しません</value>
+  </data>
+  <data name="FeedbackContainsFeedbackSubmissions" xml:space="preserve">
+    <value>フィードバックにはフィードバックの送信が含まれます</value>
+  </data>
+  <data name="LateSubmission" xml:space="preserve">
+    <value>提出が遅れています</value>
+  </data>
+  <data name="QuestionPoolAuhorCannotRemoved" xml:space="preserve">
+    <value>質問プールの作成者は削除できません</value>
+  </data>
+  <data name="QuestionPoolAuthorCanNotAdded" xml:space="preserve">
+    <value>質問プールの作成者は追加できません</value>
+  </data>
+  <data name="QuestionPoolContainQuestion" xml:space="preserve">
+    <value>質問プールには質問が含まれています。したがって、質問プールを削除するには、プールからすべての質問を削除します</value>
+  </data>
+  <data name="QuestionSetEnded" xml:space="preserve">
+    <value>問題集は終了しました</value>
+  </data>
+  <data name="QuestionSetNotStarted" xml:space="preserve">
+    <value>質問セットはまだ開始されていません</value>
+  </data>
+  <data name="ServerAccessKeyNotFound" xml:space="preserve">
+    <value>サーバーアクセスキーが見つかりません</value>
+  </data>
+  <data name="ServerBucketNotFound" xml:space="preserve">
+    <value>サーバーバケットが見つかりません</value>
+  </data>
+  <data name="ServerEndPointNotFound" xml:space="preserve">
+    <value>サーバーのエンドポイントが見つかりません</value>
+  </data>
+  <data name="ServerPreSignedExpiryTimeNotFound" xml:space="preserve">
+    <value>サーバーの事前署名された有効期限が見つかりません</value>
+  </data>
+  <data name="ServerPreSignedUlrNotFound" xml:space="preserve">
+    <value>サーバーの事前署名された URL が見つかりません</value>
+  </data>
+  <data name="ServerSecretKeyNotFound" xml:space="preserve">
+    <value>サーバーの秘密キーが見つかりません</value>
+  </data>
+  <data name="ServerUrlNotFound" xml:space="preserve">
+    <value>サーバーの URL が見つかりません</value>
+  </data>
+  <data name="UserCanNotRemoveSameUser" xml:space="preserve">
+    <value>同じユーザーを削除することはできません</value>
+  </data>
+  <data name="UserImported" xml:space="preserve">
+    <value>ユーザーが正常にインポートされました</value>
+  </data>
+  <data name="UserNotEnrolledTraining" xml:space="preserve">
+    <value>ユーザーはこのトレーニングに登録されていません</value>
+  </data>
 </root>

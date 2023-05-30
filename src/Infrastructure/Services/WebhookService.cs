@@ -40,7 +40,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 if (context == null)
                 {
-                    throw new ArgumentException("Context not found.");
+                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
                 }
 
                 if (dto.Payload.Object.Recording_files.Count == default)

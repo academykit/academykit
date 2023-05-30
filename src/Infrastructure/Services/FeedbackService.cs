@@ -41,7 +41,7 @@
             if (lesson == null)
             {
                 _logger.LogWarning("Lesson with identity : {identity} not found for user with id : {id}.", criteria.LessonIdentity, criteria.CurrentUserId);
-                throw new EntityNotFoundException("Lesson not found.");
+                throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
             }
 
             if (!string.IsNullOrWhiteSpace(criteria.Search))
@@ -67,7 +67,7 @@
             if (feedbackSubmissions)
             {
                 _logger.LogWarning("Feedback with id : {id} having type : {type} contains Feedback submissions.", entity.Id, entity.Type);
-                throw new ForbiddenException("Feedback contains feedback submissions.");
+                throw new ForbiddenException(_localizer.GetString("FeedbackContainsFeedbackSubmissions"));
             }
             _unitOfWork.GetRepository<FeedbackQuestionOption>().Delete(entity.FeedbackQuestionOptions);
         }

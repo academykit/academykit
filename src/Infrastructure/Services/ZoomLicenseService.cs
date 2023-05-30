@@ -157,7 +157,7 @@
                 }));
                 if (response.Count == 0)
                 {
-                    throw new NullReferenceException("All Liscense Id have been booked, please select another instance");
+                    throw new NullReferenceException(_localizer.GetString("AllLiscensePlaced"));
                 }
                 return response;
             }
@@ -307,7 +307,7 @@
             {
                 if (context == null)
                 {
-                    throw new ArgumentException("Context not found.");
+                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
                 }
                 var tokenString = await GetZoomJWTAccessToken().ConfigureAwait(false);
                 var client = new RestClient($"{zoomAPIPath}/meetings/{meetingId}/recordings?action=delete");

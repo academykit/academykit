@@ -564,4 +564,112 @@
   <data name="UpdateTagError" xml:space="preserve">
     <value>ट्याग अपडेट गर्ने प्रयास गर्दा त्रुटि भयो।</value>
   </data>
+  <data name="AllLiscensePlaced" xml:space="preserve">
+    <value>सबै लाइसेन्स आईडी बुक गरिएको छ, कृपया अर्को उदाहरण चयन गर्नुहोस्।</value>
+  </data>
+  <data name="DuplicateQuestionPoolName" xml:space="preserve">
+    <value>डुप्लिकेट प्रश्न पोखरी नाम फेला पर्यो।</value>
+  </data>
+  <data name="DuplicateSectionNameFound" xml:space="preserve">
+    <value>डुप्लिकेट खण्ड नाम फेला पर्यो।</value>
+  </data>
+  <data name="ErrorAttemptingRetrievingResult" xml:space="preserve">
+    <value>परिणामहरू पुन: प्राप्त गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorAttemptingSubmitExam" xml:space="preserve">
+    <value>परीक्षा पेश गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorGettingResult" xml:space="preserve">
+    <value>परिणाम विवरणहरू प्राप्त गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredAttemptingStartExam" xml:space="preserve">
+    <value>परीक्षा सुरु गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredOnMinioCredentails" xml:space="preserve">
+    <value>Minio credentials प्राप्त गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredOnUploadFile" xml:space="preserve">
+    <value>सर्भरमा फाइल अपलोड गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredVerifyResetToken" xml:space="preserve">
+    <value>रिसेट टोकन प्रमाणीकरण गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOnCalculateTrainingPercentage" xml:space="preserve">
+    <value>तालिम पूरा भएको प्रतिशत गणना गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorRetrievingStudentResult" xml:space="preserve">
+    <value>विद्यार्थीको नतिजा पुन: प्राप्त गर्ने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorUpdateWatchHistory" xml:space="preserve">
+    <value>हेराइको इतिहास अपडेट गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ExamAlreadyFinished" xml:space="preserve">
+    <value>परीक्षा पहिले नै सकियो।</value>
+  </data>
+  <data name="ExamAlreadySubmitted" xml:space="preserve">
+    <value>परीक्षा पहिले नै पेश गरिएको छ।</value>
+  </data>
+  <data name="ExamAlreadyTaken" xml:space="preserve">
+    <value>परिक्षा लिइसकेको छ ।</value>
+  </data>
+  <data name="ExamResultNotFound" xml:space="preserve">
+    <value>परीक्षाको नतिजा फेला परेन।</value>
+  </data>
+  <data name="ExamSubmissionNotFound" xml:space="preserve">
+    <value>परीक्षा सबमिशन फेला परेन।</value>
+  </data>
+  <data name="ExamSubmissionNotMatchQuestionSet" xml:space="preserve">
+    <value>परीक्षा सबमिशन प्रश्न प्रश्न सेट प्रश्नसँग मेल खाँदैन।</value>
+  </data>
+  <data name="FeedbackContainsFeedbackSubmissions" xml:space="preserve">
+    <value>प्रतिक्रियामा प्रतिक्रिया सबमिशनहरू समावेश छन्।</value>
+  </data>
+  <data name="LateSubmission" xml:space="preserve">
+    <value>ढिलो सबमिशन।</value>
+  </data>
+  <data name="QuestionPoolAuhorCannotRemoved" xml:space="preserve">
+    <value>प्रश्न पूल लेखक हटाउन सकिँदैन।</value>
+  </data>
+  <data name="QuestionPoolAuthorCanNotAdded" xml:space="preserve">
+    <value>प्रश्न पूल लेखक थप्न सकिँदैन।</value>
+  </data>
+  <data name="QuestionPoolContainQuestion" xml:space="preserve">
+    <value>प्रश्न पूलमा प्रश्नहरू छन्। त्यसैले, प्रश्न पूल मेटाउन पूलबाट सबै प्रश्नहरू हटाउनुहोस्।</value>
+  </data>
+  <data name="QuestionSetEnded" xml:space="preserve">
+    <value>प्रश्न सेट समाप्त भयो।</value>
+  </data>
+  <data name="QuestionSetNotStarted" xml:space="preserve">
+    <value>प्रश्न सेट अझै सुरु भएको छैन।</value>
+  </data>
+  <data name="ServerAccessKeyNotFound" xml:space="preserve">
+    <value>सर्भर पहुँच कुञ्जी फेला परेन।</value>
+  </data>
+  <data name="ServerBucketNotFound" xml:space="preserve">
+    <value>सर्भर बाल्टी फेला परेन।</value>
+  </data>
+  <data name="ServerEndPointNotFound" xml:space="preserve">
+    <value>सर्भर अन्तिम बिन्दु फेला परेन।</value>
+  </data>
+  <data name="ServerPreSignedExpiryTimeNotFound" xml:space="preserve">
+    <value>सर्भर पूर्व-साइन गरिएको म्याद समाप्ति समय फेला परेन।</value>
+  </data>
+  <data name="ServerPreSignedUlrNotFound" xml:space="preserve">
+    <value>सर्भर पूर्व-हस्ताक्षरित url फेला परेन।</value>
+  </data>
+  <data name="ServerSecretKeyNotFound" xml:space="preserve">
+    <value>सर्भर गोप्य कुञ्जी फेला परेन।</value>
+  </data>
+  <data name="ServerUrlNotFound" xml:space="preserve">
+    <value>सर्भर url फेला परेन।</value>
+  </data>
+  <data name="UserCanNotRemoveSameUser" xml:space="preserve">
+    <value>प्रयोगकर्ता एउटै प्रयोगकर्ता हटाउन सकिँदैन।</value>
+  </data>
+  <data name="UserImported" xml:space="preserve">
+    <value>सफलतापूर्वक प्रयोगकर्ता आयात गरियो।</value>
+  </data>
+  <data name="UserNotEnrolledTraining" xml:space="preserve">
+    <value>प्रयोगकर्ता यस प्रशिक्षणमा नामांकन गरिएको छैन।</value>
+  </data>
 </root>
