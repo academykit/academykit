@@ -31,6 +31,7 @@ import { TFunction } from "i18next";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
 interface IZoomLicensePost {
   licenseEmail: string;
@@ -45,16 +46,19 @@ export default function ZoomLicense() {
   const [showAddForm, toggleAddForm] = useToggle();
   const { t } = useTranslation();
 
-  const schema = Yup.object().shape({
-    licenseEmail: Yup.string()
-      .email("Invalid Licenses Email.")
-      .required("Licenses Email is required."),
-    hostId: Yup.string().required("Host ID is required."),
-    capacity: Yup.number()
-      .integer()
-      .nullable(false)
-      .min(1, "Capacity should be greater than 0."),
-  });
+  const schema = () => {
+    const { t } = useTranslation();
+    return Yup.object().shape({
+      licenseEmail: Yup.string()
+        .email(t("invalid_lisences_email") as string)
+        .required(t("lisence_email_required") as string),
+      hostId: Yup.string().required(t("host_id_required") as string),
+      capacity: Yup.number()
+        .integer()
+        .nullable(false)
+        .min(1, t("capacity_required") as string),
+    });
+  };
 
   const form = useForm<IZoomLicensePost>({
     initialValues: {
@@ -64,6 +68,7 @@ export default function ZoomLicense() {
     },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
 
   const Rows = ({ item }: { item: IZoomLicense<IUser> }) => {
     const [isChecked, setIsChecked] = useState<boolean>(item?.isActive);

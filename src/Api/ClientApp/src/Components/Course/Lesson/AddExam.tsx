@@ -25,47 +25,35 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
+import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Exam Name is required."),
+const schema = () => {
+  const { t } = useTranslation();
 
-  startDate: Yup.date()
-    .required("Start Date is required.")
-    .typeError("Start Date is required."),
-  endDate: Yup.date()
-    .required("End Date is required.")
-    .typeError("End Date is required."),
-  questionMarking: Yup.string().required("Question weightage is required."),
-  startTime: Yup.string()
-    .required("start time cannot be empty.")
-    .typeError("Start Time is required."),
-  endTime: Yup.string()
-    .required("end time cannot be empty.")
-    .typeError("End Time is required."),
-  duration: Yup.number()
-    .required("Duration is required.")
-    .min(1, "Exam duration should at least be one."),
-});
-const schema2 = Yup.object().shape({
-  name: Yup.string().required(t("exam_name_required")),
+  return Yup.object().shape({
+    name: Yup.string().required(t("exam_name_required") as string),
 
-  startDate: Yup.date()
-    .required(t("start_date_required"))
-    .typeError(t("start_date_required")),
-  endDate: Yup.date()
-    .required(t("end_date_required"))
-    .typeError(t("start_date_required")),
-  questionMarking: Yup.string().required(t("question_weightage_required")),
-  startTime: Yup.string()
-    .required(t("start_time_not_empty"))
-    .typeError(t("start_time_required")),
-  endTime: Yup.string()
-    .required(t("end_time_not_empty"))
-    .typeError(t("end_time_required")),
-  duration: Yup.number()
-    .required(t("duration_required"))
-    .min(1, t("exam_duration_atleast_one")),
-});
+    startDate: Yup.date()
+      .required(t("start_date_required") as string)
+      .typeError(t("start_date_required") as string),
+    endDate: Yup.date()
+      .required(t("end_date_required") as string)
+      .typeError(t("start_date_required") as string),
+    questionMarking: Yup.string().required(
+      t("question_weightage_required") as string
+    ),
+    startTime: Yup.string()
+      .required(t("start_time_not_empty") as string)
+      .typeError(t("start_time_required") as string),
+    endTime: Yup.string()
+      .required(t("end_time_not_empty") as string)
+      .typeError(t("end_time_required") as string),
+    duration: Yup.number()
+      .required(t("duration_required") as string)
+      .min(1, t("exam_duration_atleast_one") as string),
+  });
+};
 const strippedFormValue = (value: any) => {
   const val = { ...value };
   delete val.isMandatory;
@@ -130,6 +118,7 @@ const AddExam = ({
     },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
 
   const handleSubmit = async (values: any) => {
     try {

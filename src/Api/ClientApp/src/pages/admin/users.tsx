@@ -28,6 +28,7 @@ const AddUpdateUserForm = lazyWithRetry(
 import * as Yup from "yup";
 import { useForm, yupResolver } from "@mantine/form";
 import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
 const sortByObject = [
   { value: "firstName:Ascending", label: "Name (A-Z)" },
@@ -36,9 +37,12 @@ const sortByObject = [
   { value: "email:Descending", label: "Email (Z-A)" },
 ];
 
-const schema = Yup.object().shape({
-  fileUpload: Yup.mixed().required("CSV file is required!"),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    fileUpload: Yup.mixed().required(t("csv_file_required") as string),
+  });
+};
 
 const UsersList = ({
   searchParams,
@@ -59,6 +63,7 @@ const UsersList = ({
     },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
 
   const onSubmit = async (values: { fileUpload: File | null }) => {
     setCsvLoad(true);

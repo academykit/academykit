@@ -22,15 +22,17 @@ import errorType from "@utils/services/axiosError";
 import * as Yup from "yup";
 import CreateFeedback from "../FeedBack/CreateFeedBack";
 import FileUploadLesson from "@components/Ui/FileUploadLesson";
+import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("File Name is required."),
-  documentUrl: Yup.string().required("File is required!"),
-});
-const schema2 = Yup.object().shape({
-  name: Yup.string().required(t("file_name_required")),
-  documentUrl: Yup.string().required(t("file_required")),
-});
+const schema = () => {
+  const { t } = useTranslation();
+
+  return Yup.object().shape({
+    name: Yup.string().required(t("file_name_required") as string),
+    documentUrl: Yup.string().required(t("file_required") as string),
+  });
+};
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
 
@@ -74,6 +76,7 @@ const AddDocument = ({
     },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
 
   const submitForm = async (values: any) => {
     try {

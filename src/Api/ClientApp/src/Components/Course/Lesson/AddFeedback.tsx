@@ -21,13 +21,16 @@ import { useParams } from "react-router-dom";
 import errorType from "@utils/services/axiosError";
 import * as Yup from "yup";
 import CreateFeedback from "../FeedBack/CreateFeedBack";
+import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Feedback Name is required."),
-});
-const schema2 = Yup.object().shape({
-  name: Yup.string().required(t("feedback_name_required")),
-});
+const schema = () => {
+  const { t } = useTranslation();
+
+  return Yup.object().shape({
+    name: Yup.string().required(t("feedback_name_required") as string),
+  });
+};
 
 const AddFeedback = ({
   setAddState,
@@ -65,6 +68,7 @@ const AddFeedback = ({
     },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
 
   const submitForm = async (values: { name: string; description: string }) => {
     try {

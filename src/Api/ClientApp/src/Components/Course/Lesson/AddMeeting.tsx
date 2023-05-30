@@ -24,33 +24,25 @@ import { ILessonMeeting } from "@utils/services/types";
 import moment from "moment";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
+import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Meeting Name is required."),
-  meetingStartDate: Yup.string()
-    .required("Start Date is required.")
-    .typeError("Start Date is required."),
-  meetingStartTime: Yup.string()
-    .required("Start Time is required.")
-    .typeError("Start Time is required."),
-  meetingDuration: Yup.string()
-    .required("Meeting Duration is required.")
-    .typeError("Meeting Duration is required."),
-  zoomLicenseId: Yup.string().required("Zoom License is required."),
-});
-const schema2 = Yup.object().shape({
-  name: Yup.string().required(t("meeting_name_required")),
-  meetingStartDate: Yup.string()
-    .required(t("start_date_required"))
-    .typeError(t("start_date_required")),
-  meetingStartTime: Yup.string()
-    .required(t("start_time_required"))
-    .typeError(t("start_time_required")),
-  meetingDuration: Yup.string()
-    .required(t("meeting_duration_required"))
-    .typeError(t("meeting_duration_required")),
-  zoomLicenseId: Yup.string().required(t("zoom_license_required")),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    name: Yup.string().required(t("meeting_name_required") as string),
+    meetingStartDate: Yup.string()
+      .required(t("start_date_required") as string)
+      .typeError(t("start_date_required") as string),
+    meetingStartTime: Yup.string()
+      .required(t("start_time_required") as string)
+      .typeError(t("start_time_required") as string),
+    meetingDuration: Yup.string()
+      .required(t("meeting_duration_required") as string)
+      .typeError(t("meeting_duration_required") as string),
+    zoomLicenseId: Yup.string().required(t("zoom_license_required") as string),
+  });
+};
 
 const AddMeeting = ({
   setAddState,
@@ -117,6 +109,7 @@ const AddMeeting = ({
     },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
 
   const meeting = useActiveZoomLicense(
     dateTime,

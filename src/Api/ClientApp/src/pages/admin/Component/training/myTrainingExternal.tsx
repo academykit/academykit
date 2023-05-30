@@ -30,16 +30,20 @@ import {
 } from "@utils/services/certificateService";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Certificate name is required."),
-  duration: Yup.number().typeError("Duration must be in hours."),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    name: Yup.string().required(t("certificate_name_required") as string),
+    duration: Yup.number().typeError(t("duration_in_hour") as string),
+  });
+};
 
 const useStyles = createStyles({});
 
@@ -65,7 +69,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
     },
     validate: yupResolver(schema),
   });
-
+  useFormErrorHooks(form);
   useEffect(() => {
     if (idd) {
       setShowConfirmation();

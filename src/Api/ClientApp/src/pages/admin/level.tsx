@@ -30,6 +30,7 @@ import { IUser } from "@utils/services/types";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 interface ILevel<T> {
   id: string;
   name: string;
@@ -50,9 +51,12 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Level name is required."),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    name: Yup.string().required(t("level_name_required") as string),
+  });
+};
 
 const Level = () => {
   const form = useForm({
@@ -61,6 +65,7 @@ const Level = () => {
     },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
   const { t } = useTranslation();
 
   const { classes } = useStyles();

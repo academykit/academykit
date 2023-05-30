@@ -24,93 +24,62 @@ import {
   useAddFeedbackQuestion,
   useEditFeedbackQuestion,
 } from "@utils/services/feedbackService";
-import React from "react";
+
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import { useTranslation } from "react-i18next";
 const fieldSize = "md";
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Title for feedback is required."),
-  type: Yup.string().required("Feedback type is required.").nullable(),
+const schema = () => {
+  const { t } = useTranslation();
 
-  answers: Yup.array()
-    .when(["type"], {
-      is: FeedbackType.MultipleChoice.toString(),
-      then: Yup.array()
-        .min(1, "Options should be more than one.")
-        .test(
-          "test",
-          "Options should be more than one.",
-          function (value: any) {
-            const a = value.length > 1;
-            return a;
-          }
-        )
-        .of(
-          Yup.object().shape({
-            option: Yup.string().trim().required("Options is required."),
-          })
-        ),
-    })
-    .when(["type"], {
-      is: FeedbackType.SingleChoice.toString(),
-      then: Yup.array()
-        .test(
-          "test",
-          "Options should be more than one.",
-          function (value: any) {
-            const length: number = value && value.length;
-            return length > 1;
-          }
-        )
-        .of(
-          Yup.object().shape({
-            option: Yup.string().trim().required("Options is required."),
-          })
-        ),
-    }),
-});
-const schema2 = Yup.object().shape({
-  name: Yup.string().required(t("feedback_title_required")),
-  type: Yup.string().required(t("feedback_type_required")).nullable(),
+  return Yup.object().shape({
+    name: Yup.string().required(t("feedback_title_required") as string),
+    type: Yup.string()
+      .required(t("feedback_type_required") as string)
+      .nullable(),
 
-  answers: Yup.array()
-    .when(["type"], {
-      is: FeedbackType.MultipleChoice.toString(),
-      then: Yup.array()
-        .min(1, t("more_option_required"))
-        .test(
-          t("test"),
-          t("more_option_required"),
-          function (value: any) {
-            const a = value.length > 1;
-            return a;
-          }
-        )
-        .of(
-          Yup.object().shape({
-            option: Yup.string().trim().required(t("option_required")),
-          })
-        ),
-    })
-    .when(["type"], {
-      is: FeedbackType.SingleChoice.toString(),
-      then: Yup.array()
-        .test(
-          t("test"),
-          t("more_option_required"),
-          function (value: any) {
-            const length: number = value && value.length;
-            return length > 1;
-          }
-        )
-        .of(
-          Yup.object().shape({
-            option: Yup.string().trim().required(t("option_required")),
-          })
-        ),
-    }),
-});
-
-
+    answers: Yup.array()
+      .when(["type"], {
+        is: FeedbackType.MultipleChoice.toString(),
+        then: Yup.array()
+          .min(1, t("more_option_required") as string)
+          .test(
+            t("test"),
+            t("more_option_required") as string,
+            function (value: any) {
+              const a = value.length > 1;
+              return a;
+            }
+          )
+          .of(
+            Yup.object().shape({
+              option: Yup.string()
+                .trim()
+                .required(t("option_required") as string),
+            })
+          ),
+      })
+      .when(["type"], {
+        is: FeedbackType.SingleChoice.toString(),
+        then: Yup.array()
+          .test(
+            t("test"),
+            t("more_option_required") as string,
+            function (value: any) {
+              const length: number = value && value.length;
+              return length > 1;
+            }
+          )
+          .of(
+            Yup.object().shape({
+              option: Yup.string()
+                .trim()
+                .required(t("option_required") as string),
+            })
+          ),
+      }),
+  });
+};
 const getQuestionType = () => {
   return Object.entries(FeedbackType)
     .splice(0, Object.entries(FeedbackType).length / 2)
@@ -148,6 +117,7 @@ const EditFeedback = ({
     },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
 
   const addFeedbackQuestions = useAddFeedbackQuestion(lessonId, search);
   const editFeedbackQuestion = useEditFeedbackQuestion(lessonId, search);
