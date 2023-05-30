@@ -83,7 +83,6 @@ axiosInstance.interceptors.request.use(
       config.headers["Accept-Language"] =
         LanguageString[lang as keyof typeof LanguageString] ?? "en-US";
     }
-
     config.data = filterFalseyValues(config.data);
     if (
       config.headers &&

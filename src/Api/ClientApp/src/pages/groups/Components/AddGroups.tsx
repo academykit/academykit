@@ -3,8 +3,10 @@ import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
 import { useAddGroup } from "@utils/services/groupService";
+import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
 const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
+  const { t } = useTranslation();
   const schema = Yup.object().shape({
     name: Yup.string().required("Group Name is required."),
   });
@@ -34,7 +36,8 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
     try {
       await mutateAsync(name);
       showNotification({
-        message: "Successfully added group",
+        title: t("successful"),
+        message: t("group_add_success"),
       });
       onCancel();
     } catch (err) {
@@ -57,7 +60,7 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
         <form onSubmit={form.onSubmit(({ name }) => onSubmitForm(name))}>
           <TextInput
             mb={10}
-            label="Group Name"
+            label={t("group_name")}
             withAsterisk
             name="name"
             size="md"
@@ -65,7 +68,7 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
           />
 
           <Button loading={isLoading} mr={10} type="submit" size="md">
-            Submit
+            {t("submit")}
           </Button>
           <Button
             variant="outline"
@@ -74,7 +77,7 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
             onClick={(e: any) => onCancel()}
             size={"md"}
           >
-            Cancel
+            {t("cancel")}
           </Button>
         </form>
       </Box>

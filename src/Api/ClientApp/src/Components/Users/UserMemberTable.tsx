@@ -11,14 +11,15 @@ import { useEditUser } from "@utils/services/adminService";
 import { UserRole } from "@utils/enums";
 
 import { Suspense, useState } from "react";
-import { Link, Route, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { IconEdit } from "@tabler/icons";
 import { IUserProfile } from "@utils/services/types";
 import useAuth from "@hooks/useAuth";
 import { IAuthContext } from "@context/AuthProvider";
 import { getInitials } from "@utils/getInitialName";
 import lazyWithRetry from "@utils/lazyImportWithReload";
-import RoutePath from "@utils/routeConstants";
+import { useTranslation } from "react-i18next";
+import { TFunction } from "i18next";
 
 const AddUpdateUserForm = lazyWithRetry(() => import("./AddUpdateUserForm"));
 
@@ -26,14 +27,15 @@ const UserRow = ({
   item,
   search,
   auth,
+  t,
 }: {
   item: IUserProfile;
   search: string;
   auth: IAuthContext | null;
+  t: TFunction;
 }) => {
   const [opened, setOpened] = useState(false);
   const editUser = useEditUser(item?.id, search);
-  const navigate = useNavigate();
 
   return (
     <tr key={item?.id}>
@@ -70,15 +72,15 @@ const UserRow = ({
           </Text>
         </div>
       </td>
-      <td>{UserRole[item.role]}</td>
+      <td>{t(`${UserRole[item.role]}`)}</td>
       <td>{item?.email}</td>
 
       <td>{item?.mobileNumber}</td>
       <td>
         {item?.isActive ? (
-          <Badge color={"green"}>Active</Badge>
+          <Badge color={"green"}>{t("active")}</Badge>
         ) : (
-          <Badge color={"red"}>InActive</Badge>
+          <Badge color={"red"}>{t("inactive")}</Badge>
         )}
       </td>
 
@@ -102,10 +104,13 @@ const UserMemberTable = ({
   search: string;
 }) => {
   const auth = useAuth();
+  const { t } = useTranslation();
 
   const Rows = (auth: IAuthContext | null) =>
     users.map((item: any) => {
-      return <UserRow item={item} search={search} key={item.id} auth={auth} />;
+      return (
+        <UserRow item={item} search={search} key={item.id} auth={auth} t={t} />
+      );
     });
 
   return (
@@ -118,12 +123,12 @@ const UserMemberTable = ({
       >
         <thead>
           <tr>
-            <th>User</th>
-            <th>Role</th>
-            <th>Email</th>
-            <th>Phone Number</th>
-            <th>Active Status</th>
-            <th>Actions</th>
+            <th>{t("user")}</th>
+            <th>{t("role")}</th>
+            <th>{t("email")}</th>
+            <th>{t("phone_number")}</th>
+            <th>{t("active_status")}</th>
+            <th>{t("actions")}</th>
           </tr>
         </thead>
         <tbody>{Rows(auth)}</tbody>

@@ -19,6 +19,7 @@ import {
   useUpdateGroup,
 } from "@utils/services/groupService";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
@@ -31,6 +32,7 @@ const schema = Yup.object().shape({
 const GroupDetail = () => {
   const { id } = useParams();
   const { theme } = useStyle();
+  const { t } = useTranslation();
   const form = useForm({
     initialValues: {
       name: "",
@@ -60,7 +62,10 @@ const GroupDetail = () => {
         id: id as string,
         isActive: true,
       });
-      showNotification({ message: "Group updated successfully." });
+      showNotification({
+        title: t("successful"),
+        message: t("group_update_success"),
+      });
     } catch (error) {
       const err = errorType(error);
       showNotification({
@@ -73,11 +78,11 @@ const GroupDetail = () => {
   return (
     <Container fluid>
       <Flex justify={"space-between"} w={"100%"}>
-        <Title>Group Details</Title>
+        <Title>{t("group_details")}</Title>
 
         {!edit && auth?.auth && auth?.auth?.role < UserRole.Trainer && (
           <Button onClick={() => setEdit(true)} variant="outline">
-            Edit
+            {t("edit")}
           </Button>
         )}
       </Flex>
@@ -86,7 +91,7 @@ const GroupDetail = () => {
           <Paper withBorder p={10} mt={10}>
             <Flex direction="column">
               <Text size="lg" weight={"bold"}>
-                Group Name
+                {t("group_name")}
               </Text>
               <Text>{groupDetail?.data?.data?.name}</Text>
             </Flex>
@@ -97,16 +102,16 @@ const GroupDetail = () => {
               <TextInput
                 sx={{ maxWidth: theme.breakpoints.xs }}
                 name="name"
-                label="Group Name"
+                label={t("group_name")}
                 withAsterisk
-                placeholder="Your group name."
+                placeholder={t("your_group_name") as string}
                 {...form.getInputProps("name")}
               />
               <Button loading={updateGroups.isLoading} mt={20} type="submit">
-                Save
+                {t("save")}
               </Button>
               <Button variant="outline" onClick={() => setEdit(false)} ml={10}>
-                Cancel
+                {t("cancel")}
               </Button>
             </Box>
           </Paper>
