@@ -81,7 +81,7 @@
                 return authenticationModel;
             }
 
-            var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password);
+            var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password.Trim());
             if (!isUserAuthenticated)
             {
                 authenticationModel.IsAuthenticated = false;
