@@ -66,7 +66,7 @@
             {
                 return NotFound(new CommonResponseModel { Message = _localizer.GetString("TokenNotMatched") });
             }
-            return Ok(new CommonResponseModel{ Message = _localizer.GetString("LogoutSuccess") , Success = true});
+            return Ok(new { Message = _localizer.GetString("LogoutSuccess") , Success = true});
         }
 
         [HttpPost("ForgotPassword")]
