@@ -421,7 +421,31 @@
 "training": "प्रशिक्षण",
 "successfully": "सफलतापूर्वक।",
 "approved": "अनुमोदित",
-"rejected": "अस्वीकृत"
+"rejected": "अस्वीकृत",
+"aws": "AWS",
+"training_rejected_success": "तालिम सफलतापूर्वक अस्वीकृत गरियो",
+"training_published_success": "तालिम सफलतापूर्वक प्रकाशित गरियो",
+"leave_message_reject": "अस्वीकृत गर्नुको लागि सन्देश छोड्नुहोस्",
+"publish_confirmation": "के तपाईं सचम्मच्चिकै प्रकाशन गर्न चाहानुहुन्छ",
+"edit_course": "कोर्स सम्पादन गर्नुहोस्",
+"publish_course": "यो कोर्स प्रकाशित गर्नुहोस्",
+"update_file_storage_success": "फाइल संग्रहण सफलतापूर्वक अद्यावधिक गरियो।",
+"delete_comment_success": "कमेन्ट सफलतापूर्वक हटाइयो",
+"edit_comment_success": "कमेन्ट सफलतापूर्वक सम्पादन गरियो।",
+"delete_comment_reply_success": "कमेन्टको उत्तर सफलतापूर्वक हटाइयो",
+"edit_reply_success": "उत्तर सफलतापूर्वक सम्पादन गरियो।",
+"delete_course_success": "कोर्स सफलतापूर्वक हटाइयो",
+"mark_pdf_complete": "पीडीएफलाई पूरा भएको मान्छे चिन्हित गरियो।",
+"publish_training_success": "तालिमलाई सफलतापूर्वक प्रकाशित गरियो।",
+"enroll_course_success": "कोर्समा सफलतापूर्वक नामांकन गरियो।",
+"edit_feedback_question_success": "फिडब्याक प्रश्नलाई सफलतापूर्वक सम्पादन गरियो।",
+"add_feedback_question_success": "फिडब्याक प्रश्नलाई सफलतापूर्वक थपियो।",
+"thankyou_feedback": "फिडब्याकको लागि धन्यवाद।",
+"assignment": "कार्य",
+"edited": "सम्पादित गरियो",
+"file": "फाइल",
+"capital_lesson": "पाठ",
+"feedback": "फिडब्याक"
 
 
     }

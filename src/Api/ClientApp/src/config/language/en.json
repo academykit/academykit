@@ -415,8 +415,31 @@
 "training": "Training",
 "successfully": "Successfully.",
 "approved": "Approved",
-"rejected": "Rejected"
-
+"rejected": "Rejected",
+"aws": "AWS",
+"training_rejected_success": "Training rejected successfully",
+"training_published_success": "Training successfully published",
+"leave_message_reject": "Leave a message for your rejection",
+"publish_confirmation": "Are you sure you want to publish",
+"edit_course": "Edit Course",
+"publish_course": "Publish this course",
+"update_file_storage_success": "File Storage Updated Successfully. ",
+  "delete_comment_success": "Comment Deleted Successfully",
+  "edit_comment_success": "Comment Edited Successfully.",
+  "delete_comment_reply_success ": "Comment Reply Deleted Successfully",
+  "edit_reply_success": "Reply Edited Successfully.",
+  "delete_course_success": "Course Deleted successfully",
+  "mark_pdf_complete": "Pdf marked as completed.",
+  "publish_training_success": "Training has been successfully published.",
+  "enroll_course_success": "Course enrolled successfully.",
+  "edit_feedback_question_success": "Successfully edited feedback question.",
+  "add_feedback_question_success": "Successfully added feedback question.",
+  "thankyou_feedback": "Thank you for your feedback.",
+  "assignment": "Assignment",
+  "edited": "Edited",
+  "file": "File",
+  "capital_lesson": "Lesson",
+  "feedback": "Feedback"
 
 
 

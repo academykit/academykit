@@ -419,7 +419,31 @@
 "training": "トレーニング",
 "successfully": "正常に。",
 "approved": "承認済み",
-"rejected": "却下済み"
+"rejected": "却下済み",
+"aws": "AWS",
+"training_rejected_success": "トレーニングは正常に却下されました",
+"training_published_success": "トレーニングが正常に公開されました",
+"leave_message_reject": "却下の理由をメッセージで残してください",
+"publish_confirmation": "本当に公開しますか",
+"edit_course": "コースを編集する",
+"publish_course": "このコースを公開する",
+"update_file_storage_success": "ファイルストレージが正常に更新されました。",
+"delete_comment_success": "コメントが正常に削除されました",
+"edit_comment_success": "コメントが正常に編集されました。",
+"delete_comment_reply_success": "コメントの返信が正常に削除されました",
+"edit_reply_success": "返信が正常に編集されました。",
+"delete_course_success": "コースが正常に削除されました",
+"mark_pdf_complete": "PDFが完了としてマークされました。",
+"publish_training_success": "トレーニングは正常に公開されました。",
+"enroll_course_success": "コースの登録が正常に完了しました。",
+"edit_feedback_question_success": "フィードバックの質問が正常に編集されました。",
+"add_feedback_question_success": "フィードバックの質問が正常に追加されました。",
+"thankyou_feedback": "フィードバックありがとうございました。",
+"assignment": "課題",
+"edited": "編集済み",
+"file": "ファイル",
+"capital_lesson": "レッスン",
+"feedback": "フィードバック"
 
       }
       
