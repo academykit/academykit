@@ -128,12 +128,12 @@
             if (lesson == null)
             {
                 _logger.LogWarning("Lesson with id : {lessonId} not found for assignment with id : {id}.", entity.LessonId, entity.Id);
-                throw new EntityNotFoundException("Lesson not found.");
+                throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
             }
             if (lesson.Type != LessonType.Assignment)
             {
                 _logger.LogWarning("Lesson with id : {lessonId} is of invalid lesson type to create,edit or delete assignment for user with id :{userId}.", lesson.Id, entity.CreatedBy);
-                throw new ForbiddenException("Invalid lesson type for assignment.");
+                throw new ForbiddenException(_localizer.GetString("InvalidLessonTypeAssignment"));
             }
             await ValidateAndGetCourse(entity.CreatedBy, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
             return lesson;
@@ -227,7 +227,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to update assignment.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update assignment.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredUpdateAssignment"));
             }
         }
 
@@ -247,7 +247,7 @@
                 if (lesson == null)
                 {
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
                 if (lesson.Type != LessonType.Assignment)
                 {
@@ -357,7 +357,7 @@
                 if (lesson == null)
                 {
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
                 if (lesson.Type != LessonType.Assignment)
                 {
@@ -449,7 +449,7 @@
             if (lesson == null)
             {
                 _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}", searchCriteria.LessonIdentity, searchCriteria.CurrentUserId);
-                throw new EntityNotFoundException("Lesson not found.");
+                throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
             }
             if (lesson.Type != LessonType.Assignment)
             {
@@ -517,7 +517,7 @@
                 if (lesson == null)
                 {
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
                 if (lesson.Type != LessonType.Assignment)
                 {
@@ -592,7 +592,7 @@
                 if (lesson == null)
                 {
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
                 if (lesson.Type != LessonType.Assignment)
                 {
@@ -609,7 +609,7 @@
                 {
                     _logger.LogWarning("Assignment review with id: {id} not found for user with id: {userId} and lesson with id: {lessonId}.",
                                     id, currentUserId, lesson.Id);
-                    throw new EntityNotFoundException("Assignment review not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("AssignmentReviewNotFound"));
                 }
                 var currentTimeStamp = DateTime.UtcNow;
 
@@ -649,7 +649,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to update assignment review.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update assignment review.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredUpdateAssignment"));
             }
         }
 
@@ -669,7 +669,7 @@
                 if (lesson == null)
                 {
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
                 if (lesson.Type != LessonType.Assignment)
                 {
@@ -686,7 +686,7 @@
                 {
                     _logger.LogWarning("Assignment review with id: {id} not found for user with id: {userId} and lesson with id: {lessonId}.",
                                     id, currentUserId, lesson.Id);
-                    throw new EntityNotFoundException("Assignment review not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("AssignmentReviewNotFound"));
                 }
 
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
@@ -707,7 +707,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to delete assignment review.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to delete assignment review.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredDeleteAssignmentReview"));
             }
         }
 

@@ -567,6 +567,9 @@
   <data name="AllLiscensePlaced" xml:space="preserve">
     <value>सबै लाइसेन्स आईडी बुक गरिएको छ, कृपया अर्को उदाहरण चयन गर्नुहोस्।</value>
   </data>
+  <data name="AssignmentReviewNotFound" xml:space="preserve">
+    <value>असाइनमेन्ट समीक्षा फेला परेन।</value>
+  </data>
   <data name="DuplicateQuestionPoolName" xml:space="preserve">
     <value>डुप्लिकेट प्रश्न पोखरी नाम फेला पर्यो।</value>
   </data>
@@ -585,11 +588,17 @@
   <data name="ErrorOccurredAttemptingStartExam" xml:space="preserve">
     <value>परीक्षा सुरु गर्ने प्रयास गर्दा त्रुटि भयो।</value>
   </data>
+  <data name="ErrorOccurredDeleteAssignmentReview" xml:space="preserve">
+    <value>असाइनमेन्ट समीक्षा मेटाउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
   <data name="ErrorOccurredOnMinioCredentails" xml:space="preserve">
     <value>Minio credentials प्राप्त गर्ने प्रयास गर्दा त्रुटि भयो।</value>
   </data>
   <data name="ErrorOccurredOnUploadFile" xml:space="preserve">
     <value>सर्भरमा फाइल अपलोड गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredUpdateAssignment" xml:space="preserve">
+    <value>असाइनमेन्ट अपडेट गर्ने प्रयास गर्दा त्रुटि भयो।</value>
   </data>
   <data name="ErrorOccurredVerifyResetToken" xml:space="preserve">
     <value>रिसेट टोकन प्रमाणीकरण गर्ने प्रयास गर्दा त्रुटि भयो।</value>
@@ -623,6 +632,9 @@
   </data>
   <data name="FeedbackContainsFeedbackSubmissions" xml:space="preserve">
     <value>प्रतिक्रियामा प्रतिक्रिया सबमिशनहरू समावेश छन्।</value>
+  </data>
+  <data name="InvalidLessonTypeAssignment" xml:space="preserve">
+    <value>असाइनमेन्टको लागि अमान्य पाठ प्रकार।</value>
   </data>
   <data name="LateSubmission" xml:space="preserve">
     <value>ढिलो सबमिशन।</value>

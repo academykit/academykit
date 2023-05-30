@@ -570,6 +570,9 @@
   <data name="AllLiscensePlaced" xml:space="preserve">
     <value>All Liscense Id have been booked, please select another instance.</value>
   </data>
+  <data name="AssignmentReviewNotFound" xml:space="preserve">
+    <value>Assignment review not found.</value>
+  </data>
   <data name="DuplicateQuestionPoolName" xml:space="preserve">
     <value>Duplicate question pool name is found.</value>
   </data>
@@ -588,11 +591,17 @@
   <data name="ErrorOccurredAttemptingStartExam" xml:space="preserve">
     <value>An error occurred while attempting to start exam.</value>
   </data>
+  <data name="ErrorOccurredDeleteAssignmentReview" xml:space="preserve">
+    <value>An error occurred while trying to delete assignment review.</value>
+  </data>
   <data name="ErrorOccurredOnMinioCredentails" xml:space="preserve">
     <value>An error occurred while attempting to get the minio credentials.</value>
   </data>
   <data name="ErrorOccurredOnUploadFile" xml:space="preserve">
     <value>An error occurred while attempting to upload file to the server.</value>
+  </data>
+  <data name="ErrorOccurredUpdateAssignment" xml:space="preserve">
+    <value>An error occurred while trying to update assignment.</value>
   </data>
   <data name="ErrorOccurredVerifyResetToken" xml:space="preserve">
     <value>An error occurred while attempting to verify reset token.</value>
@@ -626,6 +635,9 @@
   </data>
   <data name="FeedbackContainsFeedbackSubmissions" xml:space="preserve">
     <value>Feedback contains feedback submissions.</value>
+  </data>
+  <data name="InvalidLessonTypeAssignment" xml:space="preserve">
+    <value>Invalid lesson type for assignment.</value>
   </data>
   <data name="LateSubmission" xml:space="preserve">
     <value>Late Submission.</value>
@@ -665,6 +677,9 @@
   </data>
   <data name="ServerUrlNotFound" xml:space="preserve">
     <value>Server url not found.</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
   </data>
   <data name="UserCanNotRemoveSameUser" xml:space="preserve">
     <value>User cannot be removed same user.</value>
