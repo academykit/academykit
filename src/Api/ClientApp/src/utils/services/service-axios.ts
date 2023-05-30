@@ -11,8 +11,6 @@ import { LanguageString } from "@utils/enums";
 
 type RequestData = Record<string, any>;
 
-console.log();
-
 const THREE_MINUTES = 3 * 60 * 1000;
 const baseURL = "/";
 const baseConfig = {
