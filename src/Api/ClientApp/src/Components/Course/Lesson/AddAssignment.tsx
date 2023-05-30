@@ -56,6 +56,22 @@ const schema = Yup.object().shape({
     .typeError("End Time is required."),
 });
 
+const schema2 = Yup.object().shape({
+  name: Yup.string().required(t("assiginment_title_required")),
+  startTime: Yup.date()
+    .required(t("start_time_required"))
+    .typeError(t("start_time_required")),
+  eventStartDate: Yup.date()
+    .required(t("start_date_required"))
+    .typeError(t("start_date_required")),
+  eventEndDate: Yup.date()
+    .required(t("end_date_required"))
+    .typeError(t("end_date_required")),
+  endTime: Yup.date()
+    .required(t("end_time_required"))
+    .typeError(t("end_time_required")),
+});
+
 interface SubmitType {
   name: string;
   description: string;

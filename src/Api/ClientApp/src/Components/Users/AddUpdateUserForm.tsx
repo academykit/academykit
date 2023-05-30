@@ -32,6 +32,26 @@ const schema = Yup.object().shape({
     excludeEmptyString: true,
   }),
 });
+const schema2 = Yup.object().shape({
+  email: Yup.string().email(t("invalid_email")).required(t("email_required")),
+  firstName: Yup.string()
+    .max(100, t("Firstname should have atmost 100 characters."))
+    .required(t("First Name is required.")),
+  lastName: Yup.string()
+    .max(100, t("Lastname should have atmost 100 characters."))
+    .required("Last Name is required."),
+  middleName: Yup.string()
+    .max(100, t("Middlename should have atmost 100 characters."))
+    .nullable()
+    .notRequired(),
+  role: Yup.string()
+    .oneOf(["1", "2", "3", "4"], t("Role is required."))
+    .required(t("Role is required.")),
+  mobileNumber: Yup.string().nullable().matches(PHONE_VALIDATION, {
+    message: t("Please enter valid phone number."),
+    excludeEmptyString: true,
+  }),
+});
 
 const AddUpdateUserForm = ({
   setOpened,

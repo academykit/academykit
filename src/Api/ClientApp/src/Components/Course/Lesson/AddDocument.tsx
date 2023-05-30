@@ -27,6 +27,10 @@ const schema = Yup.object().shape({
   name: Yup.string().required("File Name is required."),
   documentUrl: Yup.string().required("File is required!"),
 });
+const schema2 = Yup.object().shape({
+  name: Yup.string().required(t("file_name_required")),
+  documentUrl: Yup.string().required(t("file_required")),
+});
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
 

@@ -415,13 +415,31 @@
   "training": "Training",
   "successfully": "Successfully.",
 "approved": "Approved",
-"rejected": "Rejected"
+"rejected": "Rejected",
 
 
 
-
-
-
-
-
+"feedback_title_required": "Title for feedback is required.",
+"feedback_type_required": "Feedback type is required.",
+"more_option_required" : "Options should be more than one.",
+"test": "test",
+"assiginment_title_required": "Assignment's Title is required.",
+"start_time_required": "Start Time is required.",
+"start_date_required": "Start Date is required.",
+"end_date_required": "End Date is required.",
+"end_time_required": "End Time is required.",
+"file_name_required": "File Name is required.",
+"file_required": "File is required!",
+"exam_name_required": "Exam Name is required.",
+"start_time_not_empty":"start time cannot be empty.",
+"question_weightage_required": "Question weightage is required.",
+"end_time_not_empty": "end time cannot be empty.",
+"duration_required":"Duration is required.",
+"exam_duration_atleast_one": "Exam duration should at least be one.",
+"feedback_name_required" : "Feedback Name is required.",
+"video_name_required" : "Video Name is required.",
+"video_required" : "Video is required!",
+"meeting_name_required" : "Meeting Name is required.",
+"meeting_duration_required": "Meeting Duration is required.",
+"zoom_license_required" : "Zoom License is required."
 }

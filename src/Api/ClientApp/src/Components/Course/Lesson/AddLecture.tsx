@@ -27,7 +27,10 @@ const schema = Yup.object().shape({
   name: Yup.string().required("Video Name is required."),
   videoUrl: Yup.string().required("Video is required!"),
 });
-
+const schema2 = Yup.object().shape({
+  name: Yup.string().required(t("video_name_required")),
+  videoUrl: Yup.string().required(t("video_required")),
+});
 type IProps = {
   setAddState: Function;
   item?: ILessons;

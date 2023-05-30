@@ -68,6 +68,48 @@ const schema = Yup.object().shape({
         ),
     }),
 });
+const schema2 = Yup.object().shape({
+  name: Yup.string().required(t("feedback_title_required")),
+  type: Yup.string().required(t("feedback_type_required")).nullable(),
+
+  answers: Yup.array()
+    .when(["type"], {
+      is: FeedbackType.MultipleChoice.toString(),
+      then: Yup.array()
+        .min(1, t("more_option_required"))
+        .test(
+          t("test"),
+          t("more_option_required"),
+          function (value: any) {
+            const a = value.length > 1;
+            return a;
+          }
+        )
+        .of(
+          Yup.object().shape({
+            option: Yup.string().trim().required(t("option_required")),
+          })
+        ),
+    })
+    .when(["type"], {
+      is: FeedbackType.SingleChoice.toString(),
+      then: Yup.array()
+        .test(
+          t("test"),
+          t("more_option_required"),
+          function (value: any) {
+            const length: number = value && value.length;
+            return length > 1;
+          }
+        )
+        .of(
+          Yup.object().shape({
+            option: Yup.string().trim().required(t("option_required")),
+          })
+        ),
+    }),
+});
+
 
 const getQuestionType = () => {
   return Object.entries(FeedbackType)

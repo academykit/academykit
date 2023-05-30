@@ -25,6 +25,9 @@ import CreateFeedback from "../FeedBack/CreateFeedBack";
 const schema = Yup.object().shape({
   name: Yup.string().required("Feedback Name is required."),
 });
+const schema2 = Yup.object().shape({
+  name: Yup.string().required(t("feedback_name_required")),
+});
 
 const AddFeedback = ({
   setAddState,

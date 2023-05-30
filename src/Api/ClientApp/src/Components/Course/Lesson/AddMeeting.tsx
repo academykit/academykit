@@ -38,6 +38,19 @@ const schema = Yup.object().shape({
     .typeError("Meeting Duration is required."),
   zoomLicenseId: Yup.string().required("Zoom License is required."),
 });
+const schema2 = Yup.object().shape({
+  name: Yup.string().required(t("meeting_name_required")),
+  meetingStartDate: Yup.string()
+    .required(t("start_date_required"))
+    .typeError(t("start_date_required")),
+  meetingStartTime: Yup.string()
+    .required(t("start_time_required"))
+    .typeError(t("start_time_required")),
+  meetingDuration: Yup.string()
+    .required(t("meeting_duration_required"))
+    .typeError(t("meeting_duration_required")),
+  zoomLicenseId: Yup.string().required(t("zoom_license_required")),
+});
 
 const AddMeeting = ({
   setAddState,

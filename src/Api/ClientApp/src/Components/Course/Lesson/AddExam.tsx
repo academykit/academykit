@@ -46,7 +46,26 @@ const schema = Yup.object().shape({
     .required("Duration is required.")
     .min(1, "Exam duration should at least be one."),
 });
+const schema2 = Yup.object().shape({
+  name: Yup.string().required(t("exam_name_required")),
 
+  startDate: Yup.date()
+    .required(t("start_date_required"))
+    .typeError(t("start_date_required")),
+  endDate: Yup.date()
+    .required(t("end_date_required"))
+    .typeError(t("start_date_required")),
+  questionMarking: Yup.string().required(t("question_weightage_required")),
+  startTime: Yup.string()
+    .required(t("start_time_not_empty"))
+    .typeError(t("start_time_required")),
+  endTime: Yup.string()
+    .required(t("end_time_not_empty"))
+    .typeError(t("end_time_required")),
+  duration: Yup.number()
+    .required(t("duration_required"))
+    .min(1, t("exam_duration_atleast_one")),
+});
 const strippedFormValue = (value: any) => {
   const val = { ...value };
   delete val.isMandatory;
