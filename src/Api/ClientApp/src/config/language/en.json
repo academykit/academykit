@@ -514,6 +514,10 @@
   "one_option_selected_on_multiple_choice": "On Multiple Choice at least one option should be selected.",
   "one_option_selected_on_single_choice": "On Single choice, only one option should be selected.",
 
+  "section_update_success": "Section Updated Successfully!",
+  "exam_title": "Exam Title",
+  "passing_percentage": "Passing Percentage",
+  "question_passing_percentage": "Question Set passing percentage",
   "course_title_required": "Course Title is required",
   "level_required": "Level is required.",
   "group_required": "Group is required.",
@@ -523,5 +527,5 @@
   "designation_required": "Designation is required.",
   "file_url_required": "File Url is required!",
   "one_email_required": "At least 1 email address is required.",
-  "name_required" : "Name is required"
+  "name_required": "Name is required"
 }

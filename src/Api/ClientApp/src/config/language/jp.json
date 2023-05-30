@@ -515,7 +515,21 @@
 "certificate_name_required": "証明書の名前が必要です。",
 "duration_in_hour": "時間で期間を指定する必要があります。",
 "one_option_selected_on_multiple_choice": "複数選択肢では少なくとも1つのオプションを選択する必要があります。",
-"one_option_selected_on_single_choice": "単一選択肢では、1つのオプションのみを選択する必要があります。"
+"one_option_selected_on_single_choice": "単一選択肢では、1つのオプションのみを選択する必要があります。",
+"section_update_success": "セクションの更新に成功しました！",
+"exam_title": "試験タイトル",
+"passing_percentage": "合格率",
+"question_passing_percentage": "問題セットの合格率",
+"course_title_required": "コースのタイトルが必要です",
+"level_required": "レベルが必要です。",
+"group_required": "グループが必要です。",
+"event_start_date_required": "イベントの開始日が必要です。",
+"event_end_date_required": "イベントの終了日が必要です。",
+"signature_name_required": "署名の名前が必要です。",
+"designation_required": "役職が必要です。",
+"file_url_required": "ファイルのURLが必要です！",
+"one_email_required": "少なくとも1つのメールアドレスが必要です。",
+"name_required": "名前が必要です。"
 
       }
       

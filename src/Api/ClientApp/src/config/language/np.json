@@ -517,7 +517,21 @@
 "certificate_name_required": "प्रमाणपत्रको नाम आवश्यक छ।",
 "duration_in_hour": "अवधिलाई घण्टामा होनुपर्छ।",
 "one_option_selected_on_multiple_choice": "बहुविकल्पमा कम्तीमा एक विकल्प चयन गर्नुपर्छ।",
-"one_option_selected_on_single_choice": "एकल विकल्पमा केवल एक विकल्प चयन गर्नुपर्छ।"
+"one_option_selected_on_single_choice": "एकल विकल्पमा केवल एक विकल्प चयन गर्नुपर्छ।",
+"section_update_success": "सेक्शन सफलतापूर्वक अपडेट गरियो!",
+"exam_title": "परीक्षा शीर्षक",
+"passing_percentage": "सफलता प्रतिशत",
+"question_passing_percentage": "प्रश्न सेट सफलता प्रतिशत",
+"course_title_required": "कोर्स शीर्षक आवश्यक छ",
+"level_required": "स्तर आवश्यक छ।",
+"group_required": "समूह आवश्यक छ।",
+"event_start_date_required": "घटना सुरु मिति आवश्यक छ।",
+"event_end_date_required": "घटना समाप्ति मिति आवश्यक छ।",
+"signature_name_required": "हस्ताक्षर नाम आवश्यक छ।",
+"designation_required": "पदनाम आवश्यक छ।",
+"file_url_required": "फाइल URL आवश्यक छ!",
+"one_email_required": "कम्तीमा १ इमेल ठेगाना आवश्यक छ।",
+"name_required": "नाम आवश्यक छ।"
 
 
     }
