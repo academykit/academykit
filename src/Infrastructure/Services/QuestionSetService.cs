@@ -68,14 +68,14 @@
                 if (questionSet == null)
                 {
                     _logger.LogWarning("Question set not found with identity: {identity}.", identity);
-                    throw new EntityNotFoundException("Question set not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
                 var isCourseTeacher = questionSet.Lesson.Course.CourseTeachers.Any(x => x.UserId == currentUserId);
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (questionSet.CreatedBy != currentUserId && !isCourseTeacher && !isSuperAdminOrAdmin)
                 {
                     _logger.LogWarning("User with userId: {userId} is unauthorized user to add questions in question set with id : {id}.", currentUserId, questionSet.Id);
-                    throw new EntityNotFoundException("Unauthorized user to add questions in question set.");
+                    throw new EntityNotFoundException(_localizer.GetString("UnauthorizedUserAddQuestionSet"));
                 }
                 var checkQuestionSetSubmission = await _unitOfWork.GetRepository<QuestionSetSubmission>().ExistsAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id).ConfigureAwait(false);
@@ -83,7 +83,7 @@
                 if (checkQuestionSetSubmission)
                 {
                     _logger.LogWarning("Question set with id: {questionSetId} contains question set submission.", questionSet.Id);
-                    throw new ForbiddenException("Question set contains answer submission. So, not allowed to add question in question set.");
+                    throw new ForbiddenException(_localizer.GetString("QuestionSetAddNotAllowed"));
                 }
                 var existingQuestionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id).ConfigureAwait(false);
@@ -128,7 +128,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to add questions in question set.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to add questions in question set.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("QuestionSetAddError"));
             }
         }
 
@@ -148,14 +148,14 @@
             if (questionSet == null)
             {
                 _logger.LogWarning("Question set not found with identity: {identity}.", identity);
-                throw new EntityNotFoundException("Question set not found.");
+                throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
             }
             var isCourseTeacher = questionSet.Lesson.Course.CourseTeachers.Any(x => x.UserId == currentUserId);
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
             if (questionSet.CreatedBy != currentUserId && !isCourseTeacher && !isSuperAdminOrAdmin)
             {
                 _logger.LogWarning("User with userId: {userId} is unauthorized user to get questions in question set with id : {id}.", currentUserId, questionSet.Id);
-                throw new EntityNotFoundException("Unauthorized user to get questions in question set.");
+                throw new EntityNotFoundException(_localizer.GetString("UnauthorizedUserQuestionSet"));
             }
             IList<QuestionResponseModel> questionsLists = new List<QuestionResponseModel>();
             var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(

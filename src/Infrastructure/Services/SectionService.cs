@@ -116,18 +116,18 @@ namespace Lingtren.Infrastructure.Services
                     include: s => s.Include(x => x.Lessons).Include(x => x.Course)).ConfigureAwait(false);
                 if (section == null)
                 {
-                    throw new EntityNotFoundException("Section not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("SectionNotFound"));
                 }
                 if (section.Status == CourseStatus.Published)
                 {
                     _logger.LogWarning("Section with id: {sectionId} is in published status.", section.Id);
-                    throw new ForbiddenException("Training section is published.");
+                    throw new ForbiddenException(_localizer.GetString("TrainingSectionPublished"));
                 }
 
                 if (section.Lessons.Any(x => !x.IsDeleted))
                 {
                     _logger.LogWarning("Section with id: {sectionId} consist lessons for delete.", section.Id);
-                    throw new ForbiddenException("Training section consist lessons.");
+                    throw new ForbiddenException(_localizer.GetString("TrainingSectionLesson")); ;
                 }
 
                 section.IsDeleted = true;
@@ -140,7 +140,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to delete section.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to delete section.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("DeleteSectionError"));
             }
         }
 
@@ -159,7 +159,7 @@ namespace Lingtren.Infrastructure.Services
                 if (course == null)
                 {
                     _logger.LogWarning("ReorderAsync(): Training with identity : {identity} not found for user with id :{userId}.", identity, currentUserId);
-                    throw new EntityNotFoundException("Training was not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
                 var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
@@ -190,7 +190,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to reorder the lessons");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to reorder the lessons");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("LessonReorderError"));
             }
         }
 
