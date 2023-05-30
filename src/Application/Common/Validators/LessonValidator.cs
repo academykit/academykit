@@ -25,7 +25,7 @@
         }
     }
 
-    public class AssignmentDateValidator :  AbstractValidator<LessonRequestModel>
+    public class AssignmentDateValidator : AbstractValidator<LessonRequestModel>
     {
         public AssignmentDateValidator()
         {
