@@ -39,19 +39,19 @@
                 if (questionPool == null)
                 {
                     _logger.LogWarning("Question pool not found with identity : {identity}.", identity);
-                    throw new EntityNotFoundException("Question pool not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
                 }
 
                 var hasTeacher = ValidateQuestionPoolMaintainer(questionPool, currentUserId);
                 if (!hasTeacher)
                 {
-                    throw new ForbiddenException("Invalid access to change question pool teacher's role.");
+                    throw new ForbiddenException(_localizer.GetString("TeacherRoleInvalidAccess"));
                 }
 
                 var user = questionPool?.QuestionPoolTeachers.FirstOrDefault(x => x.UserId == userId);
                 if (user == null)
                 {
-                    throw new EntityNotFoundException("User not found in question pool.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionPoolUserNotFound"));
                 }
 
                 user.Role = role;
@@ -63,7 +63,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to assign role to question pool.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to assign role to question pool.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("AssignRoleQuestionPoolError"));
             }
         }
 

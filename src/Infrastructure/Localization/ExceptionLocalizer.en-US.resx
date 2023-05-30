@@ -486,4 +486,85 @@
   <data name="ZoomLisenceNotFound" xml:space="preserve">
     <value>Zoom license not found.</value>
   </data>
+  <data name="AssignRoleQuestionPoolError" xml:space="preserve">
+    <value>An error occurred while attempting to assign role to question pool.</value>
+  </data>
+  <data name="QuestionAssociatedQuestionSet" xml:space="preserve">
+    <value>Question is associated with question set.</value>
+  </data>
+  <data name="QuestionCannotEdit" xml:space="preserve">
+    <value>Question is associated with exam submission. So, it cannot be edited.</value>
+  </data>
+  <data name="QuestionCreateError" xml:space="preserve">
+    <value>An error occurred while attempting to create question.</value>
+  </data>
+  <data name="QuestionNotFound" xml:space="preserve">
+    <value>Question not found.</value>
+  </data>
+  <data name="QuestionPoolDeleteError" xml:space="preserve">
+    <value>An error occurred while attempting to delete question pool's question.</value>
+  </data>
+  <data name="QuestionPoolUpdateError" xml:space="preserve">
+    <value>An error occurred while attempting to update question pool's question.</value>
+  </data>
+  <data name="QuestionPoolUserNotFound" xml:space="preserve">
+    <value>User not found in question pool.</value>
+  </data>
+  <data name="QuestionSetAddError" xml:space="preserve">
+    <value>An error occurred while attempting to add questions in question set.</value>
+  </data>
+  <data name="QuestionSetAddNotAllowed" xml:space="preserve">
+    <value>Question set contains answer submission. So, not allowed to add question in question set</value>
+  </data>
+  <data name="QuestionSetNotFound" xml:space="preserve">
+    <value>Question set not found.</value>
+  </data>
+  <data name="TeacherRoleInvalidAccess" xml:space="preserve">
+    <value>Invalid access to change question pool teacher's role.</value>
+  </data>
+  <data name="UnauthorizedUserAddQuestion" xml:space="preserve">
+    <value>Unauthorized user to add question in pool.</value>
+  </data>
+  <data name="UnauthorizedUserAddQuestionSet" xml:space="preserve">
+    <value>Unauthorized user to add questions in question set.</value>
+  </data>
+  <data name="UnauthorizedUserDeleteQuestion" xml:space="preserve">
+    <value>Unauthorized user to delete question.</value>
+  </data>
+  <data name="UnauthorizedUserQuestionSet" xml:space="preserve">
+    <value>Unauthorized user to get questions in question set.</value>
+  </data>
+  <data name="UnauthorizedUserUpdateQuestion" xml:space="preserve">
+    <value>Unauthorized user to update the question.</value>
+  </data>
+  <data name="CreateTagError" xml:space="preserve">
+    <value>An error occurred while trying to create tag.</value>
+  </data>
+  <data name="DeleteSectionError" xml:space="preserve">
+    <value>An error occurred while trying to delete section.</value>
+  </data>
+  <data name="DeleteTagError" xml:space="preserve">
+    <value>An error occurred while trying to delete tag.</value>
+  </data>
+  <data name="FetchRefreshTokenError" xml:space="preserve">
+    <value>An error occurred while attempting to fetch refresh token by user id.</value>
+  </data>
+  <data name="RefreshTokenValueError" xml:space="preserve">
+    <value>An error occurred while attempting to fetch refresh token by value.</value>
+  </data>
+  <data name="TagAlreadyExist" xml:space="preserve">
+    <value>Tag name already exist.</value>
+  </data>
+  <data name="TrainingSectionLesson" xml:space="preserve">
+    <value>Training section consist lessons.</value>
+  </data>
+  <data name="TrainingSectionPublished" xml:space="preserve">
+    <value>Training section is published.</value>
+  </data>
+  <data name="UpdateRefershTokenError" xml:space="preserve">
+    <value>An error occurred while attempting to update refresh token.</value>
+  </data>
+  <data name="UpdateTagError" xml:space="preserve">
+    <value>An error occurred while trying to update tag.</value>
+  </data>
 </root>

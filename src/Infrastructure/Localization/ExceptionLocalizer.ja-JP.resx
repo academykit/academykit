@@ -486,4 +486,85 @@
   <data name="ZoomLisenceNotFound" xml:space="preserve">
     <value>ズームライセンスが見つかりません</value>
   </data>
+  <data name="AssignRoleQuestionPoolError" xml:space="preserve">
+    <value>質問プールにロールを割り当てようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="QuestionAssociatedQuestionSet" xml:space="preserve">
+    <value>質問は質問セットに関連付けられています</value>
+  </data>
+  <data name="QuestionCannotEdit" xml:space="preserve">
+    <value>質問は試験の提出に関連しています。したがって、編集することはできません</value>
+  </data>
+  <data name="QuestionCreateError" xml:space="preserve">
+    <value>質問を作成しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="QuestionNotFound" xml:space="preserve">
+    <value>質問が見つかりません</value>
+  </data>
+  <data name="QuestionPoolDeleteError" xml:space="preserve">
+    <value>質問プールの質問を削除しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="QuestionPoolUpdateError" xml:space="preserve">
+    <value>質問プールの質問を更新しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="QuestionPoolUserNotFound" xml:space="preserve">
+    <value>質問プールにユーザーが見つかりません</value>
+  </data>
+  <data name="QuestionSetAddError" xml:space="preserve">
+    <value>質問セットに質問を追加しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="QuestionSetAddNotAllowed" xml:space="preserve">
+    <value>質問セットには回答の提出が含まれています。したがって、質問セットに質問を追加することはできません</value>
+  </data>
+  <data name="QuestionSetNotFound" xml:space="preserve">
+    <value>質問セットが見つかりません</value>
+  </data>
+  <data name="TeacherRoleInvalidAccess" xml:space="preserve">
+    <value>質問プールの教師の役割を変更するための無効なアクセス</value>
+  </data>
+  <data name="UnauthorizedUserAddQuestion" xml:space="preserve">
+    <value>権限のないユーザーがプールに質問を追加する</value>
+  </data>
+  <data name="UnauthorizedUserAddQuestionSet" xml:space="preserve">
+    <value>権限のないユーザーが質問セットに質問を追加する</value>
+  </data>
+  <data name="UnauthorizedUserDeleteQuestion" xml:space="preserve">
+    <value>権限のないユーザーが質問を削除できます</value>
+  </data>
+  <data name="UnauthorizedUserQuestionSet" xml:space="preserve">
+    <value>質問セット内の質問を取得する権限のないユーザー</value>
+  </data>
+  <data name="UnauthorizedUserUpdateQuestion" xml:space="preserve">
+    <value>質問を更新する権限のないユーザー</value>
+  </data>
+  <data name="CreateTagError" xml:space="preserve">
+    <value>タグの作成中にエラーが発生しました</value>
+  </data>
+  <data name="DeleteSectionError" xml:space="preserve">
+    <value>セクションを削除しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="DeleteTagError" xml:space="preserve">
+    <value>タグを削除しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="FetchRefreshTokenError" xml:space="preserve">
+    <value>ユーザー ID によるリフレッシュ トークンの取得中にエラーが発生しました</value>
+  </data>
+  <data name="RefreshTokenValueError" xml:space="preserve">
+    <value>更新トークンを値で取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="TagAlreadyExist" xml:space="preserve">
+    <value>タグ名はすでに存在します</value>
+  </data>
+  <data name="TrainingSectionLesson" xml:space="preserve">
+    <value>トレーニングセクションはレッスンで構成されています</value>
+  </data>
+  <data name="TrainingSectionPublished" xml:space="preserve">
+    <value>トレーニングセクションが公開されました</value>
+  </data>
+  <data name="UpdateRefershTokenError" xml:space="preserve">
+    <value>リフレッシュトークンを更新しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="UpdateTagError" xml:space="preserve">
+    <value>タグを更新しようとしたときにエラーが発生しました</value>
+  </data>
 </root>

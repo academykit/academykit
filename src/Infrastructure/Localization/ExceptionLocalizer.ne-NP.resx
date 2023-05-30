@@ -483,4 +483,85 @@
   <data name="ZoomLisenceNotFound" xml:space="preserve">
     <value>जुम लाइसेन्स फेला परेन</value>
   </data>
+  <data name="AssignRoleQuestionPoolError" xml:space="preserve">
+    <value>प्रश्न पूलमा भूमिका तोक्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="QuestionAssociatedQuestionSet" xml:space="preserve">
+    <value>प्रश्न प्रश्न सेट संग सम्बन्धित छ।</value>
+  </data>
+  <data name="QuestionCannotEdit" xml:space="preserve">
+    <value>प्रश्न परीक्षा सबमिशन संग सम्बन्धित छ। त्यसकारण, यसलाई सम्पादन गर्न सकिँदैन।</value>
+  </data>
+  <data name="QuestionCreateError" xml:space="preserve">
+    <value>प्रश्न सिर्जना गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="QuestionNotFound" xml:space="preserve">
+    <value>प्रश्न भेटिएन।</value>
+  </data>
+  <data name="QuestionPoolDeleteError" xml:space="preserve">
+    <value>प्रश्न पूलको प्रश्न मेटाउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="QuestionPoolUpdateError" xml:space="preserve">
+    <value>प्रश्न पूलको प्रश्न अद्यावधिक गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="QuestionPoolUserNotFound" xml:space="preserve">
+    <value>प्रश्न पूलमा प्रयोगकर्ता फेला परेन।</value>
+  </data>
+  <data name="QuestionSetAddError" xml:space="preserve">
+    <value>प्रश्न सेटमा प्रश्नहरू थप्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="QuestionSetAddNotAllowed" xml:space="preserve">
+    <value>प्रश्न सेटमा उत्तर सबमिशन समावेश छ। त्यसैले, प्रश्न सेटमा प्रश्न थप्न अनुमति छैन।</value>
+  </data>
+  <data name="QuestionSetNotFound" xml:space="preserve">
+    <value>प्रश्न सेट भेटिएन।</value>
+  </data>
+  <data name="TeacherRoleInvalidAccess" xml:space="preserve">
+    <value>प्रश्न पूल शिक्षकको भूमिका परिवर्तन गर्न अमान्य पहुँच।</value>
+  </data>
+  <data name="UnauthorizedUserAddQuestion" xml:space="preserve">
+    <value>पूलमा प्रश्न थप्नको लागि अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UnauthorizedUserAddQuestionSet" xml:space="preserve">
+    <value>प्रश्न सेटमा प्रश्नहरू थप्नको लागि अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UnauthorizedUserDeleteQuestion" xml:space="preserve">
+    <value>प्रश्न मेटाउनको लागि अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UnauthorizedUserQuestionSet" xml:space="preserve">
+    <value>प्रश्न सेटमा प्रश्नहरू प्राप्त गर्न अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UnauthorizedUserUpdateQuestion" xml:space="preserve">
+    <value>प्रश्न अपडेट गर्नको लागि अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="CreateTagError" xml:space="preserve">
+    <value>ट्याग सिर्जना गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="DeleteSectionError" xml:space="preserve">
+    <value>खण्ड मेट्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="DeleteTagError" xml:space="preserve">
+    <value>ट्याग मेटाउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="FetchRefreshTokenError" xml:space="preserve">
+    <value>प्रयोगकर्ता आईडीद्वारा ताजा टोकन ल्याउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="RefreshTokenValueError" xml:space="preserve">
+    <value>मानद्वारा ताजा टोकन ल्याउने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="TagAlreadyExist" xml:space="preserve">
+    <value>ट्याग नाम पहिले नै अवस्थित छ।</value>
+  </data>
+  <data name="TrainingSectionLesson" xml:space="preserve">
+    <value>प्रशिक्षण खण्डमा पाठहरू समावेश छन्।</value>
+  </data>
+  <data name="TrainingSectionPublished" xml:space="preserve">
+    <value>प्रशिक्षण खण्ड प्रकाशित छ।</value>
+  </data>
+  <data name="UpdateRefershTokenError" xml:space="preserve">
+    <value>ताजा टोकन अपडेट गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="UpdateTagError" xml:space="preserve">
+    <value>ट्याग अपडेट गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
 </root>
