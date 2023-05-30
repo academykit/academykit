@@ -7,12 +7,17 @@ import {
   useGroupNotMember,
 } from "@utils/services/groupService";
 import { useEffect, useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
-const schema = Yup.object().shape({
-  email: Yup.array().min(1, "At least 1 email address is required."),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  Yup.object().shape({
+    email: Yup.array().min(1, t("one_email_required") as string),
+  });
+};
 const AddMember = ({
   onCancel,
   searchParams,
@@ -34,8 +39,9 @@ const AddMember = ({
     initialValues: {
       email: [],
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(form);
   const ref = useRef<HTMLInputElement>(null);
   const getNotMemberList = useGroupNotMember(id as string, `search=${search}`);
 

@@ -12,6 +12,7 @@ import {
 } from "@mantine/core";
 import { useCourse } from "@utils/services/courseService";
 import CourseRow from "./Component/CourseRow";
+import { useTranslation } from "react-i18next";
 
 const AdminCourseList = ({
   searchParams,
@@ -20,11 +21,11 @@ const AdminCourseList = ({
 }: IWithSearchPagination) => {
   const { data, isSuccess, isLoading, isError, error } =
     useCourse(searchParams);
-
+  const { t } = useTranslation();
   return (
     <Container fluid>
-      <Group my={10}>All the trainings are listed below:</Group>
-      {searchComponent("Search Courses")}
+      <Group my={10}>{t("all_trainings_list")}</Group>
+      {searchComponent(t("search_courses") as string)}
 
       <ScrollArea>
         {data &&
@@ -33,12 +34,12 @@ const AdminCourseList = ({
               <Table striped highlightOnHover withBorder>
                 <thead>
                   <tr>
-                    <th>Trainings Name</th>
-                    <th>Created Date</th>
-                    <th>Author</th>
+                    <th>{t("training_name")}</th>
+                    <th>{t("created_date")}</th>
+                    <th>{t("author")}</th>
 
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>{t("status")}</th>
+                    <th>{t("actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -49,11 +50,11 @@ const AdminCourseList = ({
               </Table>
             </Paper>
           ) : (
-            <Box>No Trainings Found!</Box>
+            <Box>{t("no_trainings_found")}</Box>
           ))}
       </ScrollArea>
       {isLoading && <Loader />}
-      {isError && <Box>Something Went Wrong.</Box>}
+      {isError && <Box>{t("something_went_wrong")}</Box>}
       {data && pagination(data.totalPage)}
     </Container>
   );

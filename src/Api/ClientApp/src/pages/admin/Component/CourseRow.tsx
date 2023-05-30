@@ -19,12 +19,13 @@ import RoutePath from "@utils/routeConstants";
 import errorType from "@utils/services/axiosError";
 import { ICourse, useCourseStatus } from "@utils/services/courseService";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
   const [confirmPublish, togglePublish] = useToggle();
   const [isRejected, toggleRejected] = useToggle();
-
+  const { t } = useTranslation();
   const courseStatus = useCourseStatus(course.id, search);
   const auth = useAuth();
 
@@ -57,9 +58,10 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
         message: message ?? "",
       });
       showNotification({
-        message: `Training has been ${
-          message ? "rejected!" : "successfully published!"
-        }`,
+        title: t("successful"),
+        message: message
+          ? t("training_rejected_success")
+          : t("training_published_success"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -78,8 +80,8 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
           onClose={togglePublished}
           title={
             isRejected
-              ? `Leave a message for your rejection`
-              : `Are you sure you want to publish "${course.name}"?`
+              ? t("leave_message_reject")
+              : `${t("publish_confirmation")} "${course.name}"?`
           }
         >
           {!isRejected ? (
@@ -88,7 +90,7 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
                 onClick={() => onPublish()}
                 loading={courseStatus.isLoading}
               >
-                Publish
+                {t("publish")}
               </Button>
               <Button
                 variant="outline"
@@ -96,7 +98,7 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
                   toggleRejected();
                 }}
               >
-                Reject
+                {t("reject")}
               </Button>
             </Group>
           ) : (
@@ -104,10 +106,10 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
               <Group>
                 <Textarea {...form.getInputProps("message")} w={"100%"} />
                 <Button loading={courseStatus.isLoading} type="submit">
-                  Submit
+                  {t("submit")}
                 </Button>
                 <Button variant="outline" onClick={() => toggleRejected()}>
-                  Cancel
+                  {t("cancel")}
                 </Button>
               </Group>
             </form>
@@ -117,7 +119,7 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
       </td>
       <td>{moment(course.createdOn).format("DD/MM/YY")}</td>
       <td>
-        <UserShortProfile size={"xs"} user={course.user} />
+        <UserShortProfile size={"xs"} user={course.user} page="" />
       </td>
 
       <td>
@@ -128,7 +130,7 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
       <td>
         <Group>
           {canPreviewEdit && (
-            <Tooltip label="Preview">
+            <Tooltip label={t("preview")}>
               <ActionIcon
                 component={Link}
                 to={RoutePath.courses.description(course.slug).route}
@@ -139,7 +141,7 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
             </Tooltip>
           )}
           {canPreviewEdit && (
-            <Tooltip label="Edit course">
+            <Tooltip label={t("edit_course")}>
               <ActionIcon
                 component={Link}
                 to={RoutePath.manageCourse.edit(course.slug).route}
@@ -149,7 +151,7 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
             </Tooltip>
           )}
           {course.status === CourseStatus.Review && (
-            <Tooltip label="Publish this course">
+            <Tooltip label={t("publish_course")}>
               <ActionIcon onClick={togglePublished} color={"green"}>
                 <IconFileCheck />
               </ActionIcon>

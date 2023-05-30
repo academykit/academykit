@@ -23,30 +23,37 @@ import {
 import { ILessonMCQ } from "@utils/services/types";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Exam Name is required."),
+const schema = () => {
+  const { t } = useTranslation();
 
-  startDate: Yup.date()
-    .required("Start Date is required.")
-    .typeError("Start Date is required."),
-  endDate: Yup.date()
-    .required("End Date is required.")
-    .typeError("End Date is required."),
-  questionMarking: Yup.string().required("Question weightage is required."),
-  startTime: Yup.string()
-    .required("start time cannot be empty.")
-    .typeError("Start Time is required."),
-  endTime: Yup.string()
-    .required("end time cannot be empty.")
-    .typeError("End Time is required."),
-  duration: Yup.number()
-    .required("Duration is required.")
-    .min(1, "Exam duration should at least be one."),
-});
+  return Yup.object().shape({
+    name: Yup.string().required(t("exam_name_required") as string),
 
+    startDate: Yup.date()
+      .required(t("start_date_required") as string)
+      .typeError(t("start_date_required") as string),
+    endDate: Yup.date()
+      .required(t("end_date_required") as string)
+      .typeError(t("start_date_required") as string),
+    questionMarking: Yup.string().required(
+      t("question_weightage_required") as string
+    ),
+    startTime: Yup.string()
+      .required(t("start_time_not_empty") as string)
+      .typeError(t("start_time_required") as string),
+    endTime: Yup.string()
+      .required(t("end_time_not_empty") as string)
+      .typeError(t("end_time_required") as string),
+    duration: Yup.number()
+      .required(t("duration_required") as string)
+      .min(1, t("exam_duration_atleast_one") as string),
+  });
+};
 const strippedFormValue = (value: any) => {
   const val = { ...value };
   delete val.isMandatory;
@@ -78,7 +85,7 @@ const AddExam = ({
   const navigate = useNavigate();
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
-
+  const { t } = useTranslation();
   const [isMandatory, setIsMandatory] = useState<boolean>(
     item?.isMandatory ?? false
   );
@@ -109,8 +116,9 @@ const AddExam = ({
       startDate: startDateTime,
       isMandatory: item?.isMandatory ?? false,
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(form);
 
   const handleSubmit = async (values: any) => {
     try {
@@ -137,15 +145,17 @@ const AddExam = ({
         setIsEditing(false);
       }
       showNotification({
-        title: "Success!",
-        message: `Lesson ${isEditing ? "Edited" : "Added"} successfully!`,
+        title: t("success"),
+        message: `${t("capital_lesson")} ${
+          isEditing ? t("edited") : t("added")
+        } ${t("successfully")}`,
       });
     } catch (error) {
       const err = errorType(error);
       showNotification({
         message: err,
         color: "red",
-        title: "Error!",
+        title: t("error"),
       });
     }
   };
@@ -157,18 +167,18 @@ const AddExam = ({
           <Grid.Col span={12} xs={6} lg={4}>
             <TextInput
               withAsterisk
-              label="Exam Title"
-              placeholder="Exam Title"
+              label={t("exam_title")}
+              placeholder={t("exam_title") as string}
               name="title"
               {...form.getInputProps("name")}
             />
           </Grid.Col>
           <Grid.Col span={12} xs={6} lg={4}>
             <NumberInput
-              label="Passing Percentage"
+              label={t("passing_percentage")}
               max={100}
               min={0}
-              placeholder="Question Set passing percentage"
+              placeholder={t("question_passing_percentage") as string}
               {...form.getInputProps("passingWeightage")}
             />
           </Grid.Col>

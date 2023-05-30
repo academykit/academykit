@@ -24,7 +24,9 @@ import {
 } from "@utils/services/assignmentService";
 import errorType from "@utils/services/axiosError";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
 const getQuestionType = () => {
   return Object.entries(QuestionType)
@@ -36,49 +38,59 @@ const getQuestionType = () => {
     }));
 };
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Title of Question is required."),
-  type: Yup.string().required("Question type is required.").nullable(),
+const schema = () => {
+  const { t } = useTranslation();
 
-  answers: Yup.array()
-    .when(["type"], {
-      is: QuestionType.MultipleChoice.toString(),
-      then: Yup.array()
-        .min(2, "Options should be more than one.")
-        .test(
-          "test",
-          "On Multiple Choice at least one option should be selected.",
-          function (value: any) {
-            const a = value?.filter((x: any) => x.isCorrect).length > 0;
-            return a;
-          }
-        )
-        .of(
-          Yup.object().shape({
-            option: Yup.string().trim().required("Options is required."),
-          })
-        ),
-    })
-    .when(["type"], {
-      is: QuestionType.SingleChoice.toString(),
-      then: Yup.array()
-        .min(2, "Options should be more than one.")
-        .test(
-          "test",
-          "On Single choice, only one option should be selected.",
-          function (value: any) {
-            const length: number =
-              value && value.filter((e: any) => e.isCorrect).length;
-            return length === 1;
-          }
-        )
-        .of(
-          Yup.object().shape({
-            option: Yup.string().trim().required("Options is required."),
-          })
-        ),
-    }),
-});
+  return Yup.object().shape({
+    name: Yup.string().required(t("question_title_required") as string),
+    type: Yup.string()
+      .required(t("question_type_required") as string)
+      .nullable(),
+
+    answers: Yup.array()
+      .when(["type"], {
+        is: QuestionType.MultipleChoice.toString(),
+        then: Yup.array()
+          .min(2, t("more_option_required") as string)
+          .test(
+            t("test"),
+            t("one_option_selected_on_multiple_choice") as string,
+            function (value: any) {
+              const a = value?.filter((x: any) => x.isCorrect).length > 0;
+              return a;
+            }
+          )
+          .of(
+            Yup.object().shape({
+              option: Yup.string()
+                .trim()
+                .required(t("option_required") as string),
+            })
+          ),
+      })
+      .when(["type"], {
+        is: QuestionType.SingleChoice.toString(),
+        then: Yup.array()
+          .min(2, t("more_option_required") as string)
+          .test(
+            t("test"),
+            t("one_option_selected_on_single_choice") as string,
+            function (value: any) {
+              const length: number =
+                value && value.filter((e: any) => e.isCorrect).length;
+              return length === 1;
+            }
+          )
+          .of(
+            Yup.object().shape({
+              option: Yup.string()
+                .trim()
+                .required(t("option_required") as string),
+            })
+          ),
+      }),
+  });
+};
 
 const [FormProvider, useFormContext, useForm] =
   createFormContext<ICreateAssignment>();
@@ -108,8 +120,9 @@ const EditAssignment = ({
           }))
         : [{ option: "", isCorrect: false }],
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(form);
 
   const data = useMemo(() => getQuestionType(), []);
 

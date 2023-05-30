@@ -1,4 +1,5 @@
 import useAuth from "@hooks/useAuth";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Box,
   Button,
@@ -19,25 +20,30 @@ import {
   useUpdateGroup,
 } from "@utils/services/groupService";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
 const useStyle = createStyles({});
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Group name is required!"),
-});
-
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    name: Yup.string().required(t("group_name_required") as string),
+  });
+};
 const GroupDetail = () => {
   const { id } = useParams();
   const { theme } = useStyle();
+  const { t } = useTranslation();
   const form = useForm({
     initialValues: {
       name: "",
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   const [edit, setEdit] = useState(false);
+  useFormErrorHooks(form);
 
   const groupDetail = useGetGroupDetail(id as string);
   const updateGroups = useUpdateGroup(id as string);
@@ -60,7 +66,10 @@ const GroupDetail = () => {
         id: id as string,
         isActive: true,
       });
-      showNotification({ message: "Group updated successfully." });
+      showNotification({
+        title: t("successful"),
+        message: t("group_update_success"),
+      });
     } catch (error) {
       const err = errorType(error);
       showNotification({
@@ -73,11 +82,11 @@ const GroupDetail = () => {
   return (
     <Container fluid>
       <Flex justify={"space-between"} w={"100%"}>
-        <Title>Group Details</Title>
+        <Title>{t("group_details")}</Title>
 
         {!edit && auth?.auth && auth?.auth?.role < UserRole.Trainer && (
           <Button onClick={() => setEdit(true)} variant="outline">
-            Edit
+            {t("edit")}
           </Button>
         )}
       </Flex>
@@ -86,7 +95,7 @@ const GroupDetail = () => {
           <Paper withBorder p={10} mt={10}>
             <Flex direction="column">
               <Text size="lg" weight={"bold"}>
-                Group Name
+                {t("group_name")}
               </Text>
               <Text>{groupDetail?.data?.data?.name}</Text>
             </Flex>
@@ -97,16 +106,16 @@ const GroupDetail = () => {
               <TextInput
                 sx={{ maxWidth: theme.breakpoints.xs }}
                 name="name"
-                label="Group Name"
+                label={t("group_name")}
                 withAsterisk
-                placeholder="Your group name."
+                placeholder={t("your_group_name") as string}
                 {...form.getInputProps("name")}
               />
               <Button loading={updateGroups.isLoading} mt={20} type="submit">
-                Save
+                {t("save")}
               </Button>
               <Button variant="outline" onClick={() => setEdit(false)} ml={10}>
-                Cancel
+                {t("cancel")}
               </Button>
             </Box>
           </Paper>

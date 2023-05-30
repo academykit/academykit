@@ -28,43 +28,62 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IAddQuestionType>();
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("question_title_required"),
-  type: Yup.string().required("question_type_required").nullable(),
+const schema = () => {
+  const { t } = useTranslation();
 
-  answers: Yup.array()
-    .when(["type"], {
-      is: QuestionType.MultipleChoice.toString(),
-      then: Yup.array()
-        .min(1, "option_more_than_one")
-        .test("test", "multiple_choice_option_atleast", function (value: any) {
-          const a = value?.filter((x: any) => x.isCorrect).length > 0;
-          return a;
-        })
-        .of(
-          Yup.object().shape({
-            option: Yup.string().trim().required("option_required"),
-          })
-        ),
-    })
-    .when(["type"], {
-      is: QuestionType.SingleChoice.toString(),
-      then: Yup.array()
-        .test("test", "single_choice_option_atleast", function (value: any) {
-          const length: number =
-            value && value.filter((e: any) => e.isCorrect).length;
-          return length === 1;
-        })
-        .of(
-          Yup.object().shape({
-            option: Yup.string().trim().required("option_required"),
-          })
-        ),
-    }),
-});
+  return Yup.object().shape({
+    name: Yup.string().required(t("question_title_required") as string),
+    type: Yup.string()
+      .required(t("question_type_required") as string)
+      .nullable(),
+
+    answers: Yup.array()
+      .when(["type"], {
+        is: QuestionType.MultipleChoice.toString(),
+        then: Yup.array()
+          .min(1, t("option_more_than_one") as string)
+          .test(
+            t("test"),
+            t("multiple_choice_option_atleast") as string,
+            function (value: any) {
+              const a = value?.filter((x: any) => x.isCorrect).length > 0;
+              return a;
+            }
+          )
+          .of(
+            Yup.object().shape({
+              option: Yup.string()
+                .trim()
+                .required(t("option_required") as string),
+            })
+          ),
+      })
+      .when(["type"], {
+        is: QuestionType.SingleChoice.toString(),
+        then: Yup.array()
+          .test(
+            t("test"),
+            t("single_choice_option_atleast") as string,
+            function (value: any) {
+              const length: number =
+                value && value.filter((e: any) => e.isCorrect).length;
+              return length === 1;
+            }
+          )
+          .of(
+            Yup.object().shape({
+              option: Yup.string()
+                .trim()
+                .required(t("option_required") as string),
+            })
+          ),
+      }),
+  });
+};
 
 const Create = () => {
   const navigate = useNavigate();
@@ -79,8 +98,9 @@ const Create = () => {
       type: "",
       answers: [{ option: "", isCorrect: false }],
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(form);
 
   const getQuestionType = () => {
     return [

@@ -11,17 +11,25 @@ import * as Yup from "yup";
 import errorType from "@utils/services/axiosError";
 import { PHONE_VALIDATION } from "@utils/constants";
 import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
-const schema = Yup.object().shape({
-  companyName: Yup.string().required("Company Name is required."),
-  companyAddress: Yup.string().required("Company Address required."),
-  companyContactNumber: Yup.string().nullable().matches(PHONE_VALIDATION, {
-    message: "Please enter valid phone number.",
-    excludeEmptyString: true,
-  }),
-  emailSignature: Yup.string().required("Signature is required."),
-  logoUrl: Yup.string().required("Company Logo is required!"),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    companyName: Yup.string().required(t("company_name_required") as string),
+    companyAddress: Yup.string().required(
+      t("company_address_required") as string
+    ),
+    companyContactNumber: Yup.string()
+      .nullable()
+      .matches(PHONE_VALIDATION, {
+        message: t("enter_valid_phone"),
+        excludeEmptyString: true,
+      }),
+    emailSignature: Yup.string().required(t("signature_required") as string),
+    logoUrl: Yup.string().required(t("company_logo_required") as string),
+  });
+};
 
 interface ICompanySettings {
   thumbnail?: string;
@@ -59,8 +67,9 @@ const GeneralSettings = () => {
       companyContactNumber: "",
       emailSignature: "",
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(form);
 
   const handleSubmit = async (values: any) => {
     try {

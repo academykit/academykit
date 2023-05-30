@@ -29,51 +29,59 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IAddQuestionType>();
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Title of Question is required"),
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    name: Yup.string().required(t("question_title_required") as string),
 
-  answers: Yup.array()
+    answers: Yup.array()
 
-    .when(["type"], {
-      is: QuestionType.MultipleChoice.toString(),
-      then: Yup.array()
-        .min(1, "Options should be more than one")
-        .test(
-          "test",
-          "On Multiple Choice at least one option should be selected ",
-          function (value: any) {
-            const a = value?.filter((x: any) => x.isCorrect).length > 0;
-            return a;
-          }
-        )
-        .of(
-          Yup.object().shape({
-            option: Yup.string().trim().required("Options is required"),
-          })
-        ),
-    })
-    .when(["type"], {
-      is: QuestionType.SingleChoice.toString(),
-      then: Yup.array()
-        .test(
-          "test",
-          "On Single choice, only one option should be selected.",
-          function (value: any) {
-            const length: number =
-              value && value.filter((e: any) => e.isCorrect).length;
-            return length === 1;
-          }
-        )
-        .of(
-          Yup.object().shape({
-            option: Yup.string().trim().required("Options is required"),
-          })
-        ),
-    }),
-});
+      .when(["type"], {
+        is: QuestionType.MultipleChoice.toString(),
+        then: Yup.array()
+          .min(1, t("option_more_than_one") as string)
+          .test(
+            t("test"),
+            t("multiple_choice_option_atleast ") as string,
+            function (value: any) {
+              const a = value?.filter((x: any) => x.isCorrect).length > 0;
+              return a;
+            }
+          )
+          .of(
+            Yup.object().shape({
+              option: Yup.string()
+                .trim()
+                .required(t("option_required") as string),
+            })
+          ),
+      })
+      .when(["type"], {
+        is: QuestionType.SingleChoice.toString(),
+        then: Yup.array()
+          .test(
+            t("test"),
+            t("single_choice_option_atleast") as string,
+            function (value: any) {
+              const length: number =
+                value && value.filter((e: any) => e.isCorrect).length;
+              return length === 1;
+            }
+          )
+          .of(
+            Yup.object().shape({
+              option: Yup.string()
+                .trim()
+                .required(t("option_required") as string),
+            })
+          ),
+      }),
+  });
+};
 const Create = () => {
   const { t } = useTranslation();
   const { id, slug } = useParams();
@@ -93,8 +101,9 @@ const Create = () => {
       type: "",
       answers: [{ option: "", isCorrect: false }],
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(form);
 
   const fieldSize = "md";
   const getQuestionType = () => {

@@ -21,10 +21,16 @@ import { useParams } from "react-router-dom";
 import errorType from "@utils/services/axiosError";
 import * as Yup from "yup";
 import CreateFeedback from "../FeedBack/CreateFeedBack";
+import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Feedback Name is required."),
-});
+const schema = () => {
+  const { t } = useTranslation();
+
+  return Yup.object().shape({
+    name: Yup.string().required(t("feedback_name_required") as string),
+  });
+};
 
 const AddFeedback = ({
   setAddState,
@@ -60,8 +66,9 @@ const AddFeedback = ({
       description: item?.description ?? "",
       isMandatory: item?.isMandatory ?? false,
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(form);
 
   const submitForm = async (values: { name: string; description: string }) => {
     try {
@@ -87,20 +94,22 @@ const AddFeedback = ({
         setIsEditing(false);
       }
       showNotification({
-        title: "Success",
-        message: `Feedback ${isEditing ? "Edited" : "Added"} successfully!`,
+        title: t("success"),
+        message: `${t("feedback")} ${isEditing ? t("edited") : t("added")} ${t(
+          "successfully"
+        )}`,
       });
     } catch (error: any) {
       const err = errorType(error);
 
       showNotification({
-        title: "Error!",
+        title: t("error"),
         message: err,
         color: "red",
       });
     }
   };
-
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <Modal

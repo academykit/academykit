@@ -8,6 +8,7 @@ import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import { FileAccess, uploadVideo } from "@utils/services/fileService";
 import { UseFormReturnType } from "@mantine/form";
 import FilePondPluginImageValidateSize from "filepond-plugin-image-validate-size";
+import { useTranslation } from "react-i18next";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -39,7 +40,7 @@ const LessonVideoUpload = ({
   }, [currentVideo]);
   const form = formContext();
   const [files, setFiles] = useState<any>([]);
-
+  const { t } = useTranslation();
   return (
     <Box my={marginy} sx={{ maxWidth: 470 }} pos="relative">
       <FilePond
@@ -101,7 +102,9 @@ const LessonVideoUpload = ({
           },
         }}
         name="files"
-        labelIdle='Drag & Drop your Video or <span class="filepond--label-action">Browse</span>'
+        labelIdle={`${t(
+          "video_drag_drop"
+        )} <span class="filepond--label-action">${t("browse")}</span>`}
       />
       {form.errors["videoUrl"] && (
         <Text color={"red"} size={"xs"} pos="absolute" top={"100%"}>

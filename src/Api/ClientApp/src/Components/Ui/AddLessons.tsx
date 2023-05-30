@@ -7,12 +7,16 @@ import AddAssignment from "@components/Course/Lesson/AddAssignment";
 import AddMeeting from "@components/Course/Lesson/AddMeeting";
 import AddFeedback from "@components/Course/Lesson/AddFeedback";
 import AddDocument from "@components/Course/Lesson/AddDocument";
+import { useTranslation } from "react-i18next";
+import { TFunction } from "i18next";
 
 const LessonAddList = ({
   sectionId,
   setAddLessonClick,
+  t,
 }: {
   setAddLessonClick: React.Dispatch<React.SetStateAction<boolean>>;
+  t: TFunction;
   sectionId: string;
 }) => {
   const [addState, setAddState] = React.useState<string>("");
@@ -88,42 +92,42 @@ const LessonAddList = ({
             variant="outline"
             onClick={() => setAddState("lecture")}
           >
-            + Video
+            + {t("video")}
           </Badge>{" "}
           <Badge
             style={{ cursor: "pointer" }}
             variant="outline"
             onClick={() => setAddState("mcq")}
           >
-            + Exam
+            + {t("exam")}
           </Badge>{" "}
           <Badge
             style={{ cursor: "pointer" }}
             variant="outline"
             onClick={() => setAddState("assignment")}
           >
-            + Assignment
+            + {t("assignment")}
           </Badge>{" "}
           <Badge
             style={{ cursor: "pointer" }}
             variant="outline"
             onClick={() => setAddState("meeting")}
           >
-            + Live Class
+            + {t("live_class")}
           </Badge>{" "}
           <Badge
             style={{ cursor: "pointer" }}
             variant="outline"
             onClick={() => setAddState("feedback")}
           >
-            + Feedback
+            + {t("feedback")}
           </Badge>{" "}
           <Badge
             style={{ cursor: "pointer" }}
             variant="outline"
             onClick={() => setAddState("document")}
           >
-            + Document
+            + {t("document")}
           </Badge>{" "}
           <Badge
             color="red"
@@ -131,7 +135,7 @@ const LessonAddList = ({
             variant="outline"
             onClick={() => setAddLessonClick(true)}
           >
-            X Close
+            X {t("close")}
           </Badge>
         </>
       ) : (
@@ -144,6 +148,7 @@ const LessonAddList = ({
 const AddLesson = ({ sectionId }: { sectionId: string }) => {
   const section = useSection();
   const [addLessonClick, setAddLessonClick] = useState<boolean>(true);
+  const { t } = useTranslation();
 
   return (
     <div style={{ marginTop: "10px", marginBottom: "10px" }}>
@@ -157,10 +162,11 @@ const AddLesson = ({ sectionId }: { sectionId: string }) => {
             section?.setIsAddSection(false);
           }}
         >
-          Add Lesson
+          {t("add_lesson")}
         </Button>
       ) : (
         <LessonAddList
+          t={t}
           sectionId={sectionId}
           setAddLessonClick={setAddLessonClick}
         />
