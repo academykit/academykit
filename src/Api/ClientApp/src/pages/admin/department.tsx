@@ -291,7 +291,7 @@ const Department = ({
               { value: "true", label: t("active") },
               { value: "false", label: t("inactive") },
             ],
-            "Department Status",
+            t("department_status"),
             "IsActive"
           )}
         </Flex>

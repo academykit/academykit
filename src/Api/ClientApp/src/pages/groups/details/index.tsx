@@ -1,4 +1,5 @@
 import useAuth from "@hooks/useAuth";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Box,
   Button,
@@ -18,6 +19,7 @@ import {
   useGetGroupDetail,
   useUpdateGroup,
 } from "@utils/services/groupService";
+import i18next from "i18next";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -25,10 +27,12 @@ import * as Yup from "yup";
 
 const useStyle = createStyles({});
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Group name is required!"),
-});
-
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    name: Yup.string().required(t("group_name_required") as string),
+  });
+};
 const GroupDetail = () => {
   const { id } = useParams();
   const { theme } = useStyle();
@@ -37,9 +41,10 @@ const GroupDetail = () => {
     initialValues: {
       name: "",
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
   const [edit, setEdit] = useState(false);
+  useFormErrorHooks(form);
 
   const groupDetail = useGetGroupDetail(id as string);
   const updateGroups = useUpdateGroup(id as string);
