@@ -21,8 +21,10 @@ import { useGroups } from "@utils/services/groupService";
 import { useLevels } from "@utils/services/levelService";
 import { useAddTag, useTags } from "@utils/services/tagService";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
 interface FormValues {
   thumbnail: string;
@@ -32,11 +34,18 @@ interface FormValues {
   description: string;
   tags: string[];
 }
-const schema = Yup.object().shape({
-  title: Yup.string().trim().required("Course Title is required."),
-  level: Yup.string().required("Level is required."),
-  groups: Yup.string().nullable().required("Group is required."),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    title: Yup.string()
+      .trim()
+      .required(t("course_title_required") as string),
+    level: Yup.string().required(t("level_required") as string),
+    groups: Yup.string()
+      .nullable()
+      .required(t("group_required") as string),
+  });
+};
 
 export const [FormProvider, useFormContext, useForm] =
   createFormContext<FormValues>();
@@ -75,6 +84,7 @@ const CreateCoursePage = () => {
     },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
 
   const [searchParam, setsearchParam] = useState("");
 

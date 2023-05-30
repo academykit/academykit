@@ -5,11 +5,16 @@ import errorType from "@utils/services/axiosError";
 import { useAddGroup } from "@utils/services/groupService";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
+
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    name: Yup.string().required(t("group_name_required") as string),
+  });
+};
 const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
   const { t } = useTranslation();
-  const schema = Yup.object().shape({
-    name: Yup.string().required("Group Name is required."),
-  });
   const { mutateAsync, isLoading } = useAddGroup();
   const form = useForm({
     initialValues: {
@@ -17,6 +22,7 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
     },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
   const useStyles = createStyles((theme) => ({
     paper: {
       [theme.fn.smallerThan("md")]: {
