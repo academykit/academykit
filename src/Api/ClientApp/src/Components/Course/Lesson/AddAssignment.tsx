@@ -46,7 +46,7 @@ const schema = () => {
   const { t } = useTranslation();
 
   return Yup.object().shape({
-    name: Yup.string().required(t("assiginment_title_required") as string),
+    name: Yup.string().required(t("assignment_title_required") as string),
     startTime: Yup.date()
       .required(t("start_time_required") as string)
       .typeError(t("start_time_required") as string),

@@ -50,8 +50,8 @@ export default function ZoomLicense() {
     const { t } = useTranslation();
     return Yup.object().shape({
       licenseEmail: Yup.string()
-        .email(t("invalid_lisences_email") as string)
-        .required(t("lisence_email_required") as string),
+        .email(t("invalid_license_email") as string)
+        .required(t("license_email_required") as string),
       hostId: Yup.string().required(t("host_id_required") as string),
       capacity: Yup.number()
         .integer()

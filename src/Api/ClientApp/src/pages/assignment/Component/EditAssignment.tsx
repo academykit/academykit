@@ -74,7 +74,7 @@ const schema = () => {
           .min(2, t("more_option_required") as string)
           .test(
             t("test"),
-            t("one_option_selected_on_single_coice") as string,
+            t("one_option_selected_on_single_choice") as string,
             function (value: any) {
               const length: number =
                 value && value.filter((e: any) => e.isCorrect).length;
