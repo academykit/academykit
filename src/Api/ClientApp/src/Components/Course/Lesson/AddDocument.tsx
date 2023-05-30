@@ -22,6 +22,7 @@ import errorType from "@utils/services/axiosError";
 import * as Yup from "yup";
 import CreateFeedback from "../FeedBack/CreateFeedBack";
 import FileUploadLesson from "@components/Ui/FileUploadLesson";
+import { useTranslation } from "react-i18next";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("File Name is required."),
@@ -93,21 +94,23 @@ const AddDocument = ({
         setIsEditing(false);
       }
       showNotification({
-        title: "Success",
-        message: `File ${isEditing ? "Edited" : "Added"} successfully!`,
+        title: t("success"),
+        message: `${t("file")} ${isEditing ? t("edited") : t("added")} ${t(
+          "successfully"
+        )}`,
       });
       setAddLessonClick(true);
     } catch (error: any) {
       const err = errorType(error);
 
       showNotification({
-        title: "Error!",
+        title: t("error"),
         message: err,
         color: "red",
       });
     }
   };
-
+  const { t } = useTranslation();
   return (
     <FormProvider form={form}>
       <form onSubmit={form.onSubmit(submitForm)}>

@@ -22,6 +22,7 @@ import {
   useDeleteFeedbackQuestion,
 } from "@utils/services/feedbackService";
 import EditFeedback from "./EditFeedBack";
+import { useTranslation } from "react-i18next";
 
 const useStyle = createStyles((theme) => ({
   wrapper: {
@@ -58,12 +59,12 @@ const FeedbackItem = ({
   };
   const deleteFeedback = useDeleteFeedbackQuestion(lessonId, search);
   const [confirmDelete, setConfirmDelete] = useToggle();
-
+  const { t } = useTranslation();
   const deleteHandler = async () => {
     try {
       await deleteFeedback.mutateAsync({ feedbackId: data.id });
       showNotification({
-        message: "Successfully deleted feedback question.",
+        message: t("edit_feedback_question_success"),
       });
     } catch (err) {
       const error = errorType(err);

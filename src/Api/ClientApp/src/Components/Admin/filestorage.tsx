@@ -16,12 +16,13 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
   const [activeIndex, setActiveIndex] = useState(
     data.findIndex((x) => x.isActive)
   );
+  const { t } = useTranslation();
   const fileStorage = useUpdateFileStorage();
   const submitHandler = async (data: IFileStorage[]) => {
     try {
       await fileStorage.mutateAsync(data);
       showNotification({
-        message: "Successfully updated file storage",
+        message: t("update_file_storage_success"),
       });
     } catch (err) {
       const error = errorType(err);

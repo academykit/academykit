@@ -116,7 +116,6 @@ const CourseDescription = () => {
   const { classes } = useStyles();
   const { id } = useParams();
   const auth = useAuth();
-
   const courseStatus = useCourseStatus(id as string, "");
   const onPublish = async () => {
     try {
@@ -125,7 +124,7 @@ const CourseDescription = () => {
         status: CourseStatus.Published,
       });
       showNotification({
-        message: "Training has been successfully published.",
+        message: t("publish_training_success"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -142,7 +141,7 @@ const CourseDescription = () => {
   const onEnroll = async () => {
     try {
       await enrollCourse.mutateAsync({ id: id as string });
-      showNotification({ message: "Course enrolled successfully." });
+      showNotification({ message: t("enroll_course_success") });
     } catch (err) {
       const error = errorType(err);
       showNotification({ message: error, color: "red" });
