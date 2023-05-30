@@ -8,6 +8,7 @@ import {
 } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const SMTP = () => {
   const smtp = useSMTPSetting();
@@ -44,6 +45,7 @@ const SMTP = () => {
       replyTo: smtp.data?.data?.replyTo || "",
     });
   }, [smtp.isSuccess]);
+  const { t } = useTranslation();
 
   return (
     <form
@@ -51,7 +53,7 @@ const SMTP = () => {
         try {
           await updateSMTP.mutateAsync(values);
           showNotification({
-            message: "Updated Successfully!",
+            message: t("update_success"),
           });
         } catch (error) {
           const err = errorType(error);
@@ -70,57 +72,57 @@ const SMTP = () => {
       >
         <TextInput
           mb={10}
-          label="Sender Email"
+          label={t("sender_email")}
           type={"email"}
           name="senderEmail"
-          placeholder="Please enter your sender's email"
+          placeholder={t("sender_email_placeholder") as string}
           {...form.getInputProps("senderEmail")}
         />
         <TextInput
           mb={10}
-          label="Reply Email"
+          label={t("reply_email")}
           name="replyEmail"
           type={"email"}
-          placeholder="Please enter your reply email"
+          placeholder={t("reply_email_placeholder") as string}
           {...form.getInputProps("replyTo")}
         />
         <TextInput
           mb={10}
-          label="Sender Name"
+          label={t("sender_name")}
           name="senderName"
-          placeholder="Please enter your sender's name"
+          placeholder={t("sender_name_placeholder") as string}
           {...form.getInputProps("senderName")}
         />
         <TextInput
           mb={10}
-          label="Username"
+          label={t("user_name")}
           name="userName"
-          placeholder="Please enter your username"
+          placeholder={t("user_name_placeholder") as string}
           {...form.getInputProps("userName")}
         />
         <PasswordInput
           mb={10}
-          label="Password"
+          label={t("password")}
           name="password"
-          placeholder="Please enter your password"
+          placeholder={t("password_placeholder") as string}
           {...form.getInputProps("password")}
         />
         <TextInput
           mb={10}
-          label="Port"
+          label={t("port")}
           name="port"
           type={"number"}
-          placeholder="Please enter your port"
+          placeholder={t("port_placeholder") as string}
           {...form.getInputProps("mailPort")}
         />
         <TextInput
           mb={10}
-          label="Server"
+          label={t("server")}
           name="server"
-          placeholder="Please enter your server url"
+          placeholder={t("server_placeholder") as string}
           {...form.getInputProps("mailServer")}
         />
-        <Button type="submit">Save</Button>
+        <Button type="submit">{t("save")}</Button>
       </Container>
     </form>
   );
