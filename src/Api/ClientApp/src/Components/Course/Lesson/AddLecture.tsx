@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import LessonVideoUpload from "@components/Ui/LessonVideoUpload";
 import {
   Button,
@@ -23,12 +23,15 @@ import { ILessonLecture, ILessonRecording } from "@utils/services/types";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Video Name is required."),
-  videoUrl: Yup.string().required("Video is required!"),
-});
-
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    name: Yup.string().required(t("video_name_required") as string),
+    videoUrl: Yup.string().required(t("video_required") as string),
+  });
+};
 type IProps = {
   setAddState: Function;
   item?: ILessons;
@@ -75,7 +78,7 @@ const AddLecture = ({
     },
     validate: yupResolver(schema),
   });
-
+  useFormErrorHooks(form);
   const handleSubmit = async (values: any) => {
     const data = isRecordedVideo
       ? ({

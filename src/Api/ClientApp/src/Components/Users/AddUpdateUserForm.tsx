@@ -3,7 +3,6 @@ import { Group, TextInput, Switch, Select, Button, Grid } from "@mantine/core";
 import { UserRole } from "@utils/enums";
 import { useDepartmentSetting } from "@utils/services/adminService";
 import { useForm, yupResolver } from "@mantine/form";
-import axios from "axios";
 import { showNotification } from "@mantine/notifications";
 import * as Yup from "yup";
 import errorType from "@utils/services/axiosError";
@@ -11,27 +10,35 @@ import { IUserProfile } from "@utils/services/types";
 import queryStringGenerator from "@utils/queryStringGenerator";
 import { PHONE_VALIDATION } from "@utils/constants";
 import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
-const schema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Email is required."),
-  firstName: Yup.string()
-    .max(100, "Firstname should have atmost 100 characters.")
-    .required("First Name is required."),
-  lastName: Yup.string()
-    .max(100, "Lastname should have atmost 100 characters.")
-    .required("Last Name is required."),
-  middleName: Yup.string()
-    .max(100, "Middlename should have atmost 100 characters.")
-    .nullable()
-    .notRequired(),
-  role: Yup.string()
-    .oneOf(["1", "2", "3", "4"], "Role is required.")
-    .required("Role is required."),
-  mobileNumber: Yup.string().nullable().matches(PHONE_VALIDATION, {
-    message: "Please enter valid phone number.",
-    excludeEmptyString: true,
-  }),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    email: Yup.string()
+      .email(t("invalid_email") as string)
+      .required(t("email_required") as string),
+    firstName: Yup.string()
+      .max(100, t("first_name_character_required") as string)
+      .required(t("first_name_required") as string),
+    lastName: Yup.string()
+      .max(100, t("last_name_character_required") as string)
+      .required("last_name_required"),
+    middleName: Yup.string()
+      .max(100, t("middle_name_character_required") as string)
+      .nullable()
+      .notRequired(),
+    role: Yup.string()
+      .oneOf(["1", "2", "3", "4"], t("role_required") as string)
+      .required(t("role_required") as string),
+    mobileNumber: Yup.string()
+      .nullable()
+      .matches(PHONE_VALIDATION, {
+        message: t("enter_valid_phone"),
+        excludeEmptyString: true,
+      }),
+  });
+};
 
 const AddUpdateUserForm = ({
   setOpened,
@@ -51,6 +58,7 @@ const AddUpdateUserForm = ({
     initialValues: item,
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
 
   const department = useDepartmentSetting(
     queryStringGenerator({

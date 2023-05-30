@@ -22,10 +22,15 @@ import errorType from "@utils/services/axiosError";
 import * as Yup from "yup";
 import CreateFeedback from "../FeedBack/CreateFeedBack";
 import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Feedback Name is required."),
-});
+const schema = () => {
+  const { t } = useTranslation();
+
+  return Yup.object().shape({
+    name: Yup.string().required(t("feedback_name_required") as string),
+  });
+};
 
 const AddFeedback = ({
   setAddState,
@@ -63,6 +68,7 @@ const AddFeedback = ({
     },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
 
   const submitForm = async (values: { name: string; description: string }) => {
     try {
@@ -89,7 +95,9 @@ const AddFeedback = ({
       }
       showNotification({
         title: t("success"),
-        message: `${t("feedback")} ${isEditing ? t("edited") : t("added")} ${t("successfully")}`,
+        message: `${t("feedback")} ${isEditing ? t("edited") : t("added")} ${t(
+          "successfully"
+        )}`,
       });
     } catch (error: any) {
       const err = errorType(error);
@@ -101,7 +109,7 @@ const AddFeedback = ({
       });
     }
   };
-const {t}= useTranslation();
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <Modal

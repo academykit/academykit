@@ -35,6 +35,7 @@ import errorType from "@utils/services/axiosError";
 import { IUser } from "@utils/services/types";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import * as Yup from "yup";
 interface IDepartment<T> {
   id: string;
@@ -42,6 +43,12 @@ interface IDepartment<T> {
   isActive: boolean;
   user: T;
 }
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    name: Yup.string().required(t("department_name_required") as string),
+  });
+};
 
 const Department = ({
   searchParams,
@@ -192,13 +199,11 @@ const Department = ({
     );
   };
 
-  const schema = Yup.object().shape({
-    name: Yup.string().required(" Department Name is required."),
-  });
   const form = useForm({
     initialValues: { name: "", isActive: false },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
   const getDepartment = useDepartmentSetting(searchParams);
   const postDepartment = usePostDepartmentSetting();
 

@@ -26,6 +26,7 @@ import { IconCalendar } from "@tabler/icons";
 import { getDateTime } from "@utils/getDateTime";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
 const strippedFormValue = (value: any) => {
   const val = { ...value };
@@ -41,21 +42,25 @@ const strippedFormValue = (value: any) => {
   return val;
 };
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Assignment's Title is required."),
-  startTime: Yup.date()
-    .required("Start Time is required.")
-    .typeError("Start Time is required."),
-  eventStartDate: Yup.date()
-    .required("Start Date is required.")
-    .typeError("Start Date is required."),
-  eventEndDate: Yup.date()
-    .required("End Date is required.")
-    .typeError("End Date is required."),
-  endTime: Yup.date()
-    .required("End Time is required.")
-    .typeError("End Time is required."),
-});
+const schema = () => {
+  const { t } = useTranslation();
+
+  return Yup.object().shape({
+    name: Yup.string().required(t("assignment_title_required") as string),
+    startTime: Yup.date()
+      .required(t("start_time_required") as string)
+      .typeError(t("start_time_required") as string),
+    eventStartDate: Yup.date()
+      .required(t("start_date_required") as string)
+      .typeError(t("start_date_required") as string),
+    eventEndDate: Yup.date()
+      .required(t("end_date_required") as string)
+      .typeError(t("end_date_required") as string),
+    endTime: Yup.date()
+      .required(t("end_time_required") as string)
+      .typeError(t("end_time_required") as string),
+  });
+};
 
 interface SubmitType {
   name: string;
@@ -115,6 +120,7 @@ const AddAssignment = ({
     },
     validate: yupResolver(schema),
   });
+  useFormErrorHooks(form);
 
   const submitForm = async (values: SubmitType) => {
     const val = { ...values };
