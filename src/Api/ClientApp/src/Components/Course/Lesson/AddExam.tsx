@@ -23,6 +23,7 @@ import {
 import { ILessonMCQ } from "@utils/services/types";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
@@ -85,7 +86,7 @@ const AddExam = ({
   const navigate = useNavigate();
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
-
+  const { t } = useTranslation();
   const [isMandatory, setIsMandatory] = useState<boolean>(
     item?.isMandatory ?? false
   );
@@ -145,15 +146,17 @@ const AddExam = ({
         setIsEditing(false);
       }
       showNotification({
-        title: "Success!",
-        message: `Lesson ${isEditing ? "Edited" : "Added"} successfully!`,
+        title: t("success"),
+        message: `${t("capital_lesson")} ${
+          isEditing ? t("edited") : t("added")
+        } ${t("successfully")}`,
       });
     } catch (error) {
       const err = errorType(error);
       showNotification({
         message: err,
         color: "red",
-        title: "Error!",
+        title: t("error"),
       });
     }
   };

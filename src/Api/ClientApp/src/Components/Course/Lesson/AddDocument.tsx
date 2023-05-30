@@ -100,21 +100,23 @@ const AddDocument = ({
         setIsEditing(false);
       }
       showNotification({
-        title: "Success",
-        message: `File ${isEditing ? "Edited" : "Added"} successfully!`,
+        title: t("success"),
+        message: `${t("file")} ${isEditing ? t("edited") : t("added")} ${t(
+          "successfully"
+        )}`,
       });
       setAddLessonClick(true);
     } catch (error: any) {
       const err = errorType(error);
 
       showNotification({
-        title: "Error!",
+        title: t("error"),
         message: err,
         color: "red",
       });
     }
   };
-
+  const { t } = useTranslation();
   return (
     <FormProvider form={form}>
       <form onSubmit={form.onSubmit(submitForm)}>

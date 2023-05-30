@@ -166,20 +166,22 @@ const AddAssignment = ({
         setIsEditing(false);
       }
       showNotification({
-        title: "Success",
-        message: `Assignment ${isEditing ? "Edited" : "Added"} successfully!`,
+        title: t("success"),
+        message: `${t("assignment")} ${
+          isEditing ? t("edited") : t("added")
+        } ${t("successfully")}`,
       });
     } catch (error: any) {
       const err = errorType(error);
 
       showNotification({
-        title: "Error!",
+        title: t("error"),
         message: err,
         color: "red",
       });
     }
   };
-
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <Modal

@@ -119,6 +119,7 @@ const EditFeedback = ({
   });
   useFormErrorHooks(form);
 
+  const { t } = useTranslation();
   const addFeedbackQuestions = useAddFeedbackQuestion(lessonId, search);
   const editFeedbackQuestion = useEditFeedbackQuestion(lessonId, search);
 
@@ -130,14 +131,14 @@ const EditFeedback = ({
           feedbackId: feedbackQuestion.id,
         });
         showNotification({
-          title: "Successful",
-          message: "Successfully edited feedback question.",
+          title: t("successful"),
+          message: t("edit_feedback_question_success"),
         });
       } else {
         await addFeedbackQuestions.mutateAsync({ data });
         showNotification({
-          title: "Successful",
-          message: "Successfully added feedback question.",
+          title: t("successful"),
+          message: t("add_feedback_question_success"),
         });
         form.reset();
       }

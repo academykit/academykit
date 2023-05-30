@@ -21,6 +21,7 @@ import {
 } from "@utils/services/commentService";
 import { IUser } from "@utils/services/types";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -50,7 +51,7 @@ const CommentReply = ({
 
   const deleteReply = useDeleteCommentReply(courseId, commentId);
   const editReply = useEditCommentReply(courseId, commentId);
-
+  const { t } = useTranslation();
   const onDelete = async () => {
     try {
       await deleteReply.mutateAsync({
@@ -58,7 +59,7 @@ const CommentReply = ({
         courseId,
         replyId: reply.id,
       });
-      showNotification({ message: "Successfully deleted comment reply." });
+      showNotification({ message: t("delete_comment_reply_success") });
     } catch (err) {
       const error = errorType(err);
       showNotification({
@@ -100,7 +101,7 @@ const CommentReply = ({
       });
       setEdit();
       showNotification({
-        message: "Successfully edited reply.",
+        message: t("edit_reply_success"),
       });
     } catch (err) {
       const error = errorType(err);
