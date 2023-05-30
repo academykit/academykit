@@ -512,5 +512,22 @@
   "certificate_name_required": "Certificate name is required.",
   "duration_in_hour": "Duration must be in hours.",
   "one_option_selected_on_multiple_choice": "On Multiple Choice at least one option should be selected.",
-  "one_option_selected_on_single_choice": "On Single choice, only one option should be selected."
+  "one_option_selected_on_single_choice": "On Single choice, only one option should be selected.",
+  
+  "section_update_success": "Section Updated Successfully!",
+  "exam_title": "Exam Title",
+  "passing_percentage": "Passing Percentage",
+  "question_passing_percentage": "Question Set passing percentage",
+  "course_title_required": "Course Title is required",
+  "level_required": "Level is required.",
+  "group_required": "Group is required.",
+  "event_start_date_required": "Event Start Date is required.",
+  "event_end_date_required": "Event End Date is required.",
+  "signature_name_required": "Signature name is required.",
+  "designation_required": "Designation is required.",
+  "file_url_required": "File Url is required!",
+  "one_email_required": "At least 1 email address is required.",
+  "name_required" : "Name is required"
+  
+
 }

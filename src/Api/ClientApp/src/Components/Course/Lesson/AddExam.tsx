@@ -167,18 +167,18 @@ const AddExam = ({
           <Grid.Col span={12} xs={6} lg={4}>
             <TextInput
               withAsterisk
-              label="Exam Title"
-              placeholder="Exam Title"
+              label={t("exam_title")}
+              placeholder={t("exam_title") as string}
               name="title"
               {...form.getInputProps("name")}
             />
           </Grid.Col>
           <Grid.Col span={12} xs={6} lg={4}>
             <NumberInput
-              label="Passing Percentage"
+              label={t("passing_percentage")}
               max={100}
               min={0}
-              placeholder="Question Set passing percentage"
+              placeholder={t("question_passing_percentage") as string}
               {...form.getInputProps("passingWeightage")}
             />
           </Grid.Col>
