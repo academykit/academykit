@@ -12,7 +12,6 @@ import { useTranslation } from "react-i18next";
 
 const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
   const form = useForm({ initialValues: data });
-  const { t } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(
     data.findIndex((x) => x.isActive)
   );
