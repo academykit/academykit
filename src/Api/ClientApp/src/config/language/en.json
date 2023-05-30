@@ -439,7 +439,26 @@
   "edited": "Edited",
   "file": "File",
   "capital_lesson": "Lesson",
-  "feedback": "Feedback"
+  "feedback": "Feedback",
+
+  "lessons": "Lessons",
+  "statistics": "Statistics",
+"lesson_stats":"Lesson Stats",
+"add_lesson": "Add Lesson",
+"video": "Video",
+"exam": "Exam",
+"live_class": "Live Class",
+"document": "Document",
+"close": "Close",
+"lesson_edit_successful": "Lesson edited successfully",
+"lesson_add_successful": "Lesson added successfully",
+"recording_name":"Recording's Name",
+"video_name": "Video Name",
+"recordings": "Recordings",
+"recording_description": "Recording's Description",
+"video_description": "Video Description",
+"video_drag_drop": "Drag & Drop your Video or"
+
 
 
 
