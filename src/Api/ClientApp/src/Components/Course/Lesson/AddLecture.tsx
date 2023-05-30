@@ -22,6 +22,7 @@ import {
 import { ILessonLecture, ILessonRecording } from "@utils/services/types";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
+import { useTranslation } from "react-i18next";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Video Name is required."),
@@ -104,20 +105,22 @@ const AddLecture = ({
         } as ILessonLecture);
       }
       showNotification({
-        title: "Success!",
-        message: `Lesson ${isEditing ? "edited" : "added"} successfully.`,
+        title: t("success"),
+        message: `${t("capital_lesson")} ${
+          isEditing ? t("edited") : t("added")
+        } ${t("successfully")}`,
       });
       setAddLessonClick(true);
     } catch (error: any) {
       const err = errorType(error);
       showNotification({
         color: "red",
-        title: "Error!",
+        title: t("error"),
         message: err,
       });
     }
   };
-
+  const { t } = useTranslation();
   return (
     <FormProvider form={form}>
       <form onSubmit={form.onSubmit(handleSubmit)}>

@@ -25,6 +25,7 @@ import moment from "moment";
 import { useParams } from "react-router-dom";
 import CommentReplies from "./CommentReplies";
 import DeleteModal from "@components/Ui/DeleteModal";
+import { useTranslation } from "react-i18next";
 const useStyles = createStyles((theme) => ({
   comment: {
     padding: `${theme.spacing.lg}px ${theme.spacing.xl}px`,
@@ -86,7 +87,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
 
   const deleteComment = useDeleteComment(id as string);
   const editComment = useEditComment(id as string, comment.id);
-
+  const { t } = useTranslation();
   const { classes, cx } = useStyles();
   const onDelete = async () => {
     try {
@@ -95,7 +96,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
         courseId: id as string,
       });
       showNotification({
-        message: "Comment deleted successfully.",
+        message: t("delete_comment_success"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -114,7 +115,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
         content,
       });
       showNotification({
-        message: "Comment edited successfully.",
+        message: t("edit_comment_success"),
       });
       setEdit();
     } catch (err) {

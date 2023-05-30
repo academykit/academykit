@@ -21,6 +21,7 @@ import { useParams } from "react-router-dom";
 import errorType from "@utils/services/axiosError";
 import * as Yup from "yup";
 import CreateFeedback from "../FeedBack/CreateFeedBack";
+import { useTranslation } from "react-i18next";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Feedback Name is required."),
@@ -87,20 +88,20 @@ const AddFeedback = ({
         setIsEditing(false);
       }
       showNotification({
-        title: "Success",
-        message: `Feedback ${isEditing ? "Edited" : "Added"} successfully!`,
+        title: t("success"),
+        message: `${t("feedback")} ${isEditing ? t("edited") : t("added")} ${t("successfully")}`,
       });
     } catch (error: any) {
       const err = errorType(error);
 
       showNotification({
-        title: "Error!",
+        title: t("error"),
         message: err,
         color: "red",
       });
     }
   };
-
+const {t}= useTranslation();
   return (
     <React.Fragment>
       <Modal

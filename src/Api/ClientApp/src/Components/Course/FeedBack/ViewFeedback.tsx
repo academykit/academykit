@@ -16,6 +16,7 @@ import FeedbackCheckBoxType from "./Options/FeedbackCheckBox";
 import FeedbackRadio from "./Options/FeedbackRadio";
 import FeedbackRating from "./Options/FeedbackRating";
 import FeedbackSubjective from "./Options/FeedbackSubjective";
+import { useTranslation } from "react-i18next";
 
 const FeedbackForm = ({
   item,
@@ -31,7 +32,7 @@ const FeedbackForm = ({
   const form = useForm({
     initialValues: item,
   });
-
+  const { t } = useTranslation();
   const handleSubmit = async (values: IFeedbackQuestions[]) => {
     const finalData: IFeedbackSubmission[] = [];
     values.forEach((x) => {
@@ -53,14 +54,14 @@ const FeedbackForm = ({
         data: finalData,
       });
       showNotification({
-        message: `Thank you for your feedback.`,
+        message: t("Thank you for your feedback."),
       });
       navigation(-1);
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        title: "Error",
+        title: t("error"),
         color: "red",
       });
     }
