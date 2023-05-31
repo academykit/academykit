@@ -10,17 +10,15 @@ import { useParams } from "react-router-dom";
 
 const Comments = () => {
   const { id } = useParams();
-  const { data, isLoading, isError, error } = useGetComments(id as string);
+  const { data, isLoading } = useGetComments(id as string);
+  const { t } = useTranslation();
   const form = useForm({
     initialValues: {
       content: "",
     },
   });
   const postComment = usePostComment(id as string);
-  if (isLoading) {
-    return <Loader />;
-  }
-  const { t } = useTranslation();
+
   const onSubmit = async ({ content }: { content: string }) => {
     try {
       await postComment.mutateAsync({
@@ -37,6 +35,10 @@ const Comments = () => {
       });
     }
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <Box>

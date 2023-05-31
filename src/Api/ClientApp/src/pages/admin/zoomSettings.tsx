@@ -98,7 +98,6 @@ const ZoomSettings = () => {
     });
     setIsChecked(zoom.data?.data.isRecordingEnabled);
   }, [zoom.isSuccess]);
-const {t}= useTranslation();
   return (
     <Paper p={"20"} withBorder>
       <form

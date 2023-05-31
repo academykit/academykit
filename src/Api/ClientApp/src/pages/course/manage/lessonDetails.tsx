@@ -19,6 +19,8 @@ import { useTranslation } from "react-i18next";
 
 const LessonDetails = () => {
   const { id, lessonId } = useParams();
+  const { t } = useTranslation();
+
   const lessonDetails = useGetLessonStatisticsDetails(
     id as string,
     lessonId as string
@@ -30,8 +32,7 @@ const LessonDetails = () => {
   }
 
   if (lessonDetails.isLoading) return <Loader />;
-  
-const{t}=useTranslation();
+
   const handleExport = async () => {
     setLoading(true);
     try {

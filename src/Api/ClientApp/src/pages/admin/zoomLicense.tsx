@@ -47,7 +47,6 @@ export default function ZoomLicense() {
   const { t } = useTranslation();
 
   const schema = () => {
-    const { t } = useTranslation();
     return Yup.object().shape({
       licenseEmail: Yup.string()
         .email(t("invalid_license_email") as string)

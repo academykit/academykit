@@ -52,6 +52,7 @@ const AddFeedback = ({
     // item?.id,
     slug as string
   );
+  const { t } = useTranslation();
 
   const [isMandatory, setIsMandatory] = useState<boolean>(
     item?.isMandatory ?? false
@@ -109,7 +110,6 @@ const AddFeedback = ({
       });
     }
   };
-  const { t } = useTranslation();
   return (
     <React.Fragment>
       <Modal

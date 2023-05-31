@@ -28,6 +28,8 @@ const FileUploadLesson = ({
   currentFile?: string;
   formContext: () => UseFormReturnType<any, (values: any) => any>;
 }) => {
+  const { t } = useTranslation();
+
   useEffect(() => {
     if (currentFile) {
       setFiles([
@@ -40,7 +42,6 @@ const FileUploadLesson = ({
       ]);
     }
   }, [currentFile]);
-  const { t } = useTranslation();
 
   const [files, setFiles] = useState<any>([]);
   const form = formContext();

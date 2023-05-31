@@ -52,6 +52,7 @@ const AddDocument = ({
 }) => {
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
+  const { t } = useTranslation();
 
   const updateLesson = useUpdateLesson(
     // item?.courseId || "",
@@ -115,7 +116,6 @@ const AddDocument = ({
       });
     }
   };
-  const { t } = useTranslation();
   return (
     <FormProvider form={form}>
       <form onSubmit={form.onSubmit(submitForm)}>

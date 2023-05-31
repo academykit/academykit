@@ -64,6 +64,7 @@ const Account = () => {
   const changeEmail = useChangeEmail();
   const auth = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const form = useForm({
     initialValues: {
@@ -114,7 +115,6 @@ const Account = () => {
       });
     }
   };
-  const { t } = useTranslation();
   return (
     <>
       <Modal

@@ -88,6 +88,7 @@ const AddAssignment = ({
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
+  const { t } = useTranslation();
 
   const [isMandatory, setIsMandatory] = useState<boolean>(
     item?.isMandatory ?? false
@@ -181,7 +182,6 @@ const AddAssignment = ({
       });
     }
   };
-  const { t } = useTranslation();
   return (
     <React.Fragment>
       <Modal

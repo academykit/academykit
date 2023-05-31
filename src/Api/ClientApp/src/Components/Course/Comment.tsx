@@ -65,6 +65,8 @@ const useStyles = createStyles((theme) => ({
 
 const Comment = ({ comment }: { comment: IComment }) => {
   const auth = useAuth();
+  const { t } = useTranslation();
+
   const showEdit = (user: IUser, edit = false) => {
     if (edit) {
       if (user.id === auth?.auth?.id) {
@@ -87,7 +89,6 @@ const Comment = ({ comment }: { comment: IComment }) => {
 
   const deleteComment = useDeleteComment(id as string);
   const editComment = useEditComment(id as string, comment.id);
-  const { t } = useTranslation();
   const { classes, cx } = useStyles();
   const onDelete = async () => {
     try {

@@ -84,6 +84,7 @@ const Questions = () => {
   const firstList: any = [];
   const secondList: any = [];
   const [activePage, setPage] = useState(1);
+  const { t } = useTranslation();
 
   const [data, setData] = useState<TransferListData>([firstList, secondList]);
   const [poolValue, setPoolValue] = useState<string | null>(null);
@@ -139,7 +140,6 @@ const Questions = () => {
       setData([data[0], i]);
     }
   }, [questionList.isSuccess]);
-const {t}= useTranslation();
   const addQuestion = async () => {
     if (!data[1].length) {
       showNotification({

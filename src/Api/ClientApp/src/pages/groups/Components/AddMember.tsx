@@ -26,6 +26,7 @@ const AddMember = ({
   searchParams: string;
 }) => {
   const [search, setSearch] = useState("");
+  const {t}= useTranslation();
 
   const { id } = useParams();
   const { mutateAsync, isLoading } = useAddGroupMember(
@@ -59,7 +60,6 @@ const AddMember = ({
       ]);
     }
   }, [getNotMemberList.isSuccess]);
-const {t}= useTranslation();
   const [data, setData] = useState<{ label: string; value: string }[]>([]);
   const onSubmitForm = async (email: string[]) => {
     try {
