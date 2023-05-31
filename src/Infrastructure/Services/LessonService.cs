@@ -98,7 +98,7 @@ namespace Lingtren.Infrastructure.Services
             if (!string.IsNullOrWhiteSpace(lessonIdentity))
             {
                 var requestedLesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
-               predicate: p => p.CourseId == course.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),
+               predicate: p => p.CourseId == course.Id && (p.Id.ToString() == lessonIdentity || p.Slug.Equals(lessonIdentity)),
                include: src => src.Include(x => x.User)
                                    .Include(x => x.Course)
                                    .Include(x => x.Section)
@@ -120,11 +120,11 @@ namespace Lingtren.Infrastructure.Services
             var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
 
             var userCompletedWatchHistories = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(
-                predicate: p => p.UserId == currentUserId && p.CourseId == lesson.CourseId && p.IsPassed
+                predicate: p => p.UserId == currentUserId && p.CourseId == course.Id && p.IsPassed
                 ).ConfigureAwait(false);
 
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
-                predicate: p => p.CourseId == lesson.CourseId,
+                predicate: p => p.CourseId == course.Id,
                 orderBy: o => o.OrderBy(x => x.Order),
                 include: src => src.Include(x => x.Lessons).ThenInclude(x=>x.QuestionSet).ThenInclude(x=>x.QuestionSetSubmissions)).ConfigureAwait(false);
 
