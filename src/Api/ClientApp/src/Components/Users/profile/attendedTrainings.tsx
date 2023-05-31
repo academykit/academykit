@@ -15,6 +15,7 @@ import RoutePath from "@utils/routeConstants";
 import { useMyCourse } from "@utils/services/courseService";
 import moment from "moment";
 import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const AttendedTrainings = ({
   searchParams,
@@ -24,20 +25,21 @@ const AttendedTrainings = ({
   const { id } = useParams();
   const { data, isLoading } = useMyCourse(id as string, searchParams);
   const theme = useMantineTheme();
+  const { t } = useTranslation();
 
   return (
     <div>
       {" "}
       <Title mt={10} size={30} mb={10}>
-        Attended Trainings{" "}
+        {t("Attended_Trainings")}
       </Title>
       <Paper>
         <Table>
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Enrolled Date</th>
-              <th>Progress</th>
+              <th>{t("title")}</th>
+              <th>{t("Enrolled_Date")}</th>
+              <th>{t("progress")}</th>
             </tr>
           </thead>
           <tbody>

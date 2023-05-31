@@ -14,6 +14,7 @@ import getCourseOgImageUrl from "@utils/getCourseOGImage";
 import RoutePath from "@utils/routeConstants";
 import { ICourse } from "@utils/services/courseService";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -24,14 +25,15 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.smallerThan(theme.breakpoints.sm)]: {
       width: "100%",
     },
-    display: 'flex',
-    flexDirection:'column',
-    justifyContent: 'space-between'
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
 }));
 
 const CourseCard = ({ course }: { course: ICourse }) => {
   const { classes, cx } = useStyles();
+  const { t } = useTranslation();
   return (
     <Card
       className={classes.card}
@@ -74,25 +76,25 @@ const CourseCard = ({ course }: { course: ICourse }) => {
         )}
       </Group>
 
-          <Text size="sm" color="dimmed" lineClamp={2} sx={{ height: "60px" }}>
-            <RichTextEditor
-              styles={{
-                root: {
-                  border: "none",
-                },
-              }}
-              value={course.description}
-              readOnly
-            />
-          </Text>
-          <Link
-            style={{ textDecoration: "none" }}
-            to={RoutePath.courses.description(course.slug).route}
-          >
-            <Button variant="light" color="blue" fullWidth mt="md" radius="md">
-              Watch
-            </Button>
-          </Link>
+      <Text size="sm" color="dimmed" lineClamp={2} sx={{ height: "60px" }}>
+        <RichTextEditor
+          styles={{
+            root: {
+              border: "none",
+            },
+          }}
+          value={course.description}
+          readOnly
+        />
+      </Text>
+      <Link
+        style={{ textDecoration: "none" }}
+        to={RoutePath.courses.description(course.slug).route}
+      >
+        <Button variant="light" color="blue" fullWidth mt="md" radius="md">
+          {t("Watch")}
+        </Button>
+      </Link>
     </Card>
   );
 };
