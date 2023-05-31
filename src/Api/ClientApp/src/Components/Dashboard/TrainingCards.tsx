@@ -21,6 +21,7 @@ import { getInitials } from "@utils/getInitialName";
 import RoutePath from "@utils/routeConstants";
 import { DashboardCourses } from "@utils/services/dashboardService";
 import { IUser } from "@utils/services/types";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const StudentAvatar = ({ data }: { data: IUser }) => {
@@ -35,7 +36,7 @@ const StudentAvatar = ({ data }: { data: IUser }) => {
 const TrainingCards = ({ data }: { data: DashboardCourses }) => {
   const auth = useAuth();
   const role = auth?.auth?.role;
-  const theme = useMantineTheme();
+  const { t } = useTranslation();
 
   return (
     <Card w={350} withBorder sx={{ position: "relative", overflow: "visible" }}>
@@ -101,7 +102,9 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
             </div>
           </Flex>
           {role === UserRole.Trainee ? (
-            <Text size="sm">{data.percentage}% Progress</Text>
+            <Text size="sm">
+              {data.percentage}% {t("progress")}
+            </Text>
           ) : (
             <Avatar.Group spacing={"lg"}>
               {data.students.length > 0 ? (
@@ -110,7 +113,7 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
                   return <StudentAvatar data={x} key={x.id} />;
                 })
               ) : (
-                <Text size="xs">No Users Enrolled.</Text>
+                <Text size="xs">{t("no_user_enrolled")}</Text>
               )}
               {data.students.length > 3 && (
                 <Avatar radius="xl">+{data.students.length - 3}</Avatar>

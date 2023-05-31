@@ -11,8 +11,6 @@ import { LanguageString } from "@utils/enums";
 
 type RequestData = Record<string, any>;
 
-console.log();
-
 const THREE_MINUTES = 3 * 60 * 1000;
 const baseURL = "/";
 const baseConfig = {
@@ -83,7 +81,6 @@ axiosInstance.interceptors.request.use(
       config.headers["Accept-Language"] =
         LanguageString[lang as keyof typeof LanguageString] ?? "en-US";
     }
-
     config.data = filterFalseyValues(config.data);
     if (
       config.headers &&

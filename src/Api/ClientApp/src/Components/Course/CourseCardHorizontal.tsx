@@ -55,14 +55,14 @@ const CourseCardHorizontal = ({
     try {
       await deleteCourse.mutateAsync(course.id);
       showNotification({
-        title: "Success",
-        message: "Course Deleted successfully",
+        title: t("success"),
+        message: t("delete_course_success"),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
         color: "red",
-        title: "Error",
+        title: t("error"),
         message: error as string,
       });
     }
@@ -144,7 +144,7 @@ const CourseCardHorizontal = ({
             <Group sx={{ justifyContent: "space-between" }}>
               <Group spacing={10}>
                 <Badge color="pink" variant="light">
-                  {CourseLanguage[course.language]}
+                  {t(`${CourseLanguage[course.language]}`)}
                 </Badge>
                 <Badge color="blue" variant="light">
                   {course?.levelName}
@@ -157,7 +157,7 @@ const CourseCardHorizontal = ({
                   course.userStatus === CourseUserStatus.Teacher) && (
                   <>
                     <Badge ml={10} color={color(course?.status)}>
-                      {CourseStatus[course?.status]}
+                      {t(`${CourseStatus[course?.status]}`)}
                     </Badge>
                   </>
                 )}

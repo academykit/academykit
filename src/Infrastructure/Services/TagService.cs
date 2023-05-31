@@ -57,7 +57,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to create tag.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to create tag.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("CreateTagError"));
             }
         }
 
@@ -75,19 +75,19 @@ namespace Lingtren.Infrastructure.Services
                 x.Slug.Equals(identity)).ConfigureAwait(false);
                 if (tag == default)
                 {
-                    throw new EntityNotFoundException("Tag not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TagNotFound"));
                 }
 
                 var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: x => x.Id == currentUserId).ConfigureAwait(false);
                 if (user == null)
                 {
-                    throw new EntityNotFoundException("User not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
                 }
 
                 var access = ValidateUser(user, tag);
                 if (!access)
                 {
-                    throw new ForbiddenException("Unauthorized user.");
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
 
                 // to do check tag exist on other services 
@@ -101,7 +101,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to delete tag.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to delete tag.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("DeleteTagError"));
             }
         }
 
@@ -122,13 +122,13 @@ namespace Lingtren.Infrastructure.Services
                 var tag = tags.FirstOrDefault(x => x.Id.ToString() == identity || x.Slug.Equals(identity));
                 if (tag == null)
                 {
-                    throw new EntityNotFoundException("Tag not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TagNotFound"));
                 }
 
                 var tagNameExist = tags.Any(x => x.Id != tag.Id && x.Name.ToLower() == tagName.ToLower());
                 if (tagNameExist)
                 {
-                    throw new ForbiddenException("Tag name already exist.");
+                    throw new ForbiddenException(_localizer.GetString("TagAlreadyExist"));
                 }
 
                 tag.Name = tagName;
@@ -141,7 +141,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to update tag.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update tag.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UpdateTagError"));
             }
         }
 

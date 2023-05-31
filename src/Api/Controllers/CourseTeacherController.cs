@@ -79,7 +79,7 @@
 
             if (user == null)
             {
-                throw new EntityNotFoundException("User not found.");
+                throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
             }
 
             var currentTimeStamp = DateTime.UtcNow;

@@ -20,13 +20,18 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import errorType from "@utils/services/axiosError";
 import * as Yup from "yup";
-import CreateFeedback from "../FeedBack/CreateFeedBack";
 import FileUploadLesson from "@components/Ui/FileUploadLesson";
+import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("File Name is required."),
-  documentUrl: Yup.string().required("File is required!"),
-});
+const schema = () => {
+  const { t } = useTranslation();
+
+  return Yup.object().shape({
+    name: Yup.string().required(t("file_name_required") as string),
+    documentUrl: Yup.string().required(t("file_required") as string),
+  });
+};
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
 
@@ -68,8 +73,9 @@ const AddDocument = ({
       documentUrl: item?.documentUrl ?? "",
       isMandatory: item?.isMandatory ?? false,
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(form);
 
   const submitForm = async (values: any) => {
     try {
@@ -93,21 +99,23 @@ const AddDocument = ({
         setIsEditing(false);
       }
       showNotification({
-        title: "Success",
-        message: `File ${isEditing ? "Edited" : "Added"} successfully!`,
+        title: t("success"),
+        message: `${t("file")} ${isEditing ? t("edited") : t("added")} ${t(
+          "successfully"
+        )}`,
       });
       setAddLessonClick(true);
     } catch (error: any) {
       const err = errorType(error);
 
       showNotification({
-        title: "Error!",
+        title: t("error"),
         message: err,
         color: "red",
       });
     }
   };
-
+  const { t } = useTranslation();
   return (
     <FormProvider form={form}>
       <form onSubmit={form.onSubmit(submitForm)}>

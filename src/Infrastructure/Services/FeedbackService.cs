@@ -41,7 +41,7 @@
             if (lesson == null)
             {
                 _logger.LogWarning("Lesson with identity : {identity} not found for user with id : {id}.", criteria.LessonIdentity, criteria.CurrentUserId);
-                throw new EntityNotFoundException("Lesson not found.");
+                throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
             }
 
             if (!string.IsNullOrWhiteSpace(criteria.Search))
@@ -67,7 +67,7 @@
             if (feedbackSubmissions)
             {
                 _logger.LogWarning("Feedback with id : {id} having type : {type} contains Feedback submissions.", entity.Id, entity.Type);
-                throw new ForbiddenException("Feedback contains feedback submissions.");
+                throw new ForbiddenException(_localizer.GetString("FeedbackContainsFeedbackSubmissions"));
             }
             _unitOfWork.GetRepository<FeedbackQuestionOption>().Delete(entity.FeedbackQuestionOptions);
         }
@@ -144,12 +144,12 @@
             if (lesson == null)
             {
                 _logger.LogWarning("Lesson with id : {lessonId} not found for Feedback with id : {id}.", entity.LessonId, entity.Id);
-                throw new EntityNotFoundException("Lesson not found.");
+                throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
             }
             if (lesson.Type != LessonType.Feedback)
             {
                 _logger.LogWarning("Lesson with id : {lessonId} is of invalid lesson type to create,edit or delete Feedback for user with id :{userId}.", lesson.Id, entity.CreatedBy);
-                throw new ForbiddenException("Invalid lesson type for feedback.");
+                throw new ForbiddenException(_localizer.GetString("InvalidLessonFeedbackType"));
             }
             await ValidateAndGetCourse(entity.CreatedBy, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
             return lesson;
@@ -172,13 +172,13 @@
                 if (lesson == null)
                 {
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
                 if (lesson.Type != LessonType.Feedback)
                 {
                     _logger.LogWarning("Lesson type not matched for feedback submission for lesson with id: {id} and user with id: {userId}.",
                                         lesson.Id, currentUserId);
-                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}.");
+                    throw new ForbiddenException(_localizer.GetString("InvalidLessonFeedbackType"));
                 }
                 await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: true).ConfigureAwait(false);
 
@@ -205,7 +205,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to fetch the student list who has submitted feedback.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch the student list who has submitted feedback.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("StudentListFetchError"));
             }
         }
 
@@ -264,7 +264,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to update feedback.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update feedback.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UpdateFeedBackError"));
             }
         }
 
@@ -284,18 +284,18 @@
                 if (lesson == null)
                 {
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
                 if (lesson.Type != LessonType.Feedback)
                 {
                     _logger.LogWarning("Lesson type not matched for feedback submission for lesson with id: {id} and user with id: {userId}.",
                                         lesson.Id, currentUserId);
-                    throw new ForbiddenException($"Invalid lesson type :{lesson.Type}.");
+                    throw new ForbiddenException(_localizer.GetString("InvalidLessonFeedbackType"));
                 }
                 if (lesson.Status != CourseStatus.Published)
                 {
                     _logger.LogWarning("Lesson with id: {id} not published for user with id: {userId}.", lesson.Id, currentUserId);
-                    throw new EntityNotFoundException("Lesson not published.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotpublished"));
                 }
 
                 var course = await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
@@ -303,13 +303,13 @@
                 {
                     _logger.LogWarning("training with id : {courseId} is in {status} status to give Feedback for the user with id: {userId}.",
                         course.Id, course.Status, currentUserId);
-                    throw new ForbiddenException($"Cannot submit feedback of the training having {course.Status} status.");
+                    throw new ForbiddenException(_localizer.GetString("FeedbackCompletedStatus"));
                 }
                 if (course.CourseTeachers.Any(x => x.UserId == currentUserId))
                 {
                     _logger.LogWarning("User with id: {userId} is a teacher of the training with id: {courseId} and lesson with id: {lessonId} to submit the feedback.",
                         currentUserId, course.Id, lesson.Id);
-                    throw new ForbiddenException("Training trainer cannot submit the feedback.");
+                    throw new ForbiddenException(_localizer.GetString("TrainingTrainerCannotSubmitFeedback"));
                 }
 
                 var feedbacks = await _unitOfWork.GetRepository<Feedback>().GetAllAsync(
@@ -326,7 +326,7 @@
                 if (feebackSubmissionExists)
                 {
                     _logger.LogWarning("User with id: {userId} cannot resubmit the feedback having id: {feedbackId}.", currentUserId, lesson.Id);
-                    throw new ForbiddenException("Feedback cannot be re-submitted.");
+                    throw new ForbiddenException(_localizer.GetString("FeedBackCannotReSubmit"));
                 }
 
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
@@ -369,7 +369,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to submit the feedback.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to submit the feedback.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("SubmitFeedBackError"));
             }
         }
 
@@ -390,13 +390,13 @@
             if (lesson == null)
             {
                 _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", lessonIdentity, currentUserId);
-                throw new EntityNotFoundException("Lesson not found.");
+                throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
             }
             if (lesson.Type != LessonType.Feedback)
             {
                 _logger.LogWarning("Lesson type not matched for Feedback fetch for lesson with id: {id} and user with id: {userId}.",
                                     lesson.Id, currentUserId);
-                throw new ForbiddenException($"Invalid lesson type :{lesson.Type}.");
+                throw new ForbiddenException(_localizer.GetString("InvalidLessonFeedbackType"));
             }
 
             await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
@@ -406,7 +406,7 @@
 
             if(feedbackSubmissions.Count == default)
              {
-                    throw new EntityNotFoundException("Feedback report not found.");      
+                    throw new EntityNotFoundException(_localizer.GetString("FeedBackReportNotFound"));      
              }
 
             var response = new List<FeedBackReportDto>();
@@ -519,13 +519,13 @@
             if (lesson == null)
             {
                 _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id}.", searchCriteria.LessonIdentity, searchCriteria.CurrentUserId);
-                throw new EntityNotFoundException("Lesson not found.");
+                throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
             }
             if (lesson.Type != LessonType.Feedback)
             {
                 _logger.LogWarning("Lesson type not matched for Feedback fetch for lesson with id: {id} and user with id: {userId}.",
                                     lesson.Id, searchCriteria.CurrentUserId);
-                throw new ForbiddenException($"Invalid lesson type :{lesson.Type}.");
+                throw new ForbiddenException(_localizer.GetString("InvalidLessonFeedbackType"));
             }
 
             var course = await ValidateAndGetCourse(searchCriteria.CurrentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);

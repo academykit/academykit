@@ -30,7 +30,7 @@ import {
   usePostStatisticsCertificate,
 } from "@utils/services/manageCourseService";
 import RoutePath from "@utils/routeConstants";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useTransition } from "react";
 import ConfirmationModal from "@components/Ui/ConfirmationModal";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
@@ -38,6 +38,7 @@ import moment from "moment";
 import { getInitials } from "@utils/getInitialName";
 import { IconDownload, IconEye } from "@tabler/icons";
 import downloadImage from "@utils/downloadImage";
+import { useTranslation } from "react-i18next";
 
 const Rows = ({
   item,
@@ -62,12 +63,12 @@ const Rows = ({
         issueAll: false,
         identity: course_id,
       });
-      showNotification({ message: "Certificate issued successfully." });
+      showNotification({ message: t("certificate_issue_success") });
     } catch (error) {
       const err = errorType(error);
 
       showNotification({
-        title: "Error!",
+        title: t("error"),
         color: "red",
         message: err,
       });
@@ -81,6 +82,7 @@ const Rows = ({
       setSelected([userId, ...selected]);
     }
   };
+  const { t } = useTranslation();
 
   return (
     <tr key={item.userId}>
@@ -114,7 +116,7 @@ const Rows = ({
         <ProgressBar total={100} positive={item?.percentage} />
         <UnstyledButton component={Link} to={item.userId}>
           <Badge color="green" variant="outline" mt={10}>
-            View
+            {t("view")}
           </Badge>
         </UnstyledButton>
       </td>
@@ -123,13 +125,13 @@ const Rows = ({
           {item?.hasCertificateIssued ? (
             <div style={{ marginTop: "10px" }}>
               <Text>
-                Issued on{" "}
+                {t("issued_on")}{" "}
                 {moment(item?.certificateIssuedDate + "Z").format(
                   theme.dateFormat
                 )}
               </Text>
               <Flex justify={"center"} mt={8}>
-                <Tooltip label="View Certificate">
+                <Tooltip label={t("view_certificate")}>
                   <UnstyledButton
                     mr="sm"
                     onClick={() => {
@@ -139,7 +141,7 @@ const Rows = ({
                     <IconEye size={23} color="green" />
                   </UnstyledButton>
                 </Tooltip>
-                <Tooltip label="Download Certificate">
+                <Tooltip label={t("download_certificate")}>
                   <UnstyledButton
                     onClick={() =>
                       downloadImage(item.certificateUrl, item.fullName)
@@ -152,14 +154,14 @@ const Rows = ({
             </div>
           ) : (
             <>
-              <Badge>Not Issued</Badge>
+              <Badge>{t("not_issued")}</Badge>
               <Button
                 size="xs"
                 mt={10}
                 loading={postUserData.isLoading}
                 onClick={() => handleSubmit([item.userId])}
               >
-                Issue
+                {t("issue")}
               </Button>
             </>
           )}
@@ -193,18 +195,19 @@ const ManageStudents = ({
   const [submitModal, setSubmitModal] = useState(false);
 
   const handleIssueAll = async () => {
+    const { t } = useTranslation();
     try {
       await postUserData.mutateAsync({
         data: [],
         issueAll: true,
         identity: course_id,
       });
-      showNotification({ message: "Certificate issued to all successfully." });
+      showNotification({ message: t("certificate_issue_success_all") });
     } catch (error) {
       const err = errorType(error);
 
       showNotification({
-        title: "Error!",
+        title: t("error"),
         color: "red",
         message: err,
       });
@@ -218,27 +221,28 @@ const ManageStudents = ({
         issueAll: false,
         identity: course_id,
       });
-      showNotification({ message: "Certificate issued successfully." });
+      showNotification({ message: t("certificate_issue_success") });
     } catch (error) {
       const err = errorType(error);
 
       showNotification({
-        title: "Error!",
+        title: t("error"),
         color: "red",
         message: err,
       });
     }
   };
+  const { t } = useTranslation();
 
   if (getStudentStat.data?.totalCount === 0)
-    return <Box>No trainees found.</Box>;
+    return <Box>{t("no_trainees")}</Box>;
 
   if (getStudentStat.isLoading) return <Loader />;
 
   return (
     <ScrollArea>
       <ConfirmationModal
-        title="Are you sure want to issue certificate to everyone?"
+        title={t("sure_to_issue_certificate_everyone")}
         open={opened}
         onClose={() => setOpened(false)}
         onConfirm={handleIssueAll}
@@ -250,7 +254,7 @@ const ManageStudents = ({
         onConfirm={handleSubmit}
       />
       <Group position="apart" mb={"lg"}>
-        <Title>Trainee</Title>
+        <Title>{t("trainee")}</Title>
         <Flex>
           {getStudentStat.data && getStudentStat.data?.items.length >= 1 && (
             <Button
@@ -259,7 +263,7 @@ const ManageStudents = ({
               mr={20}
               loading={selected.length !== 0 && postUserData.isLoading}
             >
-              Issue Certificate
+              {t("issue_certificate")}
             </Button>
           )}
 
@@ -269,7 +273,7 @@ const ManageStudents = ({
               disabled={selected.length > 0}
               onClick={() => setOpened(true)}
             >
-              Issue Certificates to All
+              {t("issue_certificates_to_all")}
             </Button>
           )}
         </Flex>
@@ -291,14 +295,14 @@ const ManageStudents = ({
             <thead>
               <tr>
                 <th></th>
-                <th>Name</th>
-                <th>Progress</th>
+                <th>{t("name")}</th>
+                <th>{t("progress")}</th>
                 <th>
                   <Flex align={"center"} direction={"column"}>
-                    Certificate
+                    {t("certificate")}
                   </Flex>
                 </th>
-                <th style={{ textAlign: "center" }}>Current Lesson</th>
+                <th style={{ textAlign: "center" }}>{t("current_lesson")}</th>
               </tr>
             </thead>
             <tbody>

@@ -27,6 +27,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
 const useStyle = createStyles((theme, _params, getRef) => ({
   group: {
@@ -53,11 +54,14 @@ interface FormValues {
   tags: string[];
 }
 
-const schema = Yup.object().shape({
-  title: Yup.string().required("Course Title is required."),
-  level: Yup.string().required("Level is required."),
-  groups: Yup.string().required("Group is required."),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    title: Yup.string().required(t("course_title_required") as string),
+    level: Yup.string().required(t("level_required") as string),
+    groups: Yup.string().required(t("group_required") as string),
+  });
+};
 
 export const [FormProvider, useFormContext, useForm] =
   createFormContext<FormValues>();
@@ -72,8 +76,9 @@ const EditCourse = () => {
       description: "",
       tags: [],
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(form);
 
   const [searchParams, setSearchParams] = useState("");
   const [searchParamsGroup, setSearchParamsGroup] = useState("");
@@ -164,8 +169,8 @@ const EditCourse = () => {
       });
       navigator(RoutePath.manageCourse.lessons(slug.id).route);
       showNotification({
-        title: "Success",
-        message: "Training updated successfully.",
+        title: t("success"),
+        message: t("training_update_success"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -185,12 +190,12 @@ const EditCourse = () => {
             <ThumbnailEditor
               formContext={useFormContext}
               currentThumbnail={courseSingleData?.thumbnailUrl}
-              label="thumbnail"
+              label={t("thumbnail") as string}
             />
             <Group mt={10} grow>
               <TextInput
-                placeholder="Course Title awsdfas"
-                label="Title"
+                placeholder={t("title_course") as string}
+                label={t("title")}
                 withAsterisk
                 {...form.getInputProps("title")}
                 size="lg"
@@ -211,8 +216,8 @@ const EditCourse = () => {
                     mutate(query);
                   }}
                   size={"lg"}
-                  label="Tags"
-                  placeholder="Please select Tags."
+                  label={t("tags")}
+                  placeholder={t("tags_placeholder") as string}
                 />
               ) : (
                 <Loader />

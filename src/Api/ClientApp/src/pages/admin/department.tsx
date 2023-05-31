@@ -34,6 +34,8 @@ import {
 import errorType from "@utils/services/axiosError";
 import { IUser } from "@utils/services/types";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import * as Yup from "yup";
 interface IDepartment<T> {
   id: string;
@@ -41,6 +43,12 @@ interface IDepartment<T> {
   isActive: boolean;
   user: T;
 }
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    name: Yup.string().required(t("department_name_required") as string),
+  });
+};
 
 const Department = ({
   searchParams,
@@ -75,14 +83,14 @@ const Department = ({
         isDepartmentActive: item.isActive,
       },
     });
-
+    const { t } = useTranslation();
     const updateDepartment = useUpdateDepartmentSetting(item.id);
     const deleteDepartment = useDeleteDepartmentSetting();
     const handleDelete = async () => {
       try {
         await deleteDepartment.mutateAsync(item.id);
         showNotification({
-          message: "Department deleted successfully!",
+          message: t("delete_department_success"),
         });
       } catch (error: any) {
         showNotification({
@@ -105,13 +113,13 @@ const Department = ({
                   });
 
                   showNotification({
-                    message: "Successfully updated department!",
+                    message: t("update_department_success"),
                   });
                 } catch (error) {
                   const err = errorType(error);
 
                   showNotification({
-                    title: "Error!",
+                    title: t("error"),
                     message: err,
                     color: "red",
                   });
@@ -119,17 +127,17 @@ const Department = ({
               })}
             >
               <TextInput
-                label="Department Name"
+                label={t("department_name")}
                 name="departmentName"
                 withAsterisk
-                placeholder="Enter Department Name"
+                placeholder={t("department_name_placeholder") as string}
                 {...form.getInputProps("dName")}
                 mb={10}
               />
               <Switch
                 sx={{ input: { cursor: "pointer" } }}
                 checked={isChecked}
-                label="Department Enabled"
+                label={t("department_enabled")}
                 labelPosition="left"
                 onChange={(e) => {
                   setIsChecked(e.currentTarget.checked);
@@ -141,10 +149,10 @@ const Department = ({
               />
 
               <Group mt={20}>
-                <Button type="submit">Submit</Button>
+                <Button type="submit">{t("submit")}</Button>
 
                 <Button variant="outline" onClick={() => setEditModal(false)}>
-                  Cancel
+                  {t("cancel")}
                 </Button>
               </Group>
             </form>
@@ -152,7 +160,7 @@ const Department = ({
         </Modal>
 
         <DeleteModal
-          title={`Are you sure you want to delete "${item?.name}" department?`}
+          title={`${t("sure_to_delete")} "${item?.name}" ${t("department?")}`}
           open={opened}
           onClose={setOpened}
           onConfirm={handleDelete}
@@ -167,9 +175,9 @@ const Department = ({
         </td>
         <td style={{ textAlign: "center" }}>
           {item?.isActive ? (
-            <Badge color={"green"}>Active</Badge>
+            <Badge color={"green"}>{t("active")}</Badge>
           ) : (
-            <Badge color={"red"}>InActive</Badge>
+            <Badge color={"red"}>{t("inactive")}</Badge>
           )}
         </td>
         <td>
@@ -191,18 +199,17 @@ const Department = ({
     );
   };
 
-  const schema = Yup.object().shape({
-    name: Yup.string().required(" Department Name is required."),
-  });
   const form = useForm({
     initialValues: { name: "", isActive: false },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(form);
   const getDepartment = useDepartmentSetting(searchParams);
   const postDepartment = usePostDepartmentSetting();
 
   const [showAddForm, toggleAddForm] = useToggle();
   const { classes } = useStyles();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -210,9 +217,9 @@ const Department = ({
         sx={{ justifyContent: "space-between", alignItems: "center" }}
         mb={15}
       >
-        <Title>Departments</Title>
+        <Title>{t("departments")}</Title>
         {!showAddForm && (
-          <Button onClick={() => toggleAddForm()}>Add Department</Button>
+          <Button onClick={() => toggleAddForm()}>{t("add_department")}</Button>
         )}
       </Group>
 
@@ -238,13 +245,13 @@ const Department = ({
                     form.reset();
                     toggleAddForm();
                     showNotification({
-                      message: "Successfully added department!",
+                      message: t("add_department_success"),
                     });
                   } catch (error) {
                     const err = errorType(error);
 
                     showNotification({
-                      title: "Error!",
+                      title: t("error"),
                       message: err,
                       color: "red",
                     });
@@ -252,16 +259,16 @@ const Department = ({
                 })}
               >
                 <TextInput
-                  label="Department Name"
+                  label={t("department_name")}
                   name="departmentName"
                   withAsterisk
-                  placeholder="Enter Department Name"
+                  placeholder={t("department_name_placeholder") as string}
                   {...form.getInputProps("name")}
                   mb={10}
                 />
                 <Switch
                   sx={{ input: { cursor: "pointer" } }}
-                  label="Department Enabled"
+                  label={t("department_enabled")}
                   labelPosition="left"
                   onChange={(e) => {
                     form.setFieldValue("isActive", e.currentTarget.checked);
@@ -269,10 +276,10 @@ const Department = ({
                 />
 
                 <Group mt={20} ml={10}>
-                  <Button type="submit">Submit</Button>
+                  <Button type="submit">{t("submit")}</Button>
                   {showAddForm && (
                     <Button variant="outline" onClick={() => toggleAddForm()}>
-                      Cancel
+                      {t("cancel")}
                     </Button>
                   )}
                 </Group>
@@ -282,14 +289,14 @@ const Department = ({
         )}
       </Transition>
       <Flex mb={10}>
-        {searchComponent("Search Department")}
+        {searchComponent(t("search_department") as string)}
         <Flex>
           {filterComponent(
             [
-              { value: "true", label: "Active" },
-              { value: "false", label: "Inactive" },
+              { value: "true", label: t("active") },
+              { value: "false", label: t("inactive") },
             ],
-            "Department Status",
+            t("department_status"),
             "IsActive"
           )}
         </Flex>
@@ -300,12 +307,12 @@ const Department = ({
           <Table striped highlightOnHover withBorder sx={{ marginTop: "10px" }}>
             <thead>
               <tr>
-                <th>Name</th>
+                <th>{t("name")}</th>
                 <th>
-                  <Text align="center">Department Status</Text>
+                  <Text align="center">{t("department_status")}</Text>
                 </th>
                 <th>
-                  <Text align="center">Actions</Text>
+                  <Text align="center">{t("actions")}</Text>
                 </th>
               </tr>
             </thead>
@@ -317,7 +324,7 @@ const Department = ({
           </Table>
         </Paper>
       ) : (
-        <Box mt={10}>No Department Found!</Box>
+        <Box mt={10}>{t("no_department")}</Box>
       )}
 
       {getDepartment.data && pagination(getDepartment.data?.totalPage)}

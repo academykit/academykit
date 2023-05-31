@@ -3,34 +3,42 @@ import { Group, TextInput, Switch, Select, Button, Grid } from "@mantine/core";
 import { UserRole } from "@utils/enums";
 import { useDepartmentSetting } from "@utils/services/adminService";
 import { useForm, yupResolver } from "@mantine/form";
-import axios from "axios";
 import { showNotification } from "@mantine/notifications";
 import * as Yup from "yup";
 import errorType from "@utils/services/axiosError";
 import { IUserProfile } from "@utils/services/types";
 import queryStringGenerator from "@utils/queryStringGenerator";
 import { PHONE_VALIDATION } from "@utils/constants";
+import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
-const schema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Email is required."),
-  firstName: Yup.string()
-    .max(100, "Firstname should have atmost 100 characters.")
-    .required("First Name is required."),
-  lastName: Yup.string()
-    .max(100, "Lastname should have atmost 100 characters.")
-    .required("Last Name is required."),
-  middleName: Yup.string()
-    .max(100, "Middlename should have atmost 100 characters.")
-    .nullable()
-    .notRequired(),
-  role: Yup.string()
-    .oneOf(["1", "2", "3", "4"], "Role is required.")
-    .required("Role is required."),
-  mobileNumber: Yup.string().nullable().matches(PHONE_VALIDATION, {
-    message: "Please enter valid phone number.",
-    excludeEmptyString: true,
-  }),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    email: Yup.string()
+      .email(t("invalid_email") as string)
+      .required(t("email_required") as string),
+    firstName: Yup.string()
+      .max(100, t("first_name_character_required") as string)
+      .required(t("first_name_required") as string),
+    lastName: Yup.string()
+      .max(100, t("last_name_character_required") as string)
+      .required("last_name_required"),
+    middleName: Yup.string()
+      .max(100, t("middle_name_character_required") as string)
+      .nullable()
+      .notRequired(),
+    role: Yup.string()
+      .oneOf(["1", "2", "3", "4"], t("role_required") as string)
+      .required(t("role_required") as string),
+    mobileNumber: Yup.string()
+      .nullable()
+      .matches(PHONE_VALIDATION, {
+        message: t("enter_valid_phone"),
+        excludeEmptyString: true,
+      }),
+  });
+};
 
 const AddUpdateUserForm = ({
   setOpened,
@@ -45,10 +53,12 @@ const AddUpdateUserForm = ({
   apiHooks: any;
   item?: IUserProfile;
 }) => {
+  const { t } = useTranslation();
   const form = useForm<IUserProfile>({
     initialValues: item,
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(form);
 
   const department = useDepartmentSetting(
     queryStringGenerator({
@@ -79,27 +89,19 @@ const AddUpdateUserForm = ({
         await apiHooks.mutateAsync({ id: item?.id as string, data });
       }
       showNotification({
-        message: `User ${isEditing ? "Edited" : "Added"} successfully!`,
-        title: "Success",
+        message: isEditing ? t("user_edited_success") : t("user_added_success"),
+        title: t("successful"),
       });
-      setOpened(!opened);
     } catch (error) {
       const err = errorType(error);
 
-      if (axios.isAxiosError(error)) {
-        showNotification({
-          message: err,
-          title: "Error!",
-          color: "red",
-        });
-      } else {
-        showNotification({
-          message: "Unable to add group at this moment! please try again.",
-          color: "red",
-        });
-      }
-      setOpened(!opened);
+      showNotification({
+        message: err,
+        title: t("error"),
+        color: "red",
+      });
     }
+    setOpened(!opened);
   };
 
   return (
@@ -108,53 +110,53 @@ const AddUpdateUserForm = ({
         <Grid.Col xs={6} lg={4}>
           <TextInput
             withAsterisk
-            label="First Name"
-            placeholder="User's First Name"
+            label={t("firstname")}
+            placeholder={t("user_firstname") as string}
             name="firstName"
             {...form.getInputProps("firstName")}
           />
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <TextInput
-            label="Middle Name"
-            placeholder="User's Middle Name"
+            label={t("middlename")}
+            placeholder={t("user_middlename") as string}
             {...form.getInputProps("middleName")}
           />
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <TextInput
             withAsterisk
-            label="Last Name"
-            placeholder="User's Last Name"
+            label={t("lastname")}
+            placeholder={t("user_lastname") as string}
             {...form.getInputProps("lastName")}
           />
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <TextInput
             withAsterisk
-            label="Email"
+            label={t("email")}
             type="email"
-            placeholder="User's Email Name"
+            placeholder={t("user_email") as string}
             {...form.getInputProps("email")}
           />
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <TextInput
-            label="Mobile Number"
-            placeholder="User's Phone number"
+            label={t("mobilenumber")}
+            placeholder={t("user_phone_number") as string}
             {...form.getInputProps("mobileNumber")}
           />
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <TextInput
-            label="Profession"
-            placeholder="User's Profession Name"
+            label={t("profession")}
+            placeholder={t("user_profession") as string}
             {...form.getInputProps("profession")}
           />
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <Switch
-            label="User Status"
+            label={t("user_status")}
             {...form.getInputProps("isActive")}
             checked={userStatus}
             onChange={(event) => {
@@ -166,9 +168,9 @@ const AddUpdateUserForm = ({
         <Grid.Col xs={6} lg={4}>
           <Select
             withAsterisk
-            error="Pick at least one"
-            label="User Role"
-            placeholder="Pick one user role"
+            error={t("user_role_pick")}
+            label={t("user_role")}
+            placeholder={t("user_role_pick") as string}
             data={[
               { value: UserRole.Admin, label: "Admin" },
               { value: UserRole.Trainer, label: "Trainer" },
@@ -179,8 +181,8 @@ const AddUpdateUserForm = ({
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <Select
-            label="Department"
-            placeholder="Pick One Department"
+            label={t("department")}
+            placeholder={t("pick_department") as string}
             searchable
             {...form.getInputProps("departmentId")}
             data={
@@ -197,7 +199,7 @@ const AddUpdateUserForm = ({
 
       <Group position="right" mt="md">
         <Button type="submit" loading={apiHooks.isLoading}>
-          Submit
+          {t("submit")}
         </Button>
       </Group>
     </form>

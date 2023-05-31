@@ -8,7 +8,6 @@ import {
   ScrollArea,
   useMantineTheme,
   Switch,
-  Modal,
   Button,
   TextInput,
   Paper,
@@ -28,8 +27,11 @@ import {
 } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
 import { IUser } from "@utils/services/types";
+import { TFunction } from "i18next";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
 interface IZoomLicensePost {
   licenseEmail: string;
@@ -42,17 +44,21 @@ export default function ZoomLicense() {
   const getZoomLicense = useZoomLicense();
   const addZoomLicense = useAddZoomLicense();
   const [showAddForm, toggleAddForm] = useToggle();
+  const { t } = useTranslation();
 
-  const schema = Yup.object().shape({
-    licenseEmail: Yup.string()
-      .email("Invalid Licenses Email.")
-      .required("Licenses Email is required."),
-    hostId: Yup.string().required("Host ID is required."),
-    capacity: Yup.number()
-      .integer()
-      .nullable(false)
-      .min(1, "Capacity should be greater than 0."),
-  });
+  const schema = () => {
+    const { t } = useTranslation();
+    return Yup.object().shape({
+      licenseEmail: Yup.string()
+        .email(t("invalid_license_email") as string)
+        .required(t("license_email_required") as string),
+      hostId: Yup.string().required(t("host_id_required") as string),
+      capacity: Yup.number()
+        .integer()
+        .nullable(false)
+        .min(1, t("capacity_required") as string),
+    });
+  };
 
   const form = useForm<IZoomLicensePost>({
     initialValues: {
@@ -60,8 +66,9 @@ export default function ZoomLicense() {
       hostId: "",
       capacity: 0,
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(form);
 
   const Rows = ({ item }: { item: IZoomLicense<IUser> }) => {
     const [isChecked, setIsChecked] = useState<boolean>(item?.isActive);
@@ -71,7 +78,8 @@ export default function ZoomLicense() {
       try {
         await deleteZoomLicense.mutateAsync(item.id);
         showNotification({
-          message: "Zoom License delete successfully!",
+          title: t("successful"),
+          message: t("zoom_license_deleted"),
         });
       } catch (error) {
         const err = errorType(error);
@@ -86,7 +94,9 @@ export default function ZoomLicense() {
     return (
       <tr key={item.id}>
         <DeleteModal
-          title={`Are you sure you want to delete License with Email "${item.licenseEmail}"?`}
+          title={`${t("zoom_license_delete_confirmation")} "${
+            item.licenseEmail
+          }"?`}
           open={opened}
           onClose={setOpened}
           onConfirm={handleDelete}
@@ -118,15 +128,15 @@ export default function ZoomLicense() {
                   status: !isChecked,
                 });
                 showNotification({
-                  message: "Status updated successfully!",
-                  title: "Success!",
+                  message: t("status_updated"),
+                  title: t("successful"),
                 });
                 getZoomLicense.refetch();
               } catch (error) {
                 const err = errorType(error);
                 showNotification({
                   message: err,
-                  title: "Error!",
+                  title: t("error"),
                   color: "red",
                 });
                 setIsChecked(!isChecked);
@@ -136,9 +146,6 @@ export default function ZoomLicense() {
         </td>
         <td>
           <Group spacing={0} position="center">
-            {/* <ActionIcon>
-              <IconPencil size={16} stroke={1.5} />
-            </ActionIcon> */}
             <ActionIcon color="red">
               <IconTrash
                 size={16}
@@ -158,7 +165,9 @@ export default function ZoomLicense() {
     try {
       await addZoomLicense.mutateAsync(values);
       showNotification({
-        message: "Zoom License added successfully!",
+        title: t("successful"),
+
+        message: t("zoom_license_added"),
       });
       form.reset();
       toggleAddForm();
@@ -177,9 +186,9 @@ export default function ZoomLicense() {
         sx={{ justifyContent: "space-between", alignItems: "center" }}
         mb={15}
       >
-        <Title>Zoom Licenses</Title>
+        <Title>{t("zoom_licenses")}</Title>
         {!showAddForm && (
-          <Button onClick={() => toggleAddForm()}>Add License</Button>
+          <Button onClick={() => toggleAddForm()}>{t("add_license")}</Button>
         )}
         {/* <Button onClick={() => toggleAddForm()}>
           {!showAddForm ? "Add License" : "Cancel"}
@@ -196,28 +205,28 @@ export default function ZoomLicense() {
             <form onSubmit={form.onSubmit(handleSubmit)}>
               <TextInput
                 name="licenseEmail"
-                label="License Email"
+                label={t("license_email")}
                 withAsterisk
                 {...form.getInputProps("licenseEmail")}
               />
               <TextInput
                 name="hostId"
-                label="Host ID"
+                label={t("host_id")}
                 withAsterisk
                 {...form.getInputProps("hostId")}
               />
               <TextInput
                 name="capacity"
-                label="Capacity"
+                label={t("capacity")}
                 type={"number"}
                 withAsterisk
                 {...form.getInputProps("capacity")}
               />
               <Group mt={10}>
-                <Button type="submit">Submit</Button>
+                <Button type="submit">{t("submit")}</Button>
                 {showAddForm && (
                   <Button onClick={() => toggleAddForm()} variant="outline">
-                    Cancel
+                    {t("cancel")}
                   </Button>
                 )}
               </Group>
@@ -236,11 +245,11 @@ export default function ZoomLicense() {
         >
           <thead>
             <tr>
-              <th>License Email</th>
-              <th>Host ID</th>
-              <th style={{ textAlign: "center" }}>Capacity</th>
-              <th style={{ textAlign: "center" }}>Active Status</th>
-              <th style={{ textAlign: "center" }}>Actions</th>
+              <th>{t("license_email")}</th>
+              <th>{t("host_id")}</th>
+              <th style={{ textAlign: "center" }}>{t("capacity")}</th>
+              <th style={{ textAlign: "center" }}>{t("active_status")}</th>
+              <th style={{ textAlign: "center" }}>{t("actions")}</th>
             </tr>
           </thead>
           <tbody>

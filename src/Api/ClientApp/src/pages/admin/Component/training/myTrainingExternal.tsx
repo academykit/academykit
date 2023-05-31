@@ -30,15 +30,20 @@ import {
 } from "@utils/services/certificateService";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Certificate name is required."),
-  duration: Yup.number().typeError("Duration must be in hours."),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    name: Yup.string().required(t("certificate_name_required") as string),
+    duration: Yup.number().typeError(t("duration_in_hour") as string),
+  });
+};
 
 const useStyles = createStyles({});
 
@@ -52,6 +57,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
   const [idd, setIdd] = useState<any>();
   const [updates, setUpdates] = useState(false);
   const { theme } = useStyles();
+  const { t } = useTranslation();
 
   const form = useForm({
     initialValues: {
@@ -61,9 +67,9 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
       institute: "",
       imageUrl: "",
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
-
+  useFormErrorHooks(form);
   useEffect(() => {
     if (idd) {
       setShowConfirmation();
@@ -86,9 +92,9 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
         await addCertificate.mutateAsync(data);
       }
       showNotification({
-        message: `Training certification ${
-          updates ? "edited" : "added"
-        } successfully.`,
+        message: updates
+          ? t("training_certificate_edited")
+          : t("training_certificate_added"),
       });
       form.reset();
     } catch (error) {
@@ -107,7 +113,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
   return (
     <div>
       <Modal
-        title="Add new Certificate"
+        title={t("add_certificate")}
         opened={showConfirmation}
         onClose={() => {
           setShowConfirmation();
@@ -123,52 +129,54 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
         <FormProvider form={form}>
           <form onSubmit={form.onSubmit(handleSubmit)}>
             <TextInput
-              label="Name"
+              label={t("name")}
               name="name"
               withAsterisk
               {...form.getInputProps("name")}
             />
             <TextInput
-              label="Duration (hours)"
+              label={t("duration_hour")}
               name="duration"
               {...form.getInputProps("duration")}
             />
             <DateRangePicker
-              label="Start Date - End Date"
-              placeholder="Pick dates range"
+              label={t("start_end_date")}
+              placeholder={t("date_range") as string}
               allowSingleDateInRange={true}
               value={value}
               //@ts-ignore
               onChange={setValue}
             />
             <TextInput
-              label="Location"
+              label={t("location")}
               name="location"
               {...form.getInputProps("location")}
             />
             <TextInput
-              label="Institute"
+              label={t("institute")}
               name="institute"
               {...form.getInputProps("institute")}
             />
-            <Text>Certificate Image</Text>
+            <Text>{t("certificate_image")}</Text>
             <ThumbnailEditor
               formContext={useFormContext}
-              label="Certificate Image"
+              label={t("certificate_image") as string}
               FormField="imageUrl"
               currentThumbnail={idd?.imageUrl}
             />
             <Button type="submit" loading={addCertificate.isLoading}>
-              Submit
+              {t("submit")}
             </Button>
           </form>
         </FormProvider>
       </Modal>
       <Group position="right">
-        <Button onClick={() => setShowConfirmation()}>Add Certificate</Button>
+        <Button onClick={() => setShowConfirmation()}>
+          {t("add_certificate")}
+        </Button>
       </Group>
       {certificateList.isSuccess && certificateList.data?.length < 0 && (
-        <Box>No External trainings found.</Box>
+        <Box>{t("no_external_training")}</Box>
       )}
       {certificateList.isSuccess &&
         certificateList.data.map((x) => (
@@ -178,7 +186,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                 <Flex>
                   <Text weight={"bold"}>
                     {x.name}
-                    <Badge ml={20}>{CertificateStatus[x.status]}</Badge>
+                    <Badge ml={20}>{t(`${CertificateStatus[x.status]}`)}</Badge>
                   </Text>
                   {x.status !== CertificateStatus.Approved && (
                     <ActionIcon
@@ -249,9 +257,9 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
               auth.auth.role <= UserRole.Admin &&
               auth.auth.id !== x.user.id && (
                 <Box mt={10}>
-                  <Button>Approve</Button>
+                  <Button>{t("approve")}</Button>
                   <Button ml={10} variant="outline" color={"red"}>
-                    Reject
+                    {t("reject")}
                   </Button>
                 </Box>
               )}

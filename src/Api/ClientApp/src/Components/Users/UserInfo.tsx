@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
 export interface FormValues {
   email: string;
@@ -36,18 +37,23 @@ export interface FormValues {
 
 const [FormProvider, useFormContext, useForm] = createFormContext<FormValues>();
 
-const schema = Yup.object().shape({
-  firstName: Yup.string().required("First Name is required."),
-  lastName: Yup.string().required("Last Name is required."),
-  email: Yup.string().email("Invalid Email").required("Email is required."),
-  mobileNumber: Yup.string()
-    .nullable()
-    .notRequired()
-    .matches(PHONE_VALIDATION, {
-      message: "Please enter valid phone number.",
-      excludeEmptyString: true,
-    }),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    firstName: Yup.string().required(t("first_name_required") as string),
+    lastName: Yup.string().required(t("last_name_required") as string),
+    email: Yup.string()
+      .email(t("invalid_email") as string)
+      .required(t("email_required") as string),
+    mobileNumber: Yup.string()
+      .nullable()
+      .notRequired()
+      .matches(PHONE_VALIDATION, {
+        message: t("enter_valid_phone"),
+        excludeEmptyString: true,
+      }),
+  });
+};
 const UserInfo = () => {
   const userId = localStorage.getItem("id");
   const { data, isLoading, isSuccess } = useReAuth();
@@ -67,8 +73,9 @@ const UserInfo = () => {
       role: 1,
       isActive: false,
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(formData);
 
   useEffect(() => {
     if (isSuccess) {

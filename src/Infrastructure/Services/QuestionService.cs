@@ -96,12 +96,12 @@
                 if (questionPool == null)
                 {
                     _logger.LogWarning("Question pool not found with identity: {identity}.", identity);
-                    throw new EntityNotFoundException("Question pool not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
                 }
                 if (currentUserId != questionPool.CreatedBy && !questionPool.QuestionPoolTeachers.Any(x => x.UserId == currentUserId))
                 {
                     _logger.LogWarning("User with id: {currentUserId} is not allowed to add question in the question pool with id: {questionPoolId}.", currentUserId, questionPool.Id);
-                    throw new ForbiddenException("Unauthorized user to add question in pool.");
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUserAddQuestion"));
                 }
                 var currentTimeStamp = DateTime.UtcNow;
                 var entity = new Question()
@@ -166,7 +166,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to create question.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to create question.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("QuestionCreateError"));
             }
         }
 
@@ -188,19 +188,19 @@
                 if (questionPool == null)
                 {
                     _logger.LogWarning("Question pool not found with identity: {poolIdentity}.", poolIdentity);
-                    throw new EntityNotFoundException("Question pool not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
                 }
                 var existing = await _unitOfWork.GetRepository<Question>().GetFirstOrDefaultAsync(predicate: x => x.Id == questionId,
                                                             include: src => src.Include(x => x.QuestionOptions).Include(x => x.QuestionTags)).ConfigureAwait(false);
                 if (existing == null)
                 {
                     _logger.LogWarning("Question not found with id: {questionId}.", questionId);
-                    throw new EntityNotFoundException("Question not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionNotFound"));
                 }
                 if (existing.CreatedBy != currentUserId)
                 {
                     _logger.LogWarning("User with id: {currentUserId} is not allowed to update question with id: {id}.", currentUserId, existing.Id);
-                    throw new ForbiddenException("Unauthorized user to update the question.");
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUserUpdateQuestion"));
                 }
 
                 var questionPoolQuestion = await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetFirstOrDefaultAsync(
@@ -217,7 +217,7 @@
                     if (existQuestionSetSubmissions)
                     {
                         _logger.LogWarning("Question with id: {id} cannot be edited such that it is associated with exam submission.", existing.Id);
-                        throw new ForbiddenException("Question is associated with exam submission. So, it cannot be edited.");
+                        throw new ForbiddenException(_localizer.GetString("QuestionCannotEdit"));
                     }
                 }
                 var currentTimeStamp = DateTime.UtcNow;
@@ -278,7 +278,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to update question pool's question.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to update question pool's question.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("QuestionPoolUpdateError"));
             }
         }
 
@@ -298,7 +298,7 @@
                 if (questionPool == null)
                 {
                     _logger.LogWarning("Question pool not found with identity: {poolIdentity}.", poolIdentity);
-                    throw new EntityNotFoundException("Question pool not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
                 }
 
                 var existing = await _unitOfWork.GetRepository<Question>().GetFirstOrDefaultAsync(predicate: p => p.Id == questionId,
@@ -306,12 +306,12 @@
                 if (existing == null)
                 {
                     _logger.LogWarning("Question not found with id: {id}.", questionId);
-                    throw new EntityNotFoundException("Question not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionNotFound"));
                 }
                 if (existing.CreatedBy != currentUserId)
                 {
                     _logger.LogWarning("User with id: {currentUserId} is not allowed to update question with id: {id}.", currentUserId, existing.Id);
-                    throw new ForbiddenException("Unauthorized user to delete question.");
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUserDeleteQuestion"));
                 }
                 var questionPoolQuestion = await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetFirstOrDefaultAsync(
                     predicate: p => p.QuestionPoolId == questionPool.Id && p.QuestionId == existing.Id).ConfigureAwait(false);
@@ -322,7 +322,7 @@
                 if (checkQuestionSetQuestionExist)
                 {
                     _logger.LogWarning("Question with id: {id} is associated with Question-Set-Questions.", existing.Id);
-                    throw new ForbiddenException("Question is associated with question set.");
+                    throw new ForbiddenException(_localizer.GetString("QuestionAssociatedQuestionSet"));
                 }
 
                 _unitOfWork.GetRepository<QuestionPoolQuestion>().Delete(questionPoolQuestion);
@@ -335,7 +335,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to delete question pool's question.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to delete question pool's question.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("QuestionPoolDeleteError"));
             }
         }
     }

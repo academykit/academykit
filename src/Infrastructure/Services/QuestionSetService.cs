@@ -68,14 +68,14 @@
                 if (questionSet == null)
                 {
                     _logger.LogWarning("Question set not found with identity: {identity}.", identity);
-                    throw new EntityNotFoundException("Question set not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
                 var isCourseTeacher = questionSet.Lesson.Course.CourseTeachers.Any(x => x.UserId == currentUserId);
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (questionSet.CreatedBy != currentUserId && !isCourseTeacher && !isSuperAdminOrAdmin)
                 {
                     _logger.LogWarning("User with userId: {userId} is unauthorized user to add questions in question set with id : {id}.", currentUserId, questionSet.Id);
-                    throw new EntityNotFoundException("Unauthorized user to add questions in question set.");
+                    throw new EntityNotFoundException(_localizer.GetString("UnauthorizedUserAddQuestionSet"));
                 }
                 var checkQuestionSetSubmission = await _unitOfWork.GetRepository<QuestionSetSubmission>().ExistsAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id).ConfigureAwait(false);
@@ -83,7 +83,7 @@
                 if (checkQuestionSetSubmission)
                 {
                     _logger.LogWarning("Question set with id: {questionSetId} contains question set submission.", questionSet.Id);
-                    throw new ForbiddenException("Question set contains answer submission. So, not allowed to add question in question set.");
+                    throw new ForbiddenException(_localizer.GetString("QuestionSetAddNotAllowed"));
                 }
                 var existingQuestionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id).ConfigureAwait(false);
@@ -128,7 +128,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to add questions in question set.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to add questions in question set.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("QuestionSetAddError"));
             }
         }
 
@@ -148,14 +148,14 @@
             if (questionSet == null)
             {
                 _logger.LogWarning("Question set not found with identity: {identity}.", identity);
-                throw new EntityNotFoundException("Question set not found.");
+                throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
             }
             var isCourseTeacher = questionSet.Lesson.Course.CourseTeachers.Any(x => x.UserId == currentUserId);
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
             if (questionSet.CreatedBy != currentUserId && !isCourseTeacher && !isSuperAdminOrAdmin)
             {
                 _logger.LogWarning("User with userId: {userId} is unauthorized user to get questions in question set with id : {id}.", currentUserId, questionSet.Id);
-                throw new EntityNotFoundException("Unauthorized user to get questions in question set.");
+                throw new EntityNotFoundException(_localizer.GetString("UnauthorizedUserQuestionSet"));
             }
             IList<QuestionResponseModel> questionsLists = new List<QuestionResponseModel>();
             var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
@@ -199,19 +199,19 @@
                 if (questionSet == null)
                 {
                     _logger.LogWarning("Question set not found with identity: {identity} for user with id : {currentUserId}.", identity, currentUserId);
-                    throw new EntityNotFoundException("Question set not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
 
                 if (currentTimeStamp <= questionSet.StartTime)
                 {
                     _logger.LogWarning("Question set with identity: {identity} has not started yet for user with id : {currentUserId}.", identity, currentUserId);
-                    throw new ForbiddenException("Question set has not started yet.");
+                    throw new ForbiddenException(_localizer.GetString("QuestionSetNotStarted"));
                 }
 
                 if (currentTimeStamp >= questionSet.EndTime)
                 {
                     _logger.LogWarning("Question set with identity: {identity} has ended for user with id : {currentUserId}.", identity, currentUserId);
-                    throw new ForbiddenException("Question set has ended.");
+                    throw new ForbiddenException(_localizer.GetString("QuestionSetEnded"));
                 }
 
                 var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
@@ -222,7 +222,7 @@
                 {
                     _logger.LogWarning("training with id : {courseId} is in {status} status to start exam for the user with id: {userId}.",
                         lesson.Course.Id, lesson.Course.Status, currentUserId);
-                    throw new ForbiddenException($"Cannot give exam to the training having {lesson.Course.Status} status.");
+                    throw new ForbiddenException(_localizer.GetString("TraningExamCompletedStatus"));
                 }
 
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
@@ -233,7 +233,7 @@
                 {
                     _logger.LogWarning("User with id:{currentUserId} has not enrolled in training with id: {courseId} and question set id with id: {questionSetId}."
                                                 , currentUserId, lesson.CourseId, questionSet.Id);
-                    throw new ForbiddenException("User is not enrolled in this training.");
+                    throw new ForbiddenException(_localizer.GetString("UserNotEnrolledTraining"));
                 }
 
                 var questionSetSubmissionCount = await _unitOfWork.GetRepository<QuestionSetSubmission>().CountAsync(
@@ -242,12 +242,12 @@
                 if (questionSetSubmissionCount >= questionSet.AllowedRetake && !isValidUser)
                 {
                     _logger.LogWarning("User with Id {currentUserId} has already taken exam of Question Set with Id {questionSetId}.", currentUserId, questionSet.Id);
-                    throw new ForbiddenException("Exam already taken.");
+                    throw new ForbiddenException(_localizer.GetString("ExamAlreadyTaken"));
                 }
                 if (questionSet.EndTime.HasValue && questionSet.EndTime != default && questionSet.EndTime < currentTimeStamp)
                 {
                     _logger.LogWarning("Question set with id: {questionSetId} has been finished.", questionSet.Id);
-                    throw new ForbiddenException("Exam already finished.");
+                    throw new ForbiddenException(_localizer.GetString("ExamAlreadyFinished"));
                 }
 
                 var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
@@ -291,7 +291,7 @@
             {
                 _unitOfWork.Dispose();
                 _logger.LogError(ex, "An error occurred while attempting to start exam.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to start exam.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredAttemptingStartExam"));
             }
         }
 
@@ -315,7 +315,7 @@
                 if (questionSet == null)
                 {
                     _logger.LogWarning("Question set not found with identity: {identity} for user with id : {currentUserId}.", identity, currentUserId);
-                    throw new EntityNotFoundException("Question set not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
                 var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id,
@@ -326,7 +326,7 @@
                 if (questionSetSubmission == null)
                 {
                     _logger.LogWarning("Question set submission not found with id: {questionSetSubmissionId} for user with id : {currentUserId}.", questionSetSubmissionId, currentUserId);
-                    throw new EntityNotFoundException("Question set submission not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionSetSubmissionNotFound")) ;
                 }
 
                 var questionSetSubmissionAnswerCount = await _unitOfWork.GetRepository<QuestionSetSubmissionAnswer>().CountAsync(
@@ -334,7 +334,7 @@
                 if (questionSetSubmissionAnswerCount > 0)
                 {
                     _logger.LogWarning("Question set submission with id: {questionSetSubmissionId} already contains answers for user with id: {currentUserId}.", questionSetSubmissionId, currentUserId);
-                    throw new ForbiddenException("Exam already submitted.");
+                    throw new ForbiddenException(_localizer.GetString("ExamAlreadySubmitted"));
                 }
 
                 var answerSubmissionCount = await _unitOfWork.GetRepository<QuestionSetSubmission>().CountAsync(
@@ -343,7 +343,7 @@
                 if (questionSet.AllowedRetake != 0 && answerSubmissionCount >= questionSet.AllowedRetake)
                 {
                     _logger.LogWarning("Maximum attempt / submission count reached for user with id : {userId} for question-set with id : {questionSetId}", currentUserId, questionSet.Id);
-                    throw new ForbiddenException("Exam already submitted.");
+                    throw new ForbiddenException(_localizer.GetString("ExamAlreadySubmitted"));
                 }
 
                 var questionSetQuestionIds = answers.ToList().ConvertAll(x => x.QuestionSetQuestionId);
@@ -352,7 +352,7 @@
                 {
                     _logger.LogWarning("User with id: {currentUserId} doesn't submit all question for question set submission with id: {questionSetSubmissionId}", currentUserId, questionSetSubmissionId);
                     isSubmissionError = true;
-                    questionSetSubmission.SubmissionErrorMessage += " Exam submission question doesn't match with question set question.";
+                    questionSetSubmission.SubmissionErrorMessage += _localizer.GetString("ExamSubmissionNotMatchQuestionSet");
                 }
 
                 if (questionSet.Duration != 0
@@ -361,7 +361,7 @@
                 {
                     _logger.LogWarning("Exam duration expires for question set submission with id: {questionSetSubmissionId} and user with id: {currentUserId}", questionSetSubmissionId, currentUserId);
                     isSubmissionError = true;
-                    questionSetSubmission.SubmissionErrorMessage += " Late Submission";
+                    questionSetSubmission.SubmissionErrorMessage += _localizer.GetString("LateSubmission");
                 }
 
                 IList<QuestionSetSubmissionAnswer> answerSubmissionAnswers = new List<QuestionSetSubmissionAnswer>();
@@ -425,7 +425,7 @@
             {
                 _unitOfWork.Dispose();
                 _logger.LogError(ex, "An error occurred while attempting to submit the exam.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to submit the exam.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorAttemptingSubmitExam"));
             }
         }
 
@@ -493,7 +493,7 @@
                 if (questionSet == null)
                 {
                     _logger.LogWarning("Question set not found with identity: {identity}.", identity);
-                    throw new EntityNotFoundException("Question set not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
 
                 var course = await ValidateAndGetCourse(currentUserId, questionSet.Lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
@@ -556,7 +556,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to retrieving the results.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to retrieving the results.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorAttemptingRetrievingResult"));
             }
         }
 
@@ -579,7 +579,7 @@
                 if (questionSet == null)
                 {
                     _logger.LogWarning("Question set not found with identity: {identity}.", identity);
-                    throw new EntityNotFoundException("Question set not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
 
                 var course = await ValidateAndGetCourse(currentUserId, questionSet.Lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
@@ -636,7 +636,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to retrieving the student result.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to retrieving the student result.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorRetrievingStudentResult"));
             }
         }
 
@@ -659,7 +659,7 @@
                 if (questionSet == null)
                 {
                     _logger.LogWarning("Question set not found with identity: {identity}.", identity);
-                    throw new EntityNotFoundException("Question set not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
 
                 var course = await ValidateAndGetCourse(currentUserId, questionSet.Lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
@@ -675,14 +675,14 @@
                 if (questionSetResult == null)
                 {
                     _logger.LogWarning("Question set result not found for user with id: {currentUserId} and question-set-id: {questionSetId}.", currentUserId, questionSet.Id);
-                    throw new EntityNotFoundException("Exam result not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("ExamResultNotFound"));
                 }
                 var questionSetSubmission = await _unitOfWork.GetRepository<QuestionSetSubmission>().GetFirstOrDefaultAsync(predicate: p => p.Id == questionSetSubmissionId
                                                                             && p.QuestionSetId == questionSet.Id).ConfigureAwait(false);
                 if (questionSetSubmission == null)
                 {
                     _logger.LogWarning("Question set submission not found with id: {questionSetSubmissionId} for user id: {currentUserId}.", questionSetSubmission, currentUserId);
-                    throw new EntityNotFoundException("Exam submission not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("ExamSubmissionNotFound"));
                 }
                 var questionSetSubmissionAnswers = await _unitOfWork.GetRepository<QuestionSetSubmissionAnswer>().GetAllAsync(predicate: p => p.QuestionSetSubmissionId == questionSetSubmissionId,
                                                             include: src => src.Include(x => x.QuestionSetQuestion.QuestionPoolQuestion.Question.QuestionOptions)).ConfigureAwait(false);
@@ -744,7 +744,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while getting result details.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while getting result details.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorGettingResult"));
             }
         }
 

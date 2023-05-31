@@ -20,6 +20,7 @@ import { Link } from "react-router-dom";
 import DeleteModal from "@components/Ui/DeleteModal";
 import useAuth from "@hooks/useAuth";
 import { UserRole } from "@utils/enums";
+import { useTranslation } from "react-i18next";
 
 const useStyle = createStyles((theme) => ({
   wrapper: {
@@ -35,19 +36,20 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
   const [deleteModal, setDeleteModal] = useToggle();
   const deleteGroup = useDeleteGroup(group.id, search);
   const auth = useAuth();
+  const { t } = useTranslation();
 
   const handleDelete = async () => {
     try {
       await deleteGroup.mutateAsync({ id: group.id });
       showNotification({
-        title: "Success",
-        message: "Group deleted successfully.",
+        title: t("successful"),
+        message: t("group_deleted"),
       });
     } catch (error) {
       const err = errorType(error);
       showNotification({
         color: "red",
-        title: "Error",
+        title: t("error"),
         message: err as string,
       });
     }
@@ -74,7 +76,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
         sx={{ maxWidth: 200 }}
       >
         <DeleteModal
-          title={`Do you want to delete "${group.name}" group?`}
+          title={`${t("want_to_delete")} "${group.name}" ${t("group")}?`}
           open={deleteModal}
           onClose={setDeleteModal}
           onConfirm={handleDelete}
@@ -107,7 +109,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
                   >
                     <NavLink
                       variant="subtle"
-                      label="Edit"
+                      label={t("edit")}
                       component={Link}
                       to={RoutePath.groups.details(group.slug).route}
                       rightSection={<IconChevronRight size={12} stroke={1.5} />}
@@ -116,7 +118,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
                     <NavLink
                       onClick={() => setDeleteModal()}
                       variant="subtle"
-                      label="Delete"
+                      label={t("delete")}
                       component={"button"}
                       rightSection={<IconChevronRight size={12} stroke={1.5} />}
                     ></NavLink>
@@ -132,7 +134,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
             component={Link}
             to={RoutePath.groups.members(group.slug).route}
           >
-            {group.memberCount} Members
+            {group.memberCount} {"members"}
           </Anchor>
         </Box>
         <Box style={{ zIndex: "10", position: "relative" }}>
@@ -141,7 +143,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
             component={Link}
             to={RoutePath.groups.courses(group.slug).route}
           >
-            {group.courseCount} Trainings
+            {group.courseCount} {t("trainings")}
           </Anchor>
         </Box>
         <Box style={{ zIndex: "10", position: "relative" }}>
@@ -150,7 +152,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
             component={Link}
             to={RoutePath.groups.attachments(group.slug).route}
           >
-            {group.attachmentCount} Attachments
+            {group.attachmentCount} {"attachments"}
           </Anchor>
         </Box>
       </Card>

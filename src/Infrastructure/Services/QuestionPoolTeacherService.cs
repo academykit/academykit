@@ -39,19 +39,19 @@
                 if (questionPool == null)
                 {
                     _logger.LogWarning("Question pool not found with identity : {identity}.", identity);
-                    throw new EntityNotFoundException("Question pool not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
                 }
 
                 var hasTeacher = ValidateQuestionPoolMaintainer(questionPool, currentUserId);
                 if (!hasTeacher)
                 {
-                    throw new ForbiddenException("Invalid access to change question pool teacher's role.");
+                    throw new ForbiddenException(_localizer.GetString("TeacherRoleInvalidAccess"));
                 }
 
                 var user = questionPool?.QuestionPoolTeachers.FirstOrDefault(x => x.UserId == userId);
                 if (user == null)
                 {
-                    throw new EntityNotFoundException("User not found in question pool.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionPoolUserNotFound"));
                 }
 
                 user.Role = role;
@@ -63,7 +63,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to assign role to question pool.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to assign role to question pool.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("AssignRoleQuestionPoolError"));
             }
         }
 
@@ -108,14 +108,14 @@
             if (teacher.UserId == currentUserId)
             {
                 _logger.LogWarning("User with id : {userId} cannot remove own-self from question pool teacher with pool id : {poolId}.", currentUserId, teacher.QuestionPoolId);
-                throw new ForbiddenException("User cannot be removed same user.");
+                throw new ForbiddenException(_localizer.GetString("UserCanNotRemoveSameUser"));
             }
 
             var questionPool = await ValidateAndGetQuestionPool(currentUserId, questionPoolIdentity: teacher.QuestionPoolId.ToString()).ConfigureAwait(false);
             if (questionPool.CreatedBy == teacher.UserId)
             {
                 _logger.LogWarning("QuestionPool with Id {id} creator User Id {userId} can't be delete from questionPool teacher.", questionPool.Id, teacher.UserId);
-                throw new ForbiddenException("Question pool author cannot be removed.");
+                throw new ForbiddenException(_localizer.GetString("QuestionPoolAuhorCannotRemoved"));
             }
         }
 
@@ -134,13 +134,13 @@
             if (questionPool.CreatedBy == entity.UserId)
             {
                 _logger.LogWarning("QuestionPool with Id : {id} creator User Id : {userId} can't be questionPool teacher.", questionPool.Id, entity.UserId);
-                throw new ForbiddenException("Question pool author cannot be added.");
+                throw new ForbiddenException(_localizer.GetString("QuestionPoolAuthorCanNotAdded"));
             }
             if (questionPool.QuestionPoolTeachers.Any(p => p.UserId == entity.UserId))
             {
                 var poolRole = questionPool.QuestionPoolTeachers.FirstOrDefault(p => p.UserId == entity.UserId)?.Role;
                 _logger.LogWarning("User with Id {userId} is already question pool {role} of question pool with Id  : {id}.", entity.UserId, poolRole, questionPool.Id);
-                throw new ForbiddenException($"User is already found as question pool {poolRole}.");
+                throw new ForbiddenException(_localizer.GetString("UserAlreadyFoundQuestionPool"));
             }
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == entity.UserId).ConfigureAwait(false);
             CommonHelper.CheckFoundEntity(user);

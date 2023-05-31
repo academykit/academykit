@@ -28,7 +28,9 @@ import {
 import errorType from "@utils/services/axiosError";
 import { IUser } from "@utils/services/types";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 interface ILevel<T> {
   id: string;
   name: string;
@@ -49,17 +51,23 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const schema = Yup.object().shape({
-  name: Yup.string().required("Level name is required."),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    name: Yup.string().required(t("level_name_required") as string),
+  });
+};
 
 const Level = () => {
   const form = useForm({
     initialValues: {
       name: "",
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(form);
+  const { t } = useTranslation();
+
   const { classes } = useStyles();
 
   const Rows = ({ item }: { item: ILevel<IUser> }) => {
@@ -77,7 +85,7 @@ const Level = () => {
       try {
         await deleteLevel.mutateAsync(item.id);
         showNotification({
-          message: "Level deleted successfully!",
+          message: t("delete_level"),
         });
       } catch (error) {
         const err = errorType(error);
@@ -100,7 +108,7 @@ const Level = () => {
                     name: data.eName,
                     id: item.id,
                   });
-                  showNotification({ message: "Successfully Updated." });
+                  showNotification({ message: t("update_success") });
                 } catch (error) {
                   const err = errorType(error);
                   showNotification({
@@ -118,8 +126,8 @@ const Level = () => {
               >
                 <TextInput
                   withAsterisk
-                  label="Level Name"
-                  placeholder="Enter Level Name"
+                  label={t("level_name")}
+                  placeholder={t("level_name_placeholder") as string}
                   name="eName"
                   {...form.getInputProps("eName")}
                 />
@@ -127,7 +135,7 @@ const Level = () => {
 
               <Group mt={20} ml={10}>
                 <Button type="submit" variant="outline">
-                  Save
+                  {t("save")}
                 </Button>
               </Group>
             </form>
@@ -182,7 +190,7 @@ const Level = () => {
         sx={{ justifyContent: "space-between", alignItems: "center" }}
         mb={15}
       >
-        <Title>Levels</Title>
+        <Title>{t("levels")}</Title>
         {!showAddForm && (
           <Button onClick={() => toggleAddForm()}>Add Level</Button>
         )}
@@ -208,7 +216,7 @@ const Level = () => {
                   try {
                     await postLevel.mutateAsync(values);
                     showNotification({
-                      message: "Successfully added level!",
+                      message: t("add_level_success"),
                     });
                     form.reset();
                     toggleAddForm();
@@ -216,7 +224,7 @@ const Level = () => {
                     const err = errorType(error);
 
                     showNotification({
-                      title: "Error!",
+                      title: t("error"),
                       message: err,
                       color: "red",
                     });
@@ -224,18 +232,18 @@ const Level = () => {
                 })}
               >
                 <TextInput
-                  label="Level Name"
+                  label={t("level_name")}
                   name="levelName"
                   withAsterisk
-                  placeholder="Enter Level Name."
+                  placeholder={t("level_name_placeholder") as string}
                   {...form.getInputProps("name")}
                 />
 
                 <Group mt={10}>
-                  <Button type="submit">Submit</Button>
+                  <Button type="submit">{t("submit")}</Button>
                   {showAddForm && (
                     <Button onClick={() => toggleAddForm()} variant="outline">
-                      Cancel
+                      {t("cancel")}
                     </Button>
                   )}
                 </Group>
@@ -249,10 +257,10 @@ const Level = () => {
         <Table striped highlightOnHover withBorder sx={{ marginTop: "10px" }}>
           <thead>
             <tr>
-              <th>Name</th>
+              <th>{t("name")}</th>
 
               <th>
-                <Text align="center">Actions</Text>
+                <Text align="center">{t("actions")}</Text>
               </th>
             </tr>
           </thead>

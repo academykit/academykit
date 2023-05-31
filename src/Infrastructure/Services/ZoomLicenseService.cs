@@ -157,7 +157,7 @@
                 }));
                 if (response.Count == 0)
                 {
-                    throw new NullReferenceException("All Liscense Id have been booked, please select another instance");
+                    throw new NullReferenceException(_localizer.GetString("AllLiscensePlaced"));
                 }
                 return response;
             }
@@ -198,7 +198,7 @@
 
             if (hasOverlappingMeetings.Count() != 0)
             {
-                throw new InvalidDataException("Time span is already used, try another instance");
+                throw new InvalidDataException(_localizer.GetString("TimeSpanAlreadyUsed"));
             }
 
             var data = from zoomLicense in zoomLicenses
@@ -307,7 +307,7 @@
             {
                 if (context == null)
                 {
-                    throw new ArgumentException("Context not found.");
+                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
                 }
                 var tokenString = await GetZoomJWTAccessToken().ConfigureAwait(false);
                 var client = new RestClient($"{zoomAPIPath}/meetings/{meetingId}/recordings?action=delete");
@@ -326,7 +326,7 @@
             var zoomSetting = await _unitOfWork.GetRepository<ZoomSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
             if (zoomSetting == null)
             {
-                throw new EntityNotFoundException("Zoom setting not found.");
+                throw new EntityNotFoundException(_localizer.GetString("ZoomSettingNotFound"));
             }
             var tokenHandler = new JwtSecurityTokenHandler();
             var currentTimeStamp = DateTime.UtcNow;
@@ -361,7 +361,7 @@
             var zoomSetting = await _unitOfWork.GetRepository<ZoomSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
             if (zoomSetting == null)
             {
-                throw new EntityNotFoundException("Zoom setting not found.");
+                throw new EntityNotFoundException(_localizer.GetString("ZoomSettingNotFound"));
             }
 
             // Get the current epoch time-stamp
@@ -427,7 +427,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to generate zak token.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to generate zak token.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("GenerateZakTokenError"));
             }
         }
 

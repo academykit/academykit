@@ -2,6 +2,7 @@ import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
 import InlineInput from "./InlineInput";
+import { useTranslation } from "react-i18next";
 
 const EditNameForm = ({
   item,
@@ -14,6 +15,7 @@ const EditNameForm = ({
   setIsEditing: Function;
   updateFunction: any;
 }) => {
+  const { t } = useTranslation();
   const form = useForm({
     initialValues: {
       name: item.name,
@@ -30,8 +32,8 @@ const EditNameForm = ({
             sectionName: values.name,
           });
           showNotification({
-            message: "Section Updated Successfully!",
-            title: "Success",
+            message: t("section_update_success"),
+            title: t("successful"),
           });
           setIsEditing(false);
         } catch (error) {
@@ -46,7 +48,7 @@ const EditNameForm = ({
       })}
     >
       <InlineInput
-        placeholder="Enter section name"
+        placeholder={t("section_name_placeholder")}
         onCloseEdit={() => setIsEditing(false)}
         {...form.getInputProps("name")}
       ></InlineInput>

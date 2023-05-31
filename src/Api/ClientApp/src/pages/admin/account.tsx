@@ -13,6 +13,7 @@ import { useChangeEmail, useChangePassword } from "@utils/services/authService";
 import errorType from "@utils/services/axiosError";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 
@@ -29,21 +30,24 @@ export interface IChangeEmailRequest {
   password: string;
 }
 
-const schema = Yup.object().shape({
-  currentPassword: Yup.string()
-    .required("Current Password is required.")
-    .label("current_password"),
-  newPassword: Yup.string()
-    .min(8, "Password must be 8 characters long.")
-    .matches(/[0-9]/, "Password requires a number.")
-    .matches(/[a-z]/, "Password requires a lowercase letter.")
-    .matches(/[A-Z]/, "Password requires an uppercase letter.")
-    .matches(/[^\w]/, "Password requires a symbol.")
-    .required("New Password is required."),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("newPassword"), null], "Password must match.")
-    .required("Confirm Password is required."),
-});
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    currentPassword: Yup.string()
+      .required(t("current_password_required") as string)
+      .label(t("current_password")),
+    newPassword: Yup.string()
+      .min(8, t("password_length_required") as string)
+      .matches(/[0-9]/, t("password_number_required") as string)
+      .matches(/[a-z]/, t("password_lowercase_required") as string)
+      .matches(/[A-Z]/, t("password_uppercase_required") as string)
+      .matches(/[^\w]/, t("password_symbol_required") as string)
+      .required("New Password is required."),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref(t("new_password")), null], t("password_match") as string)
+      .required(t("password_confirm_required") as string),
+  });
+};
 
 const changeEmailSchema = Yup.object().shape({
   oldEmail: Yup.string().email("Invalid Email.").required("Email is required."),
@@ -67,8 +71,9 @@ const Account = () => {
       newPassword: "",
       confirmPassword: "",
     },
-    validate: yupResolver(schema),
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(form);
 
   const changeEmailForm = useForm({
     initialValues: {

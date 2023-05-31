@@ -26,6 +26,7 @@ import Download from "./PdfComponents/Download";
 import FullScreen from "./PdfComponents/FullScreen";
 import Zoom from "./PdfComponents/Zoom";
 import SwitchPage from "./PdfComponents/SwitchPage";
+import { useTranslation } from "react-i18next";
 
 interface PdfViewerProps {
   lesson: ICourseLesson;
@@ -38,11 +39,12 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
   const matchesSmallScreen = useMediaQuery("(min-width: 550px");
 
   const theme = useMantineColorScheme();
+  const { t } = useTranslation();
   const onMarkComplete = () => {
     onEnded();
     showNotification({
-      title: "Success",
-      message: "Pdf marked as completed.",
+      title: t("success"),
+      message: t("mark_pdf_complete"),
     });
   };
 
