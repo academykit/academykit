@@ -5,6 +5,7 @@ import {
   ILessonStartQuestion,
   ILessonStartQuestionOption,
 } from "@utils/services/examService";
+import { useTranslation } from "react-i18next";
 
 const useStyle = createStyles((theme) => ({
   option: {
@@ -30,12 +31,13 @@ type Props = {
 
 const ExamCheckBox = ({ form, options, currentIndex }: Props) => {
   const { classes, cx } = useStyle();
+  const { t } = useTranslation();
 
   return (
     <Box mt={10} px={20} className={classes.option}>
       <Group>
         <Title size={"xs"} mb={5}>
-          Options
+          {t("options")}
         </Title>
       </Group>
       {options.map((option, index) => (
