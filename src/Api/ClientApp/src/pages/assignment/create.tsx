@@ -8,6 +8,7 @@ import { useAssignmentQuestion } from "@utils/services/assignmentService";
 import { useParams } from "react-router-dom";
 import AssignmentItem from "./Component/AssignmentItem";
 import EditAssignment from "./Component/EditAssignment";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   lessonId: string;
@@ -22,6 +23,7 @@ const CreateAssignment = ({
   const [addQuestion, setAddQuestion] = useToggle();
 
   const questionList = useAssignmentQuestion(lessonId, searchParams);
+  const { t } = useTranslation();
   return (
     <Container>
       {questionList.isSuccess && (
@@ -38,7 +40,7 @@ const CreateAssignment = ({
               ))}
             </Box>
           ) : (
-            <Box mt={10}>No assignment questions found!</Box>
+            <Box mt={10}>{t("no_assignment_questions")}</Box>
           )}
           {addQuestion && (
             <EditAssignment
@@ -50,7 +52,7 @@ const CreateAssignment = ({
 
           {!addQuestion && (
             <Button mt={10} onClick={() => setAddQuestion()}>
-              Add Question
+              {t("add_question")}
             </Button>
           )}
         </>

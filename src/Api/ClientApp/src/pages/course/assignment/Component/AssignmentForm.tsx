@@ -33,6 +33,7 @@ const AssignmentForm = ({
 
   const handleSubmit = async (values: IAssignmentQuestion[]) => {
     const finalData: IAssignmentSubmission[] = [];
+    const { t } = useTranslation();
     values.forEach((x) => {
       var data: any = {};
       if (x.assignmentSubmissionId) data["id"] = x.assignmentSubmissionId;
@@ -102,10 +103,10 @@ const AssignmentForm = ({
       ))}
       <Group mt={20}>
         <Button loading={submitAssignment.isLoading} type="submit">
-          Submit
+          {t("submit")}
         </Button>
         <Button type="reset" variant="outline" onClick={() => navigation(-1)}>
-          Cancel
+          {t("cancel")}
         </Button>
       </Group>
     </form>

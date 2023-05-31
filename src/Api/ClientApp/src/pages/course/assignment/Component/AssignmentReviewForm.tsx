@@ -37,7 +37,7 @@ const AssignmentReviewForm = ({
   const [isPass, setIsPass] = useState(
     editData?.assignmentReview?.isPassed ?? false
   );
-  const{t}= useTranslation();
+  const { t } = useTranslation();
 
   const submitHandler = async (data: IAddAssignmentReview) => {
     try {
@@ -52,9 +52,9 @@ const AssignmentReviewForm = ({
       }
       showNotification({
         title: t("successful"),
-        message: `${t("Successfully")} ${
-          edit ? t("edited") : t("added")
-        } ${t("review_on_assignment")}`,
+        message: `${t("Successfully")} ${edit ? t("edited") : t("added")} ${t(
+          "review_on_assignment"
+        )}`,
       });
       closeModal();
     } catch (err) {
@@ -76,8 +76,8 @@ const AssignmentReviewForm = ({
   return (
     <Box>
       <form onSubmit={form.onSubmit(submitHandler)}>
-        <Textarea label="Comment" {...form.getInputProps("review")} />
-        <NumberInput {...form.getInputProps("marks")} label="Marks" />
+        <Textarea label={t("comment")} {...form.getInputProps("review")} />
+        <NumberInput {...form.getInputProps("marks")} label={t("marks")} />
         <Switch
           checked={isPass}
           {...form.getInputProps("isPassed")}
@@ -85,13 +85,13 @@ const AssignmentReviewForm = ({
             setIsPass(!isPass);
             form.setFieldValue("isPassed", !isPass);
           }}
-          label="Pass"
+          label={t("pass")}
           mt={10}
         />
         <Group mt={20}>
-          <Button type="submit">Submit</Button>
+          <Button type="submit">{t("submit")}</Button>
           <Button onClick={closeModal} variant="outline">
-            Cancel
+            {t("cancel")}
           </Button>
         </Group>
       </form>
