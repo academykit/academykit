@@ -49,10 +49,6 @@ const GroupDetail = () => {
   const updateGroups = useUpdateGroup(id as string);
   const auth = useAuth();
 
-  if (groupDetail.error) {
-    throw groupDetail.error;
-  }
-
   useEffect(() => {
     if (groupDetail.isSuccess) {
       form.setFieldValue("name", groupDetail.data.data.name);
@@ -78,6 +74,9 @@ const GroupDetail = () => {
       });
     }
   };
+  if (groupDetail.error) {
+    throw groupDetail.error;
+  }
 
   return (
     <Container fluid>
