@@ -21,6 +21,7 @@ import {
 } from "@utils/services/types";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const useStyles = createStyles((theme) => ({
   item: {
@@ -65,6 +66,7 @@ const Lesson = ({
 }) => {
   const { classes, cx } = useStyles();
   const { id: slug } = useParams();
+  const { t } = useTranslation();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [value, toggle] = useToggle();
@@ -111,7 +113,7 @@ const Lesson = ({
               <Text m={"auto"}>
                 {ReadableEnum[
                   LessonType[lesson.type] as keyof typeof ReadableEnum
-                ] ?? LessonType[lesson.type]}
+                ] ?? t(`${LessonType[lesson.type]}`)}
               </Text>
             </Group>
           </Grid.Col>
@@ -132,7 +134,7 @@ const Lesson = ({
                 variant="outline"
                 onClick={() => setIsEditing(!isEditing)}
               >
-                {isEditing ? "Cancel" : "Edit"}
+                {isEditing ? t("cancel") : t("edit")}
               </Button>
             </Group>
           </Grid.Col>

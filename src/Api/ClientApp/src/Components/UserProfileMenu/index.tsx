@@ -18,6 +18,7 @@ import { getInitials } from "@utils/getInitialName";
 import { IUser } from "@utils/services/types";
 import { CSSProperties, FC, forwardRef } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   user: IUser;
@@ -35,6 +36,7 @@ const UserProfileMenu: FC<Props> = ({
 }) => {
   const { classes } = useStyle();
   const auth = useAuth();
+  const { t } = useTranslation();
 
   return (
     <Group position="center">
@@ -69,7 +71,7 @@ const UserProfileMenu: FC<Props> = ({
               {fullName}
             </Text>
             <Text size={"sm"} color={"dimmed"}>
-              {role === UserRole.SuperAdmin ? "Super Admin" : UserRole[role]}
+              {t(`${UserRole[role]}`)}
             </Text>
           </Box>
           <Divider />
@@ -80,7 +82,7 @@ const UserProfileMenu: FC<Props> = ({
             className={classes.item}
             icon={<IconUser size={14} />}
           >
-            <Text size={size}>My Profile</Text>
+            <Text size={size}>{t("myProfile")}</Text>
           </Menu.Item>
           <Menu.Item
             component={Link}
@@ -88,7 +90,7 @@ const UserProfileMenu: FC<Props> = ({
             className={classes.item}
             icon={<IconPencil size={14} />}
           >
-            <Text size={size}>Edit Profile</Text>
+            <Text size={size}>{t("editProfile")}</Text>
           </Menu.Item>
 
           <Menu.Item
@@ -97,14 +99,14 @@ const UserProfileMenu: FC<Props> = ({
             className={classes.item}
             icon={<IconLock size={14} />}
           >
-            <Text size={size}>Account</Text>
+            <Text size={size}>{t("Account")}</Text>
           </Menu.Item>
           <Menu.Item
             onClick={auth?.logout}
             className={classes.item}
             icon={<IconLogout size={14} />}
           >
-            <Text size={size}>Logout</Text>
+            <Text size={size}>{t("Logout")}</Text>
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
