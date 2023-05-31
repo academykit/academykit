@@ -28,6 +28,7 @@ import ExamCounter from "./ExamCounter";
 import ExamCheckBox from "./ExamOptions/ExamCheckBox";
 import ExamRadio from "./ExamOptions/ExamRadio";
 import useAuth from "@hooks/useAuth";
+import { useTranslation } from "react-i18next";
 
 const useStyle = createStyles((theme) => ({
   option: {
@@ -93,7 +94,7 @@ const Exam = ({
   const examSubmission = useSubmitExam();
   const auth = useAuth();
   const location = useLocation();
-
+  const { t } = useTranslation();
   const form = useForm({
     initialValues: questions,
   });
@@ -166,7 +167,7 @@ const Exam = ({
   return (
     <form onSubmit={form.onSubmit(onSubmitHandler)}>
       <Modal
-        title="Are you sure you want to submit this exam?"
+        title={t("submit_exam_confirmation")}
         opened={showConfirmation}
         onClose={setShowConfirmation}
       >
@@ -177,10 +178,10 @@ const Exam = ({
               submitButtonRef && submitButtonRef.current?.click();
             }}
           >
-            Submit
+            {t("submit")}
           </Button>
           <Button variant="outline" onClick={() => setShowConfirmation()}>
-            Cancel
+            {t("cancel")}
           </Button>
         </Group>
       </Modal>
@@ -189,14 +190,14 @@ const Exam = ({
         onClose={() => {
           navigate(location.state + "?invalidate=true" ?? "/");
         }}
-        title="Exam submitted successfully. Please be patient for your result."
+        title={t("submission_success")}
       >
         <Button
           onClick={() => {
             navigate(location.state + "?invalidate=true" ?? "/");
           }}
         >
-          Close
+          {t("close")}
         </Button>
       </Modal>
       <Grid m={20}>
@@ -254,7 +255,7 @@ const Exam = ({
                   setCurrentIndex(currentIndex - 1);
                 }}
               >
-                Previous
+                {t("previous")}
               </Button>
             ) : (
               <div></div>
@@ -273,7 +274,7 @@ const Exam = ({
                   setCurrentIndex((currentIndex) => currentIndex + 1);
                 }}
               >
-                Next
+                {t("next")}
               </Button>
             ) : (
               <div></div>
