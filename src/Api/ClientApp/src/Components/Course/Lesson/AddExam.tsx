@@ -185,25 +185,25 @@ const AddExam = ({
           <Grid.Col span={12} xs={6} lg={4}>
             <NumberInput
               withAsterisk
-              label="Question Weightage"
+              label={t("question_weightage")}
               min={1}
               defaultValue={1}
-              placeholder="Question Weightage"
+              placeholder={t("question_weightage") as string}
               {...form.getInputProps("questionMarking")}
             />
           </Grid.Col>
           <Grid.Col span={12} xs={6} lg={4}>
             <DatePicker
-              placeholder="Pick date"
+              placeholder={t("pick_date") as string}
               withAsterisk
-              label="Start date"
+              label={t("Start date")}
               minDate={moment(new Date()).toDate()}
               {...form.getInputProps("startDate")}
             />
           </Grid.Col>
           <Grid.Col span={12} xs={6} lg={4}>
             <TimeInput
-              label="Start Time"
+              label={t("start_time")}
               format="12"
               clearable
               withAsterisk
@@ -213,8 +213,8 @@ const AddExam = ({
 
           <Grid.Col span={12} xs={6} lg={4}>
             <NumberInput
-              label="Duration (minutes)"
-              placeholder="Duration"
+              label={t("duration_minutes")}
+              placeholder={t("duration") as string}
               min={1}
               withAsterisk
               {...form.getInputProps("duration")}
@@ -223,8 +223,8 @@ const AddExam = ({
 
           <Grid.Col span={12} xs={6} lg={4}>
             <DatePicker
-              placeholder="Pick date"
-              label="End date"
+              placeholder={t("pick_date") as string}
+              label={t("End date")}
               withAsterisk
               minDate={form.values?.startDate}
               {...form.getInputProps("endDate")}
@@ -232,7 +232,7 @@ const AddExam = ({
           </Grid.Col>
           <Grid.Col span={12} xs={6} lg={4}>
             <TimeInput
-              label="End Time"
+              label={t("end_time")}
               format="12"
               clearable
               withAsterisk
@@ -242,8 +242,8 @@ const AddExam = ({
 
           <Grid.Col span={12} xs={6} lg={4}>
             <NumberInput
-              label="Negative Marking"
-              placeholder="Negative Marking"
+              label={t("negative_marking")}
+              placeholder={t("negative_marking") as string}
               min={0}
               step={0.05}
               precision={2}
@@ -253,8 +253,8 @@ const AddExam = ({
           </Grid.Col>
           <Grid.Col span={12} xs={6} lg={4}>
             <NumberInput
-              label="Number Of Retakes"
-              placeholder="Retakes"
+              label={t("number_retake")}
+              placeholder={t("retakes") as string}
               min={0}
               {...form.getInputProps("allowedRetake")}
             />
@@ -262,7 +262,7 @@ const AddExam = ({
 
           <Grid.Col span={6} lg={4}>
             <Switch
-              label="Is Mandatory"
+              label={t("is_mandatory")}
               {...form.getInputProps("isMandatory")}
               checked={isMandatory}
               onChange={() => {
@@ -274,8 +274,8 @@ const AddExam = ({
 
           <Grid.Col>
             <Textarea
-              label="Description"
-              placeholder="Exam's Description"
+              label={t("Description")}
+              placeholder={t("exam_description") as string}
               {...form.getInputProps("description")}
             />
           </Grid.Col>
@@ -286,7 +286,7 @@ const AddExam = ({
             type="submit"
             loading={updateLesson.isLoading || lesson.isLoading}
           >
-            Submit
+            {t("submit")}
           </Button>
           {!isEditing && (
             <Button
@@ -295,7 +295,7 @@ const AddExam = ({
               }}
               variant="outline"
             >
-              Close
+              {t("close")}
             </Button>
           )}
           {isEditing && (
@@ -304,7 +304,7 @@ const AddExam = ({
                 navigate("questions/" + item?.slug);
               }}
             >
-              Add More Questions
+              {t("add_more_questions")}
             </Button>
           )}
         </Group>

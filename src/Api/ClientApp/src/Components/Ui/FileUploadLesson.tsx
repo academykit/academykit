@@ -12,6 +12,7 @@ import {
   uploadVideo,
 } from "@utils/services/fileService";
 import { UseFormReturnType } from "@mantine/form";
+import { useTranslation } from "react-i18next";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -39,6 +40,7 @@ const FileUploadLesson = ({
       ]);
     }
   }, [currentFile]);
+  const { t } = useTranslation();
 
   const [files, setFiles] = useState<any>([]);
   const form = formContext();
@@ -47,7 +49,9 @@ const FileUploadLesson = ({
       <FilePond
         instantUpload={true}
         files={files}
-        labelIdle={`Drag & Drop your File or <span class="filepond--label-action">Browse</span>`}
+        labelIdle={`${t(
+          "drag_and_drop_file"
+        )} <span class="filepond--label-action">${t("browse")}</span>`}
         onaddfile={(error, file) => {}}
         onremovefile={() => form.setFieldValue("documentUrl", "")}
         onupdatefiles={setFiles}

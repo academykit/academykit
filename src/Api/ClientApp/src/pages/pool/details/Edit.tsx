@@ -29,12 +29,13 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
+import i18n from "i18n";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IAddQuestionType>();
 
 const schema = () => {
-  const { t } = useTranslation();
+  const t = i18n.t;
   return Yup.object().shape({
     name: Yup.string().required(t("question_title_required") as string),
 
@@ -103,8 +104,8 @@ const Create = () => {
     },
     validate: yupResolver(schema()),
   });
-  useFormErrorHooks(form);
 
+  useFormErrorHooks(form);
   const fieldSize = "md";
   const getQuestionType = () => {
     return [

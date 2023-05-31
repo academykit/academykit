@@ -219,15 +219,15 @@ const AddAssignment = ({
           <Grid align={"center"} justify="space-around">
             <Grid.Col span={12} lg={8}>
               <TextInput
-                label="Assignment Title"
-                placeholder="Assignment's Title"
+                label={t("assignment_title")}
+                placeholder={t("assignment_title") as string}
                 withAsterisk
                 {...form.getInputProps("name")}
               />
             </Grid.Col>
             <Grid.Col span={4}>
               <Switch
-                label="Is Mandatory"
+                label={t("is_mandatory")}
                 {...form.getInputProps("isMandatory")}
                 checked={isMandatory}
                 onChange={() => {
@@ -240,8 +240,8 @@ const AddAssignment = ({
             <Grid.Col span={6}>
               <DatePicker
                 w={"100%"}
-                placeholder="Pick Starting Date"
-                label="Start date"
+                placeholder={t("pick_start_date") as string}
+                label={t("start_date")}
                 icon={<IconCalendar size={16} />}
                 minDate={moment(new Date()).toDate()}
                 withAsterisk
@@ -250,7 +250,7 @@ const AddAssignment = ({
             </Grid.Col>
             <Grid.Col span={6}>
               <TimeInput
-                label="Start Time"
+                label={t("start_time")}
                 format="12"
                 withAsterisk
                 clearable
@@ -261,8 +261,8 @@ const AddAssignment = ({
             <Grid.Col span={6}>
               <DatePicker
                 w={"100%"}
-                placeholder="Pick Ending Date"
-                label="End date"
+                placeholder={t("pick_end_date") as string}
+                label={t("end_date")}
                 minDate={form.values.eventStartDate}
                 icon={<IconCalendar size={16} />}
                 withAsterisk
@@ -271,7 +271,7 @@ const AddAssignment = ({
             </Grid.Col>
             <Grid.Col span={6}>
               <TimeInput
-                label="End Time"
+                label={t("end_time")}
                 format="12"
                 clearable
                 withAsterisk
@@ -280,8 +280,8 @@ const AddAssignment = ({
             </Grid.Col>
             <Grid.Col>
               <Textarea
-                placeholder="Assignment's Description"
-                label="Assignment Description"
+                placeholder={t("assignment_description") as string}
+                label={t("assignment_description")}
                 mb={10}
                 {...form.getInputProps("description")}
               />
@@ -292,7 +292,7 @@ const AddAssignment = ({
               type="submit"
               loading={lesson.isLoading || updateLesson.isLoading}
             >
-              Submit
+              {t("submit")}
             </Button>
             {!isEditing && (
               <Button
@@ -301,7 +301,7 @@ const AddAssignment = ({
                 }}
                 variant="outline"
               >
-                Close
+                {t("close")}
               </Button>
             )}
             {isEditing && (
@@ -311,7 +311,7 @@ const AddAssignment = ({
                   setOpened(true);
                 }}
               >
-                Add More Questions
+                {t("add_more_questions")}
               </Button>
             )}
           </Group>

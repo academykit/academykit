@@ -67,6 +67,8 @@ const AddMeeting = ({
     item?.id,
     isEditing
   );
+  const { t } = useTranslation();
+
   const [isMandatory, setIsMandatory] = useState<boolean>(
     item?.isMandatory ?? false
   );
@@ -123,7 +125,7 @@ const AddMeeting = ({
       })
     : [
         {
-          label: "Please select different time!",
+          label: t("select_different_time"),
           value: "null",
           disabled: true,
         },
@@ -197,15 +199,15 @@ const AddMeeting = ({
       <Grid align="center">
         <Grid.Col span={12} lg={6}>
           <TextInput
-            label="Meeting name"
-            placeholder="Meeting's Name"
+            label={t("meeting_name")}
+            placeholder={t("meeting_name") as string}
             {...form.getInputProps("name")}
             withAsterisk
           />
         </Grid.Col>
         <Grid.Col span={6} lg={3}>
           <Switch
-            label="Is Mandatory"
+            label={t("is_mandatory")}
             {...form.getInputProps("isMandatory")}
             checked={isMandatory}
             onChange={() => {
@@ -217,13 +219,13 @@ const AddMeeting = ({
       </Grid>
       <Group grow>
         <DatePicker
-          placeholder="Pick date"
-          label="Start date"
+          placeholder={t("pick_date") as string}
+          label={t("start_date")}
           withAsterisk
           {...form.getInputProps("meetingStartDate")}
         />
         <TimeInput
-          label="Start Time"
+          label={t("start_time")}
           format="12"
           clearable
           withAsterisk
@@ -232,8 +234,8 @@ const AddMeeting = ({
       </Group>
       <Group grow mt={5} mb={10}>
         <NumberInput
-          label="Meeting Duration (minutes)"
-          placeholder="Meeting Duration in Minutes"
+          label={t("meeting_duration")}
+          placeholder={t("meeting_duration_minutes") as string}
           withAsterisk
           min={1}
           {...form.getInputProps("meetingDuration")}
@@ -246,9 +248,9 @@ const AddMeeting = ({
               changeZoomLiscense();
             }
           }}
-          defaultValue="Pick one license"
-          label="Zoom License"
-          placeholder="Pick one License"
+          defaultValue={t("pick_license")}
+          label={t("zoom_license")}
+          placeholder={t("pick_license") as string}
           disabled={
             !(
               form.values.meetingDuration &&
@@ -262,8 +264,8 @@ const AddMeeting = ({
         />
       </Group>
       <Textarea
-        label="Description"
-        placeholder="Description for Live Class"
+        label={t("description")}
+        placeholder={t("description_live_class") as string}
         {...form.getInputProps("description")}
       />
       <Group position="left" mt="md">
@@ -271,7 +273,7 @@ const AddMeeting = ({
           type="submit"
           loading={lesson.isLoading || updateLesson.isLoading}
         >
-          Submit
+          {t("submit")}
         </Button>
         {!isEditing && (
           <Button
@@ -280,7 +282,7 @@ const AddMeeting = ({
             }}
             variant="outline"
           >
-            Close
+            {t("close")}
           </Button>
         )}
       </Group>
