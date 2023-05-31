@@ -22,7 +22,6 @@ import {
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 
 const useStyles = createStyles((theme) => ({
   item: {
@@ -72,7 +71,6 @@ const Lesson = ({
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [value, toggle] = useToggle();
   const deleteLesson = useDeleteLesson(slug as string);
-  const { t } = useTranslation();
   const onDeleteLesson = async () => {
     try {
       await deleteLesson.mutateAsync({

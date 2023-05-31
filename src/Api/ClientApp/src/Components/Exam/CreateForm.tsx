@@ -17,6 +17,7 @@ import { QuestionType, ReadableEnum } from "@utils/enums";
 import queryStringGenerator from "@utils/queryStringGenerator";
 import { IAddQuestionType } from "@utils/services/questionService";
 import { useAddTag, useTags } from "@utils/services/tagService";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   form: UseFormReturnType<
@@ -62,17 +63,18 @@ const CreateForm: FC<Props> = ({ form, onSubmit, useFormContext }) => {
   }, [tags.isSuccess]);
 
   const { mutate } = useAddTag();
+  const { t } = useTranslation();
   return (
     <>
       <TextInput
         size={fieldSize}
         withAsterisk
-        label="Title for question"
-        placeholder="Enter Title of Question"
+        label={t("title_for_question")}
+        placeholder={t("title_for_question_placeholder") as string}
         {...form.getInputProps("name")}
       ></TextInput>
       <Box mt={20}>
-        <Text size={"sm"}>Description</Text>
+        <Text size={"sm"}>{t("description")}</Text>
         <TextEditor formContext={useFormContext} />
       </Box>
 
@@ -91,29 +93,29 @@ const CreateForm: FC<Props> = ({ form, onSubmit, useFormContext }) => {
             mutate(query);
           }}
           size={"lg"}
-          label="Tags"
-          placeholder="Please select Tags."
+          label={t("tags")}
+          placeholder={t("select_tags") as string}
         />
       ) : (
         <Loader />
       )}
 
       <Box mt={20}>
-        <Text size={"sm"}>Hint</Text>
+        <Text size={"sm"}>{t("hint")}</Text>
         <TextEditor label="hints" formContext={useFormContext} />
       </Box>
       <Select
         mt={20}
-        placeholder={"Please Question Type"}
+        placeholder={t("select_question_type") as string}
         size={fieldSize}
-        label="Question Type"
+        label={t("select_question")}
         {...form.getInputProps("type")}
         data={getQuestionType()}
       ></Select>
       {(form.values.type === QuestionType.MultipleChoice.toString() ||
         form.values.type === QuestionType.SingleChoice.toString()) && (
         <Box>
-          <Text mt={20}>Options</Text>
+          <Text mt={20}>{t("options")}</Text>
           {form.values.answers.map((x, i) => (
             <Group key={i} mb={30}>
               <Checkbox
