@@ -22,13 +22,13 @@ import {
   ILessonStartQuestionOption,
   useSubmitExam,
 } from "@utils/services/examService";
+import { useTranslation } from "react-i18next";
 import { RefObject, useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ExamCounter from "./ExamCounter";
 import ExamCheckBox from "./ExamOptions/ExamCheckBox";
 import ExamRadio from "./ExamOptions/ExamRadio";
 import useAuth from "@hooks/useAuth";
-import { useTranslation } from "react-i18next";
 
 const useStyle = createStyles((theme) => ({
   option: {
@@ -95,6 +95,7 @@ const Exam = ({
   const auth = useAuth();
   const location = useLocation();
   const { t } = useTranslation();
+
   const form = useForm({
     initialValues: questions,
   });
