@@ -95,14 +95,14 @@
             if (course == null)
             {
                 _logger.LogWarning("Training with identity: {identity} not found for user with :{id}.", model.CourseIdentity, currentUserId);
-                throw new EntityNotFoundException("Training not found.");
+                throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             }
             var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                 predicate: p => p.CourseId == course.Id && (p.Id.ToString() == model.LessonIdentity || p.Slug == model.LessonIdentity)).ConfigureAwait(false);
             if (lesson == null)
             {
                 _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and training with id : {courseId}.", model.LessonIdentity, currentUserId, course.Id);
-                throw new EntityNotFoundException("Lesson not found.");
+                throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
             }
 
             var isCompleted = false;
@@ -176,14 +176,14 @@
                 if (course == null)
                 {
                     _logger.LogWarning("Training with identity: {identity} not found for user with :{id}.", model.CourseIdentity, currentUserId);
-                    throw new EntityNotFoundException("Training not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
                 var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                     predicate: p => p.CourseId == course.Id && (p.Id.ToString() == model.LessonIdentity || p.Slug == model.LessonIdentity)).ConfigureAwait(false);
                 if (lesson == null)
                 {
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and training with id : {courseId}.", model.LessonIdentity, currentUserId, course.Id);
-                    throw new EntityNotFoundException("Lesson not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
                 var currentTimeStamp = DateTime.UtcNow;
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
@@ -220,7 +220,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to pass the student.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update watch history.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorUpdateWatchHistory"));
             }
         }
 
@@ -247,7 +247,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to calculate training completed percentage.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to calculate training completed percentage.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOnCalculateTrainingPercentage"));
             }
         }
 

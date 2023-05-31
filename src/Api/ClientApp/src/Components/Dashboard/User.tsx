@@ -20,6 +20,7 @@ import {
 } from "@utils/services/dashboardService";
 import { StatsCard } from "./StatsCard";
 import TrainingCards from "./TrainingCards";
+import { useTranslation } from "react-i18next";
 
 const incomingData = [
   {
@@ -92,6 +93,7 @@ export const User = ({
   dashboard: DashboardStats;
   dashboardCourses: DashboardCourses[];
 }) => {
+  const { t } = useTranslation();
   return (
     <div>
       <SimpleGrid
@@ -109,14 +111,14 @@ export const User = ({
           ))}
       </SimpleGrid>
       <Text size={"xl"} weight="bold">
-        My Trainings
+        {t("my_trainings")}
       </Text>
       {dashboardCourses.length > 0 ? (
         <Text c="dimmed" mb={10}>
-          Your progress on learning materials:
+          {t("my_progress")}
         </Text>
       ) : (
-        <Text c="dimmed">You are not enrolled to any training.</Text>
+        <Text c="dimmed">{t("not_enrolled_training")}</Text>
       )}
 
       <SimpleGrid
@@ -135,6 +137,7 @@ export const User = ({
 
 export function StatsGrid({ data }: StatsGridProps) {
   const { classes } = useStyles();
+  const { t } = useTranslation();
 
   const stats = data.map((stat) => {
     const Icon = icons[stat.icon];
@@ -163,7 +166,7 @@ export function StatsGrid({ data }: StatsGridProps) {
         </Group>
 
         <Text size="xs" color="dimmed" mt={7}>
-          Compared to previous month
+          {t("previous_month")}
         </Text>
       </Paper>
     );

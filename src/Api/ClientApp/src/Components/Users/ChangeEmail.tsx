@@ -2,19 +2,21 @@ import { Alert, Button, Container } from "@mantine/core";
 import { IconAlertCircle, IconTrophy } from "@tabler/icons";
 import { useVerifyChangeEmail } from "@utils/services/authService";
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "react-router-dom";
 
 const ChangeEmail = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const verifyChangeEmail = useVerifyChangeEmail(token as string);
+  const { t } = useTranslation();
 
   return (
     <Container size="sm">
       <div style={{ marginTop: "150px" }}>
         {verifyChangeEmail.isSuccess && (
           <Alert icon={<IconTrophy size={20} />} title="Success" color="green">
-            Your email has been changed successfully.
+            {t("email_change_success")}
           </Alert>
         )}
 
@@ -24,12 +26,11 @@ const ChangeEmail = () => {
             title="Error!"
             color="pink"
           >
-            Something terrible happened! Some error occurred while changing
-            email!
+            {t("something_terrible_email")}
           </Alert>
         )}
         <Button mt={20} variant={"outline"} component={Link} to="/">
-          Go Back to Home
+          {t("go_back")}
         </Button>
       </div>
     </Container>

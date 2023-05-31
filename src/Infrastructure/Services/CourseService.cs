@@ -174,7 +174,7 @@ namespace Lingtren.Infrastructure.Services
             if (course.Status != CourseStatus.Draft)
             {
                 _logger.LogWarning("Training with id : {courseId} cannot be deleted having status : {status}.", course.Id, course.Status.ToString());
-                throw new ForbiddenException("Only training with draft status can be deleted.");
+                throw new ForbiddenException(_localizer.GetString("OnlyDraftTrainingDeleted"));
             }
             await ValidateAndGetCourse(currentUserId, courseIdentity: course.Id.ToString(), validateForModify: true).ConfigureAwait(false);
         }
@@ -188,7 +188,7 @@ namespace Lingtren.Infrastructure.Services
             if (!CurrentUserId.HasValue)
             {
                 _logger.LogWarning("CurrentUserId is required.");
-                throw new ForbiddenException("CurrentUserId is required.");
+                throw new ForbiddenException(_localizer.GetString("CurrentUserRequired"));
             }
 
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(CurrentUserId.Value).ConfigureAwait(false);
@@ -199,14 +199,14 @@ namespace Lingtren.Infrastructure.Services
             }
             if (!entityToReturn.IsUpdate && entityToReturn.Status != CourseStatus.Published)
             {
-                throw new EntityNotFoundException("The training could not be found.");
+                throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             }
             if (entityToReturn.GroupId.HasValue)
             {
                 var hasAccess = await ValidateUserCanAccessGroupCourse(entityToReturn, CurrentUserId.Value).ConfigureAwait(false);
                 if (!hasAccess)
                 {
-                    throw new ForbiddenException("User not allowed to access this training.");
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
             }
         }
@@ -312,7 +312,7 @@ namespace Lingtren.Infrastructure.Services
                 || (course.Status != CourseStatus.Published && model.Status == CourseStatus.Completed))
             {
                 _logger.LogWarning("Training with id: {id} cannot be changed from {status} status to {changeStatus} status.", course.Id, course.Status, model.Status);
-                throw new ForbiddenException($"Training with status: {course.Status} cannot be changed to {model.Status} status.");
+                throw new ForbiddenException(_localizer.GetString("TrainingStatusCannotChanged"));
             }
 
             var isSuperAdminOrAdminAccess = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
@@ -320,7 +320,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 _logger.LogWarning("User with id: {userId} is unauthorized user to change training with id: {id} status from {status} to {changeStatus}.",
                     currentUserId, course.Id, course.Status, model.Status);
-                throw new ForbiddenException($"Unauthorized user to change training status to {model.Status}.");
+                throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
             }
 
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
@@ -394,7 +394,7 @@ namespace Lingtren.Infrastructure.Services
             if (course == null)
             {
                 _logger.LogWarning("Training with identity: {identity} not found for user with id: {userId}.", identity, currentUserId);
-                throw new ForbiddenException("Training not found.");
+                throw new ForbiddenException(_localizer.GetString("TrainingNotFound"));
             }
             course.IsUpdate = true;
             course.Status = CourseStatus.Draft;
@@ -428,7 +428,7 @@ namespace Lingtren.Infrastructure.Services
                 if (course.Status == CourseStatus.Completed)
                 {
                     _logger.LogWarning("Training with id :{id} is in {status} status for enrollment.", course.Id, course.Status);
-                    throw new ForbiddenException($"Cannot enrolled in the training having {course.Status} status.");
+                    throw new ForbiddenException(_localizer.GetString("CannotEnrolledOnCompletedTraining"));
                 }
 
                 var existCourseEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().ExistsAsync(
@@ -439,7 +439,7 @@ namespace Lingtren.Infrastructure.Services
                 if (existCourseEnrollment)
                 {
                     _logger.LogWarning("User with userId: {userId} is already enrolled in the training with id: {courseId}.", userId, course.Id);
-                    throw new ForbiddenException("You are already enrolled in this training.");
+                    throw new ForbiddenException(_localizer.GetString("AlreadyEnrolledInTraining"));
                 }
 
                 var currentTimeStamp = DateTime.UtcNow;
@@ -480,17 +480,17 @@ namespace Lingtren.Infrastructure.Services
                 if (course == null)
                 {
                     _logger.LogWarning("Training with identity : {identity} not found for user with id : {currentUserId}.", identity, currentUserId);
-                    throw new EntityNotFoundException("Training not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
                 if (course.Status != CourseStatus.Draft)
                 {
                     _logger.LogWarning("Training with identity : {identity} is in {status} status. So, it cannot be removed.", identity, course.Status);
-                    throw new EntityNotFoundException("Training with draft status is only allowed to removed.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingWithDraftgStatusCanOnlyRemoved"));
                 }
                 if (course.CourseEnrollments.Count > 0)
                 {
                     _logger.LogWarning("Training with identity : {identity} contains enrollments.", identity);
-                    throw new EntityNotFoundException("Training contains member enrollments. So, it cannot be removed.");
+                    throw new EntityNotFoundException(_localizer.GetString("EnrollmentFoundInTraining"));
                 }
 
                 var privateFiles = new List<string>();
@@ -608,7 +608,7 @@ namespace Lingtren.Infrastructure.Services
                 if (course == null)
                 {
                     _logger.LogWarning("Training with identity : {identity} not found for user with id : {currentUserId}.", identity, currentUserId);
-                    throw new EntityNotFoundException("Training not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
                 course.Sections = new List<Section>();
                 course.Sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
@@ -692,7 +692,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to fetch training detail.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch training detail.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredFetchTrainingDetail"));
             }
         }
 
@@ -710,7 +710,7 @@ namespace Lingtren.Infrastructure.Services
             if (group == null)
             {
                 _logger.LogWarning("Group with identity: {identity} not found.", identity);
-                throw new EntityNotFoundException("Group not found.");
+                throw new EntityNotFoundException(_localizer.GetString("GroupNotFound"));
             }
 
             var userAccess = await ValidateUserCanAccessGroup(group.Id, criteria.CurrentUserId).ConfigureAwait(false);
@@ -718,7 +718,7 @@ namespace Lingtren.Infrastructure.Services
             if (!userAccess && !isSuperAdminOrAdmin)
             {
                 _logger.LogWarning("User with id: {userId} is not authorized user to access the group with id: {groupId}.", criteria.CurrentUserId, group.Id);
-                throw new ForbiddenException("User can't access the group.");
+                throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
             }
 
             predicate = GroupCourseSearchPredicate(group.Id, predicate, criteria);
@@ -799,7 +799,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to fetch training list of the user.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch training list of the user.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredFetachTrainingUserList"));
             }
         }
 
@@ -898,7 +898,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to fetch training statistics.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch training statistics.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredFetchTrainingStatistics"));
             }
         }
 
@@ -943,7 +943,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to fetch training lesson statistics.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch training lesson statistics.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredFetchLessonStatistics"));
             }
         }
 
@@ -1047,7 +1047,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to fetch training student statistics.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to fetch training student statistics.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredFetchTrainingStudentStatistics"));
             }
         }
 
@@ -1368,12 +1368,12 @@ namespace Lingtren.Infrastructure.Services
 
                 else
                 {
-                    throw new UnauthorizedAccessException("This feature doesnot supports to Superadmin");
+                    throw new UnauthorizedAccessException(_localizer.GetString("UnauthorizedUser"));
                 }
             }
             catch
             {
-                throw new NullReferenceException("Not authorized ,Please register your userid first");
+                throw new NullReferenceException(_localizer.GetString("UnauthorizedUser"));
             }
         }
 
@@ -1399,7 +1399,7 @@ namespace Lingtren.Infrastructure.Services
                 if (course.Signatures.Count == 0)
                 {
                     _logger.LogWarning("At least one trainer signature detail is required for training with id :{courseId}.", course.Id);
-                    throw new EntityNotFoundException("At least one trainer signature detail is required.");
+                    throw new EntityNotFoundException(_localizer.GetString("AtLeastOneTrainerSignatureRequired"));
                 }
                 course.CourseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
                      predicate: p => p.CourseId == course.Id
@@ -1408,7 +1408,7 @@ namespace Lingtren.Infrastructure.Services
                 if (course.CourseCertificate == null)
                 {
                     _logger.LogWarning("Certificate detail information not found for training with id :{courseId}.", course.Id);
-                    throw new EntityNotFoundException("Certificate detail information not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("CertificateNotFound"));
                 }
 
                 var predicate = PredicateBuilder.New<CourseEnrollment>(true);
@@ -1461,7 +1461,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to issued the training certificate.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to issued the training certificate.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredOnCertificateIssued"));
             }
         }
 
@@ -1526,7 +1526,7 @@ namespace Lingtren.Infrastructure.Services
                 if (course == null)
                 {
                     _logger.LogWarning("Training with identity: {identity} not found.", identity);
-                    throw new EntityNotFoundException("Training not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
                 var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(predicate: x => x.CourseId == course.Id).ConfigureAwait(false);
@@ -1537,7 +1537,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying fetch the training signature.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying fetch the training signature.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredFetchTrainingSignature"));
             }
         }
 
@@ -1556,14 +1556,14 @@ namespace Lingtren.Infrastructure.Services
                 if (course == null)
                 {
                     _logger.LogWarning("Training with identity: {identity} not found.", identity);
-                    throw new EntityNotFoundException("Training not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
                 var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
                     predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
                 if (signatures.Count >= 3)
                 {
                     _logger.LogWarning("training with id: {id} cannot have more than 3 signatures for user with id: {userId}.", course.Id, currentUserId);
-                    throw new ForbiddenException("At most 3 signatures are only allowed.");
+                    throw new ForbiddenException(_localizer.GetString("AtMostThreeSignaturesAllowed"));
                 }
                 var currentTimeStamp = DateTime.UtcNow;
                 var signature = new Signature
@@ -1614,7 +1614,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"An error occurred while trying to upload signature in the training.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to upload signature in the training.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredUploadSignature"));
             }
         }
 
@@ -1634,7 +1634,7 @@ namespace Lingtren.Infrastructure.Services
                 if (course == null)
                 {
                     _logger.LogWarning("Training with identity: {identity} not found.", identity);
-                    throw new EntityNotFoundException("Training not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
                 var signature = await _unitOfWork.GetRepository<Signature>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == id && p.CourseId == course.Id
@@ -1642,7 +1642,7 @@ namespace Lingtren.Infrastructure.Services
                 if (signature == null)
                 {
                     _logger.LogWarning("Signature with id: {id} and trainingId : {courseId} not found.", id, course.Id);
-                    throw new EntityNotFoundException("Signature not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("SignatureNotFound"));
                 }
                 var currentTimeStamp = DateTime.UtcNow;
 
@@ -1703,7 +1703,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to update signature in the training.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update signature in the training.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredUpdateSignature"));
             }
         }
 
@@ -1722,7 +1722,7 @@ namespace Lingtren.Infrastructure.Services
                 if (course == null)
                 {
                     _logger.LogWarning("Training with identity: {identity} not found.", identity);
-                    throw new EntityNotFoundException("Training not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
                 var signature = await _unitOfWork.GetRepository<Signature>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == id && p.CourseId == course.Id
@@ -1730,7 +1730,7 @@ namespace Lingtren.Infrastructure.Services
                 if (signature == null)
                 {
                     _logger.LogWarning("Signature with id: {id} and trainingId : {courseId} not found.", id, course.Id);
-                    throw new EntityNotFoundException("Signature not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("SignatureNotFound"));
                 }
 
                 var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
@@ -1776,7 +1776,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to update signature in the training.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to update signature in the training.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredDeleteSignature"));
             }
         }
 
@@ -1793,7 +1793,7 @@ namespace Lingtren.Infrastructure.Services
             if (course == null)
             {
                 _logger.LogWarning("Training with identity: {identity} not found.", identity);
-                throw new EntityNotFoundException("Training not found.");
+                throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             }
             var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
                        predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
@@ -1847,7 +1847,7 @@ namespace Lingtren.Infrastructure.Services
             if (course == null)
             {
                 _logger.LogWarning("Training with identity: {identity} not found.", identity);
-                throw new EntityNotFoundException("Training not found.");
+                throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             }
             var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
                 predicate: p => p.CourseId == course.Id

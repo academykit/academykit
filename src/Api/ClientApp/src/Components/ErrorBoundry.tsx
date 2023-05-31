@@ -5,6 +5,7 @@ import ServerError from "@pages/500";
 import { isDevelopment, isProduction } from "@utils/env";
 import axios, { AxiosError } from "axios";
 import { Component, ErrorInfo, ReactNode } from "react";
+import i18next from "i18next";
 
 interface Props {
   children?: ReactNode;
@@ -59,7 +60,7 @@ class ErrorBoundary extends Component<Props, State> {
       return (
         <>
           <div>
-            <h2>Something went wrong.</h2>
+            <h2>{i18next.t("something_wrong")}</h2>
             <details style={{ whiteSpace: "pre-wrap" }}>
               {this.state.error && this.state.error.toString()}
               <br />

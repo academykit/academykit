@@ -185,9 +185,9 @@
                 {
                     return course;
                 }
-                throw new ForbiddenException("You are not allowed to access this training.");
+                throw new ForbiddenException(_localizer.GetString("Trainingaccessnotallowed"));
             }
-            throw new ForbiddenException("You are not allowed to modify this training.");
+            throw new ForbiddenException(_localizer.GetString("TrainingModifynotallowed"));
         }
 
         protected async Task<bool> ValidateUserCanAccessGroupCourse(Course course, Guid currentUserId)
@@ -237,7 +237,7 @@
                 return questionPool;
             }
 
-            throw new ForbiddenException("You are not allowed to modify this question pool.");
+            throw new ForbiddenException(_localizer.GetString("QuestionpoolModifynotallowed"));
         }
 
         protected async Task<IList<Guid>> GetUserGroupIds(Guid userId)
@@ -296,7 +296,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to calculate training completed percentage.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to calculate training completed percentage.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("TrainingCompletePercentage"));
             }
         }
 

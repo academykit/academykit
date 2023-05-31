@@ -3,9 +3,11 @@
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Infrastructure.Localization;
     using MailKit.Net.Smtp;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using MimeKit;
 
@@ -15,18 +17,21 @@
         private readonly ISMTPSettingService _smtpSettingService;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly string _appUrl;
+        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
 
         public EmailService(
             ILogger<EmailService> logger,
             ISMTPSettingService smtpSettingService,
             IWebHostEnvironment hostingEnvironment,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IStringLocalizer<ExceptionLocalizer> localizer
             )
         {
             _logger = logger;
             _smtpSettingService = smtpSettingService;
             _hostingEnvironment = hostingEnvironment;
             _appUrl = configuration.GetSection("AppUrls:App").Value;
+            _localizer = localizer;
         }
 
         public async Task SendMailWithHtmlBodyAsync(EmailRequestDto emailRequestDto)
@@ -41,7 +46,7 @@
                 if (smtpSetting == null)
                 {
                     _logger.LogWarning("SMTP Setting not found.");
-                    throw new EntityNotFoundException("SMTP Setting not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("SMTPSettingNotFound"));
                 }
 
                 htmlBody = htmlBody.Replace("[content]", emailRequestDto.Message);

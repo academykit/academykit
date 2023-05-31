@@ -125,7 +125,7 @@
                 if (questionPoolQuestions.Count() != 0 && questionsetsubmission.Count() != 0 && questionsetsubmission.Any(x=>x.QuestionSetResults.Count != 0))
                 {
                     _logger.LogWarning("Question pool with id: {poolId} contains questions. So, it cannot be deleted.", identity);
-                    throw new ForbiddenException("Question pool contains questions. So, to delete question pool remove all the questions from pool.");
+                    throw new ForbiddenException(_localizer.GetString("QuestionPoolContainQuestion"));
                 }
 
                 var ids = questionPoolQuestions.Select(x => x.Id).ToList();  
@@ -169,7 +169,7 @@
             if (QuestionPoolExist)
             {
                 _logger.LogWarning("Duplicate QuestionPool name : {name} is found for the QuestionPool with id : {id}.", entity.Name, entity.Id);
-                throw new ServiceException("Duplicate question pool name is found.");
+                throw new ServiceException(_localizer.GetString("DuplicateQuestionPoolName"));
             }
         }
         #endregion Private Methods

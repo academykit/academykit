@@ -45,7 +45,7 @@ namespace Lingtren.Api.Controllers
             var course = await _courseService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
             if (course == null)
             {
-                throw new EntityNotFoundException("Training was not found.");
+                throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             }
 
             searchCriteria.CurrentUserId = CurrentUser.Id;
@@ -80,12 +80,12 @@ namespace Lingtren.Api.Controllers
             var course = await _courseService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
             if (course == null)
             {
-                throw new EntityNotFoundException("Training was not found.");
+                throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             }
             
             if(course.Status == CourseStatus.Completed)
             {
-                throw new ArgumentException("Course is completed.");
+                throw new ArgumentException(_localizer.GetString("CourseCompleted"));
             }
 
             var entity = new Section()

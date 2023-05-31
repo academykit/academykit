@@ -30,7 +30,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to fetch refresh token by user id.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to fetch refresh token by user id.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("FetchRefreshTokenError"));
             }
         }
 
@@ -48,7 +48,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to fetch refresh token by value.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to fetch refresh token by value.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("RefreshTokenValueError"));
             }
         }
 
@@ -67,7 +67,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to update refresh token.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to update refresh token.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UpdateRefershTokenError"));
             }
         }
 
@@ -86,7 +86,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to update refresh token.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to update refresh token.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UpdateRefershTokenError"));
             }
         }
 
@@ -105,7 +105,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to update refresh token.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to update refresh token.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UpdateRefershTokenError"));
             }
         }
     }

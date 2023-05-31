@@ -261,6 +261,111 @@
   <data name="ZoomLicense" xml:space="preserve">
     <value>जुम लाइसेन्स सफलतापूर्वक हटाइयो।</value>
   </data>
+  <data name="AssignmentSubmission" xml:space="preserve">
+    <value>असाइनमेन्टमा असाइनमेन्ट सबमिशनहरू समावेश छन्।</value>
+  </data>
+  <data name="CannotAccess" xml:space="preserve">
+    <value>अति गर्न मिल्दैन</value>
+  </data>
+  <data name="CertificateNotFound" xml:space="preserve">
+    <value>प्रमाणपत्र फेला परेन।</value>
+  </data>
+  <data name="CertificateNotVerified" xml:space="preserve">
+    <value>प्रमाणपत्र प्रमाणित छैन।</value>
+  </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>टिप्पणी फेला परेन</value>
+  </data>
+  <data name="CommentReplyNotFound" xml:space="preserve">
+    <value>टिप्पणी जवाफ फेला परेन।</value>
+  </data>
+  <data name="FeedBackCannotReSubmit" xml:space="preserve">
+    <value>प्रतिक्रिया पुन: पेस गर्न सकिँदैन।</value>
+  </data>
+  <data name="FeedBackReportNotFound" xml:space="preserve">
+    <value>प्रतिक्रिया रिपोर्ट फेला परेन।</value>
+  </data>
+  <data name="FilePresignedUrlError" xml:space="preserve">
+    <value>फाइल presigned url प्राप्त गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>समूह फेला परेन।</value>
+  </data>
+  <data name="LessonNotFound" xml:space="preserve">
+    <value>पाठ फेला परेन।</value>
+  </data>
+  <data name="LessonNotpublished" xml:space="preserve">
+    <value>पाठ प्रकाशित भएको छैन।</value>
+  </data>
+  <data name="QuestionpoolModifynotallowed" xml:space="preserve">
+    <value>तपाइँलाई यो प्रश्न पूल परिमार्जन गर्न अनुमति छैन।</value>
+  </data>
+  <data name="RecordingFileinS3BucketSave" xml:space="preserve">
+    <value>s3 बाल्टीमा रेकर्डिङ फाइल बचत गर्ने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="RemoveReplyBeforeComment" xml:space="preserve">
+    <value>कृपया टिप्पणी हटाउनु अघि जवाफ हटाउनुहोस्।</value>
+  </data>
+  <data name="S3BucketSave" xml:space="preserve">
+    <value>s3 बाल्टीमा फाइल बचत गर्ने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="S3PreSigned" xml:space="preserve">
+    <value>s3 पूर्व-हस्ताक्षरित फाइल url प्राप्त गर्ने प्रयास गर्दा त्रुटि भयो</value>
+  </data>
+  <data name="SameUserRemoved" xml:space="preserve">
+    <value>प्रयोगकर्ता एउटै प्रयोगकर्ता हटाउन सकिँदैन।</value>
+  </data>
+  <data name="StudentListFetchError" xml:space="preserve">
+    <value>प्रतिक्रिया पेस गर्ने विद्यार्थी सूची ल्याउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="SubmitFeedBackError" xml:space="preserve">
+    <value>प्रतिक्रिया पेश गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="TraineeAsTrainingTrainerNotAdded" xml:space="preserve">
+    <value>प्रशिक्षार्थी भूमिका भएका प्रयोगकर्तालाई प्रशिक्षण प्रशिक्षकको रूपमा थप्न अनुमति छैन।</value>
+  </data>
+  <data name="TrainerNotAllowedDepartmentUser" xml:space="preserve">
+    <value>प्रशिक्षार्थीलाई विभाग प्रयोगकर्ता हेर्न अनुमति छैन।</value>
+  </data>
+  <data name="Trainingaccessnotallowed" xml:space="preserve">
+    <value>तपाइँलाई यो प्रशिक्षण पहुँच गर्न अनुमति छैन।</value>
+  </data>
+  <data name="TrainingAuthorAdded" xml:space="preserve">
+    <value>प्रशिक्षण लेखक थप्न सकिँदैन।</value>
+  </data>
+  <data name="TrainingAuthorRemoved" xml:space="preserve">
+    <value>प्रशिक्षण लेखक हटाउन सकिँदैन।</value>
+  </data>
+  <data name="TrainingCompletePercentage" xml:space="preserve">
+    <value>तालिम पूरा भएको प्रतिशत गणना गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="TrainingModifynotallowed" xml:space="preserve">
+    <value>तपाईंलाई यो प्रशिक्षण परिमार्जन गर्न अनुमति छैन।</value>
+  </data>
+  <data name="TrainingTrainerCannotSubmitFeedback" xml:space="preserve">
+    <value>तालिम प्रशिक्षकले प्रतिक्रिया पेश गर्न सक्दैन।</value>
+  </data>
+  <data name="UnauthorizedUser" xml:space="preserve">
+    <value>अनाधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UnauthorizedUserAddedTrainer" xml:space="preserve">
+    <value>समूह पाठ्यक्रममा प्रशिक्षकको रूपमा थपिने अनधिकृत प्रयोगकर्ता</value>
+  </data>
+  <data name="UnauthorizedUserDeleteComment" xml:space="preserve">
+    <value>टिप्पणी मेटाउन अनाधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UnauthorizedUserEditComment" xml:space="preserve">
+    <value>टिप्पणी सम्पादन गर्न अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UpdateFeedBackError" xml:space="preserve">
+    <value>प्रतिक्रिया अद्यावधिक गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="UploadFileinServerError" xml:space="preserve">
+    <value>सर्भरमा फाइल अपलोड गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="UserFoundasTrainingTrainer" xml:space="preserve">
+    <value>प्रयोगकर्ता पहिले नै प्रशिक्षण प्रशिक्षकको रूपमा फेला परेको छ।</value>
+  </data>
   <data name="AssignmentReviewDeleted" xml:space="preserve">
     <value>असाइनमेन्ट समीक्षा सफलतापूर्वक मेटाइयो।</value>
   </data>
@@ -273,13 +378,492 @@
   <data name="AtleastOneQuestionRequired" xml:space="preserve">
     <value>कम्तिमा एउटा प्रश्न आवश्यक छ।</value>
   </data>
+  <data name="CourseCompleted" xml:space="preserve">
+    <value>पाठ्यक्रम पूरा भएको छ।</value>
+  </data>
+  <data name="GeneralSettingNotFound" xml:space="preserve">
+    <value>सामान्य सेटिङ फेला परेन।</value>
+  </data>
+  <data name="GenerateZakTokenError" xml:space="preserve">
+    <value>zak टोकन उत्पन्न गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="OnlySameUserOrAdmin" xml:space="preserve">
+    <value>केवल एउटै प्रयोगकर्तालाई प्रयोगकर्ता वा प्रशासक द्वारा मात्र अद्यावधिक गर्न अनुमति छ।</value>
+  </data>
   <data name="QuestionPoolNotFound" xml:space="preserve">
     <value>प्रश्न पोखरी फेला परेन।</value>
   </data>
   <data name="SectionNotFound" xml:space="preserve">
     <value>खण्ड फेला परेन।</value>
   </data>
+  <data name="SMTPSettingNotFound" xml:space="preserve">
+    <value>SMTP सेटिङ फेला परेन।</value>
+  </data>
+  <data name="TimeSpanAlreadyUsed" xml:space="preserve">
+    <value>समय अवधि पहिले नै प्रयोग गरिएको छ, अर्को उदाहरण प्रयास गर्नुहोस्।</value>
+  </data>
   <data name="TraineeRoleNotAllowed" xml:space="preserve">
     <value>प्रशिक्षार्थी भूमिका भएका प्रयोगकर्तालाई परीक्षा पूल सिर्जनाकर्ताको रूपमा थप्न अनुमति छैन।</value>
+  </data>
+  <data name="ZoomSettingNotFound" xml:space="preserve">
+    <value>जुम सेटिङ फेला परेन।</value>
+  </data>
+  <data name="CompleteMandatoryLesson" xml:space="preserve">
+    <value>हालको पाठ हेर्नु अघि कृपया माथिको बाँकी अनिवार्य पाठ पूरा गर्नुहोस्।</value>
+  </data>
+  <data name="ContextNotFound" xml:space="preserve">
+    <value>सन्दर्भ फेला परेन।</value>
+  </data>
+  <data name="CourseNotFound" xml:space="preserve">
+    <value>पाठ्यक्रम फेला परेन।</value>
+  </data>
+  <data name="CreateLessonError" xml:space="preserve">
+    <value>पाठ सिर्जना गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="DeleteLevelError" xml:space="preserve">
+    <value>स्तर मेटाउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="FetchLevelError" xml:space="preserve">
+    <value>स्तरहरू ल्याउन प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="FileGetError" xml:space="preserve">
+    <value>फाइल प्राप्त गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="LessonReorderError" xml:space="preserve">
+    <value>पाठहरू पुन: क्रमबद्ध गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="LessonTypeNotMatched" xml:space="preserve">
+    <value>पाठको प्रकार मेल खाएन।</value>
+  </data>
+  <data name="LessonTypeNotMatchMeeting" xml:space="preserve">
+    <value>बैठकमा सामेल हुनका लागि पाठको प्रकार मेल खाँदैन।</value>
+  </data>
+  <data name="LevelAlreadyExist" xml:space="preserve">
+    <value>स्तर पहिले नै अवस्थित छ।</value>
+  </data>
+  <data name="LevelCreateError" xml:space="preserve">
+    <value>स्तर सिर्जना गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="LevelNameAlreadyExist" xml:space="preserve">
+    <value>स्तर नाम पहिले नै अवस्थित छ।</value>
+  </data>
+  <data name="LevelNotFound" xml:space="preserve">
+    <value>स्तर फेला परेन</value>
+  </data>
+  <data name="LevelUpdate" xml:space="preserve">
+    <value>स्तर अद्यावधिक गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="LiveClassJoinError" xml:space="preserve">
+    <value>लाइभ कक्षामा सामेल हुन प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="MeetingNotAccessed" xml:space="preserve">
+    <value>तपाईंलाई यो बैठकमा पहुँच गर्न अनुमति छैन।</value>
+  </data>
+  <data name="MeetingNotFound" xml:space="preserve">
+    <value>बैठक भेटिएन।</value>
+  </data>
+  <data name="MeetingReportNotFound" xml:space="preserve">
+    <value>बैठक रिपोर्ट फेला परेन।</value>
+  </data>
+  <data name="StorageSettingNotConfigured" xml:space="preserve">
+    <value>भण्डारण सेटिङ कन्फिगर गरिएको छैन।</value>
+  </data>
+  <data name="TagNotFound" xml:space="preserve">
+    <value>ट्याग फेला परेन।</value>
+  </data>
+  <data name="TeacherNotFound" xml:space="preserve">
+    <value>शिक्षक भेटिएन ।</value>
+  </data>
+  <data name="UpdateLessonInformationError" xml:space="preserve">
+    <value>पाठ जानकारी अपडेट गर्ने प्रयास गर्दा त्रुटि भयो</value>
+  </data>
+  <data name="UploadFileError" xml:space="preserve">
+    <value>फाइल अपलोड गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ZoomLisenceNotFound" xml:space="preserve">
+    <value>जुम लाइसेन्स फेला परेन</value>
+  </data>
+  <data name="AssignRoleQuestionPoolError" xml:space="preserve">
+    <value>प्रश्न पूलमा भूमिका तोक्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="QuestionAssociatedQuestionSet" xml:space="preserve">
+    <value>प्रश्न प्रश्न सेट संग सम्बन्धित छ।</value>
+  </data>
+  <data name="QuestionCannotEdit" xml:space="preserve">
+    <value>प्रश्न परीक्षा सबमिशन संग सम्बन्धित छ। त्यसकारण, यसलाई सम्पादन गर्न सकिँदैन।</value>
+  </data>
+  <data name="QuestionCreateError" xml:space="preserve">
+    <value>प्रश्न सिर्जना गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="QuestionNotFound" xml:space="preserve">
+    <value>प्रश्न भेटिएन।</value>
+  </data>
+  <data name="QuestionPoolDeleteError" xml:space="preserve">
+    <value>प्रश्न पूलको प्रश्न मेटाउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="QuestionPoolUpdateError" xml:space="preserve">
+    <value>प्रश्न पूलको प्रश्न अद्यावधिक गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="QuestionPoolUserNotFound" xml:space="preserve">
+    <value>प्रश्न पूलमा प्रयोगकर्ता फेला परेन।</value>
+  </data>
+  <data name="QuestionSetAddError" xml:space="preserve">
+    <value>प्रश्न सेटमा प्रश्नहरू थप्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="QuestionSetAddNotAllowed" xml:space="preserve">
+    <value>प्रश्न सेटमा उत्तर सबमिशन समावेश छ। त्यसैले, प्रश्न सेटमा प्रश्न थप्न अनुमति छैन।</value>
+  </data>
+  <data name="QuestionSetNotFound" xml:space="preserve">
+    <value>प्रश्न सेट भेटिएन।</value>
+  </data>
+  <data name="TeacherRoleInvalidAccess" xml:space="preserve">
+    <value>प्रश्न पूल शिक्षकको भूमिका परिवर्तन गर्न अमान्य पहुँच।</value>
+  </data>
+  <data name="UnauthorizedUserAddQuestion" xml:space="preserve">
+    <value>पूलमा प्रश्न थप्नको लागि अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UnauthorizedUserAddQuestionSet" xml:space="preserve">
+    <value>प्रश्न सेटमा प्रश्नहरू थप्नको लागि अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UnauthorizedUserDeleteQuestion" xml:space="preserve">
+    <value>प्रश्न मेटाउनको लागि अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UnauthorizedUserQuestionSet" xml:space="preserve">
+    <value>प्रश्न सेटमा प्रश्नहरू प्राप्त गर्न अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UnauthorizedUserUpdateQuestion" xml:space="preserve">
+    <value>प्रश्न अपडेट गर्नको लागि अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="CreateTagError" xml:space="preserve">
+    <value>ट्याग सिर्जना गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="DeleteSectionError" xml:space="preserve">
+    <value>खण्ड मेट्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="DeleteTagError" xml:space="preserve">
+    <value>ट्याग मेटाउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="FetchRefreshTokenError" xml:space="preserve">
+    <value>प्रयोगकर्ता आईडीद्वारा ताजा टोकन ल्याउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="RefreshTokenValueError" xml:space="preserve">
+    <value>मानद्वारा ताजा टोकन ल्याउने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="TagAlreadyExist" xml:space="preserve">
+    <value>ट्याग नाम पहिले नै अवस्थित छ।</value>
+  </data>
+  <data name="TrainingSectionLesson" xml:space="preserve">
+    <value>प्रशिक्षण खण्डमा पाठहरू समावेश छन्।</value>
+  </data>
+  <data name="TrainingSectionPublished" xml:space="preserve">
+    <value>प्रशिक्षण खण्ड प्रकाशित छ।</value>
+  </data>
+  <data name="UpdateRefershTokenError" xml:space="preserve">
+    <value>ताजा टोकन अपडेट गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="UpdateTagError" xml:space="preserve">
+    <value>ट्याग अपडेट गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="AllLiscensePlaced" xml:space="preserve">
+    <value>सबै लाइसेन्स आईडी बुक गरिएको छ, कृपया अर्को उदाहरण चयन गर्नुहोस्।</value>
+  </data>
+  <data name="AssignmentReviewNotFound" xml:space="preserve">
+    <value>असाइनमेन्ट समीक्षा फेला परेन।</value>
+  </data>
+  <data name="DuplicateQuestionPoolName" xml:space="preserve">
+    <value>डुप्लिकेट प्रश्न पोखरी नाम फेला पर्यो।</value>
+  </data>
+  <data name="DuplicateSectionNameFound" xml:space="preserve">
+    <value>डुप्लिकेट खण्ड नाम फेला पर्यो।</value>
+  </data>
+  <data name="ErrorAttemptingRetrievingResult" xml:space="preserve">
+    <value>परिणामहरू पुन: प्राप्त गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorAttemptingSubmitExam" xml:space="preserve">
+    <value>परीक्षा पेश गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorGettingResult" xml:space="preserve">
+    <value>परिणाम विवरणहरू प्राप्त गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredAttemptingStartExam" xml:space="preserve">
+    <value>परीक्षा सुरु गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredDeleteAssignmentReview" xml:space="preserve">
+    <value>असाइनमेन्ट समीक्षा मेटाउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredOnMinioCredentails" xml:space="preserve">
+    <value>Minio credentials प्राप्त गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredOnUploadFile" xml:space="preserve">
+    <value>सर्भरमा फाइल अपलोड गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredUpdateAssignment" xml:space="preserve">
+    <value>असाइनमेन्ट अपडेट गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredVerifyResetToken" xml:space="preserve">
+    <value>रिसेट टोकन प्रमाणीकरण गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOnCalculateTrainingPercentage" xml:space="preserve">
+    <value>तालिम पूरा भएको प्रतिशत गणना गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorRetrievingStudentResult" xml:space="preserve">
+    <value>विद्यार्थीको नतिजा पुन: प्राप्त गर्ने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorUpdateWatchHistory" xml:space="preserve">
+    <value>हेराइको इतिहास अपडेट गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ExamAlreadyFinished" xml:space="preserve">
+    <value>परीक्षा पहिले नै सकियो।</value>
+  </data>
+  <data name="ExamAlreadySubmitted" xml:space="preserve">
+    <value>परीक्षा पहिले नै पेश गरिएको छ।</value>
+  </data>
+  <data name="ExamAlreadyTaken" xml:space="preserve">
+    <value>परिक्षा लिइसकेको छ ।</value>
+  </data>
+  <data name="ExamResultNotFound" xml:space="preserve">
+    <value>परीक्षाको नतिजा फेला परेन।</value>
+  </data>
+  <data name="ExamSubmissionNotFound" xml:space="preserve">
+    <value>परीक्षा सबमिशन फेला परेन।</value>
+  </data>
+  <data name="ExamSubmissionNotMatchQuestionSet" xml:space="preserve">
+    <value>परीक्षा सबमिशन प्रश्न प्रश्न सेट प्रश्नसँग मेल खाँदैन।</value>
+  </data>
+  <data name="FeedbackContainsFeedbackSubmissions" xml:space="preserve">
+    <value>प्रतिक्रियामा प्रतिक्रिया सबमिशनहरू समावेश छन्।</value>
+  </data>
+  <data name="InvalidLessonTypeAssignment" xml:space="preserve">
+    <value>असाइनमेन्टको लागि अमान्य पाठ प्रकार।</value>
+  </data>
+  <data name="LateSubmission" xml:space="preserve">
+    <value>ढिलो सबमिशन।</value>
+  </data>
+  <data name="QuestionPoolAuhorCannotRemoved" xml:space="preserve">
+    <value>प्रश्न पूल लेखक हटाउन सकिँदैन।</value>
+  </data>
+  <data name="QuestionPoolAuthorCanNotAdded" xml:space="preserve">
+    <value>प्रश्न पूल लेखक थप्न सकिँदैन।</value>
+  </data>
+  <data name="QuestionPoolContainQuestion" xml:space="preserve">
+    <value>प्रश्न पूलमा प्रश्नहरू छन्। त्यसैले, प्रश्न पूल मेटाउन पूलबाट सबै प्रश्नहरू हटाउनुहोस्।</value>
+  </data>
+  <data name="QuestionSetEnded" xml:space="preserve">
+    <value>प्रश्न सेट समाप्त भयो।</value>
+  </data>
+  <data name="QuestionSetNotStarted" xml:space="preserve">
+    <value>प्रश्न सेट अझै सुरु भएको छैन।</value>
+  </data>
+  <data name="ServerAccessKeyNotFound" xml:space="preserve">
+    <value>सर्भर पहुँच कुञ्जी फेला परेन।</value>
+  </data>
+  <data name="ServerBucketNotFound" xml:space="preserve">
+    <value>सर्भर बाल्टी फेला परेन।</value>
+  </data>
+  <data name="ServerEndPointNotFound" xml:space="preserve">
+    <value>सर्भर अन्तिम बिन्दु फेला परेन।</value>
+  </data>
+  <data name="ServerPreSignedExpiryTimeNotFound" xml:space="preserve">
+    <value>सर्भर पूर्व-साइन गरिएको म्याद समाप्ति समय फेला परेन।</value>
+  </data>
+  <data name="ServerPreSignedUlrNotFound" xml:space="preserve">
+    <value>सर्भर पूर्व-हस्ताक्षरित url फेला परेन।</value>
+  </data>
+  <data name="ServerSecretKeyNotFound" xml:space="preserve">
+    <value>सर्भर गोप्य कुञ्जी फेला परेन।</value>
+  </data>
+  <data name="ServerUrlNotFound" xml:space="preserve">
+    <value>सर्भर url फेला परेन।</value>
+  </data>
+  <data name="UserCanNotRemoveSameUser" xml:space="preserve">
+    <value>प्रयोगकर्ता एउटै प्रयोगकर्ता हटाउन सकिँदैन।</value>
+  </data>
+  <data name="UserImported" xml:space="preserve">
+    <value>सफलतापूर्वक प्रयोगकर्ता आयात गरियो।</value>
+  </data>
+  <data name="UserNotEnrolledTraining" xml:space="preserve">
+    <value>प्रयोगकर्ता यस प्रशिक्षणमा नामांकन गरिएको छैन।</value>
+  </data>
+  <data name="AlreadyEnrolledInTraining" xml:space="preserve">
+    <value>तपाईं पहिले नै यस प्रशिक्षणमा भर्ना हुनुहुन्छ।</value>
+  </data>
+  <data name="AlreadyExistInAnotherAccount" xml:space="preserve">
+    <value>पहिले नै अर्को खातामा अवस्थित छ।</value>
+  </data>
+  <data name="AtLeastOneTrainerSignatureRequired" xml:space="preserve">
+    <value>कम्तिमा एक प्रशिक्षकको हस्ताक्षर विवरण आवश्यक छ।</value>
+  </data>
+  <data name="AtMostThreeSignaturesAllowed" xml:space="preserve">
+    <value>बढीमा ३ हस्ताक्षर मात्र अनुमति छ।</value>
+  </data>
+  <data name="AwsAccessKeyNotFound" xml:space="preserve">
+    <value>Aws पहुँच कुञ्जी फेला परेन।</value>
+  </data>
+  <data name="AwsRegionEndPointNotFound" xml:space="preserve">
+    <value>Aws क्षेत्रको अन्त्य बिन्दु फेला परेन।</value>
+  </data>
+  <data name="AwsSecretKeyNotFound" xml:space="preserve">
+    <value>AWS गोप्य कुञ्जी फेला परेन।</value>
+  </data>
+  <data name="CannotEnrolledOnCompletedTraining" xml:space="preserve">
+    <value>स्थिति पूरा भएपछि तालिममा भर्ना हुन सक्दैन।</value>
+  </data>
+  <data name="CannotSubmitAssignmentStatusCompleted" xml:space="preserve">
+    <value>स्थिति पूरा भएपछि तालिमको असाइनमेन्ट पेश गर्न सकिँदैन।</value>
+  </data>
+  <data name="CeritificateAlreadyApproved" xml:space="preserve">
+    <value>संगको प्रमाणपत्र पहिले नै स्वीकृत छ।</value>
+  </data>
+  <data name="CurrentUserRequired" xml:space="preserve">
+    <value>हालको प्रयोगकर्ता आईडी आवश्यक छ।</value>
+  </data>
+  <data name="CurrentWatchLessonNotFound" xml:space="preserve">
+    <value>हाल हेरिएको पाठ फेला परेन।</value>
+  </data>
+  <data name="DepartmentContainsUsersCannotDeleted" xml:space="preserve">
+    <value>विभागले प्रयोगकर्ताहरू समावेश गर्दछ। त्यसैले, यसलाई मेटाउन सकिँदैन।</value>
+  </data>
+  <data name="DuplicateDepartmentNameFound" xml:space="preserve">
+    <value>डुप्लिकेट विभागको नाम फेला पर्यो।</value>
+  </data>
+  <data name="EmailShouldNotEmpty" xml:space="preserve">
+    <value>इमेल खाली हुनु हुँदैन।</value>
+  </data>
+  <data name="EnrollmentFoundInTraining" xml:space="preserve">
+    <value>प्रशिक्षणमा सदस्य नामांकन समावेश छ। त्यसैले, यसलाई हटाउन सकिँदैन।</value>
+  </data>
+  <data name="EnterUserEmail" xml:space="preserve">
+    <value>कृपया प्रयोगकर्ता इमेल प्रविष्ट गर्नुहोस्।</value>
+  </data>
+  <data name="ErroprOccurredFetchStudentSubmittedAssignment" xml:space="preserve">
+    <value>विद्यार्थीले पेश गरेको असाइनमेन्ट ल्याउने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccuredSubmitAssignment" xml:space="preserve">
+    <value>असाइनमेन्ट पेश गर्ने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurrecdRemoveFileFromGroup" xml:space="preserve">
+    <value>समूहबाट फाइल हटाउन प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredDeleteSignature" xml:space="preserve">
+    <value>तालिममा हस्ताक्षर मेटाउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFetachTrainingUserList" xml:space="preserve">
+    <value>प्रयोगकर्ताको प्रशिक्षण सूची ल्याउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFetchLessonStatistics" xml:space="preserve">
+    <value>प्रशिक्षण पाठ तथ्याङ्कहरू ल्याउन प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingDetail" xml:space="preserve">
+    <value>तालिमको विवरण ल्याउने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingSignature" xml:space="preserve">
+    <value>तालिम हस्ताक्षर ल्याउने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingStatistics" xml:space="preserve">
+    <value>प्रशिक्षण तथ्याङ्कहरू ल्याउने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingStudentStatistics" xml:space="preserve">
+    <value>प्रशिक्षण विद्यार्थी तथ्याङ्कहरू ल्याउन प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFetchUserDetails" xml:space="preserve">
+    <value>प्रयोगकर्ता विवरण जानकारी ल्याउन प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFtechGroupFiles" xml:space="preserve">
+    <value>समूह फाइलहरू ल्याउन प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredGettingAWsCredential" xml:space="preserve">
+    <value>Aws credential प्राप्त गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredOnCertificateIssued" xml:space="preserve">
+    <value>तालिम प्रमाणपत्र जारी गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredSubmitAssignmentReview" xml:space="preserve">
+    <value>असाइनमेन्ट समीक्षा पेश गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredUpdateSignature" xml:space="preserve">
+    <value>तालिममा हस्ताक्षर अद्यावधिक गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredUploadFileToGroup" xml:space="preserve">
+    <value>समूहमा फाइल अपलोड गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredUploadSignature" xml:space="preserve">
+    <value>तालिममा हस्ताक्षर अपलोड गर्ने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredVerifyChnageEmailToken" xml:space="preserve">
+    <value>इमेल टोकन परिवर्तन प्रमाणीकरण गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="FeedbackCompletedStatus" xml:space="preserve">
+    <value>तालिम लिएको प्रतिक्रिया पेश गर्न सकिँदैन
+पूरा स्थिति।</value>
+  </data>
+  <data name="FeedbackSubmissionNotFound" xml:space="preserve">
+    <value>प्रतिक्रिया सबमिशन फेला परेन।</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>फाइल फेला परेन।</value>
+  </data>
+  <data name="GroupMemberAdded" xml:space="preserve">
+    <value>समूह सदस्य सफलतापूर्वक थपियो।</value>
+  </data>
+  <data name="GroupMemberNotFound" xml:space="preserve">
+    <value>समूह सदस्य फेला परेन।</value>
+  </data>
+  <data name="InvalidLessonAssignmentType" xml:space="preserve">
+    <value>अमान्य पाठ प्रकार असाइनमेन्ट होइन।</value>
+  </data>
+  <data name="InvalidLessonFeedbackType" xml:space="preserve">
+    <value>प्रतिक्रियाको लागि अमान्य पाठ प्रकार।</value>
+  </data>
+  <data name="LessonTypeRecordedCannotDeleted" xml:space="preserve">
+    <value>प्रकारको साथ पाठ
+रेकर्ड मेटाउन सकिँदैन।</value>
+  </data>
+  <data name="OnlyDraftTrainingDeleted" xml:space="preserve">
+    <value>मस्यौदा स्थिति भएको प्रशिक्षण मात्र मेटाउन सकिन्छ।</value>
+  </data>
+  <data name="OnlySuperAdminTrainerAllowedToRemoveMember" xml:space="preserve">
+    <value>सुपर-एडमिन वा प्रशासक वा प्रशिक्षकको भूमिका भएको प्रयोगकर्तालाई मात्र समूहबाट सदस्य हटाउन अनुमति दिइन्छ।</value>
+  </data>
+  <data name="OnlySuperAdminTranerAccessToAddMember" xml:space="preserve">
+    <value>सुपर-एडमिन वा प्रशासक वा प्रशिक्षकको भूमिका भएको प्रयोगकर्तालाई मात्र समूहमा सदस्य थप्न अनुमति दिइन्छ।</value>
+  </data>
+  <data name="QuestionSetSubmissionNotFound" xml:space="preserve">
+    <value>प्रश्न सेट सबमिशन फेला परेन।</value>
+  </data>
+  <data name="ReviewAlreadyGivenAssignment" xml:space="preserve">
+    <value>हालको असाइनमेन्टमा समीक्षा पहिले नै दिइएको छ।</value>
+  </data>
+  <data name="SignatureNotFound" xml:space="preserve">
+    <value>हस्ताक्षर फेला परेन।</value>
+  </data>
+  <data name="TokenSignatureNotFormatted" xml:space="preserve">
+    <value>टोकन हस्ताक्षर ठीकसँग ढाँचा गरिएको छैन।</value>
+  </data>
+  <data name="TrainingAssociateToGroupCannotRemoved" xml:space="preserve">
+    <value>केही तालिमहरू यस समूहसँग सम्बन्धित छन्। त्यसैले, समूह हटाउन सकिँदैन।</value>
+  </data>
+  <data name="TrainingStatusCannotChanged" xml:space="preserve">
+    <value>स्थिति संग प्रशिक्षण परिवर्तन गर्न सकिदैन।</value>
+  </data>
+  <data name="TrainingTeacherCannotSubmitAssignment" xml:space="preserve">
+    <value>तालिम शिक्षकले असाइनमेन्ट पेश गर्न सक्दैन।</value>
+  </data>
+  <data name="TraningExamCompletedStatus" xml:space="preserve">
+    <value>तालिमको अवस्था पूरा भई परीक्षा दिन नपाउने ।</value>
+  </data>
+  <data name="UnauthorizedUserToCreateAttachment" xml:space="preserve">
+    <value>समूहमा संलग्नक सिर्जना गर्न अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UnauthorizedUserToRemoveFileFromGroup" xml:space="preserve">
+    <value>समूहबाट फाइल हटाउनको लागि अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UserAlreadyFoundQuestionPool" xml:space="preserve">
+    <value>प्रयोगकर्ता पहिले नै प्रश्न पूलको रूपमा फेला परेको छ</value>
+  </data>
+  <data name="UserCannotAccessGroup" xml:space="preserve">
+    <value>प्रयोगकर्ता समूह पहुँच गर्न सक्दैन।</value>
+  </data>
+  <data name="UserNotFoundWithEmail" xml:space="preserve">
+    <value>इमेलको साथ प्रयोगकर्ता फेला परेन</value>
   </data>
 </root>
