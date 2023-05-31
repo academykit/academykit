@@ -690,4 +690,186 @@
   <data name="UserNotEnrolledTraining" xml:space="preserve">
     <value>User is not enrolled in this training.</value>
   </data>
+  <data name="AlreadyEnrolledInTraining" xml:space="preserve">
+    <value>You are already enrolled in this training.</value>
+  </data>
+  <data name="AlreadyExistInAnotherAccount" xml:space="preserve">
+    <value>already exist in another account.</value>
+  </data>
+  <data name="AtLeastOneTrainerSignatureRequired" xml:space="preserve">
+    <value>At least one trainer signature detail is required.</value>
+  </data>
+  <data name="AtMostThreeSignaturesAllowed" xml:space="preserve">
+    <value>At most 3 signatures are only allowed.</value>
+  </data>
+  <data name="AwsAccessKeyNotFound" xml:space="preserve">
+    <value>Aws Access key not found.</value>
+  </data>
+  <data name="AwsRegionEndPointNotFound" xml:space="preserve">
+    <value>Aws region end point not found.</value>
+  </data>
+  <data name="AwsSecretKeyNotFound" xml:space="preserve">
+    <value>AWS secret key not found.</value>
+  </data>
+  <data name="CannotEnrolledOnCompletedTraining" xml:space="preserve">
+    <value>Cannot enrolled in the training having completed status.</value>
+  </data>
+  <data name="CannotSubmitAssignmentStatusCompleted" xml:space="preserve">
+    <value>Cannot submit assignment of the training having completed status.</value>
+  </data>
+  <data name="CeritificateAlreadyApproved" xml:space="preserve">
+    <value>Ceritificate with is already approved.</value>
+  </data>
+  <data name="CurrentUserRequired" xml:space="preserve">
+    <value>CurrentUser Id is required.</value>
+  </data>
+  <data name="CurrentWatchLessonNotFound" xml:space="preserve">
+    <value>Current watched lesson not found.</value>
+  </data>
+  <data name="DepartmentContainsUsersCannotDeleted" xml:space="preserve">
+    <value>Department contains users. So, it cannot be deleted.</value>
+  </data>
+  <data name="DuplicateDepartmentNameFound" xml:space="preserve">
+    <value>Duplicate department name is found.</value>
+  </data>
+  <data name="EmailShouldNotEmpty" xml:space="preserve">
+    <value>Email shouldn't be empty.</value>
+  </data>
+  <data name="EnrollmentFoundInTraining" xml:space="preserve">
+    <value>Training contains member enrollments. So, it cannot be removed.</value>
+  </data>
+  <data name="EnterUserEmail" xml:space="preserve">
+    <value>Please enter user email.</value>
+  </data>
+  <data name="ErroprOccurredFetchStudentSubmittedAssignment" xml:space="preserve">
+    <value>An error occurred while trying to fetch the student submitted assignment.</value>
+  </data>
+  <data name="ErrorOccuredSubmitAssignment" xml:space="preserve">
+    <value>An error occurred while trying to submit the assignment.</value>
+  </data>
+  <data name="ErrorOccurrecdRemoveFileFromGroup" xml:space="preserve">
+    <value>An error occurred while trying to remove the file from group.</value>
+  </data>
+  <data name="ErrorOccurredDeleteSignature" xml:space="preserve">
+    <value>An error occurred while trying to delete signature in the training.</value>
+  </data>
+  <data name="ErrorOccurredFetachTrainingUserList" xml:space="preserve">
+    <value>An error occurred while trying to fetch training list of the user.</value>
+  </data>
+  <data name="ErrorOccurredFetchLessonStatistics" xml:space="preserve">
+    <value>An error occurred while trying to fetch training lesson statistics.</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingDetail" xml:space="preserve">
+    <value>An error occurred while trying to fetch training detail.</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingSignature" xml:space="preserve">
+    <value>An error occurred while trying fetch the training signature.</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingStatistics" xml:space="preserve">
+    <value>An error occurred while trying to fetch training statistics.</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingStudentStatistics" xml:space="preserve">
+    <value>An error occurred while trying to fetch training student statistics.</value>
+  </data>
+  <data name="ErrorOccurredFetchUserDetails" xml:space="preserve">
+    <value>An error occurred while attempting to fetch user detail information.</value>
+  </data>
+  <data name="ErrorOccurredFtechGroupFiles" xml:space="preserve">
+    <value>An error occurred while trying to fetch the group files.</value>
+  </data>
+  <data name="ErrorOccurredGettingAWsCredential" xml:space="preserve">
+    <value>An error occurred while attempting to get the aws credential.</value>
+  </data>
+  <data name="ErrorOccurredOnCertificateIssued" xml:space="preserve">
+    <value>An error occurred while trying to issued the training certificate.</value>
+  </data>
+  <data name="ErrorOccurredSubmitAssignmentReview" xml:space="preserve">
+    <value>An error occurred while trying to submit assignment review.</value>
+  </data>
+  <data name="ErrorOccurredUpdateSignature" xml:space="preserve">
+    <value>An error occurred while trying to update signature in the training.</value>
+  </data>
+  <data name="ErrorOccurredUploadFileToGroup" xml:space="preserve">
+    <value>An error occurred while trying to upload the file in the group.</value>
+  </data>
+  <data name="ErrorOccurredUploadSignature" xml:space="preserve">
+    <value>An error occurred while trying to upload signature in the training.</value>
+  </data>
+  <data name="ErrorOccurredVerifyChnageEmailToken" xml:space="preserve">
+    <value>An error occurred while attempting to verify change email token.</value>
+  </data>
+  <data name="FeedbackCompletedStatus" xml:space="preserve">
+    <value>Cannot submit feedback of the training having 
+completed status.</value>
+  </data>
+  <data name="FeedbackSubmissionNotFound" xml:space="preserve">
+    <value>Feedback submission not found.</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>File not found.</value>
+  </data>
+  <data name="GroupMemberAdded" xml:space="preserve">
+    <value>Group Member Added Successfully.</value>
+  </data>
+  <data name="GroupMemberNotFound" xml:space="preserve">
+    <value>Group member not found.</value>
+  </data>
+  <data name="InvalidLessonAssignmentType" xml:space="preserve">
+    <value>Invalid lesson type is not assignment.</value>
+  </data>
+  <data name="InvalidLessonFeedbackType" xml:space="preserve">
+    <value>Invalid lesson type for feedback.</value>
+  </data>
+  <data name="LessonTypeRecordedCannotDeleted" xml:space="preserve">
+    <value>Lesson with type 
+recorded cannot be deleted.</value>
+  </data>
+  <data name="OnlyDraftTrainingDeleted" xml:space="preserve">
+    <value>Only training with draft status can be deleted.</value>
+  </data>
+  <data name="OnlySuperAdminTrainerAllowedToRemoveMember" xml:space="preserve">
+    <value>Only user with super-admin or admin or trainer role is allowed to remove member from the group.</value>
+  </data>
+  <data name="OnlySuperAdminTranerAccessToAddMember" xml:space="preserve">
+    <value>Only user with super-admin or admin or trainer role is allowed to add member in the group.</value>
+  </data>
+  <data name="QuestionSetSubmissionNotFound" xml:space="preserve">
+    <value>Question set submission not found.</value>
+  </data>
+  <data name="ReviewAlreadyGivenAssignment" xml:space="preserve">
+    <value>Review has been already given to current assignment.</value>
+  </data>
+  <data name="SignatureNotFound" xml:space="preserve">
+    <value>Signature not found.</value>
+  </data>
+  <data name="TokenSignatureNotFormatted" xml:space="preserve">
+    <value>Token signature not properly formatted.</value>
+  </data>
+  <data name="TrainingAssociateToGroupCannotRemoved" xml:space="preserve">
+    <value>Some trainings are associated with this group. So, group cannot be removed.</value>
+  </data>
+  <data name="TrainingStatusCannotChanged" xml:space="preserve">
+    <value>Training with status cannot be changed.</value>
+  </data>
+  <data name="TrainingTeacherCannotSubmitAssignment" xml:space="preserve">
+    <value>Training teacher cannot submit the assignment.</value>
+  </data>
+  <data name="TraningExamCompletedStatus" xml:space="preserve">
+    <value>Cannot give exam to the training having completed status.</value>
+  </data>
+  <data name="UnauthorizedUserToCreateAttachment" xml:space="preserve">
+    <value>Unauthorized user to create an attachment in the group.</value>
+  </data>
+  <data name="UnauthorizedUserToRemoveFileFromGroup" xml:space="preserve">
+    <value>Unauthorized user to remove the file from the group.</value>
+  </data>
+  <data name="UserAlreadyFoundQuestionPool" xml:space="preserve">
+    <value>User is already found as question pool.</value>
+  </data>
+  <data name="UserCannotAccessGroup" xml:space="preserve">
+    <value>User can't access the group.</value>
+  </data>
+  <data name="UserNotFoundWithEmail" xml:space="preserve">
+    <value>User not found with email</value>
+  </data>
 </root>

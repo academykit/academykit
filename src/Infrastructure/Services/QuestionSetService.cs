@@ -222,7 +222,7 @@
                 {
                     _logger.LogWarning("training with id : {courseId} is in {status} status to start exam for the user with id: {userId}.",
                         lesson.Course.Id, lesson.Course.Status, currentUserId);
-                    throw new ForbiddenException($"Cannot give exam to the training having {lesson.Course.Status} status.");
+                    throw new ForbiddenException(_localizer.GetString("TraningExamCompletedStatus"));
                 }
 
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
@@ -326,7 +326,7 @@
                 if (questionSetSubmission == null)
                 {
                     _logger.LogWarning("Question set submission not found with id: {questionSetSubmissionId} for user with id : {currentUserId}.", questionSetSubmissionId, currentUserId);
-                    throw new EntityNotFoundException("Question set submission not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionSetSubmissionNotFound")) ;
                 }
 
                 var questionSetSubmissionAnswerCount = await _unitOfWork.GetRepository<QuestionSetSubmissionAnswer>().CountAsync(

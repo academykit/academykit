@@ -684,4 +684,186 @@
   <data name="UserNotEnrolledTraining" xml:space="preserve">
     <value>प्रयोगकर्ता यस प्रशिक्षणमा नामांकन गरिएको छैन।</value>
   </data>
+  <data name="AlreadyEnrolledInTraining" xml:space="preserve">
+    <value>तपाईं पहिले नै यस प्रशिक्षणमा भर्ना हुनुहुन्छ।</value>
+  </data>
+  <data name="AlreadyExistInAnotherAccount" xml:space="preserve">
+    <value>पहिले नै अर्को खातामा अवस्थित छ।</value>
+  </data>
+  <data name="AtLeastOneTrainerSignatureRequired" xml:space="preserve">
+    <value>कम्तिमा एक प्रशिक्षकको हस्ताक्षर विवरण आवश्यक छ।</value>
+  </data>
+  <data name="AtMostThreeSignaturesAllowed" xml:space="preserve">
+    <value>बढीमा ३ हस्ताक्षर मात्र अनुमति छ।</value>
+  </data>
+  <data name="AwsAccessKeyNotFound" xml:space="preserve">
+    <value>Aws पहुँच कुञ्जी फेला परेन।</value>
+  </data>
+  <data name="AwsRegionEndPointNotFound" xml:space="preserve">
+    <value>Aws क्षेत्रको अन्त्य बिन्दु फेला परेन।</value>
+  </data>
+  <data name="AwsSecretKeyNotFound" xml:space="preserve">
+    <value>AWS गोप्य कुञ्जी फेला परेन।</value>
+  </data>
+  <data name="CannotEnrolledOnCompletedTraining" xml:space="preserve">
+    <value>स्थिति पूरा भएपछि तालिममा भर्ना हुन सक्दैन।</value>
+  </data>
+  <data name="CannotSubmitAssignmentStatusCompleted" xml:space="preserve">
+    <value>स्थिति पूरा भएपछि तालिमको असाइनमेन्ट पेश गर्न सकिँदैन।</value>
+  </data>
+  <data name="CeritificateAlreadyApproved" xml:space="preserve">
+    <value>संगको प्रमाणपत्र पहिले नै स्वीकृत छ।</value>
+  </data>
+  <data name="CurrentUserRequired" xml:space="preserve">
+    <value>हालको प्रयोगकर्ता आईडी आवश्यक छ।</value>
+  </data>
+  <data name="CurrentWatchLessonNotFound" xml:space="preserve">
+    <value>हाल हेरिएको पाठ फेला परेन।</value>
+  </data>
+  <data name="DepartmentContainsUsersCannotDeleted" xml:space="preserve">
+    <value>विभागले प्रयोगकर्ताहरू समावेश गर्दछ। त्यसैले, यसलाई मेटाउन सकिँदैन।</value>
+  </data>
+  <data name="DuplicateDepartmentNameFound" xml:space="preserve">
+    <value>डुप्लिकेट विभागको नाम फेला पर्यो।</value>
+  </data>
+  <data name="EmailShouldNotEmpty" xml:space="preserve">
+    <value>इमेल खाली हुनु हुँदैन।</value>
+  </data>
+  <data name="EnrollmentFoundInTraining" xml:space="preserve">
+    <value>प्रशिक्षणमा सदस्य नामांकन समावेश छ। त्यसैले, यसलाई हटाउन सकिँदैन।</value>
+  </data>
+  <data name="EnterUserEmail" xml:space="preserve">
+    <value>कृपया प्रयोगकर्ता इमेल प्रविष्ट गर्नुहोस्।</value>
+  </data>
+  <data name="ErroprOccurredFetchStudentSubmittedAssignment" xml:space="preserve">
+    <value>विद्यार्थीले पेश गरेको असाइनमेन्ट ल्याउने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccuredSubmitAssignment" xml:space="preserve">
+    <value>असाइनमेन्ट पेश गर्ने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurrecdRemoveFileFromGroup" xml:space="preserve">
+    <value>समूहबाट फाइल हटाउन प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredDeleteSignature" xml:space="preserve">
+    <value>तालिममा हस्ताक्षर मेटाउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFetachTrainingUserList" xml:space="preserve">
+    <value>प्रयोगकर्ताको प्रशिक्षण सूची ल्याउने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFetchLessonStatistics" xml:space="preserve">
+    <value>प्रशिक्षण पाठ तथ्याङ्कहरू ल्याउन प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingDetail" xml:space="preserve">
+    <value>तालिमको विवरण ल्याउने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingSignature" xml:space="preserve">
+    <value>तालिम हस्ताक्षर ल्याउने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingStatistics" xml:space="preserve">
+    <value>प्रशिक्षण तथ्याङ्कहरू ल्याउने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingStudentStatistics" xml:space="preserve">
+    <value>प्रशिक्षण विद्यार्थी तथ्याङ्कहरू ल्याउन प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFetchUserDetails" xml:space="preserve">
+    <value>प्रयोगकर्ता विवरण जानकारी ल्याउन प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredFtechGroupFiles" xml:space="preserve">
+    <value>समूह फाइलहरू ल्याउन प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredGettingAWsCredential" xml:space="preserve">
+    <value>Aws credential प्राप्त गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredOnCertificateIssued" xml:space="preserve">
+    <value>तालिम प्रमाणपत्र जारी गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredSubmitAssignmentReview" xml:space="preserve">
+    <value>असाइनमेन्ट समीक्षा पेश गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredUpdateSignature" xml:space="preserve">
+    <value>तालिममा हस्ताक्षर अद्यावधिक गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredUploadFileToGroup" xml:space="preserve">
+    <value>समूहमा फाइल अपलोड गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredUploadSignature" xml:space="preserve">
+    <value>तालिममा हस्ताक्षर अपलोड गर्ने प्रयास गर्दा एउटा त्रुटि भयो।</value>
+  </data>
+  <data name="ErrorOccurredVerifyChnageEmailToken" xml:space="preserve">
+    <value>इमेल टोकन परिवर्तन प्रमाणीकरण गर्ने प्रयास गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="FeedbackCompletedStatus" xml:space="preserve">
+    <value>तालिम लिएको प्रतिक्रिया पेश गर्न सकिँदैन
+पूरा स्थिति।</value>
+  </data>
+  <data name="FeedbackSubmissionNotFound" xml:space="preserve">
+    <value>प्रतिक्रिया सबमिशन फेला परेन।</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>फाइल फेला परेन।</value>
+  </data>
+  <data name="GroupMemberAdded" xml:space="preserve">
+    <value>समूह सदस्य सफलतापूर्वक थपियो।</value>
+  </data>
+  <data name="GroupMemberNotFound" xml:space="preserve">
+    <value>समूह सदस्य फेला परेन।</value>
+  </data>
+  <data name="InvalidLessonAssignmentType" xml:space="preserve">
+    <value>अमान्य पाठ प्रकार असाइनमेन्ट होइन।</value>
+  </data>
+  <data name="InvalidLessonFeedbackType" xml:space="preserve">
+    <value>प्रतिक्रियाको लागि अमान्य पाठ प्रकार।</value>
+  </data>
+  <data name="LessonTypeRecordedCannotDeleted" xml:space="preserve">
+    <value>प्रकारको साथ पाठ
+रेकर्ड मेटाउन सकिँदैन।</value>
+  </data>
+  <data name="OnlyDraftTrainingDeleted" xml:space="preserve">
+    <value>मस्यौदा स्थिति भएको प्रशिक्षण मात्र मेटाउन सकिन्छ।</value>
+  </data>
+  <data name="OnlySuperAdminTrainerAllowedToRemoveMember" xml:space="preserve">
+    <value>सुपर-एडमिन वा प्रशासक वा प्रशिक्षकको भूमिका भएको प्रयोगकर्तालाई मात्र समूहबाट सदस्य हटाउन अनुमति दिइन्छ।</value>
+  </data>
+  <data name="OnlySuperAdminTranerAccessToAddMember" xml:space="preserve">
+    <value>सुपर-एडमिन वा प्रशासक वा प्रशिक्षकको भूमिका भएको प्रयोगकर्तालाई मात्र समूहमा सदस्य थप्न अनुमति दिइन्छ।</value>
+  </data>
+  <data name="QuestionSetSubmissionNotFound" xml:space="preserve">
+    <value>प्रश्न सेट सबमिशन फेला परेन।</value>
+  </data>
+  <data name="ReviewAlreadyGivenAssignment" xml:space="preserve">
+    <value>हालको असाइनमेन्टमा समीक्षा पहिले नै दिइएको छ।</value>
+  </data>
+  <data name="SignatureNotFound" xml:space="preserve">
+    <value>हस्ताक्षर फेला परेन।</value>
+  </data>
+  <data name="TokenSignatureNotFormatted" xml:space="preserve">
+    <value>टोकन हस्ताक्षर ठीकसँग ढाँचा गरिएको छैन।</value>
+  </data>
+  <data name="TrainingAssociateToGroupCannotRemoved" xml:space="preserve">
+    <value>केही तालिमहरू यस समूहसँग सम्बन्धित छन्। त्यसैले, समूह हटाउन सकिँदैन।</value>
+  </data>
+  <data name="TrainingStatusCannotChanged" xml:space="preserve">
+    <value>स्थिति संग प्रशिक्षण परिवर्तन गर्न सकिदैन।</value>
+  </data>
+  <data name="TrainingTeacherCannotSubmitAssignment" xml:space="preserve">
+    <value>तालिम शिक्षकले असाइनमेन्ट पेश गर्न सक्दैन।</value>
+  </data>
+  <data name="TraningExamCompletedStatus" xml:space="preserve">
+    <value>तालिमको अवस्था पूरा भई परीक्षा दिन नपाउने ।</value>
+  </data>
+  <data name="UnauthorizedUserToCreateAttachment" xml:space="preserve">
+    <value>समूहमा संलग्नक सिर्जना गर्न अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UnauthorizedUserToRemoveFileFromGroup" xml:space="preserve">
+    <value>समूहबाट फाइल हटाउनको लागि अनधिकृत प्रयोगकर्ता।</value>
+  </data>
+  <data name="UserAlreadyFoundQuestionPool" xml:space="preserve">
+    <value>प्रयोगकर्ता पहिले नै प्रश्न पूलको रूपमा फेला परेको छ</value>
+  </data>
+  <data name="UserCannotAccessGroup" xml:space="preserve">
+    <value>प्रयोगकर्ता समूह पहुँच गर्न सक्दैन।</value>
+  </data>
+  <data name="UserNotFoundWithEmail" xml:space="preserve">
+    <value>इमेलको साथ प्रयोगकर्ता फेला परेन</value>
+  </data>
 </root>

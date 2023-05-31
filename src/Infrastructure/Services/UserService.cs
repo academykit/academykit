@@ -485,13 +485,13 @@
             if (user == null)
             {
                 _logger.LogWarning("User with email : {email} not found.", model.OldEmail);
-                throw new ForbiddenException($"User not found with email : {model.OldEmail}.");
+                throw new ForbiddenException(_localizer.GetString("UserNotFoundWithEmail") +" "+ model.OldEmail);
             }
             var newUser = await GetUserByEmailAsync(model.NewEmail).ConfigureAwait(false);
             if (newUser != null)
             {
                 _logger.LogWarning("User with new email : {email} found in the system.", model.NewEmail);
-                throw new ForbiddenException($"This new email address {model.NewEmail} already exist in another account.");
+                throw new ForbiddenException(model.NewEmail +" "+ _localizer.GetString("AlreadyExistInAnotherAccount"));
             }
             var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password);
             if (!isUserAuthenticated)
@@ -502,7 +502,7 @@
             if (user.Id != currentUserId)
             {
                 _logger.LogWarning("User with email: {email} is invalid user request to change email of current user with id: {currentUserId}", user.Email, currentUserId);
-                throw new ForbiddenException("Unauthorized current email user request to change email.");
+                throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
             }
             var companyName = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync(selector: x => x.CompanyName).ConfigureAwait(false);
             var changeEmailToken = GenerateResendAndChangeEmailToken(model.OldEmail, model.NewEmail, _changeEmailEncryptionKey, _changeEmailTokenExpiry);
@@ -523,13 +523,13 @@
             if (string.IsNullOrWhiteSpace(oldEmail) || string.IsNullOrWhiteSpace(newEmail))
             {
                 _logger.LogWarning("Old email or new email is null or empty for resend change email.");
-                throw new ForbiddenException("Old email or new email cannot be null or empty.");
+                throw new ForbiddenException(_localizer.GetString("EmailShouldNotEmpty"));
             }
             var user = await GetUserByEmailAsync(oldEmail).ConfigureAwait(false);
             if (user == null)
             {
                 _logger.LogWarning("User with email : {email} not found.", oldEmail);
-                throw new ForbiddenException($"User not found with email : {newEmail}.");
+                throw new ForbiddenException(_localizer.GetString("UserNotFoundWithEmail") + " " + newEmail);
             }
             var changeEmailToken = GenerateResendAndChangeEmailToken(oldEmail, newEmail, _changeEmailEncryptionKey, _changeEmailTokenExpiry);
             var resendToken = GenerateResendAndChangeEmailToken(oldEmail, newEmail, _resendChangeEmailEncryptionKey, _resendChangeEmailTokenExpiry);
@@ -550,13 +550,13 @@
             if (string.IsNullOrWhiteSpace(oldEmail) || string.IsNullOrWhiteSpace(newEmail))
             {
                 _logger.LogWarning("Old email or new email is null or empty for verify change email.");
-                throw new ForbiddenException("Old email or new email cannot be null or empty.");
+                throw new ForbiddenException(_localizer.GetString("EmailShouldNotEmpty"));
             }
             var user = await GetUserByEmailAsync(oldEmail).ConfigureAwait(false);
             if (user == null)
             {
                 _logger.LogWarning("User with email : {email} not found.", oldEmail);
-                throw new ForbiddenException($"User not found with email : {newEmail}.");
+                throw new ForbiddenException(_localizer.GetString("UserNotFoundWithEmail") + " " + newEmail);
             }
             user.Email = newEmail;
             user.UpdatedOn = currentTimeStamp;
@@ -618,7 +618,7 @@
                 var tokenExpiry = security.ValidTo;
                 if (tokenExpiry < currentTimeStamp)
                 {
-                    throw new ForbiddenException("Change email token has already expired. Please resend change email request.");
+                    throw new ForbiddenException(_localizer.GetString("TokenExpired"));
                 }
                 return (oldEmail, newEmail);
             }
@@ -627,13 +627,13 @@
                 _logger.LogError(ex, "An error occurred while attempting to verify change email token.");
                 if (ex is SecurityTokenInvalidSignatureException)
                 {
-                    throw new ForbiddenException("Token signature not properly formatted.");
+                    throw new ForbiddenException(_localizer.GetString("TokenSignatureNotFormatted"));
                 }
                 if (ex is SecurityTokenExpiredException)
                 {
-                    throw new ForbiddenException("Token expired.");
+                    throw new ForbiddenException(_localizer.GetString("TokenExpired"));
                 }
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to verify change email token.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredVerifyChnageEmailToken"));
             }
         }
         #endregion Account Services
@@ -859,7 +859,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to fetch user detail information.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to fetch user detail information.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredFetchUserDetails"));
             }
         }
 
@@ -915,13 +915,13 @@
                 }
                 else
                 {
-                    throw new UnauthorizedAccessException("Trainee are not allowed to excess this feature.");
+                    throw new UnauthorizedAccessException(_localizer.GetString("UnauthorizedUser"));
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to fetch user detail information.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to fetch user detail information.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredFetchUserDetails"));
             }
         }
     }

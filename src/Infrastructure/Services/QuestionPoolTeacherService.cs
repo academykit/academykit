@@ -140,7 +140,7 @@
             {
                 var poolRole = questionPool.QuestionPoolTeachers.FirstOrDefault(p => p.UserId == entity.UserId)?.Role;
                 _logger.LogWarning("User with Id {userId} is already question pool {role} of question pool with Id  : {id}.", entity.UserId, poolRole, questionPool.Id);
-                throw new ForbiddenException($"User is already found as question pool {poolRole}.");
+                throw new ForbiddenException(_localizer.GetString("UserAlreadyFoundQuestionPool"));
             }
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == entity.UserId).ConfigureAwait(false);
             CommonHelper.CheckFoundEntity(user);

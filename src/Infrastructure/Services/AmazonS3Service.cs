@@ -128,19 +128,19 @@ namespace Lingtren.Infrastructure.Services
                 var accessKey = settings.FirstOrDefault(x => x.Key == "AWS_AccessKey")?.Value;
                 if (string.IsNullOrEmpty(accessKey))
                 {
-                    throw new EntityNotFoundException("Aws Access key not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("AwsAccessKeyNotFound"));
                 }
 
                 var secretKey = settings.FirstOrDefault(x => x.Key == "AWS_SecretKey")?.Value;
                 if (string.IsNullOrEmpty(secretKey))
                 {
-                    throw new EntityNotFoundException("AWS secret key not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("AwsSecretKeyNotFound"));
                 }
 
                 var regionEndPoint = settings.FirstOrDefault(x => x.Key == "AWS_RegionEndpoint")?.Value;
                 if (string.IsNullOrEmpty(regionEndPoint))
                 {
-                    throw new EntityNotFoundException("Aws region end point not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("AwsRegionEndPointNotFound"));
                 }
                 var fileBucket = settings.FirstOrDefault(x => x.Key == "AWS_FileBucket")?.Value;
                 var videoBucket = settings.FirstOrDefault(x => x.Key == "AWS_VideoBucket")?.Value;
@@ -158,7 +158,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to get the aws credential.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to get the aws credential.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredGettingAWsCredential"));
             }
         }
 

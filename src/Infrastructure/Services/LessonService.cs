@@ -498,7 +498,7 @@ namespace Lingtren.Infrastructure.Services
                 if (lesson.Type == LessonType.RecordedVideo)
                 {
                     _logger.LogWarning("DeleteLessonAsync(): Lesson with id : {lessonId} has type : {type}.", lesson.Id, lesson.Type);
-                    throw new ForbiddenException($"Lesson with type {lesson.Type} cannot be deleted.");
+                    throw new ForbiddenException(_localizer.GetString("LessonTypeRecordedCannotDeleted"));
                 }
 
                 if (lesson.Type == LessonType.Exam)
@@ -574,7 +574,7 @@ namespace Lingtren.Infrastructure.Services
                     {
                         _logger.LogWarning("DeleteLessonAsync(): Lesson with id:{lessonId} and type: {type} contains feedbackSubmissions.",
                                            lesson.Id, lesson.Type);
-                        throw new EntityNotFoundException($"Feedback contains submission for lesson with type: {lesson.Type}.");
+                        throw new EntityNotFoundException(_localizer.GetString("FeedbackSubmissionNotFound"));
                     }
                     var feedbackOptions = await _unitOfWork.GetRepository<FeedbackQuestionOption>().GetAllAsync(
                         predicate: p => feedbackIds.Contains(p.FeedbackId)).ConfigureAwait(false);
@@ -852,7 +852,7 @@ namespace Lingtren.Infrastructure.Services
             if (currentLesson == null)
             {
                 _logger.LogWarning("Current watch lesson not found for training with id : {courseId} and user with id : {userId}.", course.Id, currentUserId);
-                throw new EntityNotFoundException("Current watched lesson not found.");
+                throw new EntityNotFoundException(_localizer.GetString("CurrentWatchLessonNotFound"));
             }
             return currentLesson;
         }

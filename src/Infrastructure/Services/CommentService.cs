@@ -126,7 +126,7 @@
             if (existing == null)
             {
                 _logger.LogWarning("Comment with id :{id} not found.", commentId);
-                throw new EntityNotFoundException("Comment not found.");
+                throw new EntityNotFoundException(_localizer.GetString("CommentNotFound"));
             }
             if (existing.CreatedBy != currentUserId)
             {

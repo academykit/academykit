@@ -115,7 +115,7 @@
             if (existUsers)
             {
                 _logger.LogWarning("Department with id: {id} contains users so it cannot be deleted for user with id: {userId}.", entityToDelete.Id, CurrentUserId);
-                throw new ForbiddenException("Department contains users. So, it cannot be deleted.");
+                throw new ForbiddenException(_localizer.GetString("DepartmentContainsUsersCannotDeleted"));
             }
         }
         #endregion Protected Methods
@@ -134,7 +134,7 @@
             if (departmentExist)
             {
                 _logger.LogWarning("Duplicate department name : {name} is found for the department with id : {id}.", entity.Name, entity.Id);
-                throw new ServiceException("Duplicate department name is found.");
+                throw new ServiceException(_localizer.GetString("DuplicateDepartmentNameFound"));
             }
         }
         #endregion Private Methods

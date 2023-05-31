@@ -70,17 +70,17 @@ namespace Lingtren.Infrastructure.Services
                 var ceritificate = await _unitOfWork.GetRepository<Certificate>().GetFirstOrDefaultAsync(predicate: p => p.Id == identity).ConfigureAwait(false);
                 if (ceritificate == null)
                 {
-                    throw new EntityNotFoundException($"Certificate with identity : {identity} not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("CertificateNotFound"));
                 }
 
                 if (ceritificate.CreatedBy != currentUserId)
                 {
-                    throw new ForbiddenException("Unauthorized user.");
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
 
                 if (ceritificate.Status == CertificateStatus.Approved)
                 {
-                    throw new ArgumentException("Cerificate with identity : {identity} is already approved.");
+                    throw new ArgumentException(_localizer.GetString("CeritificateAlreadyApproved"));
                 }
 
                 ceritificate.Name = model.Name;
@@ -112,7 +112,7 @@ namespace Lingtren.Infrastructure.Services
                 var ceritificate = await _unitOfWork.GetRepository<Certificate>().GetFirstOrDefaultAsync(predicate: p => p.Id == identity).ConfigureAwait(false);
                 if (ceritificate == null)
                 {
-                    throw new EntityNotFoundException($"Certificate with identity : {identity} not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("CertificateNotFound"));
                 }
 
                 if (ceritificate.CreatedBy != currentUserId)

@@ -687,4 +687,186 @@
   <data name="UserNotEnrolledTraining" xml:space="preserve">
     <value>ユーザーはこのトレーニングに登録されていません</value>
   </data>
+  <data name="AlreadyEnrolledInTraining" xml:space="preserve">
+    <value>あなたはすでにこのトレーニングに登録しています</value>
+  </data>
+  <data name="AlreadyExistInAnotherAccount" xml:space="preserve">
+    <value>別のアカウントにすでに存在します</value>
+  </data>
+  <data name="AtLeastOneTrainerSignatureRequired" xml:space="preserve">
+    <value>少なくとも 1 つのトレーナー署名の詳細が必要です</value>
+  </data>
+  <data name="AtMostThreeSignaturesAllowed" xml:space="preserve">
+    <value>署名は最大 3 つまでしか許可されません</value>
+  </data>
+  <data name="AwsAccessKeyNotFound" xml:space="preserve">
+    <value>AWS アクセスキーが見つかりません</value>
+  </data>
+  <data name="AwsRegionEndPointNotFound" xml:space="preserve">
+    <value>AWS リージョンのエンドポイントが見つかりません</value>
+  </data>
+  <data name="AwsSecretKeyNotFound" xml:space="preserve">
+    <value>AWS 秘密キーが見つかりません</value>
+  </data>
+  <data name="CannotEnrolledOnCompletedTraining" xml:space="preserve">
+    <value>完了ステータスではトレーニングに登録できません</value>
+  </data>
+  <data name="CannotSubmitAssignmentStatusCompleted" xml:space="preserve">
+    <value>完了ステータスのトレーニングの課題を提出することはできません</value>
+  </data>
+  <data name="CeritificateAlreadyApproved" xml:space="preserve">
+    <value>の付いた証明書はすでに承認されています</value>
+  </data>
+  <data name="CurrentUserRequired" xml:space="preserve">
+    <value>現在のユーザー ID は必須です</value>
+  </data>
+  <data name="CurrentWatchLessonNotFound" xml:space="preserve">
+    <value>現在視聴しているレッスンが見つかりません</value>
+  </data>
+  <data name="DepartmentContainsUsersCannotDeleted" xml:space="preserve">
+    <value>部門にはユーザーが含まれています。したがって、削除することはできません</value>
+  </data>
+  <data name="DuplicateDepartmentNameFound" xml:space="preserve">
+    <value>重複した部署名が見つかりました</value>
+  </data>
+  <data name="EmailShouldNotEmpty" xml:space="preserve">
+    <value>電子メールは空であってはなりません</value>
+  </data>
+  <data name="EnrollmentFoundInTraining" xml:space="preserve">
+    <value>トレーニングにはメンバー登録が含まれます。したがって、削除することはできません</value>
+  </data>
+  <data name="EnterUserEmail" xml:space="preserve">
+    <value>ユーザーのメールアドレスを入力してください</value>
+  </data>
+  <data name="ErroprOccurredFetchStudentSubmittedAssignment" xml:space="preserve">
+    <value>学生が提出した課題を取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccuredSubmitAssignment" xml:space="preserve">
+    <value>課題を送信しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurrecdRemoveFileFromGroup" xml:space="preserve">
+    <value>グループからファイルを削除しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredDeleteSignature" xml:space="preserve">
+    <value>トレーニングで署名を削除しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredFetachTrainingUserList" xml:space="preserve">
+    <value>ユーザーのトレーニング リストを取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredFetchLessonStatistics" xml:space="preserve">
+    <value>トレーニング レッスンの統計を取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingDetail" xml:space="preserve">
+    <value>トレーニングの詳細を取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingSignature" xml:space="preserve">
+    <value>トレーニング署名を取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingStatistics" xml:space="preserve">
+    <value>トレーニング統計を取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredFetchTrainingStudentStatistics" xml:space="preserve">
+    <value>研修生の統計を取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredFetchUserDetails" xml:space="preserve">
+    <value>ユーザーの詳細情報を取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredFtechGroupFiles" xml:space="preserve">
+    <value>グループ ファイルを取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredGettingAWsCredential" xml:space="preserve">
+    <value>aws 認証情報を取得しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredOnCertificateIssued" xml:space="preserve">
+    <value>トレーニング証明書を発行しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredSubmitAssignmentReview" xml:space="preserve">
+    <value>課題レビューを送信しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredUpdateSignature" xml:space="preserve">
+    <value>トレーニングで署名を更新しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredUploadFileToGroup" xml:space="preserve">
+    <value>グループにファイルをアップロードしようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredUploadSignature" xml:space="preserve">
+    <value>トレーニングで署名をアップロードしようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="ErrorOccurredVerifyChnageEmailToken" xml:space="preserve">
+    <value>電子メール トークンの変更を確認しようとしたときにエラーが発生しました</value>
+  </data>
+  <data name="FeedbackCompletedStatus" xml:space="preserve">
+    <value>トレーニングのフィードバックを送信できません
+完成した状態</value>
+  </data>
+  <data name="FeedbackSubmissionNotFound" xml:space="preserve">
+    <value>フィードバックの送信が見つかりません</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>ファイルが見つかりません</value>
+  </data>
+  <data name="GroupMemberAdded" xml:space="preserve">
+    <value>グループメンバーが正常に追加されました</value>
+  </data>
+  <data name="GroupMemberNotFound" xml:space="preserve">
+    <value>グループメンバーが見つかりません</value>
+  </data>
+  <data name="InvalidLessonAssignmentType" xml:space="preserve">
+    <value>無効なレッスン タイプは割り当てではありません</value>
+  </data>
+  <data name="InvalidLessonFeedbackType" xml:space="preserve">
+    <value>フィードバック用のレッスン タイプが無効です</value>
+  </data>
+  <data name="LessonTypeRecordedCannotDeleted" xml:space="preserve">
+    <value>タイプを使ったレッスン
+記録されたものは削除できません</value>
+  </data>
+  <data name="OnlyDraftTrainingDeleted" xml:space="preserve">
+    <value>削除できるのはドラフトステータスのトレーニングのみです</value>
+  </data>
+  <data name="OnlySuperAdminTrainerAllowedToRemoveMember" xml:space="preserve">
+    <value>スーパー管理者、管理者、またはトレーナーの役割を持つユーザーのみが、グループからメンバーを削除できます</value>
+  </data>
+  <data name="OnlySuperAdminTranerAccessToAddMember" xml:space="preserve">
+    <value>スーパー管理者、管理者、またはトレーナーの役割を持つユーザーのみがグループにメンバーを追加できます</value>
+  </data>
+  <data name="QuestionSetSubmissionNotFound" xml:space="preserve">
+    <value>質問セットの提出が見つかりません</value>
+  </data>
+  <data name="ReviewAlreadyGivenAssignment" xml:space="preserve">
+    <value>現在の課題はすでにレビューされています</value>
+  </data>
+  <data name="SignatureNotFound" xml:space="preserve">
+    <value>署名が見つかりません</value>
+  </data>
+  <data name="TokenSignatureNotFormatted" xml:space="preserve">
+    <value>トークン署名が正しくフォーマットされていません</value>
+  </data>
+  <data name="TrainingAssociateToGroupCannotRemoved" xml:space="preserve">
+    <value>一部のトレーニングはこのグループに関連付けられています。したがって、グループを削除することはできません</value>
+  </data>
+  <data name="TrainingStatusCannotChanged" xml:space="preserve">
+    <value>ステータスのあるトレーニングは変更できません</value>
+  </data>
+  <data name="TrainingTeacherCannotSubmitAssignment" xml:space="preserve">
+    <value>研修講師は課題を提出できません</value>
+  </data>
+  <data name="TraningExamCompletedStatus" xml:space="preserve">
+    <value>研修修了者は試験を受けることができません</value>
+  </data>
+  <data name="UnauthorizedUserToCreateAttachment" xml:space="preserve">
+    <value>グループ内に添付ファイルを作成する権限のないユーザー</value>
+  </data>
+  <data name="UnauthorizedUserToRemoveFileFromGroup" xml:space="preserve">
+    <value>権限のないユーザーがグループからファイルを削除します</value>
+  </data>
+  <data name="UserAlreadyFoundQuestionPool" xml:space="preserve">
+    <value>ユーザーは質問プールとしてすでに見つかりました</value>
+  </data>
+  <data name="UserCannotAccessGroup" xml:space="preserve">
+    <value>ユーザーはグループにアクセスできません</value>
+  </data>
+  <data name="UserNotFoundWithEmail" xml:space="preserve">
+    <value>電子メールを含むユーザーが見つかりません</value>
+  </data>
 </root>
