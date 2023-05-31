@@ -64,6 +64,7 @@ const StudentLessonDetails = ({
     slug?.lessonId as string
   );
   const [examResultModal, setExamResultModal] = useToggle();
+  const { t } = useTranslation();
 
   const [liveClassReportModal, setLiveClassReportModal] = useToggle();
   const [confirmComplete, setConfirmComplete] = useToggle();
@@ -132,7 +133,6 @@ const StudentLessonDetails = ({
         return <div></div>;
     }
   };
-const {t}= useTranslation();
   const onCompletedClick = async () => {
     try {
       await watchHistory.mutateAsync({ courseId, lessonId, userId: studentId });

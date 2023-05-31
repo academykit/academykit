@@ -33,6 +33,7 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
   const [refreshToken, setRefreshToken] = useState<string | null>(
     localStorage.getItem(REFRESH_TOKEN_STORAGE) as string
   );
+  const { t } = useTranslation();
 
   const [auth, setAuth] = useState<IUserProfile | null>(null);
   const [ready, setReady] = useState(false);
@@ -63,7 +64,6 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
   }, [useLogoutQuery.isSuccess]);
 
   const [showLogout, setShowLogout] = useToggle();
-  const { t } = useTranslation();
   const confirmLogout = async () => {
     try {
       await useLogoutQuery.mutateAsync();

@@ -114,13 +114,6 @@ const Classes = () => {
   ) {
     navigate("/404", { replace: true });
   }
-  if (isLoading) {
-    return (
-      <Center>
-        <Loader />
-      </Center>
-    );
-  }
 
   const goToNextLesson = (nextLesson: string) =>
     navigate(`${RoutePath.classes}/${params.id}/${nextLesson}`);
@@ -141,6 +134,14 @@ const Classes = () => {
       });
     }
   };
+
+  if (isLoading) {
+    return (
+      <Center>
+        <Loader />
+      </Center>
+    );
+  }
 
   return (
     <Box p={0}>

@@ -101,7 +101,7 @@ const PoolCard = ({
                 >
                   <NavLink
                     variant="subtle"
-                    label="Edit"
+                    label={t("edit")}
                     component={Link}
                     to={RoutePath.pool.details(slug).route}
                     rightSection={<IconChevronRight size={12} stroke={1.5} />}
@@ -110,7 +110,7 @@ const PoolCard = ({
                   <NavLink
                     onClick={() => setDeleteModal()}
                     variant="subtle"
-                    label="Delete"
+                    label={t("delete")}
                     component={"button"}
                     rightSection={<IconChevronRight size={12} stroke={1.5} />}
                   ></NavLink>

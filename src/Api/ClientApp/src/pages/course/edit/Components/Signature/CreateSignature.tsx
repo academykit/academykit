@@ -42,6 +42,7 @@ const CreateSignature = ({
   const editSignature = useEditSignature(id as string);
   const [signatureUrl, setSignatureUrl] = useState(data?.fileUrl ?? "");
   const [confirmDelete, setConfirmDelete] = useToggle();
+  const { t } = useTranslation();
 
   const form = useForm({
     initialValues: data,
@@ -67,7 +68,6 @@ const CreateSignature = ({
       });
     }
   };
-  const { t } = useTranslation();
   const handelEdit = async (data: IGetSignature) => {
     try {
       await editSignature.mutateAsync({ data, id: id as string });

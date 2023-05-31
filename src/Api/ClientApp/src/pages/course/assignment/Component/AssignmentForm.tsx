@@ -25,6 +25,7 @@ const AssignmentForm = ({
   const submitAssignment = useSubmitAssignment({ lessonId });
   const { id } = useParams();
   const navigation = useNavigate();
+  const { t } = useTranslation();
 
   const form = useForm({
     initialValues: item,
@@ -63,7 +64,6 @@ const AssignmentForm = ({
       });
     }
   };
-  const { t } = useTranslation();
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       {item.map((x, currentIndex) => (

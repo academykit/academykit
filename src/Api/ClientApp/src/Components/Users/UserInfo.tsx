@@ -98,6 +98,8 @@ const UserInfo = () => {
 
   const updateUser = useUpdateUser(userId as string);
   const navigator = useNavigate();
+  const { t } = useTranslation();
+
   const handleSubmit = async (data: FormValues) => {
     try {
       const withImage = { ...data };
@@ -113,7 +115,6 @@ const UserInfo = () => {
       showNotification({ message: error, title: t("error"), color: "red" });
     }
   };
-  const { t } = useTranslation();
   return (
     <Paper shadow={"xl"} radius="md" p="xl" withBorder>
       {t("profile_section")}

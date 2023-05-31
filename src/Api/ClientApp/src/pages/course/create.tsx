@@ -52,6 +52,7 @@ export const [FormProvider, useFormContext, useForm] =
 
 const CreateCoursePage = () => {
   const [searchParamGroup, setsearchParamGroup] = useState("");
+  const { t } = useTranslation();
 
   const groups = useGroups(
     queryStringGenerator({
@@ -119,7 +120,6 @@ const CreateCoursePage = () => {
   }, [isSuccess]);
 
   const { mutateAsync, isLoading } = useCreateCourse();
-  const { t } = useTranslation();
   const submitHandler = async (data: FormValues) => {
     try {
       const res = await mutateAsync({
