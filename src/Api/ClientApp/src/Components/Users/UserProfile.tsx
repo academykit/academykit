@@ -15,7 +15,7 @@ import {
   IconSchool,
 } from "@tabler/icons";
 import { useProfileAuth } from "@utils/services/authService";
-
+import { useTranslation } from "react-i18next";
 import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import RichTextEditor from "@mantine/rte";
 import useAuth from "@hooks/useAuth";
@@ -40,6 +40,7 @@ const UserProfile = () => {
   const { classes } = useStyles();
   const local_id = localStorage.getItem("id");
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const { data, isSuccess } = useProfileAuth(id as string);
   return (
@@ -73,17 +74,17 @@ const UserProfile = () => {
             size={"xl"}
             sx={{ margin: "5px 0", padding: "3px" }}
           >
-            About {data?.fullName}
+            {t("About")} : {data?.fullName}
           </Text>
           <Divider />
           <Text size={"md"} sx={{ padding: "5px 50px" }}>
-            Address: {data?.address}
+            {t("address")} : {data?.address}
           </Text>
           <Text size={"md"} sx={{ padding: "5px 50px" }}>
-            Mobile number: {data?.mobileNumber}
+            {t("mobilenumber")} : {data?.mobileNumber}
           </Text>
           <Text size={"md"} sx={{ padding: "5px 50px" }} mb={10}>
-            Email: {data?.email}
+            {t("email")} : {data?.email}
           </Text>
           {data && data.bio && data?.bio.replace(/<[^>]+>/g, "").length > 0 && (
             <>
@@ -118,10 +119,10 @@ const UserProfile = () => {
               value="certificate"
               icon={<IconFileDescription size={14} />}
             >
-              Certificate
+              {t("certificate")}
             </Tabs.Tab>
             <Tabs.Tab value="training" icon={<IconSchool size={14} />}>
-              Training
+              {t("training")}
             </Tabs.Tab>
           </Tabs.List>
 
