@@ -33,18 +33,13 @@ const Verify = () => {
     <Container>
       <div style={{ marginTop: "150px" }}>
         <Text mb={10} size={"xl"} weight="bold">
-          Confirmation Email has been sent
+          {t("confirmation_sent")}
         </Text>
-        <Text>Please check your new email inbox to confirm your process.</Text>
-        <Text>
-          If you have any trouble, you can email support@vurilo.com for help at
-          any time.
-        </Text>
-        <Text mt={10}>
-          Note: Current Email change request is only valid for 5 Minutes
-        </Text>
+        <Text>{t("check_inbox")}</Text>
+        <Text>{t("email_vurilo")}</Text>
+        <Text mt={10}>{t("valid_five_minutes")}</Text>
         <Button mt={20} loading={resendEmail.isLoading} onClick={handleClick}>
-          Resend Verification Email
+          {t("resend_verification")}
         </Button>
       </div>
     </Container>

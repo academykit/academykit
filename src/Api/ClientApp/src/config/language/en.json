@@ -718,5 +718,38 @@
   "join_meeting": "Join Meeting",
   "class_duration": "Class Duration",
   "minutes": "Minutes",
-  "reply" : "Reply"
+  "reply" : "Reply",
+  "500": "500",
+  "something_bad": "Something bad just happened",
+  "server_error": "Our servers could not handle your request. Don't worry, our development team was already notified. Try refreshing the page.",
+  "refresh_page": "Refresh the page",
+  "confirmation_sent":"Confirmation Email has been sent",
+  "check_inbox": "Please check your new email inbox to confirm your process.",
+  "email_vurilo": "If you have any trouble, you can email support@vurilo.com for help at any time.",
+  "valid_five_minutes": "Note: Current Email change request is only valid for 5 Minutes",
+  "resend_verification": "Resend Verification Email",
+  "esewa":"Esewa",
+  "khalti":"Khalti",
+  "key":"Key",
+  "your_key":"Please enter your key",
+  "secret":"Secret",
+  "secret_key":"Your secret key",
+  "verify_url":"Verify Url",
+  "your_verification_url":"Your verification Url",
+  "name_a-z":"Name (A-Z)",
+  "name_z-a":"Name (Z-A)",
+  "email_a-z":"Email (A-Z)",
+  "email_z-a":"Email (Z-A)",
+  "hints":"Hints",
+  "no_assignment_questions":"No assignment questions found!",
+  "comment":"Comment",
+  "marks":"Marks",
+  "pass":"Pass",
+  "edit_assignment_review":"Edit Assignment Review",
+  "review_assignment":"Review Assignment"
+  
+
+
+
+
 }
