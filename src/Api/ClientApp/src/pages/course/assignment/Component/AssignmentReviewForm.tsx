@@ -16,6 +16,7 @@ import {
 } from "@utils/services/assignmentService";
 import errorType from "@utils/services/axiosError";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 const AssignmentReviewForm = ({
@@ -36,6 +37,7 @@ const AssignmentReviewForm = ({
   const [isPass, setIsPass] = useState(
     editData?.assignmentReview?.isPassed ?? false
   );
+  const{t}= useTranslation();
 
   const submitHandler = async (data: IAddAssignmentReview) => {
     try {
@@ -49,10 +51,10 @@ const AssignmentReviewForm = ({
         await addReview.mutateAsync({ data, lessonId: id as string });
       }
       showNotification({
-        title: "Successful",
-        message: `Successfully ${
-          edit ? "edited" : "added"
-        } review on assignment`,
+        title: t("successful"),
+        message: `${t("Successfully")} ${
+          edit ? t("edited") : t("added")
+        } ${t("review_on_assignment")}`,
       });
       closeModal();
     } catch (err) {

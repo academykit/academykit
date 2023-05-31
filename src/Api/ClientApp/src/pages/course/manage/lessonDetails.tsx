@@ -15,6 +15,7 @@ import { useGetLessonStatisticsDetails } from "@utils/services/manageCourseServi
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import CourseLessonDetails from "./Components/CourseLessonDetails";
+import { useTranslation } from "react-i18next";
 
 const LessonDetails = () => {
   const { id, lessonId } = useParams();
@@ -29,7 +30,8 @@ const LessonDetails = () => {
   }
 
   if (lessonDetails.isLoading) return <Loader />;
-
+  
+const{t}=useTranslation();
   const handleExport = async () => {
     setLoading(true);
     try {
@@ -50,7 +52,7 @@ const LessonDetails = () => {
       const error = errorType(err);
       showNotification({
         message: error,
-        title: "Error!",
+        title: t("error"),
         color: "red",
       });
     }

@@ -28,6 +28,7 @@ import moment from "moment";
 import formatDuration from "@utils/formatDuration";
 import { getType } from "./LessonStatusColor";
 import { IStudentInfoLesson } from "@utils/services/manageCourseService";
+import { useTranslation } from "react-i18next";
 
 const TableRow = ({ values }: { values: IReportDetail }) => {
   const theme = useMantineTheme();
@@ -131,12 +132,12 @@ const StudentLessonDetails = ({
         return <div></div>;
     }
   };
-
+const {t}= useTranslation();
   const onCompletedClick = async () => {
     try {
       await watchHistory.mutateAsync({ courseId, lessonId, userId: studentId });
       showNotification({
-        message: "Successfully passed student.",
+        message: t("pass_student_success"),
       });
       setConfirmComplete();
     } catch (err) {

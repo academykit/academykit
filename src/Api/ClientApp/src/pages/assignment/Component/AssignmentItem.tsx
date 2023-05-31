@@ -23,6 +23,8 @@ import {
 } from "@utils/services/assignmentService";
 import errorType from "@utils/services/axiosError";
 import EditAssignment from "./EditAssignment";
+import { useTransition } from "react";
+import { useTranslation } from "react-i18next";
 
 const useStyle = createStyles((theme) => ({
   wrapper: {
@@ -59,12 +61,12 @@ const AssignmentItem = ({
   };
   const deleteQuestion = useDeleteAssignmentQuestion(lessonId, search);
   const [confirmDelete, setConfirmDelete] = useToggle();
-
+  const { t } = useTranslation();
   const deleteHandler = async () => {
     try {
       await deleteQuestion.mutateAsync({ assignmentId: data.id });
       showNotification({
-        message: "Successfully deleted assignment question",
+        message: t("delete_assignment_question_success"),
       });
     } catch (err) {
       const error = errorType(err);

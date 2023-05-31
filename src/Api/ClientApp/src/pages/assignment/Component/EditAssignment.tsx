@@ -128,7 +128,7 @@ const EditAssignment = ({
 
   const addAssignmentQuestion = useAddAssignmentQuestion(lessonId, search);
   const editAssignment = useEditAssignmentQuestion(lessonId, search);
-
+  const { t } = useTranslation();
   const onSubmit = async (data: ICreateAssignment) => {
     try {
       if (assignmentQuestion) {
@@ -138,12 +138,12 @@ const EditAssignment = ({
           assignmentId: assignmentQuestion.id,
         });
         showNotification({
-          message: "Successfully edited assignment question.",
+          message: t("edit_assignment_question_success"),
         });
       } else {
         await addAssignmentQuestion.mutateAsync({ data });
         showNotification({
-          message: "Successfully added assignment question.",
+          message: t("add_assignment_question_success"),
         });
       }
       form.reset();

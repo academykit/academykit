@@ -59,7 +59,7 @@ const AddMember = ({
       ]);
     }
   }, [getNotMemberList.isSuccess]);
-
+const {t}= useTranslation();
   const [data, setData] = useState<{ label: string; value: string }[]>([]);
   const onSubmitForm = async (email: string[]) => {
     try {
@@ -73,7 +73,7 @@ const AddMember = ({
         });
       }
       showNotification({
-        message: response.data?.message ?? "Successfully Added Group Member.",
+        message: response.data?.message ?? t("add_group_member_success"),
       });
       onCancel();
     } catch (err) {

@@ -26,6 +26,7 @@ import { showNotification } from "@mantine/notifications";
 import { useNavigate, useParams } from "react-router-dom";
 import errorType from "@utils/services/axiosError";
 import RichTextEditor from "@mantine/rte";
+import { useTranslation } from "react-i18next";
 
 interface ISelectList {
   label: string;
@@ -138,11 +139,11 @@ const Questions = () => {
       setData([data[0], i]);
     }
   }, [questionList.isSuccess]);
-
+const {t}= useTranslation();
   const addQuestion = async () => {
     if (!data[1].length) {
       showNotification({
-        message: "Question List cannot be empty!",
+        message: t("question_list_cannot_empty"),
         color: "red",
       });
       return;
@@ -157,14 +158,14 @@ const Questions = () => {
         identity: params.lessonSlug ?? "",
       });
       showNotification({
-        message: "Questions added successfully!",
+        message: t("add_questions_success"),
       });
       navigate(-1);
     } catch (error) {
       const err = errorType(error);
 
       showNotification({
-        title: "Error",
+        title: t("error"),
         message: err,
         color: "red",
       });
