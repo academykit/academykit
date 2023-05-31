@@ -119,7 +119,7 @@ const CreateCoursePage = () => {
   }, [isSuccess]);
 
   const { mutateAsync, isLoading } = useCreateCourse();
-
+  const { t } = useTranslation();
   const submitHandler = async (data: FormValues) => {
     try {
       const res = await mutateAsync({
@@ -133,8 +133,8 @@ const CreateCoursePage = () => {
       });
       form.reset();
       showNotification({
-        title: "Success!",
-        message: "Training created successfully.",
+        title: t("success"),
+        message: t("create_training_success"),
       });
       navigate(RoutePath.manageCourse.lessons(res.data.slug).route);
     } catch (err) {

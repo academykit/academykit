@@ -29,6 +29,7 @@ import {
 import { Link, useParams } from "react-router-dom";
 import AddMember from "../Components/AddMember";
 import { UserRole } from "@utils/enums";
+import { useTranslation } from "react-i18next";
 
 const a = {
   in: { opacity: 1 },
@@ -140,6 +141,7 @@ const GroupMemberRow = ({
     search,
     data.user.id
   );
+  const { t } = useTranslation();
   const deleteMember = async () => {
     removeGroupMember.mutate({ id: id as string, memberId: data.id });
   };
@@ -154,7 +156,7 @@ const GroupMemberRow = ({
   }
   if (removeGroupMember.isSuccess) {
     showNotification({
-      message: `Successfully removed ${data.user.fullName}`,
+      message: `${t("remove_success")} ${data.user.fullName}`,
     });
     removeGroupMember.reset();
     setDeleteDialog();

@@ -5,6 +5,7 @@ import { showNotification } from "@mantine/notifications";
 import RichTextEditor from "@mantine/rte";
 import errorType from "@utils/services/axiosError";
 import { useGetComments, usePostComment } from "@utils/services/commentService";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 const Comments = () => {
@@ -19,7 +20,7 @@ const Comments = () => {
   if (isLoading) {
     return <Loader />;
   }
-
+  const { t } = useTranslation();
   const onSubmit = async ({ content }: { content: string }) => {
     try {
       await postComment.mutateAsync({
@@ -27,7 +28,7 @@ const Comments = () => {
         courseId: id as string,
       });
       form.reset();
-      showNotification({ message: "Comment added successfully" });
+      showNotification({ message: t("add_comment_success") });
     } catch (err) {
       const error = errorType(err);
       showNotification({

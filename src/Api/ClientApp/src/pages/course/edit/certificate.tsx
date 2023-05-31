@@ -101,7 +101,7 @@ const Certificate = () => {
         title: t("success"),
         message: `${t("certificate_details")} ${
           isEditing ? t("updated") : t("added")
-        } successfully!`,
+        } ${t("successfully")}`,
       });
     } catch (error) {
       const err = errorType(error);

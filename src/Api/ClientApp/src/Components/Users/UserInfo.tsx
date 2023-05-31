@@ -105,12 +105,12 @@ const UserInfo = () => {
       await updateUser.mutateAsync({ id: userId as string, data });
       navigator(`/userProfile/${userId as string}`);
       showNotification({
-        title: "Successful",
-        message: "Profile Successfully Updated.",
+        title: t("successful"),
+        message: t("update_profile_success"),
       });
     } catch (err) {
       const error = errorType(err);
-      showNotification({ message: error, title: "Error!", color: "red" });
+      showNotification({ message: error, title: t("error"), color: "red" });
     }
   };
   const { t } = useTranslation();

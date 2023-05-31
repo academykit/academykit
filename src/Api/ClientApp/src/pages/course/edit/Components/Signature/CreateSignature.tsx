@@ -54,31 +54,31 @@ const CreateSignature = ({
     try {
       await createCertificate.mutateAsync({ data, id: id as string });
       showNotification({
-        title: "Success",
-        message: "Signature added successfully!",
+        title: t("success"),
+        message: t("add_signature_success"),
       });
       onClose && onClose();
     } catch (error) {
       const err = errorType(error);
       showNotification({
-        title: "Error",
+        title: t("error"),
         message: err,
         color: "red",
       });
     }
   };
-
+  const { t } = useTranslation();
   const handelEdit = async (data: IGetSignature) => {
     try {
       await editSignature.mutateAsync({ data, id: id as string });
       showNotification({
-        title: "Success",
-        message: "Signature edited successfully!",
+        title: t("success"),
+        message: t("edit_signature_success"),
       });
     } catch (error) {
       const err = errorType(error);
       showNotification({
-        title: "Error",
+        title: t("error"),
         message: err,
         color: "red",
       });
@@ -88,13 +88,13 @@ const CreateSignature = ({
     try {
       await deleteSignature.mutateAsync({ id: id as string, sigId });
       showNotification({
-        title: "Success",
-        message: "Signature deleted successfully!",
+        title: t("success"),
+        message: t("delete_signature_success"),
       });
     } catch (error) {
       const err = errorType(error);
       showNotification({
-        title: "Error",
+        title: t("error"),
         message: err,
         color: "red",
       });

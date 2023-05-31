@@ -134,7 +134,7 @@ const Create = () => {
     } catch (err) {
       const error = errorType(err);
       showNotification({
-        title: "Error",
+        title: t("error"),
         message: error,
         color: "red",
       });

@@ -11,6 +11,7 @@ import {
   IPoolTeacher,
   useDeletePoolTeacher,
 } from "@utils/services/poolService";
+import { useTranslation } from "react-i18next";
 
 const TeacherCard = ({
   teacher,
@@ -22,12 +23,12 @@ const TeacherCard = ({
   const deleteTeacher = useDeletePoolTeacher(slug);
   const [confirmation, setConfirmation] = useToggle();
   const auth = useAuth();
-
+  const { t } = useTranslation();
   const handleDelete = async () => {
     try {
       setConfirmation();
       await deleteTeacher.mutateAsync(teacher.id as string);
-      showNotification({ message: "Teacher deleted successfully" });
+      showNotification({ message: t("delete_teacher_success") });
     } catch (err) {
       const error = errorType(err);
       showNotification({

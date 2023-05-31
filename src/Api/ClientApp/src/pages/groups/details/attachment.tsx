@@ -33,6 +33,7 @@ import {
 } from "@utils/services/groupService";
 import moment from "moment";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 const GroupAttachment = ({
@@ -45,20 +46,21 @@ const GroupAttachment = ({
   const [deleteAttachment, setDeleteAttachment] = useState("");
   const [opened, setOpened] = useState(false);
   const authUser = useAuth();
-  
-  
+
   if (getGroupAttachment.error) {
     throw getGroupAttachment.error;
   }
-  
+
   const Rows = ({ item }: { item: IGroupAttachmentItems }) => {
-    const [enabled, setEnabled] = useState(false)
+    const [enabled, setEnabled] = useState(false);
     const removeAttachment = useRemoveGroupAttachment(
       id as string,
       item.id,
       searchParams
-      );
-      const fileUrl = getFileUrl(item.url,enabled)
+    );
+    const fileUrl = getFileUrl(item.url, enabled);
+
+    const { t } = useTranslation();
     const handleDelete = async () => {
       try {
         await removeAttachment.mutateAsync({
@@ -66,7 +68,7 @@ const GroupAttachment = ({
           fileId: item.id,
         });
         showNotification({
-          message: "Attachment deleted successfully.",
+          message: t("delete_attachment_success"),
         });
         setOpened(false);
       } catch (err) {
@@ -79,9 +81,8 @@ const GroupAttachment = ({
       setDeleteAttachment("");
     };
     const handleDownload = () => {
-      setEnabled(true)
-      if(fileUrl.isSuccess){
-
+      setEnabled(true);
+      if (fileUrl.isSuccess) {
         window.open(fileUrl.data);
       }
     };
@@ -95,19 +96,18 @@ const GroupAttachment = ({
           onConfirm={handleDelete}
         />
 
-        <td>{ moment(item.createdOn + "Z").format('YYYY-MM-DD HH:mm:ss') }</td>
+        <td>{moment(item.createdOn + "Z").format("YYYY-MM-DD HH:mm:ss")}</td>
         <td>{item.name}</td>
         <td>{item.mimeType}</td>
-       
+
         <td>
           <Flex>
-            
             <Tooltip label={"Download attachment"}>
               <ActionIcon onClick={() => handleDownload()}>
                 <IconDownload />
               </ActionIcon>
             </Tooltip>
-         
+
             <Tooltip label={"Delete attachment"}>
               <ActionIcon onClick={() => setDeleteAttachment(item.id)}>
                 <IconTrash color="red" />
@@ -115,7 +115,6 @@ const GroupAttachment = ({
             </Tooltip>
           </Flex>
         </td>
-        
       </tr>
     );
   };

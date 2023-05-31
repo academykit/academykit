@@ -13,6 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import CheckboxType from "./CheckboxType";
 import RadioType from "./RadioType";
 import SubjectiveType from "./SubjectiveType";
+import { useTranslation } from "react-i18next";
 
 const AssignmentForm = ({
   item,
@@ -49,20 +50,20 @@ const AssignmentForm = ({
         data: finalData,
       });
       showNotification({
-        message: `Successfully submitted assignment`,
-        title: "Success",
+        message: t("submit_assignment_success"),
+        title: t("success"),
       });
       navigation(-1);
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        title: "Error",
+        title: t("error"),
         color: "red",
       });
     }
   };
-
+  const { t } = useTranslation();
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       {item.map((x, currentIndex) => (

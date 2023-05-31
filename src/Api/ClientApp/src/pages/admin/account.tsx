@@ -90,7 +90,7 @@ const Account = () => {
       await mutateAsync(value);
       form.reset();
       showNotification({
-        message: "Password Changed successfully!",
+        message: t("change_password_success"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -109,7 +109,7 @@ const Account = () => {
       const err = errorType(error);
       showNotification({
         message: err,
-        title: "Error",
+        title: t("error"),
         color: "red",
       });
     }

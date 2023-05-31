@@ -139,7 +139,7 @@ const AddMeeting = ({
       form.setFieldValue("zoomLicenseId", "");
     }
   };
-
+  const { t } = useTranslation();
   const handleSubmit = async (values: any) => {
     const time = new Date(values?.meetingStartTime).toLocaleTimeString();
     const date = new Date(values?.meetingStartDate).toLocaleDateString();
@@ -178,8 +178,10 @@ const AddMeeting = ({
         } as ILessonMeeting);
       }
       showNotification({
-        message: `Lesson ${isEditing ? "Edited" : "Added"} successfully!`,
-        title: "Success!",
+        message: `${t("capital_lesson")} ${
+          isEditing ? t("edited") : t("added")
+        } ${t("successfully")}`,
+        title: t("success"),
       });
       setAddLessonClick(true);
     } catch (error) {
@@ -187,7 +189,7 @@ const AddMeeting = ({
       showNotification({
         message: err,
         color: "red",
-        title: "Error!",
+        title: t("error"),
       });
     }
   };

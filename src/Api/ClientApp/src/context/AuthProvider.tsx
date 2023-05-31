@@ -7,6 +7,7 @@ import { useLogout, useReAuth } from "@utils/services/authService";
 import { IUserProfile } from "@utils/services/types";
 import React, { createContext, useState, FC } from "react";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface IAuthContext {
   auth: IUserProfile | null;
@@ -62,6 +63,7 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
   }, [useLogoutQuery.isSuccess]);
 
   const [showLogout, setShowLogout] = useToggle();
+  const { t } = useTranslation();
   const confirmLogout = async () => {
     try {
       await useLogoutQuery.mutateAsync();
@@ -69,8 +71,8 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
     } catch (err) {
       setShowLogout();
       showNotification({
-        title: "Error!",
-        message: "Unable to logout at this time",
+        title: t("error"),
+        message: t("unable_to_logout"),
         color: "red",
       });
     }

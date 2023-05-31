@@ -80,7 +80,7 @@ const UsersList = ({
       showNotification({
         message: err,
         color: "red",
-        title: "Error",
+        title: t("error"),
       });
     }
     setCsvLoad(false);

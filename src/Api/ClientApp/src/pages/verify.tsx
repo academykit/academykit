@@ -4,6 +4,7 @@ import { showNotification } from "@mantine/notifications";
 import { useResendEmailVerification } from "@utils/services/authService";
 import errorType from "@utils/services/axiosError";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
 const Verify = () => {
@@ -11,18 +12,18 @@ const Verify = () => {
   const resendEmail = useResendEmailVerification();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
-
+  const { t } = useTranslation();
   const handleClick = async () => {
     try {
       await resendEmail.mutateAsync({ token: token as string });
       showNotification({
-        title: "Successful",
-        message: "Email was re-sent successfully",
+        title: t("successful"),
+        message: t("re_sent_email"),
       });
     } catch (error) {
       const err = errorType(error);
       showNotification({
-        title: "Error",
+        title: t("error"),
         message: err,
         color: "red",
       });
