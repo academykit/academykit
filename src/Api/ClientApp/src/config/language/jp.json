@@ -701,6 +701,23 @@
 "sure_submit_exam": "この試験を提出してもよろしいですか？",
 "exam_submitted_bePatient": "試験が正常に提出されました。結果をお待ちください。",
 "mark_complete": "完了としてマークする",
-"delete_feedback_question" : "このフィードバックの質問を削除してもよろしいですか？"
+"delete_feedback_question" : "このフィードバックの質問を削除してもよろしいですか？",
+"email_change_success": "メールが正常に変更されました",
+"something_terrible_email": "何か恐ろしいことが起こりました！ メールの変更中にエラーが発生しました！",
+"go_back": "ホームに戻る",
+"error_while_joining": "ミーティングに参加する際にエラーが発生しました",
+"back_course": "コースに戻る",
+"rejoin": "再参加する",
+"my_progress": "学習の進捗状況：",
+"not_enrolled_training": "どのトレーニングにも登録されていません。",
+"previous_month": "前月と比較して",
+"total_exams": "総合試験数",
+"join_meeting": "ミーティングに参加する",
+"class_duration": "クラスの期間",
+"minutes": "分",
+"reply" : "返信する"
+
+
+
     }
     

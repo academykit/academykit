@@ -11,16 +11,13 @@ import {
 import {
   IconEdit,
   IconFileDescription,
-  IconMessage,
   IconSchool,
 } from "@tabler/icons";
 import { useProfileAuth } from "@utils/services/authService";
 import { useTranslation } from "react-i18next";
 import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import RichTextEditor from "@mantine/rte";
-import useAuth from "@hooks/useAuth";
 
-import InternalCertificate from "./Components/InternalCertificate";
 
 const useStyles = createStyles((theme) => ({
   avatarImage: {

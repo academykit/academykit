@@ -105,7 +105,7 @@ const MyTrainings = () => {
           }
 
           {authorCourse.data && authorCourse.data.totalCount === 0 && (
-            <Box mt={5}>No Trainings Found</Box>
+            <Box mt={5}>{t("no_trainings_found")}</Box>
           )}
         </div>
       )}

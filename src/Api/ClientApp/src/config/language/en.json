@@ -704,9 +704,19 @@
   "sure_submit_exam": "Are you sure you want to submit this exam?",
   "exam_submitted_bePatient": "Exam submitted successfully. Please be patient for your result.",
   "mark_complete": "Mark Complete",
-  "delete_feedback_question" : "Are you sure you want to delete this feedback question?"
-  
-
-
-
+  "delete_feedback_question" : "Are you sure you want to delete this feedback question?",
+  "email_change_success": "Your email has been changed successfully",
+  "something_terrible_email": "Something terrible happened! Some error occurred while changing email!",
+  "go_back": "Go Back to Home",
+  "error_while_joining": "Error Occured while joining meeting",
+  "back_course": "Back to Course",
+  "rejoin": "Rejoin",
+  "my_progress": "Your progress on learning materials:",
+  "not_enrolled_training": "You are not enrolled to any training.",
+  "previous_month": "Compared to previous month",
+  "total_exams": "Total Exams",
+  "join_meeting": "Join Meeting",
+  "class_duration": "Class Duration",
+  "minutes": "Minutes",
+  "reply" : "Reply"
 }
