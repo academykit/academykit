@@ -152,6 +152,7 @@ const AddAssignment = ({
         endDate: endDate && endDate.utcDateTime,
         isMandatory,
       };
+
       if (!isEditing) {
         const response: any = await lesson.mutateAsync(
           assignmentData as ILessonAssignment
@@ -166,6 +167,7 @@ const AddAssignment = ({
         } as ILessonAssignment);
         setIsEditing(false);
       }
+      console.log("first");
       showNotification({
         title: t("success"),
         message: `${t("assignment")} ${
@@ -174,7 +176,7 @@ const AddAssignment = ({
       });
     } catch (error: any) {
       const err = errorType(error);
-
+      console.log("err");
       showNotification({
         title: t("error"),
         message: err,
