@@ -92,13 +92,13 @@ namespace Lingtren.Infrastructure.Services
             if (course == null)
             {
                 _logger.LogWarning("Training with identity: {identity} not found for user with :{id}.", identity, currentUserId);
-                throw new EntityNotFoundException("Training not found.");
+                throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             }
             var lesson = new Lesson();
             if (!string.IsNullOrWhiteSpace(lessonIdentity))
             {
                 var requestedLesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
-               predicate: p => p.CourseId == course.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),
+               predicate: p => p.CourseId == course.Id && (p.Id.ToString() == lessonIdentity || p.Slug.Equals(lessonIdentity)),
                include: src => src.Include(x => x.User)
                                    .Include(x => x.Course)
                                    .Include(x => x.Section)
@@ -107,7 +107,7 @@ namespace Lingtren.Infrastructure.Services
                 if (requestedLesson == null)
                 {
                     _logger.LogWarning("Lesson with identity : {identity} and training with id: {courseId} not found for user with :{id}.", identity, course.Id, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
                 lesson = requestedLesson;
             }
@@ -120,11 +120,11 @@ namespace Lingtren.Infrastructure.Services
             var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
 
             var userCompletedWatchHistories = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(
-                predicate: p => p.UserId == currentUserId && p.CourseId == lesson.CourseId && p.IsPassed
+                predicate: p => p.UserId == currentUserId && p.CourseId == course.Id && p.IsPassed
                 ).ConfigureAwait(false);
 
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
-                predicate: p => p.CourseId == lesson.CourseId,
+                predicate: p => p.CourseId == course.Id,
                 orderBy: o => o.OrderBy(x => x.Order),
                 include: src => src.Include(x => x.Lessons).ThenInclude(x=>x.QuestionSet).ThenInclude(x=>x.QuestionSetSubmissions)).ConfigureAwait(false);
 
@@ -138,7 +138,7 @@ namespace Lingtren.Infrastructure.Services
             if (!isTeacher && !isSuperAdminOrAdmin && containMandatoryLesson.Any())
             {
                 _logger.LogWarning("User with id: {userId} needs to view other mandatory lesson before viewing current lesson with id: {lessonId}", currentUserId, lesson.Id);
-                throw new ForbiddenException("Please complete above remaining mandatory lesson before viewing current lesson.");
+                throw new ForbiddenException(_localizer.GetString("CompleteMandatoryLesson"));
             }
 
             if (lesson.Type == LessonType.LiveClass)
@@ -270,7 +270,7 @@ namespace Lingtren.Infrastructure.Services
                 if (course == null)
                 {
                     _logger.LogWarning("Training with identity: {identity} not found for user with :{id}.", courseIdentity, currentUserId);
-                    throw new EntityNotFoundException("Training not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
                 var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
                     predicate: p => p.CourseId == course.Id &&
@@ -279,7 +279,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     _logger.LogWarning("Section with identity: {identity} not found for user with id:{id} and training with id: {courseId}.",
                                             courseIdentity, currentUserId, course.Id);
-                    throw new EntityNotFoundException("Training not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
                 var currentTimeStamp = DateTime.UtcNow;
                 var lesson = new Lesson
@@ -345,7 +345,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to create the lesson");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to create the lesson");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("CreateLessonError"));
             }
         }
 
@@ -365,7 +365,7 @@ namespace Lingtren.Infrastructure.Services
                 if (course == null)
                 {
                     _logger.LogWarning("Training with identity: {identity} not found for user with :{id}.", identity, currentUserId);
-                    throw new EntityNotFoundException("Training not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
                 var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
@@ -375,7 +375,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     _logger.LogWarning("Section with identity: {identity} not found for user with id:{id} and training with id: {courseId}.",
                                             identity, currentUserId, course.Id);
-                    throw new EntityNotFoundException("Training not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
                 var existing = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
@@ -384,13 +384,13 @@ namespace Lingtren.Infrastructure.Services
                 if (existing == null)
                 {
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with id: {id} and training with id: {courseId} and section with id: {sectionId}.", lessonIdentity, currentUserId, course.Id, section.Id);
-                    throw new EntityNotFoundException("Lesson not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
 
                 if (model.Type != existing.Type)
                 {
                     _logger.LogWarning("Lesson type not matched for lesson with id: {id}.", existing.Id);
-                    throw new ForbiddenException("Lesson type not matched.");
+                    throw new ForbiddenException(_localizer.GetString("LessonTypeNotMatched"));
                 }
                 var currentTimeStamp = DateTime.UtcNow;
 
@@ -464,7 +464,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to update the lesson information");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to update the lesson information");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UpdateLessonInformationError"));
             }
         }
 
@@ -483,7 +483,7 @@ namespace Lingtren.Infrastructure.Services
                 if (course == null)
                 {
                     _logger.LogWarning("DeleteLessonAsync(): Training with identity : {identity} not found for user with id :{currentUserId}.", identity, currentUserId);
-                    throw new EntityNotFoundException("Training was not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
                 var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
@@ -492,13 +492,13 @@ namespace Lingtren.Infrastructure.Services
                 if (lesson == null)
                 {
                     _logger.LogWarning("DeleteLessonAsync(): Lesson with identity : {lessonIdentity} was not found for user with id : {userId} and having training with id : {courseId}.", lessonIdentity, currentUserId, course.Id);
-                    throw new EntityNotFoundException("Lesson was not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
 
                 if (lesson.Type == LessonType.RecordedVideo)
                 {
                     _logger.LogWarning("DeleteLessonAsync(): Lesson with id : {lessonId} has type : {type}.", lesson.Id, lesson.Type);
-                    throw new ForbiddenException($"Lesson with type {lesson.Type} cannot be deleted.");
+                    throw new ForbiddenException(_localizer.GetString("LessonTypeRecordedCannotDeleted"));
                 }
 
                 if (lesson.Type == LessonType.Exam)
@@ -509,7 +509,7 @@ namespace Lingtren.Infrastructure.Services
                     if (questionSet == null)
                     {
                         _logger.LogWarning("DeleteLessonAsync(): Lesson with id:{lessonId} and type: {lessonType} does not contain question set with id : {questionSetId}.", lesson.Id, lesson.Type, lesson.QuestionSetId);
-                        throw new EntityNotFoundException($"Question set not found for lesson with type: {lesson.Type}.");
+                        throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                     }
 
                     var hasAnyAttempt = await _unitOfWork.GetRepository<QuestionSetSubmission>().ExistsAsync(
@@ -532,7 +532,7 @@ namespace Lingtren.Infrastructure.Services
                     {
                         _logger.LogWarning("DeleteLessonAsync(): Lesson with id:{lessonId} and type: {type} does not contain meeting with id : {meetingId}.",
                                            lesson.Id, lesson.Type, lesson.MeetingId);
-                        throw new EntityNotFoundException($"Meeting not found for lesson with type: {lesson.Type}.");
+                        throw new EntityNotFoundException(_localizer.GetString("MeetingNotFound"));
                     }
                 }
 
@@ -574,7 +574,7 @@ namespace Lingtren.Infrastructure.Services
                     {
                         _logger.LogWarning("DeleteLessonAsync(): Lesson with id:{lessonId} and type: {type} contains feedbackSubmissions.",
                                            lesson.Id, lesson.Type);
-                        throw new EntityNotFoundException($"Feedback contains submission for lesson with type: {lesson.Type}.");
+                        throw new EntityNotFoundException(_localizer.GetString("FeedbackSubmissionNotFound"));
                     }
                     var feedbackOptions = await _unitOfWork.GetRepository<FeedbackQuestionOption>().GetAllAsync(
                         predicate: p => feedbackIds.Contains(p.FeedbackId)).ConfigureAwait(false);
@@ -623,14 +623,14 @@ namespace Lingtren.Infrastructure.Services
                 if (user == null)
                 {
                     _logger.LogWarning("User with id: {id} not found.", currentUserId);
-                    throw new EntityNotFoundException("User not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
                 }
 
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: false).ConfigureAwait(false);
                 if (course == null)
                 {
                     _logger.LogWarning("Training with identity: {identity} not found for user with id :{id}.", identity, currentUserId);
-                    throw new EntityNotFoundException("Training not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
                 var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
@@ -639,26 +639,26 @@ namespace Lingtren.Infrastructure.Services
                 if (lesson == null)
                 {
                     _logger.LogWarning("Lesson with identity : {identity} and training with id: {courseId} not found for user with :{id}.", identity, course.Id, currentUserId);
-                    throw new EntityNotFoundException("Lesson not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
 
                 if (lesson.Type != LessonType.LiveClass)
                 {
                     _logger.LogWarning("Lesson with id : {id} type not match for join meeting.", lesson.Id);
-                    throw new ForbiddenException("Lesson type not match for join meeting.");
+                    throw new ForbiddenException(_localizer.GetString("LessonTypeNotMatchMeeting"));
                 }
                 lesson.Meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == lesson.MeetingId, include: src => src.Include(x => x.ZoomLicense)).ConfigureAwait(false);
                 if (lesson.Meeting == null)
                 {
                     _logger.LogWarning("Lesson with id : {id}  meeting not found for join meeting.", lesson.Id);
-                    throw new EntityNotFoundException("Meeting not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("MeetingNotFound"));
                 }
 
                 if (lesson.Meeting.ZoomLicense == null)
                 {
                     _logger.LogWarning("Zoom license with id : {id} not found.", lesson.Meeting.ZoomLicenseId);
-                    throw new ServiceException("Zoom license not found.");
+                    throw new ServiceException(_localizer.GetString("ZoomLisenceNotFound"));
                 }
 
                 var isModerator = await IsLiveClassModerator(currentUserId, course).ConfigureAwait(false);
@@ -669,7 +669,7 @@ namespace Lingtren.Infrastructure.Services
                         if (!isMember)
                         {
                             _logger.LogWarning("User with id : {currentUserId} is invalid user to attend this meeting having lesson with id :{id}.", currentUserId, lesson.Id);
-                            throw new ForbiddenException("You are not allowed to access this meeting.");
+                            throw new ForbiddenException(_localizer.GetString("MeetingNotAccessed"));
                         }
                     }
                
@@ -678,7 +678,7 @@ namespace Lingtren.Infrastructure.Services
                 if (zoomSetting == null)
                 {
                     _logger.LogWarning("GetJoinMeetingAsync(): Zoom setting not found for user with id: {id}.", currentUserId);
-                    throw new ServiceException("Zoom setting not found.");
+                    throw new ServiceException(_localizer.GetString("ZoomSettingNotFound"));
                 }
 
                 if (lesson.Meeting.MeetingNumber == default)
@@ -703,7 +703,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to join live class.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to join live class.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("LiveClassJoinError"));
             }
         }
 
@@ -724,20 +724,20 @@ namespace Lingtren.Infrastructure.Services
             if (lesson == default)
             {
                 _logger.LogError($"GetMeetingReportAsync: Lesson with identity : {identity} not found.");
-                throw new EntityNotFoundException("Lesson not found.");
+                throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
             }
 
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate : x => x.Id.ToString().Equals(userId)).ConfigureAwait(false);
             if(user == default)
             {
-                throw new EntityNotFoundException("User not found.");
+                throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
             }
             var reports = await _unitOfWork.GetRepository<MeetingReport>().GetAllAsync(predicate: p => p.MeetingId == lesson.MeetingId &&
                           p.UserId.ToString() == userId).ConfigureAwait(false);
             if (reports == default)
             {
                 _logger.LogError($"GetMeetingReportAsync : Meeting report of user with id {userId} not found.");
-                throw new EntityNotFoundException("Meeting report not found.");
+                throw new EntityNotFoundException(_localizer.GetString("MeetingReportNotFound"));
             }
             return reports.Select(x => new MeetingReportResponseModel
             {
@@ -768,7 +768,7 @@ namespace Lingtren.Infrastructure.Services
                 if (course == null)
                 {
                     _logger.LogWarning("ReorderAsync(): Training with identity : {identity} not found for user with id :{userId}.", identity, currentUserId);
-                    throw new EntityNotFoundException("Training was not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
                 var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
@@ -778,7 +778,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     _logger.LogWarning("ReorderAsync(): Section with identity : {identity} not found for training with id : {id} and user with id :{userId}.",
                         model.SectionIdentity, course.Id, currentUserId);
-                    throw new EntityNotFoundException("Section was not found.");
+                    throw new EntityNotFoundException(_localizer.GetString("SectionNotFound"));
                 }
 
                 var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(
@@ -809,7 +809,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to reorder the lessons.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while attempting to reorder the lessons.");
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("LessonReorderError"));
             }
         }
 
@@ -852,7 +852,7 @@ namespace Lingtren.Infrastructure.Services
             if (currentLesson == null)
             {
                 _logger.LogWarning("Current watch lesson not found for training with id : {courseId} and user with id : {userId}.", course.Id, currentUserId);
-                throw new EntityNotFoundException("Current watched lesson not found.");
+                throw new EntityNotFoundException(_localizer.GetString("CurrentWatchLessonNotFound"));
             }
             return currentLesson;
         }

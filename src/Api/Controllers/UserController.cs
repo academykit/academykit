@@ -174,7 +174,7 @@
             if (CurrentUser.Id != userId && CurrentUser.Role != UserRole.SuperAdmin && CurrentUser.Role != UserRole.Admin)
             {
                 _logger.LogWarning("User with Id : {userId} and role :{role} is not allowed to update user.", CurrentUser.Id, CurrentUser.Role.ToString());
-                throw new ForbiddenException("Only same user is allowed to update user or by admin only.");
+                throw new ForbiddenException(_localizer.GetString("OnlySameUserOrAdmin"));
             }
             await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Update").ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _userService.GetAsync(userId, CurrentUser.Id, includeAllProperties: false).ConfigureAwait(false);
