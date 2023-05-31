@@ -43,7 +43,7 @@ const GroupMember = ({
   searchParams,
 }: IWithSearchPagination) => {
   const [showAddMember, setShowAddMember] = useToggle();
-
+  const { t } = useTranslation();
   const { id } = useParams();
   const groupMember = useGroupMember(id as string, searchParams);
 
@@ -59,15 +59,15 @@ const GroupMember = ({
         mt={20}
       >
         <Box>
-          <Title> Group Members</Title>
-          <Text>Here you can see all members of the group.</Text>
+          <Title>{t("group_members")}</Title>
+          <Text>{t("group_members_description")}</Text>
         </Box>
         {auth?.auth && auth?.auth?.role <= UserRole.Trainer && (
           <Transition mounted={!showAddMember} transition={a} duration={400}>
             {(styles) => (
               <>
                 <Button onClick={() => setShowAddMember()}>
-                  Add Group Member
+                  {t("add_group_member")}
                 </Button>
               </>
             )}
@@ -88,22 +88,22 @@ const GroupMember = ({
           )}
         </Transition>
       </Box>
-      <Box mt={10}>{searchComponent("Search for group members")}</Box>
-      {groupMember.isError && <>Unable to fetch data please try again</>}
+      <Box mt={10}>{searchComponent(t("search_group_members") as string)}</Box>
+      {groupMember.isError && <>{t("unable_to_fetch")}</>}
 
       {groupMember.isLoading && <Loader />}
       {groupMember.data && groupMember.data?.totalCount < 1 && (
-        <Box mt={10}>No Members Found!</Box>
+        <Box mt={10}>{t("no_members_found")}</Box>
       )}
       {groupMember.isSuccess && groupMember.data.totalCount !== 0 && (
         <Paper mt={10}>
           <Table striped>
             <thead>
               <tr>
-                <th>User Name</th>
-                <th>Email | Phone Number</th>
+                <th>{t("user_name")}</th>
+                <th>{t("email_or_phone")}</th>
                 {auth?.auth && auth?.auth?.role <= UserRole.Trainer && (
-                  <th>Actions</th>
+                  <th>{t("actions")}</th>
                 )}
               </tr>
             </thead>
@@ -164,7 +164,7 @@ const GroupMemberRow = ({
   return (
     <tr>
       <DeleteModal
-        title={`Are you sure you want to remove "${data.user.fullName}" ?`}
+        title={`${t("sure_want_to_remove")} "${data.user.fullName}" ?`}
         open={deleteDialog}
         onClose={setDeleteDialog}
         onConfirm={deleteMember}

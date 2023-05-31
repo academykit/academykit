@@ -59,7 +59,7 @@ const AddMember = ({
       ]);
     }
   }, [getNotMemberList.isSuccess]);
-const {t}= useTranslation();
+  const { t } = useTranslation();
   const [data, setData] = useState<{ label: string; value: string }[]>([]);
   const onSubmitForm = async (email: string[]) => {
     try {
@@ -110,7 +110,7 @@ const {t}= useTranslation();
           searchable
           data={data}
           mb={10}
-          label="Email Address"
+          label={t("email_address")}
           withAsterisk
           name="email"
           size="md"
@@ -122,7 +122,7 @@ const {t}= useTranslation();
         />
 
         <Button loading={isLoading} mr={10} type="submit" size="md">
-          Submit
+          {t("submit")}
         </Button>
         <Button
           variant="outline"
@@ -131,7 +131,7 @@ const {t}= useTranslation();
           onClick={(e: any) => onCancel()}
           size={"md"}
         >
-          Cancel
+          {t("cancel")}
         </Button>
       </form>
     </Box>

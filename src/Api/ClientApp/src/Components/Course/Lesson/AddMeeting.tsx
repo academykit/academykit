@@ -141,7 +141,6 @@ const AddMeeting = ({
       form.setFieldValue("zoomLicenseId", "");
     }
   };
-  const { t } = useTranslation();
   const handleSubmit = async (values: any) => {
     const time = new Date(values?.meetingStartTime).toLocaleTimeString();
     const date = new Date(values?.meetingStartDate).toLocaleDateString();

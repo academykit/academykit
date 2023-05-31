@@ -7,6 +7,7 @@ import {
   Group,
   Anchor,
 } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
@@ -52,11 +53,12 @@ const useStyles = createStyles((theme) => ({
 
 const UnAuthorize = () => {
   const { classes } = useStyles();
+  const {t}= useTranslation();
   return (
     <Container className={classes.root}>
-      <div className={classes.label}>401</div>
+      <div className={classes.label}>{t("401")}</div>
       <Title className={classes.title}>
-        You are not authorize to access this page.
+       {t("not_authorized")}
       </Title>
       <Text
         color="dimmed"
@@ -70,7 +72,7 @@ const UnAuthorize = () => {
       <Group position="center">
         <Anchor href={"/"}>
           <Button variant="subtle" size="md">
-            Take me back to home page
+           {t("back_to_home")}
           </Button>
         </Anchor>
       </Group>

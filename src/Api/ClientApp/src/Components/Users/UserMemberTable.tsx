@@ -44,7 +44,7 @@ const UserRow = ({
           size={800}
           opened={opened}
           onClose={() => setOpened(false)}
-          title={`Editing User: ${item?.fullName}`}
+          title={`${t("edit_user")} ${item?.fullName}`}
           styles={{ title: { fontWeight: "bold" } }}
         >
           <Suspense fallback={<Loader />}>

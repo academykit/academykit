@@ -8,34 +8,6 @@ import { StatsCard } from "./StatsCard";
 import TrainingCards from "./TrainingCards";
 import { useTranslation } from "react-i18next";
 
-const incomingData = [
-  {
-    key: "totalUsers",
-    label: "Total Users",
-    icon: "userEnrollment",
-  },
-  {
-    key: "totalActiveUsers",
-    label: "Active Users",
-    icon: "active",
-  },
-  {
-    key: "totalGroups",
-    label: "Total Groups",
-    icon: "groups",
-  },
-  {
-    key: "totalTrainers",
-    label: "Total Trainers",
-    icon: "trainers",
-  },
-  {
-    key: "totalTrainings",
-    label: "Total Trainings",
-    icon: "trainings",
-  },
-];
-
 const Admin = ({
   dashboard,
   dashboardCourses,
