@@ -134,7 +134,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
             component={Link}
             to={RoutePath.groups.members(group.slug).route}
           >
-            {group.memberCount} {"members"}
+            {group.memberCount} {t("members")}
           </Anchor>
         </Box>
         <Box style={{ zIndex: "10", position: "relative" }}>
@@ -152,7 +152,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
             component={Link}
             to={RoutePath.groups.attachments(group.slug).route}
           >
-            {group.attachmentCount} {"attachments"}
+            {group.attachmentCount} {t("attachments")}
           </Anchor>
         </Box>
       </Card>

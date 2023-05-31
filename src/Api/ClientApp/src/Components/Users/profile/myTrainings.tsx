@@ -22,11 +22,13 @@ import { CourseLanguage, UserRole } from "@utils/enums";
 import moment from "moment";
 import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 const MyTrainings = () => {
   const auth = useReAuth();
   const theme = useMantineTheme();
   const [page, setPage] = useState(1);
   const { id } = useParams();
+  const { t } = useTranslation();
   const authorCourse = useCourse(
     `UserId=${id}&Enrollmentstatus=1&size=12&page=${page}`
   );
@@ -36,17 +38,19 @@ const MyTrainings = () => {
       {auth.data && auth.data?.role !== UserRole.Trainee && (
         <div>
           <Title mt={20} size={30} mb={10}>
-            My Trainings
+            {t("my_trainings")}
           </Title>
 
           <Paper>
             <Table striped>
               <thead>
                 <tr>
-                  <th>Title</th>
-                  <th>Created Date</th>
-                  <th>Language / Level</th>
-                  <th>Action</th>
+                  <th>{t("title")}</th>
+                  <th>{t("created_date")}</th>
+                  <th>
+                    {t("Language")} / {t("level")}
+                  </th>
+                  <th>{t("action")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -73,7 +77,7 @@ const MyTrainings = () => {
                         </Badge>
                       </td>
                       <td>
-                        <Tooltip label={"Edit this course"}>
+                        <Tooltip label={t("edit_this_course")}>
                           <ActionIcon
                             component={Link}
                             to={RoutePath.manageCourse.edit(x.slug).route}
