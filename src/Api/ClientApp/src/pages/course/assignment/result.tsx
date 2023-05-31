@@ -18,6 +18,7 @@ import { QuestionType, UserRole } from "@utils/enums";
 import { useAssignmentReview } from "@utils/services/assignmentService";
 import { useNavigate, useParams } from "react-router-dom";
 import AssignmentReviewForm from "./Component/AssignmentReviewForm";
+import { useTranslation } from "react-i18next";
 
 const useStyle = createStyles((theme) => ({
   option: {
@@ -42,7 +43,7 @@ const AssignmentResult = () => {
   const { id, studentId } = useParams();
   const navigate = useNavigate();
   const auth = useAuth();
-
+  const { t } = useTranslation();
   const getAssignment = useAssignmentReview(id as string, studentId as string);
 
   if (getAssignment.isError) {
@@ -58,8 +59,8 @@ const AssignmentResult = () => {
         onClose={() => setShowReviewBox()}
         title={
           !!getAssignment.data?.assignmentReview?.review
-            ? "Edit Assignment Review"
-            : "Review Assignment"
+            ? t("edit_assignment_review")
+            : t("review_assignment")
         }
       >
         <AssignmentReviewForm
@@ -75,7 +76,7 @@ const AssignmentResult = () => {
           {x.description && (
             <>
               <Text mt={15} weight="bold">
-                Description
+                {t("description")}
               </Text>
               <RichTextEditor
                 my={10}
@@ -87,7 +88,7 @@ const AssignmentResult = () => {
 
           {x.hints && (
             <>
-              <Text weight="bold">Hint</Text>
+              <Text weight="bold">{t("hint")}</Text>
               <RichTextEditor my={10} value={x.hints} readOnly />
             </>
           )}
