@@ -168,7 +168,7 @@ const Exam = ({
   return (
     <form onSubmit={form.onSubmit(onSubmitHandler)}>
       <Modal
-        title={t("sure_submit_exam")}
+        title={t("submit_exam_confirmation")}
         opened={showConfirmation}
         onClose={setShowConfirmation}
       >
@@ -191,7 +191,7 @@ const Exam = ({
         onClose={() => {
           navigate(location.state + "?invalidate=true" ?? "/");
         }}
-        title={t("exam_submitted_bePatient")}
+        title={t("submission_success")}
       >
         <Button
           onClick={() => {

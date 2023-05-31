@@ -18,6 +18,7 @@ import {
 } from "@utils/services/examService";
 import { useEffect, useState } from "react";
 import SubmitResultHeader from "./SubmitResultHeader";
+import { useTranslation } from "react-i18next";
 const useStyle = createStyles((theme) => ({
   option: {
     padding: 20,
@@ -35,7 +36,7 @@ const useStyle = createStyles((theme) => ({
     width: "50px",
     justifyContent: "center",
     alignItems: "center",
-    cursor: 'pointer'
+    cursor: "pointer",
   },
   navigateWrapper: {
     border: "1px solid grey",
@@ -95,7 +96,7 @@ const SubmittedResultDetails = ({
 }) => {
   const { classes, theme, cx } = useStyle();
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.md}px)`);
-
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const customLayout = useCustomLayout();
 
@@ -177,7 +178,7 @@ const SubmittedResultDetails = ({
                 setCurrentIndex(currentIndex - 1);
               }}
             >
-              Previous
+              {t("previous")}
             </Button>
           ) : (
             <div></div>
@@ -194,7 +195,7 @@ const SubmittedResultDetails = ({
                 setCurrentIndex((currentIndex) => currentIndex + 1);
               }}
             >
-              Next
+              {t("next")}
             </Button>
           ) : (
             <></>

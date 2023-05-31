@@ -14,6 +14,8 @@ import {
   IFeedbackOptions,
   IFeedbackQuestions,
 } from "@utils/services/feedbackService";
+import { useTransition } from "react";
+import { useTranslation } from "react-i18next";
 
 const useStyle = createStyles((theme) => ({
   option: {
@@ -37,6 +39,7 @@ type Props = {
 
 const FeedbackRadio = ({ options, form, currentIndex }: Props) => {
   const { classes, cx } = useStyle();
+  const { t } = useTranslation();
   const changeFieldValue = (optionCurrentIndex: number) => {
     options.map((option, index) => {
       if (index !== optionCurrentIndex) {
@@ -56,7 +59,7 @@ const FeedbackRadio = ({ options, form, currentIndex }: Props) => {
   return (
     <Box mt={10} px={20} className={classes.option}>
       <Group>
-        <Title size={"xs"}>Options</Title>
+        <Title size={"xs"}>{t("options")}</Title>
       </Group>
       {options.map((option, index) => (
         <div

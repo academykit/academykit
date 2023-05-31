@@ -247,7 +247,7 @@ const ManageStudents = ({
         onConfirm={handleIssueAll}
       />
       <ConfirmationModal
-        title="Are you sure want to issue certificate?"
+        title={t("sure_to_issue_certificate")}
         open={submitModal}
         onClose={() => setSubmitModal(false)}
         onConfirm={handleSubmit}

@@ -15,6 +15,7 @@ import { useGetCourseLesson } from "@utils/services/courseService";
 import { api } from "@utils/services/service-api";
 import moment from "moment";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "react-router-dom";
 
 const ExamDetails = ({
@@ -26,7 +27,7 @@ const ExamDetails = ({
 }) => {
   const auth = useAuth();
   const queryClient = useQueryClient();
-
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const userId = auth?.auth?.id ?? "";
   const { data } = useGetCourseLesson(
@@ -72,18 +73,27 @@ const ExamDetails = ({
             </Title>
             {exam?.startTime && (
               <Text>
-                Start Date: {moment(exam?.startTime).format(theme.dateFormat)}{" "}
+                {t("start_date")}:{" "}
+                {moment(exam?.startTime).format(theme.dateFormat)}{" "}
               </Text>
             )}
             {exam?.duration ? (
-              <Text>Duration: {exam?.duration / 60} minute(s) </Text>
+              <Text>
+                {t("duration")}: {exam?.duration / 60} minute(s){" "}
+              </Text>
             ) : (
               ""
             )}
-            <Text>Total Retake: {exam?.allowedRetake}</Text>
-            <Text>Remaining Retakes: {data?.remainingAttempt}</Text>
+            <Text>
+              {t("total_retake")}: {exam?.allowedRetake}
+            </Text>
+            <Text>
+              {t("remaining_retakes")}: {data?.remainingAttempt}
+            </Text>
             {exam?.negativeMarking ? (
-              <Text>Negative marking {exam?.negativeMarking}</Text>
+              <Text>
+                {t("negative_marking")} {exam?.negativeMarking}
+              </Text>
             ) : (
               ""
             )}
@@ -109,10 +119,10 @@ const ExamDetails = ({
                     to={RoutePath.exam?.details(exam?.slug).route}
                     state={window.location.pathname}
                   >
-                    Start Exam
+                    {t("start_exam")}
                   </Button>
                 ) : (
-                  <Text mt={15}>You have exceeded attempt count.</Text>
+                  <Text mt={15}>{t("attempt_exceeded")}</Text>
                 )}
               </>
             ) : (

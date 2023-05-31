@@ -90,7 +90,7 @@ const FeedbackItem = ({
   return (
     <Flex gap={"lg"} className={classes.wrapper}>
       <DeleteModal
-        title={t("delete_feedback_question")}
+        title={t("delete_feedback_question_confirmation")}
         open={confirmDelete}
         onClose={setConfirmDelete}
         onConfirm={deleteHandler}
@@ -101,19 +101,19 @@ const FeedbackItem = ({
 
         {data.description && (
           <Box my={10}>
-            <Text>{"Description"}</Text>
+            <Text>{t("description")}</Text>
             <RichTextEditor mb={5} value={data.description} readOnly={true} />
           </Box>
         )}
         {data.hint && (
           <Box my={10}>
-            <Text size={"sm"}>{"Hint"}</Text>
+            <Text size={"sm"}>{t("hint")}</Text>
             <RichTextEditor mb={5} value={data.hint} readOnly={true} />
           </Box>
         )}
         <Select
           mt={20}
-          placeholder={"Feedback Type"}
+          placeholder={t("feedback_type") as string}
           label={t("feedback_type")}
           data={getQuestionType()}
           value={data.type.toString()}

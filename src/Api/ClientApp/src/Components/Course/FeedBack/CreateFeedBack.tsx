@@ -5,6 +5,7 @@ import { useToggle } from "@mantine/hooks";
 import { useFeedbackQuestion } from "@utils/services/feedbackService";
 import EditFeedback from "./EditFeedBack";
 import FeedbackItem from "./FeedbackList";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   lessonId: string;
@@ -12,7 +13,7 @@ interface Props {
 
 const CreateFeedback = ({ lessonId }: Props) => {
   const [addQuestion, setAddQuestion] = useToggle();
-
+  const { t } = useTranslation();
   const feedbackList = useFeedbackQuestion(lessonId, "");
   return (
     <Container>
@@ -30,7 +31,7 @@ const CreateFeedback = ({ lessonId }: Props) => {
               ))}
             </Box>
           ) : (
-            <Box mb={10}>No feedback questions found!</Box>
+            <Box mb={10}>{t("no_feedback_questions")}</Box>
           )}
         </>
       )}
@@ -42,7 +43,7 @@ const CreateFeedback = ({ lessonId }: Props) => {
         />
       )}
       <Button onClick={() => setAddQuestion()} mt={10}>
-        Add Feedback
+        {"add_feedback"}
       </Button>
     </Container>
   );

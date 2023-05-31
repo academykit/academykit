@@ -28,14 +28,16 @@ type IProps = {
 const FileUpload = ({ label = "files", onSuccess, id, search }: IProps) => {
   const [files, setFiles] = useState<any>([]);
   const postAttachment = useAddGroupAttachment(search);
-
   const { t } = useTranslation();
+
   return (
     <div style={{ maxWidth: 470, position: "relative" }}>
       <FilePond
         instantUpload={true}
         files={files}
-        labelIdle={`Drag & Drop your ${label} or <span class="filepond--label-action">Browse</span>`}
+        labelIdle={`${t("drag_and_drop")} ${label} ${t(
+          "or"
+        )} <span class="filepond--label-action">${t("browse")}</span>`}
         onaddfile={(error, file) => {}}
         onupdatefiles={setFiles}
         allowMultiple={false}

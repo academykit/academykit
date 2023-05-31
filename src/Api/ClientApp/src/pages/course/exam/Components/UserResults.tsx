@@ -12,6 +12,7 @@ import RoutePath from "@utils/routeConstants";
 import { useMyResult } from "@utils/services/examService";
 import axios from "axios";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const UserResults = ({
@@ -22,6 +23,7 @@ const UserResults = ({
   studentId: string;
 }) => {
   const theme = useMantineTheme();
+  const { t } = useTranslation();
   const result = useMyResult(lessonId, studentId);
   if (result.isLoading) {
     return <Loader />;
@@ -32,22 +34,22 @@ const UserResults = ({
         // @ts-ignore
         return <Box>{result.error.response?.data?.message}</Box>;
       } else if (result.error.response?.status === 404) {
-        return <Box> No Result has been found</Box>;
+        return <Box> {t("no_result")}</Box>;
       } else {
-        return <div>Something went wrong</div>;
+        return <div>{t("something_wrong")}</div>;
       }
     }
   }
   if (result.data?.attemptCount === 0) {
     return (
       <Title my={10} size={"sm"}>
-        No Previous Attempt available
+        {t("no_previous_attempt")}
       </Title>
     );
   }
   return (
     <>
-      <Title mt={20}> Previous Results</Title>
+      <Title mt={20}> {t("previous_result")}</Title>
       <Table
         sx={(theme) => ({
           ...theme.defaultGradient,
@@ -57,10 +59,10 @@ const UserResults = ({
       >
         <thead>
           <tr>
-            <th>Obtained</th>
-            <th>Submission Date</th>
-            <th>Completed Duration</th>
-            <th>Actions</th>
+            <th>{t("obtained")}</th>
+            <th>{t("submission_date")}</th>
+            <th>{t("completed_duration")}</th>
+            <th>{t("actions")}</th>
           </tr>
         </thead>
         <tbody>
