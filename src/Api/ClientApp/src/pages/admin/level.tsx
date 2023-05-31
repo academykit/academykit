@@ -142,7 +142,7 @@ const Level = () => {
           </Box>
         </Modal>
         <DeleteModal
-          title={`Do you want to delete "${item?.name}" level?`}
+          title={`${t("want_to_delete")} "${item?.name}" ${t("level?")}`}
           open={opened}
           onClose={setOpened}
           onConfirm={handleDelete}
@@ -192,7 +192,7 @@ const Level = () => {
       >
         <Title>{t("levels")}</Title>
         {!showAddForm && (
-          <Button onClick={() => toggleAddForm()}>Add Level</Button>
+          <Button onClick={() => toggleAddForm()}>{t("add_level")}</Button>
         )}
       </Group>
 

@@ -13,6 +13,7 @@ import {
   IconUserCircle,
 } from "@tabler/icons";
 import { DashboardStats } from "@utils/services/dashboardService";
+import { TFunction } from "i18next";
 
 const icons = {
   userEnrollment: IconUserCircle,

@@ -72,10 +72,10 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
                       onClick={onMarkComplete}
                       loading={watchHistory.isLoading}
                     >
-                      Mark Complete
+                      {t("mark_complete")}
                     </Button>
                   ) : (
-                    <Badge>Completed</Badge>
+                    <Badge>{t("Completed")}</Badge>
                   )}
                   <FullScreen toolbarSlot={toolbarSlot} />
                   {/* <Download toolbarSlot={toolbarSlot} /> */}

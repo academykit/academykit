@@ -170,12 +170,12 @@ const CourseDescription = () => {
             <Title className={classes.title}>
               {course.data?.name}
               <Badge ml={10}>
-                {CourseUserStatusValue[course.data?.userStatus]}
+                {t(`${CourseUserStatusValue[course?.data?.userStatus]}`)}
               </Badge>
               {auth?.auth && auth?.auth?.role <= UserRole.Admin && (
                 <>
                   <Badge ml={10} color={"teal"}>
-                    {CourseStatus[course.data?.status]}
+                    {t(`${CourseStatus[course?.data?.status]}`)}
                   </Badge>
                 </>
               )}

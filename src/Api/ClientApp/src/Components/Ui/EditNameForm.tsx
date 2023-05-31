@@ -41,7 +41,7 @@ const EditNameForm = ({
 
           showNotification({
             message: err,
-            title: "Error",
+            title: t("error"),
             color: "red",
           });
         }

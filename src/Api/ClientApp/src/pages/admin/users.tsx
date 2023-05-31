@@ -30,13 +30,6 @@ import { useForm, yupResolver } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
-const sortByObject = [
-  { value: "firstName:Ascending", label: "Name (A-Z)" },
-  { value: "firstName:Descending", label: "Name (Z-A)" },
-  { value: "email:Ascending", label: "Email (A-Z)" },
-  { value: "email:Descending", label: "Email (Z-A)" },
-];
-
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
@@ -80,11 +73,18 @@ const UsersList = ({
       showNotification({
         message: err,
         color: "red",
-        title: "Error",
+        title: t("error"),
       });
     }
     setCsvLoad(false);
   };
+
+  const sortByObject = [
+    { value: "firstName:Ascending", label: t("name_a-z") },
+    { value: "firstName:Descending", label: t("name_z-a") },
+    { value: "email:Ascending", label: t("email_a-z") },
+    { value: "email:Descending", label: t("email_z-a") },
+  ];
 
   return (
     <>

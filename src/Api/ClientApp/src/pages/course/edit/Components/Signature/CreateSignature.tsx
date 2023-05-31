@@ -42,6 +42,7 @@ const CreateSignature = ({
   const editSignature = useEditSignature(id as string);
   const [signatureUrl, setSignatureUrl] = useState(data?.fileUrl ?? "");
   const [confirmDelete, setConfirmDelete] = useToggle();
+  const { t } = useTranslation();
 
   const form = useForm({
     initialValues: data,
@@ -54,31 +55,30 @@ const CreateSignature = ({
     try {
       await createCertificate.mutateAsync({ data, id: id as string });
       showNotification({
-        title: "Success",
-        message: "Signature added successfully!",
+        title: t("success"),
+        message: t("add_signature_success"),
       });
       onClose && onClose();
     } catch (error) {
       const err = errorType(error);
       showNotification({
-        title: "Error",
+        title: t("error"),
         message: err,
         color: "red",
       });
     }
   };
-
   const handelEdit = async (data: IGetSignature) => {
     try {
       await editSignature.mutateAsync({ data, id: id as string });
       showNotification({
-        title: "Success",
-        message: "Signature edited successfully!",
+        title: t("success"),
+        message: t("edit_signature_success"),
       });
     } catch (error) {
       const err = errorType(error);
       showNotification({
-        title: "Error",
+        title: t("error"),
         message: err,
         color: "red",
       });
@@ -88,13 +88,13 @@ const CreateSignature = ({
     try {
       await deleteSignature.mutateAsync({ id: id as string, sigId });
       showNotification({
-        title: "Success",
-        message: "Signature deleted successfully!",
+        title: t("success"),
+        message: t("delete_signature_success"),
       });
     } catch (error) {
       const err = errorType(error);
       showNotification({
-        title: "Error",
+        title: t("error"),
         message: err,
         color: "red",
       });
@@ -106,7 +106,7 @@ const CreateSignature = ({
     <FormProvider form={form}>
       {data && (
         <DeleteModal
-          title={`Are you sure you want to delete?`}
+          title={t("sure_want_to_delete")}
           open={confirmDelete}
           onClose={setConfirmDelete}
           onConfirm={() => handleDelete(data.id)}
@@ -118,26 +118,26 @@ const CreateSignature = ({
           <Group noWrap mb={10}>
             <TextInput
               w={"100%"}
-              label="Name"
-              placeholder="Enter name"
+              label={t("name")}
+              placeholder={t("enter_name") as string}
               withAsterisk
               {...form.getInputProps(`fullName`)}
             />
             <TextInput
               w={"100%"}
               ml={5}
-              label="Designation"
+              label={t("designation")}
               withAsterisk
-              placeholder="Enter the designation"
+              placeholder={t("designation_placeholder") as string}
               {...form.getInputProps(`designation`)}
             />
           </Group>
           <Text size={"sm"}>
-            Signature <sup style={{ color: "red" }}>*</sup>
+            {t("signature")} <sup style={{ color: "red" }}>*</sup>
           </Text>
           <ThumbnailEditor
             formContext={useFormContext}
-            label="Signature"
+            label={t("signature") as string}
             FormField={`fileUrl`}
             currentThumbnail={signatureUrl}
             width="48.5%"
@@ -147,7 +147,7 @@ const CreateSignature = ({
               loading={createCertificate.isLoading || editSignature.isLoading}
               type="submit"
             >
-              {edit ? "Save Edit" : "Add"}
+              {edit ? t("save_edit") : t("add")}
             </Button>
             {edit ? (
               <Button
@@ -155,11 +155,11 @@ const CreateSignature = ({
                 type="reset"
                 variant="outline"
               >
-                Delete
+                {t("delete")}
               </Button>
             ) : (
               <Button onClick={onClose} type="reset" variant="outline">
-                Cancel
+                {t("cancel")}
               </Button>
             )}
           </Group>

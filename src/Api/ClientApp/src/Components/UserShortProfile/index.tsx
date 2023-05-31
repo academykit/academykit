@@ -44,7 +44,9 @@ const UserShortProfile: FC<Props> = ({
             {fullName}
           </Text>
           <Text size={"sm"} color={"dimmed"}>
-            {page === "Pool" ? t(`${PoolRole[role]}`) : t(`${UserRole[role]}`)}
+            {page === "Pool"
+              ? t(`${PoolRole[role] ?? ""}`)
+              : t(`${UserRole[role]}`)}
           </Text>
         </Box>
       </Flex>

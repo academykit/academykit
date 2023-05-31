@@ -14,6 +14,7 @@ import formatDuration from "@utils/formatDuration";
 import RoutePath from "@utils/routeConstants";
 import { ILessons } from "@utils/services/courseService";
 import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const useStyle = createStyles((theme) => {
   return {
@@ -41,6 +42,7 @@ const Lesson = ({
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.lg}px)`);
   const { hovered, ref } = useHover();
   const { lessonId } = useParams();
+  const { t } = useTranslation();
 
   return (
     <Popover
@@ -78,9 +80,7 @@ const Lesson = ({
                 {index + 1}. {lesson.name}
               </Title>
               <Badge color="blue" variant="light" ml={10}>
-                {ReadableEnum[
-                  LessonType[lesson.type] as keyof typeof ReadableEnum
-                ] ?? LessonType[lesson.type]}
+                {t(`${LessonType[lesson.type]}`)}
               </Badge>
             </Box>
           </Group>
@@ -95,7 +95,10 @@ const Lesson = ({
           lesson.type === LessonType.LiveClass ||
           lesson.type === LessonType.RecordedVideo ||
           lesson.type === LessonType.Video) && (
-          <Text>Duration: {formatDuration(lesson.duration)}</Text>
+          <Text>
+            {t("Duration")}
+            {formatDuration(lesson.duration)}
+          </Text>
         )}
       </Popover.Dropdown>
     </Popover>

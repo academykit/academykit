@@ -50,6 +50,7 @@ const MCQPool = ({
   const pools = usePools(searchParams);
   const addPool = useAddPool(searchParams);
   const [showAddForm, toggleAddForm] = useToggle();
+  const { t } = useTranslation();
 
   const { classes } = useStyle();
   const form = useForm({
@@ -69,7 +70,6 @@ const MCQPool = ({
       showNotification({ message: error, color: "red" });
     }
   };
-  const { t } = useTranslation();
   return (
     <Container fluid>
       <Group sx={{ justifyContent: "space-between", alignItems: "center" }}>

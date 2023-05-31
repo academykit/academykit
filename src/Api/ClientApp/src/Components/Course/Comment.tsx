@@ -65,6 +65,8 @@ const useStyles = createStyles((theme) => ({
 
 const Comment = ({ comment }: { comment: IComment }) => {
   const auth = useAuth();
+  const { t } = useTranslation();
+
   const showEdit = (user: IUser, edit = false) => {
     if (edit) {
       if (user.id === auth?.auth?.id) {
@@ -87,7 +89,6 @@ const Comment = ({ comment }: { comment: IComment }) => {
 
   const deleteComment = useDeleteComment(id as string);
   const editComment = useEditComment(id as string, comment.id);
-  const { t } = useTranslation();
   const { classes, cx } = useStyles();
   const onDelete = async () => {
     try {
@@ -142,7 +143,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
       shadow="md"
     >
       <DeleteModal
-        title={"Are you sure you want to delete this comment?"}
+        title={t("delete_comment_confirmation")}
         open={deleteConfirmation}
         onClose={setDeleteConfirmation}
         onConfirm={onDelete}
@@ -179,10 +180,10 @@ const Comment = ({ comment }: { comment: IComment }) => {
           {edit && (
             <Group>
               <Button size="sm" type="submit">
-                Save
+                {t("save")}
               </Button>
               <Button variant="outline" size="sm" onClick={() => setEdit()}>
-                Cancel
+                {t("cancel")}
               </Button>
             </Group>
           )}
@@ -199,7 +200,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
 
         {!edit && showEdit(comment.user, true) && (
           <Button variant="subtle" mx={4} onClick={() => setEdit()}>
-            Edit
+            {t("edit")}
           </Button>
         )}
         {showEdit(comment.user) && comment.repliesCount <= 0 && (
@@ -209,7 +210,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
             mx={4}
             onClick={() => setDeleteConfirmation()}
           >
-            Delete
+            {t("delete")}
           </Button>
         )}
       </Box>

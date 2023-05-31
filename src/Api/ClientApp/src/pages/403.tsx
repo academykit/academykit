@@ -7,6 +7,7 @@ import {
   Group,
   Anchor,
 } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
@@ -52,11 +53,11 @@ const useStyles = createStyles((theme) => ({
 
 const Forbidden = () => {
   const { classes } = useStyles();
-
+  const { t } = useTranslation();
   return (
     <Container className={classes.root}>
-      <div className={classes.label}>403</div>
-      <Title className={classes.title}>Forbidden</Title>
+      <div className={classes.label}>{t("403")}</div>
+      <Title className={classes.title}>{t("forbidden")}</Title>
       <Text
         color="dimmed"
         size="lg"
@@ -69,7 +70,7 @@ const Forbidden = () => {
       <Group position="center">
         <Anchor href={"/"}>
           <Button variant="subtle" size="md">
-            Take me back to home page
+            {t("back_to_home")}
           </Button>
         </Anchor>
       </Group>

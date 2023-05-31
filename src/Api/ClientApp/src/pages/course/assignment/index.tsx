@@ -3,6 +3,7 @@ import { Button, Container, createStyles, Divider, Title } from "@mantine/core";
 import { useAssignmentQuestion } from "@utils/services/assignmentService";
 import { useNavigate, useParams } from "react-router-dom";
 import AssignmentForm from "./Component/AssignmentForm";
+import { useTranslation } from "react-i18next";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -32,14 +33,14 @@ const AssignmentPage = () => {
   const { classes } = useStyles();
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   const assignment = useAssignmentQuestion(id as string, "");
 
   if (assignment.isSuccess && assignment.data?.length === 0) {
     return (
       <Container className={classes.root}>
         <div>
-          <Title className={classes.title}>No questions found...</Title>
+          <Title className={classes.title}>{t("no_question_found")}</Title>
 
           <Button
             variant="outline"
@@ -48,7 +49,7 @@ const AssignmentPage = () => {
             onClick={() => navigate(-1)}
             className={classes.control}
           >
-            Go back
+            {t("go_back")}
           </Button>
         </div>
       </Container>

@@ -81,7 +81,7 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
           title={
             isRejected
               ? t("leave_message_reject")
-              : `${t("publish_confirmation")} "${course.name}"?`
+              : `${t("publish_confirmation")} "${course.name}"${t("?")}`
           }
         >
           {!isRejected ? (

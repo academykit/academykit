@@ -4,6 +4,7 @@ import { useState } from "react";
 import ManageCourseModal from "./mangeCourseModal";
 import StudentLessonDetails from "./StudentDetails";
 import LessonStatusColor from "./StudentDetails/LessonStatusColor";
+import { useTranslation } from "react-i18next";
 
 const CourseStudentLessons = ({
   element,
@@ -15,6 +16,7 @@ const CourseStudentLessons = ({
   courseId: string;
 }) => {
   const [opened, setOpened] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <tr key={element.lessonId}>
@@ -29,7 +31,7 @@ const CourseStudentLessons = ({
       <td>
         {ReadableEnum[
           LessonType[element.lessonType] as keyof typeof ReadableEnum
-        ] ?? LessonType[element.lessonType]}
+        ] ?? t(LessonType[element.lessonType])}
       </td>
       <td>
         <StudentLessonDetails

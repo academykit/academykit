@@ -9,6 +9,7 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { useAddGroupAttachment } from "@utils/services/groupService";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
+import { useTranslation } from "react-i18next";
 registerPlugin(
   FilePondPluginImageExifOrientation,
   FilePondPluginImagePreview,
@@ -27,13 +28,16 @@ type IProps = {
 const FileUpload = ({ label = "files", onSuccess, id, search }: IProps) => {
   const [files, setFiles] = useState<any>([]);
   const postAttachment = useAddGroupAttachment(search);
+  const { t } = useTranslation();
 
   return (
     <div style={{ maxWidth: 470, position: "relative" }}>
       <FilePond
         instantUpload={true}
         files={files}
-        labelIdle={`Drag & Drop your ${label} or <span class="filepond--label-action">Browse</span>`}
+        labelIdle={`${t("drag_and_drop")} ${label} ${t(
+          "or"
+        )} <span class="filepond--label-action">${t("browse")}</span>`}
         onaddfile={(error, file) => {}}
         onupdatefiles={setFiles}
         allowMultiple={false}
@@ -58,7 +62,7 @@ const FileUpload = ({ label = "files", onSuccess, id, search }: IProps) => {
                 file: file as File,
               });
               load(res.data.url);
-              showNotification({ message: "Attachment added successfully." });
+              showNotification({ message: t("add_attachment_success") });
               onSuccess();
             } catch (err) {
               const resError = errorType(err);

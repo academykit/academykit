@@ -52,6 +52,7 @@ const AddFeedback = ({
     // item?.id,
     slug as string
   );
+  const { t } = useTranslation();
 
   const [isMandatory, setIsMandatory] = useState<boolean>(
     item?.isMandatory ?? false
@@ -109,7 +110,6 @@ const AddFeedback = ({
       });
     }
   };
-  const { t } = useTranslation();
   return (
     <React.Fragment>
       <Modal
@@ -148,14 +148,14 @@ const AddFeedback = ({
             <Grid.Col span={12} lg={8}>
               <TextInput
                 withAsterisk
-                label="Feedback Title"
-                placeholder="FeedBack's Title"
+                label={t("feedback_title")}
+                placeholder={t("feedback_title") as string}
                 {...form.getInputProps("name")}
               />
             </Grid.Col>
             <Grid.Col span={4}>
               <Switch
-                label="Is Mandatory"
+                label={t("is_mandatory")}
                 {...form.getInputProps("isMandatory")}
                 checked={isMandatory}
                 onChange={() => {
@@ -166,8 +166,8 @@ const AddFeedback = ({
             </Grid.Col>
           </Grid>
           <Textarea
-            placeholder="Feedback's Description"
-            label="Feedback Description"
+            placeholder={t("feedback_description") as string}
+            label={t("feedback_description")}
             mb={10}
             {...form.getInputProps("description")}
           />
@@ -176,7 +176,7 @@ const AddFeedback = ({
               type="submit"
               loading={lesson.isLoading || updateLesson.isLoading}
             >
-              Submit
+              {t("submit")}
             </Button>
             {!isEditing && (
               <Button
@@ -185,7 +185,7 @@ const AddFeedback = ({
                 }}
                 variant="outline"
               >
-                Close
+                {t("close")}
               </Button>
             )}
             {isEditing && (
@@ -195,7 +195,7 @@ const AddFeedback = ({
                   setOpened(true);
                 }}
               >
-                Add More Feedback
+                {t("add_more_feedback")}
               </Button>
             )}
           </Group>

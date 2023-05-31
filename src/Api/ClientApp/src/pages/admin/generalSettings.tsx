@@ -101,7 +101,7 @@ const GeneralSettings = () => {
           {t("company_logo")} <sup style={{ color: "red" }}>*</sup>
           <ThumbnailEditor
             formContext={useFormContext}
-            label="image"
+            label={t("image") as string}
             FormField="logoUrl"
             currentThumbnail={data?.logoUrl}
           />

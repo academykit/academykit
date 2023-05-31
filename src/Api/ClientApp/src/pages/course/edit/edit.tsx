@@ -66,6 +66,7 @@ const schema = () => {
 export const [FormProvider, useFormContext, useForm] =
   createFormContext<FormValues>();
 const EditCourse = () => {
+  const { t } = useTranslation();
   const { classes } = useStyle();
   const form = useForm({
     initialValues: {
@@ -180,7 +181,6 @@ const EditCourse = () => {
       });
     }
   };
-  const { t } = useTranslation();
 
   return (
     <div>

@@ -33,6 +33,7 @@ import {
 } from "@utils/services/groupService";
 import moment from "moment";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 const GroupAttachment = ({
@@ -45,20 +46,21 @@ const GroupAttachment = ({
   const [deleteAttachment, setDeleteAttachment] = useState("");
   const [opened, setOpened] = useState(false);
   const authUser = useAuth();
-  
-  
+
   if (getGroupAttachment.error) {
     throw getGroupAttachment.error;
   }
-  
+  const { t } = useTranslation();
+
   const Rows = ({ item }: { item: IGroupAttachmentItems }) => {
-    const [enabled, setEnabled] = useState(false)
+    const [enabled, setEnabled] = useState(false);
     const removeAttachment = useRemoveGroupAttachment(
       id as string,
       item.id,
       searchParams
-      );
-      const fileUrl = getFileUrl(item.url,enabled)
+    );
+    const fileUrl = getFileUrl(item.url, enabled);
+
     const handleDelete = async () => {
       try {
         await removeAttachment.mutateAsync({
@@ -66,7 +68,7 @@ const GroupAttachment = ({
           fileId: item.id,
         });
         showNotification({
-          message: "Attachment deleted successfully.",
+          message: t("delete_attachment_success"),
         });
         setOpened(false);
       } catch (err) {
@@ -79,9 +81,8 @@ const GroupAttachment = ({
       setDeleteAttachment("");
     };
     const handleDownload = () => {
-      setEnabled(true)
-      if(fileUrl.isSuccess){
-
+      setEnabled(true);
+      if (fileUrl.isSuccess) {
         window.open(fileUrl.data);
       }
     };
@@ -89,33 +90,31 @@ const GroupAttachment = ({
     return (
       <tr key={item.id}>
         <DeleteModal
-          title={`Are you sure you want to delete attachment?`}
+          title={t("sure_to_delete_attachment")}
           open={item.id === deleteAttachment}
           onClose={setDeleteAttachment}
           onConfirm={handleDelete}
         />
 
-        <td>{ moment(item.createdOn + "Z").format('YYYY-MM-DD HH:mm:ss') }</td>
+        <td>{moment(item.createdOn + "Z").format("YYYY-MM-DD HH:mm:ss")}</td>
         <td>{item.name}</td>
         <td>{item.mimeType}</td>
-       
+
         <td>
           <Flex>
-            
-            <Tooltip label={"Download attachment"}>
+            <Tooltip label={t("download_attachment")}>
               <ActionIcon onClick={() => handleDownload()}>
                 <IconDownload />
               </ActionIcon>
             </Tooltip>
-         
-            <Tooltip label={"Delete attachment"}>
+
+            <Tooltip label={t("delete_attachment")}>
               <ActionIcon onClick={() => setDeleteAttachment(item.id)}>
                 <IconTrash color="red" />
               </ActionIcon>
             </Tooltip>
           </Flex>
         </td>
-        
       </tr>
     );
   };
@@ -126,7 +125,7 @@ const GroupAttachment = ({
         opened={opened}
         onClose={() => setOpened(false)}
         styles={{ title: { fontWeight: "bold" } }}
-        title="Upload Attachments"
+        title={t("upload_attachments")}
       >
         <AddAssignment close={() => setOpened(false)} search={searchParams} />
       </Modal>
@@ -136,7 +135,7 @@ const GroupAttachment = ({
           wrap={"wrap"}
           sx={{ justifyContent: "space-between", alignItems: "center" }}
         >
-          <Title sx={{ flexGrow: 2 }}>Attachments</Title>
+          <Title sx={{ flexGrow: 2 }}>{t("attachments")}</Title>
           <Flex
             sx={{
               justifyContent: "end",
@@ -145,12 +144,12 @@ const GroupAttachment = ({
           >
             {authUser?.auth && authUser?.auth?.role <= 3 && (
               <Button onClick={() => setOpened(true)} my={10} ml={5}>
-                Add New Attachment
+                {t("add_new_attachment")}
               </Button>
             )}
           </Flex>
         </Flex>
-        {searchComponent("Search Attachments")}
+        {searchComponent(t("search_attachments") as string)}
 
         {getGroupAttachment.data &&
         getGroupAttachment.data?.items.length >= 1 ? (
@@ -165,10 +164,10 @@ const GroupAttachment = ({
               >
                 <thead>
                   <tr>
-                    <th>Uploaded Date</th>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Action</th>
+                    <th>{t("uploaded_date")}</th>
+                    <th>{t("name")}</th>
+                    <th>{t("type")}</th>
+                    <th>{t("action")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -183,7 +182,7 @@ const GroupAttachment = ({
             </Paper>
           </ScrollArea>
         ) : (
-          <Text mt={10}>No Attachments Found!</Text>
+          <Text mt={10}>{t("no_attachments_found")}</Text>
         )}
       </Container>
     </>

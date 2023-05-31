@@ -73,6 +73,7 @@ const Department = ({
       item.id,
       !item.isActive
     );
+    const { t } = useTranslation();
     const [opened, setOpened] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [isChecked, setIsChecked] = useState(item.isActive);
@@ -83,7 +84,6 @@ const Department = ({
         isDepartmentActive: item.isActive,
       },
     });
-    const { t } = useTranslation();
     const updateDepartment = useUpdateDepartmentSetting(item.id);
     const deleteDepartment = useDeleteDepartmentSetting();
     const handleDelete = async () => {

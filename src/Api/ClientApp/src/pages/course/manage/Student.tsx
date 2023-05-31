@@ -55,6 +55,7 @@ const Rows = ({
   const course_id = id as string;
   const postUserData = usePostStatisticsCertificate(course_id, searchParams);
   const theme = useMantineTheme();
+  const { t } = useTranslation();
 
   const handleSubmit = async (dataUser: string[]) => {
     try {
@@ -82,7 +83,6 @@ const Rows = ({
       setSelected([userId, ...selected]);
     }
   };
-  const { t } = useTranslation();
 
   return (
     <tr key={item.userId}>
@@ -193,9 +193,9 @@ const ManageStudents = ({
   const postUserData = usePostStatisticsCertificate(course_id, searchParams);
   const [selected, setSelected] = useState<string[]>([]);
   const [submitModal, setSubmitModal] = useState(false);
+  const { t } = useTranslation();
 
   const handleIssueAll = async () => {
-    const { t } = useTranslation();
     try {
       await postUserData.mutateAsync({
         data: [],
@@ -232,7 +232,6 @@ const ManageStudents = ({
       });
     }
   };
-  const { t } = useTranslation();
 
   if (getStudentStat.data?.totalCount === 0)
     return <Box>{t("no_trainees")}</Box>;
@@ -248,7 +247,7 @@ const ManageStudents = ({
         onConfirm={handleIssueAll}
       />
       <ConfirmationModal
-        title="Are you sure want to issue certificate?"
+        title={t("sure_to_issue_certificate")}
         open={submitModal}
         onClose={() => setSubmitModal(false)}
         onConfirm={handleSubmit}

@@ -26,6 +26,8 @@ const LessonVideoUpload = ({
   marginy?: number;
   formContext: () => UseFormReturnType<any, (values: any) => any>;
 }) => {
+  const { t } = useTranslation();
+
   useEffect(() => {
     if (currentVideo) {
       setFiles([
@@ -40,7 +42,6 @@ const LessonVideoUpload = ({
   }, [currentVideo]);
   const form = formContext();
   const [files, setFiles] = useState<any>([]);
-  const { t } = useTranslation();
   return (
     <Box my={marginy} sx={{ maxWidth: 470 }} pos="relative">
       <FilePond

@@ -28,6 +28,7 @@ import moment from "moment";
 import formatDuration from "@utils/formatDuration";
 import { getType } from "./LessonStatusColor";
 import { IStudentInfoLesson } from "@utils/services/manageCourseService";
+import { useTranslation } from "react-i18next";
 
 const TableRow = ({ values }: { values: IReportDetail }) => {
   const theme = useMantineTheme();
@@ -63,6 +64,7 @@ const StudentLessonDetails = ({
     slug?.lessonId as string
   );
   const [examResultModal, setExamResultModal] = useToggle();
+  const { t } = useTranslation();
 
   const [liveClassReportModal, setLiveClassReportModal] = useToggle();
   const [confirmComplete, setConfirmComplete] = useToggle();
@@ -78,7 +80,7 @@ const StudentLessonDetails = ({
     switch (type) {
       case LessonType.Exam:
         return (
-          <Tooltip label="View Result">
+          <Tooltip label={t("view_result")}>
             <ActionIcon
               color="green"
               variant="subtle"
@@ -90,7 +92,7 @@ const StudentLessonDetails = ({
         );
       case LessonType.LiveClass:
         return (
-          <Tooltip label="View Live Class Report">
+          <Tooltip label={t("view_live_class_report")}>
             <ActionIcon
               color="green"
               variant="subtle"
@@ -102,7 +104,7 @@ const StudentLessonDetails = ({
         );
       case LessonType.Assignment:
         return (
-          <Tooltip label="View Assignment Result">
+          <Tooltip label={t("view_assignment_result")}>
             <ActionIcon
               component={Link}
               color="green"
@@ -116,7 +118,7 @@ const StudentLessonDetails = ({
 
       case LessonType.Feedback:
         return (
-          <Tooltip label="View Feedback">
+          <Tooltip label={t("view_feedback")}>
             <ActionIcon
               component={Link}
               color="green"
@@ -131,12 +133,11 @@ const StudentLessonDetails = ({
         return <div></div>;
     }
   };
-
   const onCompletedClick = async () => {
     try {
       await watchHistory.mutateAsync({ courseId, lessonId, userId: studentId });
       showNotification({
-        message: "Successfully passed student.",
+        message: t("pass_student_success"),
       });
       setConfirmComplete();
     } catch (err) {
@@ -176,12 +177,14 @@ const StudentLessonDetails = ({
       <Modal
         opened={confirmComplete}
         onClose={() => setConfirmComplete()}
-        title={`Are you sure you want to pass this student for "${lessonName}" lesson?`}
+        title={`${t("pass_student_confirmation")} "${lessonName}" ${t(
+          "lesson?"
+        )}`}
       >
         <Group>
           <Button onClick={onCompletedClick}>Confirm</Button>
           <Button onClick={() => setConfirmComplete()} variant="outline">
-            Cancel
+            {t("cancel")}
           </Button>
         </Group>
       </Modal>
@@ -190,7 +193,7 @@ const StudentLessonDetails = ({
         overflow="inside"
         opened={liveClassReportModal}
         onClose={() => setLiveClassReportModal()}
-        title={`Meeting Report`}
+        title={t("meeting_report")}
         styles={{
           title: {
             fontWeight: "bold",
@@ -207,10 +210,10 @@ const StudentLessonDetails = ({
                 <Table>
                   <thead>
                     <tr>
-                      <th>Start Date</th>
-                      <th>Joined Time</th>
-                      <th>Left Time</th>
-                      <th>Duration</th>
+                      <th>{t("start_date")}</th>
+                      <th>{t("join_time")}</th>
+                      <th>{t("left_time")}</th>
+                      <th>{t("duration")}</th>
                     </tr>
                   </thead>
 
@@ -221,7 +224,7 @@ const StudentLessonDetails = ({
                   </tbody>
                 </Table>
               )}
-              {meetingReport.isError && <Box>Something went wrong.</Box>}
+              {meetingReport.isError && <Box>{t("something_went_wrong")}</Box>}
             </>
           )}
         </>
@@ -229,7 +232,7 @@ const StudentLessonDetails = ({
       <Group>
         {getViewButton()}
         {!isCompleted && (
-          <Tooltip label={`Mark as ${getType(type).true}`}>
+          <Tooltip label={`${t("mark_as")} ${getType(type).true}`}>
             <ActionIcon
               onClick={() => setConfirmComplete()}
               variant="subtle"

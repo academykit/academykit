@@ -8,10 +8,12 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 
 const ZoomMettingMessage = () => {
   let [searchParams] = useSearchParams();
+  const { t } = useTranslation();
   const { courseId, lessonId } = useParams();
   const s = searchParams.get("s");
   const e = searchParams.get("e");
@@ -20,7 +22,7 @@ const ZoomMettingMessage = () => {
     return (
       <Center pt="20%">
         <Container>
-          <Title align="center">Error Occured while joining meeting</Title>
+          <Title align="center">{t("error_while_joining")}</Title>
           <Text align="center">{e}</Text>
           <Box my={20} ml={180}>
             <Group>
@@ -30,7 +32,7 @@ const ZoomMettingMessage = () => {
                 to={`/classes/${courseId}/1`}
                 color={"dimmed"}
               >
-                <Button>Back to Course</Button>
+                <Button>{t("back_course")}</Button>
               </Anchor>
               <Anchor
                 size={"xs"}
@@ -44,7 +46,7 @@ const ZoomMettingMessage = () => {
                   component="a"
                   href={`/meet.html?l=${lessonId}&c=${courseId}`}
                 >
-                  Rejoin
+                  {t("rejoin")}
                 </Button>
               </Anchor>
             </Group>

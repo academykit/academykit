@@ -157,7 +157,8 @@ const AddLecture = ({
             </Grid.Col>
           </Grid>
           <Text size={"sm"} mt={10}>
-            {isRecordedVideo ? t("recordings") : t("video")}{" "}
+            {isRecordedVideo ? t("recordings") : t("video")}
+
             <span style={{ color: "red" }}>*</span>
           </Text>
           <LessonVideoUpload

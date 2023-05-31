@@ -6,6 +6,7 @@ import {
   Container,
   Group,
 } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -53,15 +54,15 @@ const useStyles = createStyles((theme) => ({
 
 const ServerError = () => {
   const { classes } = useStyles();
+  const { t } = useTranslation();
 
   return (
     <div className={classes.root}>
       <Container>
-        <div className={classes.label}>500</div>
-        <Title className={classes.title}>Something bad just happened...</Title>
+        <div className={classes.label}>{t("500")}</div>
+        <Title className={classes.title}>{t("something_bad")}</Title>
         <Text size="lg" align="center" className={classes.description}>
-          Our servers could not handle your request. Don&apos;t worry, our
-          development team was already notified. Try refreshing the page.
+          {t("server_error")}
         </Text>
         <Group position="center">
           <Button
@@ -69,7 +70,7 @@ const ServerError = () => {
             size="md"
             onClick={() => window.location.reload()}
           >
-            Refresh the page
+            {t("refresh_page")}
           </Button>
         </Group>
       </Container>

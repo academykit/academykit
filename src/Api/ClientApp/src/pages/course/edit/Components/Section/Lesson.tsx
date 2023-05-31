@@ -20,6 +20,7 @@ import {
   ILessonMeeting,
 } from "@utils/services/types";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
@@ -65,11 +66,11 @@ const Lesson = ({
 }) => {
   const { classes, cx } = useStyles();
   const { id: slug } = useParams();
+  const { t } = useTranslation();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [value, toggle] = useToggle();
   const deleteLesson = useDeleteLesson(slug as string);
-
   const onDeleteLesson = async () => {
     try {
       await deleteLesson.mutateAsync({
@@ -77,8 +78,8 @@ const Lesson = ({
         lessonId: lesson.id,
       });
       showNotification({
-        message: "Lesson Deleted successfully!",
-        title: "Success",
+        message: t("delete_lesson_success"),
+        title: t("success"),
       });
       toggle();
     } catch (error) {
@@ -87,14 +88,14 @@ const Lesson = ({
       showNotification({
         message: err,
         color: "red",
-        title: "Error",
+        title: t("error"),
       });
     }
   };
   return (
     <div>
       <DeleteModal
-        title={`Are you sure you want to delete?`}
+        title={t("sure_want_to_delete")}
         open={value}
         onClose={toggle}
         onConfirm={onDeleteLesson}
@@ -111,7 +112,7 @@ const Lesson = ({
               <Text m={"auto"}>
                 {ReadableEnum[
                   LessonType[lesson.type] as keyof typeof ReadableEnum
-                ] ?? LessonType[lesson.type]}
+                ] ?? t(`${LessonType[lesson.type]}`)}
               </Text>
             </Group>
           </Grid.Col>
@@ -132,7 +133,7 @@ const Lesson = ({
                 variant="outline"
                 onClick={() => setIsEditing(!isEditing)}
               >
-                {isEditing ? "Cancel" : "Edit"}
+                {isEditing ? t("cancel") : t("edit")}
               </Button>
             </Group>
           </Grid.Col>
