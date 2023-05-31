@@ -34,7 +34,7 @@ const PoolCard = ({
       await deletePool.mutateAsync(poolId);
       showNotification({
         title: t("successful"),
-        message: t("Question Pool Deleted successfully."),
+        message: t("question_pool_delete"),
       });
     } catch (err) {
       const error = errorType(err);
