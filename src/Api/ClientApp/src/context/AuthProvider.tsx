@@ -98,12 +98,12 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
       <Modal
         onClose={() => setShowLogout()}
         opened={showLogout}
-        title="Are you sure you want to Logout?"
+        title={t("logout_confirmation")}
       >
         <Group position="center">
           <Button onClick={confirmLogout}>Sure</Button>
           <Button variant="outline" onClick={() => setShowLogout()}>
-            Cancel
+            {t("cancel")}
           </Button>
         </Group>
       </Modal>

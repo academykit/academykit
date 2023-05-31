@@ -91,7 +91,7 @@ const SectionItem = ({
       })}
     >
       <DeleteModal
-        title={`Are you sure you want to delete?`}
+        title={t("sure_want_to_delete")}
         open={value}
         onClose={toggle}
         onConfirm={onDelete}
