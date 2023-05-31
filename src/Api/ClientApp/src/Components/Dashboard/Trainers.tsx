@@ -7,33 +7,27 @@ import {
 import React from "react";
 import { StatsCard } from "./StatsCard";
 import TrainingCards from "./TrainingCards";
-
-const incomingData = [
-  {
-    key: "totalGroups",
-    label: "My Groups",
-    icon: "userEnrollment",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 const TrainerCardDual = ({ dashboard }: { dashboard: DashboardStats }) => {
+  const { t } = useTranslation();
   return (
     <Paper withBorder p="md" radius={"md"}>
       <Group position="left" noWrap>
         <IconBook size={26} stroke={1.5} />
-        <Text size="md">My Trainings</Text>
+        <Text size="md">{t("my_trainings")}</Text>
       </Group>
       <Group position="apart" noWrap mt={10}>
         <Flex>
           <IconActivity size={26} stroke={1.5} />
           <Text ml={5} size="md">
-            Active
+            {t("active")}
           </Text>
         </Flex>
         <Flex>
           <IconFileCheck size={26} stroke={1.5} />
           <Text ml={5} size="md">
-            Completed
+            {t("completed")}
           </Text>
         </Flex>
       </Group>
@@ -52,6 +46,14 @@ const Trainers = ({
   dashboard: DashboardStats;
   dashboardCourses: DashboardCourses[];
 }) => {
+  const { t } = useTranslation();
+  const incomingData = [
+    {
+      key: "totalGroups",
+      label: t("my_groups"),
+      icon: "userEnrollment",
+    },
+  ];
   return (
     <div>
       <SimpleGrid
@@ -70,14 +72,14 @@ const Trainers = ({
         <TrainerCardDual dashboard={dashboard} />
       </SimpleGrid>
       <Text size={"xl"} weight="bold">
-        My Training
+        {t("my_training")}
       </Text>
       {dashboardCourses.length > 0 ? (
         <Text mb={10} c="dimmed">
-          Trainings you are moderating on:
+          {t("training_moderating")}
         </Text>
       ) : (
-        <Text c="dimmed">You are not Moderating on any Trainings.</Text>
+        <Text c="dimmed">{t("not_moderating_any_trainings")}</Text>
       )}
 
       <SimpleGrid
