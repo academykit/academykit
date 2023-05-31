@@ -149,7 +149,7 @@ const AddFeedback = ({
               <TextInput
                 withAsterisk
                 label={t("feedback_title")}
-                placeholder="feedback_title"
+                placeholder={t("feedback_title") as string}
                 {...form.getInputProps("name")}
               />
             </Grid.Col>

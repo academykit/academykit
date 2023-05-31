@@ -7,6 +7,7 @@ import {
   usePostCommentReply,
 } from "@utils/services/commentService";
 import CommentReply from "./CommentReply";
+import { useTranslation } from "react-i18next";
 
 const CommentReplies = ({
   commentId,
@@ -22,6 +23,7 @@ const CommentReplies = ({
   });
   const addCommentReply = usePostCommentReply(courseId, commentId);
   const commentReplies = useGetCommentReplies(courseId, commentId);
+  const { t } = useTranslation();
 
   const submitHandler = async ({ content }: { content: string }) => {
     try {
@@ -58,11 +60,11 @@ const CommentReplies = ({
           <Textarea
             {...form.getInputProps("content")}
             sx={{ width: "100%" }}
-            placeholder="Your comment"
+            placeholder={t("your_comment") as string}
             withAsterisk
           />
           <Button type="submit" loading={addCommentReply.isLoading}>
-            Reply
+            {t("reply")}
           </Button>
         </Group>
       </form>
