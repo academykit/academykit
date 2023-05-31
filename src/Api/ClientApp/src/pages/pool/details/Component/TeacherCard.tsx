@@ -41,7 +41,7 @@ const TeacherCard = ({
   return (
     <Card radius={"lg"} my={10}>
       <DeleteModal
-        title={`Do you want to delete this trainer?`}
+        title={t("want_to_delete_trainer")}
         open={confirmation}
         onClose={setConfirmation}
         onConfirm={handleDelete}

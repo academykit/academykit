@@ -28,7 +28,7 @@ const LessonDetails = () => {
   const [loading, setLoading] = useState(false);
 
   if (lessonDetails.data && lessonDetails.data?.totalCount < 1) {
-    return <Box>No enrolled student found.</Box>;
+    return <Box>{t("no_enrolled_student_found")}</Box>;
   }
 
   if (lessonDetails.isLoading) return <Loader />;
@@ -65,7 +65,7 @@ const LessonDetails = () => {
       {lessonDetails.data?.items[0].lessonType === LessonType.Feedback && (
         <Group position="right" my="md">
           <Button onClick={handleExport} loading={loading}>
-            Export
+            {t("export")}
           </Button>
         </Group>
       )}
@@ -73,12 +73,12 @@ const LessonDetails = () => {
         <Table striped withBorder>
           <thead>
             <tr>
-              <th>Trainees</th>
+              <th>{t("trainees")}</th>
               <th>
-                <Center>Status</Center>
+                <Center>{t("status")}</Center>
               </th>
 
-              <th>Actions</th>
+              <th>{t("actions")}</th>
             </tr>
           </thead>
           <tbody>

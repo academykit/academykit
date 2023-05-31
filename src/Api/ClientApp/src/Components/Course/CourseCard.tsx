@@ -13,8 +13,8 @@ import { CourseLanguage } from "@utils/enums";
 import getCourseOgImageUrl from "@utils/getCourseOGImage";
 import RoutePath from "@utils/routeConstants";
 import { ICourse } from "@utils/services/courseService";
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -92,7 +92,7 @@ const CourseCard = ({ course }: { course: ICourse }) => {
         to={RoutePath.courses.description(course.slug).route}
       >
         <Button variant="light" color="blue" fullWidth mt="md" radius="md">
-          {t("Watch")}
+          {t("watch")}
         </Button>
       </Link>
     </Card>
