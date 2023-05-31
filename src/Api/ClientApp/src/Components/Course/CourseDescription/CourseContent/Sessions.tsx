@@ -4,6 +4,7 @@ import { CourseUserStatus, UserRole } from "@utils/enums";
 import formatDuration from "@utils/formatDuration";
 import { ISection } from "@utils/services/courseService";
 import Lesson from "./Lesson";
+import { useTranslation } from "react-i18next";
 
 const Sessions = ({
   section,
@@ -16,6 +17,7 @@ const Sessions = ({
 }) => {
   // const totalDuration = section.lessons?.reduce((a, b) => b.duration + a, 0);
   const auth = useAuth();
+  const { t } = useTranslation();
 
   const canClickLessons =
     enrollmentStatus === CourseUserStatus.NotEnrolled &&
@@ -27,7 +29,7 @@ const Sessions = ({
       <Title size={"h6"}>{section?.name}</Title>
       <Text size={10} color={"dimmed"}>
         {formatDuration(section.duration ?? 0)}. {section.lessons?.length}{" "}
-        Lesson(s)
+        {t("Lesson")}
       </Text>
       <Box
         my={20}

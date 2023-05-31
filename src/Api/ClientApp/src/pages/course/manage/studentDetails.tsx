@@ -2,8 +2,10 @@ import { Center, Paper, Table, Box, Loader } from "@mantine/core";
 import { useGetStudentStatisticsDetails } from "@utils/services/manageCourseService";
 import { useParams } from "react-router-dom";
 import CourseStudentLessons from "./Components/CourseStudentLessons";
+import { useTranslation } from "react-i18next";
 
 const StudentDetails = () => {
+  const { t } = useTranslation();
   const { id, studentId } = useParams();
   const studentDetails = useGetStudentStatisticsDetails(
     id as string,
@@ -15,7 +17,7 @@ const StudentDetails = () => {
   }
 
   if (studentDetails.data?.length === 0)
-    return <Box>Trainee has not started any lesson.</Box>;
+    return <Box>{t("trainee_not_started_lesson")}</Box>;
 
   if (studentDetails.isLoading) return <Loader />;
 
@@ -24,12 +26,12 @@ const StudentDetails = () => {
       <Table striped withBorder>
         <thead>
           <tr>
-            <th>Lesson</th>
+            <th>{t("Lesson")}</th>
             <th>
-              <Center>Lesson Status</Center>
+              <Center>{t("lesson_status")}</Center>
             </th>
-            <th>Lesson Type</th>
-            <th>Actions</th>
+            <th>{t("lesson_type")}</th>
+            <th>{t("action")}</th>
           </tr>
         </thead>
         <tbody>

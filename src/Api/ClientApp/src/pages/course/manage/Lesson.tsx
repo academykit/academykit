@@ -40,7 +40,7 @@ function TableReviews() {
             {item.name}
           </Anchor>
         </td>
-        <td>{LessonType[item.lessonType]}</td>
+        <td>{t(`${LessonType[item.lessonType]}`)}</td>
         <td>
           <ProgressBar
             total={item?.enrolledStudent}
