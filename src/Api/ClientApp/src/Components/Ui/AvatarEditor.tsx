@@ -13,6 +13,7 @@ import {
   default as FilePondPluginFileValidateSize,
   default as FilePondPluginImageResize,
 } from "filepond-plugin-file-validate-size";
+import { useTranslation } from "react-i18next";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -45,7 +46,7 @@ const AvatarEditor = ({ label = "files", url, formContext }: IProps) => {
   }, [url]);
 
   const form = formContext();
-
+  const { t } = useTranslation();
   const [files, setFiles] = useState<any>([]);
   return (
     <div style={{ maxWidth: 200 }}>
@@ -62,7 +63,9 @@ const AvatarEditor = ({ label = "files", url, formContext }: IProps) => {
         stylePanelLayout="compact circle"
         stylePanelAspectRatio="1:1"
         files={files}
-        labelIdle={`Drag & Drop your ${label} or <span class="filepond--label-action">Browse</span>`}
+        labelIdle={`${t("drag_and_drop")} ${label} ${t(
+          "or"
+        )} <span class="filepond--label-action">${t("browse")}</span>`}
         onupdatefiles={setFiles}
         allowMultiple={false}
         maxFiles={1}
@@ -85,7 +88,7 @@ const AvatarEditor = ({ label = "files", url, formContext }: IProps) => {
               load(res.data);
               form.setFieldValue("imageUrl", res.data);
             } catch (e) {
-              error("Unable to upload file");
+              error(t("unable_to_upload"));
             }
             return {
               abort: () => {
