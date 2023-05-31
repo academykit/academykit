@@ -631,6 +631,32 @@
 "Assignment": "कार्य",
 "LiveClass": "लाइभ क्लास",
 "RecordedVideo": "रेकर्डेड भिडियो",
-"Feedback": "प्रतिक्रिया"
+"Feedback": "प्रतिक्रिया",
+"view_previous_lesson": "अघिल्लो पाठ हेर्नुहोस्",
+"comments": "कैफियतहरू",
+"Duration": "अवधि:",
+"Watch": "हेर्नुहोस्",
+"About": "बारेमा",
+"Attended_Trainings": "संचालित गरिएका तालिमहरू",
+"Enrolled_Date": "नामान्तरण मिति",
+"Language": "भाषा",
+"edit_this_course": "यो कोर्स सम्पादन गर्नुहोस्",
+"watch": "हेर्नुहोस्",
+"title_for_question": "प्रश्नको शीर्षक",
+"title_for_question_placeholder": "प्रश्नको शीर्षक प्रविष्ट गर्नुहोस्",
+"designation": "निर्धारण",
+"designation_placeholder": "निर्धारण प्रविष्ट गर्नुहोस्",
+"signature": "हस्ताक्षर",
+"save_edit": "सम्पादन सुरक्षित गर्नुहोस्",
+"enter_name": "नाम प्रविष्ट गर्नुहोस्",
+"sure_want_to_delete": "के तपाईं निश्चित हुनुहुन्छ तपाईं मेटाउन चाहानुहुन्छ?",
+"no_enrolled_student_found": "नामान्तरण गरिएका छात्रहरू भेटिएन।",
+"export": "निर्यात गर्नुहोस्",
+"trainees": "तालिमार्थीहरू",
+"want_to_delete_trainer": "के तपाईं यो प्रशिक्षकलाई मेटाउन चाहानुहुन्छ?",
+"attended_trainings": "संचालित गरिएका तालिमहरू",
+"enrolled_date": "नामान्तरण मिति"
+
+
 }
       

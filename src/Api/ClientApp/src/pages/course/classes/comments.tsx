@@ -2,7 +2,6 @@ import Comment from "@components/Course/Comment";
 import { Box, Button, Loader, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import RichTextEditor from "@mantine/rte";
 import errorType from "@utils/services/axiosError";
 import { useGetComments, usePostComment } from "@utils/services/commentService";
 import { useTranslation } from "react-i18next";

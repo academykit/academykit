@@ -629,7 +629,30 @@
 "Assignment": "課題",
 "LiveClass": "ライブクラス",
 "RecordedVideo": "録画ビデオ",
-"Feedback": "フィードバック"
-
+"Feedback": "フィードバック",
+"view_previous_lesson": "前のレッスンを見る",
+"comments": "コメント",
+"Duration": "期間：",
+"Watch": "視聴",
+"About": "概要",
+"Attended_Trainings": "参加したトレーニング",
+"Enrolled_Date": "登録日",
+"Language": "言語",
+"edit_this_course": "このコースを編集する",
+"watch": "視聴",
+"title_for_question": "質問のタイトル",
+"title_for_question_placeholder": "質問のタイトルを入力してください",
+"designation": "役職",
+"designation_placeholder": "役職を入力してください",
+"signature": "署名",
+"save_edit": "編集を保存",
+"enter_name": "名前を入力してください",
+"sure_want_to_delete": "削除してもよろしいですか？",
+"no_enrolled_student_found": "登録された学生は見つかりませんでした。",
+"export": "エクスポート",
+"trainees": "受講者",
+"want_to_delete_trainer": "このトレーナーを削除しますか？",
+"attended_trainings": "参加したトレーニング",
+"enrolled_date": "登録日"
     }
     
