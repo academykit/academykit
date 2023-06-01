@@ -94,7 +94,7 @@ const AssignmentResult = () => {
           )}
           {x.type === QuestionType.Subjective ? (
             <>
-              <Text weight="bold">Answers</Text>
+              <Text weight="bold">{t("answers")}</Text>
               <RichTextEditor readOnly={true} value={x.answer} />
             </>
           ) : (
@@ -127,7 +127,7 @@ const AssignmentResult = () => {
       ))}
       {getAssignment.data.assignmentReview && (
         <Paper p={20}>
-          <Title>Review</Title>
+          <Title>{t("review")}</Title>
           <Group>
             <UserShortProfile
               size={"md"}
@@ -135,13 +135,13 @@ const AssignmentResult = () => {
             />
             <Paper withBorder shadow={"xl"} px={40} py={20} mx={20}>
               <Group>
-                <Text> Mark</Text>
+                <Text> {t("mark")}</Text>
                 <Text color={"dimmed"}>
                   {getAssignment.data?.assignmentReview?.mark}/100
                 </Text>
               </Group>
               <Group>
-                <Text>Review</Text>
+                <Text>{t("review")}</Text>
                 <Text color={"dimmed"}>
                   {getAssignment.data?.assignmentReview?.review}
                 </Text>
@@ -155,8 +155,8 @@ const AssignmentResult = () => {
         {auth?.auth && auth?.auth?.role <= UserRole.Trainer && (
           <Button onClick={() => setShowReviewBox()}>
             {getAssignment.data?.assignmentReview?.review
-              ? "Edit Review"
-              : "Add Review"}
+              ? t("edit_review")
+              : t("add_review")}
           </Button>
         )}
         <Button
@@ -165,7 +165,7 @@ const AssignmentResult = () => {
             navigate(-1);
           }}
         >
-          Go Back
+          {t("go_back_button")}
         </Button>
       </Group>
     </Container>

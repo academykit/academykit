@@ -182,7 +182,7 @@ const StudentLessonDetails = ({
         )}`}
       >
         <Group>
-          <Button onClick={onCompletedClick}>Confirm</Button>
+          <Button onClick={onCompletedClick}>{t("confirm")}</Button>
           <Button onClick={() => setConfirmComplete()} variant="outline">
             {t("cancel")}
           </Button>

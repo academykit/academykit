@@ -228,7 +228,7 @@ const Create = () => {
 
             <Box mt={20}>
               <Text size={"md"}>{t("hint")}</Text>
-              <TextEditor label="hints" formContext={useFormContext} />
+              <TextEditor label={t("hints") as string} formContext={useFormContext} />
             </Box>
             <Select
               mt={20}

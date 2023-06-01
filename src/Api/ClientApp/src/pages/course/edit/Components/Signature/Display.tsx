@@ -1,5 +1,8 @@
+import { useTranslation } from "react-i18next";
+
 const DisplaySignature = () => {
-  return <div>DisplaySignature</div>;
+  const { t } = useTranslation();
+  return <div>{t("display_signature")}</div>;
 };
 
 export default DisplaySignature;

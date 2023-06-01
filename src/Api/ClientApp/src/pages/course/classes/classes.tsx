@@ -266,7 +266,7 @@ const Classes = () => {
         <Box>
           <Tabs
             defaultChecked={true}
-            defaultValue={"description"}
+            defaultValue={t("description")}
             value={tab}
             onTabChange={(value) =>
               navigate(`${value}`, { preventScrollReset: true })

@@ -46,13 +46,13 @@ const Comments = () => {
       ))}
       <form onSubmit={form.onSubmit(onSubmit)}>
         <Textarea
-          placeholder="Write your comment here"
+          placeholder={t("your_comment_here") as string}
           {...form.getInputProps("content")}
           mt={20}
           sx={{ minHeight: "5rem" }}
         />
         <Button loading={postComment.isLoading} type="submit" mt={10}>
-          Post
+          {t("post")}
         </Button>
       </form>
     </Box>
