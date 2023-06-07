@@ -587,3 +587,9 @@ export const useUpdateFileStorage = () => {
     }
   );
 };
+
+// ------------Resend Email-------------------
+export const resendEmail = async (id: string) =>
+  await httpClient.patch(api.auth.resendEmail(id));
+export const useResendEmail = (id: string) =>
+  useMutation([api.auth.resendEmail(id)], resendEmail);

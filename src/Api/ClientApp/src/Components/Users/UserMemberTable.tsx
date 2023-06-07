@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Avatar,
   Badge,
   Loader,
@@ -6,19 +7,22 @@ import {
   Paper,
   Table,
   Text,
+  Tooltip,
+  useMantineColorScheme,
 } from "@mantine/core";
-import { useEditUser } from "@utils/services/adminService";
-import { UserRole } from "@utils/enums";
+import { useEditUser, useResendEmail } from "@utils/services/adminService";
+import { UserRole, UserStatus } from "@utils/enums";
 
 import { Suspense, useState } from "react";
-import { Link, Route, useNavigate } from "react-router-dom";
-import { IconEdit } from "@tabler/icons";
+import { Link } from "react-router-dom";
+import { IconEdit, IconSend } from "@tabler/icons";
 import { IUserProfile } from "@utils/services/types";
 import useAuth from "@hooks/useAuth";
 import { IAuthContext } from "@context/AuthProvider";
 import { getInitials } from "@utils/getInitialName";
 import lazyWithRetry from "@utils/lazyImportWithReload";
-import RoutePath from "@utils/routeConstants";
+import { showNotification } from "@mantine/notifications";
+import errorType from "@utils/services/axiosError";
 
 const AddUpdateUserForm = lazyWithRetry(() => import("./AddUpdateUserForm"));
 
@@ -33,7 +37,25 @@ const UserRow = ({
 }) => {
   const [opened, setOpened] = useState(false);
   const editUser = useEditUser(item?.id, search);
-  const navigate = useNavigate();
+  const { colorScheme } = useMantineColorScheme();
+  const resend = useResendEmail(item?.id);
+
+  const handleResendEmail = async () => {
+    try {
+      await resend.mutateAsync(item.id);
+      showNotification({
+        message: "Email sent successfully!",
+        title: "Successful",
+      });
+    } catch (error) {
+      const err = errorType(error);
+      showNotification({
+        message: err,
+        title: "Error!",
+        color: "red",
+      });
+    }
+  };
 
   return (
     <tr key={item?.id}>
@@ -75,19 +97,48 @@ const UserRow = ({
 
       <td>{item?.mobileNumber}</td>
       <td>
-        {item?.isActive ? (
+        {item?.status === UserStatus.Active ? (
           <Badge color={"green"}>Active</Badge>
-        ) : (
+        ) : item?.status === UserStatus.InActive ? (
           <Badge color={"red"}>InActive</Badge>
+        ) : (
+          <Badge color="yellow">Pending</Badge>
         )}
       </td>
 
-      <td>
+      <td style={{ display: "flex" }}>
         {item.role !== UserRole.SuperAdmin && auth?.auth?.id !== item.id && (
-          <IconEdit
-            onClick={() => setOpened(true)}
-            style={{ cursor: "pointer" }}
-          />
+          <Tooltip label="Edit User Details">
+            <ActionIcon
+              style={{
+                cursor: "pointer",
+                color: colorScheme === "dark" ? "#F8F9FA" : "#25262B",
+              }}
+            >
+              <IconEdit
+                onClick={() => setOpened(true)}
+                style={{ cursor: "pointer" }}
+                size={20}
+              />
+            </ActionIcon>
+          </Tooltip>
+        )}
+
+        {auth?.auth?.id !== item.id && item.status === UserStatus.Pending && (
+          <Tooltip label="Resend Email" onClick={handleResendEmail}>
+            <ActionIcon
+              style={{
+                cursor: "pointer",
+                color: colorScheme === "dark" ? "#F8F9FA" : "#25262B",
+              }}
+            >
+              {resend.isLoading ? (
+                <Loader variant="oval" />
+              ) : (
+                <IconSend size={20} />
+              )}
+            </ActionIcon>
+          </Tooltip>
         )}
       </td>
     </tr>
