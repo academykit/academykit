@@ -1150,8 +1150,8 @@ namespace Lingtren.Infrastructure.Services
                 var users = await _unitOfWork.GetRepository<User>().GetAllAsync().ConfigureAwait(false);
 
                 responseModel.TotalUsers = users.Count();
-                responseModel.TotalActiveUsers = users.Count(predicate: p => p.IsActive);
-                responseModel.TotalTrainers = users.Count(predicate: p => p.IsActive && p.Role == UserRole.Trainer);
+                responseModel.TotalActiveUsers = users.Count(predicate: p => p.Status == UserStatus.Active);
+                responseModel.TotalTrainers = users.Count(predicate: p => p.Status == UserStatus.Active && p.Role == UserRole.Trainer);
 
                 responseModel.TotalGroups = await _unitOfWork.GetRepository<Group>().CountAsync(predicate: p => p.IsActive).ConfigureAwait(false);
                 responseModel.TotalTrainings = await _unitOfWork.GetRepository<Course>().CountAsync(

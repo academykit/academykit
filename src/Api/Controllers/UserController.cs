@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Api.Controllers
 {
     using FluentValidation;
+    using Hangfire;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
@@ -101,7 +102,7 @@
                 Bio = model.Bio,
                 ImageUrl = model.ImageUrl,
                 PublicUrls = model.PublicUrls,
-                IsActive = model.IsActive,
+                Status = UserStatus.Pending,
                 Profession = model.Profession,
                 Role = model.Role,
                 DepartmentId = model.DepartmentId,
@@ -116,7 +117,7 @@
 
             var response = await _userService.CreateAsync(entity).ConfigureAwait(false);
             var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
-            await _emailService.SendUserCreatedPasswordEmail(entity.Email, entity.FullName, password,company.CompanyName).ConfigureAwait(false);
+            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(entity.Email, entity.FullName, password, company.CompanyName,null));
             return new UserResponseModel(response);
         }
 
@@ -138,11 +139,11 @@
         /// <param name="CourseID">the current course id </param>
         /// <returns> the instance of <see cref="UserResponseModel" /> .</returns>
         [HttpGet("{userId}/{courseId}")]
-        public async Task<List<UserResponseModel>> GetUsersForCouseEnrollment(Guid userId,string courseId)
+        public async Task<List<UserResponseModel>> GetUsersForCouseEnrollment(Guid userId, string courseId)
         {
             return await _userService.GetUserForCourseEnrollment(userId, courseId).ConfigureAwait(false);
         }
-        
+
 
         /// <summary>
         /// import bulk user api
@@ -150,10 +151,10 @@
         /// <param name="model"> the instance of <see cref="UserImportRequestModel" /> . </param>
         /// <returns> the task complete </returns>
         [HttpPost("bulkuser")]
-        public async Task<IActionResult> BulkUser([FromForm]UserImportRequestModel model)
+        public async Task<IActionResult> BulkUser([FromForm] UserImportRequestModel model)
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
-           var response =  await _userService.ImportUserAsync(model.File,CurrentUser.Id).ConfigureAwait(false);
+            var response = await _userService.ImportUserAsync(model.File, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new { statusCode = 200, message = $"{response}" });
         }
 
@@ -187,7 +188,6 @@
             existing.PublicUrls = model.PublicUrls;
             existing.ImageUrl = model.ImageUrl;
             existing.Profession = model.Profession;
-            existing.IsActive = model.IsActive;
             existing.DepartmentId = model.DepartmentId;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
@@ -200,6 +200,15 @@
                     IsSuperAdmin(CurrentUser.Role);
                 }
                 existing.Role = model.Role;
+            }
+
+            if (model.Status == UserStatus.Pending || model.Status == UserStatus.Active)
+            {
+                existing.Status = UserStatus.Active;
+            }
+            else
+            {
+                existing.Status = UserStatus.InActive;
             }
 
             var savedEntity = await _userService.UpdateAsync(existing).ConfigureAwait(false);
@@ -226,6 +235,18 @@
         {
             await _changeEmailValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             return await _userService.ChangeEmailRequestAsync(model, CurrentUser.Id).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// resend email api
+        /// </summary>
+        /// <param name="userId"> the user id </param>
+        /// <returns> the task complete </returns>
+        [HttpPatch("{userId}/resendemail")]
+        public async Task<IActionResult> ResendMail(Guid userId)
+        {
+            await _userService.ResendEmailAsync(userId, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel { Success = true, Message = "Email resend successfully." });
         }
 
         /// <summary>

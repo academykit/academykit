@@ -616,7 +616,7 @@ namespace Lingtren.Infrastructure.Services
             try
             {
                 var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
-                    predicate: p => p.Id == currentUserId && p.IsActive).ConfigureAwait(false);
+                    predicate: p => p.Id == currentUserId && p.Status == UserStatus.Active).ConfigureAwait(false);
                 if (user == null)
                 {
                     _logger.LogWarning("User with id: {id} not found.", currentUserId);

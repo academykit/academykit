@@ -148,7 +148,7 @@
             var department = await GetByIdOrSlugAsync(identity, currentUserId).ConfigureAwait(false);
 
             var predicate = PredicateBuilder.New<User>(true);
-            predicate = predicate.And(p => p.DepartmentId == department.Id && p.IsActive);
+            predicate = predicate.And(p => p.DepartmentId == department.Id && p.Status == UserStatus.Active);
 
             if (!string.IsNullOrWhiteSpace(searchCriteria.Search))
             {
@@ -211,7 +211,7 @@
                             Bio = departmentUser.Bio,
                             ImageUrl = departmentUser.ImageUrl,
                             PublicUrls = departmentUser.PublicUrls,
-                            IsActive = departmentUser.IsActive,
+                            Status = departmentUser.Status,
                             CreatedOn = departmentUser.CreatedOn,
                             FullName = departmentUser.FullName,
                             DepartmentId = departmentUser.DepartmentId,

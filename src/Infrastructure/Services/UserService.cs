@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using AngleSharp.Dom;
     using CsvHelper;
     using Domain.Entities;
     using Hangfire;
@@ -38,13 +39,15 @@
         private readonly int _changeEmailTokenExpiry;
         private readonly string _resendChangeEmailEncryptionKey;
         private readonly int _resendChangeEmailTokenExpiry;
+        private readonly IGeneralSettingService _generalSettingService;
 
         public UserService(IUnitOfWork unitOfWork,
             ILogger<UserService> logger,
             IEmailService emailService,
             IRefreshTokenService refreshTokenService,
             IOptions<JWT> jwt,
-            IConfiguration configuration) : base(unitOfWork, logger)
+            IConfiguration configuration,
+            IGeneralSettingService generalSettingService) : base(unitOfWork, logger)
         {
             _emailService = emailService;
             _refreshTokenService = refreshTokenService;
@@ -53,6 +56,7 @@
             _changeEmailTokenExpiry = int.Parse(configuration.GetSection("ChangeEmail:ExpireInMinutes").Value);
             _resendChangeEmailEncryptionKey = configuration.GetSection("ResendChangeEmail:EncryptionKey").Value;
             _resendChangeEmailTokenExpiry = int.Parse(configuration.GetSection("ResendChangeEmail:ExpireInMinutes").Value);
+            _generalSettingService = generalSettingService;
         }
 
         #region Account Services
@@ -74,7 +78,7 @@
                 return authenticationModel;
             }
 
-            if (!user.IsActive)
+            if (user.Status == UserStatus.InActive)
             {
                 authenticationModel.IsAuthenticated = false;
                 authenticationModel.Message = "Inactive user account";
@@ -88,7 +92,18 @@
                 authenticationModel.Message = "Incorrect User Credentials.";
                 return authenticationModel;
             }
+
             var currentTimeStamp = DateTime.UtcNow;
+
+            if (user.Status == UserStatus.Pending)
+            {
+                user.Status = UserStatus.Active;
+                user.UpdatedBy = user.Id;
+                user.UpdatedOn = currentTimeStamp;
+
+                _unitOfWork.GetRepository<User>().Update(user);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
 
             var refreshToken = new RefreshToken
             {
@@ -317,7 +332,7 @@
                                 MiddleName = user.MiddleName,
                                 LastName = user.LastName,
                                 Email = user.Email,
-                                IsActive = true,
+                                Status = UserStatus.Pending,
                                 Profession = user.Profession,
                                 MobileNumber = user.MobileNumber,
                                 Role = Enum.Parse<UserRole>(user.Role),
@@ -386,6 +401,7 @@
                 var tokenExpiry = DateTime.UtcNow.AddMinutes(5);
                 user.PasswordResetToken = token;
                 user.PasswordResetTokenExpiry = tokenExpiry;
+                user.Status = UserStatus.Active;
                 _unitOfWork.GetRepository<User>().Update(user);
                 var companyName = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync(selector: x => x.CompanyName).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -506,6 +522,49 @@
             var resendToken = GenerateResendAndChangeEmailToken(model.OldEmail, model.NewEmail, _resendChangeEmailEncryptionKey, _resendChangeEmailTokenExpiry);
             await _emailService.SendChangePasswordMailAsync(model.NewEmail, user.FirstName, changeEmailToken, _changeEmailTokenExpiry, companyName).ConfigureAwait(false);
             return new ChangeEmailResponseModel() { ResendToken = resendToken };
+        }
+
+        /// <summary>
+        /// Handle to resend email async
+        /// </summary>
+        /// <param name="userId"> the user id </param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the task complete </returns>
+        public async Task ResendEmailAsync(Guid userId, Guid currentUserId)
+        {
+            try
+            {
+                var isSuperAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+                if (!isSuperAdmin)
+                {
+                    throw new ForbiddenException("You are not authorized to resend email.");
+                }
+
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == userId).ConfigureAwait(false);
+                if (user == default)
+                {
+                    throw new ForbiddenException("User not found.");
+                }
+
+                if (user.Status != UserStatus.Pending)
+                {
+                    throw new ArgumentException("User is already active.");
+                }
+                var password = await GenerateRandomPassword(8).ConfigureAwait(false);
+                var hashPassword = HashPassword(password);
+                user.HashPassword = hashPassword;
+                user.UpdatedBy = currentUserId;
+                user.UpdatedOn = DateTime.UtcNow;
+                _unitOfWork.GetRepository<User>().Update(user);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(user.Email, user.FullName, password, company.CompanyName, null));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error occured on ResendEmailAsync method : {ex.Message}");
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
         }
 
         /// <summary>
@@ -673,9 +732,9 @@
             {
                 predicate = predicate.And(p => p.DepartmentId == criteria.DepartmentId.Value);
             }
-            if (criteria.IsActive != null)
+            if (criteria.Status.HasValue)
             {
-                predicate.And(p => p.IsActive == criteria.IsActive);
+                predicate = predicate.And(p => p.Status == criteria.Status.Value);
             }
             return predicate;
         }
@@ -812,7 +871,6 @@
         {
             try
             {
-
                 var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == userId,
                     include: src => src.Include(x => x.Department)
@@ -861,7 +919,6 @@
             }
         }
 
-
         /// <summary>
         /// get user by id
         /// </summary>
@@ -882,33 +939,28 @@
                 var user = users.FirstOrDefault(x => x.Id == userId);
                 if (user.Role == UserRole.Admin || user.Role == UserRole.SuperAdmin)
                 {
-
                     var trimedUsers = users.Where(x => x.Id != userId && x.CourseEnrollments != course.CourseEnrollments && x.Role != UserRole.SuperAdmin && x.Role != UserRole.Admin &&
                     x.Id != course.CreatedBy && x.CourseTeachers != course.CourseTeachers);
 
                     var response = new List<UserResponseModel>();
-
-
                     foreach (var trimedUser in trimedUsers)
                     {
                         response.Add(new UserResponseModel
                         {
-                            Id=trimedUser.Id,
-                            FullName=trimedUser.FullName,
+                            Id = trimedUser.Id,
+                            FullName = trimedUser.FullName,
                             Address = trimedUser.Address,
                             Email = trimedUser.Email,
                             FirstName = trimedUser.FirstName,
-                            LastName = trimedUser.LastName, 
+                            LastName = trimedUser.LastName,
                             MobileNumber = trimedUser.MobileNumber,
                             Bio = trimedUser.Bio,
                             Role = trimedUser.Role,
                             DepartmentId = trimedUser.DepartmentId,
-                            IsActive = trimedUser.IsActive,
+                            Status = trimedUser.Status,
                             PublicUrls = trimedUser.PublicUrls,
-
                         });
                     }
-
                     return response;
                 }
                 else

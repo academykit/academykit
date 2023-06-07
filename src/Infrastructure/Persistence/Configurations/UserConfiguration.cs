@@ -22,7 +22,7 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Bio).HasColumnName("bio").HasColumnType("VARCHAR(500)").HasMaxLength(500).IsRequired(false);
             builder.Property(x => x.HashPassword).HasColumnName("hash_password").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
             builder.Property(x => x.PublicUrls).HasColumnName("public_urls").HasColumnType("VARCHAR(2000)").HasMaxLength(2000).IsRequired(false);
-            builder.Property(x => x.IsActive).HasColumnName("is_active").HasDefaultValue(false);
+            builder.Property(x => x.Status).HasColumnName("status").HasDefaultValue(UserStatus.Active).IsRequired();
             builder.Property(x => x.PasswordResetToken).HasColumnName("password_reset_token").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
             builder.Property(x => x.PasswordChangeToken).HasColumnName("password_change_token").HasColumnType("VARCHAR(500)").HasMaxLength(500).IsRequired(false);
             builder.Property(x => x.PasswordResetTokenExpiry).HasColumnName("password_reset_token_expiry").HasColumnType("DATETIME").IsRequired(false);
