@@ -178,9 +178,9 @@ const AddUpdateUserForm = ({
             label="User Role"
             placeholder="Pick one user role"
             data={[
-              { value: UserRole.Admin.toString(), label: "Admin" },
-              { value: UserRole.Trainer.toString(), label: "Trainer" },
-              { value: UserRole.Trainee.toString(), label: "Trainee" },
+              { value: UserRole.Admin, label: "Admin" },
+              { value: UserRole.Trainer, label: "Trainer" },
+              { value: UserRole.Trainee, label: "Trainee" },
             ]}
             {...form.getInputProps("role")}
           />
