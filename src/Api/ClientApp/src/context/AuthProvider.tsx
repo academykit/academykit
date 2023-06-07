@@ -7,6 +7,7 @@ import { useLogout, useReAuth } from "@utils/services/authService";
 import { IUserProfile } from "@utils/services/types";
 import React, { createContext, useState, FC } from "react";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface IAuthContext {
   auth: IUserProfile | null;
@@ -32,6 +33,7 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
   const [refreshToken, setRefreshToken] = useState<string | null>(
     localStorage.getItem(REFRESH_TOKEN_STORAGE) as string
   );
+  const { t } = useTranslation();
 
   const [auth, setAuth] = useState<IUserProfile | null>(null);
   const [ready, setReady] = useState(false);
@@ -69,8 +71,8 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
     } catch (err) {
       setShowLogout();
       showNotification({
-        title: "Error!",
-        message: "Unable to logout at this time",
+        title: t("error"),
+        message: t("unable_to_logout"),
         color: "red",
       });
     }
@@ -96,12 +98,12 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
       <Modal
         onClose={() => setShowLogout()}
         opened={showLogout}
-        title="Are you sure you want to Logout?"
+        title={t("logout_confirmation")}
       >
         <Group position="center">
           <Button onClick={confirmLogout}>Sure</Button>
           <Button variant="outline" onClick={() => setShowLogout()}>
-            Cancel
+            {t("cancel")}
           </Button>
         </Group>
       </Modal>

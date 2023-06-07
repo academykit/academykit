@@ -23,6 +23,8 @@ import {
 } from "@utils/services/assignmentService";
 import errorType from "@utils/services/axiosError";
 import EditAssignment from "./EditAssignment";
+import { useTransition } from "react";
+import { useTranslation } from "react-i18next";
 
 const useStyle = createStyles((theme) => ({
   wrapper: {
@@ -59,12 +61,12 @@ const AssignmentItem = ({
   };
   const deleteQuestion = useDeleteAssignmentQuestion(lessonId, search);
   const [confirmDelete, setConfirmDelete] = useToggle();
-
+  const { t } = useTranslation();
   const deleteHandler = async () => {
     try {
       await deleteQuestion.mutateAsync({ assignmentId: data.id });
       showNotification({
-        message: "Successfully deleted assignment question",
+        message: t("delete_assignment_question_success"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -90,7 +92,7 @@ const AssignmentItem = ({
   return (
     <Flex gap={"lg"} className={classes.wrapper}>
       <DeleteModal
-        title={`Are you sure you want to delete this assignment question?`}
+        title={t("delete_assignment_question_confirmation")}
         open={confirmDelete}
         onClose={setConfirmDelete}
         onConfirm={deleteHandler}
@@ -101,20 +103,20 @@ const AssignmentItem = ({
 
         {data.description && (
           <Box my={10}>
-            <Text>{"Description"}</Text>
+            <Text>{t("description")}</Text>
             <RichTextEditor mb={5} value={data.description} readOnly={true} />
           </Box>
         )}
         {data?.hints && (
           <Box my={10}>
-            <Text size={"sm"}>{"Hint"}</Text>
+            <Text size={"sm"}>{t("hint")}</Text>
             <RichTextEditor mb={5} value={data?.hints} readOnly={true} />
           </Box>
         )}
         <Select
           mt={20}
-          placeholder={"Question Type"}
-          label="Question Type"
+          placeholder={t("question_type") as string}
+          label={t("question_type")}
           data={getQuestionType()}
           value={data.type.toString()}
           onChange={() => {}}
@@ -124,7 +126,7 @@ const AssignmentItem = ({
           {(data.type === QuestionType.MultipleChoice ||
             data.type === QuestionType.SingleChoice) && (
             <>
-              <Text>Options</Text>
+              <Text>{t("options")}</Text>
               {data.assignmentQuestionOptions?.map((x) => (
                 <Group my={10} key={x.id}>
                   <Checkbox onChange={() => {}} checked={x.isCorrect} />

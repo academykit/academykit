@@ -1,5 +1,6 @@
 import CountDownTimer from "@components/Ui/CountDownTimer";
 import { Button, Group } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 const ExamCounter = ({
   duration,
   isLoading,
@@ -11,6 +12,7 @@ const ExamCounter = ({
   onSubmit: () => void;
   onClick: () => void;
 }) => {
+  const { t } = useTranslation();
   return (
     <Group>
       <CountDownTimer
@@ -19,7 +21,7 @@ const ExamCounter = ({
         cb={onSubmit}
       />
       <Button loading={isLoading} onClick={onClick}>
-        Submit
+        {t("submit")}
       </Button>
     </Group>
   );

@@ -78,7 +78,7 @@ const RowsExternal = ({
                   display: "flex",
                 }}
               >
-                <Tooltip label="View Certificate">
+                <Tooltip label={t("view_certificate")}>
                   <ActionIcon
                     onClick={() => window.open(item?.imageUrl)}
                     mr={10}
@@ -86,7 +86,7 @@ const RowsExternal = ({
                     <IconEye color="black" />
                   </ActionIcon>
                 </Tooltip>
-                <Tooltip label="Download Certificate">
+                <Tooltip label={t("download_certificate")}>
                   <ActionIcon
                     onClick={() =>
                       downloadImage(item?.imageUrl, item?.user?.fullName ?? "")

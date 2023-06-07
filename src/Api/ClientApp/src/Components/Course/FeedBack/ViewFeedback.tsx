@@ -103,10 +103,10 @@ const FeedbackForm = ({
       ))}
       <Group mt={20}>
         <Button loading={submitFeedback.isLoading} type="submit">
-          Submit
+          {t("submit")}
         </Button>
         <Button type="reset" variant="outline" onClick={() => navigation(-1)}>
-          Cancel
+          {t("cancel")}
         </Button>
       </Group>
     </form>

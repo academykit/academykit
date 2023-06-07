@@ -103,8 +103,8 @@ const Create = () => {
     },
     validate: yupResolver(schema()),
   });
-  useFormErrorHooks(form);
 
+  useFormErrorHooks(form);
   const fieldSize = "md";
   const getQuestionType = () => {
     return [
@@ -134,7 +134,7 @@ const Create = () => {
     } catch (err) {
       const error = errorType(err);
       showNotification({
-        title: "Error",
+        title: t("error"),
         message: error,
         color: "red",
       });

@@ -6,6 +6,8 @@ import {
   IFeedbackOptions,
   IFeedbackQuestions,
 } from "@utils/services/feedbackService";
+import { useTransition } from "react";
+import { useTranslation } from "react-i18next";
 
 const useStyle = createStyles((theme) => ({
   option: {
@@ -29,11 +31,12 @@ type Props = {
 
 const FeedbackCheckBoxType = ({ options, form, currentIndex }: Props) => {
   const { classes, cx } = useStyle();
+  const { t } = useTranslation();
 
   return (
     <Box mt={10} px={20} className={classes.option}>
       <Group>
-        <Title size={"xs"}>Options</Title>
+        <Title size={"xs"}>{t("options")}</Title>
       </Group>
       {options.map((option, index) => (
         <label key={option.id} htmlFor={option.id}>

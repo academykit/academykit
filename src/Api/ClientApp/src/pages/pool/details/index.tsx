@@ -52,7 +52,7 @@ const MCQDetails = () => {
     try {
       await addPool.mutateAsync({ name: name, poolId: id as string });
       showNotification({
-        message: "Successfully updated pool",
+        message: t("update_pool_success"),
       });
       setEdit(!edit);
     } catch (err) {

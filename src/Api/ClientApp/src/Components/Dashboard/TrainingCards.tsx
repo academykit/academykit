@@ -87,7 +87,7 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
                       >
                         <NavLink
                           variant="subtle"
-                          label="Manage"
+                          label={t("manage")}
                           component={Link}
                           to={RoutePath.manageCourse.manage(data.slug).route}
                           rightSection={

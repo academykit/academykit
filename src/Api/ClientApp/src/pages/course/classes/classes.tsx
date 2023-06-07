@@ -32,6 +32,7 @@ import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
 import FeedbackDetails from "@components/Course/Classes/FeedbackDetails";
 import lazyWithRetry from "@utils/lazyImportWithReload";
+import { useTranslation } from "react-i18next";
 
 const PdfViewer = lazyWithRetry(
   () => import("@components/Course/Classes/PdfViewer")
@@ -86,6 +87,7 @@ const Classes = () => {
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.md}px)`);
   const params = useParams();
   const tab = params["*"];
+  const { t } = useTranslation();
   const [videoState, setVideoState] = useState<
     | "loading"
     | "completed"
@@ -97,30 +99,15 @@ const Classes = () => {
   >("loading");
 
   const { data, isLoading } = useCourseDescription(params.id as string);
-
-  const courseLesson = useGetCourseLesson(
-    params.id as string,
-    params.lessonId === "1" ? undefined : params.lessonId
-  );
   const auth = useAuth();
   const watchHistory = useWatchHistory(
     params.id as string,
     params.lessonId === "1" ? undefined : params.lessonId
   );
-  if (
-    auth?.auth?.role !== UserRole.Admin &&
-    auth?.auth?.role !== UserRole.SuperAdmin &&
-    data?.userStatus === CourseUserStatus.NotEnrolled
-  ) {
-    navigate("/404", { replace: true });
-  }
-  if (isLoading) {
-    return (
-      <Center>
-        <Loader />
-      </Center>
-    );
-  }
+  const courseLesson = useGetCourseLesson(
+    params.id as string,
+    params.lessonId === "1" ? undefined : params.lessonId
+  );
 
   const goToNextLesson = (nextLesson: string) =>
     navigate(`${RoutePath.classes}/${params.id}/${nextLesson}`);
@@ -141,6 +128,22 @@ const Classes = () => {
       });
     }
   };
+
+  if (
+    auth?.auth?.role !== UserRole.Admin &&
+    auth?.auth?.role !== UserRole.SuperAdmin &&
+    data?.userStatus === CourseUserStatus.NotEnrolled
+  ) {
+    navigate("/404", { replace: true });
+  }
+
+  if (isLoading) {
+    return (
+      <Center>
+        <Loader />
+      </Center>
+    );
+  }
 
   return (
     <Box p={0}>
@@ -173,7 +176,7 @@ const Classes = () => {
                       mt={20}
                       to={`${RoutePath.classes}/${params.id}/1`}
                     >
-                      View Previous Lesson
+                      {t("view_previous_lesson")}
                     </Button>
                   )}
               </Box>
@@ -274,10 +277,10 @@ const Classes = () => {
                 value="description"
                 icon={<IconFileDescription size={14} />}
               >
-                Description
+                {t("description")}
               </Tabs.Tab>
               <Tabs.Tab value="comments" icon={<IconMessage size={14} />}>
-                Comments
+                {t("comments")}
               </Tabs.Tab>
             </Tabs.List>
 

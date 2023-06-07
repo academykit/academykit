@@ -13,6 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import CheckboxType from "./CheckboxType";
 import RadioType from "./RadioType";
 import SubjectiveType from "./SubjectiveType";
+import { useTranslation } from "react-i18next";
 
 const AssignmentForm = ({
   item,
@@ -24,6 +25,7 @@ const AssignmentForm = ({
   const submitAssignment = useSubmitAssignment({ lessonId });
   const { id } = useParams();
   const navigation = useNavigate();
+  const { t } = useTranslation();
 
   const form = useForm({
     initialValues: item,
@@ -31,6 +33,7 @@ const AssignmentForm = ({
 
   const handleSubmit = async (values: IAssignmentQuestion[]) => {
     const finalData: IAssignmentSubmission[] = [];
+    const { t } = useTranslation();
     values.forEach((x) => {
       var data: any = {};
       if (x.assignmentSubmissionId) data["id"] = x.assignmentSubmissionId;
@@ -49,20 +52,19 @@ const AssignmentForm = ({
         data: finalData,
       });
       showNotification({
-        message: `Successfully submitted assignment`,
-        title: "Success",
+        message: t("submit_assignment_success"),
+        title: t("success"),
       });
       navigation(-1);
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        title: "Error",
+        title: t("error"),
         color: "red",
       });
     }
   };
-
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       {item.map((x, currentIndex) => (
@@ -101,10 +103,10 @@ const AssignmentForm = ({
       ))}
       <Group mt={20}>
         <Button loading={submitAssignment.isLoading} type="submit">
-          Submit
+          {t("submit")}
         </Button>
         <Button type="reset" variant="outline" onClick={() => navigation(-1)}>
-          Cancel
+          {t("cancel")}
         </Button>
       </Group>
     </form>

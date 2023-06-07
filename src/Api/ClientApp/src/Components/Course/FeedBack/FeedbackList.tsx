@@ -90,7 +90,7 @@ const FeedbackItem = ({
   return (
     <Flex gap={"lg"} className={classes.wrapper}>
       <DeleteModal
-        title={"Are you sure you want to delete this feedback question?"}
+        title={t("delete_feedback_question_confirmation")}
         open={confirmDelete}
         onClose={setConfirmDelete}
         onConfirm={deleteHandler}
@@ -101,20 +101,20 @@ const FeedbackItem = ({
 
         {data.description && (
           <Box my={10}>
-            <Text>{"Description"}</Text>
+            <Text>{t("description")}</Text>
             <RichTextEditor mb={5} value={data.description} readOnly={true} />
           </Box>
         )}
         {data.hint && (
           <Box my={10}>
-            <Text size={"sm"}>{"Hint"}</Text>
+            <Text size={"sm"}>{t("hint")}</Text>
             <RichTextEditor mb={5} value={data.hint} readOnly={true} />
           </Box>
         )}
         <Select
           mt={20}
-          placeholder={"Feedback Type"}
-          label="Feedback Type"
+          placeholder={t("feedback_type") as string}
+          label={t("feedback_type")}
           data={getQuestionType()}
           value={data.type.toString()}
           onChange={() => {}}
@@ -124,7 +124,7 @@ const FeedbackItem = ({
           {(data.type === FeedbackType.MultipleChoice ||
             data.type === FeedbackType.SingleChoice) && (
             <>
-              <Text>Options</Text>
+              <Text>{t("options")}</Text>
               {data.feedbackQuestionOptions?.map((x) => (
                 <Group my={10} key={x.id}>
                   <RichTextEditor

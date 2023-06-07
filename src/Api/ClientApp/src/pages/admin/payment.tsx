@@ -8,6 +8,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface AccordionLabelProps {
   title: string;
@@ -46,7 +47,7 @@ function AccordionLabel({ title, image, description }: AccordionLabelProps) {
 const Accordion = ({ items }: any) => {
   const [isActive, setIsActive] = useState(false);
   const { theme, classes, cx } = useStyles();
-
+  const { t } = useTranslation();
   return (
     <div style={{ marginBottom: "20px" }}>
       <Paper
@@ -66,22 +67,22 @@ const Accordion = ({ items }: any) => {
       {isActive && (
         <Container sx={{ marginTop: "10px" }}>
           <TextInput
-            label="Key"
+            label={t("key")}
             withAsterisk
-            placeholder="Please enter your key"
+            placeholder={t("your_key") as string}
             sx={{ marginBottom: "5px" }}
           />
           <TextInput
-            label="Secret"
+            label={t("secret")}
             withAsterisk
             type="password"
-            placeholder="Your secret key"
+            placeholder={t("secret_key") as string}
             sx={{ marginBottom: "5px" }}
           />
           <TextInput
-            label="Verify Url"
+            label={t("verify_url")}
             withAsterisk
-            placeholder="Your verification Url"
+            placeholder={t("your_verification_url") as string}
             sx={{ marginBottom: "5px" }}
           />
         </Container>
@@ -90,20 +91,20 @@ const Accordion = ({ items }: any) => {
   );
 };
 
-const accordionData = [
-  {
-    title: "Esewa",
-    image: "https://img.icons8.com/clouds/256/000000/homer-simpson.png",
-    description: "Esewa says They are the best",
-  },
-  {
-    title: "Khalti",
-    iamge: "https://img.icons8.com/clouds/256/000000/futurama-bender.png",
-    description: "Khalti says THEY are the best",
-  },
-];
-
 const PaymentMethod = () => {
+  const { t } = useTranslation();
+  const accordionData = [
+    {
+      title: t("esewa"),
+      image: "https://img.icons8.com/clouds/256/000000/homer-simpson.png",
+      description: "Esewa says They are the best",
+    },
+    {
+      title: t("khalti"),
+      iamge: "https://img.icons8.com/clouds/256/000000/futurama-bender.png",
+      description: "Khalti says THEY are the best",
+    },
+  ];
   return (
     <div>
       <div className="accordion">

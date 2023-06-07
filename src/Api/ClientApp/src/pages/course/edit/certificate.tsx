@@ -51,6 +51,7 @@ const Certificate = () => {
   const addCertificate = useAddCertificate(params.id as string);
   const getCertificateDetails = useGetCertificateDetails(params.id as string);
   const data = getCertificateDetails.data?.data;
+  const { t } = useTranslation();
 
   const form = useForm({
     validate: yupResolver(schema()),
@@ -82,7 +83,6 @@ const Certificate = () => {
   }, [getCertificateDetails.isSuccess]);
 
   const [addSignatureForm, setAddSignatureForm] = useToggle();
-  const { t } = useTranslation();
   const handleSubmit = async (values: any) => {
     const isEditing = !(
       getCertificateDetails.isError || !getCertificateDetails.data
@@ -101,7 +101,7 @@ const Certificate = () => {
         title: t("success"),
         message: `${t("certificate_details")} ${
           isEditing ? t("updated") : t("added")
-        } successfully!`,
+        } ${t("successfully")}`,
       });
     } catch (error) {
       const err = errorType(error);

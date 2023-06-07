@@ -115,7 +115,7 @@ const CommentReply = ({
   return (
     <Box m={10} p={10} className={classes.wrapper}>
       <DeleteModal
-        title={"Are you sure you want to delete this reply?"}
+        title={t("delete_reply_confirmation")}
         open={deleteConfirmation}
         onClose={setDeleteConfirmation}
         onConfirm={onDelete}
@@ -142,15 +142,15 @@ const CommentReply = ({
               sx={{ width: "100%" }}
               mt={20}
               mb={10}
-              placeholder="Your comment"
+              placeholder={t("your_comment") as string}
               withAsterisk
             />
             <Group>
               <Button loading={editReply.isLoading} size="sm" type="submit">
-                Edit
+                {t("edit")}
               </Button>
               <Button size="sm" variant="outline" onClick={() => setEdit()}>
-                Cancel
+                {t("cancel")}
               </Button>
             </Group>
           </form>
@@ -163,7 +163,7 @@ const CommentReply = ({
       <Box sx={{ display: "flex", justifyContent: "end" }}>
         {!edit && showEdit(reply.user, true) && (
           <Button variant="subtle" mx={4} onClick={() => setEdit()}>
-            Edit
+            {t("edit")}
           </Button>
         )}
         {showEdit(reply.user) && (
@@ -172,7 +172,7 @@ const CommentReply = ({
             variant="subtle"
             mx={4}
           >
-            Delete
+            {t("delete")}
           </Button>
         )}
       </Box>

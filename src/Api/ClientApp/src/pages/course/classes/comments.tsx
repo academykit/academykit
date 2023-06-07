@@ -2,23 +2,21 @@ import Comment from "@components/Course/Comment";
 import { Box, Button, Loader, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import RichTextEditor from "@mantine/rte";
 import errorType from "@utils/services/axiosError";
 import { useGetComments, usePostComment } from "@utils/services/commentService";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 const Comments = () => {
   const { id } = useParams();
-  const { data, isLoading, isError, error } = useGetComments(id as string);
+  const { data, isLoading } = useGetComments(id as string);
+  const { t } = useTranslation();
   const form = useForm({
     initialValues: {
       content: "",
     },
   });
   const postComment = usePostComment(id as string);
-  if (isLoading) {
-    return <Loader />;
-  }
 
   const onSubmit = async ({ content }: { content: string }) => {
     try {
@@ -27,7 +25,7 @@ const Comments = () => {
         courseId: id as string,
       });
       form.reset();
-      showNotification({ message: "Comment added successfully" });
+      showNotification({ message: t("add_comment_success") });
     } catch (err) {
       const error = errorType(err);
       showNotification({
@@ -36,6 +34,10 @@ const Comments = () => {
       });
     }
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <Box>

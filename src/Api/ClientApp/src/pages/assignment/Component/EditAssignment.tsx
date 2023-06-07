@@ -128,7 +128,7 @@ const EditAssignment = ({
 
   const addAssignmentQuestion = useAddAssignmentQuestion(lessonId, search);
   const editAssignment = useEditAssignmentQuestion(lessonId, search);
-
+  const { t } = useTranslation();
   const onSubmit = async (data: ICreateAssignment) => {
     try {
       if (assignmentQuestion) {
@@ -138,12 +138,12 @@ const EditAssignment = ({
           assignmentId: assignmentQuestion.id,
         });
         showNotification({
-          message: "Successfully edited assignment question.",
+          message: t("edit_assignment_question_success"),
         });
       } else {
         await addAssignmentQuestion.mutateAsync({ data });
         showNotification({
-          message: "Successfully added assignment question.",
+          message: t("add_assignment_question_success"),
         });
       }
       form.reset();
@@ -164,25 +164,28 @@ const EditAssignment = ({
             <TextInput
               size={"lg"}
               withAsterisk
-              label="Title for question"
-              placeholder="Enter Title of Question"
+              label={t("title_question")}
+              placeholder={t("enter_question_title") as string}
               {...form.getInputProps("name")}
             ></TextInput>
             <Box mt={20}>
-              <Text size={"lg"}>Description</Text>
+              <Text size={"lg"}>{t("description")}</Text>
               <TextEditor formContext={useFormContext} />
             </Box>
 
             <Box mt={20}>
-              <Text size={"lg"}>Hint</Text>
-              <TextEditor label="hints" formContext={useFormContext} />
+              <Text size={"lg"}>{t("hint")}</Text>
+              <TextEditor
+                label={t("hints") as string}
+                formContext={useFormContext}
+              />
             </Box>
             <Select
               mt={20}
-              placeholder={"Please Select Question Type"}
+              placeholder={t("select_question_type") as string}
               withAsterisk
               size={"lg"}
-              label="Question Type"
+              label={t("question_type")}
               {...form.getInputProps("type")}
               data={data}
               onClick={() => {
@@ -195,7 +198,7 @@ const EditAssignment = ({
             {(form.values.type === QuestionType.MultipleChoice.toString() ||
               form.values.type === QuestionType.SingleChoice.toString()) && (
               <Box>
-                <Text mt={20}>Options</Text>
+                <Text mt={20}>{t("options")}</Text>
                 {form.values.answers &&
                   form.values.answers.map((x, i) => (
                     <div
@@ -264,7 +267,7 @@ const EditAssignment = ({
                   addAssignmentQuestion.isLoading || editAssignment.isLoading
                 }
               >
-                Save
+                {t("save")}
               </Button>
               <Button
                 size="sm"
@@ -272,7 +275,7 @@ const EditAssignment = ({
                 onClick={onCancel}
                 variant="outline"
               >
-                Cancel
+                {t("cancel")}
               </Button>
             </Group>
           </Paper>

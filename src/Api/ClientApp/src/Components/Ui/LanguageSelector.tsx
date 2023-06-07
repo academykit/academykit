@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Select } from "@mantine/core";
 
 const LanguageSelector = () => {
-  const { i18n, t } = useTranslation();
+  const { i18n } = useTranslation();
   const lang = localStorage.getItem("lang");
   return (
     <Select

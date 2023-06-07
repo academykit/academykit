@@ -52,6 +52,7 @@ const AddDocument = ({
 }) => {
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
+  const { t } = useTranslation();
 
   const updateLesson = useUpdateLesson(
     // item?.courseId || "",
@@ -115,7 +116,6 @@ const AddDocument = ({
       });
     }
   };
-  const { t } = useTranslation();
   return (
     <FormProvider form={form}>
       <form onSubmit={form.onSubmit(submitForm)}>
@@ -124,14 +124,14 @@ const AddDocument = ({
             <Grid.Col span={12} lg={8}>
               <TextInput
                 withAsterisk
-                label="File Title"
-                placeholder="File Name"
+                label={t("file_title")}
+                placeholder={t("file_name") as string}
                 {...form.getInputProps("name")}
               />
             </Grid.Col>
             <Grid.Col span={4}>
               <Switch
-                label="Is Mandatory"
+                label={t("is_mandatory")}
                 {...form.getInputProps("isMandatory")}
                 checked={isMandatory}
                 onChange={() => {
@@ -142,15 +142,15 @@ const AddDocument = ({
             </Grid.Col>
           </Grid>
           <Text size={"sm"} mt={10}>
-            File <span style={{ color: "red" }}>*</span>
+            {t("file")} <span style={{ color: "red" }}>*</span>
           </Text>
           <FileUploadLesson
             currentFile={item?.documentUrl}
             formContext={useFormContext}
           />
           <Textarea
-            placeholder="File's Description"
-            label="File Description"
+            placeholder={t("file_description") as string}
+            label={t("file_description")}
             my={form.errors["documentUrl"] ? 20 : 10}
             {...form.getInputProps("description")}
           />
@@ -159,7 +159,7 @@ const AddDocument = ({
               type="submit"
               loading={lesson.isLoading || updateLesson.isLoading}
             >
-              Submit
+              {t("submit")}
             </Button>
             {!isEditing && (
               <Button
@@ -168,7 +168,7 @@ const AddDocument = ({
                 }}
                 variant="outline"
               >
-                Close
+                {t("close")}
               </Button>
             )}
           </Group>

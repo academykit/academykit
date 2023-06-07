@@ -159,16 +159,16 @@ const EditFeedback = ({
             <TextInput
               size={fieldSize}
               withAsterisk
-              label="Title for Feedback"
-              placeholder="Enter Title of Feedback"
+              label={t("title_feeback")}
+              placeholder={t("enter_feedback") as string}
               {...form.getInputProps("name")}
             ></TextInput>
 
             <Select
               mt={20}
-              placeholder={"Please Enter Feedback Type"}
+              placeholder={t("enter_feedback_type") as string}
               size={fieldSize}
-              label="Feedback Type"
+              label={t("feedback_type")}
               {...form.getInputProps("type")}
               data={getQuestionType()}
               onClick={() => {
@@ -182,7 +182,7 @@ const EditFeedback = ({
             {(form.values.type === FeedbackType.MultipleChoice.toString() ||
               form.values.type === FeedbackType.SingleChoice.toString()) && (
               <Box>
-                <Text mt={20}>Options</Text>
+                <Text mt={20}>{t("options")}</Text>
                 {form.values.answers &&
                   form.values.answers.map((x, i) => (
                     <div key={i} style={{ marginBottom: "30px" }}>
@@ -238,7 +238,7 @@ const EditFeedback = ({
                   // || editAssignment.isLoading
                 }
               >
-                Save
+                {t("save")}
               </Button>
               <Button
                 size="sm"
@@ -246,7 +246,7 @@ const EditFeedback = ({
                 onClick={onCancel}
                 variant="outline"
               >
-                Cancel
+                {t("cancel")}
               </Button>
             </Group>
           </Paper>

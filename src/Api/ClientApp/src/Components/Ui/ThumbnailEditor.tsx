@@ -32,6 +32,8 @@ const ThumbnailEditor = ({
   currentThumbnail,
   width,
 }: IProps) => {
+  const { t } = useTranslation();
+
   useEffect(() => {
     if (currentThumbnail) {
       setFiles([
@@ -46,7 +48,6 @@ const ThumbnailEditor = ({
   }, [currentThumbnail]);
   const form = formContext();
   const [files, setFiles] = useState<any>([]);
-  const { t } = useTranslation();
   return (
     <div
       style={{

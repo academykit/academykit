@@ -7,6 +7,7 @@ import {
   Group,
   Anchor,
 } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
@@ -52,24 +53,23 @@ const useStyles = createStyles((theme) => ({
 
 const NotFound = () => {
   const { classes } = useStyles();
-
+  const { t } = useTranslation();
   return (
     <Container className={classes.root}>
-      <div className={classes.label}>404</div>
-      <Title className={classes.title}>You have found a secret place.</Title>
+      <div className={classes.label}>{t("404")}</div>
+      <Title className={classes.title}>{t("found_a_secret_place")}</Title>
       <Text
         color="dimmed"
         size="lg"
         align="center"
         className={classes.description}
       >
-        Unfortunately, this is only a 404 page. You may have mistyped the
-        address, or the page has been moved to another URL.
+        {t("mistyped_or_moved")}{" "}
       </Text>
       <Group position="center">
         <Anchor href="/">
           <Button variant="subtle" size="md">
-            Take me back to home page
+            {t("back_to_home")}
           </Button>
         </Anchor>
       </Group>

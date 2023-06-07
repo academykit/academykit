@@ -53,6 +53,9 @@ const Dashboard = () => {
   const [courseButton, setCourseButton] = useState(
     course.data?.status === CourseStatus.Published
   );
+  const { t } = useTranslation();
+  const [opened, setOpened] = useState(false);
+
   const onPublish = async () => {
     try {
       await courseStatus.mutateAsync({
@@ -70,7 +73,6 @@ const Dashboard = () => {
       });
     }
   };
-  const { t } = useTranslation();
   const onUpdatePublish = async () => {
     try {
       await courseUpdateStatus.mutateAsync({
@@ -91,7 +93,6 @@ const Dashboard = () => {
   if (course.isLoading) {
     return <Loader />;
   }
-  const [opened, setOpened] = useState(false);
   const handleCompleted = async () => {
     try {
       await courseStatus.mutateAsync({

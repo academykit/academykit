@@ -13,6 +13,8 @@ import { useTranslation } from "react-i18next";
 const SMTP = () => {
   const smtp = useSMTPSetting();
   const updateSMTP = useUpdateSMTPSetting(smtp.data?.data.id);
+  const { t } = useTranslation();
+
   const form = useForm<ISMTPSettingUpdate>({
     initialValues: {
       senderEmail: "",
@@ -45,7 +47,6 @@ const SMTP = () => {
       replyTo: smtp.data?.data?.replyTo || "",
     });
   }, [smtp.isSuccess]);
-  const { t } = useTranslation();
 
   return (
     <form

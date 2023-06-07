@@ -98,7 +98,6 @@ const ZoomSettings = () => {
     });
     setIsChecked(zoom.data?.data.isRecordingEnabled);
   }, [zoom.isSuccess]);
-
   return (
     <Paper p={"20"} withBorder>
       <form
@@ -106,14 +105,14 @@ const ZoomSettings = () => {
           try {
             await updateZoom.mutateAsync(values);
             showNotification({
-              message: "Successfully Changed Zoom settings!",
+              message: t("change_zoom_settings_success"),
             });
             setEdit(!edit);
           } catch (error) {
             const err = errorType(error);
 
             showNotification({
-              title: "Error!",
+              title: t("error"),
               color: "red",
               message: err,
             });

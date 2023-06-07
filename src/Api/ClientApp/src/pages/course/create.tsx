@@ -52,6 +52,7 @@ export const [FormProvider, useFormContext, useForm] =
 
 const CreateCoursePage = () => {
   const [searchParamGroup, setsearchParamGroup] = useState("");
+  const { t } = useTranslation();
 
   const groups = useGroups(
     queryStringGenerator({
@@ -119,7 +120,6 @@ const CreateCoursePage = () => {
   }, [isSuccess]);
 
   const { mutateAsync, isLoading } = useCreateCourse();
-
   const submitHandler = async (data: FormValues) => {
     try {
       const res = await mutateAsync({
@@ -133,8 +133,8 @@ const CreateCoursePage = () => {
       });
       form.reset();
       showNotification({
-        title: "Success!",
-        message: "Training created successfully.",
+        title: t("success"),
+        message: t("create_training_success"),
       });
       navigate(RoutePath.manageCourse.lessons(res.data.slug).route);
     } catch (err) {
@@ -152,11 +152,14 @@ const CreateCoursePage = () => {
       <FormProvider form={form}>
         <form onSubmit={form.onSubmit(submitHandler)}>
           <Box mt={20}>
-            <ThumbnailEditor formContext={useFormContext} label="thumbnail" />
+            <ThumbnailEditor
+              formContext={useFormContext}
+              label={t("thumbnail") as string}
+            />
             <Group mt={10} grow>
               <TextInput
-                placeholder="Course Title."
-                label="Title"
+                placeholder={t("title_course") as string}
+                label={t("title")}
                 name="Title"
                 withAsterisk
                 {...form.getInputProps("title")}
@@ -179,8 +182,8 @@ const CreateCoursePage = () => {
                     mutate(query);
                   }}
                   size={"lg"}
-                  label="Tags"
-                  placeholder="Please select Tags."
+                  label={t("tags")}
+                  placeholder={t("tags_placeholder") as string}
                 />
               ) : (
                 <Loader />
@@ -189,8 +192,8 @@ const CreateCoursePage = () => {
                 <Select
                   withAsterisk
                   size="lg"
-                  placeholder="Please select Level."
-                  label="Level"
+                  placeholder={t("level_placeholder") as string}
+                  label={t("level")}
                   {...form.getInputProps("level")}
                   data={label.data.map((x) => ({ value: x.id, label: x.name }))}
                 ></Select>
@@ -214,19 +217,19 @@ const CreateCoursePage = () => {
                 }
                 {...form.getInputProps("groups")}
                 size={"lg"}
-                label="Group"
-                placeholder="Please select Group."
+                label={t("group")}
+                placeholder={t("group_placeholder") as string}
               />
             ) : (
               <Loader />
             )}
             <Box mt={20}>
-              <Text>Description</Text>
+              <Text>{t("description")}</Text>
               <TextEditor formContext={useFormContext} />
             </Box>
             <Box mt={20}>
               <Button size="lg" type="submit" loading={isLoading}>
-                Submit
+                {t("submit")}
               </Button>
             </Box>
           </Box>

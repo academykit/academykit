@@ -26,6 +26,7 @@ import {
 import { useState } from "react";
 import { DraggableStateSnapshot } from "react-beautiful-dnd";
 import Lessons from "./Lessons";
+import { useTranslation } from "react-i18next";
 
 const useStyle = createStyles((theme) => ({
   dragging: {
@@ -56,7 +57,7 @@ const SectionItem = ({
   const updateSection = useUpdateSectionName(slug);
   const deleteSection = useDeleteSection(slug);
   const section = useSection();
-
+  const { t } = useTranslation();
   const onDelete = async () => {
     try {
       await deleteSection.mutateAsync({
@@ -64,8 +65,8 @@ const SectionItem = ({
         sectionId: item.slug,
       });
       showNotification({
-        message: "Section Deleted successfully!",
-        title: "Success",
+        message: t("delete_section_success"),
+        title: t("success"),
       });
       toggle();
     } catch (error: any) {
@@ -73,7 +74,7 @@ const SectionItem = ({
       showNotification({
         message: err,
         color: "red",
-        title: "Error!",
+        title: t("error"),
       });
     }
   };
@@ -90,7 +91,7 @@ const SectionItem = ({
       })}
     >
       <DeleteModal
-        title={`Are you sure you want to delete?`}
+        title={t("sure_want_to_delete")}
         open={value}
         onClose={toggle}
         onConfirm={onDelete}

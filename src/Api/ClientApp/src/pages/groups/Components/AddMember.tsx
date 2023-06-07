@@ -26,6 +26,7 @@ const AddMember = ({
   searchParams: string;
 }) => {
   const [search, setSearch] = useState("");
+  const { t } = useTranslation();
 
   const { id } = useParams();
   const { mutateAsync, isLoading } = useAddGroupMember(
@@ -73,7 +74,7 @@ const AddMember = ({
         });
       }
       showNotification({
-        message: response.data?.message ?? "Successfully Added Group Member.",
+        message: response.data?.message ?? t("add_group_member_success"),
       });
       onCancel();
     } catch (err) {
@@ -110,7 +111,7 @@ const AddMember = ({
           searchable
           data={data}
           mb={10}
-          label="Email Address"
+          label={t("email_address")}
           withAsterisk
           name="email"
           size="md"
@@ -122,7 +123,7 @@ const AddMember = ({
         />
 
         <Button loading={isLoading} mr={10} type="submit" size="md">
-          Submit
+          {t("submit")}
         </Button>
         <Button
           variant="outline"
@@ -131,7 +132,7 @@ const AddMember = ({
           onClick={(e: any) => onCancel()}
           size={"md"}
         >
-          Cancel
+          {t("cancel")}
         </Button>
       </form>
     </Box>
