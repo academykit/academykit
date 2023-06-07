@@ -1,4 +1,4 @@
-import { UserRole } from "@utils/enums";
+import { UserRole, UserStatus } from "@utils/enums";
 import { ILessons } from "./courseService";
 import { ICertificateList } from "./manageCourseService";
 
@@ -23,6 +23,7 @@ export interface IUserProfile extends IUser {
   fullName: string;
   departmentId: string;
   role: UserRole;
+  status: UserStatus;
   certificates: ICertificateList[];
 }
 

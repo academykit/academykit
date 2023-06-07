@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Group, TextInput, Switch, Select, Button, Grid } from "@mantine/core";
-import { UserRole } from "@utils/enums";
+import { UserRole, UserStatus } from "@utils/enums";
 import { useDepartmentSetting } from "@utils/services/adminService";
 import { useForm, yupResolver } from "@mantine/form";
 import axios from "axios";
@@ -50,32 +50,43 @@ const AddUpdateUserForm = ({
     validate: yupResolver(schema),
   });
 
-  const department = useDepartmentSetting(
+  const { data } = useDepartmentSetting(
     queryStringGenerator({
       search: "",
       size: 200,
     })
   );
 
-  const [userStatus, setUserStatus] = useState<boolean>(item?.isActive ?? true);
-
   useEffect(() => {
-    form.setFieldValue("role", item?.role ?? 5);
+    form.setFieldValue("role", item?.role ?? 4);
     item?.departmentId &&
-      form.setFieldValue("department", item?.departmentId.toString() ?? "");
-    form.setFieldValue("isActive", item?.isActive ?? false);
+      form.setFieldValue("departmentId", item?.departmentId.toString() ?? "");
+    form.setFieldValue(
+      "isActive",
+      item?.status === UserStatus.Active || item?.status === UserStatus.Pending
+        ? true
+        : false
+    );
   }, [isEditing]);
 
-  const onSubmitForm = async (data: IUserProfile) => {
+  const onSubmitForm = async (data: typeof form.values) => {
     try {
       if (!isEditing) {
         await apiHooks.mutateAsync({
           ...data,
           role: Number(data?.role),
-          isActive: userStatus,
         });
       } else {
-        data = { ...data, role: Number(data?.role) };
+        const userData = { ...data };
+        //@ts-ignore
+        delete userData.isActive;
+        const status =
+          item?.status === UserStatus.Pending
+            ? UserStatus.Pending
+            : data.isActive
+            ? UserStatus.Active
+            : UserStatus.InActive;
+        data = { ...userData, role: Number(data?.role), status };
         await apiHooks.mutateAsync({ id: item?.id as string, data });
       }
       showNotification({
@@ -152,17 +163,14 @@ const AddUpdateUserForm = ({
             {...form.getInputProps("profession")}
           />
         </Grid.Col>
-        <Grid.Col xs={6} lg={4}>
-          <Switch
-            label="User Status"
-            {...form.getInputProps("isActive")}
-            checked={userStatus}
-            onChange={(event) => {
-              setUserStatus(event.currentTarget.checked);
-              form.setFieldValue("isActive", event.target.checked);
-            }}
-          />
-        </Grid.Col>
+        {isEditing && item?.status !== UserStatus.Pending && (
+          <Grid.Col xs={6} lg={4}>
+            <Switch
+              label="User Status"
+              {...form.getInputProps("isActive", { type: "checkbox" })}
+            />
+          </Grid.Col>
+        )}
         <Grid.Col xs={6} lg={4}>
           <Select
             withAsterisk
@@ -182,15 +190,15 @@ const AddUpdateUserForm = ({
             label="Department"
             placeholder="Pick One Department"
             searchable
-            {...form.getInputProps("departmentId")}
             data={
-              department.data
-                ? department.data.items.map((x) => ({
+              data
+                ? data.items.map((x) => ({
                     label: x.name,
                     value: x.id,
                   }))
                 : [""]
             }
+            {...form.getInputProps("departmentId")}
           />
         </Grid.Col>
       </Grid>
