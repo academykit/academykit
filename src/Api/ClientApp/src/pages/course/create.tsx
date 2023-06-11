@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import useNav from "@hooks/useNav";
 
 interface FormValues {
   thumbnail: string;
@@ -39,7 +40,8 @@ const schema = () => {
   return Yup.object().shape({
     title: Yup.string()
       .trim()
-      .required(t("course_title_required") as string),
+      .required(t("course_title_required") as string)
+      .max(250, t("course_title_must_be_less_than_250") as string),
     level: Yup.string().required(t("level_required") as string),
     groups: Yup.string()
       .nullable()
@@ -51,6 +53,7 @@ export const [FormProvider, useFormContext, useForm] =
   createFormContext<FormValues>();
 
 const CreateCoursePage = () => {
+  const { setBreadCrumb } = useNav();
   const [searchParamGroup, setsearchParamGroup] = useState("");
   const { t } = useTranslation();
 
@@ -174,8 +177,17 @@ const CreateCoursePage = () => {
                   labelProps="name"
                   creatable
                   sx={{ maxWidth: "500px" }}
-                  data={tagsList}
-                  value={[]}
+                  data={
+                    tagsList.length
+                      ? tagsList
+                      : [
+                          {
+                            label: t("no_tags") as string,
+                            value: "null",
+                            disabled: true,
+                          },
+                        ]
+                  }
                   {...form.getInputProps("tags")}
                   getCreateLabel={(query) => `+ Create ${query}`}
                   onCreate={(query) => {
@@ -195,7 +207,17 @@ const CreateCoursePage = () => {
                   placeholder={t("level_placeholder") as string}
                   label={t("level")}
                   {...form.getInputProps("level")}
-                  data={label.data.map((x) => ({ value: x.id, label: x.name }))}
+                  data={
+                    label.data.length > 1
+                      ? label.data.map((x) => ({ value: x.id, label: x.name }))
+                      : [
+                          {
+                            label: t("no_level") as string,
+                            value: "null",
+                            disabled: true,
+                          },
+                        ]
+                  }
                 ></Select>
               ) : (
                 <Loader />
@@ -209,11 +231,18 @@ const CreateCoursePage = () => {
                 labelProps="name"
                 sx={{ maxWidth: "500px" }}
                 data={
-                  groups.data &&
-                  groups.data.data.items.map((x) => ({
-                    label: x.name,
-                    value: x.id,
-                  }))
+                  groups.data
+                    ? groups.data.data.items.map((x) => ({
+                        label: x.name,
+                        value: x.id,
+                      }))
+                    : [
+                        {
+                          label: t("no_groups"),
+                          value: "null",
+                          disabled: true,
+                        },
+                      ]
                 }
                 {...form.getInputProps("groups")}
                 size={"lg"}
@@ -223,6 +252,7 @@ const CreateCoursePage = () => {
             ) : (
               <Loader />
             )}
+
             <Box mt={20}>
               <Text>{t("description")}</Text>
               <TextEditor formContext={useFormContext} />

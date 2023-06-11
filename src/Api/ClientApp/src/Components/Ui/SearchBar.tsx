@@ -26,8 +26,8 @@ const SearchBar: React.FC<React.PropsWithChildren<Props>> = ({
     }
   }, [form.values.search]);
   const clearField = () => {
-    form.reset();
     setSearch("");
+    form.setFieldValue("search", "");
   };
 
   return (

@@ -57,7 +57,7 @@ const NavOutlet = ({
       asideOffsetBreakpoint="sm"
       navbar={
         <Navbar
-          sx={{ position: "sticky", zIndex: 20 }}
+          sx={{ position: "sticky", zIndex: 20, overflowY: "auto" }}
           p="xs"
           hiddenBreakpoint="sm"
           hidden={!opened}

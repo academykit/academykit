@@ -23,6 +23,8 @@ import PrivacyPage from "@pages/privacy";
 import AboutPage from "@pages/about";
 import TermsPage from "@pages/terms";
 import PrivacyLayout from "@components/Layout/PrivacyLayout";
+import NavProvider from "@context/NavContext";
+import TeamsRoute from "@pages/groups/details/Route";
 const MyFeedback = lazyWithRetry(
   () => import("@pages/course/feedback/myfeedback")
 );
@@ -127,7 +129,6 @@ const MainRoutes = () => {
           path={RoutePath.courses.courseList + "*"}
           element={<CourseListRoute />}
         />
-
         {/* <Route
           path={"/user/certificate" + `/:id`}
           element={<MyTrainingExternal />}
@@ -136,7 +137,6 @@ const MainRoutes = () => {
           path={RoutePath.courses.base}
           element={<Navigate to={RoutePath.courses.courseList} replace />}
         />
-
         <Route element={<TeacherRouteGuard />}>
           <Route path={RoutePath.pool.base} element={<MCQPool />} />
           <Route
@@ -145,14 +145,21 @@ const MainRoutes = () => {
           />
           <Route
             path={RoutePath.pool.base + "/:id/*"}
-            element={<MCQPoolRoute />}
+            element={
+              <NavProvider>
+                <MCQPoolRoute />
+              </NavProvider>
+            }
           />
           <Route
             path={RoutePath.manageCourse.description().signature + "/*"}
-            element={<CourseRoute />}
+            element={
+              <NavProvider>
+                <CourseRoute />
+              </NavProvider>
+            }
           />
         </Route>
-
         <Route path={RoutePath.groups.base} element={<GroupsPage />} />
         <Route element={<AdminAuthRoute />}>
           <Route path={RoutePath.users} element={<UsersList />} />
@@ -164,49 +171,34 @@ const MainRoutes = () => {
         >
           <Route path={`*`} element={<UserProfileRoute />} />
         </Route>
-
         <Route
           path={"/meet/:courseId/:lessonId"}
           element={<ZoomMettingMessage />}
         />
-
         <Route
           path={RoutePath.courses.description().signature}
           element={<CourseDescriptionPage />}
         />
-
         <Route path="/settings/*" element={<AdminRoute />} />
-
         <Route
           path={RoutePath.classes + "/:id/:lessonId/*"}
           element={<Classes />}
         >
           <Route path="*" element={<ClassesRoute />} />
         </Route>
-
         <Route
           path={RoutePath.meeting.base + "/*"}
           element={<MeetingRoute />}
         />
+        <Route
+          path={RoutePath.groups.details().signature + "/*"}
+          element={
+            <NavProvider>
+              <TeamsRoute />
+            </NavProvider>
+          }
+        ></Route>
 
-        <Route element={<TeamsNav />}>
-          <Route
-            path={RoutePath.groups.details().signature}
-            element={<GroupDetail />}
-          />
-          <Route
-            path={RoutePath.groups.members().signature}
-            element={<GroupMember />}
-          />
-          <Route
-            path={RoutePath.groups.courses().signature}
-            element={<GroupCourse />}
-          />
-          <Route
-            path={RoutePath.groups.attachments().signature}
-            element={<GroupAttachment />}
-          />{" "}
-        </Route>
         <Route
           path={RoutePath.exam.details().signature}
           element={<LessonExam />}
@@ -235,7 +227,6 @@ const MainRoutes = () => {
           path={RoutePath.feedback.result().signature}
           element={<FeedbackResult />}
         />
-
         <Route path={"*"} element={<NotFound />} />
       </Routes>
     </Suspense>

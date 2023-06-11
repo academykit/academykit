@@ -21,7 +21,7 @@ const schema = () => {
       t("company_address_required") as string
     ),
     companyContactNumber: Yup.string()
-      .nullable()
+      .required(t("contact_number_required") as string)
       .matches(PHONE_VALIDATION, {
         message: t("enter_valid_phone"),
         excludeEmptyString: true,
@@ -117,6 +117,7 @@ const GeneralSettings = () => {
             {...form.getInputProps("companyName")}
           />
           <TextInput
+            mt={10}
             label={t("company_address")}
             withAsterisk
             name="companyAddress"
@@ -124,6 +125,7 @@ const GeneralSettings = () => {
             {...form.getInputProps("companyAddress")}
           />
           <TextInput
+            mt={10}
             label={t("company_contact")}
             withAsterisk
             type={"number"}
@@ -132,7 +134,7 @@ const GeneralSettings = () => {
             {...form.getInputProps("companyContactNumber")}
           />
           <Textarea
-            mt="md"
+            mt={10}
             label={t("mail_signature")}
             withAsterisk
             name="signature"

@@ -106,6 +106,7 @@ const EditCourse = () => {
     data: courseSingleData,
     isLoading,
     isSuccess: courseIsSuccess,
+    refetch,
   } = useCourseDescription(slug.id as string);
 
   const [tagsList, setTagsList] = useState<{ value: string; label: string }[]>(
@@ -168,6 +169,7 @@ const EditCourse = () => {
         name: data.title.trim().split(/ +/).join(" "),
         thumbnailUrl: data.thumbnail,
       });
+      refetch();
       navigator(RoutePath.manageCourse.lessons(slug.id).route);
       showNotification({
         title: t("success"),

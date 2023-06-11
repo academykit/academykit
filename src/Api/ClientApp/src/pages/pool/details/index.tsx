@@ -24,7 +24,7 @@ const useStyle = createStyles({});
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t("group_name_required") as string),
+    name: Yup.string().required(t("pool_name_required") as string),
   });
 };
 
