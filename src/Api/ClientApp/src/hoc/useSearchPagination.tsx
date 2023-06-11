@@ -57,7 +57,28 @@ const withSearchPagination =
     const [filterKey, setFilterKey] = useState<string>("");
     const [filterValue, setFilterValue] = useState<string>("");
 
+    useEffect(() => {
+      const sortBy = (sortValue && sortValue.split(":")[0]) ?? "";
+      const sortType = (sortValue && sortValue.split(":")[1]) ?? "";
+      console.log(page);
+      const data = {
+        page,
+        search: search ?? "",
+        size,
+        sortBy,
+        sortType,
+        [filterKey]: filterValue,
+      };
+
+      initialSearch.forEach((d) => {
+        data[d.key] = d.value;
+      });
+
+      setSearchParams(queryStringGenerator(data));
+    }, [page, search, size, sortValue, filterValue]);
+
     const setSearch = (search: string) => {
+      if (!search) return;
       for (let value of params.entries()) {
         if (value[0] !== "s") params.delete(value[0]);
       }
@@ -107,27 +128,8 @@ const withSearchPagination =
 
     const setPage = (pageNumber: number) => {
       params.set("page", pageNumber.toString());
-      setParams(params);
+      setParams(() => params);
     };
-
-    useEffect(() => {
-      const sortBy = (sortValue && sortValue.split(":")[0]) ?? "";
-      const sortType = (sortValue && sortValue.split(":")[1]) ?? "";
-
-      const data = {
-        page,
-        search: search ?? "",
-        size,
-        sortBy,
-        sortType,
-        [filterKey]: filterValue,
-      };
-
-      initialSearch.forEach((d) => {
-        data[d.key] = d.value;
-      });
-      setSearchParams(queryStringGenerator(data));
-    }, [page, search, size, sortValue, filterValue]);
 
     const pagination = (totalPage: number) =>
       totalPage > 0 ? (
