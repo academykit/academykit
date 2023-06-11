@@ -744,5 +744,10 @@
   "pass": "合格",
   "edit_assignment_review": "課題のレビューを編集する",
   "review_assignment": "課題をレビューする",
-  "course_title_must_be_less_than_250": "コースのタイトルは 250 文字未満である必要があります"
+  "course_title_must_be_less_than_250": "コースのタイトルは 250 文字未満である必要があります",
+  "no_tags": "タグが見つかりません！",
+  "no_level": "レベルが見つかりません！",
+  "group_character_limit": "グループ名は250文字を超えることはできません！",
+  "pool_name_required": "プール名が必要です！",
+  "contact_number_required": "連絡先番号が必要です！"
 }

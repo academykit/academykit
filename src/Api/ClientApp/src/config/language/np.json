@@ -744,5 +744,10 @@
   "pass": "सफल",
   "edit_assignment_review": "असाइनमेन्ट समीक्षा सम्पादन गर्नुहोस्",
   "review_assignment": "असाइनमेन्ट समीक्षा गर्नुहोस्",
-  "course_title_must_be_less_than_250": "पाठ्यक्रम शीर्षक 250 वर्ण भन्दा कम हुनुपर्छ"
+  "course_title_must_be_less_than_250": "पाठ्यक्रम शीर्षक 250 वर्ण भन्दा कम हुनुपर्छ",
+  "no_tags": "तागहरू भेटिएन!",
+  "no_level": "कुनै स्तर फेला परेन!",
+  "group_character_limit": "समूहको नाम २५० अक्षर भन्दा बढी हुनुहुँदैन!",
+  "pool_name_required": "पूलको नाम आवश्यक छ!",
+  "contact_number_required": "सम्पर्क नम्बर आवश्यक छ!"
 }
