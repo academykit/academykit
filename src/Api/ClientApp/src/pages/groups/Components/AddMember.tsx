@@ -90,7 +90,7 @@ const AddMember = ({
   };
   return (
     <Box sx={{ maxWidth: "500px" }}>
-      <form onSubmit={form.onSubmit((e) => console.log(e))}>
+      <form onSubmit={form.onSubmit(({ email }) => onSubmitForm(email))}>
         <MultiSelect
           ref={ref}
           searchable
