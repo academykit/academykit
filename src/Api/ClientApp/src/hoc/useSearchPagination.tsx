@@ -60,7 +60,6 @@ const withSearchPagination =
     useEffect(() => {
       const sortBy = (sortValue && sortValue.split(":")[0]) ?? "";
       const sortType = (sortValue && sortValue.split(":")[1]) ?? "";
-      console.log(page);
       const data = {
         page,
         search: search ?? "",
