@@ -14,6 +14,7 @@
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
+    using System.Text.RegularExpressions;
 
     public class CourseTeacherService : BaseGenericService<CourseTeacher, CourseTeacherSearchCriteria>, ICourseTeacherService
     {
@@ -91,8 +92,17 @@
                     var canAccess = await ValidateUserCanAccessGroupCourse(course, entity.UserId).ConfigureAwait(false);
                     if (!canAccess)
                     {
-                        _logger.LogWarning("User with Id {userId} can't access training with id {courseId}.", entity.UserId, course.Id);
-                        throw new ForbiddenException(_localizer.GetString("UnauthorizedUserAddedTrainer"));
+                        var groupMember = new GroupMember
+                        {
+                            Id = Guid.NewGuid(),
+                            GroupId = course.GroupId.Value,
+                            IsActive = true,
+                            UserId = entity.UserId,
+                            CreatedBy = entity.CreatedBy,
+                            CreatedOn = DateTime.UtcNow
+
+                        };
+                        await _unitOfWork.GetRepository<GroupMember>().InsertAsync(groupMember).ConfigureAwait(false);
                     }
                 }
             }
