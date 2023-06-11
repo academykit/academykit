@@ -46,11 +46,7 @@ const Dashboard = lazyWithRetry(() => import("@pages/user/dashboard"));
 
 const CreateCoursePage = lazyWithRetry(() => import("@pages/course/create"));
 const GroupsPage = lazyWithRetry(() => import("@pages/groups"));
-const TeamsNav = lazyWithRetry(() => import("@components/Layout/TeamsNav"));
-const GroupDetail = lazyWithRetry(() => import("@pages/groups/details"));
-const GroupMember = lazyWithRetry(
-  () => import("@pages/groups/details/members")
-);
+
 const UsersList = lazyWithRetry(() => import("@pages/admin/users"));
 const MCQPool = lazyWithRetry(() => import("@pages/pool"));
 const MCQPoolRoute = lazyWithRetry(() => import("@pages/pool/details/Route"));
@@ -69,7 +65,6 @@ const Classes = lazyWithRetry(() => import("@pages/course/classes/classes"));
 
 const AdminRoute = lazyWithRetry(() => import("@pages/admin/AdminRoute"));
 
-const GroupCourse = lazyWithRetry(() => import("@pages/groups/details/course"));
 const LessonExam = lazyWithRetry(() => import("@pages/course/exam"));
 const ExamResult = lazyWithRetry(() => import("@pages/course/exam/result"));
 
