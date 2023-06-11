@@ -177,8 +177,17 @@ const CreateCoursePage = () => {
                   labelProps="name"
                   creatable
                   sx={{ maxWidth: "500px" }}
-                  data={tagsList}
-                  value={[]}
+                  data={
+                    tagsList.length
+                      ? tagsList
+                      : [
+                          {
+                            label: t("no_tags") as string,
+                            value: "null",
+                            disabled: true,
+                          },
+                        ]
+                  }
                   {...form.getInputProps("tags")}
                   getCreateLabel={(query) => `+ Create ${query}`}
                   onCreate={(query) => {
@@ -198,7 +207,17 @@ const CreateCoursePage = () => {
                   placeholder={t("level_placeholder") as string}
                   label={t("level")}
                   {...form.getInputProps("level")}
-                  data={label.data.map((x) => ({ value: x.id, label: x.name }))}
+                  data={
+                    label.data.length > 1
+                      ? label.data.map((x) => ({ value: x.id, label: x.name }))
+                      : [
+                          {
+                            label: t("no_level") as string,
+                            value: "null",
+                            disabled: true,
+                          },
+                        ]
+                  }
                 ></Select>
               ) : (
                 <Loader />
@@ -212,11 +231,18 @@ const CreateCoursePage = () => {
                 labelProps="name"
                 sx={{ maxWidth: "500px" }}
                 data={
-                  groups.data &&
-                  groups.data.data.items.map((x) => ({
-                    label: x.name,
-                    value: x.id,
-                  }))
+                  groups.data
+                    ? groups.data.data.items.map((x) => ({
+                        label: x.name,
+                        value: x.id,
+                      }))
+                    : [
+                        {
+                          label: t("no_groups"),
+                          value: "null",
+                          disabled: true,
+                        },
+                      ]
                 }
                 {...form.getInputProps("groups")}
                 size={"lg"}
@@ -226,6 +252,7 @@ const CreateCoursePage = () => {
             ) : (
               <Loader />
             )}
+
             <Box mt={20}>
               <Text>{t("description")}</Text>
               <TextEditor formContext={useFormContext} />

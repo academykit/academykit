@@ -271,7 +271,11 @@ const Create = () => {
               </Box>
             )}
             <Group mt={20}>
-              <Button type="submit" onClick={() => setIsReset(false)}>
+              <Button
+                type="submit"
+                loading={addQuestion.isLoading}
+                onClick={() => setIsReset(false)}
+              >
                 {t("save")}
               </Button>
               <Button type="submit" onClick={() => setIsReset(true)}>
