@@ -747,5 +747,10 @@
   "pass": "Pass",
   "edit_assignment_review": "Edit Assignment Review",
   "review_assignment": "Review Assignment",
-  "course_title_must_be_less_than_250": "Course title must be less than 250 character"
+  "course_title_must_be_less_than_250": "Course title must be less than 250 character",
+  "no_tags": "No Tags Found!",
+  "no_level": "No Level Found!",
+  "group_character_limit": "Group name cannot exceed 250 character!",
+  "pool_name_required": "Pool name is required!",
+  "contact_number_required": "Contact number is required!"
 }
