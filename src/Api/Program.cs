@@ -4,6 +4,7 @@ using Lingtren.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.HttpOverrides;
 using System.Text.Json.Serialization;
+using Serilog;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 
@@ -41,9 +42,7 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(
                 ));
 
 builder.Services.AddAuthorization();
-builder.Logging.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Logs/myapp-{Date}.txt"), minimumLevel: LogLevel.Warning);
-
-
+builder.Host.UseSerilog((context,configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 var app = builder.Build();
 
 
@@ -84,7 +83,7 @@ app.UseHangfireDashboard("/jobs", new DashboardOptions
            Pass = builder.Configuration.GetSection("Hangfire").GetSection("Password").Value
        }}
 });
-app.UseRequestLocalization();
+app.UseSerilogRequestLogging();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

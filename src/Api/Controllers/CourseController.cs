@@ -220,10 +220,10 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="identity"> the course id or slug.</param>
         [HttpGet("{identity}/lessonStatistics/{lessonIdentity}")]
-        public async Task<SearchResult<LessonStudentResponseModel>> LessonDetailStatistics(string identity, string lessonIdentity, [FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<LessonStudentResponseModel>> LessonDetailStatistics(string identity, string lessonIdentity,[FromQuery] BaseSearchCriteria searchCriteria)
         {
             searchCriteria.CurrentUserId = CurrentUser.Id;
-            return await _courseService.LessonStudentsReport(identity, lessonIdentity, searchCriteria).ConfigureAwait(false);
+            return await _courseService.LessonStudentsReport(identity,lessonIdentity, searchCriteria).ConfigureAwait(false);
         }
 
         /// <summary>

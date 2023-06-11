@@ -17,7 +17,7 @@
         public string Bio { get; set; }
         public string HashPassword { get; set; }
         public string PublicUrls { get; set; }
-        public bool IsActive { get; set; }
+        public UserStatus Status { get; set; }
         public string PasswordResetToken { get; set; }
         public string ImageUrl { get; set; }
         public DateTime? PasswordResetTokenExpiry { get; set; }

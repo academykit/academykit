@@ -182,7 +182,7 @@
 
                 var isAdminOrTeacher = await _unitOfWork.GetRepository<User>().ExistsAsync(
                     predicate: p => p.Id == currentUserId && (p.Role == UserRole.Admin || p.Role == UserRole.Trainer)
-                                && p.IsActive).ConfigureAwait(false);
+                                && p.Status == UserStatus.Active).ConfigureAwait(false);
 
                 var isAccess = await IsSuperAdminOrAdminOrTrainer(currentUserId).ConfigureAwait(false);
                 if (!isAccess)
@@ -536,7 +536,7 @@
             }
 
             predicate = predicate.And(p => !p.GroupMembers.Any(x => x.GroupId == group.Id && x.UserId == p.Id));
-            predicate = predicate.And(p => p.IsActive && (p.Role != UserRole.SuperAdmin && p.Role != UserRole.Admin));
+            predicate = predicate.And(p => p.Status == UserStatus.Active && (p.Role != UserRole.SuperAdmin && p.Role != UserRole.Admin));
 
             var users = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate).ConfigureAwait(false);
             var result = users.ToIPagedList(criteria.Page, criteria.Size);

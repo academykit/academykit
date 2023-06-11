@@ -19,7 +19,6 @@
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Tokens;
-    using Minio.DataModel;
     using Newtonsoft.Json.Linq;
     using RestSharp;
     using System.IdentityModel.Tokens.Jwt;

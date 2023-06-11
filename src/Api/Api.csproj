@@ -33,7 +33,10 @@
     <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
+    <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
    <ItemGroup>
@@ -79,5 +82,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="wwwroot\Templates\DefaultTemplate.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\Logs\" />
   </ItemGroup>
 </Project>

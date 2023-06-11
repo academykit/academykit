@@ -23,16 +23,6 @@
         /// <summary>
         /// Email for account created and password
         /// </summary>
-        /// <param name="emailAddress">the email address of the receiver</param>
-        /// <param name="firstName">the first name of the receiver</param>
-        /// <param name="password">the login password of the receiver</param>
-        /// <param name="companyName"> the company name </param>
-        /// <returns></returns>
-        Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password, string companyName);
-
-        /// <summary>
-        /// Email for account created and password
-        /// </summary>
         /// <param name="email">the email address of the receiver</param>
         /// <param name="firstName">the first name of the receiver</param>
         /// <param name="token">the jwt token</param>

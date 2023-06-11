@@ -18,7 +18,7 @@
         public string PublicUrls { get; set; }
         public Guid? DepartmentId { get; set; }
         public string DepartmentName { get; set; }
-        public bool IsActive { get; set; }
+        public UserStatus Status{ get; set; }
         public DateTime CreatedOn { get; set; }
         public string FullName { get; set; }
         public IList<CourseCertificateIssuedResponseModel> Certificates { get; set; } = new List<CourseCertificateIssuedResponseModel>();
@@ -37,7 +37,7 @@
             Bio = user.Bio;
             ImageUrl = user.ImageUrl;
             PublicUrls = user.PublicUrls;
-            IsActive = user.IsActive;
+            Status = user.Status;
             CreatedOn = user.CreatedOn;
             FullName = user.FullName;
             DepartmentId = user.DepartmentId;
