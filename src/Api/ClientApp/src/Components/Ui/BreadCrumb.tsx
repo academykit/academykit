@@ -21,7 +21,7 @@ const getItems = ({ items, hide }: ItemsProps) => {
     <Anchor
       size={"sm"}
       maw={"200px"}
-      style={{ overflowX: "hidden", textOverflow: "ellipsis" }}
+      style={{ overflow: "hidden", textOverflow: "ellipsis" }}
       to={item.href}
       component={Link}
       key={index}
