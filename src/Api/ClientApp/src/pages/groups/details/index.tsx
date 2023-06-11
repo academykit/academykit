@@ -62,6 +62,7 @@ const GroupDetail = () => {
         id: id as string,
         isActive: true,
       });
+      setEdit(false);
       showNotification({
         title: t("successful"),
         message: t("group_update_success"),
