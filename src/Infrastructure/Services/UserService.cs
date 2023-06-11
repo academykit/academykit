@@ -855,7 +855,7 @@
         private async Task CheckDuplicateEmailAsync(User entity)
         {
             var checkDuplicateEmail = await _unitOfWork.GetRepository<User>().ExistsAsync(
-                predicate: p => p.Id != entity.Id && string.Equals(p.Email, entity.Email, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false);
+                predicate: p => p.Id != entity.Id && p.Email.ToLower().Equals(entity.Email.ToLower())).ConfigureAwait(false);
             if (checkDuplicateEmail)
             {
                 _logger.LogWarning("Duplicate user email : {email} is found.", entity.Email);

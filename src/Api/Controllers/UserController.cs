@@ -102,7 +102,7 @@
                 MiddleName = model.MiddleName,
                 LastName = model.LastName,
                 Address = model.Address,
-                Email = model.Email,
+                Email = model.Email.Trim(),
                 MobileNumber = model.MobileNumber,
                 Bio = model.Bio,
                 ImageUrl = model.ImageUrl,
