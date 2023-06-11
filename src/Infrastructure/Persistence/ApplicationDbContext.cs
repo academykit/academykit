@@ -72,7 +72,7 @@
                     CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
                     UpdatedBy = userId,
                     UpdatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                    IsActive = true,
+                    Status = UserStatus.Active,
                     HashPassword = "+gURQgHBT1zJz5AljZhAMyaNRFQBVorq5HIlEmhf+ZQ=:BBLvXedGXzdz0ZlypoKQxQ==",  // Admin@123
                     Role = UserRole.SuperAdmin,
                 }

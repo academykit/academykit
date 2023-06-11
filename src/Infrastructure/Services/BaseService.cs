@@ -251,27 +251,27 @@
         protected async Task<bool> IsSuperAdmin(Guid currentUserId)
         {
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
-                predicate: p => p.Id == currentUserId && p.IsActive && p.Role == UserRole.SuperAdmin).ConfigureAwait(false);
+                predicate: p => p.Id == currentUserId && p.Status == UserStatus.Active && p.Role == UserRole.SuperAdmin).ConfigureAwait(false);
 
             return user != null;
         }
         protected async Task<bool> IsSuperAdminOrAdmin(Guid currentUserId)
         {
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
-                predicate: p => p.Id == currentUserId && p.IsActive && (p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin)).ConfigureAwait(false);
+                predicate: p => p.Id == currentUserId && p.Status == UserStatus.Active && (p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin)).ConfigureAwait(false);
             return user != null;
         }
         protected async Task<bool> IsSuperAdminOrAdminOrTrainer(Guid currentUserId)
         {
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
-                predicate: p => p.Id == currentUserId && p.IsActive
+                predicate: p => p.Id == currentUserId && p.Status == UserStatus.Active
                            && (p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin || p.Role == UserRole.Trainer)).ConfigureAwait(false);
             return user != null;
         }
         protected async Task<bool> IsTrainer(Guid currentUserId)
         {
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
-                predicate: p => p.Id == currentUserId && p.IsActive && p.Role == UserRole.Trainer).ConfigureAwait(false);
+                predicate: p => p.Id == currentUserId && p.Status == UserStatus.Active && p.Role == UserRole.Trainer).ConfigureAwait(false);
             return user != null;
         }
 

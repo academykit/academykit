@@ -129,6 +129,44 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
+
+        /// <summary>
+        /// Email for account created and password
+        /// </summary>
+        /// <param name="emailAddress">the email address of the receiver</param>
+        /// <param name="firstName">the first name of the receiver</param>
+        /// <param name="password">the login password of the receiver</param>
+        /// <param name="companyName"> the company name </param>
+        /// <returns></returns>
+        [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
+        public async Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password, string companyName, PerformContext context = null)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    throw new ArgumentException("Context not found.");
+                }
+
+                var html = $"Dear {firstName},<br><br>";
+                html += $"Your account has been created in Vurilo Team. <br> Your Login Password is <b><u>{password}</u></b><br><br>";
+                html += $"Thank You,<br> {companyName}";
+                html += @$"<a href = '{this._appUrl}' > <u  style='color:blue;'> Click Here </u></a>";
+
+                var mail = new EmailRequestDto
+                {
+                    To = emailAddress,
+                    Subject = "Account Created",
+                    Message = html
+                };
+                await _emailService.SendMailWithHtmlBodyAsync(mail).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to send change email address mail.");
+            }
+        }
+
         /// <summary>
         /// Handle to send email to imported user async
         /// </summary>

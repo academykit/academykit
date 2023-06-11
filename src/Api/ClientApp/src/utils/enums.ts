@@ -5,6 +5,12 @@ export enum UserRole {
   Trainee = 4,
 }
 
+export enum UserStatus {
+  Active = 1,
+  InActive = 2,
+  Pending = 3,
+}
+
 export enum PoolRole {
   Creator = 1,
   Author = 2,

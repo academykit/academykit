@@ -25,7 +25,7 @@
         }
     }
 
-    public class AssignmentDateValidator :  AbstractValidator<LessonRequestModel>
+    public class AssignmentDateValidator : AbstractValidator<LessonRequestModel>
     {
         public AssignmentDateValidator()
         {
@@ -38,8 +38,9 @@
         public QuestionSetValidator()
         {
             RuleFor(x => x.QuestionMarking).NotNull().NotEmpty().WithMessage("Question marking is required.");
+            RuleFor(x => x.AllowedRetake).NotNull().GreaterThan(0).WithMessage("Allowed retake must be greater than 0.");
             RuleFor(x => x.Description).MaximumLength(5000).WithMessage("Description length must be less than or equal to 5000 characters.");
-            RuleFor(x => x).Must(x => x.EndTime != default && x.StartTime != default && x.EndTime > x.StartTime).WithMessage("EndTime must be greater than startTime.");
+            RuleFor(x => x).Must(x => x.EndTime != default && x.StartTime != default && x.EndTime > x.StartTime).WithMessage("End time must be greater than start time.");
         }
     }
     public class MeetingValidator : AbstractValidator<MeetingRequestModel>
