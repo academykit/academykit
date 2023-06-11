@@ -29,7 +29,10 @@ const useStyle = createStyles({});
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t("group_name_required") as string),
+    name: Yup.string()
+      .trim()
+      .required(t("group_name_required") as string)
+      .max(250, t("group_character_limit") as string),
   });
 };
 const GroupDetail = () => {
@@ -58,7 +61,7 @@ const GroupDetail = () => {
   const updateGroup = async ({ name }: { name: string }) => {
     try {
       await updateGroups.mutateAsync({
-        name,
+        name: name.trim(),
         id: id as string,
         isActive: true,
       });
@@ -73,6 +76,7 @@ const GroupDetail = () => {
         color: "red",
       });
     }
+    setEdit(false);
   };
   if (groupDetail.error) {
     throw groupDetail.error;

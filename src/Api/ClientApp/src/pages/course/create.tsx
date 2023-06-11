@@ -179,7 +179,7 @@ const CreateCoursePage = () => {
                       ? tagsList
                       : [
                           {
-                            label: "No Tags Found!",
+                            label: t("no_tags") as string,
                             value: "null",
                             disabled: true,
                           },
@@ -209,7 +209,7 @@ const CreateCoursePage = () => {
                       ? label.data.map((x) => ({ value: x.id, label: x.name }))
                       : [
                           {
-                            label: "No Level Found!",
+                            label: t("no_level") as string,
                             value: "null",
                             disabled: true,
                           },
@@ -235,7 +235,7 @@ const CreateCoursePage = () => {
                       }))
                     : [
                         {
-                          label: "No Groups Found!",
+                          label: t("no_groups"),
                           value: "null",
                           disabled: true,
                         },
