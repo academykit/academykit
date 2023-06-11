@@ -73,7 +73,14 @@ const Admin = ({
         <Text c="dimmed">{t("no_trainings")}</Text>
       )}
 
-      <Group sx={{ justifyContent: "space-evenly" }}>
+      <Group
+        sx={{
+          "@media (max-width: 1345px)": {
+            justifyContent: "space-evenly",
+          },
+          justifyContent: "space-between",
+        }}
+      >
         {dashboardCourses.length > 0 &&
           dashboardCourses.map((x, idx) => <TrainingCards data={x} />)}
       </Group>
