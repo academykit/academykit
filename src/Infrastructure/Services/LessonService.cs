@@ -1,6 +1,7 @@
 namespace Lingtren.Infrastructure.Services
 {
     using AngleSharp.Common;
+    using AngleSharp.Dom;
     using Hangfire;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
@@ -345,7 +346,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to create the lesson");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("CreateLessonError"));
+                throw ex is ServiceException ? ex: new ServiceException(_localizer.GetString(ex.Message));
             }
         }
 
@@ -866,6 +867,10 @@ namespace Lingtren.Infrastructure.Services
         private async Task CreateQuestionSetAsync(LessonRequestModel model, Lesson lesson)
         {
             lesson.QuestionSet = new QuestionSet();
+            if (model.QuestionSet.StartTime < DateTime.UtcNow || model.EndDate < DateTime.UtcNow)
+            {
+                throw new InvalidDataException("Exam start time and endtime must be greater than current time.");
+            }
             lesson.QuestionSet = new QuestionSet
             {
                 Id = Guid.NewGuid(),
@@ -898,6 +903,10 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         private async Task UpdateQuestionSetAsync(LessonRequestModel model, Lesson existingLesson)
         {
+            if(model.QuestionSet.StartTime <= DateTime.UtcNow || model.QuestionSet.EndTime <= DateTime.UtcNow)
+            {
+                throw new InvalidDataException("Exam starttime and endtime must be greater than current date time.");
+            }
             existingLesson.QuestionSet.Name = existingLesson.Name;
             existingLesson.QuestionSet.ThumbnailUrl = existingLesson.ThumbnailUrl;
             existingLesson.QuestionSet.Description = model.QuestionSet.Description;
@@ -924,6 +933,10 @@ namespace Lingtren.Infrastructure.Services
         private async Task CreateMeetingAsync(LessonRequestModel model, Lesson lesson)
         {
             lesson.Meeting = new Meeting();
+            if (model.Meeting.MeetingStartDate <= DateTime.UtcNow)
+            {
+                throw new InvalidDataException("Live lesson start time must be greater than cuttent time.");
+            }
             lesson.Meeting = new Meeting
             {
                 Id = Guid.NewGuid(),
@@ -949,6 +962,10 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         private async Task UpdateMeetingAsync(LessonRequestModel model, Lesson existingLesson)
         {
+            if(model.Meeting.MeetingStartDate <= DateTime.UtcNow)
+            {
+                throw new InvalidDataException("Startdate must be greater than current date time.");
+            }
             existingLesson.Meeting.StartDate = model.Meeting.MeetingStartDate;
             existingLesson.Meeting.ZoomLicenseId = model.Meeting.ZoomLicenseId.Value;
             existingLesson.Meeting.Duration = model.Meeting.MeetingDuration * 60; //convert duration from minutes to seconds;
