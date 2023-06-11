@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import useNav from "@hooks/useNav";
 
 interface FormValues {
   thumbnail: string;
@@ -39,7 +40,8 @@ const schema = () => {
   return Yup.object().shape({
     title: Yup.string()
       .trim()
-      .required(t("course_title_required") as string),
+      .required(t("course_title_required") as string)
+      .max(250, t("course_title_must_be_less_than_250") as string),
     level: Yup.string().required(t("level_required") as string),
     groups: Yup.string()
       .nullable()
@@ -51,6 +53,7 @@ export const [FormProvider, useFormContext, useForm] =
   createFormContext<FormValues>();
 
 const CreateCoursePage = () => {
+  const { setBreadCrumb } = useNav();
   const [searchParamGroup, setsearchParamGroup] = useState("");
   const { t } = useTranslation();
 
