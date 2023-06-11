@@ -3,7 +3,6 @@ using HangfireBasicAuthenticationFilter;
 using Lingtren.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.HttpOverrides;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 

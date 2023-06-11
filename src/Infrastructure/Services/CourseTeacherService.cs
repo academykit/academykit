@@ -69,7 +69,7 @@
                 _logger.LogWarning("Training with id {courseId} creator User Id {userId} can't be training trainer.", course.Id, entity.UserId);
                 throw new ForbiddenException(_localizer.GetString("TrainingAuthorAdded"));
             }
-            var hasAccess = await IsSuperAdminOrAdminOrTrainer(entity.UserId).ConfigureAwait(false);
+            var hasAccess = await IsSuperAdminOrAdminOrTrainer(entity.CreatedBy).ConfigureAwait(false);
             if (!hasAccess)
             {
                 _logger.LogWarning("User having Id: {userId} with trainee role is not allowed to added as training trainer of training with id {courseId}.",
