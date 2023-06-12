@@ -71,7 +71,9 @@ const TeacherCards = ({
 
       <Card radius={"lg"} mb={10}>
         <Group py={5} position="apart">
-          {user && <UserShortProfile user={user} size={"md"} />}
+          {user && (
+            <UserShortProfile user={user} size={"md"} page="Trainings" />
+          )}
           <Group>
             <Text color={"dimmed"} size={"sm"}></Text>
             {auth?.auth &&
