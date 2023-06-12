@@ -40,6 +40,9 @@ const useStyles = createStyles((theme) => ({
     },
   },
   center: {
+    ["@media (max-width : 527px)"]: {
+      width: "100%",
+    },
     width: "50%",
     margin: "auto",
   },

@@ -157,6 +157,9 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
               ? theme.colors.dark[8]
               : theme.colors.gray[0],
         },
+        body: {
+          overflow: "hidden",
+        },
       })}
       navbarOffsetBreakpoint="sm"
       asideOffsetBreakpoint="sm"
