@@ -753,5 +753,6 @@
   "no_level": "No Level Found!",
   "group_character_limit": "Group name cannot exceed 250 character!",
   "pool_name_required": "Pool name is required!",
-  "contact_number_required": "Contact number is required!"
+  "contact_number_required": "Contact number is required!",
+  "group": "Group"
 }

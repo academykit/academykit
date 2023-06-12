@@ -72,9 +72,10 @@ const withSearchPagination =
       initialSearch.forEach((d) => {
         data[d.key] = d.value;
       });
+      console.log(data);
 
       setSearchParams(queryStringGenerator(data));
-    }, [page, search, size, sortValue, filterValue]);
+    }, [page, search, size, sortValue, filterValue, initialSearch]);
 
     const setSearch = (search: string) => {
       if (!search) return;

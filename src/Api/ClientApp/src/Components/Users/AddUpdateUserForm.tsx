@@ -16,22 +16,27 @@ const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
     email: Yup.string()
+      .trim()
       .email(t("invalid_email") as string)
       .required(t("email_required") as string),
     firstName: Yup.string()
+      .trim()
       .max(100, t("first_name_character_required") as string)
       .required(t("first_name_required") as string),
     lastName: Yup.string()
+      .trim()
       .max(100, t("last_name_character_required") as string)
-      .required("last_name_required"),
+      .required(t("last_name_required") as string),
     middleName: Yup.string()
       .max(100, t("middle_name_character_required") as string)
+      .trim()
       .nullable()
       .notRequired(),
     role: Yup.string()
       .oneOf(["1", "2", "3", "4"], t("role_required") as string)
       .required(t("role_required") as string),
     mobileNumber: Yup.string()
+      .trim()
       .nullable()
       .matches(PHONE_VALIDATION, {
         message: t("enter_valid_phone"),
