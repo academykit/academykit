@@ -249,6 +249,7 @@
   "training_update_success": "トレーニングが正常に更新されました。",
   "success": "成功",
   "certificates_description": "ここでは、デフォルトテンプレートを表示して証明書に関する重要な人物の内容と署名を追加することができます。",
+  "certificate_preview_details": "証明書をプレビューするには、すべての詳細を入力してください",
   "certificate_note": "注意：トレーニーに発行するために、少なくとも1つの署名が必要です。",
   "add_signatures": "署名を追加する",
   "add_more": "さらに追加する",

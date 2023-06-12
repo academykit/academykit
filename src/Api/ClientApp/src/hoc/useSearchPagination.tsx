@@ -72,12 +72,13 @@ const withSearchPagination =
       initialSearch.forEach((d) => {
         data[d.key] = d.value;
       });
+      console.log(data);
 
       setSearchParams(queryStringGenerator(data));
-    }, [page, search, size, sortValue, filterValue]);
+    }, [page, search, size, sortValue, filterValue, initialSearch]);
 
     const setSearch = (search: string) => {
-      if (!search) return;
+      // if (!search) return;
       for (let value of params.entries()) {
         if (value[0] !== "s") params.delete(value[0]);
       }
