@@ -1,6 +1,7 @@
 namespace Lingtren.Infrastructure.Services
 {
     using AngleSharp.Common;
+    using AngleSharp.Dom;
     using Hangfire;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
@@ -126,7 +127,7 @@ namespace Lingtren.Infrastructure.Services
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
                 predicate: p => p.CourseId == course.Id,
                 orderBy: o => o.OrderBy(x => x.Order),
-                include: src => src.Include(x => x.Lessons).ThenInclude(x=>x.QuestionSet).ThenInclude(x=>x.QuestionSetSubmissions)).ConfigureAwait(false);
+                include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
 
             var lessons = new List<Lesson>();
             lessons = sections.SelectMany(x => x.Lessons.OrderBy(x => x.Order)).ToList();
@@ -866,6 +867,10 @@ namespace Lingtren.Infrastructure.Services
         private async Task CreateQuestionSetAsync(LessonRequestModel model, Lesson lesson)
         {
             lesson.QuestionSet = new QuestionSet();
+            if (model.QuestionSet.StartTime < DateTime.UtcNow || model.EndDate < DateTime.UtcNow)
+            {
+                throw new InvalidDataException(_localizer.GetString("InvalidTimeIssue"));
+            }
             lesson.QuestionSet = new QuestionSet
             {
                 Id = Guid.NewGuid(),
@@ -898,6 +903,10 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         private async Task UpdateQuestionSetAsync(LessonRequestModel model, Lesson existingLesson)
         {
+            if(model.QuestionSet.StartTime <= DateTime.UtcNow || model.QuestionSet.EndTime <= DateTime.UtcNow)
+            {
+                throw new InvalidDataException(_localizer.GetString("InvalidTimeIssue"));
+            }
             existingLesson.QuestionSet.Name = existingLesson.Name;
             existingLesson.QuestionSet.ThumbnailUrl = existingLesson.ThumbnailUrl;
             existingLesson.QuestionSet.Description = model.QuestionSet.Description;
@@ -924,6 +933,10 @@ namespace Lingtren.Infrastructure.Services
         private async Task CreateMeetingAsync(LessonRequestModel model, Lesson lesson)
         {
             lesson.Meeting = new Meeting();
+            if (model.Meeting.MeetingStartDate <= DateTime.UtcNow)
+            {
+                throw new InvalidDataException(_localizer.GetString("InvalidMeetingTimeIssue"));
+            }
             lesson.Meeting = new Meeting
             {
                 Id = Guid.NewGuid(),
@@ -949,6 +962,10 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         private async Task UpdateMeetingAsync(LessonRequestModel model, Lesson existingLesson)
         {
+            if(model.Meeting.MeetingStartDate <= DateTime.UtcNow)
+            {
+                throw new InvalidDataException(_localizer.GetString("InvalidMeetingTimeIssue"));
+            }
             existingLesson.Meeting.StartDate = model.Meeting.MeetingStartDate;
             existingLesson.Meeting.ZoomLicenseId = model.Meeting.ZoomLicenseId.Value;
             existingLesson.Meeting.Duration = model.Meeting.MeetingDuration * 60; //convert duration from minutes to seconds;

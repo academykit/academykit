@@ -866,4 +866,10 @@
   <data name="UserNotFoundWithEmail" xml:space="preserve">
     <value>इमेलको साथ प्रयोगकर्ता फेला परेन</value>
   </data>
+  <data name="InvalidExamTimeIssue" xml:space="preserve">
+    <value>परीक्षा सुरु हुने समय र अन्त्यको समय हालको समय भन्दा बढी हुनुपर्छ।</value>
+  </data>
+  <data name="InvalidMeetingTimeIssue" xml:space="preserve">
+    <value>प्रत्यक्ष पाठ सुरु समय वर्तमान समय भन्दा ठूलो हुनुपर्छ।</value>
+  </data>
 </root>

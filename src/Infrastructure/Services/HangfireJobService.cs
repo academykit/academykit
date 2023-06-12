@@ -149,10 +149,12 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var html = $"Dear {firstName},<br><br>";
-                html += $"Your account has been created in Vurilo Team. <br> Your Login Password is <b><u>{password}</u></b><br><br>";
-                html += $"Thank You,<br> {companyName}";
-                html += @$"<a href = '{this._appUrl}' > <u  style='color:blue;'> Click Here </u></a>";
-
+                html += $@"Your account has been created in <a href = '{this._appUrl}'><u  style='color:blue;'>{companyName}</u></a><br><br>";
+                html += "Here are the login details for your LMS account<br><br>";
+                html += $"Email:{emailAddress}<br>";
+                html += $"Password:{password}<br><br>";
+                html += $"Please use the above login credentials to access your account.<br><br>";
+                html += $"Best regards,<br> {companyName}";
                 var mail = new EmailRequestDto
                 {
                     To = emailAddress,
