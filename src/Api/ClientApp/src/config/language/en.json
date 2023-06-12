@@ -249,6 +249,7 @@
   "training_update_success": "Training updated successfully.",
   "success": "Success",
   "certificates_description": "You can add the contents and signature of essential persons regarding the certificates here by viewing the default template.",
+  "certificate_preview_details": "Please fill all the details to preview certificate",
   "certificate_note": "Note: You need at least one signature to be able to issue to trainee.",
   "add_signatures": "Add Signatures",
   "add_more": "Add More",
