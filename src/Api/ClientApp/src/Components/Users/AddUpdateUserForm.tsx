@@ -93,6 +93,7 @@ const AddUpdateUserForm = ({
         });
       } else {
         const userData = { ...data };
+
         //@ts-ignore
         delete userData.isActive;
         const status =
