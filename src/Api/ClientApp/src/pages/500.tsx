@@ -6,7 +6,9 @@ import {
   Container,
   Group,
 } from "@mantine/core";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link, useLocation } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -24,7 +26,7 @@ const useStyles = createStyles((theme) => ({
     fontSize: 220,
     lineHeight: 1,
     marginBottom: theme.spacing.xl * 1.5,
-    color: theme.colors[theme.primaryColor][3],
+    color: theme.colors[theme.primaryColor][0],
 
     [theme.fn.smallerThan("sm")]: {
       fontSize: 120,
@@ -55,6 +57,15 @@ const useStyles = createStyles((theme) => ({
 const ServerError = () => {
   const { classes } = useStyles();
   const { t } = useTranslation();
+  const [init, setInit] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (init) {
+      window.location.reload();
+    }
+    setInit(true);
+  }, [location.pathname]);
 
   return (
     <div className={classes.root}>
@@ -64,13 +75,16 @@ const ServerError = () => {
         <Text size="lg" align="center" className={classes.description}>
           {t("server_error")}
         </Text>
-        <Group position="center">
+        <Group position="center" sx={{ flexDirection: "column" }}>
           <Button
             variant="white"
             size="md"
             onClick={() => window.location.reload()}
           >
             {t("refresh_page")}
+          </Button>
+          <Button variant="white" size="md" component={Link} to={"/"}>
+            {t("back_to_home")}
           </Button>
         </Group>
       </Container>
