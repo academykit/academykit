@@ -89,11 +89,14 @@ axiosInstance.interceptors.request.use(
       config.data = toFormData(config.data);
       delete config.headers["formData"];
     }
-    for (let key in config.data) {
-      // Check if the value is a string
-      if (typeof config.data[key] === "string") {
-        // Trim the string value
-        config.data[key] = config.data[key].trim();
+    if (config.data) {
+      for (let key in config.data) {
+        // Check if the value is a string
+
+        if (typeof config.data[key] === "string") {
+          // Trim the string value
+          config.data[key] = config.data[key].trim();
+        }
       }
     }
     return config;
