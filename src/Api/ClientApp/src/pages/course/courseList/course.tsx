@@ -41,18 +41,18 @@ const CoursePage = ({
   ];
   return (
     <Container fluid>
-      {data && data?.items?.length > 0 && (
-        <Container fluid>
-          <Flex pb={20} justify={"end"} align={"center"}>
-            {searchComponent(t("search_trainings") as string)}
-            {filterComponent(
-              filterValue,
-              t("enrollment_status"),
-              "Enrollmentstatus"
-            )}
-          </Flex>
-        </Container>
-      )}
+      <Container fluid>
+        <Flex pb={20} justify={"end"} align={"center"}>
+          {data &&
+            data?.items?.length > 0 &&
+            searchComponent(t("search_trainings") as string)}
+          {filterComponent(
+            filterValue,
+            t("enrollment_status"),
+            "Enrollmentstatus"
+          )}
+        </Flex>
+      </Container>
       {data &&
         data?.items &&
         (data.totalCount >= 1 ? (

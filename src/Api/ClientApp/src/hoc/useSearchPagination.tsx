@@ -111,6 +111,7 @@ const withSearchPagination =
           placeholder={placeholder}
           ml={5}
           clearable
+          maw={"184px"}
           value={filterValue}
           data={data}
           onChange={(e: string) => {
