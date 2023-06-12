@@ -33,6 +33,8 @@ const LessonDetails = () => {
 
   if (lessonDetails.isLoading) return <Loader />;
 
+  if (lessonDetails.error) throw lessonDetails.error;
+
   const handleExport = async () => {
     setLoading(true);
     try {
