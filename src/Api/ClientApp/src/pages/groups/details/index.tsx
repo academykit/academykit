@@ -53,10 +53,10 @@ const GroupDetail = () => {
   const auth = useAuth();
 
   useEffect(() => {
-    if (groupDetail.isSuccess) {
+    if (groupDetail.data) {
       form.setFieldValue("name", groupDetail.data.data.name);
     }
-  }, [groupDetail.isSuccess]);
+  }, [groupDetail.data]);
 
   const updateGroup = async ({ name }: { name: string }) => {
     try {
@@ -78,6 +78,7 @@ const GroupDetail = () => {
       });
     }
     setEdit(false);
+    form.reset();
   };
   if (groupDetail.error) {
     throw groupDetail.error;

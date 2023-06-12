@@ -40,6 +40,7 @@ const NavOutlet = ({
       styles={(theme) => ({
         main: {
           padding: "0px",
+          width: "100%",
           backgroundColor:
             theme.colorScheme === "dark"
               ? theme.colors.dark[8]
