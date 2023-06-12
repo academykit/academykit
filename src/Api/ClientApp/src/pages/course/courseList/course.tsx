@@ -2,13 +2,11 @@ import withSearchPagination, {
   IWithSearchPagination,
 } from "@hoc/useSearchPagination";
 import useAuth from "@hooks/useAuth";
-import { Box, Button, Container, Flex, Loader } from "@mantine/core";
+import { Box, Container, Flex, Loader } from "@mantine/core";
 import { UserRole } from "@utils/enums";
-import RoutePath from "@utils/routeConstants";
 import { useCourse } from "@utils/services/courseService";
 import { CourseUserStatus } from "@utils/enums";
 
-import { Link } from "react-router-dom";
 import CourseList from "./component/List";
 import { useTranslation } from "react-i18next";
 
@@ -66,7 +64,6 @@ const CoursePage = ({
           )} */}
         </Flex>
       </Container>
-
       {data &&
         data?.items &&
         (data.totalCount >= 1 ? (

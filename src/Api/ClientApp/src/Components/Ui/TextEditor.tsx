@@ -1,6 +1,5 @@
 import React, { useCallback } from "react";
 import { UseFormReturnType } from "@mantine/form";
-import { EFIleUploadType } from "@utils/enums";
 import { FileAccess, uploadFile } from "@utils/services/fileService";
 import RichTextEditor from "@mantine/rte";
 
