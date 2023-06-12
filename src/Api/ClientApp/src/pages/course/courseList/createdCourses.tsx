@@ -40,14 +40,9 @@ const ReviewedCourse = ({
             alignItems: "center",
           }}
         >
-          {searchComponent(t("search_trainings") as string)}
-          {/* {role != UserRole.Trainee && (
-            <Link to={RoutePath.courses.create}>
-              <Button my={10} variant="outline" ml={5}>
-                Create New Training
-              </Button>
-            </Link>
-          )} */}
+          {data &&
+            data.items?.length > 1 &&
+            searchComponent(t("search_trainings") as string)}
         </Flex>
       </Container>
 

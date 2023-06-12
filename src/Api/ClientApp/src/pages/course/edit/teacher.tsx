@@ -142,7 +142,7 @@ const Teacher = () => {
         {(style) => (
           <Box mt={10}>
             <form onSubmit={form.onSubmit(onSubmitForm)}>
-              <Group>
+              <Group sx={{ alignItems: "start" }}>
                 <TextInput
                   placeholder={t("enter_the_email") as string}
                   name="email"
