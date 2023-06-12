@@ -22,6 +22,7 @@ import PoolCard from "./Components/PoolCard";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 const useStyle = createStyles((theme) => ({
   paper: {
     [theme.fn.smallerThan("md")]: {
@@ -51,7 +52,7 @@ const MCQPool = ({
   const addPool = useAddPool(searchParams);
   const [showAddForm, toggleAddForm] = useToggle();
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
   const { classes } = useStyle();
   const form = useForm({
     initialValues: {
@@ -62,9 +63,10 @@ const MCQPool = ({
   useFormErrorHooks(form);
   const onSubmitForm = async ({ name }: { name: string }) => {
     try {
-      await addPool.mutateAsync(name);
+      const res = await addPool.mutateAsync(name);
       form.reset();
       toggleAddForm();
+      navigate(res.data.slug + "/questions");
     } catch (err) {
       const error = errorType(err);
       showNotification({ message: error, color: "red" });

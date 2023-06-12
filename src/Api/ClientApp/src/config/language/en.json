@@ -427,7 +427,7 @@
   "update_file_storage_success": "File Storage Updated Successfully. ",
   "delete_comment_success": "Comment Deleted Successfully",
   "edit_comment_success": "Comment Edited Successfully.",
-  "delete_comment_reply_success ": "Comment Reply Deleted Successfully",
+  "delete_comment_reply_success": "Comment Reply Deleted Successfully",
   "edit_reply_success": "Reply Edited Successfully.",
   "delete_course_success": "Course Deleted successfully",
   "mark_pdf_complete": "Pdf marked as completed.",
@@ -754,5 +754,8 @@
   "group_character_limit": "Group name cannot exceed 250 character!",
   "pool_name_required": "Pool name is required!",
   "contact_number_required": "Contact number is required!",
+  "username": "Username",
+  "trainer_email_required": "Trainer's email is required!"
   "group": "Group"
+
 }

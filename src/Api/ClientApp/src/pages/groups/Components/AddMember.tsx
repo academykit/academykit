@@ -65,7 +65,6 @@ const AddMember = ({
 
   const [data, setData] = useState<{ label: string; value: string }[]>([]);
   const onSubmitForm = async (email: string[]) => {
-    console.log(email);
     try {
       const response: any = await mutateAsync({
         id: id as string,

@@ -149,7 +149,7 @@ const GroupAttachment = ({
             )}
           </Flex>
         </Flex>
-        {searchComponent(t("search_attachments") as string)}
+        {getGroupAttachment.data && getGroupAttachment.data?.items?.length > 0 && searchComponent(t("search_attachments") as string)}
 
         {getGroupAttachment.data &&
         getGroupAttachment.data?.items.length >= 1 ? (

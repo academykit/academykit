@@ -14,7 +14,7 @@ function MCQPoolNav() {
       role: UserRole.Trainer,
     },
     {
-      label: i18next.t("Trainer"),
+      label: i18next.t("trainers"),
       to: RoutePath.pool.teachers(params.id).route,
       role: UserRole.Trainer,
     },

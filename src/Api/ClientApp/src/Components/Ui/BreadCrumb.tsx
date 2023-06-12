@@ -42,7 +42,7 @@ const getItems = ({ items, hide }: ItemsProps) => {
 const Breadcrumb = ({
   hide = null,
   start,
-  py = 15,
+  py = 17,
 }: {
   hide?: number | null;
   py?: MantineStyleSystemProps["py"];

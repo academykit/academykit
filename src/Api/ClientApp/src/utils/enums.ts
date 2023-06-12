@@ -13,7 +13,7 @@ export enum UserStatus {
 
 export enum PoolRole {
   Creator = 1,
-  Author = 2,
+  Trainer = 2,
 }
 
 export enum CourseLanguage {
