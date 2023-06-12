@@ -93,16 +93,16 @@ namespace Lingtren.Infrastructure.Services
                     switch (enrollmentStatus)
                     {
                         case CourseEnrollmentStatus.Enrolled:
-                            enrollmentStatusPredicate = enrollmentStatusPredicate.Or(p => p.CourseEnrollments.Any(e => e.UserId == criteria.CurrentUserId));
+                            enrollmentStatusPredicate = enrollmentStatusPredicate.And(p => p.CourseEnrollments.Any(e => e.UserId == criteria.CurrentUserId));
                             break;
                         case CourseEnrollmentStatus.NotEnrolled:
-                            enrollmentStatusPredicate = enrollmentStatusPredicate.Or(p => !p.CourseEnrollments.Any(e => e.UserId == criteria.CurrentUserId));
+                            enrollmentStatusPredicate = enrollmentStatusPredicate.And(p => !p.CourseEnrollments.Any(e => e.UserId == criteria.CurrentUserId)).And(p=>p.CreatedBy != criteria.CurrentUserId);
                             break;
                         case CourseEnrollmentStatus.Author:
-                            enrollmentStatusPredicate = enrollmentStatusPredicate.Or(p => p.CreatedBy == criteria.CurrentUserId);
+                            enrollmentStatusPredicate = enrollmentStatusPredicate.And(p => p.CreatedBy == criteria.CurrentUserId);
                             break;
                         case CourseEnrollmentStatus.Teacher:
-                            enrollmentStatusPredicate = enrollmentStatusPredicate.Or(p => p.CourseTeachers.Any(e => e.UserId == criteria.CurrentUserId));
+                            enrollmentStatusPredicate = enrollmentStatusPredicate.And(p => p.CourseTeachers.Any(e => e.UserId == criteria.CurrentUserId));
                             break;
                         default:
                             break;
@@ -968,10 +968,6 @@ namespace Lingtren.Infrastructure.Services
                 lesson.QuestionSet = new QuestionSet();
                 lesson.QuestionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(predicate: p => p.Id == lesson.QuestionSetId,
                 include: src => src.Include(x => x.QuestionSetSubmissions).Include(x => x.QuestionSetResults).Include(x => x.QuestionSetQuestions)).ConfigureAwait(false);
-                if (lesson.QuestionSet.QuestionSetQuestions.Count == default)
-                {
-                    totalMarks = 0;
-                }
                 if(lesson.QuestionSet.QuestionSetQuestions.Count != default)
                 {
                     totalMarks = lesson.QuestionSet.QuestionMarking * lesson.QuestionSet.QuestionSetQuestions.Count;
