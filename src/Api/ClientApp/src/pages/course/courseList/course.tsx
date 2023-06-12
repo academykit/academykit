@@ -41,31 +41,6 @@ const CoursePage = ({
   ];
   return (
     <Container fluid>
-<<<<<<< HEAD
-      <Container fluid>
-        <Flex
-          pb={20}
-          sx={{
-            justifyContent: "end",
-            alignItems: "center",
-          }}
-        >
-          {searchComponent(t("search_trainings") as string)}
-          {filterComponent(
-            filterValue,
-            t("enrollment_status"),
-            "Enrollmentstatus"
-          )}
-          {/* {role != UserRole.Trainee && (
-            <Link to={RoutePath.courses.create}>
-              <Button my={10} ml={5}>
-                Create New Training
-              </Button>
-            </Link>
-          )} */}
-        </Flex>
-      </Container>
-=======
       {data && data?.items?.length > 0 && (
         <Container fluid>
           <Flex pb={20} justify={"end"} align={"center"}>
@@ -78,7 +53,6 @@ const CoursePage = ({
           </Flex>
         </Container>
       )}
->>>>>>> 04e142c43f4cf97a5079e81f1a0c4505250574ab
       {data &&
         data?.items &&
         (data.totalCount >= 1 ? (
