@@ -85,6 +85,7 @@ const schema = () => {
 const Create = () => {
   const { t } = useTranslation();
   const { id, slug } = useParams();
+  const navigate = useNavigate();
   const { mutate, data: addTagData, isSuccess } = useAddTag();
   const getQuestion = useGetQuestion(id as string, slug as string);
   const editQuestion = useEditQuestion(id as string, slug as string);
@@ -126,6 +127,7 @@ const Create = () => {
         questionId: slug as string,
         data,
       });
+      navigate(-1);
 
       showNotification({
         title: t("successful"),

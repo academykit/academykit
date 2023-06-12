@@ -1,8 +1,10 @@
+import useNav from "@hooks/useNav";
 import {
   Breadcrumbs,
   Anchor,
   Divider,
   MantineStyleSystemProps,
+  Text,
 } from "@mantine/core";
 import { Link, useLocation } from "react-router-dom";
 
@@ -16,7 +18,14 @@ type ItemsProps = {
 
 const getItems = ({ items, hide }: ItemsProps) => {
   const finalItem = items.map((item, index) => (
-    <Anchor size={"sm"} to={item.href} component={Link} key={index}>
+    <Anchor
+      size={"sm"}
+      maw={"200px"}
+      style={{ overflow: "hidden", textOverflow: "ellipsis" }}
+      to={item.href}
+      component={Link}
+      key={index}
+    >
       {item.title}
     </Anchor>
   ));
@@ -39,6 +48,7 @@ const Breadcrumb = ({
   py?: MantineStyleSystemProps["py"];
   start?: { title: string; href: string };
 }) => {
+  const { breadCrumb } = useNav();
   const routes = useLocation();
   const pathNames = routes.pathname.split("/").splice(1);
 
@@ -52,11 +62,11 @@ const Breadcrumb = ({
     };
     return a;
   });
-
+  const items = breadCrumb ?? newPath;
   return (
     <>
       <Breadcrumbs py={py} pb={5}>
-        {getItems({ items: start ? [start, ...newPath] : newPath, hide })}
+        {getItems({ items: start ? [start, ...items] : items, hide })}
       </Breadcrumbs>
       <Divider />
     </>

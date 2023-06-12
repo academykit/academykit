@@ -99,6 +99,7 @@ const Create = () => {
       answers: [{ option: "", isCorrect: false }],
     },
     validate: yupResolver(schema()),
+    validateInputOnChange: true,
   });
   useFormErrorHooks(form);
 
@@ -228,6 +229,15 @@ const Create = () => {
                 {form.values.answers.map((x, i) => (
                   <Group key={i} mb={30}>
                     <Checkbox
+                      styles={{
+                        input: {
+                          borderRadius:
+                            form.values.type ===
+                            QuestionType.SingleChoice.toString()
+                              ? "100px"
+                              : "0px",
+                        },
+                      }}
                       {...form.getInputProps(`answers.${i}.isCorrect`)}
                       name=""
                     ></Checkbox>
@@ -271,7 +281,11 @@ const Create = () => {
               </Box>
             )}
             <Group mt={20}>
-              <Button type="submit" onClick={() => setIsReset(false)}>
+              <Button
+                type="submit"
+                loading={addQuestion.isLoading}
+                onClick={() => setIsReset(false)}
+              >
                 {t("save")}
               </Button>
               <Button type="submit" onClick={() => setIsReset(true)}>

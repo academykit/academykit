@@ -12,9 +12,13 @@ import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 
+interface IAddMember {
+  email: string[];
+}
+
 const schema = () => {
   const { t } = useTranslation();
-  Yup.object().shape({
+  return Yup.object().shape({
     email: Yup.array().min(1, t("one_email_required") as string),
   });
 };
@@ -33,9 +37,7 @@ const AddMember = ({
     id as string,
     searchParams
   );
-  interface IAddMember {
-    email: string[];
-  }
+
   const form = useForm<IAddMember>({
     initialValues: {
       email: [],
@@ -63,6 +65,7 @@ const AddMember = ({
 
   const [data, setData] = useState<{ label: string; value: string }[]>([]);
   const onSubmitForm = async (email: string[]) => {
+    console.log(email);
     try {
       const response: any = await mutateAsync({
         id: id as string,
@@ -90,24 +93,6 @@ const AddMember = ({
       <form onSubmit={form.onSubmit(({ email }) => onSubmitForm(email))}>
         <MultiSelect
           ref={ref}
-          onKeyUp={(k) => {
-            k.preventDefault();
-            if (k.key === "Enter") {
-              let value = "";
-              if (ref && ref.current) {
-                value = ref.current.value;
-                setTimeout(() => {
-                  // @ts-ignore
-                  ref.current.value = "";
-                }, 50);
-              }
-              if (value) {
-                const item = { value: value, label: value };
-                setData((current) => [...current, item]);
-                form.setFieldValue("email", [...form.values.email, value]);
-              }
-            }
-          }}
           searchable
           data={data}
           mb={10}

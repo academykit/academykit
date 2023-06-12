@@ -32,6 +32,7 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
     paddingTop: theme.spacing.sm,
     paddingBottom: theme.spacing.sm,
+    gap: "10px",
 
     [theme.fn.smallerThan("xs")]: {
       flexDirection: "column",

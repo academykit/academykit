@@ -44,7 +44,7 @@ const schema = () => {
       .matches(/[^\w]/, t("password_symbol_required") as string)
       .required("New Password is required."),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref(t("new_password")), null], t("password_match") as string)
+      .oneOf([Yup.ref("newPassword"), null], t("password_match") as string)
       .required(t("password_confirm_required") as string),
   });
 };

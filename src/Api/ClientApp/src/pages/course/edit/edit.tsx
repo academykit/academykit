@@ -57,7 +57,9 @@ interface FormValues {
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    title: Yup.string().required(t("course_title_required") as string),
+    title: Yup.string()
+      .required(t("course_title_required") as string)
+      .max(250, t("course_title_must_be_less_than_250") as string),
     level: Yup.string().required(t("level_required") as string),
     groups: Yup.string().required(t("group_required") as string),
   });
@@ -106,6 +108,7 @@ const EditCourse = () => {
     data: courseSingleData,
     isLoading,
     isSuccess: courseIsSuccess,
+    refetch,
   } = useCourseDescription(slug.id as string);
 
   const [tagsList, setTagsList] = useState<{ value: string; label: string }[]>(
@@ -168,6 +171,7 @@ const EditCourse = () => {
         name: data.title.trim().split(/ +/).join(" "),
         thumbnailUrl: data.thumbnail,
       });
+      refetch();
       navigator(RoutePath.manageCourse.lessons(slug.id).route);
       showNotification({
         title: t("success"),

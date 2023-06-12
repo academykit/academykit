@@ -14,6 +14,7 @@
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using System.Linq.Expressions;
+    using System.Text.RegularExpressions;
 
     public class CourseTeacherService : BaseGenericService<CourseTeacher, CourseTeacherSearchCriteria>, ICourseTeacherService
     {
@@ -69,7 +70,7 @@
                 _logger.LogWarning("Training with id {courseId} creator User Id {userId} can't be training trainer.", course.Id, entity.UserId);
                 throw new ForbiddenException(_localizer.GetString("TrainingAuthorAdded"));
             }
-            var hasAccess = await IsSuperAdminOrAdminOrTrainer(entity.UserId).ConfigureAwait(false);
+            var hasAccess = await IsSuperAdminOrAdminOrTrainer(entity.CreatedBy).ConfigureAwait(false);
             if (!hasAccess)
             {
                 _logger.LogWarning("User having Id: {userId} with trainee role is not allowed to added as training trainer of training with id {courseId}.",
@@ -91,8 +92,17 @@
                     var canAccess = await ValidateUserCanAccessGroupCourse(course, entity.UserId).ConfigureAwait(false);
                     if (!canAccess)
                     {
-                        _logger.LogWarning("User with Id {userId} can't access training with id {courseId}.", entity.UserId, course.Id);
-                        throw new ForbiddenException(_localizer.GetString("UnauthorizedUserAddedTrainer"));
+                        var groupMember = new GroupMember
+                        {
+                            Id = Guid.NewGuid(),
+                            GroupId = course.GroupId.Value,
+                            IsActive = true,
+                            UserId = entity.UserId,
+                            CreatedBy = entity.CreatedBy,
+                            CreatedOn = DateTime.UtcNow
+
+                        };
+                        await _unitOfWork.GetRepository<GroupMember>().InsertAsync(groupMember).ConfigureAwait(false);
                     }
                 }
             }

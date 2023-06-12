@@ -1,10 +1,10 @@
 import useAuth from "@hooks/useAuth";
+import useNav from "@hooks/useNav";
 import { Loader } from "@mantine/core";
-import Forbidden from "@pages/403";
 import { CourseUserStatus, UserRole } from "@utils/enums";
 import lazyWithRetry from "@utils/lazyImportWithReload";
 import { useCourseDescription } from "@utils/services/courseService";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Routes, Route, useParams, useNavigate } from "react-router-dom";
 
 const LessonDetails = lazyWithRetry(() => import("../manage/lessonDetails"));
@@ -26,12 +26,28 @@ const CourseRoute = () => {
   const courseDetail = useCourseDescription(params.id as string);
   const auth = useAuth();
   const navigate = useNavigate();
+  const nav = useNav();
 
   useEffect(() => {
     if (courseDetail.isError) {
       throw courseDetail.error;
     }
   }, [courseDetail.isError]);
+
+  useEffect(() => {
+    if (courseDetail.isSuccess) {
+      nav.setBreadCrumb &&
+        nav.setBreadCrumb([
+          { href: "/trainings", title: "Tranning" },
+          { href: "/trainings", title: "Tranning" },
+          {
+            href: `/trainings/stat/${courseDetail.data.slug}`,
+            title: courseDetail?.data?.name ?? "",
+          },
+        ]);
+      // }
+    }
+  }, [courseDetail.isSuccess, courseDetail.isRefetching]);
 
   if (courseDetail.isSuccess) {
     if (
