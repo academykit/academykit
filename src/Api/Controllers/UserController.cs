@@ -197,7 +197,6 @@
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
             existing.Email = model.Email;
-            existing.Status = model.Status;
 
             if (CurrentUser.Role == UserRole.SuperAdmin || CurrentUser.Role == UserRole.Admin)
             {
@@ -206,6 +205,11 @@
                     IsSuperAdmin(CurrentUser.Role);
                 }
                 existing.Role = model.Role;
+            }
+
+            if(model.Status == UserStatus.Active || model.Status == UserStatus.InActive)
+            {
+                existing.Status = model.Status;
             }
 
             var savedEntity = await _userService.UpdateAsync(existing).ConfigureAwait(false);
