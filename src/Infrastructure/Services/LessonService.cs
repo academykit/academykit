@@ -127,7 +127,7 @@ namespace Lingtren.Infrastructure.Services
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
                 predicate: p => p.CourseId == course.Id,
                 orderBy: o => o.OrderBy(x => x.Order),
-                include: src => src.Include(x => x.Lessons).ThenInclude(x=>x.QuestionSet).ThenInclude(x=>x.QuestionSetSubmissions)).ConfigureAwait(false);
+                include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
 
             var lessons = new List<Lesson>();
             lessons = sections.SelectMany(x => x.Lessons.OrderBy(x => x.Order)).ToList();
@@ -346,7 +346,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to create the lesson");
-                throw ex is ServiceException ? ex: new ServiceException(_localizer.GetString(ex.Message));
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("CreateLessonError"));
             }
         }
 
@@ -869,7 +869,7 @@ namespace Lingtren.Infrastructure.Services
             lesson.QuestionSet = new QuestionSet();
             if (model.QuestionSet.StartTime < DateTime.UtcNow || model.EndDate < DateTime.UtcNow)
             {
-                throw new InvalidDataException("Exam start time and endtime must be greater than current time.");
+                throw new InvalidDataException(_localizer.GetString("InvalidTimeIssue"));
             }
             lesson.QuestionSet = new QuestionSet
             {
@@ -905,7 +905,7 @@ namespace Lingtren.Infrastructure.Services
         {
             if(model.QuestionSet.StartTime <= DateTime.UtcNow || model.QuestionSet.EndTime <= DateTime.UtcNow)
             {
-                throw new InvalidDataException("Exam starttime and endtime must be greater than current date time.");
+                throw new InvalidDataException(_localizer.GetString("InvalidTimeIssue"));
             }
             existingLesson.QuestionSet.Name = existingLesson.Name;
             existingLesson.QuestionSet.ThumbnailUrl = existingLesson.ThumbnailUrl;
@@ -935,7 +935,7 @@ namespace Lingtren.Infrastructure.Services
             lesson.Meeting = new Meeting();
             if (model.Meeting.MeetingStartDate <= DateTime.UtcNow)
             {
-                throw new InvalidDataException("Live lesson start time must be greater than cuttent time.");
+                throw new InvalidDataException(_localizer.GetString("InvalidMeetingTimeIssue"));
             }
             lesson.Meeting = new Meeting
             {
@@ -964,7 +964,7 @@ namespace Lingtren.Infrastructure.Services
         {
             if(model.Meeting.MeetingStartDate <= DateTime.UtcNow)
             {
-                throw new InvalidDataException("Startdate must be greater than current date time.");
+                throw new InvalidDataException(_localizer.GetString("InvalidMeetingTimeIssue"));
             }
             existingLesson.Meeting.StartDate = model.Meeting.MeetingStartDate;
             existingLesson.Meeting.ZoomLicenseId = model.Meeting.ZoomLicenseId.Value;
