@@ -1,6 +1,7 @@
 namespace Lingtren.Infrastructure.Services
 {
     using Application.Common.Dtos;
+    using global::Infrastructure.Helpers;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
@@ -114,6 +115,29 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
+        /// Handle to get file local path async
+        /// </summary>
+        /// <param name="key"> the file key </param>
+        /// <returns> the local file path </returns>
+        public async  Task<string> GetFileLocalPathAsync(string key)
+        {
+            var credentails = await GetCredentialAsync().ConfigureAwait(false);
+            var minio = new Minio.MinioClient().WithEndpoint(credentails.EndPoint).
+                        WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
+            var objectArgs = new Minio.PresignedGetObjectArgs().WithObject(key).WithBucket(credentails.Bucket).WithExpiry(credentails.ExpiryTime);
+            var fileUrl = await minio.PresignedGetObjectAsync(objectArgs).ConfigureAwait(false);
+
+            if(string.IsNullOrEmpty(fileUrl))
+            {
+                throw new ArgumentException(_localizer.GetString("FileNotFound"));
+            }
+            var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.mp4");
+            using (var client = new HttpClient())
+                await client.DownloadFileTaskAsync(new Uri(fileUrl), filePath).ConfigureAwait(true);
+            return filePath;
+        }
+
+        /// <summary>
         /// Handle to upload file 
         /// </summary>
         /// <param name="model"> the instance of <see cref="MediaRequestModel" /> .</param>
@@ -202,8 +226,6 @@ namespace Lingtren.Infrastructure.Services
                 throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredOnMinioCredentails"));
             }
         }
-
         #endregion
-
     }
 }
