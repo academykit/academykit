@@ -64,7 +64,7 @@ namespace Lingtren.Infrastructure.Services
                     var fullName = string.IsNullOrEmpty(user.MiddleName) ? $"{user.FirstName} {user.LastName}" : $"{user.FirstName} {user.MiddleName} {user.LastName}";
                     var html = $"Dear {fullName},<br><br>";
                     html += $"You have new {courseName} training available for the review process <br>" +
-                            @$"<a href = '{this._appUrl}/settings/courses'> <u  style='color:blue;'> Click Here </u></a> to redirect to the course<br><br>";
+                            @$"<a href = '{this._appUrl}/settings/courses'> <u  style='color:blue;'> Click Here </u></a> to redirect to the course.<br><br>";
                     html += $"Thank You, <br> {settings.CompanyName}";
                     var model = new EmailRequestDto
                     {
@@ -231,17 +231,17 @@ namespace Lingtren.Infrastructure.Services
                 var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p => p.Id == lessonId).ConfigureAwait(false);
                 if(lesson.Type != LessonType.Video || lesson.Type != LessonType.RecordedVideo)
                 {
-                    throw new ArgumentException(_localizer.GetString("LessonTypeNotMatched"));
+                    if (string.IsNullOrEmpty(lesson.VideoUrl))
+                    {
+                        throw new ArgumentException(_localizer.GetString("FileNotFound"));
+                    }
+                    var vidoePath = await _fileServerService.GetFileLocalPathAsync(lesson.VideoUrl).ConfigureAwait(true);
+                    var duration = await _videoService.GetVideoDuration(vidoePath).ConfigureAwait(true);
+                    lesson.Duration = duration;
+                    _unitOfWork.GetRepository<Lesson>().Update(lesson);
+                    _videoService.DeleteTempFile(vidoePath);
+                    await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 }
-                if(string.IsNullOrEmpty(lesson.VideoUrl))
-                {
-                    throw new ArgumentException(_localizer.GetString("FileNotFound"));
-                }
-                var vidoePath = await _fileServerService.GetFileLocalPathAsync(lesson.VideoUrl).ConfigureAwait(true);
-                var duration =await _videoService.GetVideoDuration(vidoePath).ConfigureAwait(true);
-                lesson.Duration = duration;
-                _unitOfWork.GetRepository<Lesson>().Update(lesson);
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             });
         }
 
@@ -324,16 +324,11 @@ namespace Lingtren.Infrastructure.Services
                 {
                     foreach (var member in group.GroupMembers)
                     {
-
-
                         var fullName = string.IsNullOrEmpty(member.User?.MiddleName) ? $"{member.User?.FirstName} {member.User?.LastName}" : $"{member.User?.FirstName} {member.User?.MiddleName} {member.User?.LastName}";
                         var html = $"Dear {fullName},<br><br>";
                         html += $"You have new {courseName} training available for the {group.Name} group. Please, go to {group.Name} group or " +
                                 @$"<a href ='{this._appUrl}/trainings/{courseSlug}'><u  style='color:blue;'>Click Here </u></a> to find the training there. <br>";
                         html += $"<br><br>Thank You, <br> {settings.CompanyName}";
-
-
-
                         var model = new EmailRequestDto
                         {
                             To = member.User?.Email,
@@ -382,7 +377,7 @@ namespace Lingtren.Infrastructure.Services
                     var fullName = string.IsNullOrEmpty(teacher.User?.MiddleName) ? $"{teacher.User?.FirstName} {teacher.User?.LastName}" : $"{teacher.User?.FirstName} {teacher.User?.MiddleName} {teacher.User?.LastName}";
                     var html = $"Dear {fullName},<br><br>";
                     html += $"Your lecture video named '{course.Name}' have been enrolled " +
-                            @$"<a href ={this._appUrl}><u  style='color:blue;'>Click Here </u></a>to add more courses ";
+                            @$"<a href ={this._appUrl}><u  style='color:blue;'>Click Here </u></a>to add more courses.";
                     html += $"<br><br>Thank You, <br> {settings.CompanyName}";
 
                     var model = new EmailRequestDto

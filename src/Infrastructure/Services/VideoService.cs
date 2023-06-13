@@ -13,10 +13,10 @@ namespace Lingtren.Infrastructure.Services
 {
     public class VideoService : IVideoService
     {
-   
+
         public VideoService()
         {
-           
+
         }
 
         /// <summary>
@@ -27,8 +27,8 @@ namespace Lingtren.Infrastructure.Services
         {
             get
             {
-                //  return @"C:\ffmpeg\ffmpeg.exe";
-                return RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "/opt/homebrew/bin/ffmpeg" : "/usr/bin/ffmpeg";
+                //return @"C:\ffmpeg\ffmpeg.exe";
+                 return RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "/opt/homebrew/bin/ffmpeg" : "/usr/bin/ffmpeg";
             }
         }
 
@@ -45,9 +45,21 @@ namespace Lingtren.Infrastructure.Services
             return Convert.ToInt32(data.Duration.TotalSeconds);
         }
 
+        /// <summary>
+        /// Handle to delete tepmp file 
+        /// </summary>
+        /// <param name="filePath"> the file path </param>
+        public void DeleteTempFile(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
+
         #region private method
 
-       
+
         #endregion
     }
 }
