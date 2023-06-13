@@ -280,7 +280,7 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
-        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId)
+        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId, string search)
         {
             return await ExecuteWithResultAsync(async () =>
           {
@@ -289,10 +289,20 @@ namespace Lingtren.Infrastructure.Services
               {
                   throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
               }
-              return await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer,
+              var predicate = PredicateBuilder.New<User>(true);
+              if (!string.IsNullOrWhiteSpace(search))
+              {
+                  search = search.ToLower().Trim();
+                  predicate = predicate.And(x => x.FirstName.ToLower().Trim().Contains(search)
+                  || x.LastName.ToLower().Trim().Contains(search)
+                  || x.Email.ToLower().Trim().Contains(search));
+              }
+              predicate = predicate.And(p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer);
+              return await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: predicate,
                     selector: s => new TrainerResponseModel(s)).ConfigureAwait(false);
           });
         }
+
 
         /// <summary>
         /// Handle to import the user

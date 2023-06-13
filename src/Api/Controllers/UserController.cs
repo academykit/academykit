@@ -151,7 +151,7 @@
         }
 
         [HttpGet("trainer")]
-        public async Task<IList<TrainerResponseModel>> Trainer() => await _userService.GetTrainerAsync(CurrentUser.Id).ConfigureAwait(false);
+        public async Task<IList<TrainerResponseModel>> Trainer([FromQuery]string search) => await _userService.GetTrainerAsync(CurrentUser.Id,search).ConfigureAwait(false);
       
 
         /// <summary>
