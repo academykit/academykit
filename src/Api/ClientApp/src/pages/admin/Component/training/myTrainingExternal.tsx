@@ -110,6 +110,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
   };
 
   const auth = useAuth();
+
   return (
     <div>
       <Modal
@@ -201,10 +202,13 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                   )}
                 </Flex>
                 <Text mt={5}>
-                  {t("from")} {moment(x.startDate).format(theme.dateFormat)}{" "}
-                  {t("to")} {moment(x.endDate).format(theme.dateFormat)}
-                  {t("completed_in_about")}
-                  {x.duration} {t("hrs")}
+                  {x?.startDate &&
+                    `${t("from")} ${moment(x.startDate).format(
+                      theme.dateFormat
+                    )} ${t("to")} ${moment(x.endDate).format(
+                      theme.dateFormat
+                    )}, `}
+                  {t("completed_in_about")} {x.duration} {t("hrs")}
                 </Text>
                 <Text>
                   {x.institute}

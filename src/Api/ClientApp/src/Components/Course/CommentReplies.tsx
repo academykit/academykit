@@ -63,7 +63,11 @@ const CommentReplies = ({
             placeholder={t("your_comment") as string}
             withAsterisk
           />
-          <Button type="submit" loading={addCommentReply.isLoading}>
+          <Button
+            type="submit"
+            loading={addCommentReply.isLoading}
+            disabled={!form.values.content.trim()}
+          >
             {t("reply")}
           </Button>
         </Group>

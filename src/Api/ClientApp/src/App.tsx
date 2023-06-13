@@ -18,7 +18,7 @@ import ScrollToTop from "@components/ScrollToTop";
 import "./App.css";
 import { useTranslation } from "react-i18next";
 
-const App = () => {
+const App = ({ queryClient }: { queryClient: QueryClient }) => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>(
     (localStorage.getItem(COLOR_SCHEME_KEY) as "light" | "dark") ?? "light"
   );
@@ -28,7 +28,6 @@ const App = () => {
     setColorScheme(nextColorScheme);
     localStorage.setItem(COLOR_SCHEME_KEY, nextColorScheme);
   };
-  const queryClient = new QueryClient();
   const { i18n } = useTranslation();
 
   const lang = localStorage.getItem("lang");

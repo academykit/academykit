@@ -15,6 +15,7 @@ import {
   Box,
   Loader,
   Pagination,
+  ScrollArea,
 } from "@mantine/core";
 import { IconEdit } from "@tabler/icons";
 import RoutePath from "@utils/routeConstants";
@@ -41,57 +42,60 @@ const MyTrainings = () => {
             {t("my_trainings")}
           </Title>
 
-          <Paper>
-            <Table striped>
-              <thead>
-                <tr>
-                  <th>{t("title")}</th>
-                  <th>{t("created_date")}</th>
-                  <th>
-                    {t("Language")} / {t("level")}
-                  </th>
-                  <th>{t("action")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {authorCourse.data &&
-                  authorCourse.data.totalCount > 0 &&
-                  authorCourse.data.items.map((x) => (
-                    <tr key={x.id}>
-                      <td>
-                        <Anchor
-                          component={Link}
-                          to={RoutePath.courses.description(x.slug).route}
-                        >
-                          {x.name}
-                        </Anchor>
-                      </td>
-                      <td>{moment(x.createdOn).format(theme.dateFormat)}</td>
-                      <td>
-                        <Badge color="pink" variant="light">
-                          {CourseLanguage[x.language]}
-                        </Badge>{" "}
-                        /
-                        <Badge color="blue" variant="light">
-                          {x?.levelName}
-                        </Badge>
-                      </td>
-                      <td>
-                        <Tooltip label={t("edit_this_course")}>
-                          <ActionIcon
+          <ScrollArea>
+            <Paper>
+              <Table striped>
+                <thead>
+                  <tr>
+                    <th>{t("title")}</th>
+                    <th>{t("created_date")}</th>
+                    <th>
+                      {t("Language")} / {t("level")}
+                    </th>
+                    <th>{t("action")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {authorCourse.data &&
+                    authorCourse.data.totalCount > 0 &&
+                    authorCourse.data.items.map((x) => (
+                      <tr key={x.id}>
+                        <td>
+                          <Anchor
                             component={Link}
-                            to={RoutePath.manageCourse.edit(x.slug).route}
+                            to={RoutePath.courses.description(x.slug).route}
                           >
-                            <IconEdit />
-                          </ActionIcon>
-                        </Tooltip>
-                      </td>
-                    </tr>
-                  ))}
-                {authorCourse.isLoading && <Loader />}
-              </tbody>
-            </Table>
-          </Paper>
+                            {x.name}
+                          </Anchor>
+                        </td>
+                        <td>{moment(x.createdOn).format(theme.dateFormat)}</td>
+                        <td>
+                          <Badge color="pink" variant="light">
+                            {CourseLanguage[x.language]}
+                          </Badge>{" "}
+                          /
+                          <Badge color="blue" variant="light">
+                            {x?.levelName}
+                          </Badge>
+                        </td>
+                        <td>
+                          <Tooltip label={t("edit_this_course")}>
+                            <ActionIcon
+                              component={Link}
+                              to={RoutePath.manageCourse.edit(x.slug).route}
+                            >
+                              <IconEdit />
+                            </ActionIcon>
+                          </Tooltip>
+                        </td>
+                      </tr>
+                    ))}
+                  {authorCourse.isLoading && <Loader />}
+                </tbody>
+              </Table>
+            </Paper>
+          </ScrollArea>
+
           {
             authorCourse.data && authorCourse.data.totalPage > 1 && (
               <Pagination

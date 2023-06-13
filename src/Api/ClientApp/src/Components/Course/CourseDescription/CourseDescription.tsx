@@ -32,6 +32,7 @@ import {
 import { Link, useParams } from "react-router-dom";
 import CourseContent from "./CourseContent/CourseContent";
 import { useTranslation } from "react-i18next";
+import { color } from "@utils/constants";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -174,7 +175,7 @@ const CourseDescription = () => {
               </Badge>
               {auth?.auth && auth?.auth?.role <= UserRole.Admin && (
                 <>
-                  <Badge ml={10} color={"teal"}>
+                  <Badge ml={10} color={color(course?.data?.status)}>
                     {t(`${CourseStatus[course?.data?.status]}`)}
                   </Badge>
                 </>
