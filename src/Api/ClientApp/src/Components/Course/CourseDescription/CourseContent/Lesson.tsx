@@ -49,7 +49,7 @@ const Lesson = ({
       width={200}
       position="top"
       withArrow
-      shadow={"md"}
+      shadow={"lg"}
       opened={hovered}
     >
       <Popover.Target>
@@ -76,7 +76,7 @@ const Lesson = ({
         >
           <Group>
             <Box w={"100%"} p={15}>
-              <Title size={matches ? 20 : 13} lineClamp={2}>
+              <Title size={matches ? 14 : 13} lineClamp={2}>
                 {index + 1}. {lesson.name}
               </Title>
               <Badge color="blue" variant="light" ml={10}>
@@ -87,7 +87,7 @@ const Lesson = ({
         </Paper>
       </Popover.Target>
       <Popover.Dropdown sx={{ pointerEvents: "none" }}>
-        <Text fw={700} size="lg">
+        <Text fw={700} size="md">
           {lesson.name}
         </Text>
 
