@@ -603,9 +603,7 @@ interface ITrainerGet {
 }
 
 const getTrainers = async (search: string) =>
-  await httpClient.get<IPaginated<ITrainerGet>>(
-    api.adminUser.getTrainer(search)
-  );
+  await httpClient.get<ITrainerGet[]>(api.adminUser.getTrainer(search));
 export const useGetTrainers = (search: string) =>
   useQuery([api.adminUser.getTrainer(search)], () => getTrainers(search), {
     select: (data) => data.data,
