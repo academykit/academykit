@@ -8,6 +8,7 @@ import {
   Group,
   Loader,
   MultiSelect,
+  Radio,
   Select,
   Text,
   TextInput,
@@ -47,7 +48,7 @@ const schema = () => {
         then: Yup.array()
           .min(1, t("option_more_than_one") as string)
           .test(
-            t("test"),
+            "test",
             t("multiple_choice_option_atleast") as string,
             function (value: any) {
               const a = value?.filter((x: any) => x.isCorrect).length > 0;
@@ -167,6 +168,16 @@ const Create = () => {
       form.setFieldValue("tags", [...form.values.tags, addTagData?.data?.id]);
     }
   }, [isSuccess]);
+  console.log(form.values);
+
+  const onChangeRadioType = (index: number) => {
+    form.values.answers.forEach((x, i) => {
+      if (i === index) {
+        return form.setFieldValue(`answers.${index}.isCorrect`, true);
+      }
+      return form.setFieldValue(`answers.${i}.isCorrect`, false);
+    });
+  };
 
   return (
     <Container fluid>
@@ -228,19 +239,19 @@ const Create = () => {
                 <Text mt={20}>{t("options")}</Text>
                 {form.values.answers.map((x, i) => (
                   <Group key={i} mb={30}>
-                    <Checkbox
-                      styles={{
-                        input: {
-                          borderRadius:
-                            form.values.type ===
-                            QuestionType.SingleChoice.toString()
-                              ? "100px"
-                              : "0px",
-                        },
-                      }}
-                      {...form.getInputProps(`answers.${i}.isCorrect`)}
-                      name=""
-                    ></Checkbox>
+                    {QuestionType.MultipleChoice.toString() ===
+                    form.values.type ? (
+                      <Checkbox
+                        {...form.getInputProps(`answers.${i}.isCorrect`)}
+                        name=""
+                      ></Checkbox>
+                    ) : (
+                      <Radio
+                        onChange={() => onChangeRadioType(i)}
+                        checked={form.values.answers[i].isCorrect}
+                        // {...form.getInputProps(`answers.${i}.isCorrect`)}
+                      ></Radio>
+                    )}
                     <TextEditor
                       label={`answers.${i}.option`}
                       formContext={useFormContext}
