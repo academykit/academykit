@@ -754,5 +754,6 @@
   "username": "ユーザー名",
   "trainer_email_required": "トレーナーのメールアドレスは必須です。",
   "enrollments": "登録",
-  "enrollment": "登録"
+  "enrollment": "登録",
+  "new_password_required": "新しいパスワードが必要です。"
 }

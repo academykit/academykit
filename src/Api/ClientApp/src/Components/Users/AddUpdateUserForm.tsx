@@ -65,10 +65,11 @@ const AddUpdateUserForm = ({
   });
   useFormErrorHooks(form);
 
-  const { data } = useDepartmentSetting(
+  const { data: department } = useDepartmentSetting(
     queryStringGenerator({
       search: "",
       size: 200,
+      IsActive: true,
     })
   );
 
@@ -199,8 +200,8 @@ const AddUpdateUserForm = ({
             placeholder={t("pick_department") as string}
             searchable
             data={
-              data
-                ? data.items.map((x) => ({
+              department
+                ? department.items.map((x) => ({
                     label: x.name,
                     value: x.id,
                   }))

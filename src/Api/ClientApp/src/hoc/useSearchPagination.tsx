@@ -132,7 +132,7 @@ const withSearchPagination =
     };
 
     const pagination = (totalPage: number) =>
-      totalPage > 0 ? (
+      totalPage > 1 ? (
         <Pagination my={20} total={totalPage} page={page} onChange={setPage} />
       ) : (
         <></>
