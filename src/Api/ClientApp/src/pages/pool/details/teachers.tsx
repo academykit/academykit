@@ -38,10 +38,9 @@ const MCQTeacher = () => {
   const getPoolsTeacher = usePoolsTeacher(slug.id as string);
   const createPoolTeacher = useCreateTeacherPool(slug.id as string);
   const { t } = useTranslation();
-  const { data: trainers } = useGetTrainers(
-    queryStringGenerator({ size: 10, search })
+  const { data: trainers, isLoading } = useGetTrainers(
+    queryStringGenerator({ search })
   );
-
   const [showAddForm, toggleAddForm] = useToggle();
 
   const onSubmitForm = async ({ email }: { email: string }) => {
@@ -79,22 +78,13 @@ const MCQTeacher = () => {
                   clearable
                   placeholder={t("enter_email_trainer") as string}
                   searchable
-                  nothingFound="No trainers found!"
-                  data={
-                    trainers?.items?.map((e) => e.email) ?? [
-                      { disabled: true, label: "Loading...", value: "null" },
-                    ]
-                  }
+                  nothingFound={isLoading ? "Loading..." : "No Trainers Found!"}
+                  data={trainers?.map((e) => e.email) ?? []}
                   onSearchChange={setSearch}
                   searchValue={search}
                   {...form.getInputProps("email")}
                 />
-                {/* <TextInput
-                  placeholder={t("enter_email_trainer") as string}
-                  name="email"
-                  type={"email"}
-                  {...form.getInputProps("email")}
-                ></TextInput> */}
+
                 <Button type="submit" loading={createPoolTeacher.isLoading}>
                   {t("add")}
                 </Button>
