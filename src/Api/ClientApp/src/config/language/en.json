@@ -411,7 +411,7 @@
   "no_external_trainings": "No External trainings found!",
   "from": "From",
   "to": "to",
-  "completed_in_about": ", Completed in about",
+  "completed_in_about": "Completed in about",
   "hrs": "hrs.",
   "training": "Training",
   "successfully": "Successfully.",
@@ -757,5 +757,6 @@
   "username": "Username",
   "trainer_email_required": "Trainer's email is required!",
   "enrollments": "Enrollments",
-  "enrollment": "Enrollment"
+  "enrollment": "Enrollment",
+  "new_password_required": "New Password is required."
 }

@@ -15,7 +15,7 @@ const DeleteModal = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <Modal title={title} opened={open} onClose={() => onClose()}>
+    <Modal title={title} opened={open} onClose={() => onClose()} zIndex={301}>
       <Group mt={10}>
         <Button
           onClick={() => {
