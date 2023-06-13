@@ -168,7 +168,12 @@ const Create = () => {
       form.setFieldValue("tags", [...form.values.tags, addTagData?.data?.id]);
     }
   }, [isSuccess]);
-  console.log(form.values);
+
+  useEffect(() => {
+    form.values.answers.forEach((x, i) => {
+      return form.setFieldValue(`answers.${i}.isCorrect`, false);
+    });
+  }, [form.values.type]);
 
   const onChangeRadioType = (index: number) => {
     form.values.answers.forEach((x, i) => {
