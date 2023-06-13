@@ -25,13 +25,17 @@ namespace Lingtren.Infrastructure.Services
     {
         private readonly string _appUrl;
         private readonly IEmailService _emailService;
+        private readonly IVideoService _videoService;
+        private readonly IFileServerService _fileServerService;
         public HangfireJobService(IConfiguration configuration, IUnitOfWork unitOfWork, ILogger<HangfireJobService> logger,
-        IEmailService emailService,IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+        IEmailService emailService, IStringLocalizer<ExceptionLocalizer> localizer, IVideoService videoService, IFileServerService fileServerService) : base(unitOfWork, logger, localizer)
         {
             _emailService = emailService;
             _appUrl = configuration.GetSection("AppUrls:App").Value;
+            _videoService = videoService;
+            _fileServerService = fileServerService;
         }
-        
+
 
         /// <summary>
         /// Handle to send course review mail
@@ -86,7 +90,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="context"> the instance of <see cref="PerformContext" /> .</param>
         /// <returns> the task complete </returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task CourseRejectedMailAsync(Guid courseId,string message, PerformContext context = null)
+        public async Task CourseRejectedMailAsync(Guid courseId, string message, PerformContext context = null)
         {
             try
             {
@@ -103,7 +107,7 @@ namespace Lingtren.Infrastructure.Services
                     throw new EntityNotFoundException(_localizer.GetString("CourseNotFound"));
                 }
 
-                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
+                var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
                 foreach (var teacher in course.CourseTeachers)
                 {
                     if (!string.IsNullOrEmpty(teacher.User?.Email))
@@ -111,7 +115,7 @@ namespace Lingtren.Infrastructure.Services
                         var html = $"Dear {teacher?.User.FullName},<br><br>";
                         html += $"Your {course.Name} course has been rejected. <br>{message}</b><br><br> ";
                         html += $"Thank You,<br> {settings.CompanyName}";
-                        
+
                         var model = new EmailRequestDto
                         {
                             To = teacher.User.Email,
@@ -207,6 +211,40 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
+        /// <summary>
+        /// Handle to update information of lesson video
+        /// </summary>
+        /// <param name="lessonId"> the lesson id </param>
+        /// <param name="videoUrl"> the video url </param>
+        /// <param name="context"> the instance of <see cref="PerformContext"/></param>
+        /// <returns> the task complete </returns>
+        [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
+        public async Task LessonVideoUploadedAsync(Guid lessonId, PerformContext context = null)
+        {
+            await ExecuteAsync(async () =>
+            {
+                if (context == null)
+                {
+                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
+                }
+
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p => p.Id == lessonId).ConfigureAwait(false);
+                if(lesson.Type != LessonType.Video || lesson.Type != LessonType.RecordedVideo)
+                {
+                    if (string.IsNullOrEmpty(lesson.VideoUrl))
+                    {
+                        throw new ArgumentException(_localizer.GetString("FileNotFound"));
+                    }
+                    var vidoePath = await _fileServerService.GetFileLocalPathAsync(lesson.VideoUrl).ConfigureAwait(true);
+                    var duration = await _videoService.GetVideoDuration(vidoePath).ConfigureAwait(true);
+                    lesson.Duration = duration;
+                    _unitOfWork.GetRepository<Lesson>().Update(lesson);
+                    _videoService.DeleteTempFile(vidoePath);
+                    await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                }
+            });
+        }
+
 
         /// <summary>
         /// Handle to send mail to new group member
@@ -217,7 +255,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
         /// <returns> the task complete </returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task SendMailNewGroupMember(string gropName,string groupSlug ,IList<Guid> userIds, PerformContext context = null)
+        public async Task SendMailNewGroupMember(string gropName, string groupSlug, IList<Guid> userIds, PerformContext context = null)
         {
             try
             {
@@ -237,14 +275,14 @@ namespace Lingtren.Infrastructure.Services
 
                 foreach (var user in users)
                 {
-                   
+
                     var fullName = string.IsNullOrEmpty(user.MiddleName) ? $"{user.FirstName} {user.LastName}" : $"{user.FirstName} {user.MiddleName} {user.LastName}";
                     var html = $"Dear {fullName},<br><br>";
                     html += $"You have been added to the {gropName}. Now you can find the Training Materials which has been created for this {gropName}. <br><br>";
                     html += $"Link to the group :";
                     html += $"<a href = '{this._appUrl}/groups/{groupSlug}' ><u  style='color:blue;'> Click here </u> </a>";
                     html += $"<br>Thank You, <br> {settings.CompanyName}";
-                    
+
                     var model = new EmailRequestDto
                     {
                         To = user.Email,
@@ -270,7 +308,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="context"> the instance of <see cref="PerformContext"/></param>
         /// <returns> the task complete </returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task GroupCoursePublishedMailAsync(Guid groupId, string courseName,string courseSlug ,PerformContext context = null)
+        public async Task GroupCoursePublishedMailAsync(Guid groupId, string courseName, string courseSlug, PerformContext context = null)
         {
             try
             {
@@ -286,16 +324,11 @@ namespace Lingtren.Infrastructure.Services
                 {
                     foreach (var member in group.GroupMembers)
                     {
-                       
-                        
                         var fullName = string.IsNullOrEmpty(member.User?.MiddleName) ? $"{member.User?.FirstName} {member.User?.LastName}" : $"{member.User?.FirstName} {member.User?.MiddleName} {member.User?.LastName}";
                         var html = $"Dear {fullName},<br><br>";
                         html += $"You have new {courseName} training available for the {group.Name} group. Please, go to {group.Name} group or " +
                                 @$"<a href ='{this._appUrl}/trainings/{courseSlug}'><u  style='color:blue;'>Click Here </u></a> to find the training there. <br>";
                         html += $"<br><br>Thank You, <br> {settings.CompanyName}";
-                        
-
-
                         var model = new EmailRequestDto
                         {
                             To = member.User?.Email,
@@ -325,7 +358,7 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                if(context ==null)
+                if (context == null)
                 {
                     throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
                 }
@@ -334,28 +367,28 @@ namespace Lingtren.Infrastructure.Services
                 include: source => source.Include(x => x.CourseTeachers).ThenInclude(x => x.User)).ConfigureAwait(false);
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
 
-                if (course.CourseTeachers ==null)
+                if (course.CourseTeachers == null)
                 {
                     throw new ArgumentException(_localizer.GetString("TeacherNotFound"));
                 }
-              
-                 foreach (var teacher in course.CourseTeachers)
-                {
-                        var fullName = string.IsNullOrEmpty(teacher.User?.MiddleName) ? $"{teacher.User?.FirstName} {teacher.User?.LastName}" : $"{teacher.User?.FirstName} {teacher.User?.MiddleName} {teacher.User?.LastName}";
-                        var html = $"Dear {fullName},<br><br>";
-                        html += $"Your lecture video named '{course.Name}' have been enrolled " +
-                                @$"<a href ={this._appUrl}><u  style='color:blue;'>Click Here </u></a>to add more courses.";
-                        html += $"<br><br>Thank You, <br> {settings.CompanyName}";
 
-                        var model = new EmailRequestDto
-                        {
-                            To = teacher.User?.Email,
-                            Subject = "Course Enrolled",
-                            Message = html,
-                        };
-                        await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
-                  }
-             
+                foreach (var teacher in course.CourseTeachers)
+                {
+                    var fullName = string.IsNullOrEmpty(teacher.User?.MiddleName) ? $"{teacher.User?.FirstName} {teacher.User?.LastName}" : $"{teacher.User?.FirstName} {teacher.User?.MiddleName} {teacher.User?.LastName}";
+                    var html = $"Dear {fullName},<br><br>";
+                    html += $"Your lecture video named '{course.Name}' have been enrolled " +
+                            @$"<a href ={this._appUrl}><u  style='color:blue;'>Click Here </u></a>to add more courses.";
+                    html += $"<br><br>Thank You, <br> {settings.CompanyName}";
+
+                    var model = new EmailRequestDto
+                    {
+                        To = teacher.User?.Email,
+                        Subject = "Course Enrolled",
+                        Message = html,
+                    };
+                    await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+                }
+
             }
             catch (Exception ex)
             {
@@ -414,7 +447,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="context"></param>
         /// <returns></returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task SendLessonAddedMailAsync(string courseName,string courseSlug, PerformContext context = null)
+        public async Task SendLessonAddedMailAsync(string courseName, string courseSlug, PerformContext context = null)
         {
             try
             {
@@ -430,9 +463,9 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ArgumentException("No enrollments");
                 }
-                foreach(var users in course.CourseEnrollments.AsList()) 
+                foreach (var users in course.CourseEnrollments.AsList())
                 {
-                    
+
                     var fullName = users.User.FullName;
                     var html = $"Dear {fullName},<br><br>";
                     html += $"Your enrolled course titled '{courseName}' have uploaded new content<br><br>" +

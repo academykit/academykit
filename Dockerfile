@@ -25,6 +25,8 @@ COPY ["./src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
 
 RUN dotnet restore "src/Api/Api.csproj"
 
+RUN apt-get update && apt-get install -y ffmpeg
+
 COPY . .
 
 # run build over the API project

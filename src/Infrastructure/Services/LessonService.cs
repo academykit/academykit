@@ -20,6 +20,7 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.Extensions.Logging;
     using System;
     using System.Linq.Expressions;
+    using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
     public class LessonService : BaseGenericService<Lesson, LessonBaseSearchCriteria>, ILessonService
     {
@@ -335,6 +336,7 @@ namespace Lingtren.Infrastructure.Services
                         CreatedOn = DateTime.UtcNow
                     };
                     await _unitOfWork.GetRepository<VideoQueue>().InsertAsync(videoQueue).ConfigureAwait(false);
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.LessonVideoUploadedAsync(lesson.Id, null));
                 }
                 var order = await LastLessonOrder(lesson).ConfigureAwait(false);
                 lesson.Order = order;

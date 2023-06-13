@@ -76,12 +76,13 @@ namespace Lingtren.Infrastructure.Services
                 int order = 1;
                 foreach (var file in recordingFile)
                 {
-                    var videoPath = await _mediaService.UploadRecordingFileAsync(file.Download_url, dto.Download_token,file.File_size).ConfigureAwait(true);
+                    var videoModel = await _mediaService.UploadRecordingFileAsync(file.Download_url, dto.Download_token,file.File_size).ConfigureAwait(true);
                     var recording = new RecordingFileDto
                     {
                         Name = $"{meeting.Lesson.Name} Part {order}",
                         Order = order,
-                        VideoUrl = videoPath
+                        VideoUrl = videoModel.VideoUrl,
+                        Duration = videoModel.Duration
                     };
                     recordingFileDtos.Add(recording);
                     order++;
@@ -126,7 +127,8 @@ namespace Lingtren.Infrastructure.Services
                             Slug = slug,
                             Status = meeting.Lesson.Status,
                             CreatedBy = meeting.Lesson.CreatedBy,
-                            CreatedOn = DateTime.UtcNow
+                            CreatedOn = DateTime.UtcNow,
+                            Duration = fileDto.Duration
                         };
 
                         var fileQueue = new VideoQueue
@@ -145,9 +147,10 @@ namespace Lingtren.Infrastructure.Services
                 }
                 else
                 {
-                    var videos= recordingFileDtos.FirstOrDefault();
+                    var video= recordingFileDtos.FirstOrDefault();
                     meeting.Lesson.Type = LessonType.RecordedVideo;
-                    meeting.Lesson.VideoUrl = videos.VideoUrl;
+                    meeting.Lesson.VideoUrl = video.VideoUrl;
+                    meeting.Lesson.Duration = video.Duration;
                     _unitOfWork.GetRepository<Lesson>().Update(meeting.Lesson);
                 }
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);

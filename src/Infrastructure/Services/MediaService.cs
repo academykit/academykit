@@ -22,15 +22,17 @@ namespace Lingtren.Infrastructure.Services
         private readonly IFileServerService _fileServerService;
         private readonly IAmazonS3Service _amazonService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IVideoService _videoService;
 
         public MediaService(IUnitOfWork unitOfWork,
         ILogger<MediaService> logger, IFileServerService fileServerService,
         IAmazonS3Service amazonService, IWebHostEnvironment webHostEnvironment,
-        IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+        IStringLocalizer<ExceptionLocalizer> localizer, IVideoService videoService) : base(unitOfWork, logger, localizer)
         {
             _amazonService = amazonService;
             _fileServerService = fileServerService;
             _webHostEnvironment = webHostEnvironment;
+            _videoService = videoService;
         }
 
         /// <summary>
@@ -207,8 +209,8 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="fileUrl"> the file url </param>
         /// <param name="downloadToken"> the download token </param>
-        /// <returns> the video path .</returns>
-        public async Task<string> UploadRecordingFileAsync(string fileUrl, string downloadToken,int fileSize)
+        /// <returns> the instance of <see cref="VideoModel"/></returns>
+        public async Task<VideoModel> UploadRecordingFileAsync(string fileUrl, string downloadToken, int fileSize)
         {
             try
             {
@@ -225,17 +227,22 @@ namespace Lingtren.Infrastructure.Services
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{downloadToken}");
                     await client.DownloadFileTaskAsync(new Uri(fileUrl), filePath).ConfigureAwait(true);
                 }
+                var duration =await _videoService.GetVideoDuration(filePath).ConfigureAwait(false);
                 string videoPath = "";
                 if (Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
                 {
-                    
+
                 }
                 else
                 {
-                   videoPath = await _fileServerService.UploadRecordingFileAsync(filePath,fileSize);
-                   DeleteFilePath(filePath);
+                    videoPath = await _fileServerService.UploadRecordingFileAsync(filePath, fileSize);
+                    DeleteFilePath(filePath);
                 }
-                return videoPath;
+                return new VideoModel
+                {
+                    VideoUrl = videoPath,
+                    Duration = duration
+                };
             }
             catch (Exception ex)
             {
