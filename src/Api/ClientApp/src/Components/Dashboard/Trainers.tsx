@@ -52,6 +52,8 @@ const Trainers = ({
       key: "totalGroups",
       label: t("my_groups"),
       icon: "userEnrollment",
+      signLabel: t("group"),
+      pluLabel: t("groups"),
     },
   ];
   return (

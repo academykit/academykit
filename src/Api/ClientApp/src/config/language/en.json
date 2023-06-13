@@ -200,7 +200,7 @@
   "tags_placeholder": "Please Select Tags",
   "level": "Level",
   "level_placeholder": "Please Select Level",
-  "group": "Group:",
+  "group": "Group",
   "group_placeholder": "Please Select Group",
   "question_edit_success": "Question has been Edited successfully",
   "recognize_you": "Let other learners and instructors recognize you.",
@@ -755,6 +755,7 @@
   "pool_name_required": "Pool name is required!",
   "contact_number_required": "Contact number is required!",
   "username": "Username",
-  "trainer_email_required": "Trainer's email is required!"
-
+  "trainer_email_required": "Trainer's email is required!",
+  "enrollments": "Enrollments",
+  "enrollment": "Enrollment"
 }

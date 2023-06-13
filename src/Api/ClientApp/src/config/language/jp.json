@@ -750,8 +750,9 @@
   "no_level": "レベルが見つかりません！",
   "group_character_limit": "グループ名は250文字を超えることはできません！",
   "pool_name_required": "プール名が必要です！",
-  "contact_number_required": "連絡先番号が必要です！"
-  ,"username":"ユーザー名",
-  "trainer_email_required": "トレーナーのメールアドレスは必須です。"
-
+  "contact_number_required": "連絡先番号が必要です！",
+  "username": "ユーザー名",
+  "trainer_email_required": "トレーナーのメールアドレスは必須です。",
+  "enrollments": "登録",
+  "enrollment": "登録"
 }
