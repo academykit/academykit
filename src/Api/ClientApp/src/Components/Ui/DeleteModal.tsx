@@ -15,11 +15,13 @@ const DeleteModal = ({
 }) => {
   const { t } = useTranslation();
   return (
+
     <Modal
       styles={{ header: { alignItems: "start" } }}
       title={title}
       opened={open}
       onClose={() => onClose()}
+      zIndex={301}
     >
       <Group mt={10}>
         <Button

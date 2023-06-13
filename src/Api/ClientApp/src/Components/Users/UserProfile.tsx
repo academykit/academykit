@@ -8,16 +8,17 @@ import {
   Tabs,
   Text,
 } from "@mantine/core";
-import {
-  IconEdit,
-  IconFileDescription,
-  IconSchool,
-} from "@tabler/icons";
+import { IconEdit, IconFileDescription, IconSchool } from "@tabler/icons";
 import { useProfileAuth } from "@utils/services/authService";
 import { useTranslation } from "react-i18next";
-import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import RichTextEditor from "@mantine/rte";
-
 
 const useStyles = createStyles((theme) => ({
   avatarImage: {
@@ -38,6 +39,7 @@ const UserProfile = () => {
   const local_id = localStorage.getItem("id");
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const location = useLocation();
 
   const { data, isSuccess } = useProfileAuth(id as string);
   return (
@@ -66,14 +68,6 @@ const UserProfile = () => {
           </div>
         </div>
         <Paper shadow={"lg"} withBorder sx={{ marginTop: "5px" }}>
-          <Text
-            align="center"
-            size={"xl"}
-            sx={{ margin: "5px 0", padding: "3px" }}
-          >
-            {data?.fullName}
-          </Text>
-          <Divider />
           <Text size={"md"} sx={{ padding: "5px 50px" }}>
             {t("address")} : {data?.address}
           </Text>
@@ -105,7 +99,7 @@ const UserProfile = () => {
       <Box mt={20}>
         <Tabs
           defaultChecked={true}
-          defaultValue={"certificate"}
+          defaultValue={location.pathname?.split("/").at(-1) ?? "certificate"}
           value={tabValue}
           onTabChange={(value) =>
             navigate(`${value}`, { preventScrollReset: true })

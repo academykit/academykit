@@ -593,3 +593,20 @@ const resendEmail = async (id: string) =>
   await httpClient.patch(api.auth.resendEmail(id));
 export const useResendEmail = (id: string) =>
   useMutation([api.auth.resendEmail(id)], resendEmail);
+
+//----------------------Get Trainers-------------------
+
+interface ITrainerGet {
+  userId: string;
+  role: number;
+  email: string;
+}
+
+const getTrainers = async (search: string) =>
+  await httpClient.get<IPaginated<ITrainerGet>>(
+    api.adminUser.getTrainer(search)
+  );
+export const useGetTrainers = (search: string) =>
+  useQuery([api.adminUser.getTrainer(search)], () => getTrainers(search), {
+    select: (data) => data.data,
+  });
