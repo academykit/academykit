@@ -233,13 +233,21 @@ const Certificate = () => {
             <CreateSignature
               data={cert}
               key={cert.id}
-              onClose={() => setAddSignatureForm()}
+              onClose={() => {
+                getCertificateDetails.refetch();
+                setAddSignatureForm();
+              }}
             />
           ))}
         </div>
 
         {addSignatureForm ? (
-          <CreateSignature onClose={() => setAddSignatureForm()} />
+          <CreateSignature
+            onClose={() => {
+              getCertificateDetails.refetch();
+              setAddSignatureForm();
+            }}
+          />
         ) : (
           getSignature.data &&
           getSignature.data?.length < 3 && (

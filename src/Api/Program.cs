@@ -3,6 +3,7 @@ using HangfireBasicAuthenticationFilter;
 using Lingtren.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.HttpOverrides;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 
@@ -28,8 +29,8 @@ builder.Services.AddRequestLocalization(x =>
 {
     x.DefaultRequestCulture = new RequestCulture("en-US");
     x.ApplyCurrentCultureToResponseHeaders = true;
-    x.SupportedCultures = new List<CultureInfo> { new("ne-NP"), new("en-US"),new("ja-JP")};
-    x.SupportedUICultures = new List<CultureInfo> { new("ne-NP"), new("en-US"),new("ja-JP")};
+    x.SupportedCultures = new List<CultureInfo> { new("ne-NP"), new("en-US"), new("ja-JP") };
+    x.SupportedUICultures = new List<CultureInfo> { new("ne-NP"), new("en-US"), new("ja-JP") };
 });
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddCors(options => options.AddDefaultPolicy(
@@ -40,7 +41,9 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(
                 ));
 
 builder.Services.AddAuthorization();
-// builder.Host.UseSerilog((context,configuration) => configuration.ReadFrom.Configuration(context.Configuration));
+builder.Logging.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Logs/myapp-{Date}.txt"), minimumLevel: LogLevel.Warning);
+
+
 var app = builder.Build();
 
 
@@ -53,8 +56,8 @@ else
 {
     app.UseHsts();
 }
- app.UseSwagger();
- app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
@@ -81,7 +84,7 @@ app.UseHangfireDashboard("/jobs", new DashboardOptions
            Pass = builder.Configuration.GetSection("Hangfire").GetSection("Password").Value
        }}
 });
-// app.UseSerilogRequestLogging();
+app.UseRequestLocalization();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
