@@ -88,7 +88,7 @@ const Admin = ({
           "@media (max-width: 1345px)": {
             justifyContent: "space-evenly",
           },
-          justifyContent: "space-between",
+          justifyContent: "start",
         }}
       >
         {dashboardCourses.length > 0 &&

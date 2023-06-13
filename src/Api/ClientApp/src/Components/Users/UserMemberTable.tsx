@@ -176,7 +176,7 @@ const UserMemberTable = ({
       >
         <thead>
           <tr>
-            <th>{t("user")}</th>
+            <th>{t("username")}</th>
             <th>{t("role")}</th>
             <th>{t("email")}</th>
             <th>{t("phone_number")}</th>

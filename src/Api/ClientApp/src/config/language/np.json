@@ -751,5 +751,7 @@
   "no_level": "कुनै स्तर फेला परेन!",
   "group_character_limit": "समूहको नाम २५० अक्षर भन्दा बढी हुनुहुँदैन!",
   "pool_name_required": "पूलको नाम आवश्यक छ!",
-  "contact_number_required": "सम्पर्क नम्बर आवश्यक छ!"
+  "contact_number_required": "सम्पर्क नम्बर आवश्यक छ!",
+  "username": "प्रयोगकर्ता नाम",
+  "trainer_email_required": "प्रशिक्षकको इमेल आवश्यक छ!"
 }
