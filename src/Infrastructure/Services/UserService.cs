@@ -1,37 +1,35 @@
-﻿namespace Lingtren.Infrastructure.Services
-{
-    using AngleSharp.Dom;
-    using CsvHelper;
-    using Domain.Entities;
-    using Hangfire;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Configurations;
-    using Lingtren.Infrastructure.Localization;
-    using LinqKit;
-    using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Query;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Localization;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
-    using Microsoft.IdentityModel.Tokens;
-    using MimeKit;
-    using System;
-    using System.Globalization;
-    using System.IdentityModel.Tokens.Jwt;
-    using System.Linq.Expressions;
-    using System.Security.Claims;
-    using System.Security.Cryptography;
-    using System.Text;
+﻿using CsvHelper;
+using Lingtren.Domain.Entities;
+using Hangfire;
+using Lingtren.Application.Common.Dtos;
+using Lingtren.Application.Common.Exceptions;
+using Lingtren.Application.Common.Interfaces;
+using Lingtren.Application.Common.Models.RequestModels;
+using Lingtren.Application.Common.Models.ResponseModels;
+using Lingtren.Domain.Enums;
+using Lingtren.Infrastructure.Common;
+using Lingtren.Infrastructure.Configurations;
+using Lingtren.Infrastructure.Localization;
+using LinqKit;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using MimeKit;
+using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq.Expressions;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
+namespace Lingtren.Infrastructure.Services
+{
     public class UserService : BaseGenericService<User, UserSearchCriteria>, IUserService
     {
         private readonly IEmailService _emailService;
@@ -88,7 +86,7 @@
                 return authenticationModel;
             }
 
-            var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password.Trim());
+            var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password);
             if (!isUserAuthenticated)
             {
                 authenticationModel.IsAuthenticated = false;
@@ -282,7 +280,7 @@
         /// </summary>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
-        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId)
+        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId, string search)
         {
             return await ExecuteWithResultAsync(async () =>
           {
@@ -291,10 +289,20 @@
               {
                   throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
               }
-              return await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer,
+              var predicate = PredicateBuilder.New<User>(true);
+              if (!string.IsNullOrWhiteSpace(search))
+              {
+                  search = search.ToLower().Trim();
+                  predicate = predicate.And(x => x.FirstName.ToLower().Trim().Contains(search)
+                  || x.LastName.ToLower().Trim().Contains(search)
+                  || x.Email.ToLower().Trim().Contains(search));
+              }
+              predicate = predicate.And(p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer);
+              return await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: predicate,
                     selector: s => new TrainerResponseModel(s)).ConfigureAwait(false);
           });
         }
+
 
         /// <summary>
         /// Handle to import the user
@@ -322,22 +330,23 @@
                         users.Add(user);
                     }
                 }
-
+                var message = new StringBuilder();
                 var inValidUsers = users.Where(x => string.IsNullOrWhiteSpace(x.FirstName) || string.IsNullOrWhiteSpace(x.LastName) || string.IsNullOrWhiteSpace(x.Email)).ToList();
-
+                foreach(var user in inValidUsers)
+                {
+                    message.AppendLine(_localizer.GetString("DuplicateEmailDetected"));
+                }
                 users = users.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && !string.IsNullOrWhiteSpace(x.LastName) && !string.IsNullOrWhiteSpace(x.Email)).ToList();
 
                 var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
                 var stringBuilder = new StringBuilder();
                 if (users.Count != default)
                 {
-
                     var userEmails = users.ConvertAll(x => x.Email);
                     var duplicateUser = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: p => userEmails.Contains(p.Email), selector: x => x.Email).ConfigureAwait(false);
                     foreach (var entity in duplicateUser)
                     {
-                        stringBuilder.Append($"{entity}").Append(_localizer.GetString("AlreadyRegistered"));
-                        stringBuilder.Append(Environment.NewLine);
+                        message.AppendLine(string.Join(",", entity) + " " + _localizer.GetString("AlreadyRegistered"));
                     }
                     var newUsersList = users.Where(x => !duplicateUser.Contains(x.Email)).ToList();
                     newUsersList = newUsersList.DistinctBy(x => x.Email).ToList();
@@ -377,9 +386,14 @@
                         await _unitOfWork.GetRepository<User>().InsertAsync(newUsers).ConfigureAwait(false);
                         await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                         BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailImportedUserAsync(newUserEmails, null));
+                        message.AppendLine(_localizer.GetString("UserImported"));
                     }
                 }
-                return string.IsNullOrEmpty(stringBuilder.ToString()) ? _localizer.GetString("UserImported") : $"{stringBuilder.ToString()}";
+                else
+                {
+                    message.AppendLine(_localizer.GetString("NoUserImported"));
+                }
+                return message.ToString();
             }
             catch (Exception ex)
             {

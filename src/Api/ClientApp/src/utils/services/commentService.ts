@@ -119,6 +119,7 @@ export const usePostCommentReply = (courseId: string, commentId: string) => {
     postCommentReply,
     {
       onSuccess: () => {
+        console.log(courseId, commentId);
         queryClient.invalidateQueries([
           api.comments.getRepliesList(courseId, commentId),
         ]);

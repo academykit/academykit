@@ -875,4 +875,10 @@
   <data name="InvalidMeetingTimeIssue" xml:space="preserve">
     <value>ライブ レッスンの開始時間は現在の時間より長くする必要があります。</value>
   </data>
+  <data name="DuplicateEmailDetected" xml:space="preserve">
+    <value>これらは重複ユーザーです</value>
+  </data>
+  <data name="NoUserImported" xml:space="preserve">
+    <value>ファイル形式が間違っているためユーザーをインポートできません</value>
+  </data>
 </root>

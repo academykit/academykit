@@ -872,10 +872,16 @@ recorded cannot be deleted.</value>
   <data name="UserNotFoundWithEmail" xml:space="preserve">
     <value>User not found with email</value>
   </data>
+  <data name="DuplicateEmailDetected" xml:space="preserve">
+    <value>these are duplicate user</value>
+  </data>
   <data name="InvalidExamTimeIssue" xml:space="preserve">
     <value>Exam start time and endtime must be greater than current time.</value>
   </data>
   <data name="InvalidMeetingTimeIssue" xml:space="preserve">
     <value>Live lesson start time must be greater than curttent time.</value>
+  </data>
+  <data name="NoUserImported" xml:space="preserve">
+    <value>Unable to import user due to incorrect file format</value>
   </data>
 </root>
