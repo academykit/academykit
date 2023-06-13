@@ -131,7 +131,7 @@
         /// </summary>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
-        Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId);
+        Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId,string search);
 
 
         /// <summary>
