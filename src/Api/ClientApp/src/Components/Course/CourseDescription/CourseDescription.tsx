@@ -216,11 +216,7 @@ const CourseDescription = () => {
               <Group my={30}>
                 {auth?.auth && auth?.auth?.role <= UserRole.Admin ? (
                   <Link
-                    to={`${RoutePath.classes}/${course?.data?.slug}/${
-                      course?.data?.sections &&
-                      course?.data?.sections[0]?.lessons &&
-                      course?.data?.sections[0]?.lessons[0]?.slug
-                    }`}
+                    to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}
                   >
                     <Button radius="xl" size="md" className={classes.control}>
                       {t("preview")}
@@ -238,11 +234,7 @@ const CourseDescription = () => {
                   </Button>
                 ) : course.data?.userStatus === CourseUserStatus.Author ? (
                   <Link
-                    to={`${RoutePath.classes}/${course?.data?.slug}/${
-                      course?.data?.sections &&
-                      course?.data?.sections[0]?.lessons &&
-                      course?.data?.sections[0]?.lessons[0]?.slug
-                    }`}
+                    to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}
                   >
                     <Button radius="xl" size="md" className={classes.control}>
                       {t("preview")}
