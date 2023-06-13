@@ -163,6 +163,14 @@ const CourseDescription = () => {
     <Center>{t("unable_get_course")}</Center>;
   }
 
+  const firstLessonSlugs = course?.data?.sections?.find(
+    (item) => item.lessons && item?.lessons?.length > 0
+  );
+
+  const slug = firstLessonSlugs?.lessons
+    ? firstLessonSlugs?.lessons[0].slug
+    : "";
+
   return (
     <div>
       <Container fluid>
@@ -242,11 +250,7 @@ const CourseDescription = () => {
                   </Link>
                 ) : (
                   <Link
-                    to={`${RoutePath.classes}/${course?.data?.slug}/${
-                      course?.data?.sections &&
-                      course?.data?.sections[0]?.lessons &&
-                      course?.data?.sections[0]?.lessons[0]?.slug
-                    }`}
+                    to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}
                   >
                     <Button radius="xl" size="md" className={classes.control}>
                       {t("watch_course")}
