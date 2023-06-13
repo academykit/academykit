@@ -125,6 +125,13 @@
         /// <param name="userId">the user id</param>
         /// <returns>the instance of <see cref="UserResponseModel"/></returns>
         Task<UserResponseModel> GetDetailAsync(Guid userId);
+        
+        /// <summary>
+        /// Handle to get trainer 
+        /// </summary>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
+        Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId);
 
 
         /// <summary>
