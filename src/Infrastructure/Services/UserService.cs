@@ -50,7 +50,7 @@
             IOptions<JWT> jwt,
             IConfiguration configuration,
             IStringLocalizer<ExceptionLocalizer> localizer,
-            IGeneralSettingService generalSettingService) : base(unitOfWork, logger,localizer)
+            IGeneralSettingService generalSettingService) : base(unitOfWork, logger, localizer)
         {
             _emailService = emailService;
             _refreshTokenService = refreshTokenService;
@@ -278,6 +278,25 @@
         }
 
         /// <summary>
+        /// Handle to get trainer 
+        /// </summary>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
+        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId)
+        {
+            return await ExecuteWithResultAsync(async () =>
+          {
+              var isValidUser = await IsSuperAdminOrAdminOrTrainer(currentUserId).ConfigureAwait(false);
+              if (!isValidUser)
+              {
+                  throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
+              }
+              return await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer,
+                    selector: s => new TrainerResponseModel(s)).ConfigureAwait(false);
+          });
+        }
+
+        /// <summary>
         /// Handle to import the user
         /// </summary>
         /// <param name="file"> the instance of <see cref="IFormFile" /> .</param>
@@ -501,13 +520,13 @@
             if (user == null)
             {
                 _logger.LogWarning("User with email : {email} not found.", model.OldEmail);
-                throw new ForbiddenException(_localizer.GetString("UserNotFoundWithEmail") +" "+ model.OldEmail);
+                throw new ForbiddenException(_localizer.GetString("UserNotFoundWithEmail") + " " + model.OldEmail);
             }
             var newUser = await GetUserByEmailAsync(model.NewEmail).ConfigureAwait(false);
             if (newUser != null)
             {
                 _logger.LogWarning("User with new email : {email} found in the system.", model.NewEmail);
-                throw new ForbiddenException(model.NewEmail +" "+ _localizer.GetString("AlreadyExistInAnotherAccount"));
+                throw new ForbiddenException(model.NewEmail + " " + _localizer.GetString("AlreadyExistInAnotherAccount"));
             }
             var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password);
             if (!isUserAuthenticated)

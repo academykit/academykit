@@ -149,6 +149,9 @@
             return await _userService.GetUserForCourseEnrollment(userId, courseId).ConfigureAwait(false);
         }
 
+        [HttpGet("trainer")]
+        public async Task<IList<TrainerResponseModel>> Trainer() => await _userService.GetTrainerAsync(CurrentUser.Id).ConfigureAwait(false);
+      
 
         /// <summary>
         /// import bulk user api
