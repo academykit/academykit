@@ -1,37 +1,35 @@
-﻿namespace Lingtren.Infrastructure.Services
-{
-    using AngleSharp.Dom;
-    using CsvHelper;
-    using Domain.Entities;
-    using Hangfire;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Configurations;
-    using Lingtren.Infrastructure.Localization;
-    using LinqKit;
-    using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Query;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Localization;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
-    using Microsoft.IdentityModel.Tokens;
-    using MimeKit;
-    using System;
-    using System.Globalization;
-    using System.IdentityModel.Tokens.Jwt;
-    using System.Linq.Expressions;
-    using System.Security.Claims;
-    using System.Security.Cryptography;
-    using System.Text;
+﻿using CsvHelper;
+using Lingtren.Domain.Entities;
+using Hangfire;
+using Lingtren.Application.Common.Dtos;
+using Lingtren.Application.Common.Exceptions;
+using Lingtren.Application.Common.Interfaces;
+using Lingtren.Application.Common.Models.RequestModels;
+using Lingtren.Application.Common.Models.ResponseModels;
+using Lingtren.Domain.Enums;
+using Lingtren.Infrastructure.Common;
+using Lingtren.Infrastructure.Configurations;
+using Lingtren.Infrastructure.Localization;
+using LinqKit;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using MimeKit;
+using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq.Expressions;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
+namespace Lingtren.Infrastructure.Services
+{
     public class UserService : BaseGenericService<User, UserSearchCriteria>, IUserService
     {
         private readonly IEmailService _emailService;
@@ -283,7 +281,7 @@
         /// <param name="file"> the instance of <see cref="IFormFile" /> .</param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
-        public async Task<object> ImportUserAsync(IFormFile file, Guid currentUserId)
+        public async Task<string> ImportUserAsync(IFormFile file, Guid currentUserId)
         {
             try
             {
@@ -303,11 +301,11 @@
                         users.Add(user);
                     }
                 }
-                (string invalidUsers, string duplicateUser,string successMessage,string noUserAdded) MessageTuple = (null,null,null,null);
+                var message = new StringBuilder();
                 var inValidUsers = users.Where(x => string.IsNullOrWhiteSpace(x.FirstName) || string.IsNullOrWhiteSpace(x.LastName) || string.IsNullOrWhiteSpace(x.Email)).ToList();
                 foreach(var user in inValidUsers)
                 {
-                    MessageTuple.invalidUsers = string.Join(",", user?.Email) + " " + _localizer.GetString("DuplicateEmailDetected");
+                    message.AppendLine(_localizer.GetString("DuplicateEmailDetected"));
                 }
                 users = users.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && !string.IsNullOrWhiteSpace(x.LastName) && !string.IsNullOrWhiteSpace(x.Email)).ToList();
 
@@ -319,7 +317,7 @@
                     var duplicateUser = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: p => userEmails.Contains(p.Email), selector: x => x.Email).ConfigureAwait(false);
                     foreach (var entity in duplicateUser)
                     {
-                        MessageTuple.duplicateUser =string.Join(",",entity) +" " + _localizer.GetString("AlreadyRegistered");
+                        message.AppendLine(string.Join(",", entity) + " " + _localizer.GetString("AlreadyRegistered"));
                     }
                     var newUsersList = users.Where(x => !duplicateUser.Contains(x.Email)).ToList();
                     newUsersList = newUsersList.DistinctBy(x => x.Email).ToList();
@@ -359,14 +357,14 @@
                         await _unitOfWork.GetRepository<User>().InsertAsync(newUsers).ConfigureAwait(false);
                         await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                         BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailImportedUserAsync(newUserEmails, null));
-                        MessageTuple.successMessage = _localizer.GetString("UserImported");
+                        message.AppendLine(_localizer.GetString("UserImported"));
                     }
                 }
-                if (MessageTuple is (null,null,null,null))
+                else
                 {
-                    MessageTuple.noUserAdded = _localizer.GetString("NoUserImported");
+                    message.AppendLine(_localizer.GetString("NoUserImported"));
                 }
-                return MessageTuple;
+                return message.ToString();
             }
             catch (Exception ex)
             {

@@ -162,7 +162,7 @@
             IsSuperAdminOrAdmin(CurrentUser.Role);
             var response = await _userService.ImportUserAsync(model.File, CurrentUser.Id).ConfigureAwait(false);
 
-            return Ok(JsonConvert.SerializeObject(response));
+            return Ok(response);
         }
 
         /// <summary>
