@@ -4,7 +4,7 @@ const BASE_URL_Local = `http://localhost:5173`;
 const api = (courseId: string, lessonId: string) =>
   `/api/course/${courseId}/lesson/${lessonId}/join`;
 
-ZoomMtg.setZoomJSLib("https://jssdk.zoomus.cn/2.9.5/lib", "/av"); // china cdn option
+ZoomMtg.setZoomJSLib("https://jssdk.zoomus.cn/2.13.0/lib", "/av"); // china cdn option
 ZoomMtg.preLoadWasm();
 ZoomMtg.prepareJssdk();
 export interface IStartExam {
