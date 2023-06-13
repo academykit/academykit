@@ -16,6 +16,8 @@ RUN apt-get install -y libpng-dev libjpeg-dev curl libxi6 build-essential libgl1
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get install -y nodejs
 
+RUN apt-get update && apt-get install -y ffmpeg
+
 WORKDIR /src
 
 COPY ["./src/Api/Api.csproj", "src/Api/"]
@@ -25,7 +27,7 @@ COPY ["./src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
 
 RUN dotnet restore "src/Api/Api.csproj"
 
-RUN apt-get update && apt-get install -y ffmpeg
+
 
 COPY . .
 
