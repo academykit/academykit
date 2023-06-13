@@ -872,4 +872,10 @@
   <data name="InvalidMeetingTimeIssue" xml:space="preserve">
     <value>प्रत्यक्ष पाठ सुरु समय वर्तमान समय भन्दा ठूलो हुनुपर्छ।</value>
   </data>
+  <data name="DuplicateEmailDetected" xml:space="preserve">
+    <value>यी डुप्लिकेट प्रयोगकर्ता हुन्</value>
+  </data>
+  <data name="NoUserImported" xml:space="preserve">
+    <value>गलत फाइल ढाँचाको कारणले प्रयोगकर्ता आयात गर्न असमर्थ</value>
+  </data>
 </root>

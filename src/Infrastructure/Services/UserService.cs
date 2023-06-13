@@ -88,7 +88,7 @@
                 return authenticationModel;
             }
 
-            var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password.Trim());
+            var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password);
             if (!isUserAuthenticated)
             {
                 authenticationModel.IsAuthenticated = false;
@@ -283,7 +283,7 @@
         /// <param name="file"> the instance of <see cref="IFormFile" /> .</param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
-        public async Task<string> ImportUserAsync(IFormFile file, Guid currentUserId)
+        public async Task<object> ImportUserAsync(IFormFile file, Guid currentUserId)
         {
             try
             {
@@ -303,22 +303,23 @@
                         users.Add(user);
                     }
                 }
-
+                (string invalidUsers, string duplicateUser,string successMessage,string noUserAdded) MessageTuple = (null,null,null,null);
                 var inValidUsers = users.Where(x => string.IsNullOrWhiteSpace(x.FirstName) || string.IsNullOrWhiteSpace(x.LastName) || string.IsNullOrWhiteSpace(x.Email)).ToList();
-
+                foreach(var user in inValidUsers)
+                {
+                    MessageTuple.invalidUsers = string.Join(",", user?.Email) + " " + _localizer.GetString("DuplicateEmailDetected");
+                }
                 users = users.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && !string.IsNullOrWhiteSpace(x.LastName) && !string.IsNullOrWhiteSpace(x.Email)).ToList();
 
                 var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
                 var stringBuilder = new StringBuilder();
                 if (users.Count != default)
                 {
-
                     var userEmails = users.ConvertAll(x => x.Email);
                     var duplicateUser = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: p => userEmails.Contains(p.Email), selector: x => x.Email).ConfigureAwait(false);
                     foreach (var entity in duplicateUser)
                     {
-                        stringBuilder.Append($"{entity}").Append(_localizer.GetString("AlreadyRegistered"));
-                        stringBuilder.Append(Environment.NewLine);
+                        MessageTuple.duplicateUser =string.Join(",",entity) +" " + _localizer.GetString("AlreadyRegistered");
                     }
                     var newUsersList = users.Where(x => !duplicateUser.Contains(x.Email)).ToList();
                     newUsersList = newUsersList.DistinctBy(x => x.Email).ToList();
@@ -358,9 +359,14 @@
                         await _unitOfWork.GetRepository<User>().InsertAsync(newUsers).ConfigureAwait(false);
                         await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                         BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailImportedUserAsync(newUserEmails, null));
+                        MessageTuple.successMessage = _localizer.GetString("UserImported");
                     }
                 }
-                return string.IsNullOrEmpty(stringBuilder.ToString()) ? _localizer.GetString("UserImported") : $"{stringBuilder.ToString()}";
+                if (MessageTuple is (null,null,null,null))
+                {
+                    MessageTuple.noUserAdded = _localizer.GetString("NoUserImported");
+                }
+                return MessageTuple;
             }
             catch (Exception ex)
             {

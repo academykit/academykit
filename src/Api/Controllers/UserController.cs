@@ -16,6 +16,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
+    using Newtonsoft.Json;
 
     public class UserController : BaseApiController
     {
@@ -160,7 +161,8 @@
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
             var response = await _userService.ImportUserAsync(model.File, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new { statusCode = 200, message = $"{response}" });
+
+            return Ok(JsonConvert.SerializeObject(response));
         }
 
         /// <summary>
@@ -211,9 +213,11 @@
             {
                 existing.Status = model.Status;
             }
+            var password = await _userService.GenerateRandomPassword(8).ConfigureAwait(false);
+            existing.HashPassword = _userService.HashPassword(password);
+
 
             var savedEntity = await _userService.UpdateAsync(existing).ConfigureAwait(false);
-
             if (imageKey != model.ImageUrl && !string.IsNullOrWhiteSpace(imageKey))
             {
                 if (imageKey.ToLower().Trim().Contains("/public/") && imageKey.IndexOf("/standalone/") != -1)
@@ -222,7 +226,8 @@
                 }
                 await _fileServerService.RemoveFileAsync(imageKey).ConfigureAwait(false);
             }
-
+            var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
+            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(savedEntity.Email, savedEntity.FullName, password, company.CompanyName, null));
             return new UserResponseModel(savedEntity);
         }
 
