@@ -1,7 +1,7 @@
 import SearchBar from "@components/Ui/SearchBar";
 import { Pagination, Select } from "@mantine/core";
 import queryStringGenerator from "@utils/queryStringGenerator";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export interface IWithSearchPagination {
@@ -49,35 +49,30 @@ const withSearchPagination =
       },
     ]);
 
-    let page = parseInt(params.get("page") ?? "1");
     let search = params.get("s") ?? null;
-    let size = 12;
-    const [searchParams, setSearchParams] = useState("");
-    const [sortValue, setSortValue] = useState<string>(":");
-    const [filterKey, setFilterKey] = useState<string>("");
+    let pageSize = 12;
     const [filterValue, setFilterValue] = useState<string>("");
+    const [currentPage, setCurrentPage] = useState(
+      parseInt(params.get("p") ?? "1")
+    );
 
-    useEffect(() => {
-      const sortBy = (sortValue && sortValue.split(":")[0]) ?? "";
-      const sortType = (sortValue && sortValue.split(":")[1]) ?? "";
-      const data = {
-        page,
-        search: search ?? "",
-        size,
-        sortBy,
-        sortType,
-        [filterKey]: filterValue,
-      };
-
-      initialSearch.forEach((d) => {
-        data[d.key] = d.value;
+    const qs = useMemo(() => {
+      const qs = queryStringGenerator({
+        search,
+        page: currentPage,
+        size: pageSize,
       });
+      console.log(!search);
+      !!search && params.set("s", search);
 
-      setSearchParams(queryStringGenerator(data));
-    }, [page, search, size, sortValue, filterValue, initialSearch]);
+      pageSize && params.set("si", pageSize?.toString());
+      currentPage && params.set("p", currentPage.toString());
+
+      setParams(params, { replace: true });
+      return qs;
+    }, [currentPage, search, pageSize]);
 
     const setSearch = (search: string) => {
-      // if (!search) return;
       for (let value of params.entries()) {
         if (value[0] !== "s") params.delete(value[0]);
       }
@@ -95,7 +90,7 @@ const withSearchPagination =
           clearable
           data={data}
           onChange={(e: string) => {
-            setSortValue(e);
+            // setSortValue(e);
           }}
         />
       );
@@ -117,9 +112,9 @@ const withSearchPagination =
           onChange={(e: string) => {
             setFilterValue(() => e);
             if (e) {
-              setFilterKey(() => key);
+              // setFilterKey(() => key);
             } else {
-              setFilterKey(() => "");
+              // setFilterKey(() => "");
             }
           }}
         />
@@ -127,13 +122,17 @@ const withSearchPagination =
     };
 
     const setPage = (pageNumber: number) => {
-      params.set("page", pageNumber.toString());
-      setParams(() => params);
+      setCurrentPage(pageNumber);
     };
 
     const pagination = (totalPage: number) =>
       totalPage > 1 ? (
-        <Pagination my={20} total={totalPage} page={page} onChange={setPage} />
+        <Pagination
+          my={20}
+          total={totalPage}
+          page={currentPage}
+          onChange={setPage}
+        />
       ) : (
         <></>
       );
@@ -149,7 +148,7 @@ const withSearchPagination =
       <Component
         {...(props as P)}
         filterComponent={filterComponent}
-        searchParams={searchParams}
+        searchParams={qs}
         pagination={pagination}
         searchComponent={searchComponent}
         sortComponent={sortComponent}
