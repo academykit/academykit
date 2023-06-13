@@ -43,9 +43,7 @@ const CoursePage = ({
     <Container fluid>
       <Container fluid>
         <Flex pb={20} justify={"end"} align={"center"}>
-          {data &&
-            data?.items?.length > 0 &&
-            searchComponent(t("search_trainings") as string)}
+          {searchComponent(t("search_trainings") as string)}
           {filterComponent(
             filterValue,
             t("enrollment_status"),
