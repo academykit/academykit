@@ -397,8 +397,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                _logger.LogError(_localizer.GetString("NoUserImported"));
+                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("NoUserImported"));
             }
         }
 
