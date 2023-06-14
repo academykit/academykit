@@ -748,7 +748,7 @@
   "pass": "Pass",
   "edit_assignment_review": "Edit Assignment Review",
   "review_assignment": "Review Assignment",
-  "course_title_must_be_less_than_250": "Course title must be less than 250 character",
+  "course_title_must_be_less_than_100": "Course title must be less than 100 character",
   "no_tags": "No Tags Found!",
   "no_level": "No Level Found!",
   "group_character_limit": "Group name cannot exceed 250 character!",
@@ -759,5 +759,5 @@
   "enrollments": "Enrollments",
   "enrollment": "Enrollment",
   "new_password_required": "New Password is required.",
-  "bio_character_limit":"Bio character limit should be at most 200"
+  "bio_character_limit": "Bio character limit should be at most 200"
 }
