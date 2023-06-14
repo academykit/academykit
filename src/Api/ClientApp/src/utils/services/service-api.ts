@@ -49,6 +49,7 @@ export const api = {
     postLevelSetting: `api/level`,
     updateLevelSetting: (id: string) => `api/level/${id}`,
     updateDepartmentSetting: (id: string) => `api/department/${id}`,
+    getTrainer: (search: string) => `/api/user/trainer?${search}`,
   },
   groups: {
     list: "/api/Group",

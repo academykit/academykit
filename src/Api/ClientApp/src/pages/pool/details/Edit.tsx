@@ -8,6 +8,7 @@ import {
   Group,
   Loader,
   MultiSelect,
+  Radio,
   Select,
   Text,
   TextInput,
@@ -25,7 +26,7 @@ import {
   useGetQuestion,
 } from "@utils/services/questionService";
 import { useAddTag, useTags } from "@utils/services/tagService";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
@@ -150,6 +151,7 @@ const Create = () => {
       size: 10000,
     })
   );
+  const [first, setFirst] = useState(true);
 
   useEffect(() => {
     if (tags.isSuccess && tags.isFetched) {
@@ -166,15 +168,19 @@ const Create = () => {
         option: e.option,
         isCorrect: e.isCorrect,
       }));
+
       form.setValues({
         name: getQuestion.data.name,
         description: getQuestion.data.description,
         hints: getQuestion.data.hints,
         type: getQuestion.data.type.toString(),
         answers,
+        tags: data,
       });
 
-      form.setFieldValue("tags", data);
+      setTimeout(() => {
+        setFirst(false);
+      }, 1000);
     }
   }, [getQuestion.isSuccess]);
 
@@ -188,6 +194,23 @@ const Create = () => {
       form.setFieldValue("tags", [...form.values.tags, addTagData?.data?.id]);
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (!first) {
+      form.values.answers.forEach((x, i) => {
+        return form.setFieldValue(`answers.${i}.isCorrect`, false);
+      });
+    }
+  }, [form.values.type]);
+
+  const onChangeRadioType = (index: number) => {
+    form.values.answers.forEach((x, i) => {
+      if (i === index) {
+        return form.setFieldValue(`answers.${index}.isCorrect`, true);
+      }
+      return form.setFieldValue(`answers.${i}.isCorrect`, false);
+    });
+  };
 
   return (
     <Container fluid>
@@ -247,11 +270,20 @@ const Create = () => {
                 <Text mt={20}>{t("options")}</Text>
                 {form.values.answers.map((x, i) => (
                   <Group key={i} mb={30}>
-                    <Checkbox
-                      {...form.getInputProps(`answers.${i}.isCorrect`)}
-                      name=""
-                      checked={x.isCorrect}
-                    ></Checkbox>
+                    {QuestionType.MultipleChoice.toString() ===
+                    form.values.type ? (
+                      <Checkbox
+                        checked={form.values.answers[i].isCorrect}
+                        {...form.getInputProps(`answers.${i}.isCorrect`)}
+                        name=""
+                      ></Checkbox>
+                    ) : (
+                      <Radio
+                        onChange={() => onChangeRadioType(i)}
+                        checked={form.values.answers[i].isCorrect}
+                        // {...form.getInputProps(`answers.${i}.isCorrect`)}
+                      ></Radio>
+                    )}
                     <TextEditor
                       label={`answers.${i}.option`}
                       formContext={useFormContext}

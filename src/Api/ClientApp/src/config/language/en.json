@@ -411,7 +411,7 @@
   "no_external_trainings": "No External trainings found!",
   "from": "From",
   "to": "to",
-  "completed_in_about": ", Completed in about",
+  "completed_in_about": "Completed in about",
   "hrs": "hrs.",
   "training": "Training",
   "successfully": "Successfully.",
@@ -572,7 +572,7 @@
   "delete_section_success": "Section Deleted Successfully!",
   "add_signature_success": "Signature Added Successfully!",
   "edit_signature_success": "Signature Edited Successfully!",
-  "delete_signature_success": "Signature Added Successfully!",
+  "delete_signature_success": "Signature Deleted Successfully!",
   "pass_student_success": "Student Passed Successfully.",
   "question_list_cannot_empty": "Question List cannot be empty!",
   "add_questions_success": "Questions Added Successfully!",
@@ -757,5 +757,6 @@
   "username": "Username",
   "trainer_email_required": "Trainer's email is required!",
   "enrollments": "Enrollments",
-  "enrollment": "Enrollment"
+  "enrollment": "Enrollment",
+  "new_password_required": "New Password is required."
 }

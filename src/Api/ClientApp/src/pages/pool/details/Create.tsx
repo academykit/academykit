@@ -71,7 +71,7 @@ const schema = () => {
             t("single_choice_option_atleast") as string,
             function (value: any) {
               const length: number =
-                value && value.filter((e: any) => e.isCorrect).length;
+                value && value.filter((e: any) => e?.isCorrect).length;
               return length === 1;
             }
           )
@@ -96,7 +96,7 @@ const Create = () => {
       description: "",
       hints: "",
       tags: [],
-      type: "",
+      type: "1",
       answers: [{ option: "", isCorrect: false }],
     },
     validate: yupResolver(schema()),
@@ -168,7 +168,14 @@ const Create = () => {
       form.setFieldValue("tags", [...form.values.tags, addTagData?.data?.id]);
     }
   }, [isSuccess]);
-  console.log(form.values);
+
+  useEffect(() => {
+    if (form.values.type) {
+      form.values.answers.forEach((x, i) => {
+        return form.setFieldValue(`answers.${i}.isCorrect`, false);
+      });
+    }
+  }, [form.values.type]);
 
   const onChangeRadioType = (index: number) => {
     form.values.answers.forEach((x, i) => {

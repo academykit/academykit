@@ -412,7 +412,7 @@
   "no_external_trainings": "कुनै बाह्य प्रशिक्षण फेला परेन!",
   "from": "देखि",
   "to": "सम्म",
-  "completed_in_about": ", प्रायः पूरा भयो",
+  "completed_in_about": "प्रायः पूरा भयो",
   "hrs": "घण्टा।",
   "training": "प्रशिक्षण",
   "successfully": "सफलतापूर्वक।",
@@ -755,5 +755,7 @@
   "username": "प्रयोगकर्ता नाम",
   "trainer_email_required": "प्रशिक्षकको इमेल आवश्यक छ!",
   "enrollments": "भर्नाहरू",
-  "enrollment": "भर्ना"
+  "enrollment": "भर्ना",
+  "new_password_required": "नयाँ पासवर्ड आवश्यक छ।"
+
 }

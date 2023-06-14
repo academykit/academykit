@@ -12,10 +12,7 @@
 
 *.vs
 .vs
-<<<<<<< HEAD
 *.vscode
-=======
->>>>>>> 4fc0a3e783a087f89c0f9e55b880503ec131a4bc
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

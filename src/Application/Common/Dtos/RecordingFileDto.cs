@@ -5,5 +5,6 @@ namespace Lingtren.Application.Common.Dtos
         public string Name { get; set; }
         public string VideoUrl { get; set; }
         public int Order { get; set; }
+        public int Duration { get; set; }
     }
 }

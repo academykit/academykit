@@ -571,7 +571,7 @@
   "delete_section_success": "セクションが正常に削除されました！",
   "add_signature_success": "署名が正常に追加されました！",
   "edit_signature_success": "署名が正常に編集されました！",
-  "delete_signature_success": "署名が正常に削除されました！",
+  "delete_signature_success": "署名は正常に削除されました！",
   "pass_student_success": "学生が正常に合格しました。",
   "question_list_cannot_empty": "質問リストは空にできません！",
   "add_questions_success": "質問が正常に追加されました！",
@@ -754,5 +754,6 @@
   "username": "ユーザー名",
   "trainer_email_required": "トレーナーのメールアドレスは必須です。",
   "enrollments": "登録",
-  "enrollment": "登録"
+  "enrollment": "登録",
+  "new_password_required": "新しいパスワードが必要です。"
 }
