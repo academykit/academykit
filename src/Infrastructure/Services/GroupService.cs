@@ -61,7 +61,8 @@
             {
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search)
-                 || x.User.FirstName.ToLower().Trim().Contains(search));
+                 || x.User.FirstName.ToLower().Trim().Contains(search) 
+                 || x.User.Email.ToLower().Trim().Contains(search));
             }
             if (criteria.Role != UserRole.SuperAdmin && criteria.Role != UserRole.Admin)
             {

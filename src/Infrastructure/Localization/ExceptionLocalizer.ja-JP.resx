@@ -881,4 +881,7 @@
   <data name="NoUserImported" xml:space="preserve">
     <value>ファイル形式が間違っているためユーザーをインポートできません</value>
   </data>
+  <data name="CompletedCourseIssue" xml:space="preserve">
+    <value>完了したコースは変更できません</value>
+  </data>
 </root>

@@ -240,6 +240,10 @@ namespace Lingtren.Infrastructure.Services
             return await ExecuteWithResultAsync<Course>(async () =>
             {
                 var existing = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+                if(existing.Status == CourseStatus.Completed)
+                {
+                    throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
+                }
                 var currentTimeStamp = DateTime.UtcNow;
 
                 var imageKey = existing.ThumbnailUrl;
@@ -847,7 +851,7 @@ namespace Lingtren.Infrastructure.Services
                 var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.CourseId == course.Id &&
                 !p.IsDeleted && (p.Status == CourseStatus.Published || p.Status == CourseStatus.Completed)).ConfigureAwait(false);
                 var lessonId = lessons.Select(x => x.Id);
-                var meetings = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(predicate: p=> lessonId.Contains(p.Lesson.Id)).ConfigureAwait(false);
+                var meetings = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(predicate: p=> lessonId.Contains(p.Lesson.Id),include:src=>src.Include(x=>x.Lesson)).ConfigureAwait(false);
                 var meetingName = meetings.Select(x => x.Lesson.Name).ToList();
                 var lessonSlug = lessons.Select(x => x.Slug).ToList();
                 var passcode = meetings.Select(x => x.Passcode).ToList();

@@ -878,4 +878,7 @@
   <data name="NoUserImported" xml:space="preserve">
     <value>गलत फाइल ढाँचाको कारणले प्रयोगकर्ता आयात गर्न असमर्थ</value>
   </data>
+  <data name="CompletedCourseIssue" xml:space="preserve">
+    <value>पूरा भएको पाठ्यक्रम परिमार्जन गर्न सकिँदैन</value>
+  </data>
 </root>
