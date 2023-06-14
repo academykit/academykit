@@ -85,7 +85,7 @@
   "ceritficate_issue_date": "Certificate Issued Date:",
   "total": "Total",
   "percent_completed": "% completed",
-  "search_pools": "Search for MCQ pools",
+  "search_pools": "Search for Question pools",
   "question_pool_delete": "Question Pool Deleted successfully.",
   "pool_delete_confirmation": "Do you want to delete this question pool?",
   "total_question": "Total Questions:",
@@ -155,7 +155,7 @@
   "content_of": "Course Content of",
   "section/s": "Section(s)",
   "publish": "Publish",
-  "watch_course": "Watch Course",
+  "watch_course": "Start Learning",
   "preview": "Preview",
   "enroll_course": "Enroll Course",
   "unable_get_course": "Unable to get course details.",
@@ -763,5 +763,7 @@
 
   "home": "Home",
   "Groups": "Groups",
-  "Tranning": "Training"
+  "Tranning": "Training",
+  "Pools": "Pools",
+  "my_certificate": "My Certificates"
 }
