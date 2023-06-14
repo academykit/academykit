@@ -884,7 +884,7 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 response.MeetingsList = newMeeting.OrderByDescending(x => x.StartDate);
-
+                response.TotalTeachers = course.CourseTeachers.Count;
                 response.TotalLessons = lessons.Count;
                 response.TotalMeetings = lessons.Count(x => (x.Type == LessonType.LiveClass || x.Type == LessonType.RecordedVideo) && x.MeetingId != null);
                 response.TotalLectures = lessons.Count(x => x.Type == LessonType.Video || x.Type == LessonType.RecordedVideo);
