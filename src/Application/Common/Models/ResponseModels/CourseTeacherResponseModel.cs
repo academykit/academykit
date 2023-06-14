@@ -13,6 +13,8 @@
 
         public DateTime CreatedOn { get; set; }
 
+        public string CourseCreatedBy { get; set; }
+
         public CourseTeacherResponseModel(CourseTeacher entity)
         {
             Id = entity.Id;
@@ -20,6 +22,7 @@
             CourseName = entity.Course.Name;
             User = entity.User != null ? new UserModel(entity.User) : new UserModel();
             CreatedOn = entity.CreatedOn;
+            CourseCreatedBy = entity.Course.CreatedBy.ToString();
         }
     }
 }

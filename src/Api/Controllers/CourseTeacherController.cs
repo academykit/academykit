@@ -8,6 +8,7 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
+    using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Helpers;
     using Lingtren.Infrastructure.Localization;
     using LinqKit;
@@ -72,29 +73,41 @@
         [HttpPost()]
         public async Task<CourseTeacherResponseModel> Create(CourseTeacherRequestModel model)
         {
-            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-
-            var course = await _courseService.GetByIdOrSlugAsync(model.CourseIdentity, CurrentUser.Id).ConfigureAwait(false);
-            var user = await _userService.GetUserByEmailAsync(model.Email).ConfigureAwait(false);
-
-            if (user == null)
+            try
             {
-                throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
+                await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+
+                var course = await _courseService.GetByIdOrSlugAsync(model.CourseIdentity, CurrentUser.Id).ConfigureAwait(false);
+                if (course.Status == CourseStatus.Completed)
+                {
+                    throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
+                }
+                var user = await _userService.GetUserByEmailAsync(model.Email).ConfigureAwait(false);
+
+                if (user == null)
+                {
+                    throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
+                }
+
+                var currentTimeStamp = DateTime.UtcNow;
+                var courseTeacher = new CourseTeacher
+                {
+                    CourseId = course.Id,
+                    UserId = user.Id,
+                    CreatedBy = CurrentUser.Id,
+                    CreatedOn = currentTimeStamp,
+                    UpdatedBy = CurrentUser.Id,
+                    UpdatedOn = currentTimeStamp
+                };
+
+
+                var response = await _courseTeacherService.CreateAsync(courseTeacher).ConfigureAwait(false);
+                return new CourseTeacherResponseModel(response);
             }
-
-            var currentTimeStamp = DateTime.UtcNow;
-            var courseTeacher = new CourseTeacher
+            catch (Exception ex)
             {
-                CourseId = course.Id,
-                UserId = user.Id,
-                CreatedBy = CurrentUser.Id,
-                CreatedOn = currentTimeStamp,
-                UpdatedBy = CurrentUser.Id,
-                UpdatedOn = currentTimeStamp
-            };
-
-            var response = await _courseTeacherService.CreateAsync(courseTeacher).ConfigureAwait(false);
-            return new CourseTeacherResponseModel(response);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
         }
 
         /// <summary>
