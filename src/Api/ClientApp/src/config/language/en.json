@@ -759,5 +759,9 @@
   "enrollments": "Enrollments",
   "enrollment": "Enrollment",
   "new_password_required": "New Password is required.",
-  "bio_character_limit": "Bio character limit should be at most 200"
+  "bio_character_limit":"Bio character limit should be at most 200",
+  "home": "Home",
+  "Groups": "Groups",
+  "Tranning": "Training"
+
 }

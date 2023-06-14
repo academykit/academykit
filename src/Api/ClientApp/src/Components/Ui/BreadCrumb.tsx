@@ -6,6 +6,7 @@ import {
   MantineStyleSystemProps,
   Text,
 } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
 type ItemsProps = {
@@ -17,6 +18,7 @@ type ItemsProps = {
 };
 
 const getItems = ({ items, hide }: ItemsProps) => {
+  const { t } = useTranslation();
   const finalItem = items.map((item, index) => (
     <Anchor
       size={"sm"}
@@ -26,7 +28,7 @@ const getItems = ({ items, hide }: ItemsProps) => {
       component={Link}
       key={index}
     >
-      {item.title}
+      {t(`${item.title}`)}
     </Anchor>
   ));
   if (hide) {

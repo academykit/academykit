@@ -756,5 +756,8 @@
   "enrollments": "登録",
   "enrollment": "登録",
   "new_password_required": "新しいパスワードが必要です。",
-  "bio_character_limit": "自己紹介の文字制限は 200 文字以下にする必要があります"
+  "bio_character_limit":"自己紹介の文字制限は 200 文字以下にする必要があります",
+  "Groups": "グループ",
+  "home": "家",
+  "Tranning":"トレーニング"
 }
