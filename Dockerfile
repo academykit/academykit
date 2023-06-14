@@ -16,7 +16,6 @@ RUN apt-get install -y libpng-dev libjpeg-dev curl libxi6 build-essential libgl1
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get install -y nodejs
 
-RUN apt-get update && apt-get install -y ffmpeg
 
 WORKDIR /src
 
@@ -26,8 +25,6 @@ COPY ["./src/Domain/Domain.csproj", "src/Domain/"]
 COPY ["./src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
 
 RUN dotnet restore "src/Api/Api.csproj"
-
-
 
 COPY . .
 
@@ -41,5 +38,6 @@ RUN dotnet publish "Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
+RUN apt-get update && apt-get install -y ffmpeg
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Api.dll"]
