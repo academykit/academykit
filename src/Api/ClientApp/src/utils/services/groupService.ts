@@ -62,7 +62,6 @@ export const useAddGroup = () => {
   const queryClient = useQueryClient();
   return useMutation([api.groups.list], addGroup, {
     onSuccess: (data) => {
-      console.log(data);
       queryClient.invalidateQueries([api.groups.list]);
     },
     onError: (err) => {
