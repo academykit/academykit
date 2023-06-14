@@ -572,7 +572,7 @@
   "delete_section_success": "Section Deleted Successfully!",
   "add_signature_success": "Signature Added Successfully!",
   "edit_signature_success": "Signature Edited Successfully!",
-  "delete_signature_success": "Signature Added Successfully!",
+  "delete_signature_success": "Signature Deleted Successfully!",
   "pass_student_success": "Student Passed Successfully.",
   "question_list_cannot_empty": "Question List cannot be empty!",
   "add_questions_success": "Questions Added Successfully!",
