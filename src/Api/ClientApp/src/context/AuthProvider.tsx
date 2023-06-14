@@ -1,7 +1,6 @@
 import { AppShell, Button, Center, Group, Loader, Modal } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import { useQueryClient } from "@tanstack/react-query";
 import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from "@utils/constants";
 import { useLogout, useReAuth } from "@utils/services/authService";
 import { IUserProfile } from "@utils/services/types";
@@ -67,6 +66,7 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
   const confirmLogout = async () => {
     try {
       await useLogoutQuery.mutateAsync();
+      window.history.replaceState({}, "", "/login");
       setShowLogout();
     } catch (err) {
       setShowLogout();
