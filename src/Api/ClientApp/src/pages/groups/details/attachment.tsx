@@ -8,22 +8,18 @@ import {
   ActionIcon,
   Button,
   Container,
-  CopyButton,
   Flex,
-  Group,
-  Input,
   Modal,
   Paper,
   ScrollArea,
   Table,
   Text,
-  Textarea,
-  TextInput,
   Title,
   Tooltip,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { IconCheck, IconCopy, IconDownload, IconTrash } from "@tabler/icons";
+import { IconDownload, IconTrash } from "@tabler/icons";
+import { UserRole } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
 import { getFileUrl } from "@utils/services/fileService";
 import {
@@ -54,6 +50,7 @@ const GroupAttachment = ({
 
   const Rows = ({ item }: { item: IGroupAttachmentItems }) => {
     const [enabled, setEnabled] = useState(false);
+    const auth = useAuth();
     const removeAttachment = useRemoveGroupAttachment(
       id as string,
       item.id,
@@ -108,11 +105,13 @@ const GroupAttachment = ({
               </ActionIcon>
             </Tooltip>
 
-            <Tooltip label={t("delete_attachment")}>
-              <ActionIcon onClick={() => setDeleteAttachment(item.id)}>
-                <IconTrash color="red" />
-              </ActionIcon>
-            </Tooltip>
+            {auth?.auth && auth?.auth?.role !== UserRole.Trainee && (
+              <Tooltip label={t("delete_attachment")}>
+                <ActionIcon onClick={() => setDeleteAttachment(item.id)}>
+                  <IconTrash color="red" />
+                </ActionIcon>
+              </Tooltip>
+            )}
           </Flex>
         </td>
       </tr>

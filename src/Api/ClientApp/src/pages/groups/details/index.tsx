@@ -90,7 +90,16 @@ const GroupDetail = () => {
         <Title>{t("group_details")}</Title>
 
         {!edit && auth?.auth && auth?.auth?.role < UserRole.Trainer && (
-          <Button onClick={() => setEdit(true)} variant="outline">
+          <Button
+            onClick={() => {
+              setEdit(true);
+              form.setFieldValue(
+                "name",
+                groupDetail.data ? groupDetail.data.data.name : ""
+              );
+            }}
+            variant="outline"
+          >
             {t("edit")}
           </Button>
         )}
@@ -119,7 +128,14 @@ const GroupDetail = () => {
               <Button loading={updateGroups.isLoading} mt={20} type="submit">
                 {t("save")}
               </Button>
-              <Button variant="outline" onClick={() => setEdit(false)} ml={10}>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setEdit(false);
+                  form.reset();
+                }}
+                ml={10}
+              >
                 {t("cancel")}
               </Button>
             </Box>

@@ -235,7 +235,6 @@ const Create = () => {
               mt={20}
               placeholder={t("select_question_type") as string}
               size={"lg"}
-              allowDeselect
               withAsterisk
               label={t("question_type")}
               {...form.getInputProps("type")}
