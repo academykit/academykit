@@ -73,41 +73,35 @@
         [HttpPost()]
         public async Task<CourseTeacherResponseModel> Create(CourseTeacherRequestModel model)
         {
-            try
+            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+
+            var course = await _courseService.GetByIdOrSlugAsync(model.CourseIdentity, CurrentUser.Id).ConfigureAwait(false);
+            if (course.Status == CourseStatus.Completed)
             {
-                await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-
-                var course = await _courseService.GetByIdOrSlugAsync(model.CourseIdentity, CurrentUser.Id).ConfigureAwait(false);
-                if (course.Status == CourseStatus.Completed)
-                {
-                    throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
-                }
-                var user = await _userService.GetUserByEmailAsync(model.Email).ConfigureAwait(false);
-
-                if (user == null)
-                {
-                    throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
-                }
-
-                var currentTimeStamp = DateTime.UtcNow;
-                var courseTeacher = new CourseTeacher
-                {
-                    CourseId = course.Id,
-                    UserId = user.Id,
-                    CreatedBy = CurrentUser.Id,
-                    CreatedOn = currentTimeStamp,
-                    UpdatedBy = CurrentUser.Id,
-                    UpdatedOn = currentTimeStamp
-                };
-
-
-                var response = await _courseTeacherService.CreateAsync(courseTeacher).ConfigureAwait(false);
-                return new CourseTeacherResponseModel(response);
+                throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
             }
-            catch (Exception ex)
+            var user = await _userService.GetUserByEmailAsync(model.Email).ConfigureAwait(false);
+
+            if (user == null)
             {
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
             }
+
+            var currentTimeStamp = DateTime.UtcNow;
+            var courseTeacher = new CourseTeacher
+            {
+                CourseId = course.Id,
+                UserId = user.Id,
+                CreatedBy = CurrentUser.Id,
+                CreatedOn = currentTimeStamp,
+                UpdatedBy = CurrentUser.Id,
+                UpdatedOn = currentTimeStamp
+            };
+
+
+            var response = await _courseTeacherService.CreateAsync(courseTeacher).ConfigureAwait(false);
+            return new CourseTeacherResponseModel(response);
+
         }
 
         /// <summary>
