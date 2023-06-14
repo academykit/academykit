@@ -42,7 +42,7 @@ const schema = () => {
 };
 
 const TeacherCards = ({
-  teacher: { id, user },
+  teacher: { id, user, CourseCreatedBy },
 }: {
   teacher: ICreateCourseTeacher;
 }) => {
@@ -77,7 +77,8 @@ const TeacherCards = ({
           <Group>
             <Text color={"dimmed"} size={"sm"}></Text>
             {auth?.auth &&
-              auth?.auth?.role === UserRole.SuperAdmin &&
+              (auth?.auth?.role === UserRole.SuperAdmin ||
+                auth?.auth?.id === CourseCreatedBy) &&
               auth?.auth.id !== user?.id && (
                 <IconTrash
                   color="red"
