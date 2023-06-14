@@ -45,9 +45,7 @@ const MCQQuestions = ({
   return (
     <Container fluid>
       <Flex justify={"end"}>
-        {data &&
-          data.totalCount > 0 &&
-          searchComponent(t("search_for_questions") as string)}
+        {searchComponent(t("search_for_questions") as string)}
         <Button component={Link} ml={5} to="create">
           {t("add_question")}
         </Button>

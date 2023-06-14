@@ -155,7 +155,7 @@
   "content_of": "コースコンテンツ",
   "section/s": "セクション",
   "publish": "公開",
-  "watch_course": "コースを視聴",
+  "watch_course": "学習を始める",
   "preview": "プレビュー",
   "enroll_course": "コースに登録",
   "unable_get_course": "コースの詳細を取得できません。",
@@ -759,5 +759,9 @@
   "bio_character_limit":"自己紹介の文字制限は 200 文字以下にする必要があります",
   "Groups": "グループ",
   "home": "家",
-  "Tranning":"トレーニング"
+  "Tranning":"トレーニング",
+  "Pools":"セット",
+  "my_certificate": "私の証明書"
+
+
 }

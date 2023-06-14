@@ -39,9 +39,7 @@ const CompletedCourseList = ({
             alignItems: "center",
           }}
         >
-          {data &&
-            data.items?.length > 1 &&
-            searchComponent(t("search_trainings") as string)}
+          {searchComponent(t("search_trainings") as string)}
         </Flex>
       </Container>
 
