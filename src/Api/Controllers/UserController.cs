@@ -1,22 +1,22 @@
-﻿namespace Lingtren.Api.Controllers
-{
-    using FluentValidation;
-    using Hangfire;
-    using Lingtren.Api.Common;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Helpers;
-    using Lingtren.Infrastructure.Localization;
-    using LinqKit;
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Localization;
+﻿using FluentValidation;
+using Hangfire;
+using Lingtren.Api.Common;
+using Lingtren.Application.Common.Dtos;
+using Lingtren.Application.Common.Exceptions;
+using Lingtren.Application.Common.Interfaces;
+using Lingtren.Application.Common.Models.RequestModels;
+using Lingtren.Application.Common.Models.ResponseModels;
+using Lingtren.Domain.Entities;
+using Lingtren.Domain.Enums;
+using Lingtren.Infrastructure.Helpers;
+using Lingtren.Infrastructure.Localization;
+using LinqKit;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
+namespace Lingtren.Api.Controllers
+{
     public class UserController : BaseApiController
     {
         private readonly ILogger<UserController> _logger;
@@ -164,7 +164,7 @@
             IsSuperAdminOrAdmin(CurrentUser.Role);
             var response = await _userService.ImportUserAsync(model.File, CurrentUser.Id).ConfigureAwait(false);
 
-            return Ok(response);
+            return StatusCode(200 ,new { message = response });
         }
 
         /// <summary>
