@@ -150,7 +150,7 @@ namespace Lingtren.Infrastructure.Services
 
                 var html = $"Dear {firstName},<br><br>";
                 html += $@"Your account has been created in <a href = '{this._appUrl}'><u  style='color:blue;'>{companyName}</u></a><br><br>";
-                html += "Here are the login details for your LMS account<br><br>";
+                html += "Here are the login details for your LMS account:<br><br>";
                 html += $"Email:{emailAddress}<br>";
                 html += $"Password:{password}<br><br>";
                 html += $"Please use the above login credentials to access your account.<br><br>";
