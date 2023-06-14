@@ -1,5 +1,6 @@
 namespace Lingtren.Api.Controllers
 {
+    using FluentValidation;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
@@ -12,9 +13,11 @@ namespace Lingtren.Api.Controllers
     public class ExternalCertificateController : BaseApiController
     {
         private readonly ICertificateService _certificateService;
-        public ExternalCertificateController(ICertificateService certificateService)
+        private readonly IValidator<CertificateRequestModel> _validator;
+        public ExternalCertificateController(ICertificateService certificateService, IValidator<CertificateRequestModel> validator)
         {
             _certificateService = certificateService;
+            _validator = validator;
         }
 
         /// <summary>
@@ -25,6 +28,7 @@ namespace Lingtren.Api.Controllers
         [HttpPost("external")]
         public async Task<CertificateResponseModel> External(CertificateRequestModel model)
         {
+            await _validator.ValidateAsync(model,options => options.ThrowOnFailures()).ConfigureAwait(false);
             var response = await _certificateService.SaveExternalCertificateAsync(model, CurrentUser.Id).ConfigureAwait(false);
             return response;
         }
