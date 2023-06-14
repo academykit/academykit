@@ -35,7 +35,9 @@ import useFormErrorHooks from "@hooks/useFormErrorHooks";
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    title: Yup.string().required(t("course_title_required") as string),
+    title: Yup.string()
+      .required(t("course_title_required") as string)
+      .max(80, t("course_title_less_than_80") as string),
     eventStartDate: Yup.string()
       .required(t("event_start_date_required") as string)
       .typeError(t("event_start_date_required") as string),
