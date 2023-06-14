@@ -73,7 +73,7 @@
             #endregion Service DI
 
             #region Validator DI
-
+            services.AddSingleton<IValidator<CertificateRequestModel>,CertificateRequestModelValidator>();
             services.AddSingleton<IValidator<LiveClassLicenseRequestModel>,ZoomLicenseIdValidator>();
             services.AddSingleton<IValidator<LoginRequestModel>, LoginValidator>();
             services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();
