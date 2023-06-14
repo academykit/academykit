@@ -41,7 +41,7 @@ const schema = () => {
     title: Yup.string()
       .trim()
       .required(t("course_title_required") as string)
-      .max(250, t("course_title_must_be_less_than_250") as string),
+      .max(100, t("course_title_must_be_less_than_100") as string),
     level: Yup.string().required(t("level_required") as string),
     groups: Yup.string()
       .nullable()

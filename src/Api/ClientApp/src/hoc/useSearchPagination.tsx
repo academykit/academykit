@@ -55,8 +55,13 @@ const withSearchPagination =
 
     const qs = useMemo(() => {
       const [by, type] = sort.split(":");
+      const initSearchObject: Record<string, string> = {};
+      initialSearch.forEach((x) => {
+        initSearchObject[x.key] = x.value;
+      });
+
       const qs = queryStringGenerator({
-        ...initialSearch.map((x) => ({ [x.key]: x.value })),
+        ...initSearchObject,
         search,
         page: currentPage,
         size: pageSize,
