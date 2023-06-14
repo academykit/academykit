@@ -884,4 +884,7 @@ recorded cannot be deleted.</value>
   <data name="NoUserImported" xml:space="preserve">
     <value>Unable to import user due to incorrect file format</value>
   </data>
+  <data name="CompletedCourseIssue" xml:space="preserve">
+    <value>Completed course cannot be modified</value>
+  </data>
 </root>

@@ -370,6 +370,10 @@ namespace Lingtren.Infrastructure.Services
                     _logger.LogWarning("Training with identity: {identity} not found for user with :{id}.", identity, currentUserId);
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
+                if (course.Status == CourseStatus.Completed)
+                {
+                    throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
+                }
 
                 var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
                     predicate: p => p.CourseId == course.Id && (p.Id.ToString() == model.SectionIdentity || p.Slug == model.SectionIdentity)
