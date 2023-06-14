@@ -8,6 +8,7 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
+    using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Helpers;
     using Lingtren.Infrastructure.Localization;
     using LinqKit;
@@ -75,6 +76,10 @@
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
 
             var course = await _courseService.GetByIdOrSlugAsync(model.CourseIdentity, CurrentUser.Id).ConfigureAwait(false);
+            if (course.Status == CourseStatus.Completed)
+            {
+                throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
+            }
             var user = await _userService.GetUserByEmailAsync(model.Email).ConfigureAwait(false);
 
             if (user == null)
@@ -93,8 +98,10 @@
                 UpdatedOn = currentTimeStamp
             };
 
+
             var response = await _courseTeacherService.CreateAsync(courseTeacher).ConfigureAwait(false);
             return new CourseTeacherResponseModel(response);
+
         }
 
         /// <summary>
