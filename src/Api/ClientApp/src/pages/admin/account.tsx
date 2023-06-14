@@ -192,7 +192,9 @@ const Account = () => {
               label={t("confirm_password")}
               {...form.getInputProps("confirmPassword")}
             />
-            <Button type="submit">{t("save")}</Button>
+            <Button type="submit" loading={isLoading}>
+              {t("save")}
+            </Button>
           </Container>
         </form>
         {/* email section */}
