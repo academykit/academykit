@@ -121,6 +121,7 @@ const Create = () => {
   const addQuestion = useAddQuestion(id as string, "");
   const { mutate, data: addTagData, isSuccess } = useAddTag();
   const [isReset, setIsReset] = useState(false);
+
   const onSubmit = async (data: IAddQuestionType) => {
     try {
       await addQuestion.mutateAsync({ poolId: id as string, data });
@@ -170,7 +171,7 @@ const Create = () => {
   }, [isSuccess]);
 
   useEffect(() => {
-    if (form.values.type) {
+    if (form.values.type && !addQuestion.isSuccess) {
       form.values.answers.forEach((x, i) => {
         return form.setFieldValue(`answers.${i}.isCorrect`, false);
       });

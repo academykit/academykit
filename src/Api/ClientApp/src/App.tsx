@@ -55,6 +55,14 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
                   },
                 }),
               },
+              Popover: {
+                styles: (theme) => ({
+                  dropdown: {
+                    backgroundColor:
+                      theme.colorScheme === "dark" ? "#25262B" : "#F2F4F4",
+                  },
+                }),
+              },
             },
             colorScheme,
             fontFamily: "Poppins, sans-serif",
