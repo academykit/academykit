@@ -37,7 +37,12 @@
             });
         }
 
-        public string RemoveHtmlTags(string bio)
+        /// <summary>
+        /// Handel to remove html tags from bio
+        /// </summary>
+        /// <param name="bio">User's bio</param>
+        /// <returns>string</returns>
+        private string RemoveHtmlTags(string bio)
         {
              string textonly = Regex.Replace(bio, "<.*?>", "");
              return textonly;
