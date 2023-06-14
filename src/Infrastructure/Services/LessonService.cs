@@ -471,7 +471,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to update the lesson information");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UpdateLessonInformationError"));
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
 
