@@ -518,6 +518,7 @@
   "passing_percentage": "合格率",
   "question_passing_percentage": "問題セットの合格率",
   "course_title_required": "コースのタイトルが必要です",
+  "course_title_less_than_80": "コース タイトルは 80 未満である必要があります",
   "level_required": "レベルが必要です。",
   "group_required": "グループが必要です。",
   "event_start_date_required": "イベントの開始日が必要です。",
@@ -756,12 +757,10 @@
   "enrollments": "登録",
   "enrollment": "登録",
   "new_password_required": "新しいパスワードが必要です。",
-  "bio_character_limit":"自己紹介の文字制限は 200 文字以下にする必要があります",
+  "bio_character_limit": "自己紹介の文字制限は 200 文字以下にする必要があります",
   "Groups": "グループ",
   "home": "家",
-  "Tranning":"トレーニング",
-  "Pools":"セット",
+  "Tranning": "トレーニング",
+  "Pools": "セット",
   "my_certificate": "私の証明書"
-
-
 }
