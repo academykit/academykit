@@ -16,7 +16,6 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
-    using Newtonsoft.Json;
 
     public class UserController : BaseApiController
     {
@@ -185,6 +184,11 @@
             await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Update").ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _userService.GetAsync(userId, CurrentUser.Id, includeAllProperties: false).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
+            var emailchange = false;
+            if (model.Email.ToLower().Trim() != existing.Email.ToLower().Trim())
+            {
+                emailchange = true;
+            }
 
             var imageKey = existing.ImageUrl;
 
@@ -211,16 +215,18 @@
                 }
                 existing.Role = model.Role;
             }
-
             if(model.Status == UserStatus.Active || model.Status == UserStatus.InActive)
             {
                 existing.Status = model.Status;
             }
-            var password = await _userService.GenerateRandomPassword(8).ConfigureAwait(false);
-            existing.HashPassword = _userService.HashPassword(password);
-
-
+            string password = null;
+            if(emailchange == true)
+            {
+                password = await _userService.GenerateRandomPassword(8).ConfigureAwait(false);
+                existing.HashPassword = _userService.HashPassword(password);  
+            }
             var savedEntity = await _userService.UpdateAsync(existing).ConfigureAwait(false);
+         
             if (imageKey != model.ImageUrl && !string.IsNullOrWhiteSpace(imageKey))
             {
                 if (imageKey.ToLower().Trim().Contains("/public/") && imageKey.IndexOf("/standalone/") != -1)
@@ -230,7 +236,10 @@
                 await _fileServerService.RemoveFileAsync(imageKey).ConfigureAwait(false);
             }
             var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
-            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(savedEntity.Email, savedEntity.FullName, password, company.CompanyName, null));
+            if (password != null)
+            {
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(existing.Email, existing.FullName, password, company.CompanyName, null));
+            }
             return new UserResponseModel(savedEntity);
         }
 

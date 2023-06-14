@@ -1,11 +1,11 @@
 namespace Lingtren.Infrastructure.Services
 {
-    using Amazon.S3.Model;
     using Hangfire;
     using Hangfire.Server;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
@@ -14,12 +14,9 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using Org.BouncyCastle.Crypto.Parameters;
     using System;
-    using System.Diagnostics.Metrics;
     using System.Text;
     using static Dapper.SqlMapper;
-    using static System.Net.WebRequestMethods;
 
     public class HangfireJobService : BaseService, IHangfireJobService
     {
@@ -465,13 +462,12 @@ namespace Lingtren.Infrastructure.Services
                 }
                 foreach (var users in course.CourseEnrollments.AsList())
                 {
+                    var firstName = users.User.FirstName;
+                    var html = $"Dear {firstName},<br><br>";
+                    html += @$"Your enrolled course entitled  <a href='{this._appUrl}/trainings/{courseSlug}' ><u  style='color:blue;'>'{courseName}'</u></a>  has been updated with new content. We encourage you to visit the course page and"
+                        + $"explore the new materials to enhance your learning experience.<br><br>";
 
-                    var fullName = users.User.FullName;
-                    var html = $"Dear {fullName},<br><br>";
-                    html += $"Your enrolled course titled '{courseName}' have uploaded new content<br><br>" +
-                        @$"<a href='{this._appUrl}/trainings/{courseSlug}' ><u  style='color:blue;'>Click Here </u></a> to watch the course";
                     html += $"<br><br>Thank You, <br> {settings.CompanyName}";
-
                     var model = new EmailRequestDto
                     {
                         To = users.User?.Email,

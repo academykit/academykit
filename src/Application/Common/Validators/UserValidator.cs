@@ -44,6 +44,10 @@
         /// <returns>string</returns>
         private string RemoveHtmlTags(string bio)
         {
+            if(string.IsNullOrEmpty(bio))
+            {
+                return string.Empty;
+            }
              string textonly = Regex.Replace(bio, "<.*?>", "");
              return textonly;
             

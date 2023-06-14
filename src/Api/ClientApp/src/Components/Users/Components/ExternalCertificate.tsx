@@ -138,7 +138,7 @@ const ExternalCertificate = () => {
                 </thead>
                 <tbody>
                   {externalCertificate?.data.map((x: any) => (
-                    <RowsExternal key={x.userId} item={x} t={t} />
+                    <RowsExternal key={x.id} item={x} t={t} />
                   ))}
                 </tbody>
               </Table>

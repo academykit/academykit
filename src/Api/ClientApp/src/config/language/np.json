@@ -756,6 +756,8 @@
   "trainer_email_required": "प्रशिक्षकको इमेल आवश्यक छ!",
   "enrollments": "भर्नाहरू",
   "enrollment": "भर्ना",
-  "new_password_required": "नयाँ पासवर्ड आवश्यक छ।"
+  "new_password_required": "नयाँ पासवर्ड आवश्यक छ।",
+  "bio_character_limit":"बायो क्यारेक्टरको सीमा बढीमा २०० हुनुपर्दछ"
+
 
 }
