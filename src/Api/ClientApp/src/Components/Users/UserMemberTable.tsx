@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
+import { IWithSearchPagination } from "@hoc/useSearchPagination";
 
 const AddUpdateUserForm = lazyWithRetry(() => import("./AddUpdateUserForm"));
 
@@ -150,11 +151,13 @@ const UserRow = ({
 };
 
 const UserMemberTable = ({
+  sortComponent,
   users,
   search,
 }: {
   users: IUserProfile[];
   search: string;
+  sortComponent: Pick<IWithSearchPagination, "sortComponent">["sortComponent"];
 }) => {
   const auth = useAuth();
   const { t } = useTranslation();
@@ -176,9 +179,11 @@ const UserMemberTable = ({
       >
         <thead>
           <tr>
-            <th>{t("username")}</th>
+            <th>
+              {sortComponent({ sortKey: "firstName", title: t("username") })}
+            </th>
             <th>{t("role")}</th>
-            <th>{t("email")}</th>
+            <th>{sortComponent({ sortKey: "email", title: t("email") })}</th>
             <th>{t("phone_number")}</th>
             <th>{t("active_status")}</th>
             <th>{t("actions")}</th>

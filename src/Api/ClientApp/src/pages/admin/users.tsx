@@ -162,7 +162,7 @@ const UsersList = ({
       </Group>
       <Flex mb={10}>
         {searchComponent(t("search_users") as string)}
-        <Flex>{sortComponent(sortByObject, t("sort_by"))}</Flex>
+        {/* <Flex>{sortComponent(sortByObject, t("sort_by"))}</Flex> */}
       </Flex>
       {loading && <Loader />}
       {error && <Box>{errorType(error)}</Box>}
@@ -173,7 +173,11 @@ const UsersList = ({
           (data.items.length < 1 ? (
             <Box>{t("no_users")}</Box>
           ) : (
-            <UserMemberTable users={data?.items} search={searchParams} />
+            <UserMemberTable
+              sortComponent={sortComponent}
+              users={data?.items}
+              search={searchParams}
+            />
           ))}
       </ScrollArea>
       {data && pagination(data.totalPage)}

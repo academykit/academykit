@@ -1,20 +1,15 @@
 import SearchBar from "@components/Ui/SearchBar";
-import { Pagination, Select } from "@mantine/core";
+import { Pagination, Select, UnstyledButton } from "@mantine/core";
 import queryStringGenerator from "@utils/queryStringGenerator";
 import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { IconChevronDown, IconChevronUp, IconArrowsSort } from "@tabler/icons";
 
 export interface IWithSearchPagination {
   searchParams: string;
   pagination: (totalPage: number) => JSX.Element;
   searchComponent: (placeholder?: string) => JSX.Element;
-  sortComponent: (
-    data: {
-      value: string;
-      label: string;
-    }[],
-    placeholder: string
-  ) => JSX.Element;
+  sortComponent: (props: { title: string; sortKey: string }) => JSX.Element;
   filterComponent: (
     data: {
       value: string;
@@ -37,6 +32,8 @@ const withSearchPagination =
   <P extends object>(Component: React.FC<P & IWithSearchPagination>) =>
   (props: P) => {
     const [params, setParams] = useSearchParams();
+    const [sort, setSort] = useState(params.get("so") ?? "");
+    const [filterKey, setFilterKey] = useState<string>("");
     const [initialSearch, setInitialSearch] = useState<
       {
         key: string;
@@ -57,20 +54,26 @@ const withSearchPagination =
     );
 
     const qs = useMemo(() => {
+      const [by, type] = sort.split(":");
       const qs = queryStringGenerator({
+        ...initialSearch.map((x) => ({ [x.key]: x.value })),
         search,
         page: currentPage,
         size: pageSize,
+        sortBy: by,
+        sortType: type,
+        [filterKey]: filterValue,
       });
-      console.log(!search);
+
       !!search && params.set("s", search);
+      sort && params.set("so", sort);
 
       pageSize && params.set("si", pageSize?.toString());
       currentPage && params.set("p", currentPage.toString());
 
       setParams(params, { replace: true });
       return qs;
-    }, [currentPage, search, pageSize]);
+    }, [currentPage, search, pageSize, sort, filterValue]);
 
     const setSearch = (search: string) => {
       for (let value of params.entries()) {
@@ -79,20 +82,38 @@ const withSearchPagination =
       params.set("s", search);
       setParams(params);
     };
-    const sortComponent = (
-      data: { value: string; label: string }[],
-      placeholder: string
-    ) => {
+
+    const sortComponent = (props: { title: string; sortKey: string }) => {
+      const sortKey = sort && sort.split(":").length > 0 && sort.split(":")[0];
+      const sortValue =
+        sort && sort.split(":").length > 0 && sort.split(":")[1];
+      const isAscending = sortKey === props.sortKey && sortValue === "1";
+
       return (
-        <Select
-          placeholder={placeholder}
-          ml={5}
-          clearable
-          data={data}
-          onChange={(e: string) => {
-            // setSortValue(e);
+        <UnstyledButton
+          style={{
+            display: "flex",
+            alignItems: "center",
+            fontWeight: "bold",
+            color: "#495057",
+            fontSize: "inherit",
           }}
-        />
+          onClick={() => {
+            setSort(() => props.sortKey + `:${!isAscending ? "1" : "0"}`);
+          }}
+        >
+          {props.title}
+
+          {props.sortKey === sortKey ? (
+            isAscending ? (
+              <IconChevronUp style={{ marginLeft: "10px" }} size={20} />
+            ) : (
+              <IconChevronDown style={{ marginLeft: "10px" }} size={20} />
+            )
+          ) : (
+            <IconArrowsSort style={{ marginLeft: "10px" }} size={20} />
+          )}
+        </UnstyledButton>
       );
     };
 
@@ -111,11 +132,7 @@ const withSearchPagination =
           data={data}
           onChange={(e: string) => {
             setFilterValue(() => e);
-            if (e) {
-              // setFilterKey(() => key);
-            } else {
-              // setFilterKey(() => "");
-            }
+            setFilterKey(() => key);
           }}
         />
       );
