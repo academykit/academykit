@@ -52,6 +52,15 @@ const schema = () => {
         message: t("enter_valid_phone"),
         excludeEmptyString: true,
       }),
+    bio: Yup.string().test(
+      "asdf",
+      t("bio_character_limit") as string,
+      function (value: any) {
+        const a = document.createElement("div");
+        a.innerHTML = value;
+        return a.innerText.length <= 200;
+      }
+    ),
   });
 };
 const UserInfo = () => {

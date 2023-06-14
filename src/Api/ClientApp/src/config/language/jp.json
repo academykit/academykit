@@ -755,5 +755,6 @@
   "trainer_email_required": "トレーナーのメールアドレスは必須です。",
   "enrollments": "登録",
   "enrollment": "登録",
-  "new_password_required": "新しいパスワードが必要です。"
+  "new_password_required": "新しいパスワードが必要です。",
+  "bio_character_limit":"自己紹介の文字制限は 200 文字以下にする必要があります"
 }
