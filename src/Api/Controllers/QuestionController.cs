@@ -140,7 +140,7 @@
                 throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
             }
             await _questionService.DeleteQuestionAsync(poolIdentity: identity, questionId: id, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("QuestionRemoved") });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("QuestionRemovedSuccessfully") });
         }
     }
 }

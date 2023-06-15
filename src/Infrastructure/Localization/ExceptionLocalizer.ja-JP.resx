@@ -231,7 +231,7 @@
   <data name="QuestionpoolTeacherRemoved" xml:space="preserve">
     <value>質問プールの教師が正常に削除されました</value>
   </data>
-  <data name="QuestionRemoved" xml:space="preserve">
+  <data name="QuestionRemovedSuccessfully" xml:space="preserve">
     <value>質問は正常に削除されました</value>
   </data>
   <data name="QuestionSetAnswer" xml:space="preserve">
@@ -883,5 +883,8 @@
   </data>
   <data name="CompletedCourseIssue" xml:space="preserve">
     <value>完了したコースは変更できません</value>
+  </data>
+  <data name="TrainingWithDraftgStatusCanOnlyRemoved" xml:space="preserve">
+    <value>ドラフトステータスのトレーニングは削除のみ可能です</value>
   </data>
 </root>
