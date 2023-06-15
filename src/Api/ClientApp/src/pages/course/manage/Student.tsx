@@ -280,7 +280,7 @@ const ManageStudents = ({
 
       <div style={{ display: "flex" }}>
         <Box mx={3} sx={{ width: "100%" }}>
-          {searchComponent("Search for trainees")}
+          {searchComponent(t("search_trainees") as string)}
         </Box>
       </div>
       {getStudentStat.data && getStudentStat.data?.totalCount > 0 && (

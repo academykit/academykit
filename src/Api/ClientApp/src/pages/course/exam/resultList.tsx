@@ -1,5 +1,8 @@
+import { useTranslation } from "react-i18next";
+
 const ResultList = () => {
-  return <div>ResultList</div>;
+  const { t } = useTranslation();
+  return <div>{t("result_list")}</div>;
 };
 
 export default ResultList;
