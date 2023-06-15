@@ -1,9 +1,12 @@
+import useNav from "@hooks/useNav";
 import {
   Breadcrumbs,
   Anchor,
   Divider,
   MantineStyleSystemProps,
+  Text,
 } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
 type ItemsProps = {
@@ -15,9 +18,17 @@ type ItemsProps = {
 };
 
 const getItems = ({ items, hide }: ItemsProps) => {
+  const { t } = useTranslation();
   const finalItem = items.map((item, index) => (
-    <Anchor size={"sm"} to={item.href} component={Link} key={index}>
-      {item.title}
+    <Anchor
+      size={"sm"}
+      maw={"200px"}
+      style={{ overflow: "hidden", textOverflow: "ellipsis" }}
+      to={item.href}
+      component={Link}
+      key={index}
+    >
+      {t(`${item.title}`)}
     </Anchor>
   ));
   if (hide) {
@@ -33,12 +44,13 @@ const getItems = ({ items, hide }: ItemsProps) => {
 const Breadcrumb = ({
   hide = null,
   start,
-  py = 15,
+  py = 20,
 }: {
   hide?: number | null;
   py?: MantineStyleSystemProps["py"];
   start?: { title: string; href: string };
 }) => {
+  const { breadCrumb } = useNav();
   const routes = useLocation();
   const pathNames = routes.pathname.split("/").splice(1);
 
@@ -52,11 +64,11 @@ const Breadcrumb = ({
     };
     return a;
   });
-
+  const items = breadCrumb ?? newPath;
   return (
     <>
       <Breadcrumbs py={py} pb={5}>
-        {getItems({ items: start ? [start, ...newPath] : newPath, hide })}
+        {getItems({ items: start ? [start, ...items] : items, hide })}
       </Breadcrumbs>
       <Divider />
     </>

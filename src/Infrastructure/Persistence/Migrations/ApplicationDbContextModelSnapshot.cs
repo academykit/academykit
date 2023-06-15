@@ -2863,12 +2863,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(500)")
                         .HasColumnName("image_url");
 
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false)
-                        .HasColumnName("is_active");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -2915,6 +2909,12 @@ namespace Infrastructure.Persistence.Migrations
                         .HasDefaultValue(4)
                         .HasColumnName("role");
 
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1)
+                        .HasColumnName("status");
+
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
                         .HasColumnType("VARCHAR(50)")
@@ -2940,10 +2940,10 @@ namespace Infrastructure.Persistence.Migrations
                             Email = "vuriloapp@gmail.com",
                             FirstName = "ABC",
                             HashPassword = "+gURQgHBT1zJz5AljZhAMyaNRFQBVorq5HIlEmhf+ZQ=:BBLvXedGXzdz0ZlypoKQxQ==",
-                            IsActive = true,
                             LastName = "XYZ",
                             MobileNumber = "1234567890",
                             Role = 1,
+                            Status = 1,
                             UpdatedBy = "30fcd978-f256-4733-840f-759181bc5e63",
                             UpdatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004)
                         });

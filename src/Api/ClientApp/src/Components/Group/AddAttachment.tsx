@@ -1,6 +1,4 @@
 import FileUpload from "@components/Ui/FileUpload";
-import { IWithSearchPagination } from "@hoc/useSearchPagination";
-import { Text } from "@mantine/core";
 import { useParams } from "react-router-dom";
 
 const AddAssignment = ({

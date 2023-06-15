@@ -54,9 +54,9 @@ export const useGroups = (query: string) =>
   useQuery([api.groups.list, query], () => getGroups(query));
 
 const addGroup = async (name: string) =>
-  await httpClient.post<
-    AxiosResponse<{ message: string }, { message: "string" }>
-  >(api.groups.list, { name });
+  await httpClient.post<IGroup>(api.groups.list, {
+    name,
+  });
 
 export const useAddGroup = () => {
   const queryClient = useQueryClient();

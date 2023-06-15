@@ -2,7 +2,7 @@ import { Cross } from "@components/Icons";
 import { ActionIcon, TextInput, Tooltip } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconClearAll, IconSearch } from "@tabler/icons";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 interface Props {
   placeholder?: string;
@@ -15,6 +15,7 @@ const SearchBar: React.FC<React.PropsWithChildren<Props>> = ({
   setSearch,
   search,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const form = useForm({
     initialValues: {
       search: search ?? "",
@@ -26,14 +27,16 @@ const SearchBar: React.FC<React.PropsWithChildren<Props>> = ({
     }
   }, [form.values.search]);
   const clearField = () => {
-    form.reset();
     setSearch("");
+    form.setFieldValue("search", "");
+    inputRef.current?.focus();
   };
 
   return (
     <div style={{ width: "100%" }}>
       <form onSubmit={form.onSubmit((values) => setSearch(values.search))}>
         <TextInput
+          ref={inputRef}
           radius={"md"}
           size="sm"
           rightSection={

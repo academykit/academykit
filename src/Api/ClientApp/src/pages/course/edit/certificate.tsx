@@ -35,7 +35,9 @@ import useFormErrorHooks from "@hooks/useFormErrorHooks";
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    title: Yup.string().required(t("course_title_required") as string),
+    title: Yup.string()
+      .required(t("course_title_required") as string)
+      .max(80, t("course_title_less_than_80") as string),
     eventStartDate: Yup.string()
       .required(t("event_start_date_required") as string)
       .typeError(t("event_start_date_required") as string),
@@ -125,56 +127,56 @@ const Certificate = () => {
           >
             <Box sx={{ width: "300px", margin: "auto" }}>
               {getCertificateDetails.isSuccess &&
-                getCertificateDetails.data?.data?.sampleUrl && (
+              getCertificateDetails.data?.data?.sampleUrl ? (
+                <div style={{ position: "relative", backgroundColor: "black" }}>
+                  <Image
+                    radius={"md"}
+                    style={{
+                      opacity: "0.4",
+                    }}
+                    src={getCertificateDetails.data?.data?.sampleUrl}
+                  />
                   <div
-                    style={{ position: "relative", backgroundColor: "black" }}
+                    style={{
+                      position: "absolute",
+                      left: -20,
+                      bottom: 0,
+                      right: 0,
+                      top: 0,
+                      margin: "auto",
+                      width: "45px",
+                      height: "30px",
+                      display: "flex",
+                    }}
                   >
-                    <Image
-                      radius={"md"}
-                      style={{
-                        opacity: "0.4",
-                      }}
-                      src={getCertificateDetails.data?.data?.sampleUrl}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        left: -20,
-                        bottom: 0,
-                        right: 0,
-                        top: 0,
-                        margin: "auto",
-                        width: "45px",
-                        height: "30px",
-                        display: "flex",
-                      }}
-                    >
-                      <Tooltip label={t("view_certificate")}>
-                        <ActionIcon
-                          variant="default"
-                          onClick={() => window.open(data?.sampleUrl)}
-                          mr={10}
-                          size="md"
-                        >
-                          <IconEye />
-                        </ActionIcon>
-                      </Tooltip>
-                      <Tooltip label={t("download_certificate")}>
-                        <ActionIcon
-                          variant="default"
-                          onClick={() => {
-                            downloadImage(
-                              data?.sampleUrl ?? "",
-                              data?.title ?? ""
-                            );
-                          }}
-                        >
-                          <IconDownload />
-                        </ActionIcon>
-                      </Tooltip>
-                    </div>
+                    <Tooltip label={t("view_certificate")}>
+                      <ActionIcon
+                        variant="default"
+                        onClick={() => window.open(data?.sampleUrl)}
+                        mr={10}
+                        size="md"
+                      >
+                        <IconEye />
+                      </ActionIcon>
+                    </Tooltip>
+                    <Tooltip label={t("download_certificate")}>
+                      <ActionIcon
+                        variant="default"
+                        onClick={() => {
+                          downloadImage(
+                            data?.sampleUrl ?? "",
+                            data?.title ?? ""
+                          );
+                        }}
+                      >
+                        <IconDownload />
+                      </ActionIcon>
+                    </Tooltip>
                   </div>
-                )}
+                </div>
+              ) : (
+                <Box>{t("certificate_preview_details")}</Box>
+              )}
               {getCertificateDetails.isSuccess &&
                 getCertificateDetails.data?.data?.sampleUrl && (
                   <Text size={"xs"} c="dimmed">
@@ -233,13 +235,21 @@ const Certificate = () => {
             <CreateSignature
               data={cert}
               key={cert.id}
-              onClose={() => setAddSignatureForm()}
+              onClose={() => {
+                getCertificateDetails.refetch();
+                setAddSignatureForm();
+              }}
             />
           ))}
         </div>
 
         {addSignatureForm ? (
-          <CreateSignature onClose={() => setAddSignatureForm()} />
+          <CreateSignature
+            onClose={() => {
+              getCertificateDetails.refetch();
+              setAddSignatureForm();
+            }}
+          />
         ) : (
           getSignature.data &&
           getSignature.data?.length < 3 && (

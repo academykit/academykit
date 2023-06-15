@@ -10,12 +10,18 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { FileAccess, uploadFile } from "@utils/services/fileService";
 import { Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
+import FilePondPluginImageResize from "filepond-plugin-image-resize";
+import FilePondPluginImageTransform from "filepond-plugin-image-transform";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
   FilePondPluginImagePreview,
+  FilePondPluginFileValidateType,
+  FilePondPluginFileValidateSize,
+  FilePondPluginImageResize,
   FilePondPluginImageValidateSize,
-  FilePondPluginFileValidateType
+  FilePondPluginImageTransform
 );
 type IProps = {
   formContext: () => UseFormReturnType<any, (values: any) => any>;
@@ -64,19 +70,22 @@ const ThumbnailEditor = ({
           "image/gif",
           "image/jpg",
         ]}
-        // imageValidateSizeMinWidth={639}
-        // imageValidateSizeMinHeight={359}
-        // imageValidateSizeMinResolution={229401}
         files={files}
         labelIdle={`${t(
           "drag_and_drop"
         )} ${label} or <span class="filepond--label-action">${t(
           "browse"
         )}</span>`}
+        imageValidateSizeMinWidth={639}
+        imageValidateSizeMinHeight={359}
+        allowImageResize={true}
+        imageValidateSizeMinResolution={229401}
         onaddfile={(error, file) => {}}
         onupdatefiles={setFiles}
         onremovefile={() => form.setFieldValue(FormField, "")}
         allowMultiple={false}
+        imageResizeTargetWidth={1280}
+        imageResizeTargetHeight={700}
         maxFiles={1}
         credits={false}
         server={{

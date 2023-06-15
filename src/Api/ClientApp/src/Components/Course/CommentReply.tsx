@@ -146,10 +146,22 @@ const CommentReply = ({
               withAsterisk
             />
             <Group>
-              <Button loading={editReply.isLoading} size="sm" type="submit">
+              <Button
+                loading={editReply.isLoading}
+                size="sm"
+                type="submit"
+                disabled={!form.values.content.trim()}
+              >
                 {t("edit")}
               </Button>
-              <Button size="sm" variant="outline" onClick={() => setEdit()}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  setEdit();
+                  form.reset();
+                }}
+              >
                 {t("cancel")}
               </Button>
             </Group>

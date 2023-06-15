@@ -180,8 +180,8 @@ const Questions = () => {
           <Grid.Col span={matches ? 3 : 6}>
             <Select
               size="md"
-              label={t("question_pool")}
               placeholder={t("pick_one") as string}
+              label={t("mcq_pools")}
               searchable
               clearable
               allowDeselect
@@ -204,6 +204,7 @@ const Questions = () => {
               value={data}
               onChange={setData}
               searchPlaceholder={t("search_for_questions") as string}
+
               nothingFound={
                 questionList.isLoading ? <Loader /> : t("no_question_found")
               }

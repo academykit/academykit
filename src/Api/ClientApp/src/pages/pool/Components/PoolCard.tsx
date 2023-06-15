@@ -100,11 +100,11 @@ const PoolCard = ({
                   }}
                 >
                   <NavLink
+                    w={90}
                     variant="subtle"
                     label={t("edit")}
                     component={Link}
                     to={RoutePath.pool.details(slug).route}
-                    rightSection={<IconChevronRight size={12} stroke={1.5} />}
                   ></NavLink>
 
                   <NavLink
@@ -112,7 +112,6 @@ const PoolCard = ({
                     variant="subtle"
                     label={t("delete")}
                     component={"button"}
-                    rightSection={<IconChevronRight size={12} stroke={1.5} />}
                   ></NavLink>
                 </Group>
               </Paper>

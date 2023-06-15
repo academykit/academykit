@@ -106,6 +106,7 @@ const CreateSignature = ({
     <FormProvider form={form}>
       {data && (
         <DeleteModal
+          loading={deleteSignature.isLoading}
           title={t("sure_want_to_delete")}
           open={confirmDelete}
           onClose={setConfirmDelete}

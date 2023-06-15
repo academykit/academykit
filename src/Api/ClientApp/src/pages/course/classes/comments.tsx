@@ -51,8 +51,9 @@ const Comments = () => {
           mt={20}
           sx={{ minHeight: "5rem" }}
         />
-        <Button loading={postComment.isLoading} type="submit" mt={10}>
+        <Button loading={postComment.isLoading} type="submit" mt={10} disabled={!form.values.content.trim()}>
           {t("post")}
+        
         </Button>
       </form>
     </Box>

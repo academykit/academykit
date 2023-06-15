@@ -6,6 +6,7 @@ import { useAddGroup } from "@utils/services/groupService";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import { useNavigate } from "react-router-dom";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -14,8 +15,10 @@ const schema = () => {
   });
 };
 const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
+  const navigate = useNavigate();
+
   const { t } = useTranslation();
-  const { mutateAsync, isLoading } = useAddGroup();
+  const { mutateAsync, isLoading, data, isSuccess } = useAddGroup();
   const form = useForm({
     initialValues: {
       name: "",
@@ -37,6 +40,10 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
     },
   }));
   const { classes } = useStyles();
+
+  if (isSuccess) {
+    navigate(`./${data.data.slug}/members`);
+  }
 
   const onSubmitForm = async (name: string) => {
     try {

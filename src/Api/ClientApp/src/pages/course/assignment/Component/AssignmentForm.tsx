@@ -33,7 +33,6 @@ const AssignmentForm = ({
 
   const handleSubmit = async (values: IAssignmentQuestion[]) => {
     const finalData: IAssignmentSubmission[] = [];
-    const { t } = useTranslation();
     values.forEach((x) => {
       var data: any = {};
       if (x.assignmentSubmissionId) data["id"] = x.assignmentSubmissionId;

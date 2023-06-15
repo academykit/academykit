@@ -42,7 +42,7 @@ const schema = () => {
 };
 
 const TeacherCards = ({
-  teacher: { id, user },
+  teacher: { id, user, courseCreatedBy },
 }: {
   teacher: ICreateCourseTeacher;
 }) => {
@@ -71,12 +71,14 @@ const TeacherCards = ({
 
       <Card radius={"lg"} mb={10}>
         <Group py={5} position="apart">
-          {user && <UserShortProfile user={user} size={"md"} />}
+          {user && (
+            <UserShortProfile user={user} size={"md"} page="Trainings" />
+          )}
           <Group>
             <Text color={"dimmed"} size={"sm"}></Text>
             {auth?.auth &&
-              auth?.auth?.role === UserRole.SuperAdmin &&
-              auth?.auth.id !== user?.id && (
+              auth?.auth.id !== user?.id &&
+              user?.id !== courseCreatedBy && (
                 <IconTrash
                   color="red"
                   style={{ cursor: "pointer" }}
@@ -140,7 +142,7 @@ const Teacher = () => {
         {(style) => (
           <Box mt={10}>
             <form onSubmit={form.onSubmit(onSubmitForm)}>
-              <Group>
+              <Group sx={{ alignItems: "start" }}>
                 <TextInput
                   placeholder={t("enter_the_email") as string}
                   name="email"

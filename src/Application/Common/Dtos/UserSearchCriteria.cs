@@ -4,7 +4,7 @@
 
     public class UserSearchCriteria : BaseSearchCriteria
     {
-        public bool? IsActive { get; set; }
+        public UserStatus? Status { get; set; }
         public UserRole? Role { get; set; }
         public Guid? DepartmentId { get; set; }
     }

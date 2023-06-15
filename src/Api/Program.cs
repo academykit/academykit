@@ -29,8 +29,8 @@ builder.Services.AddRequestLocalization(x =>
 {
     x.DefaultRequestCulture = new RequestCulture("en-US");
     x.ApplyCurrentCultureToResponseHeaders = true;
-    x.SupportedCultures = new List<CultureInfo> { new("ne-NP"), new("en-US"),new("ja-JP")};
-    x.SupportedUICultures = new List<CultureInfo> { new("ne-NP"), new("en-US"),new("ja-JP")};
+    x.SupportedCultures = new List<CultureInfo> { new("ne-NP"), new("en-US"), new("ja-JP") };
+    x.SupportedUICultures = new List<CultureInfo> { new("ne-NP"), new("en-US"), new("ja-JP") };
 });
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddCors(options => options.AddDefaultPolicy(
@@ -56,8 +56,8 @@ else
 {
     app.UseHsts();
 }
- app.UseSwagger();
- app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto

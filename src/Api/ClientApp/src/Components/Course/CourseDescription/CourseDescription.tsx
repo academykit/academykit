@@ -32,6 +32,7 @@ import {
 import { Link, useParams } from "react-router-dom";
 import CourseContent from "./CourseContent/CourseContent";
 import { useTranslation } from "react-i18next";
+import { color } from "@utils/constants";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -162,6 +163,14 @@ const CourseDescription = () => {
     <Center>{t("unable_get_course")}</Center>;
   }
 
+  const firstLessonSlugs = course?.data?.sections?.find(
+    (item) => item.lessons && item?.lessons?.length > 0
+  );
+
+  const slug = firstLessonSlugs?.lessons
+    ? firstLessonSlugs?.lessons[0].slug
+    : "";
+
   return (
     <div>
       <Container fluid>
@@ -174,7 +183,7 @@ const CourseDescription = () => {
               </Badge>
               {auth?.auth && auth?.auth?.role <= UserRole.Admin && (
                 <>
-                  <Badge ml={10} color={"teal"}>
+                  <Badge ml={10} color={color(course?.data?.status)}>
                     {t(`${CourseStatus[course?.data?.status]}`)}
                   </Badge>
                 </>
@@ -206,17 +215,21 @@ const CourseDescription = () => {
             <Center>
               <Group my={30}>
                 {auth?.auth && auth?.auth?.role <= UserRole.Admin ? (
-                  <Link
-                    to={`${RoutePath.classes}/${course?.data?.slug}/${
-                      course?.data?.sections &&
-                      course?.data?.sections[0]?.lessons &&
-                      course?.data?.sections[0]?.lessons[0]?.slug
-                    }`}
-                  >
-                    <Button radius="xl" size="md" className={classes.control}>
-                      {t("preview")}
-                    </Button>
-                  </Link>
+                  <>
+                    {slug && (
+                      <Link
+                        to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}
+                      >
+                        <Button
+                          radius="xl"
+                          size="md"
+                          className={classes.control}
+                        >
+                          {t("preview")}
+                        </Button>
+                      </Link>
+                    )}
+                  </>
                 ) : course.data?.userStatus === CourseUserStatus.NotEnrolled ? (
                   <Button
                     radius="xl"
@@ -228,29 +241,37 @@ const CourseDescription = () => {
                     {t("enroll_course")}
                   </Button>
                 ) : course.data?.userStatus === CourseUserStatus.Author ? (
-                  <Link
-                    to={`${RoutePath.classes}/${course?.data?.slug}/${
-                      course?.data?.sections &&
-                      course?.data?.sections[0]?.lessons &&
-                      course?.data?.sections[0]?.lessons[0]?.slug
-                    }`}
-                  >
-                    <Button radius="xl" size="md" className={classes.control}>
-                      {t("preview")}
-                    </Button>
-                  </Link>
+                  <>
+                    {slug && (
+                      <Link
+                        to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}
+                      >
+                        <Button
+                          radius="xl"
+                          size="md"
+                          className={classes.control}
+                        >
+                          {t("preview")}
+                        </Button>
+                      </Link>
+                    )}
+                  </>
                 ) : (
-                  <Link
-                    to={`${RoutePath.classes}/${course?.data?.slug}/${
-                      course?.data?.sections &&
-                      course?.data?.sections[0]?.lessons &&
-                      course?.data?.sections[0]?.lessons[0]?.slug
-                    }`}
-                  >
-                    <Button radius="xl" size="md" className={classes.control}>
-                      {t("watch_course")}
-                    </Button>
-                  </Link>
+                  <>
+                    {slug && (
+                      <Link
+                        to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}
+                      >
+                        <Button
+                          radius="xl"
+                          size="md"
+                          className={classes.control}
+                        >
+                          {t("watch_course")}
+                        </Button>
+                      </Link>
+                    )}
+                  </>
                 )}
                 {auth?.auth &&
                   auth?.auth?.role <= UserRole.Admin &&

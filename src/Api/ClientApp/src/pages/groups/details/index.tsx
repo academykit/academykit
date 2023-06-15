@@ -29,7 +29,10 @@ const useStyle = createStyles({});
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t("group_name_required") as string),
+    name: Yup.string()
+      .trim()
+      .required(t("group_name_required") as string)
+      .max(250, t("group_character_limit") as string),
   });
 };
 const GroupDetail = () => {
@@ -50,18 +53,19 @@ const GroupDetail = () => {
   const auth = useAuth();
 
   useEffect(() => {
-    if (groupDetail.isSuccess) {
+    if (groupDetail.data) {
       form.setFieldValue("name", groupDetail.data.data.name);
     }
-  }, [groupDetail.isSuccess]);
+  }, [groupDetail.data]);
 
   const updateGroup = async ({ name }: { name: string }) => {
     try {
       await updateGroups.mutateAsync({
-        name,
+        name: name.trim(),
         id: id as string,
         isActive: true,
       });
+      setEdit(false);
       showNotification({
         title: t("successful"),
         message: t("group_update_success"),
@@ -73,6 +77,8 @@ const GroupDetail = () => {
         color: "red",
       });
     }
+    setEdit(false);
+    form.reset();
   };
   if (groupDetail.error) {
     throw groupDetail.error;
@@ -84,7 +90,16 @@ const GroupDetail = () => {
         <Title>{t("group_details")}</Title>
 
         {!edit && auth?.auth && auth?.auth?.role < UserRole.Trainer && (
-          <Button onClick={() => setEdit(true)} variant="outline">
+          <Button
+            onClick={() => {
+              setEdit(true);
+              form.setFieldValue(
+                "name",
+                groupDetail.data ? groupDetail.data.data.name : ""
+              );
+            }}
+            variant="outline"
+          >
             {t("edit")}
           </Button>
         )}
@@ -113,7 +128,14 @@ const GroupDetail = () => {
               <Button loading={updateGroups.isLoading} mt={20} type="submit">
                 {t("save")}
               </Button>
-              <Button variant="outline" onClick={() => setEdit(false)} ml={10}>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setEdit(false);
+                  form.reset();
+                }}
+                ml={10}
+              >
                 {t("cancel")}
               </Button>
             </Box>

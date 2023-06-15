@@ -39,7 +39,17 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
   const { t } = useTranslation();
 
   return (
-    <Card w={350} withBorder sx={{ position: "relative", overflow: "visible" }}>
+    <Card
+      sx={{
+        ["@media (max-width: 400px)"]: {
+          width: "100%",
+        },
+        position: "relative",
+        overflow: "visible",
+        width: "350px",
+      }}
+      withBorder
+    >
       <Link
         to={RoutePath.courses.description(data.slug).route}
         style={{ position: "absolute", height: "100%", width: "100%" }}

@@ -179,10 +179,21 @@ const Comment = ({ comment }: { comment: IComment }) => {
           />
           {edit && (
             <Group>
-              <Button size="sm" type="submit">
+              <Button
+                size="sm"
+                type="submit"
+                disabled={!form.values.content.trim()}
+              >
                 {t("save")}
               </Button>
-              <Button variant="outline" size="sm" onClick={() => setEdit()}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setEdit();
+                  form.reset();
+                }}
+              >
                 {t("cancel")}
               </Button>
             </Group>

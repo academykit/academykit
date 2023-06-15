@@ -24,7 +24,7 @@ const useStyle = createStyles({});
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t("group_name_required") as string),
+    name: Yup.string().required(t("pool_name_required") as string),
   });
 };
 
@@ -69,7 +69,13 @@ const MCQDetails = () => {
         <Title>{t("pool_details")}</Title>
 
         {!edit && (
-          <Button onClick={() => setEdit(true)} variant="outline">
+          <Button
+            onClick={() => {
+              setEdit(true);
+              form.setFieldValue("name", pool.data ? pool.data?.name : "");
+            }}
+            variant="outline"
+          >
             {t("edit")}
           </Button>
         )}
@@ -98,7 +104,14 @@ const MCQDetails = () => {
               <Button loading={addPool.isLoading} mt={20} type="submit">
                 {t("save")}
               </Button>
-              <Button variant="outline" onClick={() => setEdit(false)} ml={10}>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setEdit(false);
+                  form.reset();
+                }}
+                ml={10}
+              >
                 {t("cancel")}
               </Button>
             </Box>

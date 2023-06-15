@@ -1,6 +1,7 @@
 namespace Lingtren.Infrastructure.Services
 {
     using AngleSharp.Common;
+    using AngleSharp.Dom;
     using Hangfire;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
@@ -19,6 +20,7 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.Extensions.Logging;
     using System;
     using System.Linq.Expressions;
+    using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
     public class LessonService : BaseGenericService<Lesson, LessonBaseSearchCriteria>, ILessonService
     {
@@ -126,7 +128,7 @@ namespace Lingtren.Infrastructure.Services
             var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
                 predicate: p => p.CourseId == course.Id,
                 orderBy: o => o.OrderBy(x => x.Order),
-                include: src => src.Include(x => x.Lessons).ThenInclude(x=>x.QuestionSet).ThenInclude(x=>x.QuestionSetSubmissions)).ConfigureAwait(false);
+                include: src => src.Include(x => x.Lessons)).ConfigureAwait(false);
 
             var lessons = new List<Lesson>();
             lessons = sections.SelectMany(x => x.Lessons.OrderBy(x => x.Order)).ToList();
@@ -334,6 +336,7 @@ namespace Lingtren.Infrastructure.Services
                         CreatedOn = DateTime.UtcNow
                     };
                     await _unitOfWork.GetRepository<VideoQueue>().InsertAsync(videoQueue).ConfigureAwait(false);
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.LessonVideoUploadedAsync(lesson.Id, null));
                 }
                 var order = await LastLessonOrder(lesson).ConfigureAwait(false);
                 lesson.Order = order;
@@ -345,7 +348,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to create the lesson");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("CreateLessonError"));
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
 
@@ -366,6 +369,10 @@ namespace Lingtren.Infrastructure.Services
                 {
                     _logger.LogWarning("Training with identity: {identity} not found for user with :{id}.", identity, currentUserId);
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
+                }
+                if (course.Status == CourseStatus.Completed)
+                {
+                    throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
                 }
 
                 var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
@@ -464,7 +471,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to update the lesson information");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UpdateLessonInformationError"));
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
 
@@ -619,7 +626,7 @@ namespace Lingtren.Infrastructure.Services
             try
             {
                 var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
-                    predicate: p => p.Id == currentUserId && p.IsActive).ConfigureAwait(false);
+                    predicate: p => p.Id == currentUserId && p.Status == UserStatus.Active).ConfigureAwait(false);
                 if (user == null)
                 {
                     _logger.LogWarning("User with id: {id} not found.", currentUserId);
@@ -866,6 +873,10 @@ namespace Lingtren.Infrastructure.Services
         private async Task CreateQuestionSetAsync(LessonRequestModel model, Lesson lesson)
         {
             lesson.QuestionSet = new QuestionSet();
+            if (model.QuestionSet.StartTime < DateTime.UtcNow || model.EndDate < DateTime.UtcNow)
+            {
+                throw new InvalidDataException(_localizer.GetString("InvalidTimeIssue"));
+            }
             lesson.QuestionSet = new QuestionSet
             {
                 Id = Guid.NewGuid(),
@@ -898,6 +909,10 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         private async Task UpdateQuestionSetAsync(LessonRequestModel model, Lesson existingLesson)
         {
+            if(model.QuestionSet.StartTime <= DateTime.UtcNow || model.QuestionSet.EndTime <= DateTime.UtcNow)
+            {
+                throw new InvalidDataException(_localizer.GetString("InvalidTimeIssue"));
+            }
             existingLesson.QuestionSet.Name = existingLesson.Name;
             existingLesson.QuestionSet.ThumbnailUrl = existingLesson.ThumbnailUrl;
             existingLesson.QuestionSet.Description = model.QuestionSet.Description;
@@ -924,6 +939,10 @@ namespace Lingtren.Infrastructure.Services
         private async Task CreateMeetingAsync(LessonRequestModel model, Lesson lesson)
         {
             lesson.Meeting = new Meeting();
+            if (model.Meeting.MeetingStartDate.ToUniversalTime() <= DateTime.UtcNow)
+            {
+                throw new ArgumentException(_localizer.GetString("InvalidMeetingTimeIssue"));
+            }
             lesson.Meeting = new Meeting
             {
                 Id = Guid.NewGuid(),
@@ -949,6 +968,10 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         private async Task UpdateMeetingAsync(LessonRequestModel model, Lesson existingLesson)
         {
+            if(model.Meeting.MeetingStartDate <= DateTime.UtcNow)
+            {
+                throw new InvalidDataException(_localizer.GetString("InvalidMeetingTimeIssue"));
+            }
             existingLesson.Meeting.StartDate = model.Meeting.MeetingStartDate;
             existingLesson.Meeting.ZoomLicenseId = model.Meeting.ZoomLicenseId.Value;
             existingLesson.Meeting.Duration = model.Meeting.MeetingDuration * 60; //convert duration from minutes to seconds;

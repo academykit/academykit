@@ -7,17 +7,26 @@ const DeleteModal = ({
   title,
   open,
   onConfirm,
+  loading = false,
 }: {
   onClose: Function;
   title: string;
   open: boolean;
   onConfirm: Function;
+  loading?: boolean;
 }) => {
   const { t } = useTranslation();
   return (
-    <Modal title={title} opened={open} onClose={() => onClose()}>
+    <Modal
+      styles={{ header: { alignItems: "start" } }}
+      title={title}
+      opened={open}
+      onClose={() => onClose()}
+      zIndex={301}
+    >
       <Group mt={10}>
         <Button
+          loading={loading}
           onClick={() => {
             onConfirm();
           }}

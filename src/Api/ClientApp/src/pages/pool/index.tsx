@@ -22,6 +22,7 @@ import PoolCard from "./Components/PoolCard";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 const useStyle = createStyles((theme) => ({
   paper: {
     [theme.fn.smallerThan("md")]: {
@@ -38,7 +39,7 @@ const useStyle = createStyles((theme) => ({
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t("name_required") as string),
+    name: Yup.string().required(t("pool_name_required") as string),
   });
 };
 
@@ -51,7 +52,7 @@ const MCQPool = ({
   const addPool = useAddPool(searchParams);
   const [showAddForm, toggleAddForm] = useToggle();
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
   const { classes } = useStyle();
   const form = useForm({
     initialValues: {
@@ -62,9 +63,10 @@ const MCQPool = ({
   useFormErrorHooks(form);
   const onSubmitForm = async ({ name }: { name: string }) => {
     try {
-      await addPool.mutateAsync(name);
+      const res = await addPool.mutateAsync(name);
       form.reset();
       toggleAddForm();
+      navigate(res.data.slug + "/questions");
     } catch (err) {
       const error = errorType(err);
       showNotification({ message: error, color: "red" });
@@ -123,17 +125,19 @@ const MCQPool = ({
       </Transition>
       {pools.isLoading && <Loader />}
 
-      {pools.isSuccess && (
-        <Box mt={20}>
-          {searchComponent(t("search_pools") as string)}
-          {pools.data.items.length >= 1 &&
-            pools.data?.items.map((x) => (
-              <PoolCard search={searchParams} pool={x} key={x.id} />
-            ))}
-          {pools.data?.items.length < 1 && <Box mt={10}>{t("no_pools")}</Box>}
-          {pools.data && pagination(pools.data.totalPage)}
-        </Box>
-      )}
+      <Box mt={20}>
+        {pools.isSuccess && (
+          <>
+            {searchComponent(t("search_pools") as string)}
+            {pools.data.items.length >= 1 &&
+              pools.data?.items.map((x) => (
+                <PoolCard search={searchParams} pool={x} key={x.id} />
+              ))}
+            {pools.data?.items.length < 1 && <Box mt={10}>{t("no_pools")}</Box>}
+          </>
+        )}
+        {pools.data && pagination(pools.data.totalPage)}
+      </Box>
     </Container>
   );
 };

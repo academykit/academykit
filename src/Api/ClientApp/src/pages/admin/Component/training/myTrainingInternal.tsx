@@ -76,12 +76,12 @@ const MyTrainingInternal = () => {
                       </Tooltip>
                       <Tooltip label={t("download_certificate")}>
                         <ActionIcon
-                          onClick={() =>
+                          onClick={() => {
                             downloadImage(
-                              x.certificateUrl,
-                              x.user.fullName ?? ""
-                            )
-                          }
+                              x?.certificateUrl ?? "",
+                              x?.courseName ?? ""
+                            );
+                          }}
                         >
                           <IconDownload color="black" />
                         </ActionIcon>

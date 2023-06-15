@@ -40,6 +40,7 @@ const NavOutlet = ({
       styles={(theme) => ({
         main: {
           padding: "0px",
+          width: "100%",
           backgroundColor:
             theme.colorScheme === "dark"
               ? theme.colors.dark[8]
@@ -57,7 +58,7 @@ const NavOutlet = ({
       asideOffsetBreakpoint="sm"
       navbar={
         <Navbar
-          sx={{ position: "sticky", zIndex: 20 }}
+          sx={{ position: "sticky", zIndex: 20, overflowY: "auto" }}
           p="xs"
           hiddenBreakpoint="sm"
           hidden={!opened}

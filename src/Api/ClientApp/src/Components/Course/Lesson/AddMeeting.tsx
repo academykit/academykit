@@ -69,6 +69,20 @@ const AddMeeting = ({
   );
   const { t } = useTranslation();
 
+  const form = useForm({
+    initialValues: {
+      name: "",
+      meetingStartDate: new Date(),
+      meetingStartTime: new Date(),
+      meetingDuration: 1,
+      zoomLicenseId: "",
+      isMandatory: false,
+      description: "",
+    },
+    validate: yupResolver(schema()),
+  });
+  useFormErrorHooks(form);
+
   const [isMandatory, setIsMandatory] = useState<boolean>(
     item?.isMandatory ?? false
   );
@@ -99,19 +113,15 @@ const AddMeeting = ({
     }
   }, [lessonDetails.isSuccess]);
 
-  const form = useForm({
-    initialValues: {
-      name: "",
-      meetingStartDate: new Date(),
-      meetingStartTime: new Date(),
-      meetingDuration: 1,
-      zoomLicenseId: "",
-      isMandatory: false,
-      description: "",
-    },
-    validate: yupResolver(schema()),
-  });
-  useFormErrorHooks(form);
+  useEffect(() => {
+    const { meetingDuration, meetingStartTime, meetingStartDate } = form.values;
+
+    if (meetingDuration && meetingStartTime && meetingStartDate) {
+      const time = new Date(meetingStartTime).toLocaleTimeString();
+      const date = new Date(meetingStartDate).toLocaleDateString();
+      setDateTime(() => date + " " + time);
+    }
+  }, [form.values]);
 
   const meeting = useActiveZoomLicense(
     dateTime,

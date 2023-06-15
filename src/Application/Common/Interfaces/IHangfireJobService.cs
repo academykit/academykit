@@ -51,6 +51,24 @@ namespace Lingtren.Application.Common.Interfaces
         /// <returns> the task complete </returns>
         Task SendEmailImportedUserAsync(IList<UserEmailDto> dtos, PerformContext context = null);
 
+        /// <summary>
+        /// Email for account created and password
+        /// </summary>
+        /// <param name="emailAddress">the email address of the receiver</param>
+        /// <param name="firstName">the first name of the receiver</param>
+        /// <param name="password">the login password of the receiver</param>
+        /// <param name="companyName"> the company name </param>
+        /// <returns> the task complete </returns>
+        Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password, string companyName, PerformContext context = null);
+
+        /// <summary>
+        /// Handle to update information of lesson video
+        /// </summary>
+        /// <param name="lessonId"> the lesson id </param>
+        /// <param name="context"> the instance of <see cref="PerformContext"/></param>
+        /// <returns> the task complete </returns>
+        Task LessonVideoUploadedAsync(Guid lessonId, PerformContext context = null);
+
         ///<summary>
         ///Handle to send course enrollment mail
         ///</summary>

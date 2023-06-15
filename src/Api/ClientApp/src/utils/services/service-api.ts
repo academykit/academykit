@@ -14,12 +14,13 @@ export const api = {
     resendEmailVerification: "/api/user/resendChangeEmailRequest",
     verifyChangeEmail: "/api/user/verifychangeemail",
     me: "/api/account",
+    resendEmail: (id: string) => `/api/User/${id}/resendemail`,
   },
   adminUser: {
     users: (queryString: any) => `api/user?${queryString}`,
     addUsers: `api/user`,
     editUsers: (userId: string) => `api/user/${userId}`,
-    getCompanySettings:`api/admin/settings/company`,
+    getCompanySettings: `api/admin/settings/company`,
     getGeneralSettings: `api/admin/settings`,
     getZoomSettings: `api/admin/settings/zoom`,
     getZoomLicense: `api/zoomlicense`,
@@ -48,6 +49,7 @@ export const api = {
     postLevelSetting: `api/level`,
     updateLevelSetting: (id: string) => `api/level/${id}`,
     updateDepartmentSetting: (id: string) => `api/department/${id}`,
+    getTrainer: (search: string) => `/api/user/trainer?${search}`,
   },
   groups: {
     list: "/api/Group",
@@ -67,15 +69,14 @@ export const api = {
 
   course: {
     list: "/api/course",
-    userList:(id:string)=> `/api/course/user/${id}`,
+    userList: (id: string) => `/api/course/user/${id}`,
 
     detail: (id: string) => `/api/course/${id}`,
     reorder: (id: string) => `/api/course/${id}/lesson/reorder`,
     reorderSection: (id: string) => `/api/course/${id}/section/reorder`,
     update: (id: string) => `/api/course/${id}`,
     enroll: (id: string) => `/api/Course/${id}/enroll`,
-    status: 
-      `/api/Course/status`,
+    status: `/api/Course/status`,
     lessonStat: (id: string) => `/api/course/${id}/lessonStatistics`,
     lessonStatDetails: (id: string, lessonId: string) =>
       `/api/course/${id}/lessonStatistics/${lessonId}`,
@@ -186,7 +187,7 @@ export const api = {
         ? "/api/feedback" +
           `?${search}&LessonIdentity=${lessonId}&UserId=${userId}`
         : "/api/feedback" + `?LessonIdentity=${lessonId}&UserId=${userId}`,
-    exportFeedback : (lessonId: string) => `/api/Feedback/${lessonId}/export`
+    exportFeedback: (lessonId: string) => `/api/Feedback/${lessonId}/export`,
   },
   exam: {
     startExam: (id: string) => `/api/QuestionSet/${id}/startExam`,
@@ -228,11 +229,11 @@ export const api = {
       `/api/course/${courseId}/comments/${commentId}/commentReply/${replyId}`,
   },
   externalCertificate: {
-    add: '/api/certificate/external',
-    user: (id?: string)=> `/api/certificate/external/${id}`,
+    add: "/api/certificate/external",
+    user: (id?: string) => `/api/certificate/external/${id}`,
     list: `/api/certificate/review`,
-    updateStatus : (id?: string) => `/api/certificate/${id}/verify`,
+    updateStatus: (id?: string) => `/api/certificate/${id}/verify`,
     update: (id?: string) => `/api/certificate/${id}/external`,
-    internal: `/api/certificate/internal`
-  }
+    internal: `/api/certificate/internal`,
+  },
 };

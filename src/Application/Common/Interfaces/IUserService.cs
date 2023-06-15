@@ -98,6 +98,14 @@
         Task<ChangeEmailResponseModel> ChangeEmailRequestAsync(ChangeEmailRequestModel model, Guid currentUserId);
 
         /// <summary>
+        /// Handle to resend email async
+        /// </summary>
+        /// <param name="userId"> the user id </param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the task complete </returns>
+        Task ResendEmailAsync(Guid userId, Guid currentUserId);
+
+        /// <summary>
         /// Handle to resend change user email
         /// </summary>
         /// <param name="token">the resend token</param>
@@ -117,6 +125,13 @@
         /// <param name="userId">the user id</param>
         /// <returns>the instance of <see cref="UserResponseModel"/></returns>
         Task<UserResponseModel> GetDetailAsync(Guid userId);
+        
+        /// <summary>
+        /// Handle to get trainer 
+        /// </summary>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
+        Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId,string search);
 
 
         /// <summary>

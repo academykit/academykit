@@ -8,6 +8,7 @@ import {
   Group,
   Loader,
   MultiSelect,
+  Radio,
   Select,
   Text,
   TextInput,
@@ -47,7 +48,7 @@ const schema = () => {
         then: Yup.array()
           .min(1, t("option_more_than_one") as string)
           .test(
-            t("test"),
+            "test",
             t("multiple_choice_option_atleast") as string,
             function (value: any) {
               const a = value?.filter((x: any) => x.isCorrect).length > 0;
@@ -70,7 +71,7 @@ const schema = () => {
             t("single_choice_option_atleast") as string,
             function (value: any) {
               const length: number =
-                value && value.filter((e: any) => e.isCorrect).length;
+                value && value.filter((e: any) => e?.isCorrect).length;
               return length === 1;
             }
           )
@@ -95,10 +96,11 @@ const Create = () => {
       description: "",
       hints: "",
       tags: [],
-      type: "",
+      type: "1",
       answers: [{ option: "", isCorrect: false }],
     },
     validate: yupResolver(schema()),
+    validateInputOnChange: true,
   });
   useFormErrorHooks(form);
 
@@ -119,6 +121,7 @@ const Create = () => {
   const addQuestion = useAddQuestion(id as string, "");
   const { mutate, data: addTagData, isSuccess } = useAddTag();
   const [isReset, setIsReset] = useState(false);
+
   const onSubmit = async (data: IAddQuestionType) => {
     try {
       await addQuestion.mutateAsync({ poolId: id as string, data });
@@ -166,6 +169,23 @@ const Create = () => {
       form.setFieldValue("tags", [...form.values.tags, addTagData?.data?.id]);
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (form.values.type && !addQuestion.isSuccess) {
+      form.values.answers.forEach((x, i) => {
+        return form.setFieldValue(`answers.${i}.isCorrect`, false);
+      });
+    }
+  }, [form.values.type]);
+
+  const onChangeRadioType = (index: number) => {
+    form.values.answers.forEach((x, i) => {
+      if (i === index) {
+        return form.setFieldValue(`answers.${index}.isCorrect`, true);
+      }
+      return form.setFieldValue(`answers.${i}.isCorrect`, false);
+    });
+  };
 
   return (
     <Container fluid>
@@ -218,7 +238,6 @@ const Create = () => {
               mt={20}
               placeholder={t("select_question_type") as string}
               size={"lg"}
-              allowDeselect
               withAsterisk
               label={t("question_type")}
               {...form.getInputProps("type")}
@@ -230,10 +249,19 @@ const Create = () => {
                 <Text mt={20}>{t("options")}</Text>
                 {form.values.answers.map((x, i) => (
                   <Group key={i} mb={30}>
-                    <Checkbox
-                      {...form.getInputProps(`answers.${i}.isCorrect`)}
-                      name=""
-                    ></Checkbox>
+                    {QuestionType.MultipleChoice.toString() ===
+                    form.values.type ? (
+                      <Checkbox
+                        {...form.getInputProps(`answers.${i}.isCorrect`)}
+                        name=""
+                      ></Checkbox>
+                    ) : (
+                      <Radio
+                        onChange={() => onChangeRadioType(i)}
+                        checked={form.values.answers[i].isCorrect}
+                        // {...form.getInputProps(`answers.${i}.isCorrect`)}
+                      ></Radio>
+                    )}
                     <TextEditor
                       label={`answers.${i}.option`}
                       formContext={useFormContext}
@@ -274,7 +302,11 @@ const Create = () => {
               </Box>
             )}
             <Group mt={20}>
-              <Button type="submit" onClick={() => setIsReset(false)}>
+              <Button
+                type="submit"
+                loading={addQuestion.isLoading}
+                onClick={() => setIsReset(false)}
+              >
                 {t("save")}
               </Button>
               <Button type="submit" onClick={() => setIsReset(true)}>

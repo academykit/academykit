@@ -1,21 +1,22 @@
-﻿namespace Lingtren.Api.Controllers
-{
-    using FluentValidation;
-    using Lingtren.Api.Common;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Helpers;
-    using Lingtren.Infrastructure.Localization;
-    using LinqKit;
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Localization;
+﻿using FluentValidation;
+using Hangfire;
+using Lingtren.Api.Common;
+using Lingtren.Application.Common.Dtos;
+using Lingtren.Application.Common.Exceptions;
+using Lingtren.Application.Common.Interfaces;
+using Lingtren.Application.Common.Models.RequestModels;
+using Lingtren.Application.Common.Models.ResponseModels;
+using Lingtren.Domain.Entities;
+using Lingtren.Domain.Enums;
+using Lingtren.Infrastructure.Helpers;
+using Lingtren.Infrastructure.Localization;
+using LinqKit;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
+namespace Lingtren.Api.Controllers
+{
     public class UserController : BaseApiController
     {
         private readonly ILogger<UserController> _logger;
@@ -101,12 +102,12 @@
                 MiddleName = model.MiddleName,
                 LastName = model.LastName,
                 Address = model.Address,
-                Email = model.Email,
+                Email = model.Email.Trim(),
                 MobileNumber = model.MobileNumber,
                 Bio = model.Bio,
                 ImageUrl = model.ImageUrl,
                 PublicUrls = model.PublicUrls,
-                IsActive = model.IsActive,
+                Status = UserStatus.Pending,
                 Profession = model.Profession,
                 Role = model.Role,
                 DepartmentId = model.DepartmentId,
@@ -121,7 +122,7 @@
 
             var response = await _userService.CreateAsync(entity).ConfigureAwait(false);
             var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
-            await _emailService.SendUserCreatedPasswordEmail(entity.Email, entity.FullName, password,company.CompanyName).ConfigureAwait(false);
+            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(entity.Email, entity.FullName, password, company.CompanyName,null));
             return new UserResponseModel(response);
         }
 
@@ -143,11 +144,14 @@
         /// <param name="CourseID">the current course id </param>
         /// <returns> the instance of <see cref="UserResponseModel" /> .</returns>
         [HttpGet("{userId}/{courseId}")]
-        public async Task<List<UserResponseModel>> GetUsersForCouseEnrollment(Guid userId,string courseId)
+        public async Task<List<UserResponseModel>> GetUsersForCouseEnrollment(Guid userId, string courseId)
         {
             return await _userService.GetUserForCourseEnrollment(userId, courseId).ConfigureAwait(false);
         }
-        
+
+        [HttpGet("trainer")]
+        public async Task<IList<TrainerResponseModel>> Trainer([FromQuery]string search) => await _userService.GetTrainerAsync(CurrentUser.Id,search).ConfigureAwait(false);
+      
 
         /// <summary>
         /// import bulk user api
@@ -155,11 +159,12 @@
         /// <param name="model"> the instance of <see cref="UserImportRequestModel" /> . </param>
         /// <returns> the task complete </returns>
         [HttpPost("bulkuser")]
-        public async Task<IActionResult> BulkUser([FromForm]UserImportRequestModel model)
+        public async Task<IActionResult> BulkUser([FromForm] UserImportRequestModel model)
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
-           var response =  await _userService.ImportUserAsync(model.File,CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new { statusCode = 200, message = $"{response}" });
+            var response = await _userService.ImportUserAsync(model.File, CurrentUser.Id).ConfigureAwait(false);
+
+            return StatusCode(200 ,new { message = response });
         }
 
         /// <summary>
@@ -179,6 +184,11 @@
             await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Update").ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _userService.GetAsync(userId, CurrentUser.Id, includeAllProperties: false).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
+            var emailchange = false;
+            if (model.Email.ToLower().Trim() != existing.Email.ToLower().Trim())
+            {
+                emailchange = true;
+            }
 
             var imageKey = existing.ImageUrl;
 
@@ -192,7 +202,6 @@
             existing.PublicUrls = model.PublicUrls;
             existing.ImageUrl = model.ImageUrl;
             existing.Profession = model.Profession;
-            existing.IsActive = model.IsActive;
             existing.DepartmentId = model.DepartmentId;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
@@ -206,9 +215,18 @@
                 }
                 existing.Role = model.Role;
             }
-
+            if(model.Status == UserStatus.Active || model.Status == UserStatus.InActive)
+            {
+                existing.Status = model.Status;
+            }
+            string password = null;
+            if(emailchange == true)
+            {
+                password = await _userService.GenerateRandomPassword(8).ConfigureAwait(false);
+                existing.HashPassword = _userService.HashPassword(password);  
+            }
             var savedEntity = await _userService.UpdateAsync(existing).ConfigureAwait(false);
-
+         
             if (imageKey != model.ImageUrl && !string.IsNullOrWhiteSpace(imageKey))
             {
                 if (imageKey.ToLower().Trim().Contains("/public/") && imageKey.IndexOf("/standalone/") != -1)
@@ -217,7 +235,11 @@
                 }
                 await _fileServerService.RemoveFileAsync(imageKey).ConfigureAwait(false);
             }
-
+            var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
+            if (password != null)
+            {
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(existing.Email, existing.FullName, password, company.CompanyName, null));
+            }
             return new UserResponseModel(savedEntity);
         }
 
@@ -231,6 +253,18 @@
         {
             await _changeEmailValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             return await _userService.ChangeEmailRequestAsync(model, CurrentUser.Id).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// resend email api
+        /// </summary>
+        /// <param name="userId"> the user id </param>
+        /// <returns> the task complete </returns>
+        [HttpPatch("{userId}/resendemail")]
+        public async Task<IActionResult> ResendMail(Guid userId)
+        {
+            await _userService.ResendEmailAsync(userId, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel { Success = true, Message = "Email resend successfully." });
         }
 
         /// <summary>

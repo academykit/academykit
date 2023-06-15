@@ -52,6 +52,15 @@ const schema = () => {
         message: t("enter_valid_phone"),
         excludeEmptyString: true,
       }),
+    bio: Yup.string().test(
+      "asdf",
+      t("bio_character_limit") as string,
+      function (value: any) {
+        const a = document.createElement("div");
+        a.innerHTML = value;
+        return a.innerText.length <= 200;
+      }
+    ),
   });
 };
 const UserInfo = () => {
@@ -195,6 +204,9 @@ const UserInfo = () => {
             <Grid.Col xs={12} lg={12}>
               <Text size="sm">{t("bio")}</Text>
               <RichTextEditor {...formData.getInputProps("bio")} />
+              <Text color="red" size={13} mt={5}>
+                {formData.errors?.bio}
+              </Text>
             </Grid.Col>
             <Grid.Col lg={12}>
               <Button loading={updateUser.isLoading} type="submit">

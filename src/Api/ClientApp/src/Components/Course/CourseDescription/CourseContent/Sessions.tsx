@@ -28,8 +28,7 @@ const Sessions = ({
     <Box>
       <Title size={"h6"}>{section?.name}</Title>
       <Text size={10} color={"dimmed"}>
-        {formatDuration(section.duration ?? 0)}. {section.lessons?.length}{" "}
-        {t("Lesson")}
+        {section.lessons?.length} {t("Lesson")}
       </Text>
       <Box
         my={20}

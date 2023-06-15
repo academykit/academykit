@@ -22,24 +22,6 @@ import { StatsCard } from "./StatsCard";
 import TrainingCards from "./TrainingCards";
 import { useTranslation } from "react-i18next";
 
-const incomingData = [
-  {
-    key: "totalEnrolledCourses",
-    label: "Total Enrollments",
-    icon: "enrollment",
-  },
-  {
-    key: "totalInProgressCourses",
-    label: "Active Trainings",
-    icon: "trainings",
-  },
-  {
-    key: "totalCompletedCourses",
-    label: "My Completed Trainings",
-    icon: "completed",
-  },
-];
-
 const useStyles = createStyles((theme) => ({
   root: {
     padding: theme.spacing.xl * 1.5,
@@ -94,6 +76,29 @@ export const User = ({
   dashboardCourses: DashboardCourses[];
 }) => {
   const { t } = useTranslation();
+  const incomingData = [
+    {
+      key: "totalEnrolledCourses",
+      label: "Total Enrollments",
+      icon: "enrollment",
+      signLabel: t("enrollment"),
+      pluLabel: t("enrollments"),
+    },
+    {
+      key: "totalInProgressCourses",
+      label: "Active Trainings",
+      icon: "trainings",
+      signLabel: t("training"),
+      pluLabel: t("trainings"),
+    },
+    {
+      key: "totalCompletedCourses",
+      label: "My Completed Trainings",
+      icon: "completed",
+      signLabel: t("training"),
+      pluLabel: t("trainings"),
+    },
+  ];
   return (
     <div>
       <SimpleGrid

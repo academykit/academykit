@@ -22,26 +22,36 @@ const Admin = ({
       key: "totalUsers",
       label: t("total_users"),
       icon: "userEnrollment",
+      signLabel: t("user"),
+      pluLabel: t("users"),
     },
     {
       key: "totalActiveUsers",
       label: t("active_users"),
       icon: "active",
+      signLabel: t("user"),
+      pluLabel: t("users"),
     },
     {
       key: "totalGroups",
       label: t("total_groups"),
       icon: "groups",
+      signLabel: t("group"),
+      pluLabel: t("groups"),
     },
     {
       key: "totalTrainers",
       label: t("total_trainers"),
       icon: "trainers",
+      signLabel: t("trainer"),
+      pluLabel: t("trainers"),
     },
     {
       key: "totalTrainings",
       label: t("total_trainings"),
       icon: "trainings",
+      signLabel: t("training"),
+      pluLabel: t("trainings"),
     },
   ];
 
@@ -73,7 +83,14 @@ const Admin = ({
         <Text c="dimmed">{t("no_trainings")}</Text>
       )}
 
-      <Group sx={{ justifyContent: "space-evenly" }}>
+      <Group
+        sx={{
+          "@media (max-width: 1345px)": {
+            justifyContent: "space-evenly",
+          },
+          justifyContent: "start",
+        }}
+      >
         {dashboardCourses.length > 0 &&
           dashboardCourses.map((x, idx) => <TrainingCards data={x} />)}
       </Group>

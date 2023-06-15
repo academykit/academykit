@@ -869,4 +869,19 @@
   <data name="UserNotFoundWithEmail" xml:space="preserve">
     <value>電子メールを含むユーザーが見つかりません</value>
   </data>
+  <data name="InvalidExamTimeIssue" xml:space="preserve">
+    <value>試験の開始時刻と終了時刻は現在時刻よりも後の時刻である必要があります。</value>
+  </data>
+  <data name="InvalidMeetingTimeIssue" xml:space="preserve">
+    <value>ライブ レッスンの開始時間は現在の時間より長くする必要があります。</value>
+  </data>
+  <data name="DuplicateEmailDetected" xml:space="preserve">
+    <value>これらは重複ユーザーです</value>
+  </data>
+  <data name="NoUserImported" xml:space="preserve">
+    <value>ファイル形式が間違っているためユーザーをインポートできません</value>
+  </data>
+  <data name="CompletedCourseIssue" xml:space="preserve">
+    <value>完了したコースは変更できません</value>
+  </data>
 </root>

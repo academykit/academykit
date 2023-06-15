@@ -79,9 +79,7 @@ export const useDeleteQuestion = (poolId: string, search: string) => {
     deleteQuestion,
     {
       onSuccess: (data) => {
-        queryClient.invalidateQueries([
-          api.questions.list(poolId) + `?${search}`,
-        ]);
+        queryClient.invalidateQueries([api.questions.list(poolId), search]);
       },
     }
   );

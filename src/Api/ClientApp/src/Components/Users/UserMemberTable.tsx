@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Avatar,
   Badge,
   Loader,
@@ -6,13 +7,15 @@ import {
   Paper,
   Table,
   Text,
+  Tooltip,
+  useMantineColorScheme,
 } from "@mantine/core";
-import { useEditUser } from "@utils/services/adminService";
-import { UserRole } from "@utils/enums";
+import { useEditUser, useResendEmail } from "@utils/services/adminService";
+import { UserRole, UserStatus } from "@utils/enums";
 
 import { Suspense, useState } from "react";
 import { Link } from "react-router-dom";
-import { IconEdit } from "@tabler/icons";
+import { IconEdit, IconSend } from "@tabler/icons";
 import { IUserProfile } from "@utils/services/types";
 import useAuth from "@hooks/useAuth";
 import { IAuthContext } from "@context/AuthProvider";
@@ -20,6 +23,9 @@ import { getInitials } from "@utils/getInitialName";
 import lazyWithRetry from "@utils/lazyImportWithReload";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
+import { showNotification } from "@mantine/notifications";
+import errorType from "@utils/services/axiosError";
+import { IWithSearchPagination } from "@hoc/useSearchPagination";
 
 const AddUpdateUserForm = lazyWithRetry(() => import("./AddUpdateUserForm"));
 
@@ -36,6 +42,25 @@ const UserRow = ({
 }) => {
   const [opened, setOpened] = useState(false);
   const editUser = useEditUser(item?.id, search);
+  const { colorScheme } = useMantineColorScheme();
+  const resend = useResendEmail(item?.id);
+
+  const handleResendEmail = async () => {
+    try {
+      await resend.mutateAsync(item.id);
+      showNotification({
+        message: "Email sent successfully!",
+        title: "Successful",
+      });
+    } catch (error) {
+      const err = errorType(error);
+      showNotification({
+        message: err,
+        title: "Error!",
+        color: "red",
+      });
+    }
+  };
 
   return (
     <tr key={item?.id}>
@@ -77,19 +102,48 @@ const UserRow = ({
 
       <td>{item?.mobileNumber}</td>
       <td>
-        {item?.isActive ? (
-          <Badge color={"green"}>{t("active")}</Badge>
+        {item?.status === UserStatus.Active ? (
+          <Badge color={"green"}>Active</Badge>
+        ) : item?.status === UserStatus.InActive ? (
+          <Badge color={"red"}>InActive</Badge>
         ) : (
-          <Badge color={"red"}>{t("inactive")}</Badge>
+          <Badge color="yellow">Pending</Badge>
         )}
       </td>
 
-      <td>
+      <td style={{ display: "flex" }}>
         {item.role !== UserRole.SuperAdmin && auth?.auth?.id !== item.id && (
-          <IconEdit
-            onClick={() => setOpened(true)}
-            style={{ cursor: "pointer" }}
-          />
+          <Tooltip label="Edit User Details">
+            <ActionIcon
+              style={{
+                cursor: "pointer",
+                color: colorScheme === "dark" ? "#F8F9FA" : "#25262B",
+              }}
+            >
+              <IconEdit
+                onClick={() => setOpened(true)}
+                style={{ cursor: "pointer" }}
+                size={20}
+              />
+            </ActionIcon>
+          </Tooltip>
+        )}
+
+        {auth?.auth?.id !== item.id && item.status === UserStatus.Pending && (
+          <Tooltip label="Resend Email" onClick={handleResendEmail}>
+            <ActionIcon
+              style={{
+                cursor: "pointer",
+                color: colorScheme === "dark" ? "#F8F9FA" : "#25262B",
+              }}
+            >
+              {resend.isLoading ? (
+                <Loader variant="oval" />
+              ) : (
+                <IconSend size={20} />
+              )}
+            </ActionIcon>
+          </Tooltip>
         )}
       </td>
     </tr>
@@ -97,11 +151,13 @@ const UserRow = ({
 };
 
 const UserMemberTable = ({
+  sortComponent,
   users,
   search,
 }: {
   users: IUserProfile[];
   search: string;
+  sortComponent: Pick<IWithSearchPagination, "sortComponent">["sortComponent"];
 }) => {
   const auth = useAuth();
   const { t } = useTranslation();
@@ -123,9 +179,11 @@ const UserMemberTable = ({
       >
         <thead>
           <tr>
-            <th>{t("user")}</th>
+            <th>
+              {sortComponent({ sortKey: "firstName", title: t("username") })}
+            </th>
             <th>{t("role")}</th>
-            <th>{t("email")}</th>
+            <th>{sortComponent({ sortKey: "email", title: t("email") })}</th>
             <th>{t("phone_number")}</th>
             <th>{t("active_status")}</th>
             <th>{t("actions")}</th>

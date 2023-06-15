@@ -68,11 +68,12 @@
             services.AddTransient<IWebhookService, WebhookService>();
             services.AddTransient<IHangfireJobService, HangfireJobService>();
             services.AddTransient<ICertificateService, CertificateService>();
+            services.AddTransient<IVideoService, VideoService>();
 
             #endregion Service DI
 
             #region Validator DI
-
+            services.AddSingleton<IValidator<CertificateRequestModel>,CertificateRequestModelValidator>();
             services.AddSingleton<IValidator<LiveClassLicenseRequestModel>,ZoomLicenseIdValidator>();
             services.AddSingleton<IValidator<LoginRequestModel>, LoginValidator>();
             services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();

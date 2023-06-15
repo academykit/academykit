@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Group, TextInput, Switch, Select, Button, Grid } from "@mantine/core";
-import { UserRole } from "@utils/enums";
+import { UserRole, UserStatus } from "@utils/enums";
 import { useDepartmentSetting } from "@utils/services/adminService";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
@@ -16,22 +16,27 @@ const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
     email: Yup.string()
+      .trim()
       .email(t("invalid_email") as string)
       .required(t("email_required") as string),
     firstName: Yup.string()
+      .trim()
       .max(100, t("first_name_character_required") as string)
       .required(t("first_name_required") as string),
     lastName: Yup.string()
+      .trim()
       .max(100, t("last_name_character_required") as string)
-      .required("last_name_required"),
+      .required(t("last_name_required") as string),
     middleName: Yup.string()
       .max(100, t("middle_name_character_required") as string)
+      .trim()
       .nullable()
       .notRequired(),
     role: Yup.string()
       .oneOf(["1", "2", "3", "4"], t("role_required") as string)
       .required(t("role_required") as string),
     mobileNumber: Yup.string()
+      .trim()
       .nullable()
       .matches(PHONE_VALIDATION, {
         message: t("enter_valid_phone"),
@@ -60,32 +65,45 @@ const AddUpdateUserForm = ({
   });
   useFormErrorHooks(form);
 
-  const department = useDepartmentSetting(
+  const { data: department } = useDepartmentSetting(
     queryStringGenerator({
       search: "",
       size: 200,
+      IsActive: true,
     })
   );
 
-  const [userStatus, setUserStatus] = useState<boolean>(item?.isActive ?? true);
-
   useEffect(() => {
-    form.setFieldValue("role", item?.role ?? 5);
+    form.setFieldValue("role", item?.role ?? 4);
     item?.departmentId &&
-      form.setFieldValue("department", item?.departmentId.toString() ?? "");
-    form.setFieldValue("isActive", item?.isActive ?? false);
+      form.setFieldValue("departmentId", item?.departmentId.toString() ?? "");
+    form.setFieldValue(
+      "isActive",
+      item?.status === UserStatus.Active || item?.status === UserStatus.Pending
+        ? true
+        : false
+    );
   }, [isEditing]);
 
-  const onSubmitForm = async (data: IUserProfile) => {
+  const onSubmitForm = async (data: typeof form.values) => {
     try {
       if (!isEditing) {
         await apiHooks.mutateAsync({
           ...data,
           role: Number(data?.role),
-          isActive: userStatus,
         });
       } else {
-        data = { ...data, role: Number(data?.role) };
+        const userData = { ...data };
+
+        //@ts-ignore
+        delete userData.isActive;
+        const status =
+          item?.status === UserStatus.Pending
+            ? UserStatus.Pending
+            : data.isActive
+            ? UserStatus.Active
+            : UserStatus.InActive;
+        data = { ...userData, role: Number(data?.role), status };
         await apiHooks.mutateAsync({ id: item?.id as string, data });
       }
       showNotification({
@@ -154,17 +172,14 @@ const AddUpdateUserForm = ({
             {...form.getInputProps("profession")}
           />
         </Grid.Col>
-        <Grid.Col xs={6} lg={4}>
-          <Switch
-            label={t("user_status")}
-            {...form.getInputProps("isActive")}
-            checked={userStatus}
-            onChange={(event) => {
-              setUserStatus(event.currentTarget.checked);
-              form.setFieldValue("isActive", event.target.checked);
-            }}
-          />
-        </Grid.Col>
+        {isEditing && item?.status !== UserStatus.Pending && (
+          <Grid.Col xs={6} lg={4}>
+            <Switch
+              label="User Status"
+              {...form.getInputProps("isActive", { type: "checkbox" })}
+            />
+          </Grid.Col>
+        )}
         <Grid.Col xs={6} lg={4}>
           <Select
             withAsterisk
@@ -184,15 +199,15 @@ const AddUpdateUserForm = ({
             label={t("department")}
             placeholder={t("pick_department") as string}
             searchable
-            {...form.getInputProps("departmentId")}
             data={
-              department.data
-                ? department.data.items.map((x) => ({
+              department
+                ? department.items.map((x) => ({
                     label: x.name,
                     value: x.id,
                   }))
                 : [""]
             }
+            {...form.getInputProps("departmentId")}
           />
         </Grid.Col>
       </Grid>
