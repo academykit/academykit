@@ -44,26 +44,29 @@ export const getType = (type: LessonType) => {
       return examType;
   }
 };
-const { t } = useTranslation();
 const LessonStatusColor = ({
   status: { isPassed, isCompleted, lessonType: type },
 }: {
   status: IStudentInfoLesson;
-}) => (
-  <>
-    <Group position="center">
-      {isPassed ? (
-        <Badge color={"green"}>{getType(type).true}</Badge>
-      ) : (
-        <Badge color={"red"}>{getType(type).false}</Badge>
-      )}
-      {isCompleted ? (
-        <Badge color={"green"}>{t("completed")}</Badge>
-      ) : (
-        <Badge color={"red"}>{t("not_completed")}</Badge>
-      )}
-    </Group>
-  </>
-);
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <Group position="center">
+        {isPassed ? (
+          <Badge color={"green"}>{getType(type).true}</Badge>
+        ) : (
+          <Badge color={"red"}>{getType(type).false}</Badge>
+        )}
+        {isCompleted ? (
+          <Badge color={"green"}>{t("completed")}</Badge>
+        ) : (
+          <Badge color={"red"}>{t("not_completed")}</Badge>
+        )}
+      </Group>
+    </>
+  );
+};
 
 export default LessonStatusColor;
