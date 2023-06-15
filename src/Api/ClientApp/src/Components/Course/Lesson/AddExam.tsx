@@ -104,7 +104,7 @@ const AddExam = ({
   const form = useForm({
     initialValues: {
       name: item?.name ?? "",
-      description: item?.description ?? "",
+      description: item?.questionSet?.description ?? "",
       negativeMarking: item?.questionSet?.negativeMarking ?? 0,
       questionMarking: item?.questionSet?.questionMarking ?? 1,
       passingWeightage: item?.questionSet?.passingWeightage ?? 0,
@@ -255,7 +255,7 @@ const AddExam = ({
             <NumberInput
               label={t("number_retake")}
               placeholder={t("retakes") as string}
-              min={0}
+              min={1}
               {...form.getInputProps("allowedRetake")}
             />
           </Grid.Col>
