@@ -107,9 +107,12 @@ const QuestionRow = ({
   const deleteService = useDeleteQuestion(poolId, search);
   const confirmDelete = async () => {
     try {
-      await deleteService.mutateAsync({ poolId: poolId, questionId: data.id });
+      const { data: res } = (await deleteService.mutateAsync({
+        poolId: poolId,
+        questionId: data.id,
+      })) as any;
       showNotification({
-        message: `${t("success_delete_question")} ${data.name}`,
+        message: `${res?.message}`,
       });
     } catch (err) {
       const error = errorType(err);
