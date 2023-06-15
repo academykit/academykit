@@ -228,7 +228,7 @@
   <data name="QuestionpoolTeacherRemoved" xml:space="preserve">
     <value>प्रश्न पूल शिक्षक सफलतापूर्वक हटाइयो।</value>
   </data>
-  <data name="QuestionRemoved" xml:space="preserve">
+  <data name="QuestionRemovedSuccessfully" xml:space="preserve">
     <value>प्रश्न सफलतापूर्वक हटाइयो।</value>
   </data>
   <data name="QuestionSetAnswer" xml:space="preserve">
@@ -880,5 +880,8 @@
   </data>
   <data name="CompletedCourseIssue" xml:space="preserve">
     <value>पूरा भएको पाठ्यक्रम परिमार्जन गर्न सकिँदैन</value>
+  </data>
+  <data name="TrainingWithDraftgStatusCanOnlyRemoved" xml:space="preserve">
+    <value>मस्यौदा स्थितिको साथ प्रशिक्षण मात्र हटाउन सकिन्छ</value>
   </data>
 </root>

@@ -164,7 +164,7 @@ namespace Lingtren.Api.Controllers
             IsSuperAdminOrAdmin(CurrentUser.Role);
             var response = await _userService.ImportUserAsync(model.File, CurrentUser.Id).ConfigureAwait(false);
 
-            return StatusCode(200 ,new { message = response });
+            return Ok(response);
         }
 
         /// <summary>
