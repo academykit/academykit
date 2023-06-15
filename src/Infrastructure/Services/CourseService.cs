@@ -884,7 +884,7 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 response.MeetingsList = newMeeting.OrderByDescending(x => x.StartDate);
-
+                response.TotalTeachers = course.CourseTeachers.Count;
                 response.TotalLessons = lessons.Count;
                 response.TotalMeetings = lessons.Count(x => (x.Type == LessonType.LiveClass || x.Type == LessonType.RecordedVideo) && x.MeetingId != null);
                 response.TotalLectures = lessons.Count(x => x.Type == LessonType.Video || x.Type == LessonType.RecordedVideo);
@@ -1177,7 +1177,7 @@ namespace Lingtren.Infrastructure.Services
                 responseModel.TotalEnrolledCourses = await _unitOfWork.GetRepository<CourseEnrollment>().CountAsync(predicate: p => p.EnrollmentMemberStatus.Equals(EnrollmentMemberStatusEnum.Enrolled) &&
                     p.UserId.Equals(currentUserId));
 
-                responseModel.TotalActiveTrainings = trainings.Count(predicate: p => p.Status == CourseStatus.Published || p.IsUpdate);
+                responseModel.TotalActiveTrainings = trainings.Count(predicate: p => p.Status == CourseStatus.Published || p.IsUpdate && p.Status != CourseStatus.Completed);
                 responseModel.TotalCompletedTrainings = trainings.Count(predicate: p => p.Status == CourseStatus.Completed);
             }
             if (currentUserRole == UserRole.Trainee)
