@@ -781,5 +781,7 @@
   "question_pool":"Question Pool",
   "no_options":"No options",
   "questions_list":"Questions List",
-  "selected_questions":"Selected Questions"
+  "selected_questions":"Selected Questions",
+
+  "sure": "Sure"
 }
