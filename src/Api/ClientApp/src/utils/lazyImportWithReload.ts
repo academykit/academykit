@@ -17,6 +17,7 @@ const lazyWithRetry = (componentImport: any) =>
         // Assuming that the user is not on the latest version of the application.
         // Let's refresh the page immediately.
         window.localStorage.setItem("page-has-been-force-refreshed", "true");
+
         return window.location.reload();
       }
 
