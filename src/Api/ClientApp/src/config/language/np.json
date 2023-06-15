@@ -764,5 +764,21 @@
   "home": "गृहपृष्ट",
   "Tranning": "तालिम",
   "Pools": "सेटहरू",
-  "my_certificate": "मेरो प्रमाणपत्रहरू"
+  "my_certificate": "मेरो प्रमाणपत्रहरू",
+  "answers": "उत्तरहरू",
+"mark": "चिन्ह",
+"go_back_button": "फिर्ता जानुहोस्",
+"edit_review": "समीक्षा सम्पादन गर्नुहोस्",
+"add_review": "समीक्षा थप्नुहोस्",
+"your_comment_here": "यहाँ तपाईंको टिप्पणी लेख्नुहोस्",
+"post": "पोष्ट गर्नुहोस्",
+"display_signature": "हस्ताक्षर प्रदर्शन गर्नुहोस्",
+"result_list": "परिणाम सूची",
+"not_completed": "सम्पन्न नभएको",
+"hello": "नमस्ते",
+"pick_one": "एक चयन गर्नुहोस्",
+"question_pool": "प्रश्न पूल",
+"no_options": "कुनै पनि विकल्प छैन",
+"questions_list": "प्रश्न सूची",
+"selected_questions": "छानिएका प्रश्नहरू"
 }

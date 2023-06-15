@@ -762,5 +762,21 @@
   "home": "家",
   "Tranning": "トレーニング",
   "Pools": "セット",
-  "my_certificate": "私の証明書"
+  "my_certificate": "私の証明書",
+  "answers": "回答",
+"mark": "採点",
+"go_back_button": "戻る",
+"edit_review": "レビュー編集",
+"add_review": "レビュー追加",
+"your_comment_here": "ここにコメントを入力してください",
+"post": "投稿",
+"display_signature": "署名を表示",
+"result_list": "結果リスト",
+"not_completed": "未完了",
+"hello": "こんにちは",
+"pick_one": "一つ選んでください",
+"question_pool": "問題プール",
+"no_options": "オプションなし",
+"questions_list": "問題リスト",
+"selected_questions": "選択された問題"
 }
