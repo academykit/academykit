@@ -180,7 +180,7 @@ const Questions = () => {
           <Grid.Col span={matches ? 3 : 6}>
             <Select
               size="md"
-              label="Question Pool"
+              label={t("mcq_pools")}
               placeholder="Pick one"
               searchable
               clearable
@@ -203,9 +203,9 @@ const Questions = () => {
             <TransferList
               value={data}
               onChange={setData}
-              searchPlaceholder="Search for questions"
+              searchPlaceholder={t("no_question_found") as string}
               nothingFound={
-                questionList.isLoading ? <Loader /> : "No Questions Found!"
+                questionList.isLoading ? <Loader /> : t("no_question_found")
               }
               titles={[
                 "Questions List",
