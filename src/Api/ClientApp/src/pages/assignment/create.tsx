@@ -1,11 +1,9 @@
-import Breadcrumb from "@components/Ui/BreadCrumb";
 import withSearchPagination, {
   IWithSearchPagination,
 } from "@hoc/useSearchPagination";
 import { Box, Button, Container } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { useAssignmentQuestion } from "@utils/services/assignmentService";
-import { useParams } from "react-router-dom";
 import AssignmentItem from "./Component/AssignmentItem";
 import EditAssignment from "./Component/EditAssignment";
 import { useTranslation } from "react-i18next";
@@ -16,8 +14,6 @@ interface Props {
 
 const CreateAssignment = ({
   searchParams,
-  pagination,
-  searchComponent,
   lessonId,
 }: Props & IWithSearchPagination) => {
   const [addQuestion, setAddQuestion] = useToggle();

@@ -180,7 +180,7 @@ const UsersList = ({
             />
           ))}
       </ScrollArea>
-      {data && pagination(data.totalPage)}
+      {data && pagination(data.totalPage, data.items.length)}
     </>
   );
 };

@@ -319,7 +319,11 @@ const ManageStudents = ({
         </Paper>
       )}
 
-      {getStudentStat.data && pagination(getStudentStat.data?.totalPage)}
+      {getStudentStat.data &&
+        pagination(
+          getStudentStat.data?.totalPage,
+          getStudentStat.data.items.length
+        )}
     </ScrollArea>
   );
 };

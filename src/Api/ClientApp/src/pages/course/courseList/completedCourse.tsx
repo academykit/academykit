@@ -50,7 +50,7 @@ const CompletedCourseList = ({
           <Box>{t("no_trainings_found")}</Box>
         ))}
       {isLoading && <Loader />}
-      {data && pagination(data.totalPage)}
+      {data && pagination(data.totalPage, data.items.length)}
     </Container>
   );
 };

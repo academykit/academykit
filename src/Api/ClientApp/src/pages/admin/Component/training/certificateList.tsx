@@ -164,7 +164,10 @@ const CertificateList = ({
           <CertificateCard auth={auth} item={x} search={searchParams} />
         ))}
       {listCertificate.isSuccess &&
-        pagination(listCertificate.data.data.totalPage)}
+        pagination(
+          listCertificate.data.data.totalPage,
+          listCertificate.data.data.items.length
+        )}
 
       {listCertificate.isSuccess &&
         listCertificate.data?.data.totalCount < 1 && (

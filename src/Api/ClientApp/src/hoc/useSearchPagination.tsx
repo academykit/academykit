@@ -7,7 +7,8 @@ import { IconChevronDown, IconChevronUp, IconArrowsSort } from "@tabler/icons";
 
 export interface IWithSearchPagination {
   searchParams: string;
-  pagination: (totalPage: number) => JSX.Element;
+
+  pagination: (totalPage: number, length: number) => JSX.Element;
   searchComponent: (placeholder?: string) => JSX.Element;
   sortComponent: (props: { title: string; sortKey: string }) => JSX.Element;
   filterComponent: (
@@ -48,11 +49,17 @@ const withSearchPagination =
 
     let search = params.get("s") ?? null;
     let pageSize = 12;
+    const [itemLength, setItemLength] = useState<number>();
     const [filterValue, setFilterValue] = useState<string>("");
     const [currentPage, setCurrentPage] = useState(
       parseInt(params.get("p") ?? "1")
     );
 
+    useEffect(() => {
+      if (currentPage !== 1 && itemLength == 0) {
+        setPage(currentPage - 1);
+      }
+    }, [itemLength]);
     const qs = useMemo(() => {
       const [by, type] = sort.split(":");
       const initSearchObject: Record<string, string> = {};
@@ -147,8 +154,9 @@ const withSearchPagination =
       setCurrentPage(pageNumber);
     };
 
-    const pagination = (totalPage: number) =>
-      totalPage > 1 ? (
+    const pagination = (totalPage: number, length: number) => {
+      setItemLength(length);
+      return totalPage > 1 ? (
         <Pagination
           my={20}
           total={totalPage}
@@ -158,6 +166,7 @@ const withSearchPagination =
       ) : (
         <></>
       );
+    };
     const searchComponent = (placeholder?: string) => (
       <SearchBar
         search={search ?? ""}

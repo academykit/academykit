@@ -66,7 +66,9 @@ const AttendedTrainings = ({
           </tbody>
         </Table>
       </Paper>
-      {data && data.totalPage > 1 && pagination(data.totalPage)}
+      {data &&
+        data.totalPage > 1 &&
+        pagination(data.totalPage, data.items.length)}
       {data && data.totalCount === 0 && (
         <Box mt={5}>{t("no_trainings_found")}</Box>
       )}

@@ -55,7 +55,7 @@ const AdminCourseList = ({
       </ScrollArea>
       {isLoading && <Loader />}
       {isError && <Box>{t("something_went_wrong")}</Box>}
-      {data && pagination(data.totalPage)}
+      {data && pagination(data.totalPage, data.items.length)}
     </Container>
   );
 };

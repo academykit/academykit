@@ -81,7 +81,7 @@ const MCQQuestions = ({
       )}
       {isLoading && <Loader />}
 
-      {data && pagination(data.totalPage)}
+      {data && pagination(data.totalPage, data.items.length)}
       {isError && <Box>{t("something_wrong")}</Box>}
       {data && data?.totalCount < 1 && (
         <Box mt={10}>{t("no_question_found")}</Box>

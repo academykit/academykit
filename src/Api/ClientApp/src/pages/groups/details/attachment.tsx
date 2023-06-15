@@ -177,7 +177,10 @@ const GroupAttachment = ({
               </Table>
               {getGroupAttachment.data &&
                 getGroupAttachment.data.totalPage > 1 &&
-                pagination(getGroupAttachment.data?.totalPage)}
+                pagination(
+                  getGroupAttachment.data?.totalPage,
+                  getGroupAttachment.data.items.length
+                )}
             </Paper>
           </ScrollArea>
         ) : (

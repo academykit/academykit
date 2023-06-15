@@ -120,7 +120,10 @@ const GroupMember = ({
           </Table>
         </Paper>
       )}
-      {pagination(groupMember.data?.totalPage ?? 0)}
+      {pagination(
+        groupMember.data?.totalPage ?? 0,
+        groupMember.data?.items.length ?? 1
+      )}
     </Container>
   );
 };
