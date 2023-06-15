@@ -11,6 +11,7 @@ import {
 } from "@mantine/core";
 import { useStartExam } from "@utils/services/examService";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
@@ -40,7 +41,7 @@ const useStyles = createStyles((theme) => ({
 const LessonExam = () => {
   const { id } = useParams();
   const exam = useStartExam(id as string);
-
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,7 +59,7 @@ const LessonExam = () => {
     return (
       <Container className={classes.root}>
         <div>
-          <Title className={classes.title}>No questions found...</Title>
+          <Title className={classes.title}>{t("no_question_found")}</Title>
 
           <Button
             variant="outline"
@@ -67,7 +68,7 @@ const LessonExam = () => {
             onClick={() => navigate(-1)}
             className={classes.control}
           >
-            Go back
+            {t("go_back_button")}
           </Button>
         </div>
       </Container>
