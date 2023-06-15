@@ -348,7 +348,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to create the lesson");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("CreateLessonError"));
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
 

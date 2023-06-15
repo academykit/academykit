@@ -869,7 +869,7 @@
   <data name="UserNotFoundWithEmail" xml:space="preserve">
     <value>電子メールを含むユーザーが見つかりません</value>
   </data>
-  <data name="InvalidExamTimeIssue" xml:space="preserve">
+  <data name="InvalidTimeIssue" xml:space="preserve">
     <value>試験の開始時刻と終了時刻は現在時刻よりも後の時刻である必要があります。</value>
   </data>
   <data name="InvalidMeetingTimeIssue" xml:space="preserve">

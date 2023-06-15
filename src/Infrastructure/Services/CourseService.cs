@@ -991,7 +991,7 @@ namespace Lingtren.Infrastructure.Services
                         var maxnumber = maxScore.Max(x => decimal.Parse(x.ObtainedMarks));
                         if (maxnumber != 0)
                         {
-                            bool userResult = maxnumber / totalMarks >= lesson.QuestionSet.PassingWeightage;
+                            bool userResult = maxnumber/totalMarks*100 >= lesson.QuestionSet.PassingWeightage;
                             userResults.Add((user.Id, userResult));
                         }
                         if(maxnumber == 0 & lesson.QuestionSet.PassingWeightage != 0)
