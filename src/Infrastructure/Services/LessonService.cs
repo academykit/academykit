@@ -348,7 +348,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to create the lesson");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("CreateLessonError"));
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
 
@@ -939,9 +939,9 @@ namespace Lingtren.Infrastructure.Services
         private async Task CreateMeetingAsync(LessonRequestModel model, Lesson lesson)
         {
             lesson.Meeting = new Meeting();
-            if (model.Meeting.MeetingStartDate <= DateTime.UtcNow)
+            if (model.Meeting.MeetingStartDate.ToUniversalTime() <= DateTime.UtcNow)
             {
-                throw new InvalidDataException(_localizer.GetString("InvalidMeetingTimeIssue"));
+                throw new ArgumentException(_localizer.GetString("InvalidMeetingTimeIssue"));
             }
             lesson.Meeting = new Meeting
             {
