@@ -2,6 +2,7 @@ import FeedbackForm from "@components/Course/FeedBack/ViewFeedback";
 import { Title, Button, Container, createStyles } from "@mantine/core";
 
 import { useFeedbackQuestion } from "@utils/services/feedbackService";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
@@ -31,7 +32,7 @@ const useStyles = createStyles((theme) => ({
 const FeedbackPage = () => {
   const { id } = useParams();
   const { classes } = useStyles();
-
+  const { t } = useTranslation();
   const feedback = useFeedbackQuestion(id as string, "");
   const navigate = useNavigate();
 
@@ -39,7 +40,7 @@ const FeedbackPage = () => {
     return (
       <Container className={classes.root}>
         <div>
-          <Title className={classes.title}>No questions found...</Title>
+          <Title className={classes.title}>{t("no_question_found")}</Title>
 
           <Button
             variant="outline"
@@ -48,7 +49,7 @@ const FeedbackPage = () => {
             onClick={() => navigate(-1)}
             className={classes.control}
           >
-            Go back
+            {t("go_back_button")}
           </Button>
         </div>
       </Container>

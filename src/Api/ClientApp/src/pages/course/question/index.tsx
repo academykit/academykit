@@ -180,12 +180,12 @@ const Questions = () => {
           <Grid.Col span={matches ? 3 : 6}>
             <Select
               size="md"
+              placeholder={t("pick_one") as string}
               label={t("mcq_pools")}
-              placeholder="Pick one"
               searchable
               clearable
               allowDeselect
-              nothingFound="No options"
+              nothingFound={t("no_options")}
               maxDropdownHeight={280}
               data={poolData}
               onChange={(e) => {
@@ -203,13 +203,14 @@ const Questions = () => {
             <TransferList
               value={data}
               onChange={setData}
-              searchPlaceholder={t("no_question_found") as string}
+              searchPlaceholder={t("search_for_questions") as string}
+
               nothingFound={
                 questionList.isLoading ? <Loader /> : t("no_question_found")
               }
               titles={[
-                "Questions List",
-                `Selected Questions (${data[1].length})`,
+                t("questions_list"),
+                `${t("selected_questions")} (${data[1].length})`,
               ]}
               listHeight={600}
               breakpoint="sm"
@@ -229,14 +230,14 @@ const Questions = () => {
           </>
         )}
         <Group position="left" mt={30}>
-          <Button onClick={addQuestion}>Submit</Button>
+          <Button onClick={addQuestion}>{t("submit")}</Button>
           <Button
             variant="outline"
             onClick={() => {
               navigate(-1);
             }}
           >
-            Cancel
+            {t("cancel")}
           </Button>
         </Group>
       </Paper>
