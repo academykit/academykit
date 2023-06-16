@@ -166,7 +166,7 @@
     <value>File extension should be csv format.</value>
   </data>
   <data name="AlreadyRegistered" xml:space="preserve">
-    <value>is already registered.</value>
+    <value>Some already registered.</value>
   </data>
   <data name="ResetTokenNotMatched" xml:space="preserve">
     <value>Reset token not matched.</value>
@@ -175,7 +175,7 @@
     <value>Reset token expired.</value>
   </data>
   <data name="CurrentPasswordNotMatched" xml:space="preserve">
-    <value>Current Password does not matched.</value>
+    <value>Current Password does not match.</value>
   </data>
   <data name="PasswordNotMatched" xml:space="preserve">
     <value>Password not matched.</value>
@@ -231,7 +231,7 @@
   <data name="QuestionpoolTeacherRemoved" xml:space="preserve">
     <value>Question pool teacher removed successfully.</value>
   </data>
-  <data name="QuestionRemoved" xml:space="preserve">
+  <data name="QuestionRemovedSuccessfully" xml:space="preserve">
     <value>Question removed successfully.</value>
   </data>
   <data name="QuestionSetAnswer" xml:space="preserve">
@@ -873,9 +873,9 @@ recorded cannot be deleted.</value>
     <value>User not found with email</value>
   </data>
   <data name="DuplicateEmailDetected" xml:space="preserve">
-    <value>these are duplicate user</value>
+    <value>some rows contained invalid users</value>
   </data>
-  <data name="InvalidExamTimeIssue" xml:space="preserve">
+  <data name="InvalidTimeIssue" xml:space="preserve">
     <value>Exam start time and endtime must be greater than current time.</value>
   </data>
   <data name="InvalidMeetingTimeIssue" xml:space="preserve">
@@ -886,5 +886,8 @@ recorded cannot be deleted.</value>
   </data>
   <data name="CompletedCourseIssue" xml:space="preserve">
     <value>Completed course cannot be modified</value>
+  </data>
+  <data name="TrainingWithDraftgStatusCanOnlyRemoved" xml:space="preserve">
+    <value>Traning with draft status can only be removed</value>
   </data>
 </root>

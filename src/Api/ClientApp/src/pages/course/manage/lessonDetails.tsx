@@ -85,7 +85,11 @@ const LessonDetails = () => {
           </thead>
           <tbody>
             {lessonDetails.data?.items.map((x) => (
-              <CourseLessonDetails element={x} key={x.lessonId} />
+              <CourseLessonDetails
+                element={x}
+                key={x.lessonId}
+                courseId={id as string}
+              />
             ))}
           </tbody>
         </Table>

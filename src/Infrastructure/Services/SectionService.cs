@@ -114,6 +114,10 @@ namespace Lingtren.Infrastructure.Services
                 var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
                     predicate: x => !x.IsDeleted && x.CourseId == course.Id && (x.Id.ToString() == sectionIdentity || x.Slug.Equals(sectionIdentity)),
                     include: s => s.Include(x => x.Lessons).Include(x => x.Course)).ConfigureAwait(false);
+                if(course.Status == CourseStatus.Completed)
+                {
+                    throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
+                }
                 if (section == null)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("SectionNotFound"));
@@ -140,7 +144,7 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to delete section.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("DeleteSectionError"));
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
 

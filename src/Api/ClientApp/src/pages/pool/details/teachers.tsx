@@ -50,7 +50,6 @@ const MCQTeacher = () => {
         questionPoolIdentity: slug.id as string,
         email: email,
       });
-      form.reset();
       toggleAddForm();
     } catch (err) {
       const error = errorType(err);
@@ -61,7 +60,12 @@ const MCQTeacher = () => {
     <Container fluid>
       <Group sx={{ justifyContent: "space-between", alignItems: "center" }}>
         <Title>{t("trainers")}</Title>
-        <Button onClick={() => toggleAddForm()}>
+        <Button
+          onClick={() => {
+            toggleAddForm();
+            form.reset();
+          }}
+        >
           {!showAddForm ? t("add_trainer") : t("cancel")}
         </Button>
       </Group>
