@@ -192,7 +192,7 @@
                     predicate: x => x.Id.ToString() == identity || x.Slug == identity,include: src=>src.Include(x=>x.Lesson)).ConfigureAwait(false);
 
                 var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate : p => p.Id.Equals(questionSet.Lesson.CourseId),
-                    include:src=>src.Include(x=>x.CourseTeachers)).ConfigureAwait(false);
+                    include:src=>src.Include(x=>x.CourseTeachers).Include(x=>x.CourseEnrollments)).ConfigureAwait(false);
 
                 
 
