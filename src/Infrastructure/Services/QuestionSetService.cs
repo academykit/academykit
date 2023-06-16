@@ -764,13 +764,13 @@
             var history = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
                                 predicate: p => p.UserId == currentUserId && p.LessonId == questionSet.Lesson.Id && p.CourseId == questionSet.Lesson.CourseId
                                 ).ConfigureAwait(false);
-
+            var totalQuestionMarks = totalQuestion * questionSet.QuestionMarking;
             if (history != null)
             {
                 history.IsCompleted = true;
                 history.IsPassed = history.IsPassed ? history.IsPassed :
                                     questionSet.PassingWeightage > 0 ?
-                                        (result.TotalMark - result.NegativeMark) * 100 / totalQuestion >= questionSet.PassingWeightage : false;
+                                        (result.TotalMark - result.NegativeMark) * 100 / totalQuestionMarks >= questionSet.PassingWeightage : false;
                 history.UpdatedOn = currentTimeStamp;
                 history.UpdatedBy = currentUserId;
                 _unitOfWork.GetRepository<WatchHistory>().Update(history);
@@ -788,7 +788,7 @@
                     UpdatedBy = currentUserId,
                     UpdatedOn = currentTimeStamp,
                     IsCompleted = true,
-                    IsPassed = questionSet.PassingWeightage > 0 ? (result.TotalMark - result.NegativeMark) * 100 / totalQuestion >= questionSet.PassingWeightage : false,
+                    IsPassed = questionSet.PassingWeightage > 0 ? (result.TotalMark - result.NegativeMark) * 100 / totalQuestionMarks >= questionSet.PassingWeightage : false,
                 };
                 await ManageStudentCourseComplete(questionSet.Lesson.CourseId, questionSet.Lesson.Id, currentUserId, currentTimeStamp).ConfigureAwait(false);
 
