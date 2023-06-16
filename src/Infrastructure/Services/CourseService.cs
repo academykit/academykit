@@ -1502,7 +1502,7 @@ namespace Lingtren.Infrastructure.Services
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 if (certificateissueduser.Count != default)
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCertificateIssueMailAsync(certificateissueduser, null));
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCertificateIssueMailAsync(course,certificateissueduser, null));
                 }
                 return response;
             }
