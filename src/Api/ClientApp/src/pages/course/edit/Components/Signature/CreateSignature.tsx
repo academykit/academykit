@@ -16,6 +16,7 @@ import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import useCustomForm from "@hooks/useCustomForm";
 
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IGetSignature>();
@@ -36,6 +37,7 @@ const CreateSignature = ({
   data?: IGetSignature;
   onClose?: () => void;
 }) => {
+  const cForm = useCustomForm();
   const { id } = useParams();
   const createCertificate = useAddSignature(id as string);
   const deleteSignature = useDeleteSignature(id as string);
@@ -145,6 +147,7 @@ const CreateSignature = ({
           />
           <Group mt={30}>
             <Button
+              disabled={!cForm?.isReady}
               loading={createCertificate.isLoading || editSignature.isLoading}
               type="submit"
             >

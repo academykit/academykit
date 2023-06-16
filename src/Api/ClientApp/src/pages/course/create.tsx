@@ -26,6 +26,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import useNav from "@hooks/useNav";
+import useCustomForm from "@hooks/useCustomForm";
 
 interface FormValues {
   thumbnail: string;
@@ -53,7 +54,7 @@ export const [FormProvider, useFormContext, useForm] =
   createFormContext<FormValues>();
 
 const CreateCoursePage = () => {
-  const { setBreadCrumb } = useNav();
+  const cForm = useCustomForm();
   const [searchParamGroup, setsearchParamGroup] = useState("");
   const { t } = useTranslation();
 
@@ -258,7 +259,12 @@ const CreateCoursePage = () => {
               <TextEditor formContext={useFormContext} />
             </Box>
             <Box mt={20}>
-              <Button size="lg" type="submit" loading={isLoading}>
+              <Button
+                disabled={!cForm?.isReady}
+                size="lg"
+                type="submit"
+                loading={isLoading}
+              >
                 {t("submit")}
               </Button>
             </Box>

@@ -17,6 +17,7 @@ import { BrowserRouter } from "react-router-dom";
 import ScrollToTop from "@components/ScrollToTop";
 import "./App.css";
 import { useTranslation } from "react-i18next";
+import FormProvider from "@context/FormContext";
 
 const App = ({ queryClient }: { queryClient: QueryClient }) => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>(
@@ -88,18 +89,20 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
             primaryColor: "brand",
           }}
         >
-          <NotificationsProvider>
-            <QueryClientProvider client={queryClient}>
-              <ErrorBoundary>
-                <AuthProvider>
-                  <LayoutProvider>
-                    <AppRoutes />
-                  </LayoutProvider>
-                </AuthProvider>
-                <ReactQueryDevtools initialIsOpen={false} />
-              </ErrorBoundary>
-            </QueryClientProvider>
-          </NotificationsProvider>
+          <FormProvider>
+            <NotificationsProvider>
+              <QueryClientProvider client={queryClient}>
+                <ErrorBoundary>
+                  <AuthProvider>
+                    <LayoutProvider>
+                      <AppRoutes />
+                    </LayoutProvider>
+                  </AuthProvider>
+                  <ReactQueryDevtools initialIsOpen={false} />
+                </ErrorBoundary>
+              </QueryClientProvider>
+            </NotificationsProvider>
+          </FormProvider>
         </MantineProvider>
       </BrowserRouter>
     </ColorSchemeProvider>

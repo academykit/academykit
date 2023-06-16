@@ -34,6 +34,7 @@ import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
+import useCustomForm from "@hooks/useCustomForm";
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
 
@@ -48,6 +49,7 @@ const schema = () => {
 const useStyles = createStyles({});
 
 const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
+  const cForm = useCustomForm();
   const [showConfirmation, setShowConfirmation] = useToggle();
   const { id } = useParams();
   const [value, setValue] = useState<[Date, Date]>([new Date(), new Date()]);
@@ -165,7 +167,11 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
               FormField="imageUrl"
               currentThumbnail={idd?.imageUrl}
             />
-            <Button type="submit" loading={addCertificate.isLoading}>
+            <Button
+              disabled={!cForm?.isReady}
+              type="submit"
+              loading={addCertificate.isLoading}
+            >
               {t("submit")}
             </Button>
           </form>
