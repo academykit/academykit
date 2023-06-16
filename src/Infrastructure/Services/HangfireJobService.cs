@@ -402,7 +402,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="context"></param>
         /// <returns></returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task SendCertificateIssueMailAsync(IList<CertificateUserIssuedDto> certificateUserIssuedDtos, PerformContext context = null)
+        public async Task SendCertificateIssueMailAsync(string courseName, IList<CertificateUserIssuedDto> certificateUserIssuedDtos, PerformContext context = null)
         {
             try
             {
@@ -416,7 +416,9 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var fullName = user.UserName;
                     var html = $"Dear {fullName},<br><br>";
-                    html += $"Your certificate of couse named '{user.CourseName}' have been issued.";
+                    html += $"We are happy to inform you that your Certificate of Achievement for {courseName} has been issued and is now available in your profile on the application. " 
+                        +"Please log in to your account and navigate to your profile to view and download your certificate.<br><br>";
+                    html += $"we hope you find the training helpful <br><br>";
                     html += $"<br><br>Thank You, <br> {settings.CompanyName}";
 
                     var model = new EmailRequestDto
