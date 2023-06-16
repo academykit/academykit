@@ -1031,24 +1031,14 @@ namespace Lingtren.Infrastructure.Services
                            LessonType = lesson.Type,
                            QuestionSetId = lesson.Type == LessonType.Exam ? lesson.QuestionSetId : null,
                            IsCompleted = m?.IsCompleted,
-                           IsPassed = GetIsPassed(userResults, student.UserId) ? true : m?.IsPassed ?? false,
+                           IsPassed = userResults.FirstOrDefault(ur => ur.UserId == student.Id) != default ? true : m?.IsPassed ?? false,
                            UpdatedOn = m?.UpdatedOn ?? m?.CreatedOn,
                        };
 
             return data.ToList().ToIPagedList(criteria.Page, criteria.Size);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="userResults"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        private bool GetIsPassed(IEnumerable<(Guid UserId, bool UserResult)> userResults, Guid userId)
-        {
-            var userResult = userResults.FirstOrDefault(ur => ur.UserId == userId);
-            return userResult != default && userResult.UserResult ? userResult.UserResult : false;
-        }
+
         /// <summary>
         /// Handle to fetch student course statistics report
         /// </summary>
