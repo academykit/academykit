@@ -6,6 +6,7 @@ import {
   IconSettings,
   IconDashboard,
   IconUsers,
+  IconInfoSquare,
 } from "@tabler/icons";
 import { ThemeIcon, NavLink } from "@mantine/core";
 import { Link, useLocation } from "react-router-dom";
@@ -20,6 +21,7 @@ type MainLinkProps = {
   href: string;
   onClose(): void;
   replace: boolean;
+  target?: string;
 };
 
 function MainLink({
@@ -29,23 +31,43 @@ function MainLink({
   href,
   onClose,
   replace,
+  target = "_self",
 }: MainLinkProps) {
   const router = useLocation();
+  const { t } = useTranslation();
 
   return (
-    <NavLink
-      onClick={onClose}
-      component={Link}
-      to={href}
-      replace={replace}
-      active={router.pathname.split("/")[1] === href.split("/")[1]}
-      label={label}
-      icon={<ThemeIcon color={color}>{icon}</ThemeIcon>}
-      sx={(theme) => ({
-        padding: theme.spacing.xs,
-        borderRadius: theme.radius.sm,
-      })}
-    ></NavLink>
+    <>
+      {target === "_self" && (
+        <NavLink
+          onClick={onClose}
+          component={Link}
+          to={href}
+          target={target}
+          replace={replace}
+          active={router.pathname.split("/")[1] === href.split("/")[1]}
+          label={t(`${label}`)}
+          icon={<ThemeIcon color={color}>{icon}</ThemeIcon>}
+          sx={(theme) => ({
+            padding: theme.spacing.xs,
+            borderRadius: theme.radius.sm,
+          })}
+        />
+      )}
+      {target !== "_self" && (
+        <NavLink
+          component="a"
+          href={href}
+          label={t(`${label}`)}
+          target={target}
+          icon={<ThemeIcon color={color}>{icon}</ThemeIcon>}
+          sx={(theme) => ({
+            padding: theme.spacing.xs,
+            borderRadius: theme.radius.sm,
+          })}
+        />
+      )}
+    </>
   );
 }
 
@@ -55,13 +77,12 @@ type LeftMainLinksProps = {
 
 export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
   const auth = useAuth();
-  const { t } = useTranslation();
 
   const data = [
     {
       icon: <IconDashboard size={16} />,
       color: "purple",
-      label: t("dashboard"),
+      label: "dashboard",
       href: "/",
       replace: true,
       role: UserRole.Trainee,
@@ -69,7 +90,7 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
     {
       icon: <IconUser size={16} />,
       color: "blue",
-      label: t("users"),
+      label: "users",
       href: "/users",
       replace: true,
       role: UserRole.Admin,
@@ -77,7 +98,7 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
     {
       icon: <IconUsers size={16} />,
       color: "yellow",
-      label: t("groups"),
+      label: "groups",
       href: "/groups",
       replace: true,
       role: UserRole.Trainee,
@@ -85,15 +106,16 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
     {
       icon: <IconCertificate size={16} />,
       color: "red",
-      label: t("trainings"),
+      label: "trainings",
       href: "/trainings/list",
       replace: true,
       role: UserRole.Trainee,
     },
+
     {
       icon: <IconListDetails size={16} />,
       color: "violet",
-      label: t("mcq_pools"),
+      label: "mcq_pools",
       href: "/pools",
       replace: true,
       role: UserRole.Trainer,
@@ -102,9 +124,17 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
     {
       icon: <IconSettings size={16} />,
       color: "teal",
-      label: t("settings"),
+      label: "settings",
       href: "/settings",
       replace: false,
+      role: UserRole.Trainee,
+    },
+    {
+      icon: <IconInfoSquare size={16} />,
+      color: "blue",
+      label: "help",
+      href: "https://docs.google.com/document/d/1S_wlCY7XH2oELa8ZvNPSGVik2117HuclOGC04iHpP-w/edit?usp=sharing ",
+      replace: true,
       role: UserRole.Trainee,
     },
   ];
@@ -112,7 +142,14 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
   const links = data.map((link) => {
     if (auth?.auth?.role) {
       if (link.role >= auth?.auth?.role) {
-        return <MainLink {...link} key={link.label} onClose={onClose} />;
+        return (
+          <MainLink
+            {...link}
+            key={link.label}
+            onClose={onClose}
+            target={link.label === "help" ? "_blank" : "_self"}
+          />
+        );
       }
     }
   });
