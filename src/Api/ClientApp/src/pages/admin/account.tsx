@@ -51,8 +51,14 @@ const schema = () => {
 
 const changeEmailSchema = Yup.object().shape({
   oldEmail: Yup.string().email("Invalid Email.").required("Email is required."),
-  newEmail: Yup.string().email("Invalid Email.").required("Email is required."),
+  newEmail: Yup.string()
+    .trim()
+    .lowercase()
+    .email("Invalid Email.")
+    .required("Email is required."),
   confirmEmail: Yup.string()
+    .trim()
+    .lowercase()
     .oneOf([Yup.ref("newEmail"), null], "Email must match.")
     .required("Confirm Email is required."),
   password: Yup.string().required("Password is required."),

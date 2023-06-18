@@ -121,13 +121,18 @@ const ThumbnailEditor = ({
             };
           },
           load: async (source, load, error, progress, abort, headers) => {
+            cForm?.setReady();
             await fetch(
               `${source}?cache=${Math.random().toString(36).substring(2, 7)}`
             )
               .then(async (r) => {
                 load(await r.blob());
+                cForm?.setReady();
               })
-              .catch((r) => error(r));
+              .catch((r) => {
+                error(r);
+                cForm?.setReady();
+              });
             // Should expose an abort method so the request can be cancelled
             return {
               abort: () => {
