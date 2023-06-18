@@ -125,7 +125,10 @@ const Account = () => {
     <>
       <Modal
         opened={opened}
-        onClose={() => setOpened(false)}
+        onClose={() => {
+          changeEmailForm.reset();
+          setOpened(false);
+        }}
         title={t("change_email_address")}
       >
         <form onSubmit={changeEmailForm.onSubmit(onChangeEmail)}>

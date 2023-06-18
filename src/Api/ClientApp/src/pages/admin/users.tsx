@@ -94,60 +94,62 @@ const UsersList = ({
         title={t("add_more_user")}
         styles={{ title: { fontWeight: "bold" } }}
       >
-        <Suspense fallback={<Loader />}>
-          <Tabs value={currentTab} onTabChange={setCurrentTab}>
-            <Tabs.List>
-              <Tabs.Tab value="user">{t("add_user")}</Tabs.Tab>
-              <Tabs.Tab value="import">{t("import_users")}</Tabs.Tab>
-            </Tabs.List>
-            <Tabs.Panel value="user">
-              <Box mt={10}>
-                <AddUpdateUserForm
-                  setOpened={() => setOpened(false)}
-                  opened={opened}
-                  apiHooks={addUser}
-                  isEditing={false}
-                />
-              </Box>
-            </Tabs.Panel>
-            <Tabs.Panel value="import">
-              <Text my={10} size="sm">
-                {t("csv_format")} {t("please")}
-                <Anchor
-                  href="https://vurilo-desktop-app.s3.ap-south-1.amazonaws.com/bulkimportsample.csv"
-                  style={{
-                    textDecoration: "underline",
-                  }}
-                  mx={5}
-                >
-                  {t("click_here")}
-                </Anchor>
-                {t("to_download_csv")}
-              </Text>
-              <form onSubmit={form.onSubmit(onSubmit)}>
-                <FileInput
-                  label={t("upload_csv")}
-                  name="fileUpload"
-                  withAsterisk
-                  // value={file}
-                  // onChange={setFile}
-                  placeholder={t("your_csv") as string}
-                  mt={10}
-                  clearable
-                  description={t("accepts_csv")}
-                  accept="text/csv,
+        {opened && (
+          <Suspense fallback={<Loader />}>
+            <Tabs value={currentTab} onTabChange={setCurrentTab}>
+              <Tabs.List>
+                <Tabs.Tab value="user">{t("add_user")}</Tabs.Tab>
+                <Tabs.Tab value="import">{t("import_users")}</Tabs.Tab>
+              </Tabs.List>
+              <Tabs.Panel value="user">
+                <Box mt={10}>
+                  <AddUpdateUserForm
+                    setOpened={() => setOpened(false)}
+                    opened={opened}
+                    apiHooks={addUser}
+                    isEditing={false}
+                  />
+                </Box>
+              </Tabs.Panel>
+              <Tabs.Panel value="import">
+                <Text my={10} size="sm">
+                  {t("csv_format")} {t("please")}
+                  <Anchor
+                    href="https://vurilo-desktop-app.s3.ap-south-1.amazonaws.com/bulkimportsample.csv"
+                    style={{
+                      textDecoration: "underline",
+                    }}
+                    mx={5}
+                  >
+                    {t("click_here")}
+                  </Anchor>
+                  {t("to_download_csv")}
+                </Text>
+                <form onSubmit={form.onSubmit(onSubmit)}>
+                  <FileInput
+                    label={t("upload_csv")}
+                    name="fileUpload"
+                    withAsterisk
+                    // value={file}
+                    // onChange={setFile}
+                    placeholder={t("your_csv") as string}
+                    mt={10}
+                    clearable
+                    description={t("accepts_csv")}
+                    accept="text/csv,
           application/vnd.openxmlformats-officedocument.presentationml.presentation,
           application/vnd.ms-excel,
           application/csv"
-                  {...form.getInputProps("fileUpload")}
-                />
-                <Button loading={csvLoad} mt={10} type="submit">
-                  {t("submit")}
-                </Button>
-              </form>
-            </Tabs.Panel>
-          </Tabs>
-        </Suspense>
+                    {...form.getInputProps("fileUpload")}
+                  />
+                  <Button loading={csvLoad} mt={10} type="submit">
+                    {t("submit")}
+                  </Button>
+                </form>
+              </Tabs.Panel>
+            </Tabs>
+          </Suspense>
+        )}
       </Modal>
 
       <Group

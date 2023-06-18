@@ -126,7 +126,9 @@ const GroupAttachment = ({
         styles={{ title: { fontWeight: "bold" } }}
         title={t("upload_attachments")}
       >
-        <AddAssignment close={() => setOpened(false)} search={searchParams} />
+        {opened && (
+          <AddAssignment close={() => setOpened(false)} search={searchParams} />
+        )}
       </Modal>
       <Container fluid>
         <Flex

@@ -63,12 +63,14 @@ const AssignmentResult = () => {
             : t("review_assignment")
         }
       >
-        <AssignmentReviewForm
-          reviewId={getAssignment.data?.assignmentReview?.id}
-          closeModal={() => setShowReviewBox()}
-          edit={!!getAssignment.data.assignmentReview}
-          editData={getAssignment.data}
-        />
+        {showReviewBox && (
+          <AssignmentReviewForm
+            reviewId={getAssignment.data?.assignmentReview?.id}
+            closeModal={() => setShowReviewBox()}
+            edit={!!getAssignment.data.assignmentReview}
+            editData={getAssignment.data}
+          />
+        )}
       </Modal>
       {getAssignment.data.assignments.map((x) => (
         <Card key={x.id} shadow="sm" my={10} withBorder>

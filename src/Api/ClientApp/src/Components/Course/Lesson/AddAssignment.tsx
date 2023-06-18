@@ -211,7 +211,7 @@ const AddAssignment = ({
           },
         }}
       >
-        <CreateAssignment lessonId={lessonId} />
+        {opened && <CreateAssignment lessonId={lessonId} />}
       </Modal>
 
       <form onSubmit={form.onSubmit(submitForm)}>

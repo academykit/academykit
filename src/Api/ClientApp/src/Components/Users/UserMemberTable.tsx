@@ -72,15 +72,17 @@ const UserRow = ({
           title={`${t("edit_user")} ${item?.fullName}`}
           styles={{ title: { fontWeight: "bold" } }}
         >
-          <Suspense fallback={<Loader />}>
-            <AddUpdateUserForm
-              setOpened={setOpened}
-              opened={opened}
-              isEditing={true}
-              apiHooks={editUser}
-              item={item}
-            />
-          </Suspense>
+          {opened && (
+            <Suspense fallback={<Loader />}>
+              <AddUpdateUserForm
+                setOpened={setOpened}
+                opened={opened}
+                isEditing={true}
+                apiHooks={editUser}
+                item={item}
+              />
+            </Suspense>
+          )}
         </Modal>
         <div style={{ display: "flex", textDecoration: "none" }}>
           <Link

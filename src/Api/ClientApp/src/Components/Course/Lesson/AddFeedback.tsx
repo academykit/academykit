@@ -139,7 +139,7 @@ const AddFeedback = ({
           },
         }}
       >
-        <CreateFeedback lessonId={lessonId ?? item?.id} />
+        {opened && <CreateFeedback lessonId={lessonId ?? item?.id} />}
       </Modal>
 
       <form onSubmit={form.onSubmit(submitForm)}>
