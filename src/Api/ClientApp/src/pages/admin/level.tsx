@@ -99,45 +99,53 @@ const Level = () => {
 
     return (
       <tr key={item.id}>
-        <Modal opened={isEdit} onClose={() => setIsEdit(false)}>
-          <Box mt={10}>
-            <form
-              onSubmit={form.onSubmit(async (data) => {
-                try {
-                  const up = await updateLevel.mutateAsync({
-                    name: data.eName,
-                    id: item.id,
-                  });
-                  showNotification({ message: t("update_success") });
-                } catch (error) {
-                  const err = errorType(error);
-                  showNotification({
-                    message: err,
-                    color: "red",
-                  });
-                }
-              })}
-            >
-              <Container
-                size={450}
-                sx={{
-                  marginLeft: "0px",
-                }}
+        <Modal
+          opened={isEdit}
+          onClose={() => {
+            form.reset();
+            setIsEdit(false);
+          }}
+        >
+          {isEdit && (
+            <Box mt={10}>
+              <form
+                onSubmit={form.onSubmit(async (data) => {
+                  try {
+                    const up = await updateLevel.mutateAsync({
+                      name: data.eName,
+                      id: item.id,
+                    });
+                    showNotification({ message: t("update_success") });
+                  } catch (error) {
+                    const err = errorType(error);
+                    showNotification({
+                      message: err,
+                      color: "red",
+                    });
+                  }
+                })}
               >
-                <TextInput
-                  withAsterisk
-                  label={t("level_name")}
-                  placeholder={t("level_name_placeholder") as string}
-                  name="eName"
-                  {...form.getInputProps("eName")}
-                />
-              </Container>
+                <Container
+                  size={450}
+                  sx={{
+                    marginLeft: "0px",
+                  }}
+                >
+                  <TextInput
+                    withAsterisk
+                    label={t("level_name")}
+                    placeholder={t("level_name_placeholder") as string}
+                    name="eName"
+                    {...form.getInputProps("eName")}
+                  />
+                </Container>
 
-              <Group mt={20} ml={10}>
-                <Button type="submit">{t("save")}</Button>
-              </Group>
-            </form>
-          </Box>
+                <Group mt={20} ml={10}>
+                  <Button type="submit">{t("save")}</Button>
+                </Group>
+              </form>
+            </Box>
+          )}
         </Modal>
         <DeleteModal
           title={`${t("want_to_delete")} "${item?.name}" ${t("level?")}`}

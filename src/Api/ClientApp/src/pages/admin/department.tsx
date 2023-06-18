@@ -101,7 +101,13 @@ const Department = ({
     };
     return (
       <tr key={item.id}>
-        <Modal opened={editModal} onClose={() => setEditModal(false)}>
+        <Modal
+          opened={editModal}
+          onClose={() => {
+            form.reset();
+            setEditModal(false);
+          }}
+        >
           <Box>
             <form
               onSubmit={form.onSubmit(async (values) => {
@@ -151,7 +157,13 @@ const Department = ({
               <Group mt={20}>
                 <Button type="submit">{t("submit")}</Button>
 
-                <Button variant="outline" onClick={() => setEditModal(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    form.reset();
+                    setEditModal(false);
+                  }}
+                >
                   {t("cancel")}
                 </Button>
               </Group>
