@@ -27,6 +27,11 @@ using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using System.Data.SqlClient;
+using System.Collections.Immutable;
+using System.Data.Common;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Lingtren.Infrastructure.Services
 {
@@ -774,6 +779,73 @@ namespace Lingtren.Infrastructure.Services
             }
             return predicate;
         }
+        
+
+
+        /// <summary>
+        /// Deletes child entity of given user
+        /// </summary>
+        /// <param name="user"></param>
+        protected override async void DeleteChildEntities(User user)
+        {
+            var course = _unitOfWork.GetRepository<Course>().GetAll(predicate: p => p.CourseTeachers.Any(x => x.UserId == user.Id),
+                include: src => src.Include(x => x.CourseTeachers));
+            var questionpool = _unitOfWork.GetRepository<QuestionPool>().GetAll(predicate: p=> p.QuestionPoolTeachers.Any(x=>x.UserId == user.Id),
+                include:src =>src.Include(x=>x.QuestionPoolTeachers));
+            if (course.Count() != default)
+            {
+                var updateTeacher = course.SelectMany(x => x.CourseTeachers).Where(y => y.UserId == user.Id).ToList();
+                if (updateTeacher.Count != default)
+                {
+                    _unitOfWork.GetRepository<CourseTeacher>().Delete(updateTeacher);
+                }
+            }
+            if (questionpool.Count() != default)
+            {
+                var updateQuestionPoolTeacher = questionpool.SelectMany(x => x.QuestionPoolTeachers).Where(y => y.UserId == user.Id).ToList();
+                if(updateQuestionPoolTeacher.Count != default)
+                {
+                    _unitOfWork.GetRepository<QuestionPoolTeacher>().Delete(updateQuestionPoolTeacher);
+                }
+            }
+        }
+
+        /// <summary>
+        /// updates child entity before updating user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        protected override async Task ResolveChildEntitiesAsync(User user)
+        {
+            var superAdmin = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p=>p.Role == UserRole.SuperAdmin).ConfigureAwait(false);
+            var courses = await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p=>p.CreatedBy == user.Id).ConfigureAwait(false);
+            var questionPools =await _unitOfWork.GetRepository<QuestionPool>().GetAllAsync(predicate: p => p.CreatedBy == user.Id).ConfigureAwait(false);
+            var updateCourse = new List<Course>();
+            var updatePool = new List<QuestionPool>();
+            var currenetDateTime = DateTime.UtcNow;
+            if(courses.Count != default)
+            {
+                foreach (var course in courses)
+                {
+                    course.CreatedBy = superAdmin.Id;
+                    course.UpdatedBy = superAdmin.Id;
+                    course.UpdatedOn = currenetDateTime;
+                    updateCourse.Add(course);
+                }
+                _unitOfWork.GetRepository<Course>().Update(updateCourse);
+            }
+            if (questionPools.Count != default)
+            {
+                foreach(var questionPool in questionPools)
+                {
+                    questionPool.UpdatedBy = superAdmin.Id;
+                    questionPool.UpdatedOn = currenetDateTime;
+                    questionPool.CreatedBy = superAdmin.Id;
+                    updatePool.Add(questionPool);
+                }
+                _unitOfWork.GetRepository<QuestionPool>().Update(updatePool);
+            }
+        }
 
         /// <summary>
         /// Sets the default sort column and order to given criteria.
@@ -841,6 +913,7 @@ namespace Lingtren.Infrastructure.Services
                 var user = await GetAsync(userRefreshToken.UserId, includeProperties: false);
                 return user;
             }
+            
             return null;
         }
 
@@ -1010,5 +1083,6 @@ namespace Lingtren.Infrastructure.Services
                 throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredFetchUserDetails"));
             }
         }
+
     }
 }

@@ -351,7 +351,7 @@ namespace Lingtren.Infrastructure.Services
         ////// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
         ///<returns>the tasl complete </returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task SendCourseEnrollmentMailAsync(Guid courseId, string courseName, PerformContext context = null)
+        public async Task SendCourseEnrollmentMailAsync(string userName, string userEmail, Guid courseId, string courseName, PerformContext context = null)
         {
             try
             {
@@ -373,14 +373,14 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var fullName = string.IsNullOrEmpty(teacher.User?.MiddleName) ? $"{teacher.User?.FirstName} {teacher.User?.LastName}" : $"{teacher.User?.FirstName} {teacher.User?.MiddleName} {teacher.User?.LastName}";
                     var html = $"Dear {fullName},<br><br>";
-                    html += $"Your lecture video named '{course.Name}' have been enrolled " +
-                            @$"<a href ={this._appUrl}><u  style='color:blue;'>Click Here </u></a>to add more courses.";
-                    html += $"<br><br>Thank You, <br> {settings.CompanyName}";
-
+                    html += $"A new user has enrolled in your {courseName} course. Here are the details:";
+                    html += $"<ul><li>Training: {courseName}</li><li>Enrolled User: {userName}</li> <li>User Email:{userEmail}</li></ul>";
+                    html += $"Thank you for your attention to this enrollment. We appreciate your dedication to providing an exceptional learning experience.<br>";
+                    html += $"<br><br>Best regards, <br> {settings.CompanyName}";
                     var model = new EmailRequestDto
                     {
                         To = teacher.User?.Email,
-                        Subject = "Course Enrolled",
+                        Subject = "New Enrollment",
                         Message = html,
                     };
                     await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
@@ -402,7 +402,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="context"></param>
         /// <returns></returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task SendCertificateIssueMailAsync(IList<CertificateUserIssuedDto> certificateUserIssuedDtos, PerformContext context = null)
+        public async Task SendCertificateIssueMailAsync(string courseName, IList<CertificateUserIssuedDto> certificateUserIssuedDtos, PerformContext context = null)
         {
             try
             {
@@ -416,7 +416,9 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var fullName = user.UserName;
                     var html = $"Dear {fullName},<br><br>";
-                    html += $"Your certificate of couse named '{user.CourseName}' have been issued.";
+                    html += $"We are happy to inform you that your Certificate of Achievement for {courseName} has been issued and is now available in your profile on the application. " 
+                        +"Please log in to your account and navigate to your profile to view and download your certificate.<br><br>";
+                    html += $"we hope you find the training helpful.<br><br>";
                     html += $"<br><br>Thank You, <br> {settings.CompanyName}";
 
                     var model = new EmailRequestDto

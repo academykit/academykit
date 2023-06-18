@@ -779,5 +779,7 @@
 "no_options": "オプションなし",
 "questions_list": "問題リスト",
 "selected_questions": "選択された問題",
-"sure": "もちろん"
+"sure": "もちろん",
+
+"help":"ヘルプ"
 }

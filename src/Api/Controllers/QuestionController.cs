@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Api.Controllers
 {
+    using Amazon.Runtime.SharedInterfaces;
     using ClosedXML.Excel;
     using FluentValidation;
     using Lingtren.Api.Common;
@@ -43,6 +44,7 @@
         [AllowAnonymous]
         public async Task<SearchResult<QuestionResponseModel>> SearchAsync(string identity, [FromQuery] QuestionBaseSearchCriteria searchCriteria)
         {
+           
             CommonHelper.ValidateArgumentNotNullOrEmpty(identity, nameof(identity));
             searchCriteria.CurrentUserId = CurrentUser.Id;
             searchCriteria.PoolIdentity = identity;
