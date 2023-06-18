@@ -171,12 +171,14 @@ const Department = ({
           </Box>
         </Modal>
 
-        <DeleteModal
-          title={`${t("sure_to_delete")} "${item?.name}" ${t("department?")}`}
-          open={opened}
-          onClose={setOpened}
-          onConfirm={handleDelete}
-        />
+        {opened && (
+          <DeleteModal
+            title={`${t("sure_to_delete")} "${item?.name}" ${t("department?")}`}
+            open={opened}
+            onClose={setOpened}
+            onConfirm={handleDelete}
+          />
+        )}
 
         <td>
           <Group spacing="sm">

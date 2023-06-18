@@ -147,13 +147,14 @@ const Level = () => {
             </Box>
           )}
         </Modal>
-        <DeleteModal
-          title={`${t("want_to_delete")} "${item?.name}" ${t("level?")}`}
-          open={opened}
-          onClose={setOpened}
-          onConfirm={handleDelete}
-        />
-
+        {opened && (
+          <DeleteModal
+            title={`${t("want_to_delete")} "${item?.name}" ${t("level?")}`}
+            open={opened}
+            onClose={setOpened}
+            onConfirm={handleDelete}
+          />
+        )}
         <td>
           <Group spacing="sm">
             <Text size="sm" weight={500}>
