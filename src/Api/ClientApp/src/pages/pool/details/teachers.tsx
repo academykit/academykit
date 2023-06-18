@@ -50,6 +50,8 @@ const MCQTeacher = () => {
         questionPoolIdentity: slug.id as string,
         email: email,
       });
+      showNotification({ message: "Trainer added successfully." });
+
       toggleAddForm();
     } catch (err) {
       const error = errorType(err);
