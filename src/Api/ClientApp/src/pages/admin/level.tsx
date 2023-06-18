@@ -134,9 +134,7 @@ const Level = () => {
               </Container>
 
               <Group mt={20} ml={10}>
-                <Button type="submit" variant="outline">
-                  {t("save")}
-                </Button>
+                <Button type="submit">{t("save")}</Button>
               </Group>
             </form>
           </Box>
