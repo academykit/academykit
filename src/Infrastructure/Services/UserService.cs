@@ -783,7 +783,7 @@ namespace Lingtren.Infrastructure.Services
 
 
         /// <summary>
-        /// 
+        /// Deletes child entity of given user
         /// </summary>
         /// <param name="user"></param>
         protected override async void DeleteChildEntities(User user)
@@ -811,7 +811,7 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
-        /// 
+        /// updates child entity before updating user
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
