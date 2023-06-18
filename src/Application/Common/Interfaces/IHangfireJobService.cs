@@ -75,7 +75,7 @@ namespace Lingtren.Application.Common.Interfaces
         ///<param name="coursename"> the course name</param>
         /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
         ///<returns>the tasl complete </returns>
-        Task SendCourseEnrollmentMailAsync(Guid courseId, string courseName, PerformContext context =null);
+        Task SendCourseEnrollmentMailAsync(string userName,string userEmail,Guid courseId, string courseName, PerformContext context =null);
 
         ///<summary>
         ///Handle to send cretificate issued mail

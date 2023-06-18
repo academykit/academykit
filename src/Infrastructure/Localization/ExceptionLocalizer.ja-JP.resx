@@ -887,4 +887,7 @@
   <data name="TrainingWithDraftgStatusCanOnlyRemoved" xml:space="preserve">
     <value>ドラフトステータスのトレーニングは削除のみ可能です</value>
   </data>
+  <data name="TraineeCannotBeTrainer" xml:space="preserve">
+    <value>トレーニーをトレーナーとして追加することはできません</value>
+  </data>
 </root>
