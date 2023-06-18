@@ -890,4 +890,7 @@ recorded cannot be deleted.</value>
   <data name="TrainingWithDraftgStatusCanOnlyRemoved" xml:space="preserve">
     <value>Traning with draft status can only be removed</value>
   </data>
+  <data name="TraineeCannotBeTrainer" xml:space="preserve">
+    <value>Trainee cannot be added as trainer</value>
+  </data>
 </root>

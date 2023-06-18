@@ -92,13 +92,16 @@
             try
             {
                 var html = $"Dear {firstName},<br><br>";
-                html += $"Requested for password reset. <br> Your Token is <b><u>{resetToken}</u></b> for password reset. Token is valid for 5 minutes only.<br><br>";
-                html += $"Thank You,<br> {companyName}";
+                html += $"We have received a request for a password reset for your account. To proceed with the reset, please use the following token:<br>";
+                html += $"Token: {resetToken}<br>";
+                html += $"Please note that this token is valid for 5 minutes only. If you do not reset your password within this timeframe, you will need to request a new token.<br>";
+                html += $"If you did not initiate this password reset request, please disregard this email and ensure the security of your account<br>";
+                html += $"Thank You.<br>Best regards,<br>{companyName}";
 
                 var mail = new EmailRequestDto
                 {
                     To = emailAddress,
-                    Subject = "Forgot Password",
+                    Subject = "Password Reset Token for Your Account",
                     Message = html
                 };
                 await SendMailWithHtmlBodyAsync(mail).ConfigureAwait(false);

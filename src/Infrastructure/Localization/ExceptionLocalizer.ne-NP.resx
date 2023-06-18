@@ -884,4 +884,7 @@
   <data name="TrainingWithDraftgStatusCanOnlyRemoved" xml:space="preserve">
     <value>मस्यौदा स्थितिको साथ प्रशिक्षण मात्र हटाउन सकिन्छ</value>
   </data>
+  <data name="TraineeCannotBeTrainer" xml:space="preserve">
+    <value>प्रशिक्षार्थीलाई प्रशिक्षकको रूपमा थप्न सकिँदैन</value>
+  </data>
 </root>
