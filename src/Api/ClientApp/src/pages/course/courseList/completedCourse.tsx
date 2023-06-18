@@ -39,9 +39,7 @@ const CompletedCourseList = ({
             alignItems: "center",
           }}
         >
-          {data &&
-            data.items?.length > 1 &&
-            searchComponent(t("search_trainings") as string)}
+          {searchComponent(t("search_trainings") as string)}
         </Flex>
       </Container>
 
@@ -52,7 +50,7 @@ const CompletedCourseList = ({
           <Box>{t("no_trainings_found")}</Box>
         ))}
       {isLoading && <Loader />}
-      {data && pagination(data.totalPage)}
+      {data && pagination(data.totalPage, data.items.length)}
     </Container>
   );
 };

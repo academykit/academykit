@@ -90,6 +90,7 @@ export interface ICreateCourseTeacher {
   id: string;
   user?: IUser;
   courseName: string;
+  courseCreatedBy?: string;
 }
 const createTeacherCourse = async (data: {
   courseIdentity: string;

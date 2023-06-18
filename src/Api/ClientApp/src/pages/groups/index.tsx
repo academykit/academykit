@@ -92,7 +92,7 @@ const GroupsPage = ({
             <Box>{t("no_groups")}</Box>
           ))}
       </Group>
-      {data && pagination(data.data.totalPage)}
+      {data && pagination(data.data.totalPage, data.data.items.length)}
     </Container>
   );
 };

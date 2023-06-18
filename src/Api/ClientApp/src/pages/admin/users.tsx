@@ -61,10 +61,9 @@ const UsersList = ({
   const onSubmit = async (values: { fileUpload: File | null }) => {
     setCsvLoad(true);
     try {
-      await uploadUserCsv(values.fileUpload);
+      const res = await uploadUserCsv(values.fileUpload);
       showNotification({
-        message: t("user_imported_success"),
-        title: t("successful"),
+        message: res.data as string,
       });
       setOpened(false);
       form.reset();
@@ -180,7 +179,7 @@ const UsersList = ({
             />
           ))}
       </ScrollArea>
-      {data && pagination(data.totalPage)}
+      {data && pagination(data.totalPage, data.items.length)}
     </>
   );
 };

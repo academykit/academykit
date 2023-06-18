@@ -12,6 +12,7 @@ import errorType from "@utils/services/axiosError";
 import { PHONE_VALIDATION } from "@utils/constants";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import useCustomForm from "@hooks/useCustomForm";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -44,6 +45,7 @@ const [FormProvider, useFormContext, useForm] =
   createFormContext<ICompanySettings>();
 
 const GeneralSettings = () => {
+  const cForm = useCustomForm();
   const generalSettings = useGeneralSetting();
   const updateGeneral = useUpdateGeneralSetting(generalSettings.data?.data.id);
   const data = generalSettings.data?.data;
@@ -141,7 +143,12 @@ const GeneralSettings = () => {
             placeholder={t("enter_mail_signature") as string}
             {...form.getInputProps("emailSignature")}
           />
-          <Button mt={10} type="submit" loading={updateGeneral.isLoading}>
+          <Button
+            disabled={!cForm?.isReady}
+            mt={10}
+            type="submit"
+            loading={updateGeneral.isLoading}
+          >
             {t("submit")}
           </Button>
         </Container>

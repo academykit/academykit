@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import FilePondPluginImageResize from "filepond-plugin-image-resize";
 import FilePondPluginImageTransform from "filepond-plugin-image-transform";
+import useCustomForm from "@hooks/useCustomForm";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -38,6 +39,8 @@ const ThumbnailEditor = ({
   currentThumbnail,
   width,
 }: IProps) => {
+  const cForm = useCustomForm();
+
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -101,6 +104,7 @@ const ThumbnailEditor = ({
             progress,
             abort
           ) => {
+            cForm?.setReady();
             try {
               const res = await uploadFile(file as File, FileAccess.Public);
               load(res.data);
@@ -108,6 +112,8 @@ const ThumbnailEditor = ({
             } catch (e) {
               error(t("unable_to_upload"));
             }
+            cForm?.setReady();
+
             return {
               abort: () => {
                 abort();

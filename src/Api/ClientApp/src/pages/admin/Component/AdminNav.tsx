@@ -17,7 +17,7 @@ const AdminNav = () => {
       role: UserRole.Trainee,
     },
     {
-      label: t("my_trainings"),
+      label: t("my_certificate"),
       to: RoutePath.settings.training(),
       role: UserRole.Trainee,
     },

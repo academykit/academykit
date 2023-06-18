@@ -16,6 +16,7 @@ import {
   IFeedbackQuestions,
   useGetUserFeedback,
 } from "@utils/services/feedbackService";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 const useStyle = createStyles((theme) => ({
@@ -34,7 +35,7 @@ const FeedbackResult = () => {
   const { id, studentId } = useParams();
   const navigate = useNavigate();
   const auth = useReAuth();
-
+  const { t } = useTranslation();
   const getUserFeedback = useGetUserFeedback(
     id as string,
     studentId ? (studentId as string) : auth.data?.id ?? ""
@@ -84,7 +85,7 @@ const FeedbackResult = () => {
       ))}
       <Group mt={20}>
         <Button type="reset" variant="outline" onClick={() => navigate(-1)}>
-          Go Back
+          {t("go_back_button")}
         </Button>
       </Group>
     </Container>

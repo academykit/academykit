@@ -121,6 +121,7 @@ const Create = () => {
   const addQuestion = useAddQuestion(id as string, "");
   const { mutate, data: addTagData, isSuccess } = useAddTag();
   const [isReset, setIsReset] = useState(false);
+
   const onSubmit = async (data: IAddQuestionType) => {
     try {
       await addQuestion.mutateAsync({ poolId: id as string, data });
@@ -170,7 +171,7 @@ const Create = () => {
   }, [isSuccess]);
 
   useEffect(() => {
-    if (form.values.type) {
+    if (form.values.type && !addQuestion.isSuccess) {
       form.values.answers.forEach((x, i) => {
         return form.setFieldValue(`answers.${i}.isCorrect`, false);
       });
@@ -227,14 +228,16 @@ const Create = () => {
 
             <Box mt={20}>
               <Text size={"lg"}>{t("hint")}</Text>
-              <TextEditor label="hints" formContext={useFormContext} />
+              <TextEditor
+                label={t("hints") as string}
+                formContext={useFormContext}
+              />
             </Box>
 
             <Select
               mt={20}
               placeholder={t("select_question_type") as string}
               size={"lg"}
-              allowDeselect
               withAsterisk
               label={t("question_type")}
               {...form.getInputProps("type")}

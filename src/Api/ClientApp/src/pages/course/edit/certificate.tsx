@@ -35,11 +35,14 @@ import useFormErrorHooks from "@hooks/useFormErrorHooks";
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    title: Yup.string().required(t("course_title_required") as string),
-    eventStartDate: Yup.string()
+    title: Yup.string()
+      .required(t("course_title_required") as string)
+      .max(80, t("course_title_less_than_80") as string),
+    eventStartDate: Yup.date()
       .required(t("event_start_date_required") as string)
       .typeError(t("event_start_date_required") as string),
-    eventEndDate: Yup.string()
+    eventEndDate: Yup.date()
+      .min(Yup.ref("eventStartDate"), "End Date Needs to be after Start Date")
       .required(t("event_end_date_required") as string)
       .typeError(t("event_end_date_required") as string),
   });

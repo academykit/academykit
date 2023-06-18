@@ -40,9 +40,7 @@ const ReviewedCourse = ({
             alignItems: "center",
           }}
         >
-          {data &&
-            data.items?.length > 1 &&
-            searchComponent(t("search_trainings") as string)}
+          {searchComponent(t("search_trainings") as string)}
         </Flex>
       </Container>
 
@@ -54,7 +52,7 @@ const ReviewedCourse = ({
           <Box>{t("no_trainings_found")}</Box>
         ))}
       {isLoading && <Loader />}
-      {data && pagination(data.totalPage)}
+      {data && pagination(data.totalPage, data.items.length)}
     </Container>
   );
 };

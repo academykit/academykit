@@ -101,7 +101,7 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
         title={t("logout_confirmation")}
       >
         <Group position="center">
-          <Button onClick={confirmLogout}>Sure</Button>
+          <Button onClick={confirmLogout}>{t("sure")}</Button>
           <Button variant="outline" onClick={() => setShowLogout()}>
             {t("cancel")}
           </Button>

@@ -118,8 +118,7 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
           ) : (
             <Avatar.Group spacing={"lg"}>
               {data.students.length > 0 ? (
-                data.students.map((x, idx) => {
-                  if (idx === 2) return;
+                data.students.slice(0, 3).map((x, idx) => {
                   return <StudentAvatar data={x} key={x.id} />;
                 })
               ) : (

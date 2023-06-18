@@ -1,6 +1,7 @@
 import { Badge, Group } from "@mantine/core";
 import { LessonType } from "@utils/enums";
 import { IStudentInfoLesson } from "@utils/services/manageCourseService";
+import { useTranslation } from "react-i18next";
 
 const videoType = {
   true: "Watched",
@@ -43,26 +44,29 @@ export const getType = (type: LessonType) => {
       return examType;
   }
 };
-
 const LessonStatusColor = ({
   status: { isPassed, isCompleted, lessonType: type },
 }: {
   status: IStudentInfoLesson;
-}) => (
-  <>
-    <Group position="center">
-      {isPassed ? (
-        <Badge color={"green"}>{getType(type).true}</Badge>
-      ) : (
-        <Badge color={"red"}>{getType(type).false}</Badge>
-      )}
-      {isCompleted ? (
-        <Badge color={"green"}>Completed</Badge>
-      ) : (
-        <Badge color={"red"}>Not Completed</Badge>
-      )}
-    </Group>
-  </>
-);
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <Group position="center">
+        {isPassed ? (
+          <Badge color={"green"}>{getType(type).true}</Badge>
+        ) : (
+          <Badge color={"red"}>{getType(type).false}</Badge>
+        )}
+        {isCompleted ? (
+          <Badge color={"green"}>{t("completed")}</Badge>
+        ) : (
+          <Badge color={"red"}>{t("not_completed")}</Badge>
+        )}
+      </Group>
+    </>
+  );
+};
 
 export default LessonStatusColor;

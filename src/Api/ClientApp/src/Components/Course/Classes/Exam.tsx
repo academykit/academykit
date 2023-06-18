@@ -95,6 +95,7 @@ const Exam = ({
   const auth = useAuth();
   const location = useLocation();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const form = useForm({
     initialValues: questions,
@@ -121,7 +122,7 @@ const Exam = ({
             onClick={() => setShowConfirmation()}
           />
         ) : (
-          <></>
+          <Button onClick={() => navigate(-1)}>{t("close")}</Button>
         )
       );
     customLayout.setExamPageTitle &&
@@ -133,7 +134,6 @@ const Exam = ({
   const { classes, theme, cx } = useStyle();
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.md}px)`);
   const [visited, setVisited] = useState<number[]>([]);
-  const navigate = useNavigate();
 
   const onQuestionVisit = (index: number) => {
     if (!visited.includes(index)) {

@@ -215,13 +215,21 @@ const CourseDescription = () => {
             <Center>
               <Group my={30}>
                 {auth?.auth && auth?.auth?.role <= UserRole.Admin ? (
-                  <Link
-                    to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}
-                  >
-                    <Button radius="xl" size="md" className={classes.control}>
-                      {t("preview")}
-                    </Button>
-                  </Link>
+                  <>
+                    {slug && (
+                      <Link
+                        to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}
+                      >
+                        <Button
+                          radius="xl"
+                          size="md"
+                          className={classes.control}
+                        >
+                          {t("preview")}
+                        </Button>
+                      </Link>
+                    )}
+                  </>
                 ) : course.data?.userStatus === CourseUserStatus.NotEnrolled ? (
                   <Button
                     radius="xl"
@@ -233,21 +241,37 @@ const CourseDescription = () => {
                     {t("enroll_course")}
                   </Button>
                 ) : course.data?.userStatus === CourseUserStatus.Author ? (
-                  <Link
-                    to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}
-                  >
-                    <Button radius="xl" size="md" className={classes.control}>
-                      {t("preview")}
-                    </Button>
-                  </Link>
+                  <>
+                    {slug && (
+                      <Link
+                        to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}
+                      >
+                        <Button
+                          radius="xl"
+                          size="md"
+                          className={classes.control}
+                        >
+                          {t("preview")}
+                        </Button>
+                      </Link>
+                    )}
+                  </>
                 ) : (
-                  <Link
-                    to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}
-                  >
-                    <Button radius="xl" size="md" className={classes.control}>
-                      {t("watch_course")}
-                    </Button>
-                  </Link>
+                  <>
+                    {slug && (
+                      <Link
+                        to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}
+                      >
+                        <Button
+                          radius="xl"
+                          size="md"
+                          className={classes.control}
+                        >
+                          {t("watch_course")}
+                        </Button>
+                      </Link>
+                    )}
+                  </>
                 )}
                 {auth?.auth &&
                   auth?.auth?.role <= UserRole.Admin &&

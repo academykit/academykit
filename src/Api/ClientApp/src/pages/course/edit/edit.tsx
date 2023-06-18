@@ -28,6 +28,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import useCustomForm from "@hooks/useCustomForm";
 
 const useStyle = createStyles((theme, _params, getRef) => ({
   group: {
@@ -59,7 +60,7 @@ const schema = () => {
   return Yup.object().shape({
     title: Yup.string()
       .required(t("course_title_required") as string)
-      .max(250, t("course_title_must_be_less_than_250") as string),
+      .max(250, t("course_title_must_be_less_than_100") as string),
     level: Yup.string().required(t("level_required") as string),
     groups: Yup.string().required(t("group_required") as string),
   });
@@ -68,6 +69,7 @@ const schema = () => {
 export const [FormProvider, useFormContext, useForm] =
   createFormContext<FormValues>();
 const EditCourse = () => {
+  const cForm = useCustomForm();
   const { t } = useTranslation();
   const { classes } = useStyle();
   const form = useForm({
@@ -266,7 +268,12 @@ const EditCourse = () => {
               <TextEditor formContext={useFormContext} />
             </Box>
             <Box mt={20}>
-              <Button size="lg" type="submit" loading={updateCourse.isLoading}>
+              <Button
+                disabled={!cForm?.isReady}
+                size="lg"
+                type="submit"
+                loading={updateCourse.isLoading}
+              >
                 {t("submit")}
               </Button>
             </Box>

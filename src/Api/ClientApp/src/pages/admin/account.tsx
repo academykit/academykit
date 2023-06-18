@@ -42,7 +42,7 @@ const schema = () => {
       .matches(/[a-z]/, t("password_lowercase_required") as string)
       .matches(/[A-Z]/, t("password_uppercase_required") as string)
       .matches(/[^\w]/, t("password_symbol_required") as string)
-      .required("new_password_required"),
+      .required(t("new_password_required") as string),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("newPassword"), null], t("password_match") as string)
       .required(t("password_confirm_required") as string),
@@ -192,7 +192,9 @@ const Account = () => {
               label={t("confirm_password")}
               {...form.getInputProps("confirmPassword")}
             />
-            <Button type="submit">{t("save")}</Button>
+            <Button type="submit" loading={isLoading}>
+              {t("save")}
+            </Button>
           </Container>
         </form>
         {/* email section */}

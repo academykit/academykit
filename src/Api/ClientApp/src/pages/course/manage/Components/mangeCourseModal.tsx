@@ -1,5 +1,6 @@
 import { Modal } from "@mantine/core";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const ManageCourseModal = ({
   opened,
@@ -8,9 +9,10 @@ const ManageCourseModal = ({
   opened: boolean;
   setOpened: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const { t } = useTranslation();
   return (
     <Modal opened={opened} onClose={() => setOpened(false)}>
-      Hello
+      {t("hello")}
     </Modal>
   );
 };

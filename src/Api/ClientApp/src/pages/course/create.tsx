@@ -26,6 +26,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import useNav from "@hooks/useNav";
+import useCustomForm from "@hooks/useCustomForm";
 
 interface FormValues {
   thumbnail: string;
@@ -41,7 +42,7 @@ const schema = () => {
     title: Yup.string()
       .trim()
       .required(t("course_title_required") as string)
-      .max(250, t("course_title_must_be_less_than_250") as string),
+      .max(100, t("course_title_must_be_less_than_100") as string),
     level: Yup.string().required(t("level_required") as string),
     groups: Yup.string()
       .nullable()
@@ -53,7 +54,7 @@ export const [FormProvider, useFormContext, useForm] =
   createFormContext<FormValues>();
 
 const CreateCoursePage = () => {
-  const { setBreadCrumb } = useNav();
+  const cForm = useCustomForm();
   const [searchParamGroup, setsearchParamGroup] = useState("");
   const { t } = useTranslation();
 
@@ -258,7 +259,12 @@ const CreateCoursePage = () => {
               <TextEditor formContext={useFormContext} />
             </Box>
             <Box mt={20}>
-              <Button size="lg" type="submit" loading={isLoading}>
+              <Button
+                disabled={!cForm?.isReady}
+                size="lg"
+                type="submit"
+                loading={isLoading}
+              >
                 {t("submit")}
               </Button>
             </Box>

@@ -34,6 +34,7 @@ import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
+import useCustomForm from "@hooks/useCustomForm";
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
 
@@ -48,6 +49,7 @@ const schema = () => {
 const useStyles = createStyles({});
 
 const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
+  const cForm = useCustomForm();
   const [showConfirmation, setShowConfirmation] = useToggle();
   const { id } = useParams();
   const [value, setValue] = useState<[Date, Date]>([new Date(), new Date()]);
@@ -113,64 +115,71 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
 
   return (
     <div>
-      <Modal
-        title={t("add_certificate")}
-        opened={showConfirmation}
-        onClose={() => {
-          setShowConfirmation();
-          setIdd(null);
-          setUpdates(false);
-        }}
-        styles={{
-          title: {
-            fontWeight: "bold",
-          },
-        }}
-      >
-        <FormProvider form={form}>
-          <form onSubmit={form.onSubmit(handleSubmit)}>
-            <TextInput
-              label={t("name")}
-              name="name"
-              withAsterisk
-              {...form.getInputProps("name")}
-            />
-            <TextInput
-              label={t("duration_hour")}
-              name="duration"
-              {...form.getInputProps("duration")}
-            />
-            <DateRangePicker
-              label={t("start_end_date")}
-              placeholder={t("date_range") as string}
-              allowSingleDateInRange={true}
-              value={value}
-              //@ts-ignore
-              onChange={setValue}
-            />
-            <TextInput
-              label={t("location")}
-              name="location"
-              {...form.getInputProps("location")}
-            />
-            <TextInput
-              label={t("institute")}
-              name="institute"
-              {...form.getInputProps("institute")}
-            />
-            <Text>{t("certificate_image")}</Text>
-            <ThumbnailEditor
-              formContext={useFormContext}
-              label={t("certificate_image") as string}
-              FormField="imageUrl"
-              currentThumbnail={idd?.imageUrl}
-            />
-            <Button type="submit" loading={addCertificate.isLoading}>
-              {t("submit")}
-            </Button>
-          </form>
-        </FormProvider>
-      </Modal>
+      {showConfirmation && (
+        <Modal
+          title={t("add_certificate")}
+          opened={showConfirmation}
+          onClose={() => {
+            setShowConfirmation();
+            setIdd(null);
+            setUpdates(false);
+            form.reset();
+          }}
+          styles={{
+            title: {
+              fontWeight: "bold",
+            },
+          }}
+        >
+          <FormProvider form={form}>
+            <form onSubmit={form.onSubmit(handleSubmit)}>
+              <TextInput
+                label={t("name")}
+                name="name"
+                withAsterisk
+                {...form.getInputProps("name")}
+              />
+              <TextInput
+                label={t("duration_hour")}
+                name="duration"
+                {...form.getInputProps("duration")}
+              />
+              <DateRangePicker
+                label={t("start_end_date")}
+                placeholder={t("date_range") as string}
+                allowSingleDateInRange={true}
+                value={value}
+                //@ts-ignore
+                onChange={setValue}
+              />
+              <TextInput
+                label={t("location")}
+                name="location"
+                {...form.getInputProps("location")}
+              />
+              <TextInput
+                label={t("institute")}
+                name="institute"
+                {...form.getInputProps("institute")}
+              />
+              <Text>{t("certificate_image")}</Text>
+              <ThumbnailEditor
+                formContext={useFormContext}
+                label={t("certificate_image") as string}
+                FormField="imageUrl"
+                currentThumbnail={idd?.imageUrl}
+              />
+              <Button
+                disabled={!cForm?.isReady}
+                type="submit"
+                loading={addCertificate.isLoading}
+              >
+                {t("submit")}
+              </Button>
+            </form>
+          </FormProvider>
+        </Modal>
+      )}
       <Group position="right">
         <Button onClick={() => setShowConfirmation()}>
           {t("add_certificate")}

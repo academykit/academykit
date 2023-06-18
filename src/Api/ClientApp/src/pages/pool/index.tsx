@@ -136,7 +136,8 @@ const MCQPool = ({
             {pools.data?.items.length < 1 && <Box mt={10}>{t("no_pools")}</Box>}
           </>
         )}
-        {pools.data && pagination(pools.data.totalPage)}
+        {pools.data &&
+          pagination(pools.data.totalPage, pools.data.items.length)}
       </Box>
     </Container>
   );

@@ -8,22 +8,18 @@ import {
   ActionIcon,
   Button,
   Container,
-  CopyButton,
   Flex,
-  Group,
-  Input,
   Modal,
   Paper,
   ScrollArea,
   Table,
   Text,
-  Textarea,
-  TextInput,
   Title,
   Tooltip,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { IconCheck, IconCopy, IconDownload, IconTrash } from "@tabler/icons";
+import { IconDownload, IconTrash } from "@tabler/icons";
+import { UserRole } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
 import { getFileUrl } from "@utils/services/fileService";
 import {
@@ -54,6 +50,7 @@ const GroupAttachment = ({
 
   const Rows = ({ item }: { item: IGroupAttachmentItems }) => {
     const [enabled, setEnabled] = useState(false);
+    const auth = useAuth();
     const removeAttachment = useRemoveGroupAttachment(
       id as string,
       item.id,
@@ -108,11 +105,13 @@ const GroupAttachment = ({
               </ActionIcon>
             </Tooltip>
 
-            <Tooltip label={t("delete_attachment")}>
-              <ActionIcon onClick={() => setDeleteAttachment(item.id)}>
-                <IconTrash color="red" />
-              </ActionIcon>
-            </Tooltip>
+            {auth?.auth && auth?.auth?.role !== UserRole.Trainee && (
+              <Tooltip label={t("delete_attachment")}>
+                <ActionIcon onClick={() => setDeleteAttachment(item.id)}>
+                  <IconTrash color="red" />
+                </ActionIcon>
+              </Tooltip>
+            )}
           </Flex>
         </td>
       </tr>
@@ -149,7 +148,7 @@ const GroupAttachment = ({
             )}
           </Flex>
         </Flex>
-        {getGroupAttachment.data && getGroupAttachment.data?.items?.length > 0 && searchComponent(t("search_attachments") as string)}
+        {searchComponent(t("search_attachments") as string)}
 
         {getGroupAttachment.data &&
         getGroupAttachment.data?.items.length >= 1 ? (
@@ -178,7 +177,10 @@ const GroupAttachment = ({
               </Table>
               {getGroupAttachment.data &&
                 getGroupAttachment.data.totalPage > 1 &&
-                pagination(getGroupAttachment.data?.totalPage)}
+                pagination(
+                  getGroupAttachment.data?.totalPage,
+                  getGroupAttachment.data.items.length
+                )}
             </Paper>
           </ScrollArea>
         ) : (

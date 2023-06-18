@@ -25,19 +25,20 @@ import queryStringGenerator from "@utils/queryStringGenerator";
 import { useState } from "react";
 
 const MCQTeacher = () => {
+  const { t } = useTranslation();
+
   const form = useForm({
     initialValues: {
       email: "",
     },
     validate: {
-      email: (value) => (!value ? "Trainer's email is required!" : null),
+      email: (value) => (!value ? t("trainer_email_required") : null),
     },
   });
   const slug = useParams();
   const [search, setSearch] = useState("");
   const getPoolsTeacher = usePoolsTeacher(slug.id as string);
   const createPoolTeacher = useCreateTeacherPool(slug.id as string);
-  const { t } = useTranslation();
   const { data: trainers, isLoading } = useGetTrainers(
     queryStringGenerator({ search })
   );
@@ -49,7 +50,6 @@ const MCQTeacher = () => {
         questionPoolIdentity: slug.id as string,
         email: email,
       });
-      form.reset();
       toggleAddForm();
     } catch (err) {
       const error = errorType(err);
@@ -60,7 +60,12 @@ const MCQTeacher = () => {
     <Container fluid>
       <Group sx={{ justifyContent: "space-between", alignItems: "center" }}>
         <Title>{t("trainers")}</Title>
-        <Button onClick={() => toggleAddForm()}>
+        <Button
+          onClick={() => {
+            toggleAddForm();
+            form.reset();
+          }}
+        >
           {!showAddForm ? t("add_trainer") : t("cancel")}
         </Button>
       </Group>

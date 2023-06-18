@@ -83,7 +83,7 @@ const schema = () => {
       }),
   });
 };
-const Create = () => {
+const EditQuestion = () => {
   const { t } = useTranslation();
   const { id, slug } = useParams();
   const navigate = useNavigate();
@@ -93,6 +93,8 @@ const Create = () => {
   const [tagsList, setTagsList] = useState<{ value: string; label: string }[]>(
     []
   );
+
+  console.log(getQuestion);
 
   const form = useForm({
     initialValues: {
@@ -105,7 +107,6 @@ const Create = () => {
     },
     validate: yupResolver(schema()),
   });
-
   useFormErrorHooks(form);
   const fieldSize = "md";
   const getQuestionType = () => {
@@ -129,7 +130,6 @@ const Create = () => {
         data,
       });
       navigate(-1);
-
       showNotification({
         title: t("successful"),
         message: t("question_edit_success"),
@@ -182,7 +182,7 @@ const Create = () => {
         setFirst(false);
       }, 1000);
     }
-  }, [getQuestion.isSuccess]);
+  }, [getQuestion.data]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -253,7 +253,10 @@ const Create = () => {
 
             <Box mt={20}>
               <Text size={"md"}>{t("hint")}</Text>
-              <TextEditor label="hints" formContext={useFormContext} />
+              <TextEditor
+                label={t("hints") as string}
+                formContext={useFormContext}
+              />
             </Box>
             <Select
               mt={20}
@@ -335,4 +338,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default EditQuestion;

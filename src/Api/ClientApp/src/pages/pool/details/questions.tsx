@@ -45,9 +45,7 @@ const MCQQuestions = ({
   return (
     <Container fluid>
       <Flex justify={"end"}>
-        {data &&
-          data.totalCount > 0 &&
-          searchComponent(t("search_for_questions") as string)}
+        {searchComponent(t("search_for_questions") as string)}
         <Button component={Link} ml={5} to="create">
           {t("add_question")}
         </Button>
@@ -83,7 +81,7 @@ const MCQQuestions = ({
       )}
       {isLoading && <Loader />}
 
-      {data && pagination(data.totalPage)}
+      {data && pagination(data.totalPage, data.items.length)}
       {isError && <Box>{t("something_wrong")}</Box>}
       {data && data?.totalCount < 1 && (
         <Box mt={10}>{t("no_question_found")}</Box>
@@ -109,9 +107,12 @@ const QuestionRow = ({
   const deleteService = useDeleteQuestion(poolId, search);
   const confirmDelete = async () => {
     try {
-      await deleteService.mutateAsync({ poolId: poolId, questionId: data.id });
+      const { data: res } = (await deleteService.mutateAsync({
+        poolId: poolId,
+        questionId: data.id,
+      })) as any;
       showNotification({
-        message: `${t("success_delete_question")} ${data.name}`,
+        message: `${res?.message}`,
       });
     } catch (err) {
       const error = errorType(err);

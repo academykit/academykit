@@ -943,9 +943,9 @@ namespace Lingtren.Infrastructure.Services
         private async Task CreateMeetingAsync(LessonRequestModel model, Lesson lesson)
         {
             lesson.Meeting = new Meeting();
-            if (model.Meeting.MeetingStartDate <= DateTime.UtcNow)
+            if (model.Meeting.MeetingStartDate.ToUniversalTime() <= DateTime.UtcNow)
             {
-                throw new InvalidDataException(_localizer.GetString("InvalidMeetingTimeIssue"));
+                throw new ArgumentException(_localizer.GetString("InvalidMeetingTimeIssue"));
             }
             lesson.Meeting = new Meeting
             {

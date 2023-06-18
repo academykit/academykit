@@ -327,7 +327,11 @@ const Department = ({
         <Box mt={10}>{t("no_department")}</Box>
       )}
 
-      {getDepartment.data && pagination(getDepartment.data?.totalPage)}
+      {getDepartment.data &&
+        pagination(
+          getDepartment.data?.totalPage,
+          getDepartment.data?.items.length
+        )}
     </>
   );
 };

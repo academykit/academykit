@@ -46,7 +46,9 @@ const GroupCourse = ({
           ))}
       </Flex>
       {isLoading && <Loader />}
-      {data && data.totalPage > 1 && pagination(data?.totalPage)}
+      {data &&
+        data.totalPage > 1 &&
+        pagination(data?.totalPage, data.items.length)}
     </Container>
   );
 };

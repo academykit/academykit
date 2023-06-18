@@ -43,7 +43,7 @@ const CreateFeedback = ({ lessonId }: Props) => {
         />
       )}
       <Button onClick={() => setAddQuestion()} mt={10}>
-        {"add_feedback"}
+        {t("add_feedback")}
       </Button>
     </Container>
   );
