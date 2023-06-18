@@ -85,7 +85,7 @@ const withSearchPagination =
 
       setParams(params, { replace: true });
       return qs;
-    }, [currentPage, search, pageSize, sort, filterValue]);
+    }, [currentPage, search, pageSize, sort, filterValue, initialSearch]);
 
     const setSearch = (search: string) => {
       for (let value of params.entries()) {
