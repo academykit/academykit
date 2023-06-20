@@ -850,6 +850,12 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
+        /// <summary>
+        /// Handel to return bool for validity of modification
+        /// </summary>
+        /// <param name="newUser">old user's credentials <see cref="User"></param>
+        /// <param name="oldUser">new user's credentials <see cref="User"></param>
+        /// <returns>Bool</returns>
         private bool userRecordModificationValidity(User newUser,User oldUser)
         {
             if (newUser.Role == UserRole.Admin && oldUser.Role == UserRole.Trainer)
