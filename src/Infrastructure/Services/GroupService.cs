@@ -244,11 +244,11 @@
                     result.HttpStatusCode = HttpStatusCode.PartialContent;
                     if (duplicateUsers.Count > 0)
                     {
-                        result.Message += $"Already as group member : {string.Join(", ", duplicateUsers.Select(x => x.User.Email))} {Environment.NewLine} ";
+                        result.Message += _localizer.GetString($"AlreadyAddedMember") + ": " + string.Join(", ", duplicateUsers.Select(x => x.User.Email));
                     }
                     if (inActiveUsers.Count > 0)
                     {
-                        result.Message += $"Inactive group member : {string.Join(", ", inActiveUsers.Select(x => x.User.Email))} {Environment.NewLine} ";
+                        result.Message = _localizer.GetString("InactiveGroupMember") + ": " + string.Join(", ", inActiveUsers.Select(x => x.User.Email));
                     }
                     if (nonUsers.Count > 0)
                     {

@@ -816,38 +816,42 @@ namespace Lingtren.Infrastructure.Services
         protected override async Task ResolveChildEntitiesAsync(User user)
         {
             var oldUser = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p=>p.Id == user.Id).ConfigureAwait(false);
-            var allowed = userRecordModificationValidity(user, oldUser);
-            if (allowed == true)
+            if (oldUser != null)
             {
-                var superAdmin =await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Role == UserRole.SuperAdmin).ConfigureAwait(false);
-                var courses =await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p => p.CreatedBy == oldUser.Id).ConfigureAwait(false);
-                var questionPools =await _unitOfWork.GetRepository<QuestionPool>().GetAllAsync(predicate: p => p.CreatedBy == oldUser.Id).ConfigureAwait(false);
-                var updateCourse = new List<Course>();
-                var updatePool = new List<QuestionPool>();
-                var currenetDateTime = DateTime.UtcNow;
-                if (courses.Count != default)
+                var allowed = userRecordModificationValidity(user, oldUser);
+                if (allowed == true)
                 {
-                    foreach (var course in courses)
+                    var superAdmin = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Role == UserRole.SuperAdmin).ConfigureAwait(false);
+                    var courses = await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p => p.CreatedBy == oldUser.Id).ConfigureAwait(false);
+                    var questionPools = await _unitOfWork.GetRepository<QuestionPool>().GetAllAsync(predicate: p => p.CreatedBy == oldUser.Id).ConfigureAwait(false);
+                    var updateCourse = new List<Course>();
+                    var updatePool = new List<QuestionPool>();
+                    var currenetDateTime = DateTime.UtcNow;
+                    if (courses.Count != default)
                     {
-                        course.CreatedBy = superAdmin.Id;
-                        course.UpdatedBy = superAdmin.Id;
-                        course.UpdatedOn = currenetDateTime;
-                        updateCourse.Add(course);
+                        foreach (var course in courses)
+                        {
+                            course.CreatedBy = superAdmin.Id;
+                            course.UpdatedBy = superAdmin.Id;
+                            course.UpdatedOn = currenetDateTime;
+                            updateCourse.Add(course);
+                        }
+                        _unitOfWork.GetRepository<Course>().Update(updateCourse);
                     }
-                    _unitOfWork.GetRepository<Course>().Update(updateCourse);
-                }
-                if (questionPools.Count != default)
-                {
-                    foreach (var questionPool in questionPools)
+                    if (questionPools.Count != default)
                     {
-                        questionPool.UpdatedBy = superAdmin.Id;
-                        questionPool.UpdatedOn = currenetDateTime;
-                        questionPool.CreatedBy = superAdmin.Id;
-                        updatePool.Add(questionPool);
+                        foreach (var questionPool in questionPools)
+                        {
+                            questionPool.UpdatedBy = superAdmin.Id;
+                            questionPool.UpdatedOn = currenetDateTime;
+                            questionPool.CreatedBy = superAdmin.Id;
+                            updatePool.Add(questionPool);
+                        }
+                        _unitOfWork.GetRepository<QuestionPool>().Update(updatePool);
                     }
-                    _unitOfWork.GetRepository<QuestionPool>().Update(updatePool);
                 }
             }
+            
         }
 
         /// <summary>
