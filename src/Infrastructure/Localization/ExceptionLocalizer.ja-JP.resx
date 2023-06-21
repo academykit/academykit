@@ -890,4 +890,7 @@
   <data name="TraineeCannotBeTrainer" xml:space="preserve">
     <value>トレーニーをトレーナーとして追加することはできません</value>
   </data>
+  <data name="AlreadyAddedMember" xml:space="preserve">
+    <value>ユーザーはすでにグループに追加されています</value>
+  </data>
 </root>

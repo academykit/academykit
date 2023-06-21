@@ -893,4 +893,7 @@ recorded cannot be deleted.</value>
   <data name="TraineeCannotBeTrainer" xml:space="preserve">
     <value>Trainee cannot be added as trainer</value>
   </data>
+  <data name="AlreadyAddedMember" xml:space="preserve">
+    <value>User is already added in group</value>
+  </data>
 </root>
