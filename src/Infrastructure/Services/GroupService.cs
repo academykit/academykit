@@ -244,23 +244,25 @@
                     result.HttpStatusCode = HttpStatusCode.PartialContent;
                     if (duplicateUsers.Count > 0)
                     {
-                        result.Message += _localizer.GetString($"AlreadyAddedMember") + ": " + string.Join(", ", duplicateUsers.Select(x => x.User.Email));
+                        result.Message += _localizer.GetString($"AlreadyAddedMember") + " : " + string.Join(", ", duplicateUsers.Select(x => x.User.Email)) + Environment.NewLine;
+
                     }
                     if (inActiveUsers.Count > 0)
                     {
-                        result.Message = _localizer.GetString("InactiveGroupMember") + ": " + string.Join(", ", inActiveUsers.Select(x => x.User.Email));
+                        result.Message = _localizer.GetString("InactiveGroupMember") + " : " + string.Join(", ", inActiveUsers.Select(x => x.User.Email)) + Environment.NewLine;
                     }
                     if (nonUsers.Count > 0)
                     {
-                        result.Message += $"Not a system user : {string.Join(", ", nonUsers.Select(x => x))} {Environment.NewLine} ";
+                        result.Message += _localizer.GetString("NotASystemUser") + " : " + string.Join(", ", adminAndSuperAdmin.Select(x => x.Email)) + Environment.NewLine;
                     }
                     if (adminAndSuperAdmin.Count > 0)
                     {
-                        result.Message += $"System superadmin or admin : {string.Join(", ", adminAndSuperAdmin.Select(x => x.Email))} {Environment.NewLine} ";
+                        result.Message += _localizer.GetString("AdminOrSuperAdmin") + " : " + string.Join(", ", adminAndSuperAdmin.Select(x => x.Email)) + Environment.NewLine;
                     }
                     result.Message = result.Message.TrimStart(' ', '&');
                     if (usersToBeAdded.Any())
                     {
+                        result.Message += _localizer.GetString("OtherAddedSuccessfully");
                         result.Message += " & Other remaining users are added successfully in the group";
                     }
                 }

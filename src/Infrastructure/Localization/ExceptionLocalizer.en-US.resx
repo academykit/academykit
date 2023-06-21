@@ -893,7 +893,19 @@ recorded cannot be deleted.</value>
   <data name="TraineeCannotBeTrainer" xml:space="preserve">
     <value>Trainee cannot be added as trainer</value>
   </data>
+  <data name="AdminOrSuperAdmin" xml:space="preserve">
+    <value>these user were admin or superadmin</value>
+  </data>
   <data name="AlreadyAddedMember" xml:space="preserve">
     <value>User is already added in group</value>
+  </data>
+  <data name="InactiveGroupMember" xml:space="preserve">
+    <value>Member is of inactive status</value>
+  </data>
+  <data name="NotASystemUser" xml:space="preserve">
+    <value>User is not in our system</value>
+  </data>
+  <data name="OtherAddedSuccessfully" xml:space="preserve">
+    <value>and Other remaining users are added successfully in the group</value>
   </data>
 </root>
