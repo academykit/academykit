@@ -921,30 +921,33 @@ namespace Lingtren.Infrastructure.Services
                     ).ConfigureAwait(false);
 
                 var response = new List<LessonStatisticsResponseModel>();
-                lessons.OrderBy(o => o.Section.Order).ThenBy(o => o.Order).ForEach(x => 
-                response.Add(new LessonStatisticsResponseModel
+                var liveLessionId = lessons.Select(x=>x.Id).ToList();
+
+
+                var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(predicate : p => p.CourseId == course.Id  && liveLessionId.Contains(p.LessonId)).ConfigureAwait(false);
+
+                watchHistory = watchHistory.DistinctBy(x => x.UserId).ToList();
+                
+                foreach(var lesson in lessons.OrderBy(o=>o.Section.Id).ThenBy(o=>o.Order))
                 {
-                    Id = x.Id,
-                    Slug = x.Slug,
-                    Name = x.Name,
-                    CourseId = course.Id,
-                    CourseSlug = course.Slug,
-                    CourseName = course.Name,
-                    LessonType = x.Type,
-                    SectionId = x.SectionId,
-                    SectionSlug = x.Section?.Slug,
-                    SectionName = x.Section?.Name,
-                    IsMandatory = x.IsMandatory,
-                    EnrolledStudent = course.CourseEnrollments.Count,
-                    LessonWatched = _unitOfWork.GetRepository<WatchHistory>()
-                                     .CountAsync(predicate: p => p.LessonId == x.Id && p.IsCompleted
-                                      && course.CourseEnrollments.Select(e => e.UserId).Contains(p.UserId)).Result
-                                      > course.CourseEnrollments.Count
-                                      ? course.CourseEnrollments.Count
-                                      : _unitOfWork.GetRepository<WatchHistory>()
-                                      .CountAsync(predicate: p => p.LessonId == x.Id && p.IsCompleted
-                                       && course.CourseEnrollments.Select(e => e.UserId).Contains(p.UserId)).Result
-                }));
+                    response.Add(new LessonStatisticsResponseModel
+                    {
+                        Id =lesson.Id,
+                        Slug = lesson.Slug,
+                        Name = lesson.Name,
+                        CourseId = course.Id,
+                        CourseSlug = course.Slug,
+                        CourseName = course.Name,
+                        LessonType = lesson.Type,
+                        SectionId = lesson.SectionId,
+                        SectionSlug = lesson.Section?.Slug,
+                        SectionName = lesson.Section?.Name,
+                        IsMandatory = lesson.IsMandatory,
+                        EnrolledStudent = course.CourseEnrollments.Count,
+                        LessonWatched = watchHistory.Where(x=>x.LessonId == lesson.Id && x.CourseId == course.Id).Count(),
+                    });
+                } 
+
                 return response;
             }
             catch (Exception ex)
@@ -1043,7 +1046,7 @@ namespace Lingtren.Infrastructure.Services
             return data.ToList().ToIPagedList(criteria.Page, criteria.Size);
         }
 
-
+        
         /// <summary>
         /// Handle to fetch student course statistics report
         /// </summary>
