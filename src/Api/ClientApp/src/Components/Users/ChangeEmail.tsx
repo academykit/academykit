@@ -1,7 +1,6 @@
 import { Alert, Button, Container } from "@mantine/core";
 import { IconAlertCircle, IconTrophy } from "@tabler/icons";
 import { useVerifyChangeEmail } from "@utils/services/authService";
-import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "react-router-dom";
 

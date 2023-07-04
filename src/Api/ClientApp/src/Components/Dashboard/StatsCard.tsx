@@ -44,11 +44,10 @@ interface StatsGridProps {
 
 export const StatsCard = ({ data, dashboard }: StatsGridProps) => {
   const Icon = icons[data.icon];
-  const splitString = data.label.split(" ");
-  const backLabel =
-    dashboard && dashboard[data.key as keyof DashboardStats] > 1
-      ? data.pluLabel
-      : data.signLabel;
+  const backLabel = data.pluLabel;
+  // dashboard && dashboard[data.key as keyof DashboardStats] > 1
+  //   ? data.pluLabel
+  //   : data.signLabel;
 
   return (
     <Paper withBorder p="md" radius="md">

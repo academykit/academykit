@@ -292,7 +292,13 @@ const Department = ({
                 <Group mt={20} ml={10}>
                   <Button type="submit">{t("submit")}</Button>
                   {showAddForm && (
-                    <Button variant="outline" onClick={() => toggleAddForm()}>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        form.reset();
+                        toggleAddForm();
+                      }}
+                    >
                       {t("cancel")}
                     </Button>
                   )}

@@ -136,11 +136,13 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
               <TextInput
                 label={t("name")}
                 name="name"
+                placeholder={t("Name of Training") as string}
                 withAsterisk
                 {...form.getInputProps("name")}
               />
               <TextInput
                 label={t("duration_hour")}
+                placeholder={t("Duration of Training") as string}
                 name="duration"
                 {...form.getInputProps("duration")}
               />
@@ -154,11 +156,13 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
               />
               <TextInput
                 label={t("location")}
+                placeholder={t("Location of Training") as string}
                 name="location"
                 {...form.getInputProps("location")}
               />
               <TextInput
                 label={t("institute")}
+                placeholder={t("Name of institute") as string}
                 name="institute"
                 {...form.getInputProps("institute")}
               />

@@ -249,7 +249,13 @@ const Level = () => {
                 <Group mt={10}>
                   <Button type="submit">{t("submit")}</Button>
                   {showAddForm && (
-                    <Button onClick={() => toggleAddForm()} variant="outline">
+                    <Button
+                      onClick={() => {
+                        form.reset();
+                        toggleAddForm();
+                      }}
+                      variant="outline"
+                    >
                       {t("cancel")}
                     </Button>
                   )}

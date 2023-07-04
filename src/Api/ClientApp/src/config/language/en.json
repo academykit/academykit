@@ -784,5 +784,21 @@
   "selected_questions": "Selected Questions",
 
   "sure": "Sure",
-  "help": "Help"
+  "help": "Help",
+  "Enrollment": "Enrollment",
+  "Lecture": "Lecture",
+  "Meeting": "Meeting",
+
+  "Enrollments": "Enrollments",
+  "Lessons": "Lessons",
+  "Assignments": "Assignments",
+  "Lectures": "Lectures",
+  "Exams": "Exams",
+  "Meetings": "Meetings",
+  "Documents": "Documents",
+
+  "Name of Training": "Name of Training",
+  "Duration of Training": "Duration of Training",
+  "Location of Training": "Location of Training",
+  "Name of institute": "Name of institute"
 }

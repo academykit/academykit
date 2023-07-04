@@ -50,7 +50,10 @@ const schema = () => {
 };
 
 const changeEmailSchema = Yup.object().shape({
-  oldEmail: Yup.string().email("Invalid Email.").required("Email is required."),
+  oldEmail: Yup.string()
+    .trim()
+    .email("Invalid Email.")
+    .required("Email is required."),
   newEmail: Yup.string()
     .trim()
     .lowercase()

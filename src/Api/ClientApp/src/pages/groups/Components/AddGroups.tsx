@@ -74,6 +74,7 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
           <TextInput
             mb={10}
             label={t("group_name")}
+            placeholder={t("your_group_name") as string}
             withAsterisk
             name="name"
             size="md"

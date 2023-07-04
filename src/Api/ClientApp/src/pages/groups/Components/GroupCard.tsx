@@ -102,29 +102,29 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
               </Popover.Target>
               <Popover.Dropdown>
                 <Paper>
-                  <Group
+                  {/* <Group
                     p={0}
                     sx={{
                       flexDirection: "column",
                       alignItems: "start",
                     }}
-                  >
-                    <NavLink
-                      variant="subtle"
-                      label={t("edit")}
-                      component={Link}
-                      to={RoutePath.groups.details(group.slug).route}
-                      rightSection={<IconChevronRight size={12} stroke={1.5} />}
-                    ></NavLink>
+                  > */}
+                  <NavLink
+                    variant="subtle"
+                    label={t("edit")}
+                    component={Link}
+                    to={RoutePath.groups.details(group.slug).route}
+                    rightSection={<IconChevronRight size={12} stroke={1.5} />}
+                  ></NavLink>
 
-                    <NavLink
-                      onClick={() => setDeleteModal()}
-                      variant="subtle"
-                      label={t("delete")}
-                      component={"button"}
-                      rightSection={<IconChevronRight size={12} stroke={1.5} />}
-                    ></NavLink>
-                  </Group>
+                  <NavLink
+                    onClick={() => setDeleteModal()}
+                    variant="subtle"
+                    label={t("delete")}
+                    component={"button"}
+                    rightSection={<IconChevronRight size={12} stroke={1.5} />}
+                  ></NavLink>
+                  {/* </Group> */}
                 </Paper>
               </Popover.Dropdown>
             </Popover>
