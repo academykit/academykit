@@ -63,6 +63,7 @@ namespace Lingtren.Infrastructure.Services
             _resendChangeEmailEncryptionKey = configuration.GetSection("ResendChangeEmail:EncryptionKey").Value;
             _resendChangeEmailTokenExpiry = int.Parse(configuration.GetSection("ResendChangeEmail:ExpireInMinutes").Value);
             _generalSettingService = generalSettingService;
+
         }
 
         #region Account Services
@@ -779,37 +780,34 @@ namespace Lingtren.Infrastructure.Services
             }
             return predicate;
         }
-        
+
 
 
         /// <summary>
         /// Deletes child entity of given user
         /// </summary>
         /// <param name="user"></param>
-        protected override async void DeleteChildEntities(User user)
+        protected override void DeleteChildEntities(User user)
         {
-            var course = _unitOfWork.GetRepository<Course>().GetAll(predicate: p => p.CourseTeachers.Any(x => x.UserId == user.Id),
-                include: src => src.Include(x => x.CourseTeachers));
-            var questionpool = _unitOfWork.GetRepository<QuestionPool>().GetAll(predicate: p=> p.QuestionPoolTeachers.Any(x=>x.UserId == user.Id),
-                include:src =>src.Include(x=>x.QuestionPoolTeachers));
-            if (course.Count() != default)
+            var courseTeacher = _unitOfWork.GetRepository<CourseTeacher>().GetAll(predicate: p => p.UserId == user.Id).ToList();
+            var questionPoolTeacher = _unitOfWork.GetRepository<QuestionPoolTeacher>().GetAll(predicate: p => p.UserId == user.Id).ToList();
+            if (courseTeacher.Count() != default && !string.IsNullOrEmpty(courseTeacher.ToString()))
             {
-                var updateTeacher = course.SelectMany(x => x.CourseTeachers).Where(y => y.UserId == user.Id).ToList();
-                if (updateTeacher.Count != default)
+                foreach (var removeuser in courseTeacher)
                 {
-                    _unitOfWork.GetRepository<CourseTeacher>().Delete(updateTeacher);
+                    _unitOfWork.GetRepository<CourseTeacher>().Delete(removeuser);
                 }
             }
-            if (questionpool.Count() != default)
+            if (questionPoolTeacher.Count() != default && string.IsNullOrEmpty(questionPoolTeacher.ToString()))
             {
-                var updateQuestionPoolTeacher = questionpool.SelectMany(x => x.QuestionPoolTeachers).Where(y => y.UserId == user.Id).ToList();
-                if(updateQuestionPoolTeacher.Count != default)
+                foreach (var removeuser in questionPoolTeacher)
                 {
-                    _unitOfWork.GetRepository<QuestionPoolTeacher>().Delete(updateQuestionPoolTeacher);
+                    _unitOfWork.GetRepository<CourseTeacher>().Delete(removeuser);
                 }
             }
-        }
 
+        }
+                
         /// <summary>
         /// updates child entity before updating user
         /// </summary>
@@ -817,35 +815,79 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         protected override async Task ResolveChildEntitiesAsync(User user)
         {
-            var superAdmin = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p=>p.Role == UserRole.SuperAdmin).ConfigureAwait(false);
-            var courses = await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p=>p.CreatedBy == user.Id).ConfigureAwait(false);
-            var questionPools =await _unitOfWork.GetRepository<QuestionPool>().GetAllAsync(predicate: p => p.CreatedBy == user.Id).ConfigureAwait(false);
-            var updateCourse = new List<Course>();
-            var updatePool = new List<QuestionPool>();
-            var currenetDateTime = DateTime.UtcNow;
-            if(courses.Count != default)
+            var oldUser = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p=>p.Id == user.Id).ConfigureAwait(false);
+            if (oldUser != null)
             {
-                foreach (var course in courses)
+                var allowed = userRecordModificationValidity(user, oldUser);
+                if (allowed == true)
                 {
-                    course.CreatedBy = superAdmin.Id;
-                    course.UpdatedBy = superAdmin.Id;
-                    course.UpdatedOn = currenetDateTime;
-                    updateCourse.Add(course);
+                    var superAdmin = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Role == UserRole.SuperAdmin).ConfigureAwait(false);
+                    var courses = await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p => p.CreatedBy == oldUser.Id).ConfigureAwait(false);
+                    var questionPools = await _unitOfWork.GetRepository<QuestionPool>().GetAllAsync(predicate: p => p.CreatedBy == oldUser.Id).ConfigureAwait(false);
+                    var updateCourse = new List<Course>();
+                    var updatePool = new List<QuestionPool>();
+                    var currenetDateTime = DateTime.UtcNow;
+                    if (courses.Count != default)
+                    {
+                        foreach (var course in courses)
+                        {
+                            course.CreatedBy = superAdmin.Id;
+                            course.UpdatedBy = superAdmin.Id;
+                            course.UpdatedOn = currenetDateTime;
+                            updateCourse.Add(course);
+                        }
+                        _unitOfWork.GetRepository<Course>().Update(updateCourse);
+                    }
+                    if (questionPools.Count != default)
+                    {
+                        foreach (var questionPool in questionPools)
+                        {
+                            questionPool.UpdatedBy = superAdmin.Id;
+                            questionPool.UpdatedOn = currenetDateTime;
+                            questionPool.CreatedBy = superAdmin.Id;
+                            updatePool.Add(questionPool);
+                        }
+                        _unitOfWork.GetRepository<QuestionPool>().Update(updatePool);
+                    }
                 }
-                _unitOfWork.GetRepository<Course>().Update(updateCourse);
             }
-            if (questionPools.Count != default)
-            {
-                foreach(var questionPool in questionPools)
-                {
-                    questionPool.UpdatedBy = superAdmin.Id;
-                    questionPool.UpdatedOn = currenetDateTime;
-                    questionPool.CreatedBy = superAdmin.Id;
-                    updatePool.Add(questionPool);
-                }
-                _unitOfWork.GetRepository<QuestionPool>().Update(updatePool);
-            }
+            
         }
+
+        /// <summary>
+        /// Handel to return bool for validity of modification
+        /// </summary>
+        /// <param name="newUser">old user's credentials <see cref="User"></param>
+        /// <param name="oldUser">new user's credentials <see cref="User"></param>
+        /// <returns>Bool</returns>
+        private bool userRecordModificationValidity(User newUser,User oldUser)
+        {
+            if (newUser.Role == UserRole.Admin && oldUser.Role == UserRole.Trainer)
+            { 
+                return false;
+            }
+
+            if (newUser.Role == UserRole.Trainer && oldUser.Role == UserRole.Admin)
+            { 
+                return false;
+            }
+
+            if (newUser.Role == oldUser.Role)
+            { 
+                return false; 
+            }
+            if (newUser.Role == UserRole.Admin && oldUser.Role == UserRole.Trainee)
+            {
+                return false;
+            }
+            if (newUser.Role == UserRole.Trainer && oldUser.Role == UserRole.Trainee)
+            {
+                return false;
+            }
+
+               return true;
+        }
+
 
         /// <summary>
         /// Sets the default sort column and order to given criteria.

@@ -921,8 +921,8 @@ namespace Lingtren.Infrastructure.Services
                     ).ConfigureAwait(false);
 
                 var response = new List<LessonStatisticsResponseModel>();
-
-                lessons.OrderBy(o => o.Section.Order).ThenBy(o => o.Order).ForEach(x => response.Add(new LessonStatisticsResponseModel
+                lessons.OrderBy(o => o.Section.Order).ThenBy(o => o.Order).ForEach(x => 
+                response.Add(new LessonStatisticsResponseModel
                 {
                     Id = x.Id,
                     Slug = x.Slug,
@@ -936,9 +936,14 @@ namespace Lingtren.Infrastructure.Services
                     SectionName = x.Section?.Name,
                     IsMandatory = x.IsMandatory,
                     EnrolledStudent = course.CourseEnrollments.Count,
-                    LessonWatched = _unitOfWork.GetRepository<WatchHistory>().CountAsync(
-                                        predicate: p => p.LessonId == x.Id && p.IsCompleted
-                                            && course.CourseEnrollments.Select(x => x.UserId).Contains(p.UserId)).Result
+                    LessonWatched = _unitOfWork.GetRepository<WatchHistory>()
+                                     .CountAsync(predicate: p => p.LessonId == x.Id && p.IsCompleted
+                                      && course.CourseEnrollments.Select(e => e.UserId).Contains(p.UserId)).Result
+                                      > course.CourseEnrollments.Count
+                                      ? course.CourseEnrollments.Count
+                                      : _unitOfWork.GetRepository<WatchHistory>()
+                                      .CountAsync(predicate: p => p.LessonId == x.Id && p.IsCompleted
+                                       && course.CourseEnrollments.Select(e => e.UserId).Contains(p.UserId)).Result
                 }));
                 return response;
             }

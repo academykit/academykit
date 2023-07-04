@@ -887,4 +887,7 @@
   <data name="TraineeCannotBeTrainer" xml:space="preserve">
     <value>प्रशिक्षार्थीलाई प्रशिक्षकको रूपमा थप्न सकिँदैन</value>
   </data>
+  <data name="AlreadyAddedMember" xml:space="preserve">
+    <value>प्रयोगकर्ता पहिले नै समूहमा थपिएको छ</value>
+  </data>
 </root>
