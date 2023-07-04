@@ -1,9 +1,7 @@
 namespace Lingtren.Application.Common.Interfaces
 {
-    using Hangfire;
     using Hangfire.Server;
     using Lingtren.Application.Common.Dtos;
-    using Lingtren.Domain.Entities;
 
     public interface IHangfireJobService
     {
@@ -94,5 +92,25 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="context"> the instance of <see cref="PerformContext" /> .</param>
         /// <returns> the task complete </returns>
         Task SendLessonAddedMailAsync(string courseName,string courseSlug,PerformContext context = null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fullName"></param>
+        /// <param name="email"></param>
+        /// <param name="companyName"></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        Task AccountUpdatedMailAsync(string fullName, string email,string oldEmail, PerformContext context = null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newEmail"></param>
+        /// <param name="oldEmail"></param>
+        /// <param name="fullName"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        Task SendEmailChangedMailAsync(string newEmail, string oldEmail, string fullName, PerformContext context = null);
     }
 }

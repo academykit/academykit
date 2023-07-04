@@ -149,8 +149,13 @@ namespace Lingtren.Api.Controllers
             return await _userService.GetUserForCourseEnrollment(userId, courseId).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// get trainer
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns>List of trainer</returns>
         [HttpGet("trainer")]
-        public async Task<IList<TrainerResponseModel>> Trainer([FromQuery]string search) => await _userService.GetTrainerAsync(CurrentUser.Id,search).ConfigureAwait(false);
+        public async Task<IList<TrainerResponseModel>> Trainer([FromQuery]TeacherSearchCriteria criteria) => await _userService.GetTrainerAsync(CurrentUser.Id,criteria).ConfigureAwait(false);
       
 
         /// <summary>
@@ -184,10 +189,12 @@ namespace Lingtren.Api.Controllers
             await _validator.ValidateAsync(model, options => options.IncludeRuleSets("Update").ThrowOnFailures()).ConfigureAwait(false);
             var existing = await _userService.GetAsync(userId, CurrentUser.Id, includeAllProperties: false).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
+            var oldEmail = string.Empty;
             var emailchange = false;
             if (model.Email.ToLower().Trim() != existing.Email.ToLower().Trim())
             {
                 emailchange = true;
+                oldEmail = existing.Email;
             }
 
             var imageKey = existing.ImageUrl;
@@ -238,14 +245,12 @@ namespace Lingtren.Api.Controllers
             var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             if (password != null)
             {
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.AccountUpdatedMailAsync(existing.FullName,model.Email,oldEmail,null));
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(existing.Email, existing.FullName, password, company.CompanyName, null));
             }
+
             return new UserResponseModel(savedEntity);
         }
-
-
-
-
 
         /// <summary>
         /// change email request api

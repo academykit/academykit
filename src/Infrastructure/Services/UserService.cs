@@ -285,28 +285,34 @@ namespace Lingtren.Infrastructure.Services
         /// Handle to get trainer 
         /// </summary>
         /// <param name="currentUserId"> the current user id </param>
+        /// <param name="critera"> the instance of <see cref="TeacherSearchCriteria"></see></param>
         /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
-        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId, string search)
+        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId, TeacherSearchCriteria critera)
         {
             return await ExecuteWithResultAsync(async () =>
-          {
+            {
               var isValidUser = await IsSuperAdminOrAdminOrTrainer(currentUserId).ConfigureAwait(false);
               if (!isValidUser)
               {
                   throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
               }
               var predicate = PredicateBuilder.New<User>(true);
-              if (!string.IsNullOrWhiteSpace(search))
+              if (!string.IsNullOrWhiteSpace(critera.Search))
               {
-                  search = search.ToLower().Trim();
+                  var search = critera.Search.ToLower().Trim();
                   predicate = predicate.And(x => x.FirstName.ToLower().Trim().Contains(search)
                   || x.LastName.ToLower().Trim().Contains(search)
                   || x.Email.ToLower().Trim().Contains(search));
               }
+              if(!string.IsNullOrWhiteSpace(critera.CourseIdentity))
+                {
+                    predicate = predicate.And(x => x.Courses.Any(x => x.Id.ToString() != critera.CourseIdentity || x.Slug.ToLower() != critera.CourseIdentity.ToLower().Trim()));
+
+                }
               predicate = predicate.And(p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer);
               return await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: predicate,
                     selector: s => new TrainerResponseModel(s)).ConfigureAwait(false);
-          });
+            });
         }
 
 
@@ -661,6 +667,7 @@ namespace Lingtren.Infrastructure.Services
 
             _unitOfWork.GetRepository<User>().Update(user);
             await _unitOfWork.SaveChangesAsync();
+            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailChangedMailAsync(newEmail, oldEmail, user.FullName, null));
         }
 
         /// <summary>
