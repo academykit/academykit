@@ -196,9 +196,7 @@ namespace Lingtren.Api.Controllers
                 emailchange = true;
                 oldEmail = existing.Email;
             }
-
             var imageKey = existing.ImageUrl;
-
             existing.Id = existing.Id;
             existing.FirstName = model.FirstName;
             existing.MiddleName = model.MiddleName;

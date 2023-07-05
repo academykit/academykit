@@ -902,4 +902,37 @@
   <data name="OtherAddedSuccessfully" xml:space="preserve">
     <value>र अन्य बाँकी प्रयोगकर्ताहरू समूहमा सफलतापूर्वक थपिएका छन्</value>
   </data>
+  <data name="CSVNullError" xml:space="preserve">
+    <value>कृपया CSV फाइलमा प्रयोगकर्ताहरू थप्नुहोस्; फाइल खाली छ।</value>
+  </data>
+  <data name="IncorrectEmail" xml:space="preserve">
+    <value>पङ्क्ति नम्बरको इमेल अनिवार्य फिल्डमा डाटा प्रविष्ट गर्नुहोस्</value>
+  </data>
+  <data name="IncorrectEmailFormat" xml:space="preserve">
+    <value>पङ्क्ति नम्बरको स्तम्भ इमेल सही गर्नुहोस्</value>
+  </data>
+  <data name="IncorrectFirstName" xml:space="preserve">
+    <value>अनिवार्य फिल्डमा डेटा प्रविष्ट गर्नुहोस् पङ्क्ति नम्बरको पहिलो नाम</value>
+  </data>
+  <data name="IncorrectLastName" xml:space="preserve">
+    <value>पङ्क्ति नम्बरको अन्तिम नाम अनिवार्य फिल्डमा डाटा प्रविष्ट गर्नुहोस्</value>
+  </data>
+  <data name="IncorrectMoblieNumberFormaIncorrectMoblieNumberFormaIncorrectMoblieNumberForma" xml:space="preserve">
+    <value>पङ्क्ति नम्बरको स्तम्भ मोबाइल नम्बर सही गर्नुहोस्</value>
+  </data>
+  <data name="IncorrectRole" xml:space="preserve">
+    <value>अनिवार्य फिल्डमा डेटा प्रविष्ट गर्नुहोस् पङ्क्ति नम्बरको भूमिका</value>
+  </data>
+  <data name="IncorrectRoleFormat" xml:space="preserve">
+    <value>पङ्क्ति नम्बरको स्तम्भ भूमिका सही गर्नुहोस्</value>
+  </data>
+  <data name="QuestionPoolNameLength" xml:space="preserve">
+    <value>नाम लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+  </data>
+  <data name="QuestionPoolNameRequired" xml:space="preserve">
+    <value>प्रश्न पोखरी नाम आवश्यक छ।</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>र फेरि प्रयास गर्नुहोस्।</value>
+  </data>
 </root>

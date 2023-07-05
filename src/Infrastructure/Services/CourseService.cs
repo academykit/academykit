@@ -848,7 +848,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 var responses = new List<CourseStatisticsResponseModel>();
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
-                var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.CourseId == course.Id &&                !p.IsDeleted).ConfigureAwait(false);
+                var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.CourseId == course.Id && !p.IsDeleted).ConfigureAwait(false);
                 var lessonId = lessons.Select(x => x.Id);
                 var meetings = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(predicate: p=> lessonId.Contains(p.Lesson.Id),include:src=>src.Include(x=>x.Lesson)).ConfigureAwait(false);
                 var meetingName = meetings.Select(x => x.Lesson.Name).ToList();
@@ -881,7 +881,6 @@ namespace Lingtren.Infrastructure.Services
                         ZoomId = meetings12.ZoomId
                     });
                 }
-
                 response.MeetingsList = newMeeting.OrderByDescending(x => x.StartDate);
                 response.TotalTeachers = course.CourseTeachers.Count;
                 response.TotalLessons = lessons.Count;
