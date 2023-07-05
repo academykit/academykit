@@ -27,6 +27,7 @@ const useStyles = createStyles((theme) => ({
     marginTop: "auto",
     cursor: "pointer",
     marginLeft: "10px",
+    lineHeight: "1.15"
   },
 }));
 
