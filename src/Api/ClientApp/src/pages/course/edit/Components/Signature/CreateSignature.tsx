@@ -89,6 +89,7 @@ const CreateSignature = ({
   const handleDelete = async (sigId: string) => {
     try {
       await deleteSignature.mutateAsync({ id: id as string, sigId });
+      onClose && onClose();
       showNotification({
         title: t("success"),
         message: t("delete_signature_success"),

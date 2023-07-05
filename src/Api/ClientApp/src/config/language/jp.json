@@ -797,5 +797,10 @@
   "Name of Training": "研修名",
   "Duration of Training": "トレーニング期間",
   "Location of Training": "研修の場所",
-  "Name of institute": "研究所名"
+  "Name of institute": "研究所名",
+  "general": "全般的",
+
+  "second": "秒",
+  "minute": "分",
+  "hour": "時間"
 }

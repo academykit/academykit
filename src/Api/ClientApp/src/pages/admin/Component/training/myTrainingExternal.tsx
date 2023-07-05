@@ -141,6 +141,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                 {...form.getInputProps("name")}
               />
               <TextInput
+                withAsterisk
                 label={t("duration_hour")}
                 placeholder={t("Duration of Training") as string}
                 name="duration"

@@ -13,7 +13,6 @@ import {
   IconUserCircle,
 } from "@tabler/icons";
 import { DashboardStats } from "@utils/services/dashboardService";
-import { TFunction } from "i18next";
 
 const icons = {
   userEnrollment: IconUserCircle,
@@ -44,10 +43,10 @@ interface StatsGridProps {
 
 export const StatsCard = ({ data, dashboard }: StatsGridProps) => {
   const Icon = icons[data.icon];
-  const backLabel = data.pluLabel;
-  // dashboard && dashboard[data.key as keyof DashboardStats] > 1
-  //   ? data.pluLabel
-  //   : data.signLabel;
+  const backLabel =
+    dashboard && dashboard[data.key as keyof DashboardStats] > 1
+      ? data.pluLabel
+      : data.signLabel;
 
   return (
     <Paper withBorder p="md" radius="md">
