@@ -1,6 +1,6 @@
 ﻿namespace Lingtren.Api.Controllers
 {
-    using Amazon.Runtime.SharedInterfaces;
+
     using ClosedXML.Excel;
     using FluentValidation;
     using Lingtren.Api.Common;

@@ -890,7 +890,52 @@
   <data name="TraineeCannotBeTrainer" xml:space="preserve">
     <value>トレーニーをトレーナーとして追加することはできません</value>
   </data>
+  <data name="AdminOrSuperAdmin" xml:space="preserve">
+    <value>これらのユーザーは管理者またはスーパー管理者でした</value>
+  </data>
   <data name="AlreadyAddedMember" xml:space="preserve">
     <value>ユーザーはすでにグループに追加されています</value>
+  </data>
+  <data name="InactiveGroupMember" xml:space="preserve">
+    <value>メンバーは非アクティブなステータスです</value>
+  </data>
+  <data name="NotASystemUser" xml:space="preserve">
+    <value>ユーザーはシステムに存在しません</value>
+  </data>
+  <data name="OtherAddedSuccessfully" xml:space="preserve">
+    <value>他の残りのユーザーはグループに正常に追加されます</value>
+  </data>
+  <data name="CSVNullError" xml:space="preserve">
+    <value>CSV ファイルにユーザーを追加してください。ファイルは空です</value>
+  </data>
+  <data name="IncorrectEmail" xml:space="preserve">
+    <value>必須フィールドにデータを入力してください 行番号の電子メール</value>
+  </data>
+  <data name="IncorrectEmailFormat" xml:space="preserve">
+    <value>行番号の列電子メールを修正します</value>
+  </data>
+  <data name="IncorrectFirstName" xml:space="preserve">
+    <value>行番号の必須フィールドにデータを入力します</value>
+  </data>
+  <data name="IncorrectLastName" xml:space="preserve">
+    <value>必須フィールドにデータを入力します 行番号の姓</value>
+  </data>
+  <data name="IncorrectMoblieNumberFormat" xml:space="preserve">
+    <value>行番号の列 MobileNumber を修正します</value>
+  </data>
+  <data name="IncorrectRole" xml:space="preserve">
+    <value>必須フィールドにデータを入力します 行番号の役割</value>
+  </data>
+  <data name="IncorrectRoleFormat" xml:space="preserve">
+    <value>正しい列 行番号の役割</value>
+  </data>
+  <data name="QuestionPoolNameLength" xml:space="preserve">
+    <value>名前の長さは 100 文字以下である必要があります。</value>
+  </data>
+  <data name="QuestionPoolNameRequired" xml:space="preserve">
+    <value>質問プール名は必須です。</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>そしてさらに試みる</value>
   </data>
 </root>
