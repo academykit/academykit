@@ -115,25 +115,26 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
 
   return (
     <div>
-      {showConfirmation && (
-        <Modal
-          title={t("add_certificate")}
-          opened={showConfirmation}
-          onClose={() => {
-            setShowConfirmation();
-            setIdd(null);
-            setUpdates(false);
-            form.reset();
-          }}
-          styles={{
-            title: {
-              fontWeight: "bold",
-            },
-          }}
-        >
-          <FormProvider form={form}>
+      <Modal
+        title={t("add_certificate")}
+        opened={showConfirmation}
+        onClose={() => {
+          setShowConfirmation();
+          setIdd(null);
+          setUpdates(false);
+          form.reset();
+        }}
+        styles={{
+          title: {
+            fontWeight: "bold",
+          },
+        }}
+      >
+        <FormProvider form={form}>
+          {showConfirmation && (
             <form onSubmit={form.onSubmit(handleSubmit)}>
               <TextInput
+                autoFocus
                 label={t("name")}
                 name="name"
                 placeholder={t("Name of Training") as string}
@@ -182,9 +183,10 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                 {t("submit")}
               </Button>
             </form>
-          </FormProvider>
-        </Modal>
-      )}
+          )}
+        </FormProvider>
+      </Modal>
+
       <Group position="right">
         <Button onClick={() => setShowConfirmation()}>
           {t("add_certificate")}

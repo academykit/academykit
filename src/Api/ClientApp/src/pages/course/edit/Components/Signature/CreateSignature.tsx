@@ -121,6 +121,7 @@ const CreateSignature = ({
         <Paper p={10} style={{ marginBottom: "20px" }} withBorder>
           <Group noWrap mb={10}>
             <TextInput
+              autoFocus
               w={"100%"}
               label={t("name")}
               placeholder={t("enter_name") as string}

@@ -87,7 +87,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
           <Title size={22} lineClamp={1} w={"80%"}>
             {group.name}
           </Title>
-          {auth?.auth && auth.auth?.role < UserRole.Trainee && (
+          {auth?.auth && auth.auth?.role < UserRole.Trainer && (
             <Popover
               position={"left-start"}
               arrowSize={12}

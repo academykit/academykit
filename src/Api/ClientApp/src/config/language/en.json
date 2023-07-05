@@ -804,5 +804,6 @@
   "general": "General",
   "second": "second",
   "minute": "minute",
-  "hour": "hour"
+  "hour": "hour",
+  "User Not found": "User not found"
 }

@@ -10,6 +10,7 @@ import {
   Anchor,
   Loader,
   Box,
+  Text,
 } from "@mantine/core";
 import { IconEye } from "@tabler/icons";
 import { LessonType } from "@utils/enums";
@@ -32,7 +33,7 @@ const Rows = ({
 
   return (
     <tr key={item?.id}>
-      <td>
+      <td style={{ maxWidth: "200px" }}>
         <Anchor
           component={Link}
           to={`${RoutePath.classes}/${course_id}/${item.slug}`}

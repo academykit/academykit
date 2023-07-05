@@ -1,4 +1,4 @@
-import { Box, Button, MultiSelect } from "@mantine/core";
+import { Box, Button, Loader, MultiSelect } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
@@ -91,6 +91,7 @@ const AddMember = ({
     <Box sx={{ maxWidth: "500px" }}>
       <form onSubmit={form.onSubmit(({ email }) => onSubmitForm(email))}>
         <MultiSelect
+          autoFocus
           ref={ref}
           searchable
           data={data}
@@ -99,6 +100,13 @@ const AddMember = ({
           withAsterisk
           name="email"
           size="md"
+          nothingFound={
+            getNotMemberList.isLoading ? (
+              <Loader />
+            ) : (
+              <Box>{t("User Not found")}</Box>
+            )
+          }
           getCreateLabel={(query) => `+ Create ${query}`}
           onSearchChange={(d) => {
             setSearch(d);

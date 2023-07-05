@@ -27,8 +27,8 @@ const ManageCourse = () => {
       key: "totalTeachers",
       label: t("total_trainers"),
       icon: "groups",
-      pluLabel: t("Lessons"),
-      signLabel: t("Lesson"),
+      pluLabel: t("trainers"),
+      signLabel: t("trainer"),
     },
     {
       key: "totalAssignments",

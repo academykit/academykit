@@ -118,6 +118,7 @@ const GroupDetail = () => {
           <Paper withBorder p={20} mt={10}>
             <Box>
               <TextInput
+                autoFocus
                 sx={{ maxWidth: theme.breakpoints.xs }}
                 name="name"
                 label={t("group_name")}

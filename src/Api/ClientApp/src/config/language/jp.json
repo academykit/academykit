@@ -96,6 +96,7 @@
   "Trainer": "トレーナー",
   "Trainee": "受講生",
   "trainers": "トレーナー",
+
   "pool_details": "プールの詳細",
   "edit": "編集",
   "add_trainer": "トレーナーを追加",
@@ -802,5 +803,6 @@
 
   "second": "秒",
   "minute": "分",
-  "hour": "時間"
+  "hour": "時間",
+  "User Not found": "ユーザーが見つかりません"
 }

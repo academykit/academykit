@@ -144,6 +144,7 @@ const Teacher = () => {
             <form onSubmit={form.onSubmit(onSubmitForm)}>
               <Group sx={{ alignItems: "start" }}>
                 <TextInput
+                  autoFocus
                   placeholder={t("enter_the_email") as string}
                   name="email"
                   type={"email"}

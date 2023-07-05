@@ -166,6 +166,7 @@ const AddExam = ({
         <Grid align={"center"}>
           <Grid.Col span={12} xs={6} lg={4}>
             <TextInput
+              autoFocus
               withAsterisk
               label={t("exam_title")}
               placeholder={t("exam_title") as string}

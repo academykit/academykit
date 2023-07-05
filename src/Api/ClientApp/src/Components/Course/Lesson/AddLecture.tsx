@@ -131,6 +131,7 @@ const AddLecture = ({
           <Grid align="center" justify={"space-around"}>
             <Grid.Col span={12} lg={8}>
               <TextInput
+                autoFocus
                 sx={{ width: "100%" }}
                 label={isRecordedVideo ? t("recording_name") : t("video_name")}
                 placeholder={

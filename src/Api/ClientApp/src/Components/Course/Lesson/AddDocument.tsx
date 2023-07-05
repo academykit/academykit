@@ -123,6 +123,7 @@ const AddDocument = ({
           <Grid align={"center"} justify="space-around">
             <Grid.Col span={12} lg={8}>
               <TextInput
+                autoFocus
                 withAsterisk
                 label={t("file_title")}
                 placeholder={t("file_name") as string}

@@ -127,6 +127,7 @@ const LoginPage = () => {
       <form onSubmit={form.onSubmit(onFormSubmit)}>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <TextInput
+            autoFocus
             {...form.getInputProps("email")}
             autoComplete={"email"}
             label={t("email")}

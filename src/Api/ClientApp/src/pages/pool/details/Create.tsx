@@ -193,6 +193,7 @@ const Create = () => {
         <Card mt={20}>
           <form onSubmit={form.onSubmit(onSubmit)}>
             <TextInput
+              autoFocus
               size={"lg"}
               withAsterisk
               label={t("title_question")}

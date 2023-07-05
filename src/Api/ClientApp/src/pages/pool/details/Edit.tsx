@@ -218,6 +218,7 @@ const EditQuestion = () => {
         <Card mt={20}>
           <form onSubmit={form.onSubmit(onSubmit)}>
             <TextInput
+              autoFocus
               size={fieldSize}
               withAsterisk
               label={t("title_question")}
