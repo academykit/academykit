@@ -195,7 +195,7 @@
   "course?": "course?",
   "status_change_completed": "Want to change status of this Training to Completed?",
   "title": "Title",
-  "title_course": "Course Title",
+  "title_course": "Please enter training title",
   "thumbnail": "thumbnail",
   "tags_placeholder": "Please Select Tags",
   "level": "Level",
