@@ -304,14 +304,17 @@ namespace Lingtren.Infrastructure.Services
                   || x.LastName.ToLower().Trim().Contains(search)
                   || x.Email.ToLower().Trim().Contains(search));
               }
-              if(!string.IsNullOrWhiteSpace(critera.CourseIdentity))
+                predicate = predicate.And(p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer);
+                if (!string.IsNullOrWhiteSpace(critera.CourseIdentity))
                 {
-                    predicate = predicate.And(x => x.Courses.Any(x => x.Id.ToString() != critera.CourseIdentity || x.Slug.ToLower() != critera.CourseIdentity.ToLower().Trim()));
+                    var courseTeacher = await _unitOfWork.GetRepository<CourseTeacher>().GetAllAsync(predicate: p => p.CourseId.ToString() == critera.CourseIdentity ||
+                    p.Course.Slug.ToLower() == critera.CourseIdentity.ToLower().Trim()).ConfigureAwait(false);
 
+                    var userIds = courseTeacher.Select(x=>x.UserId).ToList();
+                    predicate = predicate.And(p => !userIds.Contains(p.Id));
                 }
-              predicate = predicate.And(p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer);
-              return await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: predicate,
-                    selector: s => new TrainerResponseModel(s)).ConfigureAwait(false);
+                    return await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: predicate,
+                   selector: s => new TrainerResponseModel(s)).ConfigureAwait(false);
             });
         }
 
