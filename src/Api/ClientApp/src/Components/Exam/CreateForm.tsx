@@ -131,6 +131,7 @@ const CreateForm: FC<Props> = ({ form, onSubmit, useFormContext }) => {
                 name=""
               ></Checkbox>
               <TextEditor
+                placeholder={t("option_placeholder")}
                 label={`answers.${i}.option`}
                 formContext={useFormContext}
               ></TextEditor>

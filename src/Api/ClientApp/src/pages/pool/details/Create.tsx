@@ -203,7 +203,10 @@ const Create = () => {
             ></TextInput>
             <Box mt={20}>
               <Text size={"lg"}>{t("description")}</Text>
-              <TextEditor formContext={useFormContext} />
+              <TextEditor
+                placeholder={t("question_description")}
+                formContext={useFormContext}
+              />
             </Box>
 
             {tags.isSuccess ? (
@@ -231,6 +234,7 @@ const Create = () => {
             <Box mt={20}>
               <Text size={"lg"}>{t("hint")}</Text>
               <TextEditor
+                placeholder={t("question_hint")}
                 label={t("hints") as string}
                 formContext={useFormContext}
               />
@@ -250,13 +254,7 @@ const Create = () => {
               <Box>
                 <Text mt={20}>{t("options")}</Text>
                 {form.values.answers.map((x, i) => (
-                  <Flex
-                    justify={"center"}
-                    align={"center"}
-                    gap={"md"}
-                    key={i}
-                    mb={30}
-                  >
+                  <Flex align={"center"} gap={"md"} key={i} mb={30}>
                     {QuestionType.MultipleChoice.toString() ===
                     form.values.type ? (
                       <Checkbox
@@ -271,6 +269,7 @@ const Create = () => {
                       ></Radio>
                     )}
                     <TextEditor
+                      placeholder={t("option_placeholder")}
                       label={`answers.${i}.option`}
                       formContext={useFormContext}
                     ></TextEditor>

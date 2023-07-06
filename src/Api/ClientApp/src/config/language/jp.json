@@ -804,5 +804,18 @@
   "second": "秒",
   "minute": "分",
   "hour": "時間",
-  "User Not found": "ユーザーが見つかりません"
+  "User Not found": "ユーザーが見つかりません",
+  "option_placeholder": "オプションを追加",
+  "question_hint": "質問のヒント",
+  "question_description": "質問の説明",
+
+  "License_email": "ライセンスメールアドレス",
+  "License_host_Id": "ライセンスホストID",
+  "license_capacity": "ライセンス容量",
+  "your_short_description": "あなたの短い説明",
+  "course_description": "コースの説明",
+  "mytraining": "私のトレーニング」",
+  "zoomlicense": "「ズームライセンス」",
+  "filestorage": "ファイルストレージ",
+  "zoom": "ズーム (Zūmu)"
 }

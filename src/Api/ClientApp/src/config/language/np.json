@@ -804,5 +804,18 @@
   "second": "सेकन्ड",
   "minute": "मिनेट",
   "hour": "घण्टा",
-  "User Not found": "प्रयोगकर्ता फेला परेन"
+  "User Not found": "प्रयोगकर्ता फेला परेन",
+  "option_placeholder": "विकल्प थप्नुहोस्",
+  "question_hint": "प्रश्न संकेत",
+  "question_description": "प्रश्न वर्णन",
+
+  "License_email": "लाइसेन्स इमेल ठेगाना",
+  "License_host_Id": "लाइसेन्स होस्ट आईडी",
+  "license_capacity": "लाइसेन्स क्षमता",
+  "your_short_description": "तपाईंको संक्षेप वर्णन",
+  "course_description": "कोर्सको विवरण",
+  "mytraining": "मेरो प्रशिक्षण",
+  "zoomlicense": "जुम लाइसेन्स",
+  "filestorage": "फाइल संग्रह",
+  "zoom": "जूम"
 }

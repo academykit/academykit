@@ -92,6 +92,7 @@ const AddMember = ({
     <Box sx={{ maxWidth: "500px" }}>
       <form onSubmit={form.onSubmit(({ email }) => onSubmitForm(email))}>
         <MultiSelect
+          placeholder={t("email_address") as string}
           ref={ref}
           searchable
           data={data}

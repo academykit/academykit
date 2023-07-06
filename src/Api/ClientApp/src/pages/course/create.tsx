@@ -257,7 +257,10 @@ const CreateCoursePage = () => {
 
             <Box mt={20}>
               <Text>{t("description")}</Text>
-              <TextEditor formContext={useFormContext} />
+              <TextEditor
+                placeholder={t("course_description")}
+                formContext={useFormContext}
+              />
             </Box>
             <Box mt={20}>
               <Button
