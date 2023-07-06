@@ -19,7 +19,7 @@ const icons = {
   active: IconUserCheck,
   groups: IconUsers,
   trainers: IconSchool,
-  trainings: IconBook,
+  trainings: IconCertificate,
   totalGroups: IconUsers,
   completed: IconFileCheck,
   enrollment: IconCertificate,

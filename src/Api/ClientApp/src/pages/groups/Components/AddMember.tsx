@@ -49,6 +49,7 @@ const AddMember = ({
   const getNotMemberList = useGroupNotMember(id as string, `search=${search}`);
 
   useEffect(() => {
+    ref.current?.focus();
     if (getNotMemberList.isSuccess) {
       const t = getNotMemberList.data?.items?.map((x) => {
         return {
@@ -91,7 +92,6 @@ const AddMember = ({
     <Box sx={{ maxWidth: "500px" }}>
       <form onSubmit={form.onSubmit(({ email }) => onSubmitForm(email))}>
         <MultiSelect
-          autoFocus
           ref={ref}
           searchable
           data={data}

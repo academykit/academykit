@@ -5,6 +5,7 @@ import {
   Card,
   Checkbox,
   Container,
+  Flex,
   Group,
   Loader,
   MultiSelect,
@@ -249,7 +250,13 @@ const Create = () => {
               <Box>
                 <Text mt={20}>{t("options")}</Text>
                 {form.values.answers.map((x, i) => (
-                  <Group key={i} mb={30}>
+                  <Flex
+                    justify={"center"}
+                    align={"center"}
+                    gap={"md"}
+                    key={i}
+                    mb={30}
+                  >
                     {QuestionType.MultipleChoice.toString() ===
                     form.values.type ? (
                       <Checkbox
@@ -295,7 +302,7 @@ const Create = () => {
                         {form.errors[`answers.${i}.option`]}
                       </span>
                     )}
-                  </Group>
+                  </Flex>
                 ))}
                 {typeof form.errors[`answers`] === "string" && (
                   <span style={{ color: "red" }}>{form.errors[`answers`]}</span>

@@ -149,6 +149,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                 {...form.getInputProps("duration")}
               />
               <DateRangePicker
+                required
                 label={t("start_end_date")}
                 placeholder={t("date_range") as string}
                 allowSingleDateInRange={true}

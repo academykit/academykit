@@ -128,14 +128,20 @@ const AssignmentItem = ({
             <>
               <Text>{t("options")}</Text>
               {data.assignmentQuestionOptions?.map((x) => (
-                <Group my={10} key={x.id}>
+                <Flex
+                  align={"center"}
+                  justify={"center"}
+                  gap={"md"}
+                  my={10}
+                  key={x.id}
+                >
                   <Checkbox onChange={() => {}} checked={x.isCorrect} />
                   <RichTextEditor
                     w={"90%"}
                     readOnly
                     value={x.option}
                   ></RichTextEditor>
-                </Group>
+                </Flex>
               ))}
             </>
           )}

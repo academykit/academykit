@@ -10,7 +10,6 @@ import {
   Anchor,
   Loader,
   Box,
-  Text,
 } from "@mantine/core";
 import { IconEye } from "@tabler/icons";
 import { LessonType } from "@utils/enums";
@@ -62,17 +61,30 @@ const Rows = ({
         </Center>
       </td>
       <td
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        style={
+          {
+            // backgroundColor: "red",
+            // height: "100%",
+            // display: "flex",
+            // alignItems: "center",
+            // justifyContent: "center",
+          }
+        }
       >
-        <Tooltip label={`${t("view_details_for")} ${item.name} ${t("lesson")}`}>
-          <Button component={Link} variant="subtle" to={`${item.slug}`}>
-            <IconEye />
-          </Button>
-        </Tooltip>
+        <Center>
+          <Tooltip
+            style={{
+              maxWidth: "400px",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+            }}
+            label={`${t("view_details_for")} ${item.name} ${t("lesson")}`}
+          >
+            <Button component={Link} variant="subtle" to={`${item.slug}`}>
+              <IconEye />
+            </Button>
+          </Tooltip>
+        </Center>
       </td>
     </tr>
   );
@@ -94,8 +106,10 @@ function TableReviews() {
     <ScrollArea>
       <Paper>
         <Table
+          cellSpacing={""}
           sx={{ minWidth: 800 }}
           verticalSpacing="xs"
+          styles={{}}
           striped
           highlightOnHover
         >

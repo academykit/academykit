@@ -64,6 +64,39 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
                   },
                 }),
               },
+              TextInput: {
+                styles: (theme) => ({
+                  required: {
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                    verticalAlign: "middle",
+                  },
+                }),
+              },
+              MultiSelect: {
+                styles: (theme) => ({
+                  required: {
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                  },
+                }),
+              },
+              Select: {
+                styles: (theme) => ({
+                  required: {
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                  },
+                }),
+              },
+              Textarea: {
+                styles: (theme) => ({
+                  required: {
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                  },
+                }),
+              },
             },
             colorScheme,
             fontFamily: "Poppins, sans-serif",
