@@ -200,6 +200,7 @@ const EditCourse = () => {
             />
             <Group mt={10} grow>
               <TextInput
+                autoFocus
                 placeholder={t("title_course") as string}
                 label={t("title")}
                 withAsterisk

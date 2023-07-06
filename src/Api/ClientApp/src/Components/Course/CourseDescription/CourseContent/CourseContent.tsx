@@ -32,7 +32,7 @@ const CourseContent = ({
         {t("content_of")} {courseName}
       </Title>
       <Text size={10} color={"dimmed"}>
-        {formatDuration(duration)} {sections.length} {t("section/s")}{" "}
+        {formatDuration(duration, false, t)} {sections.length} {t("section/s")}{" "}
       </Text>
 
       <Box m={4} mx={10}>

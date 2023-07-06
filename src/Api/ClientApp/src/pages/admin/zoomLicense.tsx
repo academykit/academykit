@@ -92,14 +92,17 @@ export default function ZoomLicense() {
 
     return (
       <tr key={item.id}>
-        <DeleteModal
-          title={`${t("zoom_license_delete_confirmation")} "${
-            item.licenseEmail
-          }"?`}
-          open={opened}
-          onClose={setOpened}
-          onConfirm={handleDelete}
-        />
+        {opened && (
+          <DeleteModal
+            key={item.id}
+            title={`${t("zoom_license_delete_confirmation")} "${
+              item.licenseEmail
+            }"?`}
+            open={opened}
+            onClose={setOpened}
+            onConfirm={handleDelete}
+          />
+        )}
 
         <td>
           <Group spacing="sm">
@@ -145,14 +148,13 @@ export default function ZoomLicense() {
         </td>
         <td>
           <Group spacing={0} position="center">
-            <ActionIcon color="red">
-              <IconTrash
-                size={16}
-                stroke={1.5}
-                onClick={() => {
-                  setOpened(true);
-                }}
-              />
+            <ActionIcon
+              color="red"
+              onClick={() => {
+                setOpened(true);
+              }}
+            >
+              <IconTrash size={16} stroke={1.5} />
             </ActionIcon>
           </Group>
         </td>
@@ -201,7 +203,7 @@ export default function ZoomLicense() {
       >
         {() => (
           <Paper shadow={"sm"} radius="md" p="xl" withBorder mb={20}>
-            <form onSubmit={form.onSubmit(handleSubmit)}>
+            <form key={`${showAddForm}`} onSubmit={form.onSubmit(handleSubmit)}>
               <TextInput
                 name="licenseEmail"
                 label={t("license_email")}
@@ -224,7 +226,13 @@ export default function ZoomLicense() {
               <Group mt={10}>
                 <Button type="submit">{t("submit")}</Button>
                 {showAddForm && (
-                  <Button onClick={() => toggleAddForm()} variant="outline">
+                  <Button
+                    onClick={() => {
+                      form.reset();
+                      toggleAddForm();
+                    }}
+                    variant="outline"
+                  >
                     {t("cancel")}
                   </Button>
                 )}

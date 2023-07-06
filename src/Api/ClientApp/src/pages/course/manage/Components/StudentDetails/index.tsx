@@ -32,12 +32,14 @@ import { useTranslation } from "react-i18next";
 
 const TableRow = ({ values }: { values: IReportDetail }) => {
   const theme = useMantineTheme();
+  const { t } = useTranslation();
+
   return (
     <tr>
       <td>{moment(values.startDate).format(theme.dateFormat)}</td>
       <td>{values.joinedTime}</td>
       <td>{values.leftTime}</td>
-      <td>{formatDuration(values.duration ?? 0, true)}</td>
+      <td>{formatDuration(values.duration ?? 0, true, t)}</td>
     </tr>
   );
 };

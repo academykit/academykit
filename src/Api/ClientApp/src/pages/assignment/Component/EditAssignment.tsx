@@ -7,6 +7,7 @@ import {
   Flex,
   Group,
   Paper,
+  Radio,
   Select,
   Text,
   TextInput,
@@ -23,7 +24,7 @@ import {
   useEditAssignmentQuestion,
 } from "@utils/services/assignmentService";
 import errorType from "@utils/services/axiosError";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
@@ -129,6 +130,29 @@ const EditAssignment = ({
   const addAssignmentQuestion = useAddAssignmentQuestion(lessonId, search);
   const editAssignment = useEditAssignmentQuestion(lessonId, search);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    if (
+      form.values.type &&
+      !addAssignmentQuestion.isSuccess &&
+      form?.values.answers
+    ) {
+      form.values.answers.forEach((x, i) => {
+        return form.setFieldValue(`answers.${i}.isCorrect`, false);
+      });
+    }
+  }, [form.values.type]);
+
+  const onChangeRadioType = (index: number) => {
+    form?.values.answers &&
+      form?.values.answers.forEach((x, i) => {
+        if (i === index) {
+          return form.setFieldValue(`answers.${index}.isCorrect`, true);
+        }
+        return form.setFieldValue(`answers.${i}.isCorrect`, false);
+      });
+  };
+
   const onSubmit = async (data: ICreateAssignment) => {
     try {
       if (assignmentQuestion) {
@@ -156,6 +180,7 @@ const EditAssignment = ({
       });
     }
   };
+
   return (
     <Container fluid>
       <FormProvider form={form}>
@@ -206,15 +231,25 @@ const EditAssignment = ({
                       style={{ marginBottom: "30px", marginTop: "10px" }}
                     >
                       <Flex align="center">
-                        <Checkbox
-                          {...form.getInputProps(`answers.${i}.isCorrect`)}
-                          mr={10}
-                          checked={
-                            form.values.answers &&
-                            form?.values.answers[i].isCorrect
-                          }
-                          name="isCorrect"
-                        ></Checkbox>
+                        {QuestionType.MultipleChoice.toString() ===
+                        form.values.type ? (
+                          <Checkbox
+                            mr={10}
+                            {...form.getInputProps(`answers.${i}.isCorrect`)}
+                            name=""
+                          ></Checkbox>
+                        ) : (
+                          <Radio
+                            mr={10}
+                            onChange={() => onChangeRadioType(i)}
+                            checked={
+                              form?.values?.answers &&
+                              form?.values?.answers[i].isCorrect
+                            }
+                            // {...form.getInputProps(`answers.${i}.isCorrect`)}
+                          ></Radio>
+                        )}
+
                         <TextEditor
                           label={`answers.${i}.option`}
                           formContext={useFormContext}

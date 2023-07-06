@@ -3,6 +3,7 @@ import TextEditor from "@components/Ui/TextEditor";
 import {
   Box,
   Checkbox,
+  Flex,
   Group,
   Loader,
   MultiSelect,
@@ -117,7 +118,14 @@ const CreateForm: FC<Props> = ({ form, onSubmit, useFormContext }) => {
         <Box>
           <Text mt={20}>{t("options")}</Text>
           {form.values.answers.map((x, i) => (
-            <Group key={i} mb={30}>
+            <Flex
+              key={i}
+              mb={30}
+              style={{
+                width: "100%",
+                flexWrap: "nowrap",
+              }}
+            >
               <Checkbox
                 {...form.getInputProps(`answers.${i}.isCorrect`)}
                 name=""
@@ -154,7 +162,7 @@ const CreateForm: FC<Props> = ({ form, onSubmit, useFormContext }) => {
                   {form.errors[`answers.${i}.option`]}
                 </span>
               )}
-            </Group>
+            </Flex>
           ))}
           {typeof form.errors[`answers`] === "string" && (
             <span style={{ color: "red" }}>{form.errors[`answers`]}</span>

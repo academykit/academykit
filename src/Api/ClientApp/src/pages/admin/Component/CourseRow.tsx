@@ -6,6 +6,7 @@ import {
   Button,
   Group,
   Modal,
+  Text,
   Textarea,
   Tooltip,
 } from "@mantine/core";
@@ -115,7 +116,9 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
             </form>
           )}
         </Modal>
-        {course.name}
+        <Text maw={"300px"} sx={{ wordBreak: "break-all" }}>
+          {course.name}
+        </Text>
       </td>
       <td>{moment(course.createdOn).format("DD/MM/YY")}</td>
       <td>
@@ -124,7 +127,7 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
 
       <td>
         <Badge color={color(course.status)}>
-          {CourseStatus[course.status]}
+          {t(CourseStatus[course.status])}
         </Badge>
       </td>
       <td>

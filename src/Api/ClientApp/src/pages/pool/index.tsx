@@ -98,6 +98,7 @@ const MCQPool = ({
                   className={classes.paper}
                 >
                   <TextInput
+                    autoFocus
                     label={t("pool_name")}
                     placeholder={t("enter_pool_name") as string}
                     name="name"

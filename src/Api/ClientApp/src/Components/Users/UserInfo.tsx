@@ -143,6 +143,7 @@ const UserInfo = () => {
           <Grid>
             <Grid.Col xs={6} lg={4}>
               <TextInput
+                autoFocus
                 withAsterisk
                 label={t("firstname") as string}
                 placeholder={t("your_firstname") as string}

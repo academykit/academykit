@@ -69,14 +69,8 @@ const Department = ({
     },
   }));
   const Rows = ({ item }: { item: IDepartment<IUser> }) => {
-    const departmentSettingStatus = useUpdateDepartmentSettingStatus(
-      item.id,
-      !item.isActive
-    );
-    const { t } = useTranslation();
     const [opened, setOpened] = useState(false);
     const [editModal, setEditModal] = useState(false);
-    const [isChecked, setIsChecked] = useState(item.isActive);
 
     const form = useForm({
       initialValues: {
@@ -133,6 +127,7 @@ const Department = ({
               })}
             >
               <TextInput
+                autoFocus
                 label={t("department_name")}
                 name="departmentName"
                 withAsterisk
@@ -142,11 +137,10 @@ const Department = ({
               />
               <Switch
                 sx={{ input: { cursor: "pointer" } }}
-                checked={isChecked}
+                checked={form.values.isDepartmentActive}
                 label={t("department_enabled")}
                 labelPosition="left"
                 onChange={(e) => {
-                  setIsChecked(e.currentTarget.checked);
                   form.setFieldValue(
                     "isDepartmentActive",
                     e.currentTarget.checked
@@ -292,7 +286,13 @@ const Department = ({
                 <Group mt={20} ml={10}>
                   <Button type="submit">{t("submit")}</Button>
                   {showAddForm && (
-                    <Button variant="outline" onClick={() => toggleAddForm()}>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        form.reset();
+                        toggleAddForm();
+                      }}
+                    >
                       {t("cancel")}
                     </Button>
                   )}

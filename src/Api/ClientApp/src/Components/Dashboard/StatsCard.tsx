@@ -13,14 +13,13 @@ import {
   IconUserCircle,
 } from "@tabler/icons";
 import { DashboardStats } from "@utils/services/dashboardService";
-import { TFunction } from "i18next";
 
 const icons = {
   userEnrollment: IconUserCircle,
   active: IconUserCheck,
   groups: IconUsers,
   trainers: IconSchool,
-  trainings: IconBook,
+  trainings: IconCertificate,
   totalGroups: IconUsers,
   completed: IconFileCheck,
   enrollment: IconCertificate,
@@ -44,7 +43,6 @@ interface StatsGridProps {
 
 export const StatsCard = ({ data, dashboard }: StatsGridProps) => {
   const Icon = icons[data.icon];
-  const splitString = data.label.split(" ");
   const backLabel =
     dashboard && dashboard[data.key as keyof DashboardStats] > 1
       ? data.pluLabel

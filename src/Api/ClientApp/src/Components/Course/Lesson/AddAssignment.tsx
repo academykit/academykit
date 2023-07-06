@@ -219,6 +219,7 @@ const AddAssignment = ({
           <Grid align={"center"} justify="space-around">
             <Grid.Col span={12} lg={8}>
               <TextInput
+                autoFocus
                 label={t("assignment_title")}
                 placeholder={t("assignment_title") as string}
                 withAsterisk

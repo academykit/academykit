@@ -97,7 +97,7 @@ const Lesson = ({
           lesson.type === LessonType.Video) && (
           <Text>
             {t("Duration")}
-            {formatDuration(lesson.duration)}
+            {formatDuration(lesson.duration, false, t)}
           </Text>
         )}
       </Popover.Dropdown>

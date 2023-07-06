@@ -127,6 +127,7 @@ const AddUpdateUserForm = ({
       <Grid align={"center"}>
         <Grid.Col xs={6} lg={4}>
           <TextInput
+            autoFocus
             withAsterisk
             label={t("firstname")}
             placeholder={t("user_firstname") as string}

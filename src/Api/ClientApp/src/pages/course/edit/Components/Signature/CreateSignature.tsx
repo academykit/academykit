@@ -89,6 +89,7 @@ const CreateSignature = ({
   const handleDelete = async (sigId: string) => {
     try {
       await deleteSignature.mutateAsync({ id: id as string, sigId });
+      onClose && onClose();
       showNotification({
         title: t("success"),
         message: t("delete_signature_success"),
@@ -120,6 +121,7 @@ const CreateSignature = ({
         <Paper p={10} style={{ marginBottom: "20px" }} withBorder>
           <Group noWrap mb={10}>
             <TextInput
+              autoFocus
               w={"100%"}
               label={t("name")}
               placeholder={t("enter_name") as string}

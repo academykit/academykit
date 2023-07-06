@@ -1,5 +1,5 @@
 import { Box, Flex, Group, Paper, SimpleGrid, Text } from "@mantine/core";
-import { IconActivity, IconBook, IconFileCheck } from "@tabler/icons";
+import { IconActivity, IconBook, IconCertificate, IconFileCheck } from "@tabler/icons";
 import {
   DashboardCourses,
   DashboardStats,
@@ -14,7 +14,7 @@ const TrainerCardDual = ({ dashboard }: { dashboard: DashboardStats }) => {
   return (
     <Paper withBorder p="md" radius={"md"}>
       <Group position="left" noWrap>
-        <IconBook size={26} stroke={1.5} />
+        <IconCertificate size={26} stroke={1.5} />
         <Text size="md">{t("my_trainings")}</Text>
       </Group>
       <Group position="apart" noWrap mt={10}>
@@ -51,7 +51,7 @@ const Trainers = ({
     {
       key: "totalGroups",
       label: t("my_groups"),
-      icon: "userEnrollment",
+      icon: "groups",
       signLabel: t("group"),
       pluLabel: t("groups"),
     },

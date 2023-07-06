@@ -189,6 +189,7 @@ const Certificate = () => {
             <Container fluid w={"100%"}>
               <Flex>
                 <TextInput
+                  autoFocus
                   w={"100%"}
                   label={t("title")}
                   withAsterisk

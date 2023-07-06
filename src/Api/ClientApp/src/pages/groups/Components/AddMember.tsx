@@ -1,4 +1,4 @@
-import { Box, Button, MultiSelect } from "@mantine/core";
+import { Box, Button, Loader, MultiSelect } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
@@ -49,6 +49,7 @@ const AddMember = ({
   const getNotMemberList = useGroupNotMember(id as string, `search=${search}`);
 
   useEffect(() => {
+    ref.current?.focus();
     if (getNotMemberList.isSuccess) {
       const t = getNotMemberList.data?.items?.map((x) => {
         return {
@@ -99,6 +100,13 @@ const AddMember = ({
           withAsterisk
           name="email"
           size="md"
+          nothingFound={
+            getNotMemberList.isLoading ? (
+              <Loader />
+            ) : (
+              <Box>{t("User Not found")}</Box>
+            )
+          }
           getCreateLabel={(query) => `+ Create ${query}`}
           onSearchChange={(d) => {
             setSearch(d);

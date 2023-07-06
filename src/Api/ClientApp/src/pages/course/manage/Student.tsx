@@ -233,9 +233,6 @@ const ManageStudents = ({
     }
   };
 
-  if (getStudentStat.data?.totalCount === 0)
-    return <Box>{t("no_trainees")}</Box>;
-
   if (getStudentStat.isLoading) return <Loader />;
 
   return (
@@ -283,7 +280,7 @@ const ManageStudents = ({
           {searchComponent(t("search_trainees") as string)}
         </Box>
       </div>
-      {getStudentStat.data && getStudentStat.data?.totalCount > 0 && (
+      {getStudentStat.data && getStudentStat.data?.totalCount > 0 ? (
         <Paper mt={10}>
           <Table
             sx={{ minWidth: 800 }}
@@ -317,6 +314,8 @@ const ManageStudents = ({
             </tbody>
           </Table>
         </Paper>
+      ) : (
+        <Box>{t("no_trainees")}</Box>
       )}
 
       {getStudentStat.data &&

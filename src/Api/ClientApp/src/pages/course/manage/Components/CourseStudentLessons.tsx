@@ -5,6 +5,7 @@ import ManageCourseModal from "./mangeCourseModal";
 import StudentLessonDetails from "./StudentDetails";
 import LessonStatusColor from "./StudentDetails/LessonStatusColor";
 import { useTranslation } from "react-i18next";
+import { Text } from "@mantine/core";
 
 const CourseStudentLessons = ({
   element,
@@ -22,7 +23,7 @@ const CourseStudentLessons = ({
     <tr key={element.lessonId}>
       <td>
         <ManageCourseModal opened={opened} setOpened={setOpened} />
-        {element.lessonName}
+        <Text mah={"200px"}>{element.lessonName}</Text>
       </td>
 
       <td>

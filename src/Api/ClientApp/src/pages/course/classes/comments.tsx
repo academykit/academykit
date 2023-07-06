@@ -46,14 +46,19 @@ const Comments = () => {
       ))}
       <form onSubmit={form.onSubmit(onSubmit)}>
         <Textarea
+          autoFocus
           placeholder={t("your_comment_here") as string}
           {...form.getInputProps("content")}
           mt={20}
           sx={{ minHeight: "5rem" }}
         />
-        <Button loading={postComment.isLoading} type="submit" mt={10} disabled={!form.values.content.trim()}>
+        <Button
+          loading={postComment.isLoading}
+          type="submit"
+          mt={10}
+          disabled={!form.values.content.trim()}
+        >
           {t("post")}
-        
         </Button>
       </form>
     </Box>

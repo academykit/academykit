@@ -95,6 +95,7 @@ const MCQDetails = () => {
           <Paper mt={20} p={20} withBorder>
             <Box>
               <TextInput
+                autoFocus
                 sx={{ maxWidth: theme.breakpoints.xs }}
                 name="name"
                 label={t("pool_name")}

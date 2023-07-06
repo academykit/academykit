@@ -115,36 +115,41 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
 
   return (
     <div>
-      {showConfirmation && (
-        <Modal
-          title={t("add_certificate")}
-          opened={showConfirmation}
-          onClose={() => {
-            setShowConfirmation();
-            setIdd(null);
-            setUpdates(false);
-            form.reset();
-          }}
-          styles={{
-            title: {
-              fontWeight: "bold",
-            },
-          }}
-        >
-          <FormProvider form={form}>
+      <Modal
+        title={t("add_certificate")}
+        opened={showConfirmation}
+        onClose={() => {
+          setShowConfirmation();
+          setIdd(null);
+          setUpdates(false);
+          form.reset();
+        }}
+        styles={{
+          title: {
+            fontWeight: "bold",
+          },
+        }}
+      >
+        <FormProvider form={form}>
+          {showConfirmation && (
             <form onSubmit={form.onSubmit(handleSubmit)}>
               <TextInput
+                autoFocus
                 label={t("name")}
                 name="name"
+                placeholder={t("Name of Training") as string}
                 withAsterisk
                 {...form.getInputProps("name")}
               />
               <TextInput
+                withAsterisk
                 label={t("duration_hour")}
+                placeholder={t("Duration of Training") as string}
                 name="duration"
                 {...form.getInputProps("duration")}
               />
               <DateRangePicker
+                required
                 label={t("start_end_date")}
                 placeholder={t("date_range") as string}
                 allowSingleDateInRange={true}
@@ -154,11 +159,13 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
               />
               <TextInput
                 label={t("location")}
+                placeholder={t("Location of Training") as string}
                 name="location"
                 {...form.getInputProps("location")}
               />
               <TextInput
                 label={t("institute")}
+                placeholder={t("Name of institute") as string}
                 name="institute"
                 {...form.getInputProps("institute")}
               />
@@ -177,9 +184,10 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                 {t("submit")}
               </Button>
             </form>
-          </FormProvider>
-        </Modal>
-      )}
+          )}
+        </FormProvider>
+      </Modal>
+
       <Group position="right">
         <Button onClick={() => setShowConfirmation()}>
           {t("add_certificate")}
