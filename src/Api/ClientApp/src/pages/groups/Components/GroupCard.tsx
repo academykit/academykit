@@ -76,9 +76,16 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
         sx={{ maxWidth: 200 }}
       >
         <DeleteModal
-          title={`${t("want_to_delete")} "${group.name}" ${t("group")}${t(
-            "?"
-          )}`}
+          title={`${
+            group.memberCount > 0
+              ? "You are trying to delete a group having members. Are you sure to delete it?"
+              : t("want_to_delete") +
+                " " +
+                group.name +
+                " " +
+                t("group") +
+                t("?")
+          }`}
           open={deleteModal}
           onClose={setDeleteModal}
           onConfirm={handleDelete}
