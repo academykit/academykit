@@ -49,20 +49,40 @@ const schema = () => {
   });
 };
 
-const changeEmailSchema = Yup.object().shape({
-  oldEmail: Yup.string().email("Invalid Email.").required("Email is required."),
-  newEmail: Yup.string()
-    .trim()
-    .lowercase()
-    .email("Invalid Email.")
-    .required("Email is required."),
-  confirmEmail: Yup.string()
-    .trim()
-    .lowercase()
-    .oneOf([Yup.ref("newEmail"), null], "Email must match.")
-    .required("Confirm Email is required."),
-  password: Yup.string().required("Password is required."),
-});
+const changeEmailSchema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    oldEmail: Yup.string()
+      .email(t("invalid_email") as  string)
+      .required(t("email_required") as string),
+    newEmail: Yup.string()
+      .trim()
+      .lowercase()
+      .email(t("invalid_email") as  string)
+      .required(t("email_required") as string),
+    confirmEmail: Yup.string()
+      .trim()
+      .lowercase()
+      .oneOf([Yup.ref("newEmail"), null], t("email_must_match") as string)
+      .required(t("confirm_email_required") as string),
+    password: Yup.string().required(t("password_required") as string),
+  });
+};
+
+// const changeEmailSchema = Yup.object().shape({
+//   oldEmail: Yup.string().email("Invalid Email.").required("Email is required."),
+//   newEmail: Yup.string()
+//     .trim()
+//     .lowercase()
+//     .email("Invalid Email.")
+//     .required("Email is required."),
+//   confirmEmail: Yup.string()
+//     .trim()
+//     .lowercase()
+//     .oneOf([Yup.ref("newEmail"), null], "Email must match.")
+//     .required("Confirm Email is required."),
+//   password: Yup.string().required("Password is required."),
+// });
 
 const Account = () => {
   const [opened, setOpened] = useState(false);
@@ -89,7 +109,7 @@ const Account = () => {
       confirmEmail: "",
       password: "",
     },
-    validate: yupResolver(changeEmailSchema),
+    validate: yupResolver(changeEmailSchema()),
   });
 
   const onSubmitForm = async (value: IPasswordResetRequest) => {

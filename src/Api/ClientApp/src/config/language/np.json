@@ -758,6 +758,7 @@
   "trainer_email_required": "प्रशिक्षकको इमेल आवश्यक छ।",
   "enrollments": "भर्नाहरू",
   "enrollment": "भर्ना",
+  "password_required": "पासवर्ड आवश्यक छ।",
   "new_password_required": "नयाँ पासवर्ड आवश्यक छ।",
   "bio_character_limit": "बायो क्यारेक्टरको सीमा बढीमा २०० हुनुपर्दछ",
   "Groups": "समूहहरू",
@@ -783,5 +784,7 @@
 "selected_questions": "छानिएका प्रश्नहरू",
 "sure": "निश्चित",
 
-"help":"मद्दत"
+"help":"मद्दत",
+"email_must_match": "इमेल मिल्नुपर्छ।",
+"confirm_email_required": "पुष्टिकरण इमेल आवश्यक छ।"
 }

@@ -759,6 +759,7 @@
   "trainer_email_required": "Trainer's email is required.",
   "enrollments": "Enrollments",
   "enrollment": "Enrollment",
+  "password_required": "Password is required.",
   "new_password_required": "New Password is required.",
   "bio_character_limit": "Bio character limit should be at most 200",
   "home": "Home",
@@ -784,5 +785,7 @@
   "selected_questions": "Selected Questions",
 
   "sure": "Sure",
-  "help": "Help"
+  "help": "Help",
+  "email_must_match": "Email must match.",
+  "confirm_email_required": "Confirm Email is required."
 }
