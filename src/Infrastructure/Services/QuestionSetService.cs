@@ -788,8 +788,9 @@
                     UpdatedBy = currentUserId,
                     UpdatedOn = currentTimeStamp,
                     IsCompleted = true,
-                    IsPassed = questionSet.PassingWeightage > 0 ? (result.TotalMark - result.NegativeMark) * 100 / totalQuestionMarks >= questionSet.PassingWeightage : false,
-                };
+                    IsPassed = (questionSet.PassingWeightage <= 0) ? true : ((result.TotalMark - result.NegativeMark) * 100 / totalQuestionMarks >= questionSet.PassingWeightage) ? true : false,
+
+            };
                 await ManageStudentCourseComplete(questionSet.Lesson.CourseId, questionSet.Lesson.Id, currentUserId, currentTimeStamp).ConfigureAwait(false);
 
                 await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);

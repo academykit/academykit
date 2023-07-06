@@ -27,11 +27,7 @@ using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using System.Data.SqlClient;
-using System.Collections.Immutable;
-using System.Data.Common;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using System.Text.RegularExpressions;
 
 namespace Lingtren.Infrastructure.Services
 {
@@ -285,28 +281,37 @@ namespace Lingtren.Infrastructure.Services
         /// Handle to get trainer 
         /// </summary>
         /// <param name="currentUserId"> the current user id </param>
+        /// <param name="critera"> the instance of <see cref="TeacherSearchCriteria"></see></param>
         /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
-        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId, string search)
+        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId, TeacherSearchCriteria critera)
         {
             return await ExecuteWithResultAsync(async () =>
-          {
+            {
               var isValidUser = await IsSuperAdminOrAdminOrTrainer(currentUserId).ConfigureAwait(false);
               if (!isValidUser)
               {
                   throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
               }
               var predicate = PredicateBuilder.New<User>(true);
-              if (!string.IsNullOrWhiteSpace(search))
+              if (!string.IsNullOrWhiteSpace(critera.Search))
               {
-                  search = search.ToLower().Trim();
+                  var search = critera.Search.ToLower().Trim();
                   predicate = predicate.And(x => x.FirstName.ToLower().Trim().Contains(search)
                   || x.LastName.ToLower().Trim().Contains(search)
                   || x.Email.ToLower().Trim().Contains(search));
               }
-              predicate = predicate.And(p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer);
-              return await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: predicate,
-                    selector: s => new TrainerResponseModel(s)).ConfigureAwait(false);
-          });
+                predicate = predicate.And(p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer);
+                if (!string.IsNullOrWhiteSpace(critera.CourseIdentity))
+                {
+                    var courseTeacher = await _unitOfWork.GetRepository<CourseTeacher>().GetAllAsync(predicate: p => p.CourseId.ToString() == critera.CourseIdentity ||
+                    p.Course.Slug.ToLower() == critera.CourseIdentity.ToLower().Trim()).ConfigureAwait(false);
+
+                    var userIds = courseTeacher.Select(x=>x.UserId).ToList();
+                    predicate = predicate.And(p => !userIds.Contains(p.Id));
+                }
+                    return await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: predicate,
+                   selector: s => new TrainerResponseModel(s)).ConfigureAwait(false);
+            });
         }
 
 
@@ -327,23 +332,23 @@ namespace Lingtren.Infrastructure.Services
                     throw new ArgumentException(_localizer.GetString("CSVFileExtension"));
                 }
                 var users = new List<UserImportDto>();
+                (List<UserImportDto> userList,int SN) checkForValidRows = (new List<UserImportDto>(), 0);
                 using (var reader = new StreamReader(file.OpenReadStream()))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
                     while (csv.Read())
                     {
                         var user = csv.GetRecord<UserImportDto>();
-                        users.Add(user);
+                        if (user != null)
+                        {
+                            checkForValidRows.userList.Add(user);
+                            checkForValidRows.SN++;
+                        }
                     }
                 }
+                await CheckBulkImport(checkForValidRows);
                 var message = new StringBuilder();
-                var inValidUsers = users.Where(x => string.IsNullOrWhiteSpace(x.FirstName) || string.IsNullOrWhiteSpace(x.LastName) || string.IsNullOrWhiteSpace(x.Email)).ToList();
-                foreach(var user in inValidUsers)
-                {
-                    message.AppendLine(_localizer.GetString("DuplicateEmailDetected"));
-                }
-                users = users.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && !string.IsNullOrWhiteSpace(x.LastName) && !string.IsNullOrWhiteSpace(x.Email)).ToList();
-
+                users = checkForValidRows.userList.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && !string.IsNullOrWhiteSpace(x.LastName) && !string.IsNullOrWhiteSpace(x.Email)).ToList();
                 var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
                 var stringBuilder = new StringBuilder();
                 if (users.Count != default)
@@ -661,6 +666,7 @@ namespace Lingtren.Infrastructure.Services
 
             _unitOfWork.GetRepository<User>().Update(user);
             await _unitOfWork.SaveChangesAsync();
+            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailChangedMailAsync(newEmail, oldEmail, user.FullName, null));
         }
 
         /// <summary>
@@ -1126,5 +1132,112 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
+        /// <summary>
+        /// handel to check for valid user rows 
+        /// </summary>
+        /// <param name="checkForValidRows">instance of <see cref=""></param>
+        /// <returns></returns>
+        /// <exception cref="ForbiddenException"></exception>
+        private async Task CheckBulkImport((List<UserImportDto> userList, int SN) checkForValidRows)
+        {
+            try
+            {
+
+
+                if (checkForValidRows.userList.Count == default)
+                {
+                    throw new ForbiddenException(_localizer.GetString("CSVNullError"));
+                }
+                if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.FirstName)))
+                {
+                    var selectedSNs = checkForValidRows.userList
+                    .Where(user => string.IsNullOrWhiteSpace(user.FirstName))
+                   .Select(_ => checkForValidRows.SN)
+                    .ToList();
+                    if (selectedSNs.Any())
+                    {
+                        throw new ForbiddenException(_localizer.GetString("IncorrectFirstName") + " " + string.Join(", ", selectedSNs) + " " + _localizer.GetString("TryAgain"));
+                    }
+                }
+                if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.LastName)))
+                {
+                    var selectedSNs = checkForValidRows.userList
+                   .Where(user => string.IsNullOrWhiteSpace(user.LastName))
+                   .Select(_ => checkForValidRows.SN)
+                   .ToList();
+
+                    if (selectedSNs.Any())
+                    {
+
+                        throw new ForbiddenException(_localizer.GetString("IncorrectLastName") + " " + string.Join(",", selectedSNs) + " " + _localizer.GetString("TryAgain"));
+                    }
+                }
+                if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Email)))
+                {
+                    int selectedSN = string.IsNullOrWhiteSpace(checkForValidRows.userList?.FirstOrDefault()?.Email)
+                           ? checkForValidRows.SN
+                              : checkForValidRows.SN;
+                    throw new ForbiddenException(_localizer.GetString("IncorrectEmail") + " " + string.Join(", ", selectedSN) + " " + _localizer.GetString("TryAgain"));
+                }
+                if (!checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Email)))
+                {
+                    string emailPattern = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+                           @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
+                              @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+                    var invalidEmailRows = checkForValidRows.userList
+                       .Select((user, index) => (user.Email, index + 1))
+                         .Where(entry => !Regex.IsMatch(entry.Email, emailPattern))
+                       .Select(entry => entry.Item2)
+                       .ToList();
+                    if (invalidEmailRows.Any())
+                    {
+                        throw new ForbiddenException(_localizer.GetString("IncorrectEmailFormat") + " " + string.Join(", ", invalidEmailRows) + " " + _localizer.GetString("TryAgain"));
+                    }
+                }
+                if (!checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.MobileNumber)))
+                {
+                    string moblieNumberPattern = @"^\+9779\d{9}$";
+
+                    // Create a regular expression object
+                    Regex regex = new Regex(moblieNumberPattern);
+
+                    var invalidMoblieNumberRows = checkForValidRows.userList
+                       .Select((user, index) => (user.MobileNumber, index + 1))
+                         .Where(entry => !Regex.IsMatch(entry.MobileNumber, moblieNumberPattern))
+                       .Select(entry => entry.Item2)
+                       .ToList();
+                    if (invalidMoblieNumberRows.Any())
+                    {
+                        throw new ForbiddenException(_localizer.GetString("IncorrectMoblieNumberFormat") + " " + string.Join(", ", invalidMoblieNumberRows) + " " + _localizer.GetString("TryAgain"));
+                    }
+                }
+                if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Role) || !Enum.TryParse<UserRole>(x.Role, out _)))
+                {
+                    var emptySelectedSNs = checkForValidRows.userList
+                   .Where(user => string.IsNullOrWhiteSpace(user.Role))
+                   .Select(_ => checkForValidRows.SN)
+                   .ToList();
+
+                    if (emptySelectedSNs.Any())
+                    {
+                        throw new ForbiddenException(_localizer.GetString("IncorrectRole") + " " + string.Join(", ", emptySelectedSNs) + " " + _localizer.GetString("TryAgain"));
+                    }
+                    var selectedSNs = checkForValidRows.userList
+                   .Where(user => !Enum.TryParse<UserRole>(user.Role, out _))
+                   .Select(_ => checkForValidRows.SN)
+                   .ToList();
+
+                    if (selectedSNs.Any())
+                    {
+                        throw new ForbiddenException(_localizer.GetString("IncorrectRoleFormat") + " " + string.Join(", ", selectedSNs) + " " + _localizer.GetString("TryAgain"));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while attempting to fetch user detail information.");
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
     }
 }

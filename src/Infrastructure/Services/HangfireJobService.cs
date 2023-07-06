@@ -487,5 +487,78 @@ namespace Lingtren.Infrastructure.Services
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
+
+
+        /// <summary>
+        /// handel to send email update mail
+        /// </summary>
+        /// <param name="fullName">Users full name</param>
+        /// <param name="Newemail">Users new email</param>
+        /// <param name="oldEmail">Users old email</param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
+        public async Task AccountUpdatedMailAsync(string fullName, string Newemail,string oldEmail, PerformContext context = null)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
+                }
+                var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
+                var html = $"Dear {fullName}<br>";
+                html += @$"A recent change has been made to the email address associated with your account to {Newemail}.Please check your email for the login credentials. If you encounter any difficulties, please contact your administrator immediately.";
+                html += $"<br><br>Thank You, <br> {settings.CompanyName}";
+                var model = new EmailRequestDto
+                {
+                    To = oldEmail,
+                    Subject = "Notification: Email Address Change",
+                    Message = html,
+                };
+                await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Used to send email send mail
+        /// </summary>
+        /// <param name="newEmail">user's new email id</param>
+        /// <param name="oldEmail">user's old email </param>
+        /// <param name="fullName">users full name</param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
+        public async Task SendEmailChangedMailAsync(string newEmail, string oldEmail,string fullName, PerformContext context = null)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
+                }
+                var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
+                var html = $"Dear {fullName}";
+                html += $"A recent change has been made to the email address associated with your account to {newEmail}.Please check you email to verify the email address.If you did not initiate this change, please contact your administrator immediately to address the issue.";
+                html += $"<br><br>Thank You, <br> {settings.CompanyName}";
+                var model = new EmailRequestDto
+                {
+                    To = oldEmail,
+                    Subject = "Notification: Email Address Change",
+                    Message = html,
+                };
+                await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
     }
 }
