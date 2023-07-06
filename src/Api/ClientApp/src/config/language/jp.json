@@ -821,5 +821,7 @@
   "mytraining": "私のトレーニング」",
   "zoomlicense": "「ズームライセンス」",
   "filestorage": "ファイルストレージ",
-  "zoom": "ズーム (Zūmu)"
+  "zoom": "ズーム (Zūmu)",
+  "edit_user_detail": "ユーザー詳細の編集",
+  "resend_email": "メールを再送"
 }

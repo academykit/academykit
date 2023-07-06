@@ -128,7 +128,7 @@ const UserRow = ({
 
       <td style={{ display: "flex" }}>
         {item.role !== UserRole.SuperAdmin && auth?.auth?.id !== item.id && (
-          <Tooltip label="Edit User Details">
+          <Tooltip label={t('edit_user_detail')}>
             <ActionIcon
               style={{
                 cursor: "pointer",
@@ -145,7 +145,7 @@ const UserRow = ({
         )}
 
         {auth?.auth?.id !== item.id && item.status === UserStatus.Pending && (
-          <Tooltip label="Resend Email" onClick={handleResendEmail}>
+          <Tooltip label={t('resend_email')} onClick={handleResendEmail}>
             <ActionIcon
               style={{
                 cursor: "pointer",

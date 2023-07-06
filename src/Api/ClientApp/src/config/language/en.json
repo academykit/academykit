@@ -821,5 +821,7 @@
   "mytraining": "My Training",
   "zoomlicense": "Zoom License",
   "filestorage": "File storage",
-  "zoom": "Zoom"
+  "zoom": "Zoom",
+  "edit_user_detail": "Edit User Details",
+  "resend_email": "Resend Email"
 }
