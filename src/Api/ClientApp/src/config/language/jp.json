@@ -166,7 +166,7 @@
   "total_meetings": "総ミーティング数",
   "total_documents": "総ドキュメント数",
   "training_sent_to_draft": "トレーニングが下書きに送信されました！",
-  "training_sent_to_review": "トレーニングがレビュー待ちに送信されました！",
+  "training_sent_to_review": "あなたのコースは審査のために送信されました",
   "training_sent_to_complete": "トレーニングが完了に送信されました！",
   "yes": "はい",
   "no": "いいえ",
