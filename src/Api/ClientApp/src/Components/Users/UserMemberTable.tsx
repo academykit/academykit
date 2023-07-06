@@ -38,6 +38,10 @@ const useStyles = createStyles((theme) => ({
   emailContainer: {
     maxWidth: '280px',
     minWidth: '280px'
+  },
+  roleContainer: {
+    maxWidth: '100px',
+    minWidth: '100px'
   }
 }));
 
@@ -112,7 +116,7 @@ const UserRow = ({
           </Text>
         </div>
       </td>
-      <td>{t(`${UserRole[item.role]}`)}</td>
+      <td className={classes.roleContainer}>{t(`${UserRole[item.role]}`)}</td>
       <td className={classes.emailContainer}>{item?.email}</td>
 
       <td>{item?.mobileNumber}</td>
