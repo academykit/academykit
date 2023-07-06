@@ -118,11 +118,11 @@ const UserRow = ({
       <td>{item?.mobileNumber}</td>
       <td>
         {item?.status === UserStatus.Active ? (
-          <Badge color={"green"}>Active</Badge>
+          <Badge color={"green"}>{t("active")}</Badge>
         ) : item?.status === UserStatus.InActive ? (
-          <Badge color={"red"}>InActive</Badge>
+          <Badge color={"red"}>{t('inactive')}</Badge>
         ) : (
-          <Badge color="yellow">Pending</Badge>
+          <Badge color="yellow">{t('pending')}</Badge>
         )}
       </td>
 
