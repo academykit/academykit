@@ -13,7 +13,7 @@ import {
   Tooltip,
   Box,
 } from "@mantine/core";
-import { IconCheck, IconCopy, IconDownload } from "@tabler/icons";
+import { IconCheck, IconDownload, IconEye } from "@tabler/icons";
 import { useProfileAuth } from "@utils/services/authService";
 import { ICertificateList } from "@utils/services/manageCourseService";
 import { TFunction } from "i18next";
@@ -71,7 +71,7 @@ const RowsCompleted = ({
                 position="right"
               >
                 <ActionIcon color={copied ? "teal" : "gray"} onClick={copy}>
-                  {copied ? <IconCheck size={16} /> : <IconCopy size={16} />}
+                  {copied ? <IconCheck size={16} /> : <IconEye size={16} />}
                 </ActionIcon>
               </Tooltip>
             )}

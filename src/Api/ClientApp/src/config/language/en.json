@@ -219,7 +219,7 @@
   "duration": "Duration",
   "issued_by": "Issued By",
   "issuer_location": "Issuer Location",
-  "certificate": "Certificate",
+  "certificate": "Internal Certificate",
   "profile": "Profile",
   "account": "Account",
   "admin_settings": "Admin Settings",
