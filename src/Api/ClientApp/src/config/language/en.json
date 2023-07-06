@@ -708,7 +708,7 @@
   "mark_complete": "Mark Complete",
   "delete_feedback_question": "Are you sure you want to delete this feedback question?",
   "email_change_success": "Your email has been changed successfully",
-  "something_terrible_email": "Something terrible happened! Some error occurred while changing email!",
+  "something_terrible_email": "The token is expired. Please try again.",
   "go_back": "Go Back to Home",
   "error_while_joining": "Error Occured while joining meeting",
   "back_course": "Back to Course",
