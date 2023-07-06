@@ -8,6 +8,7 @@ import {
   Table,
   Text,
   Tooltip,
+  createStyles,
   useMantineColorScheme,
 } from "@mantine/core";
 import { useEditUser, useResendEmail } from "@utils/services/adminService";
@@ -29,6 +30,17 @@ import { IWithSearchPagination } from "@hoc/useSearchPagination";
 
 const AddUpdateUserForm = lazyWithRetry(() => import("./AddUpdateUserForm"));
 
+const useStyles = createStyles((theme) => ({
+  nameCotainer: {
+    maxWidth: '318px',
+    minWidth: '318px'
+  },
+  emailContainer: {
+    maxWidth: '280px',
+    minWidth: '280px'
+  }
+}));
+
 const UserRow = ({
   item,
   search,
@@ -44,6 +56,7 @@ const UserRow = ({
   const editUser = useEditUser(item?.id, search);
   const { colorScheme } = useMantineColorScheme();
   const resend = useResendEmail(item?.id);
+  const {classes} = useStyles();
 
   const handleResendEmail = async () => {
     try {
@@ -94,13 +107,13 @@ const UserRow = ({
             </Avatar>
           </Link>
 
-          <Text size="sm" weight={500} lineClamp={1} ml={5}>
+          <Text size="sm" weight={500} lineClamp={1} ml={5} className={classes.nameCotainer}>
             {item?.fullName}
           </Text>
         </div>
       </td>
       <td>{t(`${UserRole[item.role]}`)}</td>
-      <td>{item?.email}</td>
+      <td className={classes.emailContainer}>{item?.email}</td>
 
       <td>{item?.mobileNumber}</td>
       <td>
