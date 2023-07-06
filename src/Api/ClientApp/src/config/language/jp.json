@@ -757,6 +757,7 @@
   "trainer_email_required": "トレーナーのメールアドレスは必須です。",
   "enrollments": "登録",
   "enrollment": "登録",
+  "password_required": "パスワードが必要",
   "new_password_required": "新しいパスワードが必要です。",
   "bio_character_limit": "自己紹介の文字制限は 200 文字以下にする必要があります",
   "Groups": "グループ",
@@ -782,6 +783,8 @@
   "selected_questions": "選択された問題",
   "sure": "もちろん",
 
+  "email_must_match": "電子メールは一致する必要があります",
+  "confirm_email_required": "確認メールは必須です",
   "help": "ヘルプ",
   "Enrollment": "登録",
   "Lecture": "講義",
