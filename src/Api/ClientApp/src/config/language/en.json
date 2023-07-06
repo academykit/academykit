@@ -808,5 +808,17 @@
   "second": "second",
   "minute": "minute",
   "hour": "hour",
-  "User Not found": "User not found"
+  "User Not found": "User not found",
+
+  "option_placeholder": "Add Option",
+  "question_hint": "Question hint",
+  "question_description": "Question Description",
+
+  "License_email": "License Email address",
+  "License_host_Id": "License host Id",
+  "license_capacity": "License Capacity",
+  "mytraining": "My Training",
+  "zoomlicense": "Zoom License",
+  "filestorage": "File storage",
+  "zoom": "Zoom"
 }

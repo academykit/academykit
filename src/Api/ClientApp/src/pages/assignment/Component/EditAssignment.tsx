@@ -195,12 +195,16 @@ const EditAssignment = ({
             ></TextInput>
             <Box mt={20}>
               <Text size={"lg"}>{t("description")}</Text>
-              <TextEditor formContext={useFormContext} />
+              <TextEditor
+                placeholder={t("question_description")}
+                formContext={useFormContext}
+              />
             </Box>
 
             <Box mt={20}>
               <Text size={"lg"}>{t("hint")}</Text>
               <TextEditor
+                placeholder={t("question_hint")}
                 label={t("hints") as string}
                 formContext={useFormContext}
               />
@@ -230,7 +234,7 @@ const EditAssignment = ({
                       key={i}
                       style={{ marginBottom: "30px", marginTop: "10px" }}
                     >
-                      <Flex align="center">
+                      <Flex gap={"md"} align="center">
                         {QuestionType.MultipleChoice.toString() ===
                         form.values.type ? (
                           <Checkbox
@@ -251,6 +255,7 @@ const EditAssignment = ({
                         )}
 
                         <TextEditor
+                          placeholder={t("option_placeholder")}
                           label={`answers.${i}.option`}
                           formContext={useFormContext}
                         ></TextEditor>

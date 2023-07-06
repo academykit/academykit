@@ -6,8 +6,9 @@ import RichTextEditor from "@mantine/rte";
 type IProps = {
   formContext: () => UseFormReturnType<any, (values: any) => any>;
   label?: string;
+  placeholder: string;
 };
-const TextEditor = ({ formContext, label }: IProps) => {
+const TextEditor = ({ formContext, label, placeholder }: IProps) => {
   const handleImageUpload = useCallback(
     (file: File): Promise<string> =>
       new Promise((resolve, reject) => {
@@ -24,8 +25,9 @@ const TextEditor = ({ formContext, label }: IProps) => {
   const form = formContext();
   return (
     <RichTextEditor
+      placeholder={placeholder}
       onImageUpload={handleImageUpload}
-      style={{ wordBreak: "break-all" }}
+      style={{ wordBreak: "break-all", fontSize: 18 }}
       {...form.getInputProps(label ?? "description")}
     />
   );

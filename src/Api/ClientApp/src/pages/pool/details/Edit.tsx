@@ -228,7 +228,11 @@ const EditQuestion = () => {
             ></TextInput>
             <Box mt={20}>
               <Text size={"md"}>{t("description")}</Text>
-              <TextEditor label="description" formContext={useFormContext} />
+              <TextEditor
+                placeholder={t("question_description")}
+                label="description"
+                formContext={useFormContext}
+              />
             </Box>
 
             {tags.isSuccess ? (
@@ -256,6 +260,7 @@ const EditQuestion = () => {
             <Box mt={20}>
               <Text size={"md"}>{t("hint")}</Text>
               <TextEditor
+                placeholder={t("question_hint")}
                 label={t("hints") as string}
                 formContext={useFormContext}
               />
@@ -296,6 +301,7 @@ const EditQuestion = () => {
                       ></Radio>
                     )}
                     <TextEditor
+                      placeholder={t("option_placeholder")}
                       label={`answers.${i}.option`}
                       formContext={useFormContext}
                     ></TextEditor>

@@ -205,12 +205,14 @@ export default function ZoomLicense() {
           <Paper shadow={"sm"} radius="md" p="xl" withBorder mb={20}>
             <form key={`${showAddForm}`} onSubmit={form.onSubmit(handleSubmit)}>
               <TextInput
+                placeholder={t("License_email") as string}
                 name="licenseEmail"
                 label={t("license_email")}
                 withAsterisk
                 {...form.getInputProps("licenseEmail")}
               />
               <TextInput
+                placeholder={t("License_host_Id") as string}
                 name="hostId"
                 label={t("host_id")}
                 withAsterisk

@@ -204,7 +204,10 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={12} lg={12}>
               <Text size="sm">{t("bio")}</Text>
-              <RichTextEditor {...formData.getInputProps("bio")} />
+              <RichTextEditor
+                placeholder={t("your_short_description") as string}
+                {...formData.getInputProps("bio")}
+              />
               <Text color="red" size={13} mt={5}>
                 {formData.errors?.bio}
               </Text>
