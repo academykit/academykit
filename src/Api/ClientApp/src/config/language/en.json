@@ -127,8 +127,8 @@
   "question_title_required": "Title of Question is required.",
   "question_type_required": "Question type is required!",
   "option_more_than_one": "Options should be more than one!",
-  "multiple_choice_option_atleast": "On Multiple Choice at least one option should be selected!",
-  "single_choice_option_atleast": "On Single choice, only one option should be selected!",
+  "multiple_choice_option_atleast": "On multiple answer choice, at least one option should be selected.",
+  "single_choice_option_atleast": "On single answer choice, one option should be selected.",
   "option_required": "Options is required.",
   "details": "Details",
   "questions": "Questions",
@@ -340,6 +340,7 @@
   "phone_number": "Phone Number",
   "active": "Active",
   "inactive": "InActive",
+  "pending": "Pending",
   "user_imported_success": "User imported successfully!",
   "add_more_user": "Add More Users",
   "import_users": "Import Users",
@@ -708,7 +709,7 @@
   "mark_complete": "Mark Complete",
   "delete_feedback_question": "Are you sure you want to delete this feedback question?",
   "email_change_success": "Your email has been changed successfully",
-  "something_terrible_email": "Something terrible happened! Some error occurred while changing email!",
+  "something_terrible_email": "The token is expired. Please try again.",
   "go_back": "Go Back to Home",
   "error_while_joining": "Error Occured while joining meeting",
   "back_course": "Back to Course",
@@ -820,5 +821,7 @@
   "mytraining": "My Training",
   "zoomlicense": "Zoom License",
   "filestorage": "File storage",
-  "zoom": "Zoom"
+  "zoom": "Zoom",
+  "edit_user_detail": "Edit User Details",
+  "resend_email": "Resend Email"
 }

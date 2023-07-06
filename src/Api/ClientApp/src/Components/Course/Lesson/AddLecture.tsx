@@ -9,6 +9,7 @@ import {
   Text,
   Textarea,
   TextInput,
+  Tooltip,
 } from "@mantine/core";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
@@ -143,19 +144,25 @@ const AddLecture = ({
                 {...form.getInputProps("name")}
               />
             </Grid.Col>
-            <Grid.Col span={4}>
-              {!isRecordedVideo && (
-                <Switch
-                  label={t("is_mandatory")}
-                  {...form.getInputProps("isMandatory")}
-                  checked={isMandatory}
-                  onChange={() => {
-                    setIsMandatory(() => !isMandatory);
-                    form.setFieldValue("isMandatory", !isMandatory);
-                  }}
-                />
-              )}
-            </Grid.Col>
+            <Tooltip
+              multiline
+              label="Toggle this option to enforce mandatory completion of this lesson for trainees."
+              width={220}
+            >
+              <Grid.Col span={4}>
+                {!isRecordedVideo && (
+                  <Switch
+                    label={t("is_mandatory")}
+                    {...form.getInputProps("isMandatory")}
+                    checked={isMandatory}
+                    onChange={() => {
+                      setIsMandatory(() => !isMandatory);
+                      form.setFieldValue("isMandatory", !isMandatory);
+                    }}
+                  />
+                )}
+              </Grid.Col>
+            </Tooltip>
           </Grid>
           <Text size={"sm"} mt={10}>
             {isRecordedVideo ? t("recordings") : t("video")}

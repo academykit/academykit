@@ -8,6 +8,7 @@ import {
   Switch,
   Textarea,
   TextInput,
+  Tooltip,
 } from "@mantine/core";
 import { DatePicker, TimeInput } from "@mantine/dates";
 import { useForm, yupResolver } from "@mantine/form";
@@ -216,17 +217,23 @@ const AddMeeting = ({
             withAsterisk
           />
         </Grid.Col>
-        <Grid.Col span={6} lg={3}>
-          <Switch
-            label={t("is_mandatory")}
-            {...form.getInputProps("isMandatory")}
-            checked={isMandatory}
-            onChange={() => {
-              setIsMandatory(() => !isMandatory);
-              form.setFieldValue("isMandatory", !isMandatory);
-            }}
-          />
-        </Grid.Col>
+        <Tooltip
+          multiline
+          label="Toggle this option to enforce mandatory completion of this lesson for trainees."
+          width={220}
+        >
+          <Grid.Col span={6} lg={3}>
+            <Switch
+              label={t("is_mandatory")}
+              {...form.getInputProps("isMandatory")}
+              checked={isMandatory}
+              onChange={() => {
+                setIsMandatory(() => !isMandatory);
+                form.setFieldValue("isMandatory", !isMandatory);
+              }}
+            />
+          </Grid.Col>
+        </Tooltip>
       </Grid>
       <Group grow>
         <DatePicker

@@ -341,6 +341,7 @@
   "phone_number": "電話番号",
   "active": "有効",
   "inactive": "無効",
+  "pending": "保留中",
   "user_imported_success": "ユーザーのインポートに成功しました！",
   "add_more_user": "他のユーザーを追加する",
   "import_users": "ユーザーをインポートする",
@@ -706,7 +707,7 @@
   "mark_complete": "完了としてマークする",
   "delete_feedback_question": "このフィードバックの質問を削除してもよろしいですか？",
   "email_change_success": "メールが正常に変更されました",
-  "something_terrible_email": "何か恐ろしいことが起こりました！ メールの変更中にエラーが発生しました！",
+  "something_terrible_email": "トークンの有効期限が切れています。もう一度試してください",
   "go_back": "ホームに戻る",
   "error_while_joining": "ミーティングに参加する際にエラーが発生しました",
   "back_course": "コースに戻る",
@@ -820,5 +821,7 @@
   "mytraining": "私のトレーニング」",
   "zoomlicense": "「ズームライセンス」",
   "filestorage": "ファイルストレージ",
-  "zoom": "ズーム (Zūmu)"
+  "zoom": "ズーム (Zūmu)",
+  "edit_user_detail": "ユーザー詳細の編集",
+  "resend_email": "メールを再送"
 }
