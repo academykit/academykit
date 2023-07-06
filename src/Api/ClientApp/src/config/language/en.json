@@ -234,7 +234,7 @@
   "certificates": "Certificates",
   "submit": "Submit",
   "sections_and_lessons": "Sections and Lessons",
-  "group_lessons_sections": "You can add lessons and group them into sections. Add section, then add lessons within the section. You can arrange the order of the sections and lessons by dragging & dropping them by using the 'Sorting Icon'",
+  "group_lessons_sections": "Create a section and then add individual lessons within it. Easily arrange the order of both sections and lessons by utilizing the intuitive 'Sorting Icon', allowing you to drag and drop them into the desired sequence.",
   "add_new_section": "Add New Section",
   "section_add_success": "Section Added successfully!",
   "section_name_placeholder": "Enter section name",
