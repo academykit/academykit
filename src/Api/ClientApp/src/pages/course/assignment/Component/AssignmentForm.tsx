@@ -1,7 +1,6 @@
 import { Button, Card, Group, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import RichTextEditor from "@mantine/rte";
 import { QuestionType } from "@utils/enums";
 import {
   IAssignmentQuestion,
@@ -14,6 +13,7 @@ import CheckboxType from "./CheckboxType";
 import RadioType from "./RadioType";
 import SubjectiveType from "./SubjectiveType";
 import { useTranslation } from "react-i18next";
+import TextViewer from "@components/Ui/RichTextViewer";
 
 const AssignmentForm = ({
   item,
@@ -69,16 +69,14 @@ const AssignmentForm = ({
       {item.map((x, currentIndex) => (
         <Card key={x.id} shadow="sm" my={10} withBorder>
           <Title>{x.name}</Title>
-          <RichTextEditor
+          <TextViewer
             styles={{
               root: {
                 border: "none",
               },
             }}
-            my={10}
-            value={x.description}
-            readOnly
-          ></RichTextEditor>
+            content={x.description}
+          ></TextViewer>
           {x.type === QuestionType.MultipleChoice &&
             x?.assignmentQuestionOptions && (
               <CheckboxType

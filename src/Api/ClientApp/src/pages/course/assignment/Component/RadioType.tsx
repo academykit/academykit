@@ -1,14 +1,6 @@
-import {
-  Box,
-  Button,
-  Card,
-  createStyles,
-  Group,
-  Text,
-  Title,
-} from "@mantine/core";
+import TextViewer from "@components/Ui/RichTextViewer";
+import { Box, Card, createStyles, Group, Title } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
-import RichTextEditor from "@mantine/rte";
 import {
   IAssignmentOptions,
   IAssignmentQuestion,
@@ -84,15 +76,14 @@ const RadioType = ({ options, form, currentIndex }: Props) => {
             })}
           >
             <input type={"checkbox"} style={{ display: "none" }} />
-            <RichTextEditor
+            <TextViewer
               styles={{
                 root: {
                   border: "none",
                 },
               }}
-              readOnly
-              value={option.option}
-            ></RichTextEditor>
+              content={option.option}
+            ></TextViewer>
           </Card>
         </div>
       ))}

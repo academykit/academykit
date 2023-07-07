@@ -5,8 +5,6 @@ import {
   Checkbox,
   createStyles,
   Flex,
-  Group,
-  Modal,
   Paper,
   Select,
   Text,
@@ -14,7 +12,6 @@ import {
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import RichTextEditor from "@mantine/rte";
 import { IconEdit, IconTrash } from "@tabler/icons";
 import { QuestionType, ReadableEnum } from "@utils/enums";
 import {
@@ -23,8 +20,8 @@ import {
 } from "@utils/services/assignmentService";
 import errorType from "@utils/services/axiosError";
 import EditAssignment from "./EditAssignment";
-import { useTransition } from "react";
 import { useTranslation } from "react-i18next";
+import TextViewer from "@components/Ui/RichTextViewer";
 
 const useStyle = createStyles((theme) => ({
   wrapper: {
@@ -104,13 +101,13 @@ const AssignmentItem = ({
         {data.description && (
           <Box my={10}>
             <Text>{t("description")}</Text>
-            <RichTextEditor mb={5} value={data.description} readOnly={true} />
+            <TextViewer content={data.description} />
           </Box>
         )}
         {data?.hints && (
           <Box my={10}>
             <Text size={"sm"}>{t("hint")}</Text>
-            <RichTextEditor mb={5} value={data?.hints} readOnly={true} />
+            <TextViewer content={data?.hints} />
           </Box>
         )}
         <Select
@@ -136,11 +133,10 @@ const AssignmentItem = ({
                   key={x.id}
                 >
                   <Checkbox onChange={() => {}} checked={x.isCorrect} />
-                  <RichTextEditor
-                    w={"90%"}
-                    readOnly
-                    value={x.option}
-                  ></RichTextEditor>
+                  <TextViewer
+                    sx={{ width: "90%" }}
+                    content={x.option}
+                  ></TextViewer>
                 </Flex>
               ))}
             </>

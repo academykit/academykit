@@ -78,8 +78,8 @@ export const api = {
     enroll: (id: string) => `/api/Course/${id}/enroll`,
     status: `/api/Course/status`,
     lessonStat: (id: string) => `/api/course/${id}/lessonStatistics`,
-    lessonStatDetails: (id: string, lessonId: string) =>
-      `/api/course/${id}/lessonStatistics/${lessonId}`,
+    lessonStatDetails: (id: string, lessonId: string, qs: string) =>
+      `/api/course/${id}/lessonStatistics/${lessonId}?${qs}`,
 
     studentStat: (id: string) => `/api/course/${id}/studentStatistics`,
     studentStatDetails: (id: string, userId: string) =>

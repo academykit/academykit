@@ -1,7 +1,6 @@
 import { Button, Card, Group, Rating, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import RichTextEditor from "@mantine/rte";
 import { FeedbackType } from "@utils/enums";
 
 import errorType from "@utils/services/axiosError";
@@ -10,7 +9,6 @@ import {
   IFeedbackSubmission,
   useFeedbackSubmission,
 } from "@utils/services/feedbackService";
-import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FeedbackCheckBoxType from "./Options/FeedbackCheckBox";
 import FeedbackRadio from "./Options/FeedbackRadio";

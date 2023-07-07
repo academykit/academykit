@@ -16,14 +16,22 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import CourseLessonDetails from "./Components/CourseLessonDetails";
 import { useTranslation } from "react-i18next";
+import withSearchPagination, {
+  IWithSearchPagination,
+} from "@hoc/useSearchPagination";
 
-const LessonDetails = () => {
+const LessonDetails = ({
+  searchComponent,
+  pagination,
+  searchParams,
+}: IWithSearchPagination) => {
   const { id, lessonId } = useParams();
   const { t } = useTranslation();
 
   const lessonDetails = useGetLessonStatisticsDetails(
     id as string,
-    lessonId as string
+    lessonId as string,
+    searchParams
   );
   const [loading, setLoading] = useState(false);
 
@@ -72,6 +80,7 @@ const LessonDetails = () => {
         </Group>
       )}
       <Paper>
+        <Box mb={"sm"}>{searchComponent("Search Student")}</Box>
         <Table striped withBorder>
           <thead>
             <tr>
@@ -93,9 +102,14 @@ const LessonDetails = () => {
             ))}
           </tbody>
         </Table>
+        {lessonDetails.data &&
+          pagination(
+            lessonDetails.data.totalPage,
+            lessonDetails.data?.items.length
+          )}
       </Paper>
     </>
   );
 };
 
-export default LessonDetails;
+export default withSearchPagination(LessonDetails);

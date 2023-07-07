@@ -10,19 +10,19 @@ import { httpClient } from "./service-axios";
 import { IPaginated, IUser } from "./types";
 
 export interface ILessonStats {
-  id: string,
-slug: string,
-name: string,
-lessonType: number,
-courseId: string,
-courseSlug: string,
-courseName: string,
-sectionId: string,
-sectionSlug: string,
-sectionName: string,
-enrolledStudent: number,
-lessonWatched: number,
-isMandatory: boolean
+  id: string;
+  slug: string;
+  name: string;
+  lessonType: number;
+  courseId: string;
+  courseSlug: string;
+  courseName: string;
+  sectionId: string;
+  sectionSlug: string;
+  sectionName: string;
+  enrolledStudent: number;
+  lessonWatched: number;
+  isMandatory: boolean;
 }
 
 const getLessonStatistics = async (courseIdentity: string) => {
@@ -56,19 +56,21 @@ export interface LessonStatDetails {
 
 const getLessonStatisticsDetails = async (
   courseIdentity: string,
-  lessonId: string
+  lessonId: string,
+  qs: string
 ) => {
   return await httpClient.get<IPaginated<LessonStatDetails>>(
-    api.course.lessonStatDetails(courseIdentity, lessonId)
+    api.course.lessonStatDetails(courseIdentity, lessonId, qs)
   );
 };
 export const useGetLessonStatisticsDetails = (
   courseIdentity: string,
-  lessonId: string
+  lessonId: string,
+  qs: string
 ) => {
   return useQuery(
-    [api.course.lessonStatDetails(courseIdentity, lessonId)],
-    () => getLessonStatisticsDetails(courseIdentity, lessonId),
+    [api.course.lessonStatDetails(courseIdentity, lessonId, qs)],
+    () => getLessonStatisticsDetails(courseIdentity, lessonId, qs),
     {
       select: (data) => {
         return data.data;
@@ -85,10 +87,10 @@ export interface IStudentStat {
   lessonId: string;
   lessonSlug: string;
   lessonName: string;
-  certificateUrl:string;
-  certificateIssuedDate:string;
-  hasCertificateIssued:boolean
-  imageUrl:string
+  certificateUrl: string;
+  certificateIssuedDate: string;
+  hasCertificateIssued: boolean;
+  imageUrl: string;
 }
 
 const getStudentStatistics = async (courseIdentity: string, query: string) => {
@@ -216,8 +218,9 @@ export const usePostStatisticsCertificate = (
           api.course.certificate(identity, search),
         ]);
         queryClient.invalidateQueries([
-          api.course.studentStat(identity), search
-        ])
+          api.course.studentStat(identity),
+          search,
+        ]);
       },
       onError: (err) => {
         return errorType(err);
@@ -251,7 +254,7 @@ export const useGetCourseManageStatistics = (courseIdentity: string) => {
       select: (data) => {
         return data.data;
       },
-      retry: false
+      retry: false,
     }
   );
 };

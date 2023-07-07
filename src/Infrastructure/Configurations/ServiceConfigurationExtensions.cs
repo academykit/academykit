@@ -4,6 +4,7 @@
     using FluentValidation;
     using Hangfire;
     using Hangfire.MySql;
+    using Infrastructure.Services;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
@@ -69,6 +70,7 @@
             services.AddTransient<IHangfireJobService, HangfireJobService>();
             services.AddTransient<ICertificateService, CertificateService>();
             services.AddTransient<IVideoService, VideoService>();
+            services.AddTransient<ILogsService,LogsService>();
 
             #endregion Service DI
 

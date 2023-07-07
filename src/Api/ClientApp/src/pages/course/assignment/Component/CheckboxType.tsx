@@ -1,6 +1,6 @@
+import TextViewer from "@components/Ui/RichTextViewer";
 import { Box, Card, createStyles, Group, Text, Title } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
-import RichTextEditor from "@mantine/rte";
 import {
   IAssignmentOptions,
   IAssignmentQuestion,
@@ -56,15 +56,14 @@ const CheckBoxType = ({ options, form, currentIndex }: Props) => {
                   .isSelected,
             })}
           >
-            <RichTextEditor
+            <TextViewer
               styles={{
                 root: {
                   border: "none",
                 },
               }}
-              readOnly
-              value={option.option}
-            ></RichTextEditor>
+              content={option.option}
+            ></TextViewer>
           </Card>
         </label>
       ))}

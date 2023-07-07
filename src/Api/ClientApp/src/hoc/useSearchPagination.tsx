@@ -176,9 +176,9 @@ const withSearchPagination =
       />
     );
 
-    const dateFilterComponent = (label: string, placeholder: string) => {
-      <DatePickerInput />
-    }
+    // const dateFilterComponent = (label: string, placeholder: string) => {
+    //   <DatePickerInput />
+    // }
 
     return (
       <Component
