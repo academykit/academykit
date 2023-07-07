@@ -173,6 +173,7 @@ const AddExam = ({
               placeholder={t("exam_title") as string}
               name="title"
               {...form.getInputProps("name")}
+              styles={{error: {position: "absolute"}}}
             />
           </Grid.Col>
           <Grid.Col span={12} xs={6} lg={4}>
@@ -192,6 +193,7 @@ const AddExam = ({
               defaultValue={1}
               placeholder={t("question_weightage") as string}
               {...form.getInputProps("questionMarking")}
+              styles={{error: {position: "absolute"}}}
             />
           </Grid.Col>
           <Grid.Col span={12} xs={6} lg={4}>
@@ -220,6 +222,7 @@ const AddExam = ({
               min={1}
               withAsterisk
               {...form.getInputProps("duration")}
+              styles={{error: {position: "absolute"}}}
             />
           </Grid.Col>
 
