@@ -17,7 +17,7 @@ This guide is for the deployment of this codebase on client's linux environments
 | --------------------------------------- | ------------------------------------------------------- |
 | ConnectionStrings\_\_DefaultConnection  | MySQL connection string for EF Core for main APIs       |
 | JWT\_\_DurationInMinutes                | Expiration duration of JWT token in minutes             |
-| ConnectionStrings\_\_Hangfireconnection | ySQL connection string for EF Core for Hangfire service |
+| ConnectionStrings\_\_Hangfireconnection | MySQL connection string for EF Core for Hangfire service |
 | Hangfire\_\_User                        | Username for the hangfire dashboard                     |
 | Hangfire\_\_Password                    | Password for the hangfire dashboard                     |
 | AppUrls\_\_App                          | Domain name for the application                         |
