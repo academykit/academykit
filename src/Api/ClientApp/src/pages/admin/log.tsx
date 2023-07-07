@@ -1,17 +1,28 @@
 import withSearchPagination, {
   IWithSearchPagination,
 } from "@hoc/useSearchPagination";
-import { Group, Button, Title, Paper, Table, Text, Flex, ScrollArea } from "@mantine/core";
+import {
+  Group,
+  Button,
+  Title,
+  Paper,
+  Table,
+  Text,
+  Flex,
+  ScrollArea,
+} from "@mantine/core";
+import { IServerLogs, useGetServerLogs } from "@utils/services/adminService";
 import { useTranslation } from "react-i18next";
+import { SeverityType } from "@utils/enums";
 
-const Rows = () => {
+const Rows = ({ item }: { item: IServerLogs }) => {
   return (
     <>
       <tr>
         <td>
           <Group spacing="sm">
             <Text size="sm" weight={500}>
-              Severity
+              {SeverityType[item.type]}
             </Text>
           </Group>
         </td>
@@ -19,28 +30,28 @@ const Rows = () => {
         <td>
           <Group spacing="sm">
             <Text size="sm" weight={500}>
-              TimeStamp
+              {`${item.timeStamp}`}
             </Text>
           </Group>
         </td>
         <td>
           <Group spacing="sm">
             <Text size="sm" weight={500}>
-              App Version
+              version
             </Text>
           </Group>
         </td>
         <td>
           <Group spacing="sm">
             <Text size="sm" weight={500}>
-              Message
+              {item.message}
             </Text>
           </Group>
         </td>
         <td>
           <Group spacing="sm">
             <Text size="sm" weight={500}>
-              Faced By
+              {item.trackBy}
             </Text>
           </Group>
         </td>
@@ -63,7 +74,8 @@ const Log = ({
   filterComponent,
 }: IWithSearchPagination) => {
   const { t } = useTranslation();
-
+  const getLogData = useGetServerLogs(searchParams);
+  console.log(getLogData.data);
   return (
     <>
       <Group
@@ -87,7 +99,7 @@ const Log = ({
           )}
         </Flex>
       </Flex>
-      
+
       {/* table section */}
       <ScrollArea>
         <Paper>
@@ -108,15 +120,18 @@ const Log = ({
               </tr>
             </thead>
             <tbody>
-              <Rows />
-              <Rows />
-              {/* {getDepartment.data?.items.map((item: any) => (
+              {/* <Rows item={getLogData.data}/>
+              <Rows /> */}
+              {getLogData.data?.items.map((item: IServerLogs) => (
                 <Rows item={item} key={item.id} />
-              ))} */}
+              ))}
             </tbody>
           </Table>
         </Paper>
       </ScrollArea>
+
+      {getLogData.data &&
+        pagination(getLogData.data?.totalPage, getLogData.data?.items.length)}
     </>
   );
 };
