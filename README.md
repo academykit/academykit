@@ -11,6 +11,19 @@
 ## Run In Development
 
 ```bash
+cd src/Api/ClientApp && npm i cd ../../../
+dotnet watch run --project=src/Api/Api.csproj
+```
+
+NOTE: if you are working on more frequent backend changes then, run the frontend separately, [learn more here](https://learn.microsoft.com/en-us/aspnet/core/client-side/spa/react?view=aspnetcore-7.0&tabs=netcore-cli#run-the-cra-server-independently)
+
+```bash
+cd ClientApp
+npm i
+npm start
+```
+Then run the backend in another terminal, the build and restart will be faster
+```bash
 dotnet watch run --project=src/Api/Api.csproj
 ```
 

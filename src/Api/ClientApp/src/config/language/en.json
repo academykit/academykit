@@ -442,7 +442,6 @@
   "file": "File",
   "capital_lesson": "Lesson",
   "feedback": "Feedback",
-
   "lessons": "Lessons",
   "statistics": "Statistics",
   "lesson_stats": "Lesson Stats",
@@ -583,7 +582,6 @@
   "remove_success": "Successfully removed",
   "update_pool_success": "Pool Updated Successfully.",
   "delete_teacher_success": "Trainer deleted successfully.",
-
   "Not Enrolled": "Not Enrolled",
   "Enrolled": "Enrolled",
   "edit_user": "Editing User:",
@@ -659,7 +657,6 @@
   "want_to_delete_trainer": "Do you want to delete this trainer?",
   "attended_trainings": "Attended Trainings",
   "enrolled_date": "Enrolled Date",
-
   "total_retake": "Total Retake",
   "remaining_retakes": "Remaining Retakes",
   "attempt_exceeded": "You have exceeded attempt count.",
@@ -784,7 +781,6 @@
   "no_options": "No options",
   "questions_list": "Questions List",
   "selected_questions": "Selected Questions",
-
   "sure": "Sure",
   "help": "Help",
   "email_must_match": "Email must match.",
@@ -792,7 +788,6 @@
   "Enrollment": "Enrollment",
   "Lecture": "Lecture",
   "Meeting": "Meeting",
-
   "Enrollments": "Enrollments",
   "Lessons": "Lessons",
   "Assignments": "Assignments",
@@ -800,7 +795,6 @@
   "Exams": "Exams",
   "Meetings": "Meetings",
   "Documents": "Documents",
-
   "Name of Training": "Name of Training",
   "Duration of Training": "Duration of Training",
   "Location of Training": "Location of Training",
@@ -810,11 +804,9 @@
   "minute": "minute",
   "hour": "hour",
   "User Not found": "User not found",
-
   "option_placeholder": "Add Option",
   "question_hint": "Question hint",
   "question_description": "Question Description",
-
   "License_email": "License Email address",
   "License_host_Id": "License host Id",
   "license_capacity": "License Capacity",
@@ -823,5 +815,22 @@
   "filestorage": "File storage",
   "zoom": "Zoom",
   "edit_user_detail": "Edit User Details",
-  "resend_email": "Resend Email"
+  "resend_email": "Resend Email",
+  "settings_screen": {
+    "file_storage": {
+      "Server_AccessKey": "Server Access Key",
+      "Server_Bucket": "Bucket Name",
+      "Server_EndPoint": "Server URL",
+      "Server_PresignedExpiryTime": "Presigned Expiry Time",
+      "Server_PresignedUrl": "Server Presigned URL",
+      "Server_SecretKey": "Server Secret Key",
+      "Server_Url": "Server URL",
+      "AWS_AccessKey": "AWS Access Key",
+      "AWS_CloudFront": "AWS Cloundfront",
+      "AWS_FileBucket": "File Storage Bucket",
+      "AWS_RegionEndpoint": "Region Endpoint",
+      "AWS_SecretKey": "AWS Secret Key",
+      "AWS_VideoBucket": "Video Bucket"
+    }
+  }
 }
