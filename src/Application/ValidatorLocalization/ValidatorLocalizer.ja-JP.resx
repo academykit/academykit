@@ -117,6 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddressLength200" xml:space="preserve">
+    <value>アドレスの長さは 200 文字以下である必要があります。</value>
+  </data>
+  <data name="ApiKeyLength100" xml:space="preserve">
+    <value>API キーの長さは 100 文字以下である必要があります。</value>
+  </data>
+  <data name="APIKeyRequired" xml:space="preserve">
+    <value>APIキーが必要です。</value>
+  </data>
+  <data name="ApiSecretKeyLength100" xml:space="preserve">
+    <value>API シークレットの長さは 100 文字以下である必要があります。</value>
+  </data>
+  <data name="ApiSecretRequired" xml:space="preserve">
+    <value>API シークレットが必要です。</value>
+  </data>
   <data name="AssignementQuestionisRequired" xml:space="preserve">
     <value>割り当ての質問オプションは必須です。</value>
   </data>
@@ -126,8 +141,35 @@
   <data name="Assignmenttypeid" xml:space="preserve">
     <value>割り当てタイプは必須です。</value>
   </data>
+  <data name="BioLength200" xml:space="preserve">
+    <value>自己紹介の長さは 200 文字以下である必要があります。</value>
+  </data>
+  <data name="CapacityRequired" xml:space="preserve">
+    <value>容量が必要です。</value>
+  </data>
+  <data name="CompanyAddressLengthError" xml:space="preserve">
+    <value>会社の住所の長さは 250 文字以下である必要があります。</value>
+  </data>
+  <data name="CompanyAddressRequired" xml:space="preserve">
+    <value>会社住所は必須です。</value>
+  </data>
+  <data name="CompanyContactNumberLengthError" xml:space="preserve">
+    <value>会社の連絡先は 30 文字以下である必要があります。</value>
+  </data>
+  <data name="CompanyContactNumberRequired" xml:space="preserve">
+    <value>会社の連絡先番号は必須です。</value>
+  </data>
+  <data name="CompanyNameLengthError" xml:space="preserve">
+    <value>会社名の長さは 250 文字以下である必要があります</value>
+  </data>
+  <data name="CompanyNameRequired" xml:space="preserve">
+    <value>会社名は必須です。</value>
+  </data>
   <data name="Confirm email is required" xml:space="preserve">
     <value>確認メールは必須です。</value>
+  </data>
+  <data name="ConfirmPasswordRequired" xml:space="preserve">
+    <value>パスワードの確認が必要です。</value>
   </data>
   <data name="ConformPassword" xml:space="preserve">
     <value>パスワードの確認が必要です。</value>
@@ -135,8 +177,38 @@
   <data name="ContentRequired" xml:space="preserve">
     <value>内容は必須です。</value>
   </data>
+  <data name="CourseIdRequired" xml:space="preserve">
+    <value>必須のコース ID。</value>
+  </data>
+  <data name="CourseStatusRequired" xml:space="preserve">
+    <value>必須のコースステータス。</value>
+  </data>
+  <data name="DepartmentIdRequired" xml:space="preserve">
+    <value>部署名は必須です。</value>
+  </data>
   <data name="DescriptionLenght500" xml:space="preserve">
     <value>説明の長さは 5000 文字以下である必要があります。</value>
+  </data>
+  <data name="DesignationLength50" xml:space="preserve">
+    <value>指定の長さは 50 以下である必要があります。</value>
+  </data>
+  <data name="DocumentTypeRequired" xml:space="preserve">
+    <value>レッスンタイプが documentn タイプである場合、無効なlessoDocumentが必要です。</value>
+  </data>
+  <data name="DurationRequired" xml:space="preserve">
+    <value>期間は必須です</value>
+  </data>
+  <data name="EmailLength100" xml:space="preserve">
+    <value>電子メールの長さは 100 文字以下である必要があります。</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>電子メールは必須です。</value>
+  </data>
+  <data name="EmailSignatureLengthError" xml:space="preserve">
+    <value>電子メールの署名の長さは 1000 文字以下である必要があります。</value>
+  </data>
+  <data name="EnddateMustBeGreater" xml:space="preserve">
+    <value>終了日は開始日よりも後である必要があります。</value>
   </data>
   <data name="EndTimeEmptyError" xml:space="preserve">
     <value>終了日を空にすることはできません</value>
@@ -147,8 +219,38 @@
   <data name="EventStartDateRequired" xml:space="preserve">
     <value>イベントの開始日は必須です。</value>
   </data>
+  <data name="FeedbackNameRequired" xml:space="preserve">
+    <value>フィードバック名は必須です。</value>
+  </data>
+  <data name="FeedbackRequired" xml:space="preserve">
+    <value>すべての質問に対してフィードバックをお寄せください。</value>
+  </data>
+  <data name="FeedbackTypeRequired" xml:space="preserve">
+    <value>フィードバックの種類は必須です。</value>
+  </data>
+  <data name="FileUrlLength200" xml:space="preserve">
+    <value>ファイルの URL の長さは 200 以下である必要があります。</value>
+  </data>
+  <data name="FileUrlRequired" xml:space="preserve">
+    <value>ファイルの URL は必須です。</value>
+  </data>
+  <data name="FirstNameLength100" xml:space="preserve">
+    <value>名の長さは 100 文字以下である必要があります。</value>
+  </data>
+  <data name="FirstNameRequired" xml:space="preserve">
+    <value>名を null にすることはできません</value>
+  </data>
+  <data name="FullNameRequired" xml:space="preserve">
+    <value>フルネームは必須です。</value>
+  </data>
   <data name="HintLength500" xml:space="preserve">
     <value>ヒントの長さは 5000 文字以下である必要があります。</value>
+  </data>
+  <data name="HostIDLength" xml:space="preserve">
+    <value>ホスト ID の長さは 50 文字以下である必要があります。</value>
+  </data>
+  <data name="HostIdRequired" xml:space="preserve">
+    <value>ホストIDは必須です。</value>
   </data>
   <data name="InvalidAssignmentMarks" xml:space="preserve">
     <value>マークは 1 ～ 100 の間である必要があります。</value>
@@ -156,20 +258,92 @@
   <data name="InvalidEmailError" xml:space="preserve">
     <value>電子メールの形式が無効です</value>
   </data>
+  <data name="InvalidFeedBackType" xml:space="preserve">
+    <value>フィードバックの種類が無効です。</value>
+  </data>
   <data name="InvalidFileType" xml:space="preserve">
     <value>無効な割り当てタイプです。</value>
+  </data>
+  <data name="InvalidLessionType" xml:space="preserve">
+    <value>レッスンタイプが無効です。</value>
+  </data>
+  <data name="InvalidMediaType" xml:space="preserve">
+    <value>無効なメディアタイプです。</value>
   </data>
   <data name="InvalidPasswordFormat" xml:space="preserve">
     <value>パスワードには、少なくとも 1 つの小文字、1 つの大文字、1 つの数字、および 1 つの記号が含まれている必要があります</value>
   </data>
+  <data name="InvalidQuestionType" xml:space="preserve">
+    <value>質問の種類が無効です。</value>
+  </data>
   <data name="InvalidReviewLength" xml:space="preserve">
     <value>レビューの長さは 500 文字以下である必要があります。</value>
+  </data>
+  <data name="IsRecordingTrue" xml:space="preserve">
+    <value>録音が有効になっているかどうかは必須です。</value>
+  </data>
+  <data name="KeyCannotBeNull" xml:space="preserve">
+    <value>キーを空にすることはできません</value>
+  </data>
+  <data name="LastNameLength100" xml:space="preserve">
+    <value>姓の長さは 100 文字以下である必要があります。</value>
+  </data>
+  <data name="LastNAmeRequired" xml:space="preserve">
+    <value>姓は必須です。</value>
+  </data>
+  <data name="LessionNameRequired" xml:space="preserve">
+    <value>レッスン名は必須です。</value>
   </data>
   <data name="LessonIdRequired" xml:space="preserve">
     <value>レッスンIDは必須です</value>
   </data>
+  <data name="LevelRequired" xml:space="preserve">
+    <value>レベルは必須です。</value>
+  </data>
+  <data name="LicenseEmailLength" xml:space="preserve">
+    <value>ライセンス電子メールの長さは 50 文字以下である必要があります。</value>
+  </data>
+  <data name="LogoRequired" xml:space="preserve">
+    <value>ロゴは必須です</value>
+  </data>
+  <data name="LogoUrlRequired" xml:space="preserve">
+    <value>ロゴの URL の長さは 500 文字以下である必要があります</value>
+  </data>
+  <data name="MailPortRequired" xml:space="preserve">
+    <value>メールポートは必須です</value>
+  </data>
+  <data name="MailServerLength200" xml:space="preserve">
+    <value>メールサーバーの長さは 200 文字以下である必要があります。</value>
+  </data>
+  <data name="MailServerRequired" xml:space="preserve">
+    <value>メールサーバーは必須です。</value>
+  </data>
+  <data name="MediaTypeRequired" xml:space="preserve">
+    <value>メディアの種類は必須です。</value>
+  </data>
+  <data name="MeedingDurationRequired" xml:space="preserve">
+    <value>会議の所要時間は必須です。</value>
+  </data>
+  <data name="MeetingIdDUrationLength" xml:space="preserve">
+    <value>会議の継続時間は 1439 分以上にすることはできません。</value>
+  </data>
+  <data name="MiddleNameLength100" xml:space="preserve">
+    <value>ミドルネームの長さは 100 文字以下である必要があります。</value>
+  </data>
+  <data name="MobileNumberLength50" xml:space="preserve">
+    <value>携帯電話番号の長さは 50 文字以下である必要があります</value>
+  </data>
+  <data name="NameLength250" xml:space="preserve">
+    <value>名前の長さは 250 文字以下である必要があります</value>
+  </data>
   <data name="NameLength500" xml:space="preserve">
     <value>「名前の長さは 500 文字以下である必要があります。</value>
+  </data>
+  <data name="NameLengthError" xml:space="preserve">
+    <value>名前の長さは 100 文字以下である必要があります。</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>名前は必須です。</value>
   </data>
   <data name="NewEmailConformedRequired" xml:space="preserve">
     <value>新規メールと確認メールが一致しません。</value>
@@ -195,11 +369,92 @@
   <data name="OptionMoreThanOne" xml:space="preserve">
     <value>オプションは複数である必要があります。</value>
   </data>
+  <data name="PasswordChangeTokenIsRequired" xml:space="preserve">
+    <value>パスワード変更トークンが必要です。</value>
+  </data>
+  <data name="PasswordLength100" xml:space="preserve">
+    <value>パスワードの長さは 100 文字以下である必要があります。</value>
+  </data>
   <data name="PasswordRequired" xml:space="preserve">
     <value>パスワードが必要。</value>
   </data>
+  <data name="PreofessionLength200" xml:space="preserve">
+    <value>職業の長さは 200 文字以下である必要があります。</value>
+  </data>
+  <data name="PublicUrlLength2000" xml:space="preserve">
+    <value>パブリック URL の長さは 2000 文字以下である必要があります。</value>
+  </data>
+  <data name="QuestionHint5000Length" xml:space="preserve">
+    <value>質問のヒントの長さは 5000 文字以下である必要があります。</value>
+  </data>
+  <data name="QuestionMarkingRequired" xml:space="preserve">
+    <value>質問の評価は必須です。</value>
+  </data>
+  <data name="QuestionpoolIdRequired" xml:space="preserve">
+    <value>質問プールの ID が必要です。</value>
+  </data>
+  <data name="QuestionPoolNameRequired" xml:space="preserve">
+    <value>質問プール名は必須です。</value>
+  </data>
+  <data name="RejectMessageRequired" xml:space="preserve">
+    <value>必須の拒否メッセージ。</value>
+  </data>
+  <data name="ReplyToLength200" xml:space="preserve">
+    <value>返信の長さは 200 文字以下である必要があります。</value>
+  </data>
+  <data name="ReplyToRequired" xml:space="preserve">
+    <value>への返信は必須です。</value>
+  </data>
+  <data name="RetakeMustBeGreaterThan0" xml:space="preserve">
+    <value>許可される再取得は 0 より大きくなければなりません。</value>
+  </data>
+  <data name="RoleRequired" xml:space="preserve">
+    <value>役割は必須です。</value>
+  </data>
+  <data name="SdkKeyLength100" xml:space="preserve">
+    <value>SDK キーの長さは 100 文字以下である必要があります。</value>
+  </data>
+  <data name="SDKKeyRequired" xml:space="preserve">
+    <value>SDKキーが必要です。</value>
+  </data>
+  <data name="SdkLength100" xml:space="preserve">
+    <value>SDK シークレット名の長さは 100 文字以下である必要があります。</value>
+  </data>
+  <data name="SdkSecretRequired" xml:space="preserve">
+    <value>SDK シークレットが必要です。</value>
+  </data>
+  <data name="SectionIdRequired" xml:space="preserve">
+    <value>セクション ID が必要です。</value>
+  </data>
+  <data name="SectionNameRequired" xml:space="preserve">
+    <value>セクション名は必須です。</value>
+  </data>
+  <data name="SelectFileType" xml:space="preserve">
+    <value>ファイルを選択してください。</value>
+  </data>
+  <data name="SelectGroup" xml:space="preserve">
+    <value>グループを選択してください。</value>
+  </data>
+  <data name="SelectOneCorrectAnswer" xml:space="preserve">
+    <value>単一選択肢の質問タイプでは、正解できる選択肢は 1 つだけです。</value>
+  </data>
+  <data name="SenderEmailLength200" xml:space="preserve">
+    <value>送信者の電子メールの長さは 200 文字以下である必要があります。</value>
+  </data>
+  <data name="SenderEmailRequired" xml:space="preserve">
+    <value>送信者のメールアドレスは必須です。</value>
+  </data>
+  <data name="SenderName200" xml:space="preserve">
+    <value>送信者名の長さは 200 文字以下である必要があります</value>
+  </data>
+  <data name="SenderNameRequired" xml:space="preserve">
+    <value>メールポートは必須です</value>
+  </data>
   <data name="StartdateEmptyError" xml:space="preserve">
     <value>開始日を空にすることはできません</value>
+  </data>
+  <data name="StartDateFormat" xml:space="preserve">
+    <value>開始日は YYYY-MM-DD の形式である必要があります</value>
   </data>
   <data name="timeSpanIssue" xml:space="preserve">
     <value>イベント終了日はイベント開始日以降である必要があります</value>
@@ -207,7 +462,31 @@
   <data name="TitleLenghtIssue" xml:space="preserve">
     <value>タイトルの長さは 100 以下である必要があります。</value>
   </data>
+  <data name="TrainingIdRequired" xml:space="preserve">
+    <value>トレーニング ID が必要です</value>
+  </data>
   <data name="UserIDrequired" xml:space="preserve">
     <value>ユーザーIDは必須です</value>
+  </data>
+  <data name="UserNameLength100" xml:space="preserve">
+    <value>ユーザー名の長さは 100 文字以下である必要があります。</value>
+  </data>
+  <data name="UserNameRequired" xml:space="preserve">
+    <value>ユーザー名は必須です。</value>
+  </data>
+  <data name="ValidPercentageRange" xml:space="preserve">
+    <value>パーセンテージは 0 ～ 100 の範囲にする必要があります。</value>
+  </data>
+  <data name="ValueCannotBeNullOrEmpty" xml:space="preserve">
+    <value>値を null または空にすることはできません</value>
+  </data>
+  <data name="VideoIsRequired" xml:space="preserve">
+    <value>レッスンタイプがビデオまたは録画ビデオの場合、ビデオが必要です。</value>
+  </data>
+  <data name="ZoomLicenseEmailRequired" xml:space="preserve">
+    <value>Zoomライセンスメールが必要です。</value>
+  </data>
+  <data name="ZoomLicenseRequired" xml:space="preserve">
+    <value>Zoomライセンスを選択してください。</value>
   </data>
 </root>

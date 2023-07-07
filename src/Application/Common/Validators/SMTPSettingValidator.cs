@@ -2,17 +2,20 @@
 {
     using FluentValidation;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.ValidatorLocalization;
+    using Microsoft.Extensions.Localization;
+
     public class SMTPSettingValidator : AbstractValidator<SMTPSettingRequestModel>
     {
-        public SMTPSettingValidator()
+        public SMTPSettingValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.MailServer).NotNull().NotEmpty().WithMessage("Mail server is required.").MaximumLength(200).WithMessage("Mail server length must be less than or equal to 200 characters.");
-            RuleFor(x => x.MailPort).NotNull().NotEmpty().WithMessage("Mail port is required");
-            RuleFor(x => x.SenderName).NotNull().NotEmpty().WithMessage("Sender name is required.").MaximumLength(200).WithMessage("Sender name length must be less than or equal to 200 characters.");
-            RuleFor(x => x.SenderEmail).NotNull().NotEmpty().WithMessage("Sender email is required.").MaximumLength(200).WithMessage("Sender email length must be less than or equal to 200 characters.");
-            RuleFor(x => x.UserName).NotNull().NotEmpty().WithMessage("User name is required.").MaximumLength(100).WithMessage("User name length must be less than or equal to 100 characters.");
-            RuleFor(x => x.Password).NotNull().NotEmpty().WithMessage("Password is required.").MaximumLength(100).WithMessage("Password length must be less than or equal to 100 characters.");
-            RuleFor(x => x.ReplyTo).NotNull().NotEmpty().WithMessage("Reply to is required.").MaximumLength(200).WithMessage("Reply to length must be less than or equal to 200 characters.");
+            RuleFor(x => x.MailServer).NotNull().NotEmpty().WithMessage(context =>stringLocalizer.GetString("MailServerRequired")).MaximumLength(200).WithMessage(context => stringLocalizer.GetString("MailServerLength200"));
+            RuleFor(x => x.MailPort).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("MailPortRequired"));
+            RuleFor(x => x.SenderName).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("SenderNameRequired")).MaximumLength(200).WithMessage(context => stringLocalizer.GetString("SenderName200"));
+            RuleFor(x => x.SenderEmail).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("SenderEmailRequired")).MaximumLength(200).WithMessage(context => stringLocalizer.GetString("SenderEmailLength200"));
+            RuleFor(x => x.UserName).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("UserNameRequired")).MaximumLength(100).WithMessage(context => stringLocalizer.GetString("UserNameLength100"));
+            RuleFor(x => x.Password).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("PasswordRequired")).MaximumLength(100).WithMessage(context => stringLocalizer.GetString("PasswordLength100"));
+            RuleFor(x => x.ReplyTo).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("ReplyToRequired")).MaximumLength(200).WithMessage(context => stringLocalizer.GetString("ReplyToLength200"));
         }
     }
 }

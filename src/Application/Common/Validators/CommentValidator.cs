@@ -9,8 +9,8 @@
     {
         public CommentValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.Content).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("ContentRequired"))
-                .MaximumLength(500).WithMessage(stringLocalizer.GetString("NameLength500"));
+            RuleFor(x => x.Content).NotNull().NotEmpty().WithMessage(context=> stringLocalizer.GetString("ContentRequired"))
+                .MaximumLength(500).WithMessage(context => stringLocalizer.GetString("NameLength500"));
         }
     }
 }

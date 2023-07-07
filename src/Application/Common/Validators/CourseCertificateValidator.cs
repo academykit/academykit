@@ -10,10 +10,10 @@
     {
         public CourseCertificateValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.Title).NotEmpty().NotNull().WithMessage(stringLocalizer.GetString("UserIDrequired")).MaximumLength(100).WithMessage(stringLocalizer.GetString("TitleLenghtIssue"));
-            RuleFor(x => x.EventStartDate).NotEmpty().NotNull().WithMessage(stringLocalizer.GetString("EventStartDateRequired"));
-            RuleFor(x => x.EventEndDate).NotEmpty().NotNull().WithMessage(stringLocalizer.GetString("EventEndDate"));
-            RuleFor(x => x).Must(x => x.EventEndDate.Date >= x.EventStartDate.Date).WithMessage(stringLocalizer.GetString("timeSpanIssue"));
+            RuleFor(x => x.Title).NotEmpty().NotNull().WithMessage(context => stringLocalizer.GetString("UserIDrequired")).MaximumLength(100).WithMessage(context => stringLocalizer.GetString("TitleLenghtIssue"));
+            RuleFor(x => x.EventStartDate).NotEmpty().NotNull().WithMessage(context => stringLocalizer.GetString("EventStartDateRequired"));
+            RuleFor(x => x.EventEndDate).NotEmpty().NotNull().WithMessage(context => stringLocalizer.GetString("EventEndDate"));
+            RuleFor(x => x).Must(x => x.EventEndDate.Date >= x.EventStartDate.Date).WithMessage(context => stringLocalizer.GetString("timeSpanIssue"));
         }
     }
 }

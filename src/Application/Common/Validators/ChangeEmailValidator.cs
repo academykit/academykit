@@ -10,11 +10,11 @@
     {
         public ChangeEmailValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.NewEmail).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("NewPasswordRequired")).Length(6, 100)
-                     .Must(email => ValidEmail(email)).WithMessage(stringLocalizer.GetString("InvalidEmailError"));
-            RuleFor(x => x.OldEmail).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("OldEmailRequired"));
-            RuleFor(x => x.Password).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("PasswordRequired"));
-            RuleFor(x => x.ConfirmEmail).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("ConfirmMailRequired"));
+            RuleFor(x => x.NewEmail).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("NewPasswordRequired")).Length(6, 100)
+                     .Must(email => ValidEmail(email)).WithMessage(context => stringLocalizer.GetString("InvalidEmailError"));
+            RuleFor(x => x.OldEmail).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("OldEmailRequired"));
+            RuleFor(x => x.Password).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("PasswordRequired"));
+            RuleFor(x => x.ConfirmEmail).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("ConfirmMailRequired"));
             RuleFor(x => x.NewEmail).Equal(x => x.ConfirmEmail).WithMessage("NewEmailConformedRequired");
         }
 

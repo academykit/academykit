@@ -9,8 +9,8 @@ namespace Lingtren.Application.Common.Validators
     {
         public CertificateRequestModelValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.StartDate).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("StartdateEmptyError"));
-            RuleFor(x => x.EndDate).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("EndTimeEmptyError"));
+            RuleFor(x => x.StartDate).NotNull().NotEmpty().WithMessage(contex =>stringLocalizer.GetString("StartdateEmptyError"));
+            RuleFor(x => x.EndDate).NotNull().NotEmpty().WithMessage(context =>stringLocalizer.GetString("EndTimeEmptyError"));
         }
     }
 }

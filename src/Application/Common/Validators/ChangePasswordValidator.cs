@@ -10,10 +10,10 @@
     {
         public ChangePasswordValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.NewPassword).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("NewPasswordRequired")).Length(6, 20)
+            RuleFor(x => x.NewPassword).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("NewPasswordRequired")).Length(6, 20)
                      .Must(pw => HasValidPassword(pw)).WithMessage("InvalidPasswordFormat");
-            RuleFor(x => x.ConfirmPassword).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("ConformPassword"));
-            RuleFor(x => x.NewPassword).Equal(x => x.ConfirmPassword).WithMessage(stringLocalizer.GetString("OldAndNewPasswordDoesnotMatch"));
+            RuleFor(x => x.ConfirmPassword).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("ConformPassword"));
+            RuleFor(x => x.NewPassword).Equal(x => x.ConfirmPassword).WithMessage(context => stringLocalizer.GetString("OldAndNewPasswordDoesnotMatch"));
         }
 
         public static bool HasValidPassword(string pw)
