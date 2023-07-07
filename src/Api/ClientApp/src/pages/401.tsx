@@ -53,13 +53,11 @@ const useStyles = createStyles((theme) => ({
 
 const UnAuthorize = () => {
   const { classes } = useStyles();
-  const {t}= useTranslation();
+  const { t } = useTranslation();
   return (
     <Container className={classes.root}>
       <div className={classes.label}>{t("401")}</div>
-      <Title className={classes.title}>
-       {t("not_authorized")}
-      </Title>
+      <Title className={classes.title}>{t("not_authorized")}</Title>
       <Text
         color="dimmed"
         size="lg"
@@ -72,7 +70,7 @@ const UnAuthorize = () => {
       <Group position="center">
         <Anchor href={"/"}>
           <Button variant="subtle" size="md">
-           {t("back_to_home")}
+            {t("back_to_home")}
           </Button>
         </Anchor>
       </Group>

@@ -60,24 +60,36 @@ export const useAddCertificate = () => {
   });
 };
 
-const updateCertificate = ({data, id}:{data: ExternalCertificatePost, id: string}) => {
+const updateCertificate = ({
+  data,
+  id,
+}: {
+  data: ExternalCertificatePost;
+  id: string;
+}) => {
   return httpClient.put(api.externalCertificate.update(id), data);
 };
 
 export const useUpdateCertificate = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation(["update" + api.externalCertificate.add], updateCertificate, {
-    onSuccess: () => {
-      queryClient.invalidateQueries([
-        "certificate",
-        api.externalCertificate.add,
-      ]);
-    },
-  });
+  return useMutation(
+    ["update" + api.externalCertificate.add],
+    updateCertificate,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([
+          "certificate",
+          api.externalCertificate.add,
+        ]);
+      },
+    }
+  );
 };
 
 const getUserCertificate = (id?: string) => {
-  return httpClient.get<GetExternalCertificate[]>(api.externalCertificate.user(id));
+  return httpClient.get<GetExternalCertificate[]>(
+    api.externalCertificate.user(id)
+  );
 };
 
 export const useGetUserCertificate = (id?: string) => {
@@ -97,7 +109,9 @@ export interface ListCertificate extends ExternalCertificatePost {
 }
 
 const getListCertificate = (query: string) =>
-  httpClient.get<IPaginated<ListCertificate>>(api.externalCertificate.list + `?${query}`);
+  httpClient.get<IPaginated<ListCertificate>>(
+    api.externalCertificate.list + `?${query}`
+  );
 
 export const useGetListCertificate = (query: string) =>
   useQuery([api.externalCertificate.list, query], () =>
@@ -112,27 +126,27 @@ const updateCertificateStatus = ({
   status: CertificateStatus;
 }) =>
   httpClient.patch(
-    api.externalCertificate.updateStatus(id )+ "?status=" + status
+    api.externalCertificate.updateStatus(id) + "?status=" + status
   );
-export const useUpdateCertificateStatus = (id: string, search: string) =>
- { 
+export const useUpdateCertificateStatus = (id: string, search: string) => {
   const queryClient = useQueryClient();
   return useMutation(
     [api.externalCertificate.updateStatus(id)],
-    updateCertificateStatus,{
+    updateCertificateStatus,
+    {
       onSuccess: () => {
-queryClient.invalidateQueries([api.externalCertificate.list, search])
-      }
+        queryClient.invalidateQueries([api.externalCertificate.list, search]);
+      },
     }
   );
-}
+};
 
 const getInternalCertificate = () => {
-  return httpClient.get<ICertificateList[]>(api.externalCertificate.internal)
-}
+  return httpClient.get<ICertificateList[]>(api.externalCertificate.internal);
+};
 
 export const useGetInternalCertificate = () => {
-  return useQuery([
-    api.externalCertificate.internal
-  ], () => getInternalCertificate())
-}
+  return useQuery([api.externalCertificate.internal], () =>
+    getInternalCertificate()
+  );
+};

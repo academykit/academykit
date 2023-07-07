@@ -200,7 +200,9 @@ const CreateCoursePage = () => {
                   placeholder={t("tags_placeholder") as string}
                 />
               ) : (
-                <Loader />
+                <div>
+                  <Loader />
+                </div>
               )}
               {label.isSuccess ? (
                 <Select
@@ -222,7 +224,9 @@ const CreateCoursePage = () => {
                   }
                 ></Select>
               ) : (
-                <Loader />
+                <div>
+                  <Loader />
+                </div>
               )}
             </Group>
             {!groups.isLoading ? (
@@ -230,7 +234,6 @@ const CreateCoursePage = () => {
                 mt={20}
                 searchable
                 withAsterisk
-                labelProps="name"
                 sx={{ maxWidth: "500px" }}
                 data={
                   groups.data
