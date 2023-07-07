@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Grid,
@@ -10,7 +10,7 @@ import {
   TextInput,
   Tooltip,
 } from "@mantine/core";
-import { DatePicker, TimeInput } from "@mantine/dates";
+import { DatePickerInput, TimeInput } from "@mantine/dates";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { LessonType } from "@utils/enums";
@@ -236,7 +236,8 @@ const AddMeeting = ({
         </Tooltip>
       </Grid>
       <Group grow>
-        <DatePicker
+        <DatePickerInput
+          valueFormat="MMM DD, YYYY"
           placeholder={t("pick_date") as string}
           label={t("start_date")}
           withAsterisk
@@ -244,8 +245,6 @@ const AddMeeting = ({
         />
         <TimeInput
           label={t("start_time")}
-          format="12"
-          clearable
           withAsterisk
           {...form.getInputProps("meetingStartTime")}
         />

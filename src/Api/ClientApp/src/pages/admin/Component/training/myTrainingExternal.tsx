@@ -12,7 +12,6 @@ import {
   Modal,
   Text,
   TextInput,
-  createStyles,
 } from "@mantine/core";
 // import { DateRangePicker } from "@mantine/dates";
 import { createFormContext, yupResolver } from "@mantine/form";
@@ -28,7 +27,6 @@ import {
   useGetExternalCertificate,
   useUpdateCertificate,
 } from "@utils/services/certificateService";
-import moment from "moment";
 import { useEffect, useState } from "react";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import { useTranslation } from "react-i18next";
@@ -46,9 +44,7 @@ const schema = () => {
   });
 };
 
-const useStyles = createStyles({});
-
-const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
+const MyTrainingExternal = () => {
   const cForm = useCustomForm();
   const [showConfirmation, setShowConfirmation] = useToggle();
   const { id } = useParams();
@@ -58,7 +54,6 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
   const update = useUpdateCertificate(id as string);
   const [idd, setIdd] = useState<any>();
   const [updates, setUpdates] = useState(false);
-  const { theme } = useStyles();
   const { t } = useTranslation();
 
   const form = useForm({
@@ -150,6 +145,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
               />
               {/* <DateRangePicker
                 required
+                valueFormat="MMM DD, YYYY"
                 label={t("start_end_date")}
                 placeholder={t("date_range") as string}
                 allowSingleDateInRange={true}
@@ -221,9 +217,9 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                 {/* <Text mt={5}>
                   {x?.startDate &&
                     `${t("from")} ${moment(x.startDate).format(
-                      theme.dateFormat
+                      "MMM DD, YYYY"
                     )} ${t("to")} ${moment(x.endDate).format(
-                      theme.dateFormat
+                      "MMM DD, YYYY"
                     )}, `}
                   {t("completed_in_about")} {x.duration} {t("hrs")}
                 </Text> */}

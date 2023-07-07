@@ -6,8 +6,8 @@ import {
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { Notifications } from "@mantine/notifications";
 import AppRoutes from "@routes/AppRoutes";
+import { Notifications } from "@mantine/notifications";
 import { AuthProvider } from "@context/AuthProvider";
 import { COLOR_SCHEME_KEY } from "@utils/constants";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -65,7 +65,7 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
                 }),
               },
               TextInput: {
-                styles: (theme) => ({
+                styles: () => ({
                   required: {
                     fontWeight: "bold",
                     fontSize: "20px",
@@ -74,7 +74,7 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
                 }),
               },
               MultiSelect: {
-                styles: (theme) => ({
+                styles: () => ({
                   required: {
                     fontWeight: "bold",
                     fontSize: "20px",
@@ -82,7 +82,7 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
                 }),
               },
               Select: {
-                styles: (theme) => ({
+                styles: () => ({
                   required: {
                     fontWeight: "bold",
                     fontSize: "20px",
@@ -90,7 +90,7 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
                 }),
               },
               Textarea: {
-                styles: (theme) => ({
+                styles: () => ({
                   required: {
                     fontWeight: "bold",
                     fontSize: "20px",

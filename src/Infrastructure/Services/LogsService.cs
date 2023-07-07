@@ -53,6 +53,11 @@ namespace Lingtren.Infrastructure.Services
         {
             return await ExecuteWithResultAsync(async () =>
             {
+                var hasAccess = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+                if (!hasAccess)
+                {
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
+                }
                 return new ServerLogsResponseModel();
             });
          }

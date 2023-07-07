@@ -14,13 +14,10 @@ import { DATE_FORMAT } from "@utils/constants";
 import downloadImage from "@utils/downloadImage";
 import { useGetInternalCertificate } from "@utils/services/certificateService";
 import moment from "moment";
-import React from "react";
 import { useTranslation } from "react-i18next";
-import { Route, Routes, useLocation, useNavigate } from "react-router";
 
 const MyTrainingInternal = () => {
   const internal = useGetInternalCertificate();
-  const theme = useMantineTheme();
   const { t } = useTranslation();
   return (
     <Container fluid>

@@ -160,7 +160,7 @@ const withSearchPagination =
         <Pagination
           my={20}
           total={totalPage}
-          page={currentPage}
+          value={currentPage}
           onChange={setPage}
         />
       ) : (

@@ -12,7 +12,6 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
 import { useToggle } from "@mantine/hooks";
 import { IconCalendar, IconEye, IconDownload } from "@tabler/icons";
 import {
@@ -31,6 +30,7 @@ import moment from "moment";
 import downloadImage from "@utils/downloadImage";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import { DatePickerInput } from "@mantine/dates";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -199,8 +199,9 @@ const Certificate = () => {
               </Flex>
               <Grid mt={20}>
                 <Grid.Col span={6}>
-                  <DatePicker
+                  <DatePickerInput
                     w={"100%"}
+                    valueFormat="MMM DD, YYYY"
                     placeholder={t("start_date_placeholder") as string}
                     label={t("start_date")}
                     withAsterisk
@@ -210,8 +211,9 @@ const Certificate = () => {
                 </Grid.Col>
 
                 <Grid.Col span={6}>
-                  <DatePicker
+                  <DatePickerInput
                     w={"100%"}
+                    valueFormat="MMM DD, YYYY"
                     placeholder={t("end_date_placeholder") as string}
                     label={t("end_date")}
                     withAsterisk

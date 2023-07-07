@@ -1,6 +1,3 @@
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
 import { useReAuth } from "@utils/services/authService";
 import { useCourse } from "@utils/services/courseService";
 import {
@@ -11,7 +8,6 @@ import {
   ActionIcon,
   Paper,
   Table,
-  useMantineTheme,
   Box,
   Loader,
   Pagination,
@@ -28,7 +24,6 @@ import { DATE_FORMAT } from "@utils/constants";
 
 const MyTrainings = () => {
   const auth = useReAuth();
-  const theme = useMantineTheme();
   const [page, setPage] = useState(1);
   const { id } = useParams();
   const { t } = useTranslation();
@@ -103,7 +98,7 @@ const MyTrainings = () => {
               <Pagination
                 my={20}
                 total={authorCourse.data.totalPage}
-                page={page}
+                value={page}
                 onChange={setPage}
               />
             )
