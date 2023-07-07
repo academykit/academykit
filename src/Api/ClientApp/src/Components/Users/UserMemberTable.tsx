@@ -40,8 +40,12 @@ const useStyles = createStyles((theme) => ({
     minWidth: '280px'
   },
   roleContainer: {
-    maxWidth: '100px',
-    minWidth: '100px'
+    maxWidth: '120px',
+    minWidth: '120px'
+  },
+  phoneContainer: {
+    maxWidth: '120px',
+    minWidth: '120px'
   }
 }));
 
@@ -119,7 +123,7 @@ const UserRow = ({
       <td className={classes.roleContainer}>{t(`${UserRole[item.role]}`)}</td>
       <td className={classes.emailContainer}>{item?.email}</td>
 
-      <td>{item?.mobileNumber}</td>
+      <td className={classes.phoneContainer}>{item?.mobileNumber}</td>
       <td>
         {item?.status === UserStatus.Active ? (
           <Badge color={"green"}>{t("active")}</Badge>
