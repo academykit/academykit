@@ -1,12 +1,11 @@
+import TextViewer from "@components/Ui/RichTextViewer";
 import { Box, Card, createStyles, Group, Text, Title } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
-import RichTextEditor from "@mantine/rte";
 
 import {
   IFeedbackOptions,
   IFeedbackQuestions,
 } from "@utils/services/feedbackService";
-import { useTransition } from "react";
 import { useTranslation } from "react-i18next";
 
 const useStyle = createStyles((theme) => ({
@@ -60,15 +59,14 @@ const FeedbackCheckBoxType = ({ options, form, currentIndex }: Props) => {
             })}
           >
             <input type={"checkbox"} style={{ display: "none" }} />
-            <RichTextEditor
+            <TextViewer
               styles={{
                 root: {
                   border: "none",
                 },
               }}
-              readOnly
-              value={option.option}
-            ></RichTextEditor>
+              content={option.option}
+            ></TextViewer>
           </Card>
         </label>
       ))}

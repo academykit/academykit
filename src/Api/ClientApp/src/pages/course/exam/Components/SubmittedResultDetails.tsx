@@ -11,7 +11,6 @@ import {
   Title,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import RichTextEditor from "@mantine/rte";
 import {
   ILessonResultQuestionOption,
   ILessonStartQuestion,
@@ -19,6 +18,7 @@ import {
 import { useEffect, useState } from "react";
 import SubmitResultHeader from "./SubmitResultHeader";
 import { useTranslation } from "react-i18next";
+import TextViewer from "@components/Ui/RichTextViewer";
 const useStyle = createStyles((theme) => ({
   option: {
     padding: 20,
@@ -138,10 +138,7 @@ const SubmittedResultDetails = ({
           >
             <Title mb={20}>{questions[currentIndex]?.name}</Title>
             {questions[currentIndex]?.description && (
-              <RichTextEditor
-                readOnly
-                value={questions[currentIndex]?.description}
-              />
+              <TextViewer content={questions[currentIndex]?.description} />
             )}
           </Box>
           <Container className={classes.option}>
@@ -157,15 +154,14 @@ const SubmittedResultDetails = ({
                 radius={10}
                 my={10}
               >
-                <RichTextEditor
+                <TextViewer
                   styles={{
                     root: {
                       border: "none",
                       backgroundColor: "transparent",
                     },
                   }}
-                  readOnly
-                  value={x.value}
+                  content={x.value}
                 />
               </Card>
             ))}

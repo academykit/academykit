@@ -823,5 +823,7 @@
   "filestorage": "File storage",
   "zoom": "Zoom",
   "edit_user_detail": "Edit User Details",
-  "resend_email": "Resend Email"
+  "resend_email": "Resend Email",
+  "your_short_description": "Your short description",
+  "course_description": "Description of Course"
 }

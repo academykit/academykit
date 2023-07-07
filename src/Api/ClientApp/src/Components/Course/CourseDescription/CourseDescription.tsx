@@ -14,7 +14,6 @@ import {
   Badge,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import RichTextEditor from "@mantine/rte";
 import {
   CourseUserStatus,
   UserRole,
@@ -33,6 +32,7 @@ import { Link, useParams } from "react-router-dom";
 import CourseContent from "./CourseContent/CourseContent";
 import { useTranslation } from "react-i18next";
 import { color } from "@utils/constants";
+import TextViewer from "@components/Ui/RichTextViewer";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -195,12 +195,7 @@ const CourseDescription = () => {
                 <UserShortProfile user={course?.data?.user} size={"md"} />
               )}
             </Group>
-            <RichTextEditor
-              mt={20}
-              color="dimmed"
-              readOnly
-              value={course.data?.description}
-            />
+            <TextViewer content={course.data?.description} />
           </div>
           <div className={classes.aside}>
             <AspectRatio ratio={16 / 9} mx="auto">

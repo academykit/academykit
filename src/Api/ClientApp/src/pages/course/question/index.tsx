@@ -25,8 +25,8 @@ import {
 import { showNotification } from "@mantine/notifications";
 import { useNavigate, useParams } from "react-router-dom";
 import errorType from "@utils/services/axiosError";
-import RichTextEditor from "@mantine/rte";
 import { useTranslation } from "react-i18next";
+import TextViewer from "@components/Ui/RichTextViewer";
 
 interface ISelectList {
   label: string;
@@ -61,9 +61,8 @@ const ItemComponent = ({
       </Text>
       {data && data?.description !== null && (
         <Text lineClamp={3} sx={{ overflow: "hidden" }}>
-          <RichTextEditor
-            value={data?.description}
-            readOnly
+          <TextViewer
+            content={data?.description}
             sx={{
               wordBreak: "break-all",
             }}
@@ -204,7 +203,6 @@ const Questions = () => {
               value={data}
               onChange={setData}
               searchPlaceholder={t("search_for_questions") as string}
-
               nothingFound={
                 questionList.isLoading ? <Loader /> : t("no_question_found")
               }

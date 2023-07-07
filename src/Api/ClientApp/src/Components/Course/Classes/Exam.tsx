@@ -13,7 +13,6 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useMediaQuery, useToggle } from "@mantine/hooks";
-import RichTextEditor from "@mantine/rte";
 import { CourseUserStatus, QuestionType, UserRole } from "@utils/enums";
 import {
   ILessonExamStart,
@@ -29,6 +28,7 @@ import ExamCounter from "./ExamCounter";
 import ExamCheckBox from "./ExamOptions/ExamCheckBox";
 import ExamRadio from "./ExamOptions/ExamRadio";
 import useAuth from "@hooks/useAuth";
+import TextViewer from "@components/Ui/RichTextViewer";
 
 const useStyle = createStyles((theme) => ({
   option: {
@@ -221,9 +221,8 @@ const Exam = ({
             >
               <Title mb={20}>{questions[currentIndex]?.name}</Title>
               {questions[currentIndex]?.description && (
-                <RichTextEditor
-                  readOnly
-                  value={questions[currentIndex]?.description}
+                <TextViewer
+                  content={questions[currentIndex]?.description}
                   sx={{ wordBreak: "break-all" }}
                 />
               )}
