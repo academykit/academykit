@@ -250,7 +250,6 @@
   "success": "सफलता",
   "certificates_description": "यहाँ आप प्रमाणपत्रसंग सम्बंधित महत्वपूर्ण व्यक्तिहरूको सामग्री र हस्ताक्षर थप्न सक्नुहुन्छ।",
   "certificate_preview_details": "प्रमाणपत्र पूर्वावलोकन गर्न, कृपया सबै आवश्यक विवरणहरू भरिएको सुनिश्चित गर्नुहोस्।",
-
   "certificate_note": "नोट: तपाईंलाई ट्रेनीलाई जारी गर्नको लागि कम्तीमा एक हस्ताक्षर चाहिन्छ।",
   "add_signatures": "हस्ताक्षर थप्नुहोस्",
   "add_more": "थप थप्नुहोस्",
@@ -521,7 +520,6 @@
   "question_passing_percentage": "प्रश्न सेट सफलता प्रतिशत",
   "course_title_required": "कोर्स शीर्षक आवश्यक छ",
   "course_title_less_than_80": "पाठ्यक्रमको शीर्षक ८० भन्दा कम हुनुपर्छ",
-
   "level_required": "स्तर आवश्यक छ।",
   "group_required": "समूह आवश्यक छ।",
   "event_start_date_required": "घटना सुरु मिति आवश्यक छ।",
@@ -784,14 +782,12 @@
   "questions_list": "प्रश्न सूची",
   "selected_questions": "छानिएका प्रश्नहरू",
   "sure": "निश्चित",
-
   "email_must_match": "इमेल मिल्नुपर्छ।",
   "confirm_email_required": "पुष्टिकरण इमेल आवश्यक छ।",
   "help": "मद्दत",
   "Enrollment": "नामांकन",
   "Lecture": "व्याख्यान",
   "Meeting": "बैठक",
-
   "Enrollments": "नामांकनहरू",
   "Lessons": "पाठहरू",
   "Assignments": "असाइनमेन्टहरू",
@@ -799,7 +795,6 @@
   "Exams": "परीक्षाहरू",
   "Meetings": "बैठकहरू",
   "Documents": "कागजातहरू",
-
   "Name of Training": "तालिमको नाम",
   "Duration of Training": "तालिमको अवधि",
   "Location of Training": "तालिमको स्थान",
@@ -812,7 +807,6 @@
   "option_placeholder": "विकल्प थप्नुहोस्",
   "question_hint": "प्रश्न संकेत",
   "question_description": "प्रश्न वर्णन",
-
   "License_email": "लाइसेन्स इमेल ठेगाना",
   "License_host_Id": "लाइसेन्स होस्ट आईडी",
   "license_capacity": "लाइसेन्स क्षमता",
@@ -824,5 +818,22 @@
   "zoom": "जूम",
   "edit_user_detail": "प्रयोगकर्ता विवरणहरू सम्पादन गर्नुहोस्",
   "resend_email": "इमेल पुन: पठाउनुहोस्",
-  "logs": "सर्भर लग"
+  "logs": "सर्भर लग",
+  "settings_screen": {
+    "file_storage": {
+      "Server_AccessKey": "सर्भर एक्सेस कि",
+      "Server_Bucket": "बकेट नाम",
+      "Server_EndPoint": "सर्भर यूआरएल",
+      "Server_PresignedExpiryTime": "प्रीसाइन्ड समय समाप्ति",
+      "Server_PresignedUrl": "सर्भर प्रीसाइन्ड यूआरएल",
+      "Server_SecretKey": "सर्भर गोप्य कि",
+      "Server_Url": "सर्भर यूआरएल",
+      "AWS_AccessKey": "एडब्ल्यूएस एक्सेस कि",
+      "AWS_CloudFront": "एडब्ल्यूएस क्लाउडफ्रन्ट",
+      "AWS_FileBucket": "फाइल संग्रह",
+      "AWS_RegionEndpoint": "क्षेत्रिय एन्डप्विन्ट",
+      "AWS_SecretKey": "एडब्ल्यूएस गोप्य कि",
+      "AWS_VideoBucket": "भिडियो संग्रह"
+    }
+  }
 }

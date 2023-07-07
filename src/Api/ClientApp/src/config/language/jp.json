@@ -96,7 +96,6 @@
   "Trainer": "トレーナー",
   "Trainee": "受講生",
   "trainers": "トレーナー",
-
   "pool_details": "プールの詳細",
   "edit": "編集",
   "add_trainer": "トレーナーを追加",
@@ -783,14 +782,12 @@
   "questions_list": "問題リスト",
   "selected_questions": "選択された問題",
   "sure": "もちろん",
-
   "email_must_match": "電子メールは一致する必要があります",
   "confirm_email_required": "確認メールは必須です",
   "help": "ヘルプ",
   "Enrollment": "登録",
   "Lecture": "講義",
   "Meeting": "ミーティング",
-
   "Enrollments": "登録数",
   "Lessons": "レッスン",
   "Assignments": "課題",
@@ -798,13 +795,11 @@
   "Exams": "試験",
   "Meetings": "会議",
   "Documents": "書類",
-
   "Name of Training": "研修名",
   "Duration of Training": "トレーニング期間",
   "Location of Training": "研修の場所",
   "Name of institute": "研究所名",
   "general": "全般的",
-
   "second": "秒",
   "minute": "分",
   "hour": "時間",
@@ -812,7 +807,6 @@
   "option_placeholder": "オプションを追加",
   "question_hint": "質問のヒント",
   "question_description": "質問の説明",
-
   "License_email": "ライセンスメールアドレス",
   "License_host_Id": "ライセンスホストID",
   "license_capacity": "ライセンス容量",
@@ -824,5 +818,22 @@
   "zoom": "ズーム (Zūmu)",
   "edit_user_detail": "ユーザー詳細の編集",
   "resend_email": "メールを再送",
-  "logs": "サーバーログ"
+  "logs": "サーバーログ",
+  "settings_screen": {
+    "file_storage": {
+      "Server_AccessKey": "サーバーアクセスキー",
+      "Server_Bucket": "バケット名",
+      "Server_EndPoint": "サーバーURL",
+      "Server_PresignedExpiryTime": "署名付きURL有効期限",
+      "Server_PresignedUrl": "サーバー署名付きURL",
+      "Server_SecretKey": "サーバーシークレットキー",
+      "Server_Url": "サーバーURL",
+      "AWS_AccessKey": "AWSアクセスキー",
+      "AWS_CloudFront": "AWS CloudFront",
+      "AWS_FileBucket": "ファイルストレージバケット",
+      "AWS_RegionEndpoint": "リージョンエンドポイント",
+      "AWS_SecretKey": "AWSシークレットキー",
+      "AWS_VideoBucket": "ビデオバケット"
+    }
+  }
 }
