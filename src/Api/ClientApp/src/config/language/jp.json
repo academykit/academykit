@@ -823,5 +823,6 @@
   "filestorage": "ファイルストレージ",
   "zoom": "ズーム (Zūmu)",
   "edit_user_detail": "ユーザー詳細の編集",
-  "resend_email": "メールを再送"
+  "resend_email": "メールを再送",
+  "logs": "サーバーログ"
 }

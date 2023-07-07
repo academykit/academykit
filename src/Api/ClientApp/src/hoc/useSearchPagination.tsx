@@ -1,5 +1,6 @@
 import SearchBar from "@components/Ui/SearchBar";
 import { Pagination, Select, UnstyledButton } from "@mantine/core";
+// import { DatePickerInput } from "@mantine/dates";
 import queryStringGenerator from "@utils/queryStringGenerator";
 import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -174,6 +175,10 @@ const withSearchPagination =
         placeholder={placeholder}
       />
     );
+
+    const dateFilterComponent = (label: string, placeholder: string) => {
+      <DatePickerInput />
+    }
 
     return (
       <Component

@@ -28,6 +28,7 @@ const Settings = lazyWithRetry(() => import("./settings"));
 const SMTP = lazyWithRetry(() => import("./smtp"));
 const ZoomLicense = lazyWithRetry(() => import("./zoomLicense"));
 const ZoomSettings = lazyWithRetry(() => import("./zoomSettings"));
+const Log = lazyWithRetry(() => import("./log"));
 
 const AdminRoute = () => {
   return (
@@ -56,6 +57,7 @@ const AdminRoutesChild = () => {
           <Route path={"/smtp"} element={<SMTP />} />
           <Route path={"/level"} element={<Level />} />
           <Route path={"/department"} element={<Department />} />
+          <Route path={"/log"} element={<Log />} />
           <Route path={"/courses"} element={<AdminCourseList />} />
           <Route path={"/user/certificate"} element={<CertificateList />} />
           <Route path={"/zoomlicense"} element={<ZoomLicense />} />
