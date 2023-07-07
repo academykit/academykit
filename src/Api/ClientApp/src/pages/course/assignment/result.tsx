@@ -13,12 +13,12 @@ import {
   Title,
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
-import RichTextEditor from "@mantine/rte";
 import { QuestionType, UserRole } from "@utils/enums";
 import { useAssignmentReview } from "@utils/services/assignmentService";
 import { useNavigate, useParams } from "react-router-dom";
 import AssignmentReviewForm from "./Component/AssignmentReviewForm";
 import { useTranslation } from "react-i18next";
+import TextViewer from "@components/Ui/RichTextViewer";
 
 const useStyle = createStyles((theme) => ({
   option: {
@@ -80,24 +80,20 @@ const AssignmentResult = () => {
               <Text mt={15} weight="bold">
                 {t("description")}
               </Text>
-              <RichTextEditor
-                my={10}
-                value={x.description}
-                readOnly
-              ></RichTextEditor>
+              <TextViewer content={x.description}></TextViewer>
             </>
           )}
 
           {x.hints && (
             <>
               <Text weight="bold">{t("hint")}</Text>
-              <RichTextEditor my={10} value={x.hints} readOnly />
+              <TextViewer content={x.hints} />
             </>
           )}
           {x.type === QuestionType.Subjective ? (
             <>
               <Text weight="bold">{t("answers")}</Text>
-              <RichTextEditor readOnly={true} value={x.answer} />
+              <TextViewer content={x.answer ?? ""} />
             </>
           ) : (
             x.assignmentQuestionOptions &&
@@ -113,15 +109,14 @@ const AssignmentResult = () => {
                 })}
               >
                 <input type={"checkbox"} style={{ display: "none" }} />
-                <RichTextEditor
+                <TextViewer
                   styles={{
                     root: {
                       border: "none",
                     },
                   }}
-                  readOnly
-                  value={option.option}
-                ></RichTextEditor>
+                  content={option.option}
+                ></TextViewer>
               </Card>
             ))
           )}

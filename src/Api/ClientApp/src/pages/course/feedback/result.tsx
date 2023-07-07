@@ -1,3 +1,4 @@
+import TextViewer from "@components/Ui/RichTextViewer";
 import {
   Button,
   Card,
@@ -8,14 +9,10 @@ import {
   Rating,
   Title,
 } from "@mantine/core";
-import RichTextEditor from "@mantine/rte";
 import { FeedbackType } from "@utils/enums";
 import { useReAuth } from "@utils/services/authService";
 
-import {
-  IFeedbackQuestions,
-  useGetUserFeedback,
-} from "@utils/services/feedbackService";
+import { useGetUserFeedback } from "@utils/services/feedbackService";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -55,7 +52,7 @@ const FeedbackResult = () => {
           <Title>{x.name}</Title>
 
           {x.type === FeedbackType.Subjective ? (
-            <RichTextEditor readOnly value={x.answer} />
+            <TextViewer content={x.answer ?? ""} />
           ) : x.type === FeedbackType.Rating ? (
             <Rating value={x.rating} size={"xl"} mt={10} readOnly={true} />
           ) : (
@@ -69,15 +66,14 @@ const FeedbackResult = () => {
                   [classes.active]: option.isSelected,
                 })}
               >
-                <RichTextEditor
+                <TextViewer
                   styles={{
                     root: {
                       border: "none",
                     },
                   }}
-                  readOnly
-                  value={option.option}
-                ></RichTextEditor>
+                  content={option.option}
+                ></TextViewer>
               </Card>
             ))
           )}

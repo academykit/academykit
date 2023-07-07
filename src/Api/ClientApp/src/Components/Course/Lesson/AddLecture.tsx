@@ -142,6 +142,7 @@ const AddLecture = ({
                 }
                 withAsterisk
                 {...form.getInputProps("name")}
+                styles={{ error: { position: "absolute" } }}
               />
             </Grid.Col>
             <Tooltip

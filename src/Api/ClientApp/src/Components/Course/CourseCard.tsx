@@ -1,3 +1,4 @@
+import TextViewer from "@components/Ui/RichTextViewer";
 import {
   Card,
   Image,
@@ -6,9 +7,7 @@ import {
   Badge,
   Button,
   createStyles,
-  Flex,
 } from "@mantine/core";
-import RichTextEditor from "@mantine/rte";
 import { CourseLanguage } from "@utils/enums";
 import getCourseOgImageUrl from "@utils/getCourseOGImage";
 import RoutePath from "@utils/routeConstants";
@@ -77,14 +76,13 @@ const CourseCard = ({ course }: { course: ICourse }) => {
       </Group>
 
       <Text size="sm" color="dimmed" lineClamp={2} sx={{ height: "60px" }}>
-        <RichTextEditor
+        <TextViewer
           styles={{
             root: {
               border: "none",
             },
           }}
-          value={course.description}
-          readOnly
+          content={course.description}
         />
       </Text>
       <Link

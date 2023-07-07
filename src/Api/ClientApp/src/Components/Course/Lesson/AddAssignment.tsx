@@ -225,6 +225,7 @@ const AddAssignment = ({
                 placeholder={t("assignment_title") as string}
                 withAsterisk
                 {...form.getInputProps("name")}
+                styles={{ error: { position: "absolute" } }}
               />
             </Grid.Col>
             <Tooltip
@@ -253,6 +254,7 @@ const AddAssignment = ({
                 minDate={moment(new Date()).toDate()}
                 withAsterisk
                 {...form.getInputProps("eventStartDate")}
+                styles={{ error: { position: "absolute" } }}
               />
             </Grid.Col>
             <Grid.Col span={6}>
@@ -262,6 +264,7 @@ const AddAssignment = ({
                 withAsterisk
                 clearable
                 {...form.getInputProps("startTime")}
+                styles={{ error: { position: "absolute" } }}
               />
             </Grid.Col>
 
@@ -274,6 +277,7 @@ const AddAssignment = ({
                 icon={<IconCalendar size={16} />}
                 withAsterisk
                 {...form.getInputProps("eventEndDate")}
+                styles={{ error: { position: "absolute" } }}
               />
             </Grid.Col>
             <Grid.Col span={6}>
@@ -283,6 +287,7 @@ const AddAssignment = ({
                 clearable
                 withAsterisk
                 {...form.getInputProps("endTime")}
+                styles={{ error: { position: "absolute" } }}
               />
             </Grid.Col>
             <Grid.Col>
