@@ -5,6 +5,7 @@ import {
   Group,
   Modal,
   Paper,
+  ScrollArea,
   Switch,
   Textarea,
   TextInput,
@@ -114,10 +115,12 @@ const AddFeedback = ({
   return (
     <React.Fragment>
       <Modal
-        overflow="inside"
+        scrollAreaComponent={ScrollArea.Autosize}
         opened={opened}
         // exitTransitionDuration={100}
-        transition="slide-up"
+        transitionProps={{
+          transition: "slide-up",
+        }}
         onClose={() => {
           setOpened(false);
           setAddState("");
@@ -127,10 +130,6 @@ const AddFeedback = ({
           height: "100%",
         }}
         styles={{
-          modal: {
-            height: "100%",
-            paddingBottom: 0,
-          },
           inner: {
             paddingLeft: 0,
             paddingRight: 0,

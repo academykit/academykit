@@ -1,6 +1,3 @@
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
 import { useReAuth } from "@utils/services/authService";
 import { useCourse } from "@utils/services/courseService";
 import {
@@ -11,7 +8,6 @@ import {
   ActionIcon,
   Paper,
   Table,
-  useMantineTheme,
   Box,
   Loader,
   Pagination,
@@ -26,7 +22,6 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 const MyTrainings = () => {
   const auth = useReAuth();
-  const theme = useMantineTheme();
   const [page, setPage] = useState(1);
   const { id } = useParams();
   const { t } = useTranslation();
@@ -68,7 +63,7 @@ const MyTrainings = () => {
                             {x.name}
                           </Anchor>
                         </td>
-                        <td>{moment(x.createdOn).format(theme.dateFormat)}</td>
+                        <td>{moment(x.createdOn).format("MMM DD, YYYY")}</td>
                         <td>
                           <Badge color="pink" variant="light">
                             {CourseLanguage[x.language]}
@@ -101,7 +96,7 @@ const MyTrainings = () => {
               <Pagination
                 my={20}
                 total={authorCourse.data.totalPage}
-                page={page}
+                value={page}
                 onChange={setPage}
               />
             )

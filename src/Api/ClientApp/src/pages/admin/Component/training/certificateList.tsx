@@ -73,8 +73,8 @@ const CertificateCard = ({
             <Badge ml={20}>{CertificateStatus[item.status]}</Badge>
           </Text>
           <Text mt={5}>
-            {t("from")} {moment(item.startDate).format(theme.dateFormat)}{" "}
-            {t("to")} {moment(item.endDate).format(theme.dateFormat)}
+            {t("from")} {moment(item.startDate).format("MMM DD, YYYY")}{" "}
+            {t("to")} {moment(item.endDate).format("MMM DD, YYYY")}
             {t("completed_in_about")} {item.duration} {t("hrs")}
           </Text>
           <Text>

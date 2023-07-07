@@ -127,7 +127,7 @@ const Rows = ({
               <Text>
                 {t("issued_on")}{" "}
                 {moment(item?.certificateIssuedDate + "Z").format(
-                  theme.dateFormat
+                  "MMM DD, YYYY"
                 )}
               </Text>
               <Flex justify={"center"} mt={8}>

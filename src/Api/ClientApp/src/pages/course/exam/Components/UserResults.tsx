@@ -69,7 +69,7 @@ const UserResults = ({
           {result.data?.questionSetSubmissions?.map((r) => (
             <tr key={r.questionSetSubmissionId}>
               <td>{r.obtainedMarks}</td>
-              <td>{moment(r.submissionDate).format(theme.dateFormat)}</td>
+              <td>{moment(r.submissionDate).format("MMM DD, YYYY")}</td>
               <td>{r.completeDuration}</td>
               <td>
                 <ActionIcon

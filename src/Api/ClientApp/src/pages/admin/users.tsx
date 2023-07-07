@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useState } from "react";
 import {
   ScrollArea,
   Group,
@@ -77,13 +77,6 @@ const UsersList = ({
     }
     setCsvLoad(false);
   };
-
-  const sortByObject = [
-    { value: "firstName:Ascending", label: t("name_a-z") },
-    { value: "firstName:Descending", label: t("name_z-a") },
-    { value: "email:Ascending", label: t("email_a-z") },
-    { value: "email:Descending", label: t("email_z-a") },
-  ];
 
   return (
     <>

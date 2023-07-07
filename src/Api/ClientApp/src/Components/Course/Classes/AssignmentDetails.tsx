@@ -42,7 +42,7 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
       ) : (
         <Text>
           {t("assignment_yet_start")}{" "}
-          {moment(lesson.startDate).format(theme.dateFormat)}
+          {moment(lesson.startDate).format("MMM DD, YYYY")}
         </Text>
       )}
       {lesson.assignmentReview && (

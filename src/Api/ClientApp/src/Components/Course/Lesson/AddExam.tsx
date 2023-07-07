@@ -2,7 +2,6 @@ import {
   Button,
   Grid,
   Group,
-  Loader,
   NumberInput,
   Paper,
   Switch,
@@ -10,7 +9,7 @@ import {
   TextInput,
   Tooltip,
 } from "@mantine/core";
-import { DatePicker, TimeInput } from "@mantine/dates";
+import { DatePickerInput, TimeInput } from "@mantine/dates";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { LessonType } from "@utils/enums";
@@ -18,12 +17,11 @@ import { getDateTime } from "@utils/getDateTime";
 import errorType from "@utils/services/axiosError";
 import {
   useCreateLesson,
-  useGetCourseLesson,
   useUpdateLesson,
 } from "@utils/services/courseService";
 import { ILessonMCQ } from "@utils/services/types";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
@@ -173,7 +171,7 @@ const AddExam = ({
               placeholder={t("exam_title") as string}
               name="title"
               {...form.getInputProps("name")}
-              styles={{error: {position: "absolute"}}}
+              styles={{ error: { position: "absolute" } }}
             />
           </Grid.Col>
           <Grid.Col span={12} xs={6} lg={4}>
@@ -193,11 +191,12 @@ const AddExam = ({
               defaultValue={1}
               placeholder={t("question_weightage") as string}
               {...form.getInputProps("questionMarking")}
-              styles={{error: {position: "absolute"}}}
+              styles={{ error: { position: "absolute" } }}
             />
           </Grid.Col>
           <Grid.Col span={12} xs={6} lg={4}>
-            <DatePicker
+            <DatePickerInput
+              valueFormat="MMM DD, YYYY"
               placeholder={t("pick_date") as string}
               withAsterisk
               label={t("Start date")}
@@ -208,8 +207,6 @@ const AddExam = ({
           <Grid.Col span={12} xs={6} lg={4}>
             <TimeInput
               label={t("start_time")}
-              format="12"
-              clearable
               withAsterisk
               {...form.getInputProps("startTime")}
             />
@@ -222,12 +219,13 @@ const AddExam = ({
               min={1}
               withAsterisk
               {...form.getInputProps("duration")}
-              styles={{error: {position: "absolute"}}}
+              styles={{ error: { position: "absolute" } }}
             />
           </Grid.Col>
 
           <Grid.Col span={12} xs={6} lg={4}>
-            <DatePicker
+            <DatePickerInput
+              valueFormat="MMM DD, YYYY"
               placeholder={t("pick_date") as string}
               label={t("End date")}
               withAsterisk
@@ -238,8 +236,6 @@ const AddExam = ({
           <Grid.Col span={12} xs={6} lg={4}>
             <TimeInput
               label={t("end_time")}
-              format="12"
-              clearable
               withAsterisk
               {...form.getInputProps("endTime")}
             />

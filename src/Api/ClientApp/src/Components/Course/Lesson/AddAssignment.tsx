@@ -4,6 +4,7 @@ import {
   Group,
   Modal,
   Paper,
+  ScrollArea,
   Switch,
   Textarea,
   TextInput,
@@ -22,26 +23,12 @@ import { useParams } from "react-router-dom";
 import CreateAssignment from "@pages/assignment/create";
 import errorType from "@utils/services/axiosError";
 import * as Yup from "yup";
-import { DatePicker, TimeInput } from "@mantine/dates";
+import { DatePickerInput, TimeInput } from "@mantine/dates";
 import { IconCalendar } from "@tabler/icons";
 import { getDateTime } from "@utils/getDateTime";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-
-const strippedFormValue = (value: any) => {
-  const val = { ...value };
-  delete val.isMandatory;
-  delete val.isRequired;
-  const startTime = getDateTime(val.startDate, val.startTime);
-  const endTime = getDateTime(val.endDate, val.endTime);
-  val.startTime = startTime.utcDateTime;
-  val.endTime = endTime.utcDateTime;
-  delete val.startDate;
-  delete val.endDate;
-
-  return val;
-};
 
 const schema = () => {
   const { t } = useTranslation();
@@ -186,10 +173,10 @@ const AddAssignment = ({
   return (
     <React.Fragment>
       <Modal
-        overflow="inside"
+        scrollAreaComponent={ScrollArea.Autosize}
         opened={opened}
         // exitTransitionDuration={100}
-        transition="slide-up"
+        transitionProps={{ transition: "slide-up" }}
         onClose={() => {
           setOpened(false);
           setAddState("");
@@ -199,10 +186,6 @@ const AddAssignment = ({
           height: "100%",
         }}
         styles={{
-          modal: {
-            height: "100%",
-            paddingBottom: 0,
-          },
           inner: {
             paddingLeft: 0,
             paddingRight: 0,
@@ -246,8 +229,9 @@ const AddAssignment = ({
               </Grid.Col>
             </Tooltip>
             <Grid.Col span={6}>
-              <DatePicker
+              <DatePickerInput
                 w={"100%"}
+                valueFormat="MMM DD, YYYY"
                 placeholder={t("pick_start_date") as string}
                 label={t("start_date")}
                 icon={<IconCalendar size={16} />}
@@ -260,17 +244,16 @@ const AddAssignment = ({
             <Grid.Col span={6}>
               <TimeInput
                 label={t("start_time")}
-                format="12"
                 withAsterisk
-                clearable
                 {...form.getInputProps("startTime")}
                 styles={{ error: { position: "absolute" } }}
               />
             </Grid.Col>
 
             <Grid.Col span={6}>
-              <DatePicker
+              <DatePickerInput
                 w={"100%"}
+                valueFormat="MMM DD, YYYY"
                 placeholder={t("pick_end_date") as string}
                 label={t("end_date")}
                 minDate={form.values.eventStartDate}
@@ -283,8 +266,6 @@ const AddAssignment = ({
             <Grid.Col span={6}>
               <TimeInput
                 label={t("end_time")}
-                format="12"
-                clearable
                 withAsterisk
                 {...form.getInputProps("endTime")}
                 styles={{ error: { position: "absolute" } }}

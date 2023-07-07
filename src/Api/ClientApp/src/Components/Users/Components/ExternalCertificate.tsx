@@ -49,8 +49,8 @@ const RowsExternal = ({
           <Badge>{t("No")}</Badge>
         )}
       </td>
-      <td>{moment(item?.startDate).format(theme.dateFormat)}</td>
-      <td>{moment(item?.endDate).format(theme.dateFormat)}</td>
+      <td>{moment(item?.startDate).format("MMM DD, YYYY")}</td>
+      <td>{moment(item?.endDate).format("MMM DD, YYYY")}</td>
       <td>{item?.duration} Hour(s)</td>
       <td>{item?.institute}</td>
       <td style={{ wordBreak: "break-all" }}>{item.location}</td>

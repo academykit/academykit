@@ -34,7 +34,7 @@ const MyTrainingInternal = () => {
                 <Text weight={"bold"}>{x.courseName}</Text>
                 <Text weight={"bold"}>
                   {t("certificate_issue_date")}{" "}
-                  {moment(x.certificateIssuedDate).format(theme.dateFormat)}
+                  {moment(x.certificateIssuedDate).format("MMM DD, YYYY")}
                 </Text>
                 <Text>
                   {t("total")} {x.percentage}

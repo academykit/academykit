@@ -55,7 +55,7 @@ const AttendedTrainings = ({
                       {x.name}
                     </Anchor>
                   </td>
-                  <td>{moment(x.createdOn).format(theme.dateFormat)}</td>
+                  <td>{moment(x.createdOn).format("MMM DD, YYYY")}</td>
 
                   <td>
                     <ProgressBar total={100} positive={x.percentage} />

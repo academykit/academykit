@@ -74,7 +74,7 @@ const ExamDetails = ({
             {exam?.startTime && (
               <Text>
                 {t("start_date")}:{" "}
-                {moment(exam?.startTime).format(theme.dateFormat)}{" "}
+                {moment(exam?.startTime).format("MMM DD, YYYY")}{" "}
               </Text>
             )}
             {exam?.duration ? (

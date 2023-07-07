@@ -243,7 +243,7 @@ const CourseCardHorizontal = ({
                   <Text color="dimmed">{t("created_on")}</Text>
                 )}
                 <Text color={"dimmed"}>
-                  {moment(course.createdOn).format(theme.dateFormat)}
+                  {moment(course.createdOn).format("MMM DD, YYYY")}
                 </Text>
                 <Text ml="sm" color={"dimmed"}>
                   {t("group")}
