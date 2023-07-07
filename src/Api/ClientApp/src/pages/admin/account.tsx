@@ -53,12 +53,12 @@ const changeEmailSchema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
     oldEmail: Yup.string()
-      .email(t("invalid_email") as  string)
+      .email(t("invalid_email") as string)
       .required(t("email_required") as string),
     newEmail: Yup.string()
       .trim()
       .lowercase()
-      .email(t("invalid_email") as  string)
+      .email(t("invalid_email") as string)
       .required(t("email_required") as string),
     confirmEmail: Yup.string()
       .trim()

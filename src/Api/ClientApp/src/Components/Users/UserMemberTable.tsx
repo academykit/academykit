@@ -32,17 +32,17 @@ const AddUpdateUserForm = lazyWithRetry(() => import("./AddUpdateUserForm"));
 
 const useStyles = createStyles((theme) => ({
   nameCotainer: {
-    maxWidth: '318px',
-    minWidth: '318px'
+    maxWidth: "318px",
+    minWidth: "318px",
   },
   emailContainer: {
-    maxWidth: '280px',
-    minWidth: '280px'
+    maxWidth: "280px",
+    minWidth: "280px",
   },
   roleContainer: {
-    maxWidth: '100px',
-    minWidth: '100px'
-  }
+    maxWidth: "100px",
+    minWidth: "100px",
+  },
 }));
 
 const UserRow = ({
@@ -60,7 +60,7 @@ const UserRow = ({
   const editUser = useEditUser(item?.id, search);
   const { colorScheme } = useMantineColorScheme();
   const resend = useResendEmail(item?.id);
-  const {classes} = useStyles();
+  const { classes } = useStyles();
 
   const handleResendEmail = async () => {
     try {
@@ -111,7 +111,13 @@ const UserRow = ({
             </Avatar>
           </Link>
 
-          <Text size="sm" weight={500} lineClamp={1} ml={5} className={classes.nameCotainer}>
+          <Text
+            size="sm"
+            weight={500}
+            lineClamp={1}
+            ml={5}
+            className={classes.nameCotainer}
+          >
             {item?.fullName}
           </Text>
         </div>
@@ -124,15 +130,15 @@ const UserRow = ({
         {item?.status === UserStatus.Active ? (
           <Badge color={"green"}>{t("active")}</Badge>
         ) : item?.status === UserStatus.InActive ? (
-          <Badge color={"red"}>{t('inactive')}</Badge>
+          <Badge color={"red"}>{t("inactive")}</Badge>
         ) : (
-          <Badge color="yellow">{t('pending')}</Badge>
+          <Badge color="yellow">{t("pending")}</Badge>
         )}
       </td>
 
       <td style={{ display: "flex" }}>
         {item.role !== UserRole.SuperAdmin && auth?.auth?.id !== item.id && (
-          <Tooltip label={t('edit_user_detail')}>
+          <Tooltip label={t("edit_user_detail")}>
             <ActionIcon
               style={{
                 cursor: "pointer",
@@ -149,7 +155,7 @@ const UserRow = ({
         )}
 
         {auth?.auth?.id !== item.id && item.status === UserStatus.Pending && (
-          <Tooltip label={t('resend_email')} onClick={handleResendEmail}>
+          <Tooltip label={t("resend_email")} onClick={handleResendEmail}>
             <ActionIcon
               style={{
                 cursor: "pointer",

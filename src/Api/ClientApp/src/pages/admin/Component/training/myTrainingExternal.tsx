@@ -45,7 +45,6 @@ const schema = () => {
   });
 };
 
-
 const MyTrainingExternal = () => {
   const cForm = useCustomForm();
   const [showConfirmation, setShowConfirmation] = useToggle();

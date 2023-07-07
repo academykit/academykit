@@ -219,7 +219,7 @@ export default function ZoomLicense() {
                 {...form.getInputProps("hostId")}
               />
               <TextInput
-                placeholder={ t("license_capacity") as string}
+                placeholder={t("license_capacity") as string}
                 name="capacity"
                 label={t("capacity")}
                 type={"number"}

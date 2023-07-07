@@ -234,7 +234,6 @@ const CreateCoursePage = () => {
                 mt={20}
                 searchable
                 withAsterisk
-               
                 sx={{ maxWidth: "500px" }}
                 data={
                   groups.data

@@ -154,7 +154,7 @@ const AddLesson = ({ sectionId }: { sectionId: string }) => {
     <div style={{ marginTop: "10px", marginBottom: "10px" }}>
       {addLessonClick ? (
         <Tooltip
-        position="right"
+          position="right"
           multiline
           width={220}
           label="You can create various lesson types. Click here to see options"

@@ -187,7 +187,7 @@ const CourseCardHorizontal = ({
                           flexDirection: "column",
                           alignItems: "start",
                         }}
-                        style={{gap:"0px"}}
+                        style={{ gap: "0px" }}
                       >
                         <NavLink
                           variant="subtle"
