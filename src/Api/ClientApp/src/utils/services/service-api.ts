@@ -50,7 +50,8 @@ export const api = {
     updateLevelSetting: (id: string) => `api/level/${id}`,
     updateDepartmentSetting: (id: string) => `api/department/${id}`,
     getTrainer: (search: string) => `/api/user/trainer?${search}`,
-    getLogs: (query: string) => `/api/ServerLog/logs?${query}`
+    getLogs: (query: string) => `/api/ServerLog/logs?${query}`,
+    getSingleLog: (id: string) => `/api/ServerLog/${id}`
   },
   groups: {
     list: "/api/Group",

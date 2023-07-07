@@ -10,15 +10,183 @@ import {
   Text,
   Flex,
   ScrollArea,
+  Modal,
+  Grid,
+  Box,
 } from "@mantine/core";
-import { IServerLogs, useGetServerLogs } from "@utils/services/adminService";
+import {
+  IServerLogs,
+  useGetServerLogs,
+  useGetSingleLog,
+} from "@utils/services/adminService";
 import { useTranslation } from "react-i18next";
 import { SeverityType } from "@utils/enums";
+import { IPaginated } from "@utils/services/types";
+import { useState } from "react";
+import { IconEye } from "@tabler/icons";
+
+const serverLogs: IServerLogs[] = [
+  {
+    id: "1",
+    type: 1,
+    message: "Error occurred",
+    trackBy: "ABC123",
+    timeStamp: new Date("2023-07-07T10:30:00Z"),
+  },
+  {
+    id: "2",
+    type: 2,
+    message: "Warning: Disk space low",
+    trackBy: "DEF456",
+    timeStamp: new Date("2023-07-07T11:45:00Z"),
+  },
+  {
+    id: "3",
+    type: 1,
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
+  },
+  {
+    id: "4",
+    type: 1,
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
+  },
+  {
+    id: "5",
+    type: 1,
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
+  },
+  {
+    id: "6",
+    type: 1,
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
+  },
+  {
+    id: "7",
+    type: 1,
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
+  },
+  {
+    id: "8",
+    type: 1,
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
+  },
+  {
+    id: "9",
+    type: 1,
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
+  },
+  {
+    id: "10",
+    type: 1,
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
+  },
+  {
+    id: "11",
+    type: 1,
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
+  },
+  {
+    id: "12",
+    type: 1,
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
+  },
+  {
+    id: "13",
+    type: 1,
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
+  },
+  {
+    id: "14",
+    type: 1,
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
+  },
+  // Add more dummy data as needed
+];
+
+const paginatedData: IPaginated<IServerLogs> = {
+  currentPage: 1,
+  pageSize: 10,
+  totalCount: serverLogs.length,
+  totalPage: Math.ceil(serverLogs.length / 10),
+  items: serverLogs,
+};
+
+const DetailFields = ({
+  title,
+  content,
+}: {
+  title: string;
+  content: string;
+}) => {
+  return (
+    <Grid.Col span={6}>
+      <div>
+        <Text weight={"bold"}>{title}</Text>
+        <Text>{content}</Text>
+      </div>
+    </Grid.Col>
+  );
+};
+
+const LogDetails = ({ logId }: { logId: string }) => {
+  const { data } = useGetSingleLog(logId);
+  return (
+    <>
+      <Grid>
+        <DetailFields
+          title="Severity"
+          content={(data && SeverityType[data?.type]) ?? "-"}
+        />
+        <DetailFields
+          title="Time Stamp"
+          content={data?.timeStamp.toISOString() ?? "-"}
+        />
+        <DetailFields title="Message" content={data?.message ?? "-"} />
+        <DetailFields title="Faced By" content={data?.trackBy ?? "-"} />
+      </Grid>
+    </>
+  );
+};
 
 const Rows = ({ item }: { item: IServerLogs }) => {
+  const [viewLog, setViewLog] = useState(false);
+
   return (
     <>
       <tr>
+        <Modal
+          title={`Log Details`}
+          opened={viewLog}
+          onClose={() => {
+            setViewLog(false);
+          }}
+        >
+          <LogDetails logId={item.id} />
+        </Modal>
         <td>
           <Group spacing="sm">
             <Text size="sm" weight={500}>
@@ -50,9 +218,10 @@ const Rows = ({ item }: { item: IServerLogs }) => {
         </td>
         <td>
           <Group spacing="sm">
-            <Text size="sm" weight={500}>
-              email
-            </Text>
+            <IconEye
+              onClick={() => setViewLog(true)}
+              style={{ cursor: "pointer" }}
+            />
           </Group>
         </td>
       </tr>
@@ -66,7 +235,7 @@ const Log = ({
   searchComponent,
   filterComponent,
   startDateFilterComponent,
-  endDateFilterComponent
+  endDateFilterComponent,
 }: IWithSearchPagination) => {
   const { t } = useTranslation();
   const getLogData = useGetServerLogs(searchParams);
@@ -84,8 +253,7 @@ const Log = ({
       <Flex mb={10}>
         {startDateFilterComponent("Pick Start Date", "StartDate")}
         {endDateFilterComponent("Pick End Date", "EndDate")}
-        {searchComponent("Search logs")}
-        <Flex>
+        <div style={{ marginRight: "8px" }}>
           {filterComponent(
             [
               { value: "1", label: "Error" },
@@ -96,37 +264,42 @@ const Log = ({
             t("Severity"),
             "Severity"
           )}
-        </Flex>
+        </div>
+        {searchComponent("Search logs")}
       </Flex>
 
       {/* table section */}
-      <ScrollArea>
-        <Paper>
-          <Table
-            sx={{ minWidth: 800 }}
-            verticalSpacing="sm"
-            striped
-            highlightOnHover
-          >
-            <thead>
-              <tr>
-                <th>Severity</th>
-                <th>Time Stamp</th>
-                <th>Message</th>
-                <th>Faced By</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* <Rows item={getLogData.data}/>
+      {getLogData.data && getLogData.data.totalCount > 1 ? (
+        <ScrollArea>
+          <Paper>
+            <Table
+              sx={{ minWidth: 800 }}
+              verticalSpacing="sm"
+              striped
+              highlightOnHover
+            >
+              <thead>
+                <tr>
+                  <th>Severity</th>
+                  <th>Time Stamp</th>
+                  <th>Message</th>
+                  <th>Faced By</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* <Rows item={getLogData.data}/>
               <Rows /> */}
-              {getLogData.data?.items.map((item: IServerLogs) => (
-                <Rows item={item} key={item.id} />
-              ))}
-            </tbody>
-          </Table>
-        </Paper>
-      </ScrollArea>
+                {serverLogs.map((item: IServerLogs) => (
+                  <Rows item={item} key={item.id} />
+                ))}
+              </tbody>
+            </Table>
+          </Paper>
+        </ScrollArea>
+      ) : (
+        <Box mt={10}>No logs found</Box>
+      )}
 
       {getLogData.data &&
         pagination(getLogData.data?.totalPage, getLogData.data?.items.length)}

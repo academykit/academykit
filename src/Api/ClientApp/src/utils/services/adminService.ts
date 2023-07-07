@@ -629,3 +629,13 @@ export const useGetServerLogs = (query: string) => {
     //enabled: !!startDateTime && !!duration,
   });
 };
+
+const getSingleLog = async (id: string) => {
+  return httpClient.get<IServerLogs>(api.adminUser.getSingleLog(id));
+};
+
+export const useGetSingleLog = (id: string) => {
+  return useQuery(["log" + id], () => getSingleLog(id), {
+    select: (data) => data.data,
+  });
+};
