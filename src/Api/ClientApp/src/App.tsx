@@ -6,8 +6,8 @@ import {
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { NotificationsProvider } from "@mantine/notifications";
 import AppRoutes from "@routes/AppRoutes";
+import { Notifications } from '@mantine/notifications';
 import { AuthProvider } from "@context/AuthProvider";
 import { COLOR_SCHEME_KEY } from "@utils/constants";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -123,7 +123,6 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
           }}
         >
           <FormProvider>
-            <NotificationsProvider>
               <QueryClientProvider client={queryClient}>
                 <ErrorBoundary>
                   <AuthProvider>
@@ -134,7 +133,7 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
                   <ReactQueryDevtools initialIsOpen={false} />
                 </ErrorBoundary>
               </QueryClientProvider>
-            </NotificationsProvider>
+            <Notifications/>
           </FormProvider>
         </MantineProvider>
       </BrowserRouter>
