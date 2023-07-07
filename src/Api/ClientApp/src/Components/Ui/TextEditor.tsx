@@ -13,7 +13,7 @@ import Superscript from "@tiptap/extension-text-align";
 import SubScript from "@tiptap/extension-subscript";
 import { Box, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { useDebouncedValue } from "@mantine/hooks";
+import { useDebouncedState, useDebouncedValue } from "@mantine/hooks";
 
 type IProps = {
   formContext?: () => UseFormReturnType<any, (values: any) => any>;
@@ -32,12 +32,17 @@ const TextEditor = ({
   error,
   value,
 }: IProps) => {
-  console.log(value);
   const { t } = useTranslation();
   const cPlaceholder = t(placeholder ?? "");
   const form = formContext && formContext();
-  const [debounced] = useDebouncedValue(value, 200);
-  const [calue, setValue] = useState("");
+  const [data, setData] = useDebouncedState("", 200);
+
+  useEffect(() => {
+    if (data) {
+      if (form) form.setFieldValue(label || "description", data);
+      if (onChange) onChange(data);
+    }
+  }, [data]);
 
   const editor = useEditor({
     extensions: [
@@ -61,8 +66,7 @@ const TextEditor = ({
 
   editor?.on("update", (d) => {
     const text = editor.getHTML();
-    if (form) form.setFieldValue(label || "description", text);
-    if (onChange) onChange(text);
+    setData(text);
   });
 
   const handleImageUpload = useCallback(

@@ -14,7 +14,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@faker-js/faker": "^7.6.0",
-    "@mantine/core": "^5.6.3",
+    "@mantine/core": "^6.0.16",
     "@mantine/dates": "^5.6.4",
     "@mantine/ds": "^5.6.3",
     "@mantine/form": "^5.6.3",
@@ -27,6 +27,7 @@
     "@react-pdf-viewer/full-screen": "^3.10.0",
     "@react-pdf-viewer/toolbar": "^3.10.0",
     "@tabler/icons": "^1.109.0",
+    "@tabler/icons-react": "^2.24.0",
     "@tanstack/react-query": "^4.13.5",
     "@tanstack/react-query-devtools": "^4.14.1",
     "@tiptap/extension-highlight": "^2.0.3",

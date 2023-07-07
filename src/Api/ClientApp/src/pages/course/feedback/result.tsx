@@ -12,9 +12,7 @@ import {
 import { FeedbackType } from "@utils/enums";
 import { useReAuth } from "@utils/services/authService";
 
-import {
-  useGetUserFeedback,
-} from "@utils/services/feedbackService";
+import { useGetUserFeedback } from "@utils/services/feedbackService";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -54,7 +52,7 @@ const FeedbackResult = () => {
           <Title>{x.name}</Title>
 
           {x.type === FeedbackType.Subjective ? (
-            <TextViewer content={x.answer?''} />
+            <TextViewer content={x.answer ?? ""} />
           ) : x.type === FeedbackType.Rating ? (
             <Rating value={x.rating} size={"xl"} mt={10} readOnly={true} />
           ) : (
@@ -69,12 +67,13 @@ const FeedbackResult = () => {
                 })}
               >
                 <TextViewer
-                 styles={{
+                  styles={{
                     root: {
                       border: "none",
                     },
                   }}
-                  content={option.option}></TextViewer>
+                  content={option.option}
+                ></TextViewer>
               </Card>
             ))
           )}
