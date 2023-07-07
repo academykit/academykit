@@ -1,6 +1,6 @@
+import TextViewer from "@components/Ui/RichTextViewer";
 import { Box, Card, createStyles, Group, Title } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
-import RichTextEditor from "@mantine/rte";
 import {
   ILessonStartQuestion,
   ILessonStartQuestionOption,
@@ -60,15 +60,14 @@ const ExamCheckBox = ({ form, options, currentIndex }: Props) => {
                 form.values[currentIndex].questionOptions[index].isCorrect,
             })}
           >
-            <RichTextEditor
+            <TextViewer
               styles={{
                 root: {
                   border: "none",
                 },
               }}
-              readOnly
-              value={option.option}
-            ></RichTextEditor>
+              content={option.option}
+            ></TextViewer>
           </Card>
         </label>
       ))}

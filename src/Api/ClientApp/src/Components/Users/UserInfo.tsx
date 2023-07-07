@@ -1,16 +1,7 @@
 import AvatarEditor from "@components/Ui/AvatarEditor";
-import {
-  Button,
-  createStyles,
-  Divider,
-  Grid,
-  Paper,
-  Text,
-  TextInput,
-} from "@mantine/core";
+import { Button, Divider, Grid, Paper, Text, TextInput } from "@mantine/core";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import RichTextEditor from "@mantine/rte";
 import { PHONE_VALIDATION } from "@utils/constants";
 import { useUpdateUser } from "@utils/services/adminService";
 import { useReAuth } from "@utils/services/authService";
@@ -20,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import TextEditor from "@components/Ui/TextEditor";
 
 export interface FormValues {
   email: string;
@@ -204,13 +196,11 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={12} lg={12}>
               <Text size="sm">{t("bio")}</Text>
-              <RichTextEditor
+              <TextEditor
+                error={formData.errors?.bio}
                 placeholder={t("your_short_description") as string}
                 {...formData.getInputProps("bio")}
               />
-              <Text color="red" size={13} mt={5}>
-                {formData.errors?.bio}
-              </Text>
             </Grid.Col>
             <Grid.Col lg={12}>
               <Button loading={updateUser.isLoading} type="submit">

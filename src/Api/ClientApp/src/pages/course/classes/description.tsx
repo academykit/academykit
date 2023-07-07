@@ -1,8 +1,8 @@
-import { RichTextEditor } from "@mantine/rte";
 import { Box } from "@mantine/core";
 import { useParams } from "react-router-dom";
 import { useGetCourseLesson } from "@utils/services/courseService";
 import { LessonType } from "@utils/enums";
+import TextViewer from "@components/Ui/RichTextViewer";
 
 const CourseDescriptionSection = () => {
   const { id, lessonId } = useParams();
@@ -12,14 +12,13 @@ const CourseDescriptionSection = () => {
 
   return (
     <Box m={5}>
-      <RichTextEditor
-        readOnly
-        value={
+      <TextViewer
+        content={
           isExam
-            ? courseLesson.data?.questionSet.description
-            : courseLesson.data?.description
+            ? courseLesson.data?.questionSet.description ?? ""
+            : courseLesson.data?.description ?? ""
         }
-        id="rte"
+        // id="rte"
       />
     </Box>
   );

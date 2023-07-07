@@ -1,4 +1,4 @@
-import { Badge, Button, Paper } from "@mantine/core";
+import { Badge, Button, Paper, Tooltip } from "@mantine/core";
 import React, { useState } from "react";
 import { useSection } from "@context/SectionProvider";
 import AddLecture from "@components/Course/Lesson/AddLecture";
@@ -153,17 +153,24 @@ const AddLesson = ({ sectionId }: { sectionId: string }) => {
   return (
     <div style={{ marginTop: "10px", marginBottom: "10px" }}>
       {addLessonClick ? (
-        <Button
-          variant="outline"
-          onClick={() => {
-            // section?.setAddLessonClick(!section?.addLessonClick);
-
-            setAddLessonClick(!addLessonClick);
-            section?.setIsAddSection(false);
-          }}
+        <Tooltip
+        position="right"
+          multiline
+          width={220}
+          label="You can create various lesson types. Click here to see options"
         >
-          {t("add_lesson")}
-        </Button>
+          <Button
+            variant="outline"
+            onClick={() => {
+              // section?.setAddLessonClick(!section?.addLessonClick);
+
+              setAddLessonClick(!addLessonClick);
+              section?.setIsAddSection(false);
+            }}
+          >
+            {t("add_lesson")}
+          </Button>
+        </Tooltip>
       ) : (
         <LessonAddList
           t={t}

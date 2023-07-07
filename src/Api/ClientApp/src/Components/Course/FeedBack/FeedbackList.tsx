@@ -12,7 +12,6 @@ import {
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import RichTextEditor from "@mantine/rte";
 import { IconEdit, IconTrash } from "@tabler/icons";
 import { FeedbackType, ReadableEnum } from "@utils/enums";
 
@@ -23,6 +22,7 @@ import {
 } from "@utils/services/feedbackService";
 import EditFeedback from "./EditFeedBack";
 import { useTranslation } from "react-i18next";
+import TextViewer from "@components/Ui/RichTextViewer";
 
 const useStyle = createStyles((theme) => ({
   wrapper: {
@@ -102,13 +102,13 @@ const FeedbackItem = ({
         {data.description && (
           <Box my={10}>
             <Text>{t("description")}</Text>
-            <RichTextEditor mb={5} value={data.description} readOnly={true} />
+            <TextViewer content={data.description} />
           </Box>
         )}
         {data.hint && (
           <Box my={10}>
             <Text size={"sm"}>{t("hint")}</Text>
-            <RichTextEditor mb={5} value={data.hint} readOnly={true} />
+            <TextViewer content={data.hint} />
           </Box>
         )}
         <Select
@@ -127,11 +127,7 @@ const FeedbackItem = ({
               <Text>{t("options")}</Text>
               {data.feedbackQuestionOptions?.map((x) => (
                 <Group my={10} key={x.id}>
-                  <RichTextEditor
-                    w={"90%"}
-                    readOnly
-                    value={x.option}
-                  ></RichTextEditor>
+                  <TextViewer content={x.option}></TextViewer>
                 </Group>
               ))}
             </>

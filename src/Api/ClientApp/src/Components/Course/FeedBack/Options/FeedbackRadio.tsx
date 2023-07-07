@@ -1,3 +1,4 @@
+import TextViewer from "@components/Ui/RichTextViewer";
 import {
   Box,
   Button,
@@ -8,7 +9,6 @@ import {
   Title,
 } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
-import RichTextEditor from "@mantine/rte";
 
 import {
   IFeedbackOptions,
@@ -87,15 +87,14 @@ const FeedbackRadio = ({ options, form, currentIndex }: Props) => {
             })}
           >
             <input type={"checkbox"} style={{ display: "none" }} />
-            <RichTextEditor
+            <TextViewer
               styles={{
                 root: {
                   border: "none",
                 },
               }}
-              readOnly
-              value={option.option}
-            ></RichTextEditor>
+              content={option.option}
+            ></TextViewer>
           </Card>
         </div>
       ))}

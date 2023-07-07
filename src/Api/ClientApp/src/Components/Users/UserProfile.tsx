@@ -2,7 +2,6 @@ import {
   Avatar,
   Box,
   createStyles,
-  Divider,
   Group,
   Paper,
   Tabs,
@@ -18,7 +17,7 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import RichTextEditor from "@mantine/rte";
+import TextViewer from "@components/Ui/RichTextViewer";
 
 const useStyles = createStyles((theme) => ({
   avatarImage: {
@@ -79,18 +78,13 @@ const UserProfile = () => {
           </Text>
           {data && data.bio && data?.bio.replace(/<[^>]+>/g, "").length > 0 && (
             <>
-              <RichTextEditor
+              <TextViewer
                 styles={{
                   root: {
                     border: "none",
                   },
                 }}
-                mt={1}
-                mb={15}
-                m={50}
-                color="dimmed"
-                readOnly
-                value={data?.bio}
+                content={data?.bio}
               />
             </>
           )}
