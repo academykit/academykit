@@ -62,7 +62,7 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
             key={x.key}
             mt={10}
             {...form.getInputProps(`${activeIndex}.values.${index}.value`)}
-            label={x.key}
+            label={t("settings_screen.file_storage."+x.key)}
           />
         ))}
         <Button mt={20} type="submit">
