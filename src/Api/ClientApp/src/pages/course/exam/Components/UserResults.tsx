@@ -8,6 +8,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { IconEye } from "@tabler/icons";
+import { DATE_FORMAT } from "@utils/constants";
 import RoutePath from "@utils/routeConstants";
 import { useMyResult } from "@utils/services/examService";
 import axios from "axios";
@@ -69,7 +70,7 @@ const UserResults = ({
           {result.data?.questionSetSubmissions?.map((r) => (
             <tr key={r.questionSetSubmissionId}>
               <td>{r.obtainedMarks}</td>
-              <td>{moment(r.submissionDate).format(theme.dateFormat)}</td>
+              <td>{moment(r.submissionDate).format(DATE_FORMAT)}</td>
               <td>{r.completeDuration}</td>
               <td>
                 <ActionIcon

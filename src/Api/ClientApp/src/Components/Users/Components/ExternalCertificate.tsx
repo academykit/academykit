@@ -25,6 +25,7 @@ import { useParams } from "react-router-dom";
 import downloadImage from "@utils/downloadImage";
 import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
+import { DATE_FORMAT } from "@utils/constants";
 
 const RowsExternal = ({
   item,
@@ -49,8 +50,8 @@ const RowsExternal = ({
           <Badge>{t("No")}</Badge>
         )}
       </td>
-      <td>{moment(item?.startDate).format(theme.dateFormat)}</td>
-      <td>{moment(item?.endDate).format(theme.dateFormat)}</td>
+      <td>{moment(item?.startDate).format(DATE_FORMAT)}</td>
+      <td>{moment(item?.endDate).format(DATE_FORMAT)}</td>
       <td>{item?.duration} Hour(s)</td>
       <td>{item?.institute}</td>
       <td style={{ wordBreak: "break-all" }}>{item.location}</td>

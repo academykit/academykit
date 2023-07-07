@@ -14,7 +14,7 @@ import {
   TextInput,
   createStyles,
 } from "@mantine/core";
-import { DateRangePicker } from "@mantine/dates";
+// import { DateRangePicker } from "@mantine/dates";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
@@ -148,7 +148,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                 name="duration"
                 {...form.getInputProps("duration")}
               />
-              <DateRangePicker
+              {/* <DateRangePicker
                 required
                 label={t("start_end_date")}
                 placeholder={t("date_range") as string}
@@ -156,7 +156,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                 value={value}
                 //@ts-ignore
                 onChange={setValue}
-              />
+              /> */}
               <TextInput
                 label={t("location")}
                 placeholder={t("Location of Training") as string}
@@ -218,7 +218,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                     </ActionIcon>
                   )}
                 </Flex>
-                <Text mt={5}>
+                {/* <Text mt={5}>
                   {x?.startDate &&
                     `${t("from")} ${moment(x.startDate).format(
                       theme.dateFormat
@@ -226,7 +226,7 @@ const MyTrainingExternal = ({ isAdmin }: { isAdmin?: boolean }) => {
                       theme.dateFormat
                     )}, `}
                   {t("completed_in_about")} {x.duration} {t("hrs")}
-                </Text>
+                </Text> */}
                 <Text>
                   {x.institute}
                   {x.location && `, ${x.location}`}

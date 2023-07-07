@@ -10,6 +10,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { IconDownload, IconEye } from "@tabler/icons";
+import { DATE_FORMAT } from "@utils/constants";
 import downloadImage from "@utils/downloadImage";
 import { useGetInternalCertificate } from "@utils/services/certificateService";
 import moment from "moment";
@@ -34,7 +35,7 @@ const MyTrainingInternal = () => {
                 <Text weight={"bold"}>{x.courseName}</Text>
                 <Text weight={"bold"}>
                   {t("certificate_issue_date")}{" "}
-                  {moment(x.certificateIssuedDate).format(theme.dateFormat)}
+                  {moment(x.certificateIssuedDate).format(DATE_FORMAT)}
                 </Text>
                 <Text>
                   {t("total")} {x.percentage}

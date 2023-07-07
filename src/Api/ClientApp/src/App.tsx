@@ -6,7 +6,7 @@ import {
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { NotificationsProvider } from "@mantine/notifications";
+import { Notifications } from "@mantine/notifications";
 import AppRoutes from "@routes/AppRoutes";
 import { AuthProvider } from "@context/AuthProvider";
 import { COLOR_SCHEME_KEY } from "@utils/constants";
@@ -104,7 +104,6 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
             headings: { fontFamily: "Poppins, sans-serif" },
             loader: "dots",
 
-            dateFormat: "MMM DD, YYYY",
             colors: {
               brand: [
                 "#7AD1DD",
@@ -123,18 +122,17 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
           }}
         >
           <FormProvider>
-            <NotificationsProvider>
-              <QueryClientProvider client={queryClient}>
-                <ErrorBoundary>
-                  <AuthProvider>
-                    <LayoutProvider>
-                      <AppRoutes />
-                    </LayoutProvider>
-                  </AuthProvider>
-                  <ReactQueryDevtools initialIsOpen={false} />
-                </ErrorBoundary>
-              </QueryClientProvider>
-            </NotificationsProvider>
+            <QueryClientProvider client={queryClient}>
+              <ErrorBoundary>
+                <AuthProvider>
+                  <LayoutProvider>
+                    <AppRoutes />
+                  </LayoutProvider>
+                </AuthProvider>
+                <ReactQueryDevtools initialIsOpen={false} />
+              </ErrorBoundary>
+            </QueryClientProvider>
+            <Notifications />
           </FormProvider>
         </MantineProvider>
       </BrowserRouter>

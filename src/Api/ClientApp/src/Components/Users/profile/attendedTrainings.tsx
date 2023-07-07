@@ -11,6 +11,7 @@ import {
   Box,
   Loader,
 } from "@mantine/core";
+import { DATE_FORMAT } from "@utils/constants";
 import RoutePath from "@utils/routeConstants";
 import { useMyCourse } from "@utils/services/courseService";
 import moment from "moment";
@@ -55,7 +56,7 @@ const AttendedTrainings = ({
                       {x.name}
                     </Anchor>
                   </td>
-                  <td>{moment(x.createdOn).format(theme.dateFormat)}</td>
+                  <td>{moment(x.createdOn).format(DATE_FORMAT)}</td>
 
                   <td>
                     <ProgressBar total={100} positive={x.percentage} />

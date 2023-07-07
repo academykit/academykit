@@ -10,6 +10,7 @@ import {
 } from "@mantine/core";
 import UserResults from "@pages/course/exam/Components/UserResults";
 import { useQueryClient } from "@tanstack/react-query";
+import { DATE_FORMAT } from "@utils/constants";
 import RoutePath from "@utils/routeConstants";
 import { useGetCourseLesson } from "@utils/services/courseService";
 import { api } from "@utils/services/service-api";
@@ -73,8 +74,7 @@ const ExamDetails = ({
             </Title>
             {exam?.startTime && (
               <Text>
-                {t("start_date")}:{" "}
-                {moment(exam?.startTime).format(theme.dateFormat)}{" "}
+                {t("start_date")}: {moment(exam?.startTime).format(DATE_FORMAT)}{" "}
               </Text>
             )}
             {exam?.duration ? (

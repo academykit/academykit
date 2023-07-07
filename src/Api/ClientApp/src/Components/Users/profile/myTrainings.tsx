@@ -24,6 +24,8 @@ import moment from "moment";
 import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { DATE_FORMAT } from "@utils/constants";
+
 const MyTrainings = () => {
   const auth = useReAuth();
   const theme = useMantineTheme();
@@ -68,7 +70,7 @@ const MyTrainings = () => {
                             {x.name}
                           </Anchor>
                         </td>
-                        <td>{moment(x.createdOn).format(theme.dateFormat)}</td>
+                        <td>{moment(x.createdOn).format(DATE_FORMAT)}</td>
                         <td>
                           <Badge color="pink" variant="light">
                             {CourseLanguage[x.language]}

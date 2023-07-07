@@ -29,6 +29,7 @@ import formatDuration from "@utils/formatDuration";
 import { getType } from "./LessonStatusColor";
 import { IStudentInfoLesson } from "@utils/services/manageCourseService";
 import { useTranslation } from "react-i18next";
+import { DATE_FORMAT } from "@utils/constants";
 
 const TableRow = ({ values }: { values: IReportDetail }) => {
   const theme = useMantineTheme();
@@ -36,7 +37,7 @@ const TableRow = ({ values }: { values: IReportDetail }) => {
 
   return (
     <tr>
-      <td>{moment(values.startDate).format(theme.dateFormat)}</td>
+      <td>{moment(values.startDate).format(DATE_FORMAT)}</td>
       <td>{values.joinedTime}</td>
       <td>{values.leftTime}</td>
       <td>{formatDuration(values.duration ?? 0, true, t)}</td>

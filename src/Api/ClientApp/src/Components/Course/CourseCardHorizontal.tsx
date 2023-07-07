@@ -26,7 +26,7 @@ import {
   IconClock,
   IconDotsVertical,
 } from "@tabler/icons";
-import { color } from "@utils/constants";
+import { DATE_FORMAT, color } from "@utils/constants";
 import {
   CourseLanguage,
   CourseStatus,
@@ -69,13 +69,21 @@ const CourseCardHorizontal = ({
     setDeleteModal();
   };
   const theme = useMantineTheme();
-  const matches = useMediaQuery(`(min-width: ${theme.breakpoints.md}px)`);
+  const matches = useMediaQuery(`(max-width: ${theme.breakpoints.md}px)`);
   const matchesSmall = useMediaQuery(`(min-width: ${theme.breakpoints.xs}px)`);
   const { t } = useTranslation();
   const auth = useAuth();
 
   return (
-    <div style={{ position: "relative", height: matches ? "180px" : "350px" }}>
+    <Box
+      sx={{
+        position: "relative",
+        height: "350px",
+        "@media (min-width: 55em)": {
+          height: "180px",
+        },
+      }}
+    >
       <Link
         to={RoutePath.courses.description(course.slug).route}
         style={{
@@ -105,13 +113,17 @@ const CourseCardHorizontal = ({
           onConfirm={handleDelete}
         />
 
-        <Group
-          sx={() => ({
-            flexWrap: !matches ? "wrap" : "nowrap",
+        <Flex
+          gap={"lg"}
+          sx={(theme) => ({
+            flexWrap: "wrap",
+            "@media (min-width: 55em)": {
+              flexWrap: "nowrap",
+            },
             justifyContent: "center",
           })}
         >
-          <Flex justify={"center"}>
+          <Center>
             <Box
               sx={{
                 heigh: matches ? "100px" : "300px",
@@ -132,7 +144,7 @@ const CourseCardHorizontal = ({
                 </Center>
               </AspectRatio>
             </Box>
-          </Flex>
+          </Center>
           <Group
             style={{
               width: "100%",
@@ -187,7 +199,7 @@ const CourseCardHorizontal = ({
                           flexDirection: "column",
                           alignItems: "start",
                         }}
-                        style={{gap:"0px"}}
+                        style={{ gap: "0px" }}
                       >
                         <NavLink
                           variant="subtle"
@@ -243,7 +255,7 @@ const CourseCardHorizontal = ({
                   <Text color="dimmed">{t("created_on")}</Text>
                 )}
                 <Text color={"dimmed"}>
-                  {moment(course.createdOn).format(theme.dateFormat)}
+                  {moment(course.createdOn).format(DATE_FORMAT)}
                 </Text>
                 <Text ml="sm" color={"dimmed"}>
                   {t("group")}
@@ -256,9 +268,9 @@ const CourseCardHorizontal = ({
               </Group>
             </Group>
           </Group>
-        </Group>
+        </Flex>
       </Card>
-    </div>
+    </Box>
   );
 };
 

@@ -7,8 +7,6 @@ import {
   Box,
   Paper,
   Avatar,
-  Modal,
-  Image,
   Flex,
   Button,
   Group,
@@ -39,6 +37,7 @@ import { getInitials } from "@utils/getInitialName";
 import { IconDownload, IconEye } from "@tabler/icons";
 import downloadImage from "@utils/downloadImage";
 import { useTranslation } from "react-i18next";
+import { DATE_FORMAT } from "@utils/constants";
 
 const Rows = ({
   item,
@@ -126,9 +125,7 @@ const Rows = ({
             <div style={{ marginTop: "10px" }}>
               <Text>
                 {t("issued_on")}{" "}
-                {moment(item?.certificateIssuedDate + "Z").format(
-                  theme.dateFormat
-                )}
+                {moment(item?.certificateIssuedDate + "Z").format(DATE_FORMAT)}
               </Text>
               <Flex justify={"center"} mt={8}>
                 <Tooltip label={t("view_certificate")}>
