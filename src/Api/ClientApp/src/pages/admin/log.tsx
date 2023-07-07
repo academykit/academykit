@@ -37,13 +37,6 @@ const Rows = ({ item }: { item: IServerLogs }) => {
         <td>
           <Group spacing="sm">
             <Text size="sm" weight={500}>
-              version
-            </Text>
-          </Group>
-        </td>
-        <td>
-          <Group spacing="sm">
-            <Text size="sm" weight={500}>
               {item.message}
             </Text>
           </Group>
@@ -72,6 +65,8 @@ const Log = ({
   pagination,
   searchComponent,
   filterComponent,
+  startDateFilterComponent,
+  endDateFilterComponent
 }: IWithSearchPagination) => {
   const { t } = useTranslation();
   const getLogData = useGetServerLogs(searchParams);
@@ -87,15 +82,19 @@ const Log = ({
 
       {/* Search and Filter section */}
       <Flex mb={10}>
+        {startDateFilterComponent("Pick Start Date", "StartDate")}
+        {endDateFilterComponent("Pick End Date", "EndDate")}
         {searchComponent("Search logs")}
         <Flex>
           {filterComponent(
             [
-              { value: "true", label: t("active") },
-              { value: "false", label: t("inactive") },
+              { value: "1", label: "Error" },
+              { value: "2", label: "Warning" },
+              { value: "3", label: "Debug" },
+              { value: "4", label: "Info" },
             ],
             t("Severity"),
-            "IsActive"
+            "Severity"
           )}
         </Flex>
       </Flex>
@@ -113,7 +112,6 @@ const Log = ({
               <tr>
                 <th>Severity</th>
                 <th>Time Stamp</th>
-                <th>App Version</th>
                 <th>Message</th>
                 <th>Faced By</th>
                 <th>Actions</th>

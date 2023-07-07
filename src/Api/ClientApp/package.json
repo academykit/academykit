@@ -15,7 +15,7 @@
     "@emotion/react": "^11.10.5",
     "@faker-js/faker": "^7.6.0",
     "@mantine/core": "^6.0.16",
-    "@mantine/dates": "^5.6.4",
+    "@mantine/dates": "^6.0.16",
     "@mantine/ds": "^5.6.3",
     "@mantine/form": "^5.6.3",
     "@mantine/hooks": "^5.6.3",
