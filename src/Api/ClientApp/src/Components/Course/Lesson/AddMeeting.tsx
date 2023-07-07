@@ -257,6 +257,7 @@ const AddMeeting = ({
           withAsterisk
           min={1}
           {...form.getInputProps("meetingDuration")}
+          styles={{ error: { position: "absolute" } }}
         />
 
         <Select
@@ -279,6 +280,7 @@ const AddMeeting = ({
           data={selectItem}
           withAsterisk
           {...form.getInputProps("zoomLicenseId")}
+          styles={{ error: { position: "absolute" } }}
         />
       </Group>
       <Textarea

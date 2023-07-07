@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import {
   ScrollArea,
   Group,
@@ -90,7 +90,10 @@ const UsersList = ({
       <Modal
         size={800}
         opened={opened}
-        onClose={() => setOpened(false)}
+        onClose={() => {
+          setCurrentTab("user");
+          setOpened(false);
+        }}
         title={t("add_more_user")}
         styles={{ title: { fontWeight: "bold" } }}
       >

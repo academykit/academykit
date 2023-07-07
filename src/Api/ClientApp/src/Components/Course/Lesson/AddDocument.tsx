@@ -129,6 +129,7 @@ const AddDocument = ({
                 label={t("file_title")}
                 placeholder={t("file_name") as string}
                 {...form.getInputProps("name")}
+                styles={{ error: { position: "absolute" } }}
               />
             </Grid.Col>
             <Tooltip
