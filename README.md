@@ -22,11 +22,17 @@ To add a new migration from the root folder
 dotnet ef migrations add "migration message" --project src/Infrastructure --startup-project src/Api -o Persistence/Migrations
 ```
 
+To remove migrations 
+```
+dotnet ef migrations  remove --project src/Infrastructure --startup-project src/Api
+```
+
 To update database
 
 ```bash
 dotnet ef database update  --project src/Infrastructure --startup-project src/Api
 ```
+
 
 ## Docker
 
