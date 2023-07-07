@@ -38,6 +38,10 @@ const useStyles = createStyles((theme) => ({
   emailContainer: {
     maxWidth: '280px',
     minWidth: '280px'
+  },
+  roleContainer: {
+    maxWidth: '100px',
+    minWidth: '100px'
   }
 }));
 
@@ -112,23 +116,23 @@ const UserRow = ({
           </Text>
         </div>
       </td>
-      <td>{t(`${UserRole[item.role]}`)}</td>
+      <td className={classes.roleContainer}>{t(`${UserRole[item.role]}`)}</td>
       <td className={classes.emailContainer}>{item?.email}</td>
 
       <td>{item?.mobileNumber}</td>
       <td>
         {item?.status === UserStatus.Active ? (
-          <Badge color={"green"}>Active</Badge>
+          <Badge color={"green"}>{t("active")}</Badge>
         ) : item?.status === UserStatus.InActive ? (
-          <Badge color={"red"}>InActive</Badge>
+          <Badge color={"red"}>{t('inactive')}</Badge>
         ) : (
-          <Badge color="yellow">Pending</Badge>
+          <Badge color="yellow">{t('pending')}</Badge>
         )}
       </td>
 
       <td style={{ display: "flex" }}>
         {item.role !== UserRole.SuperAdmin && auth?.auth?.id !== item.id && (
-          <Tooltip label="Edit User Details">
+          <Tooltip label={t('edit_user_detail')}>
             <ActionIcon
               style={{
                 cursor: "pointer",
@@ -145,7 +149,7 @@ const UserRow = ({
         )}
 
         {auth?.auth?.id !== item.id && item.status === UserStatus.Pending && (
-          <Tooltip label="Resend Email" onClick={handleResendEmail}>
+          <Tooltip label={t('resend_email')} onClick={handleResendEmail}>
             <ActionIcon
               style={{
                 cursor: "pointer",

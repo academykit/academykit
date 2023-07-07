@@ -7,6 +7,7 @@ import {
   Switch,
   Textarea,
   TextInput,
+  Tooltip,
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
@@ -226,18 +227,23 @@ const AddAssignment = ({
                 {...form.getInputProps("name")}
               />
             </Grid.Col>
-            <Grid.Col span={4}>
-              <Switch
-                label={t("is_mandatory")}
-                {...form.getInputProps("isMandatory")}
-                checked={isMandatory}
-                onChange={() => {
-                  setIsMandatory(() => !isMandatory);
-                  form.setFieldValue("isMandatory", !isMandatory);
-                }}
-              />
-            </Grid.Col>
-
+            <Tooltip
+              multiline
+              label="Toggle this option to enforce mandatory completion of this lesson for trainees."
+              width={220}
+            >
+              <Grid.Col span={4}>
+                <Switch
+                  label={t("is_mandatory")}
+                  {...form.getInputProps("isMandatory")}
+                  checked={isMandatory}
+                  onChange={() => {
+                    setIsMandatory(() => !isMandatory);
+                    form.setFieldValue("isMandatory", !isMandatory);
+                  }}
+                />
+              </Grid.Col>
+            </Tooltip>
             <Grid.Col span={6}>
               <DatePicker
                 w={"100%"}
