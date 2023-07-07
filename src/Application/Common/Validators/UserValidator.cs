@@ -1,16 +1,18 @@
 ﻿namespace Lingtren.Application.Common.Validators
 {
     using FluentValidation;
+    using global::Application.ValidatorLocalization;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Microsoft.Extensions.Localization;
     using System.Text.RegularExpressions;
 
     public class UserValidator : AbstractValidator<UserRequestModel>
     {
-        public UserValidator()
+        public UserValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
             RuleSet("Add", () =>
             {
-                RuleFor(x => x.FirstName).NotNull().NotEmpty().WithMessage("First name is required.").MaximumLength(100).WithMessage("First name length must be less than or equal to 100 characters.");
+                RuleFor(x => x.FirstName).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("Thisisstring")).MaximumLength(100).WithMessage("First name length must be less than or equal to 100 characters.");
                 RuleFor(x => x.MiddleName).MaximumLength(100).WithMessage("Middle name length must be less than or equal to 100 characters.");
                 RuleFor(x => x.LastName).NotNull().NotEmpty().WithMessage("Last name is required.").MaximumLength(100).WithMessage("Last name length must be less than or equal to 100 characters.");
                 RuleFor(x => x.Email).NotNull().NotEmpty().WithMessage("Email is required").MaximumLength(100).WithMessage("Email length must be less than or equal to 100 characters.")

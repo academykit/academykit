@@ -1499,7 +1499,7 @@ namespace Lingtren.Infrastructure.Services
                     });
                     certificateissueduser.Add(new CertificateUserIssuedDto
                     {
-                        UserName = item.User.FullName,
+                        UserName = item.User.FirstName,
                         CourseName = course.Name,
                         Email= item.User.Email
                     });

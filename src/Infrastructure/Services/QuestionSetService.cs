@@ -283,7 +283,10 @@
                     Questions = new List<QuestionResponseModel>()
                 };
                 questionSetQuestions.ForEach(x => response.Questions.Add(new QuestionResponseModel(x.QuestionPoolQuestion.Question, questionSetQuestionId: x.Id, showHints: false)));
-                await _unitOfWork.GetRepository<QuestionSetSubmission>().InsertAsync(questionSetSubmission).ConfigureAwait(false);
+                if (!course.CourseTeachers.Any(x=>x.UserId == currentUserId)  && !isSuperAdminOrAdmin)
+                {
+                    await _unitOfWork.GetRepository<QuestionSetSubmission>().InsertAsync(questionSetSubmission).ConfigureAwait(false);
+                }
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return response;
             }

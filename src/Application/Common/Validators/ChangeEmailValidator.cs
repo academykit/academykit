@@ -2,18 +2,20 @@
 {
     using FluentValidation;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.ValidatorLocalization;
+    using Microsoft.Extensions.Localization;
     using System.Text.RegularExpressions;
 
     public class ChangeEmailValidator : AbstractValidator<ChangeEmailRequestModel>
     {
-        public ChangeEmailValidator()
+        public ChangeEmailValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.NewEmail).NotNull().NotEmpty().WithMessage("New password is required.").Length(6, 100)
-                     .Must(email => ValidEmail(email)).WithMessage("Invalid email format.");
-            RuleFor(x => x.OldEmail).NotNull().NotEmpty().WithMessage("Old email is required.");
-            RuleFor(x => x.Password).NotNull().NotEmpty().WithMessage("Password is required.");
-            RuleFor(x => x.ConfirmEmail).NotNull().NotEmpty().WithMessage("Confirm email is required.");
-            RuleFor(x => x.NewEmail).Equal(x => x.ConfirmEmail).WithMessage("New email and confirm email does not matched.");
+            RuleFor(x => x.NewEmail).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("NewPasswordRequired")).Length(6, 100)
+                     .Must(email => ValidEmail(email)).WithMessage(stringLocalizer.GetString("InvalidEmailError"));
+            RuleFor(x => x.OldEmail).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("OldEmailRequired"));
+            RuleFor(x => x.Password).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("PasswordRequired"));
+            RuleFor(x => x.ConfirmEmail).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("ConfirmMailRequired"));
+            RuleFor(x => x.NewEmail).Equal(x => x.ConfirmEmail).WithMessage("NewEmailConformedRequired");
         }
 
         public static bool ValidEmail(string email)

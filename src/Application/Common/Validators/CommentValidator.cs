@@ -2,12 +2,15 @@
 {
     using FluentValidation;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.ValidatorLocalization;
+    using Microsoft.Extensions.Localization;
+
     public class CommentValidator : AbstractValidator<CommentRequestModel>
     {
-        public CommentValidator()
+        public CommentValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.Content).NotNull().NotEmpty().WithMessage("Content is required.")
-                .MaximumLength(500).WithMessage("Name length must be less than or equal to 500 characters.");
+            RuleFor(x => x.Content).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("ContentRequired"))
+                .MaximumLength(500).WithMessage(stringLocalizer.GetString("NameLength500"));
         }
     }
 }
