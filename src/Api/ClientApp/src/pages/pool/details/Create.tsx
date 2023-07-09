@@ -31,6 +31,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IAddQuestionType>();
 
@@ -193,18 +194,17 @@ const Create = () => {
       <FormProvider form={form}>
         <Card mt={20}>
           <form onSubmit={form.onSubmit(onSubmit)}>
-            <TextInput
-              autoFocus
+            <CustomTextFieldWithAutoFocus
               size={"lg"}
               withAsterisk
               label={t("title_question")}
               placeholder={t("enter_question_title") as string}
               {...form.getInputProps("name")}
-            ></TextInput>
+            />
             <Box mt={20}>
               <Text size={"lg"}>{t("description")}</Text>
               <TextEditor
-                placeholder={t("question_description")}
+                placeholder={t("question_description") as string}
                 formContext={useFormContext}
               />
             </Box>

@@ -31,6 +31,7 @@ import downloadImage from "@utils/downloadImage";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import { DatePickerInput } from "@mantine/dates";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -188,8 +189,7 @@ const Certificate = () => {
 
             <Container fluid w={"100%"}>
               <Flex>
-                <TextInput
-                  autoFocus
+                <CustomTextFieldWithAutoFocus
                   w={"100%"}
                   label={t("title")}
                   withAsterisk

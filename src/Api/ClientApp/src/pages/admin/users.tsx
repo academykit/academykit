@@ -99,12 +99,14 @@ const UsersList = ({
               </Tabs.List>
               <Tabs.Panel value="user">
                 <Box mt={10}>
-                  <AddUpdateUserForm
-                    setOpened={() => setOpened(false)}
-                    opened={opened}
-                    apiHooks={addUser}
-                    isEditing={false}
-                  />
+                  {opened && (
+                    <AddUpdateUserForm
+                      setOpened={() => setOpened(false)}
+                      opened={opened}
+                      apiHooks={addUser}
+                      isEditing={false}
+                    />
+                  )}
                 </Box>
               </Tabs.Panel>
               <Tabs.Panel value="import">

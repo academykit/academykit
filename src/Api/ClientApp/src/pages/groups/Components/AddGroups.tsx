@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import { useNavigate } from "react-router-dom";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const schema = () => {
   const { t } = useTranslation();

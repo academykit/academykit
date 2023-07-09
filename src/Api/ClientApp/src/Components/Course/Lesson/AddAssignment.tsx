@@ -29,6 +29,7 @@ import { getDateTime } from "@utils/getDateTime";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -202,8 +203,7 @@ const AddAssignment = ({
         <Paper withBorder p="md">
           <Grid align={"center"} justify="space-around">
             <Grid.Col span={12} lg={8}>
-              <TextInput
-                autoFocus
+              <CustomTextFieldWithAutoFocus
                 label={t("assignment_title")}
                 placeholder={t("assignment_title") as string}
                 withAsterisk

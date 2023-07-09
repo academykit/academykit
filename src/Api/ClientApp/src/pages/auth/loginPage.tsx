@@ -24,6 +24,7 @@ import {
   useGeneralSetting,
 } from "@utils/services/adminService";
 import { useTranslation } from "react-i18next";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const LoginPage = () => {
   const form = useForm({
@@ -126,8 +127,7 @@ const LoginPage = () => {
       </Title>
       <form onSubmit={form.onSubmit(onFormSubmit)}>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <TextInput
-            autoFocus
+          <CustomTextFieldWithAutoFocus
             {...form.getInputProps("email")}
             autoComplete={"email"}
             label={t("email")}

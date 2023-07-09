@@ -26,6 +26,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -173,8 +174,7 @@ const AddExam = ({
       <Paper withBorder p="md">
         <Grid align={"center"}>
           <Grid.Col span={12} xs={6} lg={4}>
-            <TextInput
-              autoFocus
+            <CustomTextFieldWithAutoFocus
               withAsterisk
               label={t("exam_title")}
               placeholder={t("exam_title") as string}
