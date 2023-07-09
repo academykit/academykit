@@ -18,6 +18,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const useStyle = createStyles({});
 
@@ -94,8 +95,7 @@ const MCQDetails = () => {
         ) : (
           <Paper mt={20} p={20} withBorder>
             <Box>
-              <TextInput
-                autoFocus
+              <CustomTextFieldWithAutoFocus
                 sx={{ maxWidth: theme.breakpoints.xs }}
                 name="name"
                 label={t("pool_name")}

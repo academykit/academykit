@@ -31,6 +31,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -143,13 +144,12 @@ const Teacher = () => {
           <Box mt={10}>
             <form onSubmit={form.onSubmit(onSubmitForm)}>
               <Group sx={{ alignItems: "start" }}>
-                <TextInput
-                  autoFocus
+                <CustomTextFieldWithAutoFocus
                   placeholder={t("enter_the_email") as string}
                   name="email"
                   type={"email"}
                   {...form.getInputProps("email")}
-                ></TextInput>
+                />
                 <Button type="submit">{t("add")}</Button>
               </Group>
             </form>

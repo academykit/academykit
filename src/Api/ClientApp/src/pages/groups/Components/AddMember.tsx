@@ -49,7 +49,6 @@ const AddMember = ({
   const getNotMemberList = useGroupNotMember(id as string, `search=${search}`);
 
   useEffect(() => {
-    ref.current?.focus();
     if (getNotMemberList.isSuccess) {
       const t = getNotMemberList.data?.items?.map((x) => {
         return {

@@ -82,7 +82,6 @@ const MCQTeacher = () => {
             <form onSubmit={form.onSubmit(onSubmitForm)}>
               <Group sx={{ alignItems: "start" }}>
                 <Select
-                  autoFocus
                   clearable
                   placeholder={t("enter_email_trainer") as string}
                   searchable

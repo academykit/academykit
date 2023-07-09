@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import TextEditor from "@components/Ui/TextEditor";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 export interface FormValues {
   email: string;
@@ -134,7 +135,7 @@ const UserInfo = () => {
 
           <Grid>
             <Grid.Col xs={6} lg={4}>
-              <TextInput
+              <CustomTextFieldWithAutoFocus
                 autoFocus
                 withAsterisk
                 label={t("firstname") as string}

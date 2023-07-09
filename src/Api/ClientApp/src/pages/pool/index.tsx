@@ -23,6 +23,7 @@ import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 const useStyle = createStyles((theme) => ({
   paper: {
     [theme.fn.smallerThan("md")]: {
@@ -97,13 +98,12 @@ const MCQPool = ({
                   withBorder
                   className={classes.paper}
                 >
-                  <TextInput
-                    autoFocus
+                  <CustomTextFieldWithAutoFocus
                     label={t("pool_name")}
                     placeholder={t("enter_pool_name") as string}
                     name="name"
                     {...form.getInputProps("name")}
-                  ></TextInput>
+                  />
                   <Group mt={10}>
                     <Button type="submit" top={5}>
                       {t("create")}
