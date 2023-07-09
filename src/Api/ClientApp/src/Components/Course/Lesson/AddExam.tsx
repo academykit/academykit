@@ -99,13 +99,14 @@ const AddExam = ({
       allowedRetake: item?.questionSet?.allowedRetake ?? 0,
       duration: item?.duration ? item?.duration / 60 : 1,
       endDate: endDateTime,
-      endTime: startDateTime.toTimeString(),
-      startTime: endDateTime.toTimeString(),
+      endTime: moment(startDateTime).format("HH:mm"),
+      startTime: moment(endDateTime).format("HH:mm"),
       startDate: startDateTime,
       isMandatory: item?.isMandatory ?? false,
     },
     validate: yupResolver(schema()),
   });
+  console.log(endDateTime.toTimeString())
   const strippedFormValue = (value: Partial<typeof form.values>) => {
     const val = { ...value };
     delete val.isMandatory;
@@ -121,6 +122,8 @@ const AddExam = ({
         : undefined;
     val.startTime = startTime?.utcDateTime;
     val.endTime = endTime?.utcDateTime;
+
+    
     delete val.startDate;
     delete val.endDate;
 
