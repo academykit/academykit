@@ -219,7 +219,7 @@ const AddMeeting = ({
         </Grid.Col>
         <Tooltip
           multiline
-          label="Toggle this option to enforce mandatory completion of this lesson for trainees."
+          label={t('mandatory_tooltip')}
           width={220}
         >
           <Grid.Col span={6} lg={3}>
