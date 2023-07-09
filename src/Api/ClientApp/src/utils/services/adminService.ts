@@ -624,7 +624,7 @@ const getLogs = async (query: string) => {
 };
 
 export const useGetServerLogs = (query: string) => {
-  return useQuery(["logs"], () => getLogs(query), {
+  return useQuery(["logs" + query], () => getLogs(query), {
     select: (data) => data.data,
     //enabled: !!startDateTime && !!duration,
   });

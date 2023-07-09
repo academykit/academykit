@@ -103,6 +103,8 @@ const withSearchPagination =
 
       pageSize && params.set("si", pageSize?.toString());
       currentPage && params.set("p", currentPage.toString());
+      startDate && params.set("sd", startDate.toString());
+      endDate && params.set("ed", endDate.toString());
 
       setParams(params, { replace: true });
       return qs;
@@ -113,8 +115,8 @@ const withSearchPagination =
       sort,
       filterValue,
       initialSearch,
-      startDateKey,
-      endDateKey
+      startDate,
+      endDate
     ]);
 
     const setSearch = (search: string) => {
