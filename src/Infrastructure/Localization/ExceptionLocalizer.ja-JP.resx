@@ -956,4 +956,7 @@
   <data name="YouShallNotPass" xml:space="preserve">
     <value>通ることならず！</value>
   </data>
+  <data name="SectionNameCannotBeNull" xml:space="preserve">
+    <value>セクション名を null にすることはできません</value>
+  </data>
 </root>

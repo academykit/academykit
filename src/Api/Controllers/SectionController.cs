@@ -76,14 +76,18 @@ namespace Lingtren.Api.Controllers
         [HttpPost]
         public async Task<SectionResponseModel> Create(string identity, SectionRequestModel model)
         {
+            if(string.IsNullOrWhiteSpace(model.Name))
+            {
+                throw new ForbiddenException(_localizer.GetString("SectionNameCannotBeNull"));
+            }
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var course = await _courseService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
             if (course == null)
             {
                 throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             }
-            
-            if(course.Status == CourseStatus.Completed)
+
+            if (course.Status == CourseStatus.Completed)
             {
                 throw new ArgumentException(_localizer.GetString("CourseCompleted"));
             }
@@ -97,8 +101,10 @@ namespace Lingtren.Api.Controllers
                 CreatedBy = CurrentUser.Id,
                 CreatedOn = DateTime.UtcNow
             };
+
             var response = await _sectionService.CreateAsync(entity).ConfigureAwait(false);
             return new SectionResponseModel(response);
+
         }
 
         /// <summary>

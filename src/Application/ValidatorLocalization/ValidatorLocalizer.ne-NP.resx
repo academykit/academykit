@@ -426,6 +426,9 @@
   <data name="SectionIdRequired" xml:space="preserve">
     <value>खण्ड पहिचान आवश्यक छ।</value>
   </data>
+  <data name="SectionNameLength" xml:space="preserve">
+    <value>खण्ड नाम लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+  </data>
   <data name="SectionNameRequired" xml:space="preserve">
     <value>खण्डको नाम आवश्यक छ।</value>
   </data>
