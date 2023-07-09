@@ -1,11 +1,17 @@
 import { TextInput, TextInputProps } from "@mantine/core";
-import React, { FC, useState } from "react";
+import  { FC, useEffect, useRef, useState } from "react";
 
 interface ICustomTextFieldWithAutoFocus extends TextInputProps {}
 
 const CustomTextFieldWithAutoFocus: FC<ICustomTextFieldWithAutoFocus> = (
   props
 ) => {
+  const myRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    myRef?.current?.focus();
+  }, [myRef.current]);
+
+  // const mergedRef = useMergedRef(props.itemRef,)
   const [isFocused, setIsFocused] = useState(false);
 
   const handleClick = () => {
@@ -16,13 +22,16 @@ const CustomTextFieldWithAutoFocus: FC<ICustomTextFieldWithAutoFocus> = (
     setIsFocused(false);
   };
   return (
-    <TextInput
-      {...props}
-      autoComplete={isFocused ? "on" : "off"}
-      autoFocus={isFocused}
-      onClick={handleClick}
-      onBlur={handleBlur}
-    />
+    <>
+      <TextInput
+        ref={myRef}
+        {...props}
+        autoComplete={isFocused ? "on" : "off"}
+        autoFocus={isFocused}
+        onClick={handleClick}
+        onBlur={handleBlur}
+      />
+    </>
   );
 };
 
