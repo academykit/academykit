@@ -63,6 +63,11 @@ const AdminNav = () => {
       role: UserRole.Admin,
     },
     {
+      label: t("log"),
+      to: RoutePath.settings.log(),
+      role: UserRole.Admin,
+    },
+    {
       label: t("reviews"),
       to: RoutePath.settings.base,
       separator: true,

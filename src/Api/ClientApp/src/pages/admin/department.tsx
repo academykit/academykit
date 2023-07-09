@@ -304,7 +304,7 @@ const Department = ({
       </Transition>
       <Flex mb={10}>
         {searchComponent(t("search_department") as string)}
-        <Flex>
+        <Flex style={{width: "210px"}}>
           {filterComponent(
             [
               { value: "true", label: t("active") },

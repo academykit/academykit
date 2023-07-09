@@ -32,17 +32,21 @@ const AddUpdateUserForm = lazyWithRetry(() => import("./AddUpdateUserForm"));
 
 const useStyles = createStyles((theme) => ({
   nameCotainer: {
-    maxWidth: "318px",
-    minWidth: "318px",
+    maxWidth: '250px',
+    minWidth: '250px'
   },
   emailContainer: {
-    maxWidth: "280px",
-    minWidth: "280px",
+    maxWidth: '230px',
+    minWidth: '230px'
   },
   roleContainer: {
-    maxWidth: "100px",
-    minWidth: "100px",
+    maxWidth: '120px',
+    minWidth: '120px'
   },
+  phoneContainer: {
+    maxWidth: '120px',
+    minWidth: '120px'
+  }
 }));
 
 const UserRow = ({
@@ -125,7 +129,7 @@ const UserRow = ({
       <td className={classes.roleContainer}>{t(`${UserRole[item.role]}`)}</td>
       <td className={classes.emailContainer}>{item?.email}</td>
 
-      <td>{item?.mobileNumber}</td>
+      <td className={classes.phoneContainer}>{item?.mobileNumber}</td>
       <td>
         {item?.status === UserStatus.Active ? (
           <Badge color={"green"}>{t("active")}</Badge>

@@ -125,6 +125,9 @@ const RoutePath = {
     department: function () {
       return this.base + "/department";
     },
+    log: function () {
+      return this.base + "/log";
+    },
     courses: function () {
       return this.base + "/courses";
     },

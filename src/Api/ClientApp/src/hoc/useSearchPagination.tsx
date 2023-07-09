@@ -1,9 +1,11 @@
 import SearchBar from "@components/Ui/SearchBar";
 import { Pagination, Select, UnstyledButton } from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
 import queryStringGenerator from "@utils/queryStringGenerator";
 import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { IconChevronDown, IconChevronUp, IconArrowsSort } from "@tabler/icons";
+import moment from "moment";
 
 export interface IWithSearchPagination {
   searchParams: string;
@@ -27,6 +29,16 @@ export interface IWithSearchPagination {
       }[]
     >
   >;
+  startDateFilterComponent: (
+    placeholder: string,
+    key: string,
+    label?: string
+  ) => JSX.Element;
+  endDateFilterComponent: (
+    placeholder: string,
+    key: string,
+    label?: string
+  ) => JSX.Element;
 }
 
 const withSearchPagination =
@@ -54,6 +66,11 @@ const withSearchPagination =
     const [currentPage, setCurrentPage] = useState(
       parseInt(params.get("p") ?? "1")
     );
+    const [startDate, setStartDate] = useState<string>("");
+    const [startDateKey, setStartDateKey] = useState<string>("");
+
+    const [endDate, setEndDate] = useState<string>("");
+    const [endDateKey, setEndDateKey] = useState<string>("");
 
     useEffect(() => {
       if (currentPage !== 1 && itemLength == 0) {
@@ -75,6 +92,8 @@ const withSearchPagination =
         sortBy: by,
         sortType: type,
         [filterKey]: filterValue,
+        [startDateKey]: startDate,
+        [endDateKey]: endDate,
       });
 
       !!search && params.set("s", search);
@@ -82,10 +101,21 @@ const withSearchPagination =
 
       pageSize && params.set("si", pageSize?.toString());
       currentPage && params.set("p", currentPage.toString());
+      startDate && params.set("sd", startDate.toString());
+      endDate && params.set("ed", endDate.toString());
 
       setParams(params, { replace: true });
       return qs;
-    }, [currentPage, search, pageSize, sort, filterValue, initialSearch]);
+    }, [
+      currentPage,
+      search,
+      pageSize,
+      sort,
+      filterValue,
+      initialSearch,
+      startDate,
+      endDate
+    ]);
 
     const setSearch = (search: string) => {
       for (let value of params.entries()) {
@@ -175,6 +205,48 @@ const withSearchPagination =
       />
     );
 
+    const startDateFilterComponent = (
+      placeholder: string,
+      key: string,
+      label?: string
+    ) => {
+      return (
+        <DatePickerInput
+          clearable
+          valueFormat="YYYY MMM DD"
+          label={label}
+          placeholder={placeholder}
+          onChange={(val: any) => {
+            setStartDate(moment(val).toISOString());
+            setStartDateKey(key);
+          }}
+          miw={122}
+          mr={5}
+        />
+      );
+    };
+
+    const endDateFilterComponent = (
+      placeholder: string,
+      key: string,
+      label?: string
+    ) => {
+      return (
+        <DatePickerInput
+          clearable
+          valueFormat="YYYY MMM DD"
+          label={label}
+          placeholder={placeholder}
+          onChange={(val: any) => {
+            setEndDate(moment(val).toISOString());
+            setEndDateKey(key);
+          }}
+          miw={122}
+          mr={5}
+        />
+      );
+    };
+
     return (
       <Component
         {...(props as P)}
@@ -184,6 +256,8 @@ const withSearchPagination =
         searchComponent={searchComponent}
         sortComponent={sortComponent}
         setInitialSearch={setInitialSearch}
+        startDateFilterComponent={startDateFilterComponent}
+        endDateFilterComponent={endDateFilterComponent}
       />
     );
   };

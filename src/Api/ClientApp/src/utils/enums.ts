@@ -93,3 +93,10 @@ export enum LanguageString {
   en = "en-US",
   ja = "ja-JP",
 }
+
+export enum SeverityType {
+  Error = 1,
+  Warning = 2,
+  Debug = 3,
+  Info = 4,
+}

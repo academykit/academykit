@@ -13,7 +13,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-// import { DateRangePicker } from "@mantine/dates";
+import { DatePickerInput } from "@mantine/dates";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
@@ -143,16 +143,16 @@ const MyTrainingExternal = () => {
                 name="duration"
                 {...form.getInputProps("duration")}
               />
-              {/* <DateRangePicker
+              <DatePickerInput
                 required
                 valueFormat="MMM DD, YYYY"
                 label={t("start_end_date")}
                 placeholder={t("date_range") as string}
-                allowSingleDateInRange={true}
+                type="range"
                 value={value}
                 //@ts-ignore
                 onChange={setValue}
-              /> */}
+              />
               <TextInput
                 label={t("location")}
                 placeholder={t("Location of Training") as string}

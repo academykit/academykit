@@ -608,3 +608,34 @@ export const useGetTrainers = (search: string) =>
   useQuery([api.adminUser.getTrainer(search)], () => getTrainers(search), {
     select: (data) => data.data,
   });
+
+//----------------------Get server logs-------------------
+
+export interface IServerLogs {
+  id: string;
+  type: number;
+  message: string;
+  trackBy: string;
+  timeStamp: Date;
+}
+
+const getLogs = async (query: string) => {
+  return httpClient.get<IPaginated<IServerLogs>>(api.adminUser.getLogs(query));
+};
+
+export const useGetServerLogs = (query: string) => {
+  return useQuery(["logs" + query], () => getLogs(query), {
+    select: (data) => data.data,
+    //enabled: !!startDateTime && !!duration,
+  });
+};
+
+const getSingleLog = async (id: string) => {
+  return httpClient.get<IServerLogs>(api.adminUser.getSingleLog(id));
+};
+
+export const useGetSingleLog = (id: string) => {
+  return useQuery(["log" + id], () => getSingleLog(id), {
+    select: (data) => data.data,
+  });
+};
