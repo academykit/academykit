@@ -15,14 +15,17 @@ namespace Lingtren.Api.Controllers
         private readonly IMediaService _mediaService;
         private readonly IValidator<MediaRequestModel> _validator;
         private readonly ILogger<MediaController> _logger;
+        private readonly IValidator<StorageSettingRequestModel> _validator1;
         public MediaController(
             IMediaService mediaService,
             IValidator<MediaRequestModel> validator,
-            ILogger<MediaController> logger)
+            ILogger<MediaController> logger,
+            IValidator<StorageSettingRequestModel> validator1)
         {
             _mediaService = mediaService;
             _validator = validator;
             _logger = logger;
+            _validator1 = validator1;
         }
 
         /// <summary>
@@ -33,6 +36,7 @@ namespace Lingtren.Api.Controllers
         [HttpPut("setting")]
         public async Task<StorageSettingResponseModel> Update(StorageSettingRequestModel model)
         {
+            await _validator1.ValidateAsync(model,options => options.ThrowOnFailures()).ConfigureAwait(false);
             var response = await _mediaService.StorageUpdateSettingAsync(model, CurrentUser.Id).ConfigureAwait(false);
             return response;
         }

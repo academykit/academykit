@@ -2,12 +2,15 @@
 {
     using FluentValidation;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.ValidatorLocalization;
+    using Microsoft.Extensions.Localization;
+
     public class QuestionPoolTeacherValidator : AbstractValidator<QuestionPoolTeacherRequestModel>
     {
-        public QuestionPoolTeacherValidator()
+        public QuestionPoolTeacherValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.QuestionPoolIdentity).NotNull().NotEmpty().WithMessage("Question pool identity is required.");
-            RuleFor(x => x.Email).NotNull().NotEmpty().WithMessage("Email is required.");
+            RuleFor(x => x.QuestionPoolIdentity).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("QuestionpoolIdRequired"));
+            RuleFor(x => x.Email).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("EmailRequired"));
         }
     }
 }
