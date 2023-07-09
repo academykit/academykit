@@ -72,7 +72,9 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
     >
       <Box>
         <form onSubmit={form.onSubmit(({ name }) => onSubmitForm(name))}>
-          <CustomTextFieldWithAutoFocus
+          <TextInput
+            autoFocus
+            autoComplete="off"
             mb={10}
             label={t("group_name")}
             placeholder={t("your_group_name") as string}

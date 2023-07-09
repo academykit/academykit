@@ -55,19 +55,6 @@ const schema = () => {
       .min(1, t("exam_duration_atleast_one") as string),
   });
 };
-const strippedFormValue = (value: any) => {
-  const val = { ...value };
-  delete val.isMandatory;
-  delete val.isRequired;
-  const startTime = getDateTime(val.startDate, val.startTime);
-  const endTime = getDateTime(val.endDate, val.endTime);
-  val.startTime = startTime.utcDateTime;
-  val.endTime = endTime.utcDateTime;
-  delete val.startDate;
-  delete val.endDate;
-
-  return val;
-};
 
 const AddExam = ({
   setAddState,
@@ -112,16 +99,36 @@ const AddExam = ({
       allowedRetake: item?.questionSet?.allowedRetake ?? 0,
       duration: item?.duration ? item?.duration / 60 : 1,
       endDate: endDateTime,
-      endTime: endDateTime,
-      startTime: startDateTime,
+      endTime: startDateTime.toTimeString(),
+      startTime: endDateTime.toTimeString(),
       startDate: startDateTime,
       isMandatory: item?.isMandatory ?? false,
     },
     validate: yupResolver(schema()),
   });
+  const strippedFormValue = (value: Partial<typeof form.values>) => {
+    const val = { ...value };
+    delete val.isMandatory;
+    // @ts-ignore
+    delete val.isRequired;
+    const startTime =
+      val.startDate && val.startTime
+        ? getDateTime(val.startDate, val.startTime)
+        : undefined;
+    const endTime =
+      val.endDate && val.endTime
+        ? getDateTime(val.endDate, val.endTime)
+        : undefined;
+    val.startTime = startTime?.utcDateTime;
+    val.endTime = endTime?.utcDateTime;
+    delete val.startDate;
+    delete val.endDate;
+
+    return val;
+  };
   useFormErrorHooks(form);
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: typeof form.values) => {
     try {
       if (!isEditing) {
         const response: any = await lesson.mutateAsync({
@@ -152,6 +159,7 @@ const AddExam = ({
         } ${t("successfully")}`,
       });
     } catch (error) {
+      console.log(error);
       const err = errorType(error);
       showNotification({
         message: err,

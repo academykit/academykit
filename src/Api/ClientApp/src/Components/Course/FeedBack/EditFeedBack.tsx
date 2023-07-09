@@ -157,7 +157,10 @@ const EditFeedback = ({
       <FormProvider form={form}>
         <form onSubmit={form.onSubmit(onSubmit)}>
           <Paper p={20} withBorder mt={20}>
-            <CustomTextFieldWithAutoFocus
+            <TextInput
+              autoFocus
+              autoComplete="off"
+              
               size={fieldSize}
               withAsterisk
               label={t("title_feeback")}
