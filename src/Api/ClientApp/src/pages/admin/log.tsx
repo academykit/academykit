@@ -155,19 +155,21 @@ const DetailFields = ({
 
 const LogDetails = ({ logId }: { logId: string }) => {
   const { data } = useGetSingleLog(logId);
+  const { t } = useTranslation();
+
   return (
     <>
       <Grid>
         <DetailFields
-          title="Severity"
+          title={t('severity')}
           content={(data && SeverityType[data?.type]) ?? "-"}
         />
         <DetailFields
-          title="Time Stamp"
+          title={t('time_stamp')}
           content={data?.timeStamp.toISOString() ?? "-"}
         />
-        <DetailFields title="Message" content={data?.message ?? "-"} />
-        <DetailFields title="Faced By" content={data?.trackBy ?? "-"} />
+        <DetailFields title={t('message')} content={data?.message ?? "-"} />
+        <DetailFields title={t('faced_by')} content={data?.trackBy ?? "-"} />
       </Grid>
     </>
   );
@@ -175,12 +177,13 @@ const LogDetails = ({ logId }: { logId: string }) => {
 
 const Rows = ({ item }: { item: IServerLogs }) => {
   const [viewLog, setViewLog] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <>
       <tr>
         <Modal
-          title={`Log Details`}
+          title={t('log_details')}
           opened={viewLog}
           onClose={() => {
             setViewLog(false);

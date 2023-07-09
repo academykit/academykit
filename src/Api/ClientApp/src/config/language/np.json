@@ -829,6 +829,7 @@
   "info": "जानकारी",
   "search_logs": "खोज लगहरू",
   "must_specify_number": "नम्बर निर्दिष्ट गर्नुपर्छ",
+  "log_details": "लग विवरण",
   "settings_screen": {
     "file_storage": {
       "Server_AccessKey": "सर्भर एक्सेस कि",

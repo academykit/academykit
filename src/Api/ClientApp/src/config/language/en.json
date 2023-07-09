@@ -827,6 +827,7 @@
   "info": "Info",
   "search_logs": "Search logs",
   "must_specify_number": "Must specify a number",
+  "log_details": "Log Details",
   "settings_screen": {
     "file_storage": {
       "Server_AccessKey": "Server Access Key",

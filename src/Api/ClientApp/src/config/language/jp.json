@@ -829,6 +829,7 @@
   "info": "情報",
   "search_logs": "ログの検索",
   "must_specify_number": "数値を指定する必要があります",
+  "log_details": "ログの詳細",
   "settings_screen": {
     "file_storage": {
       "Server_AccessKey": "サーバーアクセスキー",
