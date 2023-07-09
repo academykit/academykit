@@ -1,11 +1,4 @@
-import {
-  Box,
-  createStyles,
-  Group,
-  Paper,
-  SimpleGrid,
-  Text,
-} from "@mantine/core";
+import { createStyles, Group, Paper, SimpleGrid, Text } from "@mantine/core";
 import {
   IconUserPlus,
   IconDiscount2,
@@ -24,7 +17,7 @@ import { useTranslation } from "react-i18next";
 
 const useStyles = createStyles((theme) => ({
   root: {
-    padding: theme.spacing.xl * 1.5,
+    padding: "20em",
   },
 
   value: {
@@ -125,7 +118,6 @@ export const User = ({
       ) : (
         <Text c="dimmed">{t("not_enrolled_training")}</Text>
       )}
-
       <SimpleGrid
         cols={3}
         breakpoints={[

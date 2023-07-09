@@ -11,6 +11,7 @@ import queryStringGenerator from "@utils/queryStringGenerator";
 import { PHONE_VALIDATION } from "@utils/constants";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -126,7 +127,7 @@ const AddUpdateUserForm = ({
     <form onSubmit={form.onSubmit(onSubmitForm)}>
       <Grid align={"center"}>
         <Grid.Col xs={6} lg={4}>
-          <TextInput
+          <CustomTextFieldWithAutoFocus
             autoFocus
             withAsterisk
             label={t("firstname")}
@@ -134,6 +135,7 @@ const AddUpdateUserForm = ({
             name="firstName"
             {...form.getInputProps("firstName")}
           />
+          {/* <TextInput /> */}
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <TextInput
@@ -188,9 +190,9 @@ const AddUpdateUserForm = ({
             label={t("user_role")}
             placeholder={t("user_role_pick") as string}
             data={[
-              { value: UserRole.Admin, label: "Admin" },
-              { value: UserRole.Trainer, label: "Trainer" },
-              { value: UserRole.Trainee, label: "Trainee" },
+              { value: UserRole.Admin, label: t("Admin") as string },
+              { value: UserRole.Trainer, label: t("Trainer") as string },
+              { value: UserRole.Trainee, label: t("Trainee") as string },
             ]}
             {...form.getInputProps("role")}
           />

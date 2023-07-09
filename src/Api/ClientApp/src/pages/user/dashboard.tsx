@@ -23,7 +23,6 @@ const Dashboard = () => {
       <Text size="lg" weight="bolder" mb={"sm"}>
         {t("overview")}
       </Text>
-
       {dashboard.isSuccess && dashboardCourses.isSuccess && (
         <>
           {role === UserRole.Admin || role === UserRole.SuperAdmin ? (

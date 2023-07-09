@@ -14,6 +14,7 @@ import SubScript from "@tiptap/extension-subscript";
 import { Box, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useDebouncedState, useDebouncedValue } from "@mantine/hooks";
+import i18next from "i18next";
 
 type IProps = {
   formContext?: () => UseFormReturnType<any, (values: any) => any>;
@@ -57,6 +58,7 @@ const TextEditor = ({
     ],
     content: form ? form.values[label ?? "description"] : value,
   });
+
   useMemo(() => {
     const textValue = form?.values[label ?? "description"] || value;
     if (editor && textValue !== editor.getHTML()) {
