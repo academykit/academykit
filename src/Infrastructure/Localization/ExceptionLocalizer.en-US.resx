@@ -941,4 +941,22 @@ recorded cannot be deleted.</value>
   <data name="TryAgain" xml:space="preserve">
     <value>and try again.</value>
   </data>
+  <data name="ArgumentExceptionMessage" xml:space="preserve">
+    <value>Invalid argument provided.</value>
+  </data>
+  <data name="BadRequestError" xml:space="preserve">
+    <value>Please check the provided data.</value>
+  </data>
+  <data name="NorAllowedDroids" xml:space="preserve">
+    <value>These aren't the droids you're looking for...</value>
+  </data>
+  <data name="NotAllowedToExcessResources" xml:space="preserve">
+    <value>You are not allowed to access this resource.</value>
+  </data>
+  <data name="ServiceExceptionMessage" xml:space="preserve">
+    <value>An error occurred while processing the service request.</value>
+  </data>
+  <data name="YouShallNotPass" xml:space="preserve">
+    <value>You shall not pass!</value>
+  </data>
 </root>

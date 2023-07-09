@@ -2,11 +2,14 @@
 {
     using FluentValidation;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.ValidatorLocalization;
+    using Microsoft.Extensions.Localization;
+
     public class QuestionPoolValidator : AbstractValidator<QuestionPoolRequestModel>
     {
-        public QuestionPoolValidator()
+        public QuestionPoolValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.Name).NotEmpty().NotNull().WithMessage("Question pool name is required.").MaximumLength(100).WithMessage("Name length must be less than or equal to 100 characters.");
+            RuleFor(x => x.Name).NotEmpty().NotNull().WithMessage(context => stringLocalizer.GetString("QuestionPoolNameRequired")).MaximumLength(100).WithMessage(context => stringLocalizer.GetString("NameLengthError"));
         }
     }
 }

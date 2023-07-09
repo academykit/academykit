@@ -2,11 +2,14 @@
 {
     using FluentValidation;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.ValidatorLocalization;
+    using Microsoft.Extensions.Localization;
+
     public class LevelValidator : AbstractValidator<LevelRequestModel>
     {
-        public LevelValidator()
+        public LevelValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.Name).NotNull().NotEmpty().WithMessage("Name is required.").MaximumLength(250).WithMessage("Name length must be less than or equal to 250 characters.");
+            RuleFor(x => x.Name).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("NameRequired")).MaximumLength(250).WithMessage(context => stringLocalizer.GetString("NameLength250"));
         }
     }
 }

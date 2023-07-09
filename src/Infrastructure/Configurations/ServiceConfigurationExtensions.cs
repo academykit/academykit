@@ -11,6 +11,8 @@
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Persistence;
     using Lingtren.Infrastructure.Services;
+    using lingtrin.Application.Common.Validators;
+    using Lingtring.Application.Common.Validators;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -75,6 +77,8 @@
             #endregion Service DI
 
             #region Validator DI
+            services.AddSingleton<IValidator<SettingValue>, SettingValueValidator>();
+            services.AddSingleton<IValidator<StorageSettingRequestModel>,StorageSettingRequestModelValidation>();
             services.AddSingleton<IValidator<CertificateRequestModel>,CertificateRequestModelValidator>();
             services.AddSingleton<IValidator<LiveClassLicenseRequestModel>,ZoomLicenseIdValidator>();
             services.AddSingleton<IValidator<LoginRequestModel>, LoginValidator>();

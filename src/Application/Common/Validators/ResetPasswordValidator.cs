@@ -2,17 +2,19 @@
 {
     using FluentValidation;
     using Lingtren.Application.Common.Dtos;
+    using Lingtren.Application.ValidatorLocalization;
+    using Microsoft.Extensions.Localization;
     using System.Text.RegularExpressions;
 
     public class ResetPasswordValidator : AbstractValidator<ResetPasswordRequestModel>
     {
-        public ResetPasswordValidator()
+        public ResetPasswordValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.NewPassword).NotNull().NotEmpty().WithMessage("New password is required.").Length(6, 20)
-                    .Must(pw => HasValidPassword(pw)).WithMessage("Password should contains at least one lowercase, one uppercase, one digit and one symbol.");
-            RuleFor(x => x.ConfirmPassword).NotNull().NotEmpty().WithMessage("Confirm password is required.");
-            RuleFor(x => x.PasswordChangeToken).NotNull().NotEmpty().WithMessage("Password change token is required.");
-            RuleFor(x => x.NewPassword).Equal(x => x.ConfirmPassword).WithMessage("New password and confirm password does not matched.");
+            RuleFor(x => x.NewPassword).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("NewPasswordRequired")).Length(6, 20)
+                    .Must(pw => HasValidPassword(pw)).WithMessage(context => stringLocalizer.GetString("InvalidPasswordFormat"));
+            RuleFor(x => x.ConfirmPassword).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("ConfirmPasswordRequired"));
+            RuleFor(x => x.PasswordChangeToken).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("PasswordChangeTokenIsRequired"));
+            RuleFor(x => x.NewPassword).Equal(x => x.ConfirmPassword).WithMessage(context => stringLocalizer.GetString("OldAndNewPasswordDoesnotMatch"));
         }
 
         public static bool HasValidPassword(string pw)

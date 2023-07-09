@@ -935,4 +935,22 @@
   <data name="TryAgain" xml:space="preserve">
     <value>र फेरि प्रयास गर्नुहोस्।</value>
   </data>
+  <data name="ArgumentExceptionMessage" xml:space="preserve">
+    <value>अमान्य तर्क प्रदान गरियो।</value>
+  </data>
+  <data name="BadRequestError" xml:space="preserve">
+    <value>प्रमाणीकरण असफल भयो। कृपया प्रदान गरिएको डाटा जाँच गर्नुहोस्।</value>
+  </data>
+  <data name="NorAllowedDroids" xml:space="preserve">
+    <value>यी तपाईंले खोजिरहनु भएको droids होइनन्...</value>
+  </data>
+  <data name="ServiceExceptionMessage" xml:space="preserve">
+    <value>सेवा अनुरोध प्रशोधन गर्दा त्रुटि भयो।</value>
+  </data>
+  <data name="String1NotAllowedToExcessResources" xml:space="preserve">
+    <value>तपाईंलाई यो स्रोत पहुँच गर्न अनुमति छैन।</value>
+  </data>
+  <data name="YouShallNotPass" xml:space="preserve">
+    <value>तिमी पास हुने छैनौ!</value>
+  </data>
 </root>

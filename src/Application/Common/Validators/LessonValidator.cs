@@ -2,55 +2,58 @@
 {
     using FluentValidation;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.ValidatorLocalization;
     using Lingtren.Domain.Enums;
+    using Microsoft.Extensions.Localization;
+
     public class LessonValidator : AbstractValidator<LessonRequestModel>
     {
-        public LessonValidator()
+        public LessonValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.SectionIdentity).NotNull().NotEmpty().WithMessage("Section identity is required.");
+            RuleFor(x => x.SectionIdentity).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("SectionIdRequired"));
             RuleFor(x => x.Name).NotNull().NotEmpty().When(x => x.Type != LessonType.Exam)
-                                    .WithMessage("Lesson name is required.").MaximumLength(250).WithMessage("Name length must be less than or equal to 250 characters.");
-            RuleFor(x => x.Type).NotNull().NotEmpty().WithMessage("Lesson type is required.").IsInEnum().WithMessage("Invalid lesson type.");
+                                    .WithMessage(context => stringLocalizer.GetString("LessionNameRequired")).MaximumLength(250).WithMessage(context => stringLocalizer.GetString("NameLength250"));
+            RuleFor(x => x.Type).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("LessonIdRequired")).IsInEnum().WithMessage(context => stringLocalizer.GetString("InvalidLessionType"));
             RuleFor(x => x.DocumentUrl).NotNull().NotEmpty().When(x => x.Type == LessonType.Document)
-                                    .WithMessage("Document is required for lesson type is document");
+                                    .WithMessage(context => stringLocalizer.GetString("DocumentTypeRequired"));
             RuleFor(x => x.VideoUrl).NotNull().NotEmpty().When(x => x.Type == LessonType.Video || x.Type == LessonType.RecordedVideo)
-                                    .WithMessage("Video is required for lesson type is video or recorded video.");
-            RuleFor(x => x.Description).MaximumLength(5000).WithMessage("Description length must be less than or equal to 5000 characters.");
-            RuleFor(x => x.QuestionSet).SetValidator(new QuestionSetValidator())
+                                    .WithMessage(context => stringLocalizer.GetString("VideoIsRequired"));
+            RuleFor(x => x.Description).MaximumLength(5000).WithMessage(context => stringLocalizer.GetString("DescriptionLenght500"));
+            RuleFor(x => x.QuestionSet).SetValidator(new QuestionSetValidator(stringLocalizer))
                                          .When(x => x.Type == LessonType.Exam);
-            RuleFor(x => x.Meeting).SetValidator(new MeetingValidator())
+            RuleFor(x => x.Meeting).SetValidator(new MeetingValidator(stringLocalizer))
                                          .When(x => x.Type == LessonType.LiveClass);
-            RuleFor(x => x).SetValidator(new AssignmentDateValidator()).When(x => x.Type == LessonType.Assignment);
+            RuleFor(x => x).SetValidator(new AssignmentDateValidator(stringLocalizer)).When(x => x.Type == LessonType.Assignment);
 
         }
     }
 
     public class AssignmentDateValidator : AbstractValidator<LessonRequestModel>
     {
-        public AssignmentDateValidator()
+        public AssignmentDateValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x).Must(x => x.EndDate != default && x.StartDate != default && x.EndDate > x.StartDate).WithMessage("EndDate must be greater than StartDate.");
+            RuleFor(x => x).Must(x => x.EndDate != default && x.StartDate != default && x.EndDate > x.StartDate).WithMessage(context => stringLocalizer.GetString("EnddateMustBeGreater"));
         }
     }
 
     public class QuestionSetValidator : AbstractValidator<QuestionSetRequestModel>
     {
-        public QuestionSetValidator()
+        public QuestionSetValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.QuestionMarking).NotNull().NotEmpty().WithMessage("Question marking is required.");
-            RuleFor(x => x.AllowedRetake).NotNull().GreaterThan(0).WithMessage("Allowed retake must be greater than 0.");
-            RuleFor(x => x.Description).MaximumLength(5000).WithMessage("Description length must be less than or equal to 5000 characters.");
-            RuleFor(x => x).Must(x => x.EndTime != default && x.StartTime != default && x.EndTime > x.StartTime).WithMessage("End time must be greater than start time.");
+            RuleFor(x => x.QuestionMarking).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("QuestionMarkingRequired"));
+            RuleFor(x => x.AllowedRetake).NotNull().GreaterThan(0).WithMessage(context => stringLocalizer.GetString("RetakeMustBeGreaterThan0"));
+            RuleFor(x => x.Description).MaximumLength(5000).WithMessage(context => stringLocalizer.GetString("DescriptionLenght500"));
+            RuleFor(x => x).Must(x => x.EndTime != default && x.StartTime != default && x.EndTime > x.StartTime).WithMessage(context => stringLocalizer.GetString("EnddateMustBeGreater"));
         }
     }
     public class MeetingValidator : AbstractValidator<MeetingRequestModel>
     {
-        public MeetingValidator()
+        public MeetingValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.ZoomLicenseId).NotNull().NotEmpty().WithMessage("Please select zoom license.");
-            RuleFor(x => x.MeetingStartDate).NotNull().NotEmpty().WithMessage("Meeting start date is required.");
-            RuleFor(x => x.MeetingDuration).NotNull().NotEmpty().WithMessage("Meeting duration is required.")
-                        .LessThanOrEqualTo(1439).WithMessage("Meeting duration cannot be greater than or equal to 1439 minutes.");
+            RuleFor(x => x.ZoomLicenseId).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("ZoomLicenseRequired"));
+            RuleFor(x => x.MeetingStartDate).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("EventStartDateRequired"));
+            RuleFor(x => x.MeetingDuration).NotNull().NotEmpty().WithMessage(stringLocalizer.GetString("MeedingDurationRequired"))
+                        .LessThanOrEqualTo(1439).WithMessage(stringLocalizer.GetString("MeetingIdDUrationLength"));
         }
     }
 }
