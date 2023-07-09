@@ -339,7 +339,7 @@
   "role": "Role",
   "phone_number": "Phone Number",
   "active": "Active",
-  "inactive": "InActive",
+  "inactive": "Inactive",
   "pending": "Pending",
   "user_imported_success": "User imported successfully!",
   "add_more_user": "Add More Users",
