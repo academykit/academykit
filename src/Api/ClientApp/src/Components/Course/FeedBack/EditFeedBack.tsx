@@ -158,6 +158,8 @@ const EditFeedback = ({
           <Paper p={20} withBorder mt={20}>
             <TextInput
               autoFocus
+              autoComplete="off"
+              
               size={fieldSize}
               withAsterisk
               label={t("title_feeback")}
