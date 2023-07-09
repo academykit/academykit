@@ -7,7 +7,7 @@
     "prestart": "node aspnetcore-https.cjs && node aspnetcore-react.cjs",
     "start": "vite",
     "dev": "vite --debug",
-    "build": "swc src -d dist --source-maps --copy-files && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
   },
