@@ -816,7 +816,7 @@
   "zoom": "Zoom",
   "edit_user_detail": "Edit User Details",
   "resend_email": "Resend Email",
-  "logs": "Server Log",
+  "log": "Server Log",
   "severity": "Severity",
   "time_stamp": "Time Stamp",
   "message": "Message",

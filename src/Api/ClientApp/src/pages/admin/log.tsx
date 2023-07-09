@@ -247,7 +247,7 @@ const Log = ({
         sx={{ justifyContent: "space-between", alignItems: "center" }}
         mb={15}
       >
-        <Title>{t("logs")}</Title>
+        <Title>{t("log")}</Title>
       </Group>
 
       {/* Search and Filter section */}
