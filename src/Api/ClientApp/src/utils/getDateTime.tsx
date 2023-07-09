@@ -1,15 +1,16 @@
 import moment from "moment";
 
 const getDateTime = (startDate: Date, startTime: string) => {
-  const date = new Date(startDate).toLocaleDateString();
-  const a = moment(`${date} ${startTime}`,"DD/MM/YYYY HH:mm")
+  const date = moment(startDate).format("DD/MM/YYYY");
+
+  const a = moment(`${date} ${startTime}`, "DD/MM/YYYY HH:mm");
+
   return {
-    time:a.toDate().toLocaleTimeString(),
-    date,
+    time: a.toDate().toLocaleTimeString(),
+    date: a.toDate(),
     utcDateTime: a.toDate().toISOString(),
     localDateTime: a.toDate(),
   };
-
 };
 
 const getDateAndTime = (dates?: string) => {

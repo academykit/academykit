@@ -41,7 +41,8 @@ const useStyles = createStyles((theme) => ({
   },
   roleContainer: {
     maxWidth: '120px',
-    minWidth: '120px'
+    minWidth: '120px',
+    width: "120px",
   },
   phoneContainer: {
     maxWidth: '120px',
