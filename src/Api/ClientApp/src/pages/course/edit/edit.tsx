@@ -213,7 +213,6 @@ const EditCourse = () => {
               {tags.isSuccess ? (
                 <MultiSelect
                   searchable
-                  labelProps="name"
                   creatable
                   sx={{ maxWidth: "500px" }}
                   data={tagsList}
@@ -221,13 +220,16 @@ const EditCourse = () => {
                   getCreateLabel={(query) => `+ Create ${query}`}
                   onCreate={(query) => {
                     mutate(query);
+                    return null;
                   }}
                   size={"lg"}
                   label={t("tags")}
                   placeholder={t("tags_placeholder") as string}
                 />
               ) : (
-                <Loader />
+                <div>
+                  <Loader size={"xs"} />
+                </div>
               )}
               {label.isSuccess ? (
                 <Select
@@ -239,7 +241,9 @@ const EditCourse = () => {
                   data={label.data.map((x) => ({ value: x.id, label: x.name }))}
                 ></Select>
               ) : (
-                <Loader />
+                <div>
+                  <Loader size={"xs"} />
+                </div>
               )}
             </Group>
             {!groups.isLoading ? (
@@ -247,7 +251,6 @@ const EditCourse = () => {
                 mt={20}
                 searchable
                 withAsterisk
-                labelProps="name"
                 sx={{ maxWidth: "500px" }}
                 data={
                   groups.data &&

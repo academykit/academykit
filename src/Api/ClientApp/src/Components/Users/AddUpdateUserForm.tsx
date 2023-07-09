@@ -176,7 +176,7 @@ const AddUpdateUserForm = ({
         {isEditing && item?.status !== UserStatus.Pending && (
           <Grid.Col xs={6} lg={4}>
             <Switch
-              label={t('user_status')}
+              label={t("user_status")}
               {...form.getInputProps("isActive", { type: "checkbox" })}
             />
           </Grid.Col>

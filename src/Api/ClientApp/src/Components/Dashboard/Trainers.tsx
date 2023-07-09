@@ -1,5 +1,10 @@
 import { Box, Flex, Group, Paper, SimpleGrid, Text } from "@mantine/core";
-import { IconActivity, IconBook, IconCertificate, IconFileCheck } from "@tabler/icons";
+import {
+  IconActivity,
+  IconBook,
+  IconCertificate,
+  IconFileCheck,
+} from "@tabler/icons";
 import {
   DashboardCourses,
   DashboardStats,

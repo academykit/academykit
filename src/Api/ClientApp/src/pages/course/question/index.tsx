@@ -96,17 +96,17 @@ const Questions = () => {
 
   let poolData: ISelectList[] = [];
   let questionTag: ISelectList[] = [];
-  questionPools.data?.items.map((e, i) => {
+  questionPools.data?.items.map((e) => {
     poolData.push({ value: e.slug, label: e.name });
   });
-  questionPoolTags.data?.items.map((e, i) => {
+  questionPoolTags.data?.items.map((e) => {
     questionTag.push({ value: e.slug, label: e.name });
   });
 
   useEffect(() => {
     if (poolValue) {
       const i: IQuestionListData[] | undefined = questions.data?.items.map(
-        (e, i) => {
+        (e) => {
           return {
             value: e.questionPoolQuestionId,
             label: e.name,
@@ -149,7 +149,7 @@ const Questions = () => {
     }
     try {
       const questionPoolQuestionIds: string[] = [];
-      data[1].map((e, i) => {
+      data[1].map((e) => {
         questionPoolQuestionIds.push(e.value);
       });
       await addQuestions.mutateAsync({
@@ -220,7 +220,7 @@ const Questions = () => {
             {questions.data && questions.data.totalPage > 1 && (
               <Pagination
                 mt={10}
-                page={activePage}
+                value={activePage}
                 onChange={setPage}
                 total={questions.data?.totalPage ?? 1}
               />

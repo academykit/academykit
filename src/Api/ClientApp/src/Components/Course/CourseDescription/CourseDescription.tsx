@@ -42,8 +42,8 @@ const useStyles = createStyles((theme) => ({
   inner: {
     display: "flex",
     justifyContent: "space-between",
-    paddingTop: theme.spacing.xl,
-    paddingBottom: theme.spacing.xl * 4,
+    paddingTop: "80px",
+    paddingBottom: "80px",
     [theme.fn.smallerThan("sm")]: {
       flexDirection: "column-reverse",
     },
@@ -51,7 +51,7 @@ const useStyles = createStyles((theme) => ({
 
   content: {
     width: "60%",
-    marginRight: theme.spacing.xl * 3,
+    marginRight: "80px",
 
     [theme.fn.smallerThan("lg")]: {
       width: "50%",

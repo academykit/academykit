@@ -31,6 +31,7 @@ import moment from "moment";
 import React from "react";
 import UserShortProfile from "@components/UserShortProfile";
 import { useTranslation } from "react-i18next";
+import { DATE_FORMAT } from "@utils/constants";
 
 const CertificateCard = ({
   auth,
@@ -73,8 +74,8 @@ const CertificateCard = ({
             <Badge ml={20}>{CertificateStatus[item.status]}</Badge>
           </Text>
           <Text mt={5}>
-            {t("from")} {moment(item.startDate).format(theme.dateFormat)}{" "}
-            {t("to")} {moment(item.endDate).format(theme.dateFormat)}
+            {t("from")} {moment(item.startDate).format(DATE_FORMAT)} {t("to")}{" "}
+            {moment(item.endDate).format(DATE_FORMAT)}
             {t("completed_in_about")} {item.duration} {t("hrs")}
           </Text>
           <Text>

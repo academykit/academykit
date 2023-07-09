@@ -4,12 +4,10 @@ import {
   Group,
   Loader,
   Modal,
-  Text,
   Tooltip,
-  SimpleGrid,
   Box,
   Table,
-  useMantineTheme,
+  ScrollArea,
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import UserResults from "@pages/course/exam/Components/UserResults";
@@ -29,14 +27,14 @@ import formatDuration from "@utils/formatDuration";
 import { getType } from "./LessonStatusColor";
 import { IStudentInfoLesson } from "@utils/services/manageCourseService";
 import { useTranslation } from "react-i18next";
+import { DATE_FORMAT } from "@utils/constants";
 
 const TableRow = ({ values }: { values: IReportDetail }) => {
-  const theme = useMantineTheme();
   const { t } = useTranslation();
 
   return (
     <tr>
-      <td>{moment(values.startDate).format(theme.dateFormat)}</td>
+      <td>{moment(values.startDate).format(DATE_FORMAT)}</td>
       <td>{values.joinedTime}</td>
       <td>{values.leftTime}</td>
       <td>{formatDuration(values.duration ?? 0, true, t)}</td>
@@ -157,12 +155,9 @@ const StudentLessonDetails = ({
         onClose={() => setExamResultModal()}
         trapFocus={true}
         opened={examResultModal}
-        transition="slide-up"
+        transitionProps={{ transition: "slide-up" }}
         size={"100%"}
         styles={{
-          modal: {
-            height: "100%",
-          },
           inner: {
             paddingLeft: 0,
             paddingRight: 0,
@@ -192,7 +187,7 @@ const StudentLessonDetails = ({
       </Modal>
       <Modal
         size={"xl"}
-        overflow="inside"
+        scrollAreaComponent={ScrollArea.Autosize}
         opened={liveClassReportModal}
         onClose={() => setLiveClassReportModal()}
         title={t("meeting_report")}
