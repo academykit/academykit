@@ -819,6 +819,15 @@
   "edit_user_detail": "ユーザー詳細の編集",
   "resend_email": "メールを再送",
   "logs": "サーバーログ",
+  "severity": "重大度",
+  "time_stamp": "タイムスタンプ",
+  "message": "メッセージ",
+  "faced_by": "直面している",
+  "no_logs": "ログが見つかりません",
+  "warning": "警告",
+  "debug": "デバッグ",
+  "info": "情報",
+  "search_logs": "ログの検索",
   "settings_screen": {
     "file_storage": {
       "Server_AccessKey": "サーバーアクセスキー",

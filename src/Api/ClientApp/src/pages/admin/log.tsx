@@ -13,6 +13,7 @@ import {
   Modal,
   Grid,
   Box,
+  Loader,
 } from "@mantine/core";
 import {
   IServerLogs,
@@ -251,25 +252,25 @@ const Log = ({
 
       {/* Search and Filter section */}
       <Flex mb={10}>
-        {startDateFilterComponent("Pick Start Date", "StartDate")}
-        {endDateFilterComponent("Pick End Date", "EndDate")}
+        {startDateFilterComponent(t('start_date'), "StartDate")}
+        {endDateFilterComponent(t('end_date'), "EndDate")}
         <div style={{ marginRight: "8px" }}>
           {filterComponent(
             [
-              { value: "1", label: "Error" },
-              { value: "2", label: "Warning" },
-              { value: "3", label: "Debug" },
-              { value: "4", label: "Info" },
+              { value: "1", label: t('error') },
+              { value: "2", label: t('warning') },
+              { value: "3", label: t('debug') },
+              { value: "4", label: t('info') },
             ],
-            t("Severity"),
+            t("severity"),
             "Severity"
           )}
         </div>
-        {searchComponent("Search logs")}
+        {searchComponent(t("search_logs") as string)}
       </Flex>
 
       {/* table section */}
-      {getLogData.data && getLogData.data.totalCount > 1 ? (
+      {getLogData.data && getLogData.data.totalCount > 0 ? (
         <ScrollArea>
           <Paper>
             <Table
@@ -280,11 +281,11 @@ const Log = ({
             >
               <thead>
                 <tr>
-                  <th>Severity</th>
-                  <th>Time Stamp</th>
-                  <th>Message</th>
-                  <th>Faced By</th>
-                  <th>Actions</th>
+                  <th>{t('severity')}</th>
+                  <th>{t('time_stamp')}</th>
+                  <th>{t('message')}</th>
+                  <th>{t('faced_by')}</th>
+                  <th>{t('actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -298,7 +299,7 @@ const Log = ({
           </Paper>
         </ScrollArea>
       ) : (
-        <Box mt={10}>No logs found</Box>
+        getLogData.isLoading ? <Loader /> : <Box mt={10}>{t('no_logs')}</Box>
       )}
 
       {getLogData.data &&

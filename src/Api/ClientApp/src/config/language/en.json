@@ -817,7 +817,15 @@
   "edit_user_detail": "Edit User Details",
   "resend_email": "Resend Email",
   "logs": "Server Log",
-
+  "severity": "Severity",
+  "time_stamp": "Time Stamp",
+  "message": "Message",
+  "faced_by": "Faced By",
+  "no_logs": "No logs found",
+  "warning": "Warning",
+  "debug": "Debug",
+  "info": "Info",
+  "search_logs": "Search logs",
   "settings_screen": {
     "file_storage": {
       "Server_AccessKey": "Server Access Key",

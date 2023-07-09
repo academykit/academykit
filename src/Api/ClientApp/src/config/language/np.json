@@ -819,6 +819,15 @@
   "edit_user_detail": "प्रयोगकर्ता विवरणहरू सम्पादन गर्नुहोस्",
   "resend_email": "इमेल पुन: पठाउनुहोस्",
   "logs": "सर्भर लग",
+  "severity": "गम्भीरता",
+  "time_stamp": "समय टिकट",
+  "message": "सन्देश",
+  "faced_by": "सामना गर्यो",
+  "no_logs": "कुनै लगहरू फेला परेन",
+  "warning": "चेतावनी",
+  "debug": "डिबग",
+  "info": "जानकारी",
+  "search_logs": "खोज लगहरू",
   "settings_screen": {
     "file_storage": {
       "Server_AccessKey": "सर्भर एक्सेस कि",
