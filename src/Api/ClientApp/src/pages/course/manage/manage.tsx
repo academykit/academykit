@@ -19,7 +19,7 @@ const ManageCourse = () => {
     {
       key: "totalLessons",
       label: t("total_lessons"),
-      icon: "school",
+      icon: "book",
       pluLabel: t("Lessons"),
       signLabel: t("Lesson"),
     },
@@ -33,21 +33,21 @@ const ManageCourse = () => {
     {
       key: "totalAssignments",
       label: t("total_assignments"),
-      icon: "book",
+      icon: "lecture",
       pluLabel: t("Assignments"),
       signLabel: t("Assignment"),
     },
     {
       key: "totalLectures",
       label: t("total_videos"),
-      icon: "lecture",
+      icon: "video",
       pluLabel: t("Lectures"),
       signLabel: t("Lecture"),
     },
     {
       key: "totalExams",
       label: t("total_exams"),
-      icon: "trainings",
+      icon: "exam",
       pluLabel: t("Exams"),
       signLabel: t("Exam"),
     },

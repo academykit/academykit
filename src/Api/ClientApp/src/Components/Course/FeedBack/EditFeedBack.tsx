@@ -189,7 +189,7 @@ const EditFeedback = ({
                     <div key={i} style={{ marginBottom: "30px" }}>
                       <Flex>
                         <TextEditor
-                          placeholder={t("option_placeholder")}
+                          placeholder={t("option_placeholder") as string}
                           label={`answers.${i}.option`}
                           formContext={useFormContext}
                         ></TextEditor>
