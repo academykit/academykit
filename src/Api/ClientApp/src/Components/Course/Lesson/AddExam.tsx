@@ -48,7 +48,7 @@ const schema = () => {
     endTime: Yup.string()
       .required(t("end_time_not_empty") as string)
       .typeError(t("end_time_required") as string),
-    duration: Yup.number()
+    duration: Yup.number().typeError('Must specify a number')
       .required(t("duration_required") as string)
       .min(1, t("exam_duration_atleast_one") as string),
   });

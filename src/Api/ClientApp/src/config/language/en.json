@@ -826,6 +826,7 @@
   "debug": "Debug",
   "info": "Info",
   "search_logs": "Search logs",
+  "must_specify_number": "Must specify a number",
   "settings_screen": {
     "file_storage": {
       "Server_AccessKey": "Server Access Key",
