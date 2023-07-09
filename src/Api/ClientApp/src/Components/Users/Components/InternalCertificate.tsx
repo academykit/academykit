@@ -44,7 +44,7 @@ const RowsCompleted = ({
           <Badge>{t("no")}</Badge>
         )}
       </td>
-      <td style={{ maxWidth: "0px" }}>
+      <td style={{ width: "150px", height: "100px" }}>
         <Modal
           opened={opened}
           size="xl"
@@ -53,7 +53,8 @@ const RowsCompleted = ({
         >
           <Image src={item?.certificateUrl}></Image>
         </Modal>
-        <Flex align={"center"}>
+        {/* <Flex align={"center"}> */}
+        <div style={{ position: "relative", width: "150px", height: "100px" }}>
           <Anchor onClick={() => setOpened((v) => !v)}>
             <Image
               width={150}
@@ -63,23 +64,38 @@ const RowsCompleted = ({
               src={item?.certificateUrl}
             />
           </Anchor>
-          <CopyButton value={item?.certificateUrl} timeout={2000}>
-            {({ copied, copy }) => (
-              <Tooltip
-                label={copied ? "Copied" : "Copy"}
-                withArrow
-                position="right"
-              >
-                <ActionIcon color={copied ? "teal" : "gray"} onClick={copy}>
-                  {copied ? <IconCheck size={16} /> : <IconEye size={16} />}
-                </ActionIcon>
-              </Tooltip>
-            )}
-          </CopyButton>
-          <ActionIcon onClick={() => handleDownload()}>
-            <IconDownload />
-          </ActionIcon>
-        </Flex>
+          <Flex
+            justify={"center"}
+            align={"center"}
+            style={{
+              position: "absolute",
+              left: 0,
+              bottom: 0,
+              right: 0,
+              top: 0,
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <CopyButton value={item?.certificateUrl} timeout={2000}>
+              {({ copied, copy }) => (
+                <Tooltip
+                  label={copied ? "Copied" : "Copy"}
+                  withArrow
+                  position="right"
+                >
+                  <ActionIcon color={copied ? "teal" : "gray"} onClick={copy}>
+                    {copied ? <IconCheck size={18} /> : <IconEye size={18} />}
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </CopyButton>
+            <ActionIcon onClick={() => handleDownload()}>
+              <IconDownload />
+            </ActionIcon>
+          </Flex>
+        </div>
+        {/* </Flex> */}
       </td>
     </tr>
   );
