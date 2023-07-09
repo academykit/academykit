@@ -41,7 +41,7 @@
             string output = phrase.RemoveAccents().ToLower();
 
             // Remove all special characters from the string.  
-            output = Regex.Replace(output, @"[^A-Za-z0-9\s-]", "");
+            output = Regex.Replace(output, @"[^\p{L}0-9\s-]", "");
 
             // Remove all additional spaces in favour of just one.  
             output = Regex.Replace(output, @"\s+", " ").Trim();
