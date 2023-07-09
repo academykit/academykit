@@ -426,6 +426,9 @@
   <data name="SectionIdRequired" xml:space="preserve">
     <value>セクション ID が必要です。</value>
   </data>
+  <data name="SectionNameLength" xml:space="preserve">
+    <value>セクション名の長さは 100 文字以下である必要があります。</value>
+  </data>
   <data name="SectionNameRequired" xml:space="preserve">
     <value>セクション名は必須です。</value>
   </data>

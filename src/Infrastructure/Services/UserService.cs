@@ -41,7 +41,6 @@ namespace Lingtren.Infrastructure.Services
         private readonly string _resendChangeEmailEncryptionKey;
         private readonly int _resendChangeEmailTokenExpiry;
         private readonly IGeneralSettingService _generalSettingService;
-
         public UserService(IUnitOfWork unitOfWork,
             ILogger<UserService> logger,
             IEmailService emailService,
@@ -239,12 +238,17 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                return await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Email == email).ConfigureAwait(false);
+                var user =  await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Email == email).ConfigureAwait(false);
+                if(user == default)
+                {
+                    throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
+                }
+                return user;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to fetch user by email.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UserNotFound"));
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
 
@@ -1223,7 +1227,7 @@ namespace Lingtren.Infrastructure.Services
                         throw new ForbiddenException(_localizer.GetString("IncorrectRole") + " " + string.Join(", ", emptySelectedSNs) + " " + _localizer.GetString("TryAgain"));
                     }
                     var selectedSNs = checkForValidRows.userList
-                   .Where(user => !Enum.TryParse<UserRole>(user.Role, out _))
+                   .Where(user => !Enum.GetNames(typeof(UserRole)).Any(enumvalue => string.Equals(enumvalue,user.Role,StringComparison.OrdinalIgnoreCase)))
                    .Select(_ => checkForValidRows.SN)
                    .ToList();
 
