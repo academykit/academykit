@@ -59,6 +59,7 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
       <Card>
         {form.values[activeIndex].values.map((x, index) => (
           <TextInput
+            required
             key={x.key}
             mt={10}
             {...form.getInputProps(`${activeIndex}.values.${index}.value`)}
