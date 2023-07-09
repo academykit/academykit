@@ -959,4 +959,7 @@ recorded cannot be deleted.</value>
   <data name="YouShallNotPass" xml:space="preserve">
     <value>You shall not pass!</value>
   </data>
+  <data name="SectionNameCannotBeNull" xml:space="preserve">
+    <value>Section name cannot be null</value>
+  </data>
 </root>

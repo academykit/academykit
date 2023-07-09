@@ -13,6 +13,7 @@ const LanguageSelector = () => {
       onChange={(value) => {
         localStorage.setItem("lang", value as string);
         i18n.changeLanguage(value as string);
+        window.location.reload();
       }}
       data={LANGUAGES.map(({ code, label }) => {
         return {

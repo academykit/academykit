@@ -953,4 +953,7 @@
   <data name="YouShallNotPass" xml:space="preserve">
     <value>तिमी पास हुने छैनौ!</value>
   </data>
+  <data name="SectionNameCannotBeNull" xml:space="preserve">
+    <value>खण्डको नाम शून्य हुन सक्दैन</value>
+  </data>
 </root>

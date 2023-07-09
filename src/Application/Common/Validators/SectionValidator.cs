@@ -9,7 +9,7 @@ namespace Lingtren.Application.Common.Validators
     {
         public SectionValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.Name).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("SectionNameRequired"));
+            RuleFor(x => x.Name).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("SectionNameRequired")).MaximumLength(100).WithMessage(context => stringLocalizer.GetString("SectionNameLength"));
         }
     }
 }
