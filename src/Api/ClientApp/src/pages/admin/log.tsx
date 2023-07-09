@@ -240,7 +240,7 @@ const Log = ({
 }: IWithSearchPagination) => {
   const { t } = useTranslation();
   const getLogData = useGetServerLogs(searchParams);
-  console.log(getLogData.data);
+  
   return (
     <>
       <Group

@@ -372,7 +372,7 @@
   "group_update_success": "グループが正常に更新されました",
   "group_details": "グループの詳細",
   "your_group_name": "グループ名を入力してください",
-  "group_name_required": "PDFファイルが必要です",
+  "group_name_required": "グループ名は必​​須です",
   "sender_email": "送信元メールアドレス",
   "sender_email_placeholder": "送信元のメールアドレスを入力してください",
   "reply_email": "返信メールアドレス",

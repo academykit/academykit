@@ -71,8 +71,6 @@ const withSearchPagination =
 
     const [endDate, setEndDate] = useState<string>("");
     const [endDateKey, setEndDateKey] = useState<string>("");
-    console.log("start", startDate)
-    console.log("end", endDate)
 
     useEffect(() => {
       if (currentPage !== 1 && itemLength == 0) {
