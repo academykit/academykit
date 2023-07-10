@@ -60,6 +60,7 @@ const UserInfo = () => {
   const userId = localStorage.getItem("id");
   const { data, isLoading, isSuccess } = useReAuth();
   const [imageURL, setImageURL] = useState(data?.imageUrl ?? "");
+  const [viewMode, setViewMode] = useState(true);
 
   const formData = useForm({
     initialValues: {
@@ -136,6 +137,7 @@ const UserInfo = () => {
           <Grid>
             <Grid.Col xs={6} lg={4}>
               <CustomTextFieldWithAutoFocus
+                disabled={viewMode}
                 autoFocus
                 withAsterisk
                 label={t("firstname") as string}
@@ -204,6 +206,10 @@ const UserInfo = () => {
               />
             </Grid.Col>
             <Grid.Col lg={12}>
+              {viewMode ? '' : ''}
+              <Button>
+                Edit
+              </Button>
               <Button loading={updateUser.isLoading} type="submit">
                 {t("save")}
               </Button>
