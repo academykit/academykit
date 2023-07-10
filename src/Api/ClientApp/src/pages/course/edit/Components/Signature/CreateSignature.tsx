@@ -78,6 +78,7 @@ const CreateSignature = ({
         title: t("success"),
         message: t("edit_signature_success"),
       });
+      window.location.reload() // refresh page on successful edit
     } catch (error) {
       const err = errorType(error);
       showNotification({
