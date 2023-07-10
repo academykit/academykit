@@ -883,5 +883,6 @@
   "attended": "Attended",
   "not_attended": "Not Attended",
   "submitted": "Submitted",
-  "not_submitted": "Not Submitted"
+  "not_submitted": "Not Submitted",
+  "resubmit": "Resubmit Assignment"
 }
