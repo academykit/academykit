@@ -150,7 +150,7 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var html = $"Dear {firstName},<br><br>";
-                html += $@"Your account has been created in <a href = '{this._appUrl}'><u  style='color:blue;'>{companyName}</u></a><br><br>";
+                html += $@"Your account has been created in the <a href = '{this._appUrl}'><u  style='color:blue;'>LMS</u></a>.<br><br>";
                 html += "Here are the login details for your LMS account:<br><br>";
                 html += $"Email:{emailAddress}<br>";
                 html += $"Password:{password}<br><br>";
@@ -188,8 +188,8 @@ namespace Lingtren.Infrastructure.Services
                 foreach (var emailDto in dtos)
                 {
                     var html = $"Dear {emailDto.FullName},<br><br>";
-                    html += $"Your account has been created in {emailDto.CompanyName}." +
-                        @$"<a href ='{this._appUrl}' ><u  style='color:blue;'> Click Here </u></a> to go to application:" +
+                    html += $"Your account has been created in LMS" +
+                        @$"<a href ='{this._appUrl}' ><u  style='color:blue;'> Click Here </u></a>. to go to application:" +
                         $"<br> Your Login Password is <b><u>{emailDto.Password}</u></b><br><br>";
                     html += $"<br><br>Thank You,<br> {emailDto.CompanyName}";
                     var model = new EmailRequestDto
