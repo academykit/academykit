@@ -17,6 +17,7 @@ import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import useCustomForm from "@hooks/useCustomForm";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IGetSignature>();
@@ -120,8 +121,7 @@ const CreateSignature = ({
       <form onSubmit={form.onSubmit(edit ? handelEdit : handleSubmit)}>
         <Paper p={10} style={{ marginBottom: "20px" }} withBorder>
           <Group noWrap mb={10}>
-            <TextInput
-              autoFocus
+            <CustomTextFieldWithAutoFocus
               w={"100%"}
               label={t("name")}
               placeholder={t("enter_name") as string}

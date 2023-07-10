@@ -24,6 +24,7 @@ import * as Yup from "yup";
 import FileUploadLesson from "@components/Ui/FileUploadLesson";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -123,8 +124,7 @@ const AddDocument = ({
         <Paper withBorder p="md">
           <Grid align={"center"} justify="space-around">
             <Grid.Col span={12} lg={8}>
-              <TextInput
-                autoFocus
+              <CustomTextFieldWithAutoFocus
                 withAsterisk
                 label={t("file_title")}
                 placeholder={t("file_name") as string}
@@ -134,7 +134,7 @@ const AddDocument = ({
             </Grid.Col>
             <Tooltip
               multiline
-              label="Toggle this option to enforce mandatory completion of this lesson for trainees."
+              label={t('mandatory_tooltip')}
               width={220}
             >
               <Grid.Col span={4}>

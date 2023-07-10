@@ -1,3 +1,4 @@
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 import useAuth from "@hooks/useAuth";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
@@ -117,8 +118,7 @@ const GroupDetail = () => {
         ) : (
           <Paper withBorder p={20} mt={10}>
             <Box>
-              <TextInput
-                autoFocus
+              <CustomTextFieldWithAutoFocus
                 sx={{ maxWidth: theme.breakpoints.xs }}
                 name="name"
                 label={t("group_name")}

@@ -76,10 +76,14 @@ axiosInstance.interceptors.request.use(
   async function (config: AxiosRequestConfig) {
     const token = localStorage.getItem("token");
     const lang = localStorage.getItem("lang");
-    if (token && config.headers) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+
+    if (config.headers) {
       config.headers["Accept-Language"] =
         LanguageString[lang as keyof typeof LanguageString] ?? "en-US";
+    }
+
+    if (token && config.headers) {
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     config.data = filterFalseyValues(config.data);
     if (

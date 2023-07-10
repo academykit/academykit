@@ -33,6 +33,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import useCustomForm from "@hooks/useCustomForm";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
 
@@ -128,8 +129,7 @@ const MyTrainingExternal = () => {
         <FormProvider form={form}>
           {showConfirmation && (
             <form onSubmit={form.onSubmit(handleSubmit)}>
-              <TextInput
-                autoFocus
+              <CustomTextFieldWithAutoFocus
                 label={t("name")}
                 name="name"
                 placeholder={t("Name of Training") as string}

@@ -3,7 +3,6 @@ import {
   IconSchool,
   IconUserCheck,
   IconUsers,
-  IconBook,
   IconFileCheck,
   IconCertificate,
   IconBooks,
@@ -11,6 +10,10 @@ import {
   IconBrandZoom,
   IconFile,
   IconUserCircle,
+  IconVideo,
+  IconPencil,
+  IconPlayerPause,
+  IconPlayerPlay,
 } from "@tabler/icons";
 import { DashboardStats } from "@utils/services/dashboardService";
 
@@ -28,6 +31,8 @@ const icons = {
   lecture: IconBook2,
   meeting: IconBrandZoom,
   document: IconFile,
+  video: IconPlayerPlay,
+  exam: IconPencil,
 };
 
 interface StatsGridProps {

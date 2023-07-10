@@ -3,6 +3,7 @@ import { ActionIcon, TextInput, Tooltip } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconClearAll, IconSearch } from "@tabler/icons";
 import React, { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   placeholder?: string;
@@ -31,6 +32,7 @@ const SearchBar: React.FC<React.PropsWithChildren<Props>> = ({
     form.setFieldValue("search", "");
     inputRef.current?.focus();
   };
+  const { t } = useTranslation();
 
   return (
     <div style={{ width: "100%" }}>
@@ -41,7 +43,7 @@ const SearchBar: React.FC<React.PropsWithChildren<Props>> = ({
           size="sm"
           rightSection={
             form.values.search && (
-              <Tooltip label="Clear search">
+              <Tooltip label={t('clear_search')}>
                 <ActionIcon onClick={clearField}>
                   <Cross />
                 </ActionIcon>

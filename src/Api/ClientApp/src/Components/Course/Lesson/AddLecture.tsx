@@ -25,6 +25,7 @@ import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -131,8 +132,7 @@ const AddLecture = ({
         <Paper withBorder p="md">
           <Grid align="center" justify={"space-around"}>
             <Grid.Col span={12} lg={8}>
-              <TextInput
-                autoFocus
+              <CustomTextFieldWithAutoFocus
                 sx={{ width: "100%" }}
                 label={isRecordedVideo ? t("recording_name") : t("video_name")}
                 placeholder={
@@ -147,7 +147,7 @@ const AddLecture = ({
             </Grid.Col>
             <Tooltip
               multiline
-              label="Toggle this option to enforce mandatory completion of this lesson for trainees."
+              label={t('mandatory_tooltip')}
               width={220}
             >
               <Grid.Col span={4}>

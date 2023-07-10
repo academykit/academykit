@@ -27,6 +27,7 @@ import {
 
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import { useTranslation } from "react-i18next";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 const fieldSize = "md";
 
 const schema = () => {
@@ -158,12 +159,14 @@ const EditFeedback = ({
           <Paper p={20} withBorder mt={20}>
             <TextInput
               autoFocus
+              autoComplete="off"
+              
               size={fieldSize}
               withAsterisk
               label={t("title_feeback")}
               placeholder={t("enter_feedback") as string}
               {...form.getInputProps("name")}
-            ></TextInput>
+            />
 
             <Select
               mt={20}
@@ -189,7 +192,7 @@ const EditFeedback = ({
                     <div key={i} style={{ marginBottom: "30px" }}>
                       <Flex>
                         <TextEditor
-                          placeholder={t("option_placeholder")}
+                          placeholder={t("option_placeholder") as string}
                           label={`answers.${i}.option`}
                           formContext={useFormContext}
                         ></TextEditor>

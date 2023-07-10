@@ -27,6 +27,7 @@ import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import useNav from "@hooks/useNav";
 import useCustomForm from "@hooks/useCustomForm";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 interface FormValues {
   thumbnail: string;
@@ -161,8 +162,7 @@ const CreateCoursePage = () => {
               label={t("thumbnail") as string}
             />
             <Group mt={10} grow>
-              <TextInput
-                autoFocus
+              <CustomTextFieldWithAutoFocus
                 placeholder={t("title_course") as string}
                 label={t("title")}
                 name="Title"
@@ -261,7 +261,7 @@ const CreateCoursePage = () => {
             <Box mt={20}>
               <Text>{t("description")}</Text>
               <TextEditor
-                placeholder={t("course_description")}
+                placeholder={t("course_description") as string}
                 formContext={useFormContext}
               />
             </Box>

@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import { useNavigate } from "react-router-dom";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -73,6 +74,7 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
         <form onSubmit={form.onSubmit(({ name }) => onSubmitForm(name))}>
           <TextInput
             autoFocus
+            autoComplete="off"
             mb={10}
             label={t("group_name")}
             placeholder={t("your_group_name") as string}

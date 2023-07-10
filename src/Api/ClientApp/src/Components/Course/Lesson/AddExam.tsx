@@ -26,6 +26,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -48,23 +49,11 @@ const schema = () => {
     endTime: Yup.string()
       .required(t("end_time_not_empty") as string)
       .typeError(t("end_time_required") as string),
-    duration: Yup.number().typeError('Must specify a number')
+    duration: Yup.number()
+      .typeError("Must specify a number")
       .required(t("duration_required") as string)
       .min(1, t("exam_duration_atleast_one") as string),
   });
-};
-const strippedFormValue = (value: any) => {
-  const val = { ...value };
-  delete val.isMandatory;
-  delete val.isRequired;
-  const startTime = getDateTime(val.startDate, val.startTime);
-  const endTime = getDateTime(val.endDate, val.endTime);
-  val.startTime = startTime.utcDateTime;
-  val.endTime = endTime.utcDateTime;
-  delete val.startDate;
-  delete val.endDate;
-
-  return val;
 };
 
 const AddExam = ({
@@ -110,16 +99,39 @@ const AddExam = ({
       allowedRetake: item?.questionSet?.allowedRetake ?? 0,
       duration: item?.duration ? item?.duration / 60 : 1,
       endDate: endDateTime,
-      endTime: endDateTime,
-      startTime: startDateTime,
+      endTime: moment(startDateTime).format("HH:mm"),
+      startTime: moment(endDateTime).format("HH:mm"),
       startDate: startDateTime,
       isMandatory: item?.isMandatory ?? false,
     },
     validate: yupResolver(schema()),
   });
+  console.log(endDateTime.toTimeString())
+  const strippedFormValue = (value: Partial<typeof form.values>) => {
+    const val = { ...value };
+    delete val.isMandatory;
+    // @ts-ignore
+    delete val.isRequired;
+    const startTime =
+      val.startDate && val.startTime
+        ? getDateTime(val.startDate, val.startTime)
+        : undefined;
+    const endTime =
+      val.endDate && val.endTime
+        ? getDateTime(val.endDate, val.endTime)
+        : undefined;
+    val.startTime = startTime?.utcDateTime;
+    val.endTime = endTime?.utcDateTime;
+
+    
+    delete val.startDate;
+    delete val.endDate;
+
+    return val;
+  };
   useFormErrorHooks(form);
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: typeof form.values) => {
     try {
       if (!isEditing) {
         const response: any = await lesson.mutateAsync({
@@ -150,6 +162,7 @@ const AddExam = ({
         } ${t("successfully")}`,
       });
     } catch (error) {
+      console.log(error);
       const err = errorType(error);
       showNotification({
         message: err,
@@ -164,8 +177,7 @@ const AddExam = ({
       <Paper withBorder p="md">
         <Grid align={"center"}>
           <Grid.Col span={12} xs={6} lg={4}>
-            <TextInput
-              autoFocus
+            <CustomTextFieldWithAutoFocus
               withAsterisk
               label={t("exam_title")}
               placeholder={t("exam_title") as string}
@@ -263,7 +275,7 @@ const AddExam = ({
 
           <Tooltip
             multiline
-            label="Toggle this option to enforce mandatory completion of this lesson for trainees."
+            label={t('mandatory_tooltip')}
             width={220}
           >
             <Grid.Col span={6} lg={4}>

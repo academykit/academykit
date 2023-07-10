@@ -1,5 +1,4 @@
 import {
-  TextInput,
   PasswordInput,
   Paper,
   Title,
@@ -11,19 +10,27 @@ import {
   Image,
 } from "@mantine/core";
 import { Link } from "react-router-dom";
-import { useForm } from "@mantine/form";
+import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import { useEffect, useTransition } from "react";
+import { useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
 import { useLogin } from "@utils/services/authService";
-import Logo from "@components/Logo";
 import RoutePath from "@utils/routeConstants";
 import { IUserProfile } from "@utils/services/types";
-import {
-  useCompanySetting,
-  useGeneralSetting,
-} from "@utils/services/adminService";
+import { useCompanySetting } from "@utils/services/adminService";
 import { useTranslation } from "react-i18next";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+import * as Yup from "yup";
+
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    email: Yup.string()
+      .trim()
+      .email(t("invalid_email") as string)
+      .required(t("email_required") as string),
+  });
+};
 
 const LoginPage = () => {
   const form = useForm({
@@ -31,6 +38,7 @@ const LoginPage = () => {
       email: "",
       password: "",
     },
+    validate: yupResolver(schema()),
   });
 
   const login = useLogin();
@@ -126,14 +134,12 @@ const LoginPage = () => {
       </Title>
       <form onSubmit={form.onSubmit(onFormSubmit)}>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <TextInput
-            autoFocus
+          <CustomTextFieldWithAutoFocus
             {...form.getInputProps("email")}
             autoComplete={"email"}
             label={t("email")}
             type={"email"}
             placeholder={t("your_email") as string}
-            required
             name="email"
           />
           <PasswordInput
@@ -141,7 +147,6 @@ const LoginPage = () => {
             label={t("password")}
             autoComplete={"password"}
             placeholder={t("your_password") as string}
-            required
             mt="md"
             name="password"
           />

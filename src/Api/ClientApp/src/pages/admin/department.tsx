@@ -37,6 +37,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import * as Yup from "yup";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 interface IDepartment<T> {
   id: string;
   name: string;
@@ -126,8 +127,7 @@ const Department = ({
                 }
               })}
             >
-              <TextInput
-                autoFocus
+              <CustomTextFieldWithAutoFocus
                 label={t("department_name")}
                 name="departmentName"
                 withAsterisk
@@ -304,7 +304,7 @@ const Department = ({
       </Transition>
       <Flex mb={10}>
         {searchComponent(t("search_department") as string)}
-        <Flex style={{width: "210px"}}>
+        <Flex style={{ width: "210px" }}>
           {filterComponent(
             [
               { value: "true", label: t("active") },

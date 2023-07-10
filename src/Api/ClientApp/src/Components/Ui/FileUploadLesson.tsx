@@ -45,6 +45,30 @@ const FileUploadLesson = ({
 
   const [files, setFiles] = useState<any>([]);
   const form = formContext();
+  const filePondProps = {
+    labelInvalidField: t("Field contains invalid files"),
+    labelFileWaitingForSize: t("Waiting for size"),
+    labelFileSizeNotAvailable: t("Size not available"),
+    labelFileLoading: t("Loading"),
+    labelFileLoadError: t("Error during load"),
+    labelFileProcessing: t("Processing"),
+    labelFileProcessingComplete: t("Processing complete"),
+    labelFileProcessingAborted: t("Processing aborted"),
+    labelFileProcessingError: t("Error during processing"),
+    labelFileProcessingRevertError: t("Error during revert"),
+    labelFileRemoveError: t("Error during removal"),
+    labelTapToCancel: t("Tap to cancel"),
+    labelTapToRetry: t("Tap to retry"),
+    labelTapToUndo: t("Tap to undo"),
+    labelButtonRemoveItem: t("Remove"),
+    labelButtonAbortItemLoad: t("Abort"),
+    labelButtonRetryItemLoad: t("Retry"),
+    labelButtonAbortItemProcessing: t("Abort"),
+    labelButtonUndoItemProcessing: t("Undo"),
+    labelButtonRetryItemProcessing: t("Retry"),
+    labelButtonProcessItem: t("Process"),
+  };
+
   return (
     <Box sx={{ maxWidth: 470 }} pos="relative">
       <FilePond
@@ -102,6 +126,7 @@ const FileUploadLesson = ({
             };
           },
         }}
+        {...filePondProps}
       />
       {form.errors["documentUrl"] && (
         <Text color={"red"} size={"xs"} pos="absolute" top={"100%"}>
