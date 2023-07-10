@@ -875,5 +875,13 @@
   "Process": "処理",
   "Delete_group_withMember": "メンバーがいるグループを削除しようとしています。 削除してもよろしいですか?",
   "Email sent successfully!": "電子メールを正常に送信",
-  "img_too_small": "画像が小さすぎます"
+  "img_too_small": "画像が小さすぎます",
+  "passed": "合格",
+  "failed": "不合格",
+  "watched": "視聴済み",
+  "not_watched": "未視聴",
+  "attended": "参加済み",
+  "not_attended": "未参加",
+  "submitted": "提出済み",
+  "not_submitted": "未提出"
 }

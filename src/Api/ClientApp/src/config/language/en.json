@@ -875,5 +875,13 @@
   "Process": "Process",
   "Delete_group_withMember": "You are trying to delete a group having members. Are you sure to delete it?",
   "Email sent successfully!": "Email sent successfully!",
-  "img_too_small": "Image is too small"
+  "img_too_small": "Image is too small",
+  "passed": "Passed",
+  "failed":"Failed",
+  "watched": "Watched",
+  "not_watched": "Not Watched",
+  "attended": "Attended",
+  "not_attended": "Not Attended",
+  "submitted": "Submitted",
+  "not_submitted": "Not Submitted"
 }
