@@ -874,5 +874,6 @@
   "Retry": "再試行",
   "Process": "処理",
   "Delete_group_withMember": "メンバーがいるグループを削除しようとしています。 削除してもよろしいですか?",
-  "Email sent successfully!": "電子メールを正常に送信"
+  "Email sent successfully!": "電子メールを正常に送信",
+  "img_too_small": "画像が小さすぎます"
 }
