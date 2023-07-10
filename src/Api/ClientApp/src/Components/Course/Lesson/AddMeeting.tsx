@@ -27,6 +27,7 @@ import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -210,18 +211,14 @@ const AddMeeting = ({
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Grid align="center">
         <Grid.Col span={12} lg={6}>
-          <TextInput
+          <CustomTextFieldWithAutoFocus
             label={t("meeting_name")}
             placeholder={t("meeting_name") as string}
             {...form.getInputProps("name")}
             withAsterisk
           />
         </Grid.Col>
-        <Tooltip
-          multiline
-          label={t('mandatory_tooltip')}
-          width={220}
-        >
+        <Tooltip multiline label={t("mandatory_tooltip")} width={220}>
           <Grid.Col span={6} lg={3}>
             <Switch
               label={t("is_mandatory")}

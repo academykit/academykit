@@ -97,6 +97,30 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
                   },
                 }),
               },
+              TimeInput: {
+                styles: () => ({
+                  required: {
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                  },
+                }),
+              },
+              DatePickerInput: {
+                styles: () => ({
+                  required: {
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                  },
+                }),
+              },
+              NumberInput: {
+                styles: () => ({
+                  required: {
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                  },
+                }),
+              },
             },
             colorScheme,
             fontFamily: "Poppins, sans-serif",
