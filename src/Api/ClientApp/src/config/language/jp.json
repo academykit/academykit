@@ -723,9 +723,9 @@
   "something_bad": "何か悪いことが起こりました",
   "server_error": "サーバーがリクエストを処理できませんでした。心配しないでください、開発チームにすでに通知されています。ページをリフレッシュしてみてください。",
   "refresh_page": "ページをリフレッシュする",
-  "confirmation_sent": "確認メールが送信されました",
+  "confirmation_sent": "確認メールを送信しました",
   "check_inbox": "新しいメールの受信トレイを確認して、処理を確認してください。",
-  "email_vurilo": "何か問題がある場合は、いつでもsupport@vurilo.com にメールでお問い合わせいただけます。",
+  "email_vurilo": "メールアドレスの変更リクエストは 5 分間のみ有効ですのでご注意ください。",
   "valid_five_minutes": "注意：現在のメール変更要求は5分間のみ有効です",
   "resend_verification": "確認メールを再送信する",
   "esewa": "Esewa",
@@ -834,6 +834,9 @@
   "click_to_see_options": "さまざまなレッスンタイプを作成できます。オプションを表示するには、ここをクリックしてください",
   "acceptable_files": "許可されるファイルの種類は [.mp4, .avi, .mov ] 許可されるファイルサイズは [2 GB] です",
   "clear_search": "検索をクリアする",
+  "copy": "コピー",
+  "copied": "コピーされました",
+  "start_end_date_required": "開始日と終了日は必須です",
   "settings_screen": {
     "file_storage": {
       "Server_AccessKey": "サーバーアクセスキー",

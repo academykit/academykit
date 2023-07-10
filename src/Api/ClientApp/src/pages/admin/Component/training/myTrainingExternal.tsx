@@ -42,6 +42,7 @@ const schema = () => {
   return Yup.object().shape({
     name: Yup.string().required(t("certificate_name_required") as string),
     duration: Yup.number().typeError(t("duration_in_hour") as string),
+    range: Yup.array().min(2, t('start_end_date_required') as string),
   });
 };
 
@@ -64,6 +65,7 @@ const MyTrainingExternal = () => {
       location: "",
       institute: "",
       imageUrl: "",
+      range: [],
     },
     validate: yupResolver(schema()),
   });
@@ -149,9 +151,9 @@ const MyTrainingExternal = () => {
                 label={t("start_end_date")}
                 placeholder={t("date_range") as string}
                 type="range"
-                value={value}
                 //@ts-ignore
                 onChange={setValue}
+                {...form.getInputProps("range")}
               />
               <TextInput
                 label={t("location")}

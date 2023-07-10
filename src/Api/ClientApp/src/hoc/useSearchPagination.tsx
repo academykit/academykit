@@ -220,7 +220,7 @@ const withSearchPagination =
             setStartDate(moment(val).toISOString());
             setStartDateKey(key);
           }}
-          miw={122}
+          miw={125}
           mr={5}
         />
       );
@@ -241,7 +241,7 @@ const withSearchPagination =
             setEndDate(moment(val).toISOString());
             setEndDateKey(key);
           }}
-          miw={122}
+          miw={125}
           mr={5}
         />
       );

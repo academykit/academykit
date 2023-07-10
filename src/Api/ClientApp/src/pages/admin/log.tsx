@@ -161,15 +161,15 @@ const LogDetails = ({ logId }: { logId: string }) => {
     <>
       <Grid>
         <DetailFields
-          title={t('severity')}
+          title={t("severity")}
           content={(data && SeverityType[data?.type]) ?? "-"}
         />
         <DetailFields
-          title={t('time_stamp')}
+          title={t("time_stamp")}
           content={data?.timeStamp.toISOString() ?? "-"}
         />
-        <DetailFields title={t('message')} content={data?.message ?? "-"} />
-        <DetailFields title={t('faced_by')} content={data?.trackBy ?? "-"} />
+        <DetailFields title={t("message")} content={data?.message ?? "-"} />
+        <DetailFields title={t("faced_by")} content={data?.trackBy ?? "-"} />
       </Grid>
     </>
   );
@@ -183,7 +183,7 @@ const Rows = ({ item }: { item: IServerLogs }) => {
     <>
       <tr>
         <Modal
-          title={t('log_details')}
+          title={t("log_details")}
           opened={viewLog}
           onClose={() => {
             setViewLog(false);
@@ -243,7 +243,7 @@ const Log = ({
 }: IWithSearchPagination) => {
   const { t } = useTranslation();
   const getLogData = useGetServerLogs(searchParams);
-  
+
   return (
     <>
       <Group
@@ -255,15 +255,15 @@ const Log = ({
 
       {/* Search and Filter section */}
       <Flex mb={10}>
-        {startDateFilterComponent(t('start_date'), "StartDate")}
-        {endDateFilterComponent(t('end_date'), "EndDate")}
+        {startDateFilterComponent(t("start_date"), "StartDate")}
+        {endDateFilterComponent(t("end_date"), "EndDate")}
         <div style={{ marginRight: "8px" }}>
           {filterComponent(
             [
-              { value: "1", label: t('error') },
-              { value: "2", label: t('warning') },
-              { value: "3", label: t('debug') },
-              { value: "4", label: t('info') },
+              { value: "1", label: t("info") },
+              { value: "2", label: t("error") },
+              { value: "3", label: t("warning") },
+              { value: "4", label: t("debug") },
             ],
             t("severity"),
             "Severity"
@@ -273,7 +273,7 @@ const Log = ({
       </Flex>
 
       {/* table section */}
-      {getLogData.data && getLogData.data.totalCount > 0 ? (
+      {getLogData.data && getLogData.data.totalCount > 1 ? (
         <ScrollArea>
           <Paper>
             <Table
@@ -284,25 +284,26 @@ const Log = ({
             >
               <thead>
                 <tr>
-                  <th>{t('severity')}</th>
-                  <th>{t('time_stamp')}</th>
-                  <th>{t('message')}</th>
-                  <th>{t('faced_by')}</th>
-                  <th>{t('actions')}</th>
+                  <th>{t("severity")}</th>
+                  <th>{t("time_stamp")}</th>
+                  <th>{t("message")}</th>
+                  <th>{t("faced_by")}</th>
+                  <th>{t("actions")}</th>
                 </tr>
               </thead>
               <tbody>
-                {/* <Rows item={getLogData.data}/>
-              <Rows /> */}
-                {serverLogs.map((item: IServerLogs) => (
-                  <Rows item={item} key={item.id} />
+                {getLogData.data.items.map((item) => (
+                  <Rows item={item} />
+                  // <Rows item={item} key={item.id} />
                 ))}
               </tbody>
             </Table>
           </Paper>
         </ScrollArea>
+      ) : getLogData.isLoading ? (
+        <Loader />
       ) : (
-        getLogData.isLoading ? <Loader /> : <Box mt={10}>{t('no_logs')}</Box>
+        <Box mt={10}>{t("no_logs")}</Box>
       )}
 
       {getLogData.data &&
