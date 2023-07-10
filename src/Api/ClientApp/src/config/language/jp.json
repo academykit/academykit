@@ -834,6 +834,8 @@
   "click_to_see_options": "さまざまなレッスンタイプを作成できます。オプションを表示するには、ここをクリックしてください",
   "acceptable_files": "許可されるファイルの種類は [.mp4, .avi, .mov ] 許可されるファイルサイズは [2 GB] です",
   "clear_search": "検索をクリアする",
+  "copy": "コピー",
+  "copied": "コピーされました",
   "settings_screen": {
     "file_storage": {
       "Server_AccessKey": "サーバーアクセスキー",

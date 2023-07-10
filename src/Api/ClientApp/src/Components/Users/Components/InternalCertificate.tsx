@@ -80,7 +80,7 @@ const RowsCompleted = ({
             <CopyButton value={item?.certificateUrl} timeout={2000}>
               {({ copied, copy }) => (
                 <Tooltip
-                  label={copied ? "Copied" : "Copy"}
+                  label={copied ? t('copied') : t('copy')}
                   withArrow
                   position="right"
                 >
