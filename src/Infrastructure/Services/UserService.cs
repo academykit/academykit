@@ -70,6 +70,10 @@ namespace Lingtren.Infrastructure.Services
         /// <returns>the instance of <see cref="AuthenticationModel"/></returns>
         public async Task<AuthenticationModel> VerifyUserAndGetToken(LoginRequestModel model)
         {
+            _logger.LogInformation("Hello");
+            _logger.LogError("Hello");
+            _logger.LogWarning("hello");
+            _logger.LogTrace("hello");
             var authenticationModel = new AuthenticationModel();
 
             var user = await GetUserByEmailAsync(email: model.Email.Trim());
@@ -336,7 +340,7 @@ namespace Lingtren.Infrastructure.Services
                     throw new ArgumentException(_localizer.GetString("CSVFileExtension"));
                 }
                 var users = new List<UserImportDto>();
-                (List<UserImportDto> userList,int SN) checkForValidRows = (new List<UserImportDto>(), 0);
+                (List<UserImportDto> userList,List<int> SN) checkForValidRows = (new List<UserImportDto>(), new List<int>());
                 using (var reader = new StreamReader(file.OpenReadStream()))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
@@ -346,7 +350,7 @@ namespace Lingtren.Infrastructure.Services
                         if (user != null)
                         {
                             checkForValidRows.userList.Add(user);
-                            checkForValidRows.SN++;
+                            checkForValidRows.SN.Add(checkForValidRows.SN.Count + 1);
                         }
                     }
                 }
@@ -1142,7 +1146,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="checkForValidRows">instance of <see cref=""></param>
         /// <returns></returns>
         /// <exception cref="ForbiddenException"></exception>
-        private async Task CheckBulkImport((List<UserImportDto> userList, int SN) checkForValidRows)
+        private async Task CheckBulkImport((List<UserImportDto> userList, List<int> SN) checkForValidRows)
         {
             try
             {
@@ -1155,9 +1159,10 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.FirstName)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                    .Where(user => string.IsNullOrWhiteSpace(user.FirstName))
-                   .Select(_ => checkForValidRows.SN)
-                    .ToList();
+                    .Select((user, index) => new { User = user, Index = index})
+                    .Where(x => string.IsNullOrWhiteSpace(x.User.FirstName))
+                     .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
+                     .ToList();
                     if (selectedSNs.Any())
                     {
                         throw new ForbiddenException(_localizer.GetString("IncorrectFirstName") + " " + string.Join(", ", selectedSNs) + " " + _localizer.GetString("TryAgain"));
@@ -1166,9 +1171,10 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.LastName)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                   .Where(user => string.IsNullOrWhiteSpace(user.LastName))
-                   .Select(_ => checkForValidRows.SN)
-                   .ToList();
+                    .Select((user, index) => new { User = user, Index = index })
+                    .Where(x => string.IsNullOrWhiteSpace(x.User.LastName))
+                     .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
+                     .ToList();
 
                     if (selectedSNs.Any())
                     {
@@ -1178,10 +1184,12 @@ namespace Lingtren.Infrastructure.Services
                 }
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Email)))
                 {
-                    int selectedSN = string.IsNullOrWhiteSpace(checkForValidRows.userList?.FirstOrDefault()?.Email)
-                           ? checkForValidRows.SN
-                              : checkForValidRows.SN;
-                    throw new ForbiddenException(_localizer.GetString("IncorrectEmail") + " " + string.Join(", ", selectedSN) + " " + _localizer.GetString("TryAgain"));
+                    var selectedSNs = checkForValidRows.userList
+                     .Select((user, index) => new { User = user, Index = index })
+                     .Where(x => string.IsNullOrWhiteSpace(x.User.Email))
+                      .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
+                      .ToList();
+                    throw new ForbiddenException(_localizer.GetString("IncorrectEmail") + " " + string.Join(", ", selectedSNs) + " " + _localizer.GetString("TryAgain"));
                 }
                 if (!checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Email)))
                 {
@@ -1217,19 +1225,22 @@ namespace Lingtren.Infrastructure.Services
                 }
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Role) || !Enum.TryParse<UserRole>(x.Role, out _)))
                 {
-                    var emptySelectedSNs = checkForValidRows.userList
-                   .Where(user => string.IsNullOrWhiteSpace(user.Role))
-                   .Select(_ => checkForValidRows.SN)
-                   .ToList();
+                    var selectedSN = checkForValidRows.userList
+                      .Select((user, index) => new { User = user, Index = index })
+                      .Where(x => string.IsNullOrWhiteSpace(x.User.Role))
+                       .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
+                       .ToList();
 
-                    if (emptySelectedSNs.Any())
+                    if (selectedSN.Any())
                     {
-                        throw new ForbiddenException(_localizer.GetString("IncorrectRole") + " " + string.Join(", ", emptySelectedSNs) + " " + _localizer.GetString("TryAgain"));
+                        throw new ForbiddenException(_localizer.GetString("IncorrectRole") + " " + string.Join(", ", selectedSN) + " " + _localizer.GetString("TryAgain"));
                     }
-                    var selectedSNs = checkForValidRows.userList
-                   .Where(user => !Enum.GetNames(typeof(UserRole)).Any(enumvalue => string.Equals(enumvalue,user.Role,StringComparison.OrdinalIgnoreCase)))
-                   .Select(_ => checkForValidRows.SN)
-                   .ToList();
+
+                     var selectedSNs = checkForValidRows.userList
+                      .Select((user, index) => new { User = user, Index = index })
+                      .Where(user => !Enum.GetNames(typeof(UserRole)).Any(enumvalue => string.Equals(enumvalue,user.User.Role,StringComparison.OrdinalIgnoreCase)))
+                       .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
+                       .ToList();
 
                     if (selectedSNs.Any())
                     {

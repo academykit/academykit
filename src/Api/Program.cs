@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
+using NLog.Web;
+using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,8 +43,10 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(
                 ));
 
 builder.Services.AddAuthorization();
-builder.Logging.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Logs/myapp-{Date}.txt"), minimumLevel: LogLevel.Warning);
-
+var logger = LogManager.Setup().LoadConfigurationFromFile("nlog.config").GetCurrentClassLogger();
+//var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
 
 var app = builder.Build();
 
@@ -90,5 +94,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapFallbackToFile("index.html");
+app.UseHttpLogging();
 // app.MigrateDatabase();
 app.Run();

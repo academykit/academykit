@@ -16,6 +16,8 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+
     public static class ServiceConfigurationExtensions
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
@@ -37,6 +39,7 @@
                    TablesPrefix = "Hangfire"
                }));
             });
+
 
             #region Service DI
 

@@ -2,10 +2,13 @@
 using Lingtren.Application.Common.Exceptions;
 using Lingtren.Application.Common.Interfaces;
 using Lingtren.Application.Common.Models.ResponseModels;
+using Lingtren.Domain.Entities;
 using Lingtren.Infrastructure.Common;
 using Lingtren.Infrastructure.Localization;
+using LinqKit;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using System.Linq.Expressions;
 
 namespace Lingtren.Infrastructure.Services
 {
@@ -32,13 +35,30 @@ namespace Lingtren.Infrastructure.Services
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
 
-                var response = new SearchResult<ServerLogsResponseModel>
+                Expression<Func<Logs, bool>> predicate = PredicateBuilder.New<Logs>(true);
+                if (!string.IsNullOrWhiteSpace(criteria.Search))
                 {
-                    Items = new List<ServerLogsResponseModel>(),
-                    CurrentPage = 1,
-                    PageSize = 1,
-                    TotalCount = 1,
-                };
+                    var search = criteria.Search.ToLower().Trim();
+                    predicate = predicate.And(x => x.Message.Contains(search) || x.Exception.Contains(search) || x.Logger.Contains(search));
+                }
+
+                if (criteria.StartDate.HasValue && !criteria.EndDate.HasValue)
+                {
+                    predicate = predicate.And(x => x.Logged.Date == criteria.StartDate.Value.Date);
+                }
+
+                if (criteria.StartDate.HasValue && criteria.EndDate.HasValue)
+                {
+                    //predicate = predicate.And(x => x.Logged.Date >= criteria.StartDate.Value.Date || x.Logged.Date =< criteria.EndDate.Value);
+                }
+
+                if (criteria.Severity.HasValue)
+                {
+                    var serverity = criteria.Severity.Value.ToString();
+                    predicate = predicate.And(x => x.Level == serverity);
+                }
+
+                var response = await _unitOfWork.GetRepository<Logs>().GetPagedListAsync(criteria, predicate: predicate, selector: s => new ServerLogsResponseModel(s)).ConfigureAwait(false);
                 return response;
             });
         }
@@ -60,6 +80,6 @@ namespace Lingtren.Infrastructure.Services
                 }
                 return new ServerLogsResponseModel();
             });
-         }
+        }
     }
 }
