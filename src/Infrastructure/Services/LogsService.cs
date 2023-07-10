@@ -36,7 +36,6 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 Expression<Func<Logs, bool>> predicate = PredicateBuilder.New<Logs>(true);
-
                 if (!string.IsNullOrWhiteSpace(criteria.Search))
                 {
                     var search = criteria.Search.ToLower().Trim();
