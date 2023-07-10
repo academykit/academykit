@@ -32,20 +32,24 @@ const AddUpdateUserForm = lazyWithRetry(() => import("./AddUpdateUserForm"));
 
 const useStyles = createStyles((theme) => ({
   nameCotainer: {
-    maxWidth: "250px",
-    minWidth: "250px",
+    maxWidth: "210px",
+    minWidth: "210px",
+    width: "210px",
   },
   emailContainer: {
     maxWidth: "230px",
     minWidth: "230px",
+    width: "230px",
   },
   roleContainer: {
     maxWidth: "120px",
     minWidth: "120px",
+    width: "120px",
   },
   phoneContainer: {
     maxWidth: "120px",
     minWidth: "120px",
+    width: "120px",
   },
 }));
 

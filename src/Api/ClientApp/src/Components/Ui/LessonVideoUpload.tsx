@@ -69,8 +69,7 @@ const LessonVideoUpload = ({
   return (
     <Tooltip
       multiline
-      label="Acceptable file types are [.mp4, .avi, .mov ]
-            Acceptable file size is [2 GB]"
+      label={t('acceptable_files')}
       width={320}
     >
       <Box my={marginy} sx={{ maxWidth: 470 }} pos="relative">

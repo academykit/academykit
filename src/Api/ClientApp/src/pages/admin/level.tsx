@@ -116,6 +116,7 @@ const Level = () => {
                       id: item.id,
                     });
                     showNotification({ message: t("update_success") });
+                    setIsEdit(false);
                   } catch (error) {
                     const err = errorType(error);
                     showNotification({
@@ -141,7 +142,9 @@ const Level = () => {
                 </Container>
 
                 <Group mt={20} ml={10}>
-                  <Button type="submit">{t("save")}</Button>
+                  <Button type="submit" loading={updateLevel.isLoading}>
+                    {t("save")}
+                  </Button>
                 </Group>
               </form>
             </Box>
@@ -153,6 +156,7 @@ const Level = () => {
             open={opened}
             onClose={setOpened}
             onConfirm={handleDelete}
+            loading={deleteLevel.isLoading}
           />
         )}
         <td>
