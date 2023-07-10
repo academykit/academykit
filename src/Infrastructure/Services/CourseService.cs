@@ -1136,13 +1136,22 @@ namespace Lingtren.Infrastructure.Services
             return response;
         }
 
+        /// <summary>
+        /// Handel to get Role of curent user 
+        /// </summary>
+        /// <param name="CurrentUserID">current user id</param>
+        /// <returns></returns>
+        /// <exception cref="ForbiddenException"></exception>
         public async Task ISSuperAdminAdminOrTrainerAsync(Guid CurrentUserID)
         {
-            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == CurrentUserID && p.Role != UserRole.Trainee).ConfigureAwait(false);
-            if (user == default)
+            await ExecuteAsync( async () =>
             {
-                throw new ForbiddenException("Super Admin or Admin or Trainer Access");
-            }
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == CurrentUserID && p.Role != UserRole.Trainee).ConfigureAwait(false);
+                if (user == default)
+                {
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
+                }
+            });
         }
 
         #endregion Statistics

@@ -123,6 +123,11 @@ namespace Lingtren.Application.Common.Interfaces
         /// <returns>the list of <see cref="LessonStudentResponseModel"/></returns>
         Task<IList<LessonStudentResponseModel>> StudentLessonsDetail(string identity, Guid userId, Guid currentUserId);
 
+        /// <summary>
+        /// handel to check role of current user
+        /// </summary>
+        /// <param name="CurrentUserID">current user id</param>
+        /// <returns></returns>
         Task ISSuperAdminAdminOrTrainerAsync(Guid CurrentUserID);
 
         #endregion Statistics
