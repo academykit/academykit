@@ -11,6 +11,6 @@ namespace Lingtren.Application.Common.Dtos
     {
         public DateTime? StartDate  { get; set; }
         public DateTime? EndDate { get; set; }
-        public  SeverityType Severity { get; set; }
+        public  SeverityType? Severity { get; set; }
     }
 }
