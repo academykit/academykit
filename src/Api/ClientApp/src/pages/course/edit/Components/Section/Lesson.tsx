@@ -111,7 +111,7 @@ const Lesson = ({
             <Group position="center">
               <Text m={"auto"} style={{padding: "10px"}}>
                 {ReadableEnum[
-                  LessonType[lesson.type] as keyof typeof ReadableEnum
+                  t(`${LessonType[lesson.type]}`) as keyof typeof ReadableEnum
                 ] ?? t(`${LessonType[lesson.type]}`)}
               </Text>
             </Group>
