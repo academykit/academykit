@@ -25,6 +25,7 @@ import * as Yup from "yup";
 import CreateFeedback from "../FeedBack/CreateFeedBack";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -146,18 +147,14 @@ const AddFeedback = ({
         <Paper withBorder p="md">
           <Grid align={"center"} justify="space-around">
             <Grid.Col span={12} lg={8}>
-              <TextInput
+              <CustomTextFieldWithAutoFocus
                 withAsterisk
                 label={t("feedback_title")}
                 placeholder={t("feedback_title") as string}
                 {...form.getInputProps("name")}
               />
             </Grid.Col>
-            <Tooltip
-              multiline
-              label={t('mandatory_tooltip')}
-              width={220}
-            >
+            <Tooltip multiline label={t("mandatory_tooltip")} width={220}>
               <Grid.Col span={4}>
                 <Switch
                   label={t("is_mandatory")}
