@@ -42,6 +42,30 @@ const LessonVideoUpload = ({
   }, [currentVideo]);
   const form = formContext();
   const [files, setFiles] = useState<any>([]);
+  const filePondProps = {
+    labelInvalidField: t("Field contains invalid files"),
+    labelFileWaitingForSize: t("Waiting for size"),
+    labelFileSizeNotAvailable: t("Size not available"),
+    labelFileLoading: t("Loading"),
+    labelFileLoadError: t("Error during load"),
+    labelFileProcessing: t("Processing"),
+    labelFileProcessingComplete: t("Processing complete"),
+    labelFileProcessingAborted: t("Processing aborted"),
+    labelFileProcessingError: t("Error during processing"),
+    labelFileProcessingRevertError: t("Error during revert"),
+    labelFileRemoveError: t("Error during removal"),
+    labelTapToCancel: t("Tap to cancel"),
+    labelTapToRetry: t("Tap to retry"),
+    labelTapToUndo: t("Tap to undo"),
+    labelButtonRemoveItem: t("Remove"),
+    labelButtonAbortItemLoad: t("Abort"),
+    labelButtonRetryItemLoad: t("Retry"),
+    labelButtonAbortItemProcessing: t("Abort"),
+    labelButtonUndoItemProcessing: t("Undo"),
+    labelButtonRetryItemProcessing: t("Retry"),
+    labelButtonProcessItem: t("Process"),
+  };
+
   return (
     <Tooltip
       multiline
@@ -111,6 +135,7 @@ const LessonVideoUpload = ({
           labelIdle={`${t(
             "video_drag_drop"
           )} <span class="filepond--label-action">${t("browse")}</span>`}
+          {...filePondProps}
         />
         {form.errors["videoUrl"] && (
           <Text color={"red"} size={"xs"} pos="absolute" top={"100%"}>

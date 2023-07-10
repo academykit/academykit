@@ -18,6 +18,29 @@ registerPlugin(
 const DcoumentUpload = ({ setUrl }: { setUrl: Function }) => {
   const [files, setFiles] = useState<any>([]);
   const { t } = useTranslation();
+  const filePondProps = {
+    labelInvalidField: t("Field contains invalid files"),
+    labelFileWaitingForSize: t("Waiting for size"),
+    labelFileSizeNotAvailable: t("Size not available"),
+    labelFileLoading: t("Loading"),
+    labelFileLoadError: t("Error during load"),
+    labelFileProcessing: t("Processing"),
+    labelFileProcessingComplete: t("Processing complete"),
+    labelFileProcessingAborted: t("Processing aborted"),
+    labelFileProcessingError: t("Error during processing"),
+    labelFileProcessingRevertError: t("Error during revert"),
+    labelFileRemoveError: t("Error during removal"),
+    labelTapToCancel: t("Tap to cancel"),
+    labelTapToRetry: t("Tap to retry"),
+    labelTapToUndo: t("Tap to undo"),
+    labelButtonRemoveItem: t("Remove"),
+    labelButtonAbortItemLoad: t("Abort"),
+    labelButtonRetryItemLoad: t("Retry"),
+    labelButtonAbortItemProcessing: t("Abort"),
+    labelButtonUndoItemProcessing: t("Undo"),
+    labelButtonRetryItemProcessing: t("Retry"),
+    labelButtonProcessItem: t("Process"),
+  };
   return (
     <Box my={10} sx={{ maxWidth: 470 }}>
       <FilePond
@@ -37,6 +60,7 @@ const DcoumentUpload = ({ setUrl }: { setUrl: Function }) => {
         labelIdle={`${t(
           "drag_document"
         )}<span class="filepond--label-action">${t("browse")}</span>`}
+        {...filePondProps}
       />
     </Box>
   );
