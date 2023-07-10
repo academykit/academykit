@@ -147,7 +147,7 @@ const UserInfo = () => {
                 {...formData.getInputProps("firstName")}
               />
             </Grid.Col>
-            <Grid.Col xs={6} lg={4}>
+            <Grid.Col xs={6} lg={4} mt={7}>
               <TextInput
                 readOnly={viewMode}
                 label={t("middlename") as string}
@@ -177,7 +177,7 @@ const UserInfo = () => {
                 {...formData.getInputProps("email")}
               />
             </Grid.Col>
-            <Grid.Col xs={6} lg={4}>
+            <Grid.Col xs={6} lg={4} mt={7}>
               <TextInput
                 readOnly={viewMode}
                 name="mobileNumber"
@@ -186,7 +186,7 @@ const UserInfo = () => {
                 {...formData.getInputProps("mobileNumber")}
               />
             </Grid.Col>
-            <Grid.Col xs={6} lg={4}>
+            <Grid.Col xs={6} lg={4} mt={7}>
               <TextInput
                 readOnly={viewMode}
                 label={t("profession")}
