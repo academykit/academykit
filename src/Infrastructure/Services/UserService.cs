@@ -363,9 +363,9 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var userEmails = users.ConvertAll(x => x.Email);
                     var duplicateUser = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: p => userEmails.Contains(p.Email), selector: x => x.Email).ConfigureAwait(false);
-                    foreach (var entity in duplicateUser)
+                    if (duplicateUser.Count != default)
                     {
-                        message.AppendLine(_localizer.GetString("AlreadyRegistered"));
+                        message.AppendLine(_localizer.GetString($"AlreadyRegistered" + " " + string.Join(",", duplicateUser)));
                     }
                     var newUsersList = users.Where(x => !duplicateUser.Contains(x.Email)).ToList();
                     newUsersList = newUsersList.DistinctBy(x => x.Email).ToList();

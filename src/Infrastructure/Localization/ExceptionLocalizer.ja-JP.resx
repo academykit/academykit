@@ -166,7 +166,7 @@
     <value> ファイルの拡張子はcsv形式にしてください。</value>
   </data>
   <data name="AlreadyRegistered" xml:space="preserve">
-    <value>はすでに登録されています。</value>
+    <value>すでに登録されているユーザー：</value>
   </data>
   <data name="ResetTokenNotMatched" xml:space="preserve">
     <value> リセットトークンが一致しません。</value>
