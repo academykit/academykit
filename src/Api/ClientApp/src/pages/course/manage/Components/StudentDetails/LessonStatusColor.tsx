@@ -5,23 +5,23 @@ import { useTranslation } from "react-i18next";
 
 const videoType = {
   true: "Watched",
-  false: "Not Watched",
+  false: "not_watched",
 };
 const examType = {
-  true: "Passed",
-  false: "Failed",
+  true: "passed",
+  false: "failed",
 };
 const liveSessionType = {
-  true: "Attended",
-  false: "Not Attended",
+  true: "attended",
+  false: "not_attended",
 };
 const documentType = {
-  true: "Viewed",
-  false: "Not Viewed",
+  true: "viewed",
+  false: "not_viewed",
 };
 const feedBackType = {
-  true: "Submitted",
-  false: "Not Submitted",
+  true: "submitted",
+  false: "not-submitted",
 };
 
 export const getType = (type: LessonType) => {
@@ -55,9 +55,9 @@ const LessonStatusColor = ({
     <>
       <Group position="center">
         {isPassed ? (
-          <Badge color={"green"}>{getType(type).true}</Badge>
+          <Badge color={"green"}>{t(getType(type).true)}</Badge>
         ) : (
-          <Badge color={"red"}>{getType(type).false}</Badge>
+          <Badge color={"red"}>{t(getType(type).false)}</Badge>
         )}
         {isCompleted ? (
           <Badge color={"green"}>{t("completed")}</Badge>
