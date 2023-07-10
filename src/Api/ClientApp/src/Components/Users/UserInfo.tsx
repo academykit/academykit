@@ -13,6 +13,7 @@ import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import TextEditor from "@components/Ui/TextEditor";
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+import TextViewer from "@components/Ui/RichTextViewer";
 
 export interface FormValues {
   email: string;
@@ -137,7 +138,7 @@ const UserInfo = () => {
           <Grid>
             <Grid.Col xs={6} lg={4}>
               <CustomTextFieldWithAutoFocus
-                disabled={viewMode}
+                readOnly={viewMode}
                 autoFocus
                 withAsterisk
                 label={t("firstname") as string}
@@ -148,6 +149,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
+                readOnly={viewMode}
                 label={t("middlename") as string}
                 name="middleName"
                 placeholder={t("your_middlename") as string}
@@ -156,6 +158,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
+                readOnly={viewMode}
                 withAsterisk
                 label={t("lastname")}
                 name="lastName"
@@ -176,6 +179,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
+                readOnly={viewMode}
                 name="mobileNumber"
                 label={t("mobilenumber")}
                 placeholder={t("your_number") as string}
@@ -184,6 +188,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
+                readOnly={viewMode}
                 label={t("profession")}
                 name="profession"
                 placeholder={t("your_profession") as string}
@@ -192,6 +197,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
+                readOnly={viewMode}
                 label={t("address")}
                 placeholder={t("your_address") as string}
                 {...formData.getInputProps("address")}
@@ -199,20 +205,38 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={12} lg={12}>
               <Text size="sm">{t("bio")}</Text>
-              <TextEditor
-                error={formData.errors?.bio}
-                placeholder={t("your_short_description") as string}
-                {...formData.getInputProps("bio")}
-              />
+              {!viewMode && (
+                <TextEditor
+                  error={formData.errors?.bio}
+                  placeholder={t("your_short_description") as string}
+                  {...formData.getInputProps("bio")}
+                />
+              )}
+              {viewMode && (
+                <TextViewer content={formData.values.bio as string} />
+              )}
             </Grid.Col>
             <Grid.Col lg={12}>
-              {viewMode ? '' : ''}
-              <Button>
-                Edit
-              </Button>
-              <Button loading={updateUser.isLoading} type="submit">
-                {t("save")}
-              </Button>
+              {viewMode && (
+                <Button onClick={() => setViewMode(false)} type="button">
+                  Edit
+                </Button>
+              )}
+
+              {!viewMode && (
+                <>
+                  <Button
+                    loading={updateUser.isLoading}
+                    type="submit"
+                    style={{ marginRight: "10px" }}
+                  >
+                    {t("save")}
+                  </Button>
+                  <Button onClick={() => setViewMode(true)} variant="outline">
+                    Cancel
+                  </Button>
+                </>
+              )}
             </Grid.Col>
           </Grid>
         </form>
