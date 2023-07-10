@@ -481,7 +481,7 @@
     <value>Percentage should be in between 0 to 100.</value>
   </data>
   <data name="ValueCannotBeNullOrEmpty" xml:space="preserve">
-    <value>Value cannot be null or empty</value>
+    <value>Value cannot be null</value>
   </data>
   <data name="VideoIsRequired" xml:space="preserve">
     <value>Video is required for lesson type is video or recorded video.</value>
