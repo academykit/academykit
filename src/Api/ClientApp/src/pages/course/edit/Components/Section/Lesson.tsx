@@ -132,6 +132,7 @@ const Lesson = ({
               <Button
                 variant="outline"
                 onClick={() => setIsEditing(!isEditing)}
+                style={{marginRight: "10px", marginTop: "5px"}}
               >
                 {isEditing ? t("cancel") : t("edit")}
               </Button>

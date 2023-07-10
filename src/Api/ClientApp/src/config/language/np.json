@@ -883,5 +883,6 @@
   "attended": "सहभागी भएको",
   "not_attended": "सहभागी नभएको",
   "submitted": "पेश गरियो",
-  "not_submitted": "पेश नगरिएको"
+  "not_submitted": "पेश नगरिएको",
+  "resubmit": "असाइनमेन्ट पुन: सबमिट गर्नुहोस्"
 }
