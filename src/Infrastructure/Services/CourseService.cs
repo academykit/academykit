@@ -1136,6 +1136,15 @@ namespace Lingtren.Infrastructure.Services
             return response;
         }
 
+        public async Task ISSuperAdminAdminOrTrainerAsync(Guid CurrentUserID)
+        {
+            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == CurrentUserID && p.Role != UserRole.Trainee).ConfigureAwait(false);
+            if (user == default)
+            {
+                throw new ForbiddenException("Super Admin or Admin or Trainer Access");
+            }
+        }
+
         #endregion Statistics
 
         #region Dashboard

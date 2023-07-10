@@ -9,6 +9,7 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Localization;
+    using Lingtren.Infrastructure.Services;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
@@ -75,8 +76,7 @@ namespace Lingtren.Api.Controllers
         [HttpPost]
         public async Task<CourseResponseModel> CreateAsync(CourseRequestModel model)
         {
-            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
-
+            await _courseService.ISSuperAdminAdminOrTrainerAsync(CurrentUser.Id);
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
             var entity = new Course
