@@ -915,7 +915,7 @@ recorded cannot be deleted.</value>
     <value>Enter data in the mandatory field Email of row number</value>
   </data>
   <data name="IncorrectEmailFormat" xml:space="preserve">
-    <value>Correct column Email  of row number</value>
+    <value>Correct Email  of row number</value>
   </data>
   <data name="IncorrectFirstName" xml:space="preserve">
     <value>Enter data in the mandatory field FirstName of row number</value>
@@ -924,7 +924,7 @@ recorded cannot be deleted.</value>
     <value>Enter data in the mandatory field LastName of row number</value>
   </data>
   <data name="IncorrectMoblieNumberFormat" xml:space="preserve">
-    <value>Correct column MobileNumber  of row number</value>
+    <value>Correct  MobileNumber  of row number</value>
   </data>
   <data name="IncorrectRole" xml:space="preserve">
     <value>Enter data in the mandatory field Role of row number</value>

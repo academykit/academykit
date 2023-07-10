@@ -336,6 +336,18 @@ namespace Lingtren.Infrastructure.Services
                     await _unitOfWork.GetRepository<VideoQueue>().InsertAsync(videoQueue).ConfigureAwait(false);
                     BackgroundJob.Enqueue<IHangfireJobService>(job => job.LessonVideoUploadedAsync(lesson.Id, null));
                 }
+                var courseenrollments = await  _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(predicate: p=> p.CourseId == course.Id).ConfigureAwait(false);
+                if (courseenrollments != null)
+                {
+                    var lessonCount = await _unitOfWork.GetRepository<Lesson>().CountAsync( predicate: p=> p.CourseId == course.Id).ConfigureAwait(false);
+                    var UpdateCourseEnrollments = new List<CourseEnrollment>();
+                    foreach(var courseenrollment in courseenrollments)
+                    {
+                        courseenrollment.Percentage = (courseenrollment.Percentage * lessonCount) / (lessonCount + 1);
+                        UpdateCourseEnrollments.Add(courseenrollment);
+                    }
+                    _unitOfWork.GetRepository<CourseEnrollment>().Update(UpdateCourseEnrollments);
+                }
                 var order = await LastLessonOrder(lesson).ConfigureAwait(false);
                 lesson.Order = order;
                 await _unitOfWork.GetRepository<Lesson>().InsertAsync(lesson).ConfigureAwait(false);
