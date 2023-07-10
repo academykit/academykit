@@ -866,6 +866,6 @@
   "Abort": "Abort",
   "Retry": "Retry",
   "Process": "Process",
-  "You are trying to delete a group having members. Are you sure to delete it?": "You are trying to delete a group having members. Are you sure to delete it?",
+  "Delete_group_withMember": "You are trying to delete a group having members. Are you sure to delete it?",
   "Email sent successfully!": "Email sent successfully!"
 }
