@@ -208,7 +208,7 @@
     <value>Email signature length must be less than or equal to 1000 characters.</value>
   </data>
   <data name="EnddateMustBeGreater" xml:space="preserve">
-    <value>EndDate must be greater than StartDate.</value>
+    <value>End date must be greater than StartDate.</value>
   </data>
   <data name="EndTimeEmptyError" xml:space="preserve">
     <value>End date cannot be empty</value>
