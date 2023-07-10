@@ -404,7 +404,7 @@
   "sure_to_delete": "Are you sure you want to delete",
   "department?": "department",
   "all_trainings_list": "All the trainings are listed below:",
-  "search_courses": "Search Courses",
+  "search_courses": "Search Training",
   "created_date": "Created Date",
   "status": "Status",
   "something_went_wrong": "Something Went Wrong.",
@@ -828,6 +828,10 @@
   "search_logs": "Search logs",
   "must_specify_number": "Must specify a number",
   "log_details": "Log Details",
+  "mandatory_tooltip": "Toggle this option to enforce mandatory completion of this lesson for trainees.",
+  "click_to_see_options": "You can create various lesson types. Click here to see options",
+  "acceptable_files": "Acceptable file types are [.mp4, .avi, .mov ] Acceptable file size is [2 GB]",
+  "clear_search": "Clear Search",
   "settings_screen": {
     "file_storage": {
       "Server_AccessKey": "Server Access Key",

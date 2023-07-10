@@ -157,7 +157,7 @@ const AddLesson = ({ sectionId }: { sectionId: string }) => {
           position="right"
           multiline
           width={220}
-          label="You can create various lesson types. Click here to see options"
+          label={t('click_to_see_options')}
         >
           <Button
             variant="outline"
