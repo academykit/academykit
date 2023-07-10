@@ -1,13 +1,25 @@
-﻿using Lingtren.Domain.Enums;
+﻿using Lingtren.Domain.Entities;
+using Lingtren.Domain.Enums;
 
 namespace Lingtren.Application.Common.Models.ResponseModels
 {
     public class ServerLogsResponseModel
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public SeverityType Type { get; set; }
-        public DateTime TimeStamp { get; set; }
+        public string TimeStamp { get; set; }
         public string Message { get; set; }
-        public string TrackBy { get; set; }
+        public ServerLogsResponseModel()
+        {
+            
+        }
+
+        public ServerLogsResponseModel(Logs log)
+        {
+            Id = log.Id;
+            Type = (SeverityType)Enum.Parse(typeof(SeverityType), log.Level);
+            Message = log.Message;
+            TimeStamp = log.Logged.ToString("MM/dd/yyyy hh:mm tt");
+        }
     }
 }

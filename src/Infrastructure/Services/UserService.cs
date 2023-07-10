@@ -70,6 +70,10 @@ namespace Lingtren.Infrastructure.Services
         /// <returns>the instance of <see cref="AuthenticationModel"/></returns>
         public async Task<AuthenticationModel> VerifyUserAndGetToken(LoginRequestModel model)
         {
+            _logger.LogInformation("Hello");
+            _logger.LogError("Hello");
+            _logger.LogWarning("hello");
+            _logger.LogTrace("hello");
             var authenticationModel = new AuthenticationModel();
 
             var user = await GetUserByEmailAsync(email: model.Email.Trim());
