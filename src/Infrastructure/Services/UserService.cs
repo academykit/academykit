@@ -1208,7 +1208,7 @@ namespace Lingtren.Infrastructure.Services
                 }
                 if (!checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.MobileNumber)))
                 {
-                    string moblieNumberPattern = @"^\+9779\d{9}$";
+                    string moblieNumberPattern = @"^\9779\d{9}$";
 
                     // Create a regular expression object
                     Regex regex = new Regex(moblieNumberPattern);
