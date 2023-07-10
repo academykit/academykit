@@ -43,10 +43,10 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(
                 ));
 
 builder.Services.AddAuthorization();
-var logger = LogManager.Setup().LoadConfigurationFromFile("nlog.config").GetCurrentClassLogger();
-//var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-builder.Logging.ClearProviders();
-builder.Host.UseNLog();
+// var logger = LogManager.Setup().LoadConfigurationFromFile("nlog.config").GetCurrentClassLogger();
+// //var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+// builder.Logging.ClearProviders();
+// builder.Host.UseNLog();
 
 var app = builder.Build();
 
@@ -94,6 +94,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapFallbackToFile("index.html");
-app.UseHttpLogging();
+// app.UseHttpLogging();
 // app.MigrateDatabase();
 app.Run();
