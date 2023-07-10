@@ -846,5 +846,26 @@
       "AWS_SecretKey": "AWSシークレットキー",
       "AWS_VideoBucket": "ビデオバケット"
     }
-  }
+  },
+  "Drag & Drop your files or Browse": "ファイルをドラッグ＆ドロップするか、クリックして選択してください",
+  "Field contains invalid files": "無効なファイルが含まれています",
+  "Waiting for size": "サイズ待機中",
+  "Size not available": "サイズが利用できません",
+  "Loading": "読み込み中",
+  "Error during load": "読み込み中のエラー",
+  "Processing": "処理中",
+  "Processing complete": "処理が完了しました",
+  "Processing aborted": "処理が中断されました",
+  "Error during processing": "処理中のエラー",
+  "Error during revert": "リバート中のエラー",
+  "Error during removal": "削除中のエラー",
+  "Tap to cancel": "キャンセルするにはタップ",
+  "Tap to retry": "再試行するにはタップ",
+  "Tap to undo": "元に戻すにはタップ",
+  "Remove": "削除",
+  "Abort": "中止",
+  "Retry": "再試行",
+  "Process": "処理",
+  "Delete_group_withMember": "メンバーがいるグループを削除しようとしています。 削除してもよろしいですか?",
+  "Email sent successfully!": "電子メールを正常に送信"
 }

@@ -4,7 +4,6 @@ import {
   Box,
   Checkbox,
   Flex,
-  Group,
   Loader,
   MultiSelect,
   Select,
@@ -102,7 +101,6 @@ const CreateForm: FC<Props> = ({ form, onSubmit, useFormContext }) => {
       )}
 
       <Box mt={20}>
-        <Text size={"sm"}>{t("hint")}</Text>
         <TextEditor label="hints" formContext={useFormContext} />
       </Box>
       <Select
@@ -130,8 +128,9 @@ const CreateForm: FC<Props> = ({ form, onSubmit, useFormContext }) => {
                 {...form.getInputProps(`answers.${i}.isCorrect`)}
                 name=""
               ></Checkbox>
+              asdas
               <TextEditor
-                placeholder={t("option_placeholder")}
+                placeholder={t("option_placeholder") as string}
                 label={`answers.${i}.option`}
                 formContext={useFormContext}
               ></TextEditor>

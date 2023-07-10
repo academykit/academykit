@@ -12,7 +12,7 @@ import {
   Image,
 } from "@mantine/core";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useForm } from "@mantine/form";
+import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
@@ -21,20 +21,30 @@ import RoutePath from "@utils/routeConstants";
 import errorType from "@utils/services/axiosError";
 import { useCompanySetting } from "@utils/services/adminService";
 import { useTranslation } from "react-i18next";
+import * as Yup from "yup";
 
 const ForgotPassword = () => {
+  const schema = () => {
+    const { t } = useTranslation();
+    return Yup.object().shape({
+      email: Yup.string()
+        .trim()
+        .email(t("invalid_email") as string)
+        .required(t("email_required") as string),
+    });
+  };
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
   const navigate = useNavigate();
   const forgotPassword = useForgotPassword();
   const { t } = useTranslation();
   const form = useForm({
+    validate: yupResolver(schema()),
     initialValues: {
       email: "",
     },
   });
 
-  const login = useLogin();
   const auth = useAuth();
   const onFormSubmit = async (values: { email: string }) => {
     try {
@@ -122,7 +132,6 @@ const ForgotPassword = () => {
             {...form.getInputProps("email")}
             label={t("email")}
             placeholder={t("your_email") as string}
-            required
           />
 
           <Group position="right" mt={10}>

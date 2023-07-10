@@ -846,6 +846,26 @@
     }
   },
   "your_short_description": "Your short description",
-  "course_description": "Description of Course"
+  "course_description": "Description of Course",
+  "Drag & Drop your files or Browse": "Drag & Drop your files or Browse",
+  "Field contains invalid files": "Field contains invalid files",
+  "Waiting for size": "Waiting for size",
+  "Size not available": "Size not available",
+  "Loading": "Loading",
+  "Error during load": "Error during load",
+  "Processing": "Processing",
+  "Processing complete": "Processing complete",
+  "Processing aborted": "Processing aborted",
+  "Error during processing": "Error during processing",
+  "Error during revert": "Error during revert",
+  "Error during removal": "Error during removal",
+  "Tap to cancel": "Tap to cancel",
+  "Tap to retry": "Tap to retry",
+  "Tap to undo": "Tap to undo",
+  "Remove": "Remove",
+  "Abort": "Abort",
+  "Retry": "Retry",
+  "Process": "Process",
+  "You are trying to delete a group having members. Are you sure to delete it?": "You are trying to delete a group having members. Are you sure to delete it?",
+  "Email sent successfully!": "Email sent successfully!"
 }
-

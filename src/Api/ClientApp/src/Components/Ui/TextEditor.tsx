@@ -11,10 +11,9 @@ import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import Superscript from "@tiptap/extension-text-align";
 import SubScript from "@tiptap/extension-subscript";
-import { Box, Text } from "@mantine/core";
+import { Box, Sx, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useDebouncedState, useDebouncedValue } from "@mantine/hooks";
-import i18next from "i18next";
 
 type IProps = {
   formContext?: () => UseFormReturnType<any, (values: any) => any>;
@@ -24,6 +23,7 @@ type IProps = {
   placeholder?: string;
   value?: string;
   error?: string;
+  sx?: Sx | (Sx | undefined)[] | undefined;
 };
 const TextEditor = ({
   formContext,
@@ -32,6 +32,7 @@ const TextEditor = ({
   onChange,
   error,
   value,
+  sx,
 }: IProps) => {
   const { t } = useTranslation();
   const cPlaceholder = t(placeholder ?? "");
@@ -86,8 +87,8 @@ const TextEditor = ({
 
   return (
     <Box>
-      {label && <label>{label}</label>}
-      <RichTextEditor editor={editor}>
+      {label && <label>{t(label)}</label>}
+      <RichTextEditor editor={editor} sx={sx}>
         <RichTextEditor.Toolbar sticky stickyOffset={60}>
           <RichTextEditor.ControlsGroup>
             <RichTextEditor.Bold />

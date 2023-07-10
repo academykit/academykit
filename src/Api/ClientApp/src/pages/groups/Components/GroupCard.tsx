@@ -78,7 +78,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
         <DeleteModal
           title={`${
             group.memberCount > 0
-              ? "You are trying to delete a group having members. Are you sure to delete it?"
+              ? t("Delete_group_withMember")
               : t("want_to_delete") +
                 " " +
                 group.name +

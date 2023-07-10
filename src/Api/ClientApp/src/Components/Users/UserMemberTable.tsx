@@ -32,21 +32,21 @@ const AddUpdateUserForm = lazyWithRetry(() => import("./AddUpdateUserForm"));
 
 const useStyles = createStyles((theme) => ({
   nameCotainer: {
-    maxWidth: '250px',
-    minWidth: '250px'
+    maxWidth: "250px",
+    minWidth: "250px",
   },
   emailContainer: {
-    maxWidth: '230px',
-    minWidth: '230px'
+    maxWidth: "230px",
+    minWidth: "230px",
   },
   roleContainer: {
-    maxWidth: '120px',
-    minWidth: '120px'
+    maxWidth: "120px",
+    minWidth: "120px",
   },
   phoneContainer: {
-    maxWidth: '120px',
-    minWidth: '120px'
-  }
+    maxWidth: "120px",
+    minWidth: "120px",
+  },
 }));
 
 const UserRow = ({
@@ -70,8 +70,8 @@ const UserRow = ({
     try {
       await resend.mutateAsync(item.id);
       showNotification({
-        message: "Email sent successfully!",
-        title: "Successful",
+        message: t("Email sent successfully!"),
+        title: t("successful"),
       });
     } catch (error) {
       const err = errorType(error);

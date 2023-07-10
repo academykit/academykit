@@ -196,7 +196,7 @@ const EditAssignment = ({
             <Box mt={20}>
               <Text size={"lg"}>{t("description")}</Text>
               <TextEditor
-                placeholder={t("question_description")}
+                placeholder={t("question_description") as string}
                 formContext={useFormContext}
               />
             </Box>
@@ -204,7 +204,7 @@ const EditAssignment = ({
             <Box mt={20}>
               <Text size={"lg"}>{t("hint")}</Text>
               <TextEditor
-                placeholder={t("question_hint")}
+                placeholder={t("question_hint") as string}
                 label={t("hints") as string}
                 formContext={useFormContext}
               />
@@ -255,7 +255,8 @@ const EditAssignment = ({
                         )}
 
                         <TextEditor
-                          placeholder={t("option_placeholder")}
+                          // sx={{width:100}}
+                          placeholder={t("option_placeholder") as string}
                           label={`answers.${i}.option`}
                           formContext={useFormContext}
                         ></TextEditor>

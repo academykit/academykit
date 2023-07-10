@@ -846,5 +846,26 @@
       "AWS_SecretKey": "एडब्ल्यूएस गोप्य कि",
       "AWS_VideoBucket": "भिडियो संग्रह"
     }
-  }
+  },
+  "Drag & Drop your files or Browse": "फाइलहरू ड्र्याग गर्नुहोस् वा ब्राउज गर्नुहोस्",
+  "Field contains invalid files": "फिल्डमा अमान्य फाइलहरू छन्",
+  "Waiting for size": "आकारको लागि प्रतीक्षा गर्दै",
+  "Size not available": "आकार उपलब्ध छैन",
+  "Loading": "लोड हुदैछ",
+  "Error during load": "लोड गर्दा त्रुटि",
+  "Processing": "प्रसेसिङ्गमा",
+  "Processing complete": "प्रसेसिङ्ग सम्पन्न",
+  "Processing aborted": "प्रसेसिङ्ग रद्द गरियो",
+  "Error during processing": "प्रसेसिङ्गमा त्रुटि",
+  "Error during revert": "पूर्वस्थितिमा फर्काउने गरी त्रुटि",
+  "Error during removal": "हटाउँदा त्रुटि",
+  "Tap to cancel": "रद्द गर्न ट्याप गर्नुहोस्",
+  "Tap to retry": "पुन: प्रयास गर्न ट्याप गर्नुहोस्",
+  "Tap to undo": "अवरुद्ध गर्न ट्याप गर्नुहोस्",
+  "Remove": "हटाउनुहोस्",
+  "Abort": "रद्द गर्नुहोस्",
+  "Retry": "पुन: प्रयास गर्नुहोस्",
+  "Process": "प्रक्रिया गर्नुहोस्",
+  "Delete_group_withMember": "तपाईं सदस्य भएको समूह मेटाउन खोज्दै हुनुहुन्छ। के तपाइँ यसलाई मेटाउन निश्चित हुनुहुन्छ?",
+  "Email sent successfully!": "इमेल सफलतापूर्वक पठाइयो!"
 }
