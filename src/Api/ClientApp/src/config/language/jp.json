@@ -836,6 +836,7 @@
   "clear_search": "検索をクリアする",
   "copy": "コピー",
   "copied": "コピーされました",
+  "start_end_date_required": "開始日と終了日は必須です",
   "settings_screen": {
     "file_storage": {
       "Server_AccessKey": "サーバーアクセスキー",

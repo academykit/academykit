@@ -836,6 +836,7 @@
   "clear_search": "खोज साफ गर्नुहोस्",
   "copy": "कापी",
   "copied": "प्रतिलिपि गरियो",
+  "start_end_date_required": "सुरु र अन्त्य मिति आवश्यक छ",
   "settings_screen": {
     "file_storage": {
       "Server_AccessKey": "सर्भर एक्सेस कि",

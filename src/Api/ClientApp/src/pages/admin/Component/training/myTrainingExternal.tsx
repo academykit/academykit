@@ -42,7 +42,7 @@ const schema = () => {
   return Yup.object().shape({
     name: Yup.string().required(t("certificate_name_required") as string),
     duration: Yup.number().typeError(t("duration_in_hour") as string),
-    range: Yup.array().min(2, "Start and End Date rquired"),
+    range: Yup.array().min(2, t('start_end_date_required') as string),
   });
 };
 

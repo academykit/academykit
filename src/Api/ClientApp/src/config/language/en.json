@@ -834,6 +834,7 @@
   "copy": "Copy",
   "copied": "Copied",
   "clear_search": "Clear Search",
+  "start_end_date_required": "Start and End Date required",
   "settings_screen": {
     "file_storage": {
       "Server_AccessKey": "Server Access Key",
