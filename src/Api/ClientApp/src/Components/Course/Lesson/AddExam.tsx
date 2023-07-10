@@ -106,7 +106,7 @@ const AddExam = ({
     },
     validate: yupResolver(schema()),
   });
-  console.log(endDateTime.toTimeString())
+  
   const strippedFormValue = (value: Partial<typeof form.values>) => {
     const val = { ...value };
     delete val.isMandatory;
@@ -186,7 +186,7 @@ const AddExam = ({
               styles={{ error: { position: "absolute" } }}
             />
           </Grid.Col>
-          <Grid.Col span={12} xs={6} lg={4}>
+          <Grid.Col span={12} xs={6} lg={4} mt={5}>
             <NumberInput
               label={t("passing_percentage")}
               max={100}
@@ -253,7 +253,7 @@ const AddExam = ({
             />
           </Grid.Col>
 
-          <Grid.Col span={12} xs={6} lg={4}>
+          <Grid.Col span={12} xs={6} lg={4} mt={5}>
             <NumberInput
               label={t("negative_marking")}
               placeholder={t("negative_marking") as string}

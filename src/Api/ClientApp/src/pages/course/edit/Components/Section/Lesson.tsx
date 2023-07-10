@@ -103,13 +103,13 @@ const Lesson = ({
       <div className={classes.item}>
         <Grid grow justify={"center"}>
           <Grid.Col span={4}>
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", padding:"10px" }}>
               {lesson?.name}
             </div>
           </Grid.Col>
           <Grid.Col span={4}>
             <Group position="center">
-              <Text m={"auto"}>
+              <Text m={"auto"} style={{padding: "10px"}}>
                 {ReadableEnum[
                   LessonType[lesson.type] as keyof typeof ReadableEnum
                 ] ?? t(`${LessonType[lesson.type]}`)}

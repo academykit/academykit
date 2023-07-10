@@ -71,6 +71,7 @@ const AvatarEditor = ({ label = "files", url, formContext }: IProps) => {
     labelButtonUndoItemProcessing: t("Undo"),
     labelButtonRetryItemProcessing: t("Retry"),
     labelButtonProcessItem: t("Process"),
+    imageValidateSizeLabelImageSizeTooSmall: t("img_too_small")
   };
 
   return (

@@ -874,5 +874,6 @@
   "Retry": "Retry",
   "Process": "Process",
   "Delete_group_withMember": "You are trying to delete a group having members. Are you sure to delete it?",
-  "Email sent successfully!": "Email sent successfully!"
+  "Email sent successfully!": "Email sent successfully!",
+  "img_too_small": "Image is too small"
 }
