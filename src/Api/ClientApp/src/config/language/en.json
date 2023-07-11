@@ -157,7 +157,7 @@
   "publish": "Publish",
   "watch_course": "Start Learning",
   "preview": "Preview",
-  "enroll_course": "Enroll Course",
+  "enroll_course": "Enroll Training",
   "unable_get_course": "Unable to get course details.",
   "total_enrollments": "Total Enrollments",
   "total_lessons": "Total Lessons",
@@ -853,6 +853,7 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "hour_s": "Hour(s)",
   "show_reply": "Show Reply",
   "hide_reply": "Hide Reply",
   "starts": "Starts",
