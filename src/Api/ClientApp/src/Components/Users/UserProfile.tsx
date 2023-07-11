@@ -41,6 +41,8 @@ const UserProfile = () => {
   const location = useLocation();
 
   const { data, isSuccess } = useProfileAuth(id as string);
+  const currentLocation = location.pathname.split('/').slice(-1)[0] // accessing the endpoint of the url
+
   return (
     <>
       <div>
@@ -94,7 +96,7 @@ const UserProfile = () => {
         <Tabs
           defaultChecked={true}
           defaultValue={location.pathname?.split("/").at(-1) ?? "certificate"}
-          value={tabValue}
+          value={currentLocation}
           onTabChange={(value) =>
             navigate(`${value}`, { preventScrollReset: true })
           }
