@@ -48,6 +48,14 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
           withGlobalStyles
           withNormalizeCSS
           theme={{
+            globalStyles: (theme) => ({
+              ".global-astrick": {
+                color: '#e03131',
+                fontWeight: 'bold',
+                fontSize: '20px',
+                verticalAlign: 'middle'
+              },
+            }),
             components: {
               Anchor: {
                 styles: (theme) => ({

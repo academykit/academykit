@@ -139,7 +139,7 @@ const CreateSignature = ({
             />
           </Group>
           <Text size={"sm"}>
-            {t("signature")} <sup style={{ color: "red" }}>*</sup>
+            {t("signature")} <sup style={{verticalAlign: "bottom"}} className="global-astrick"> *</sup>
           </Text>
           <ThumbnailEditor
             formContext={useFormContext}

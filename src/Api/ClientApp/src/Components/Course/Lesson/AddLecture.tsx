@@ -168,7 +168,7 @@ const AddLecture = ({
           <Text size={"sm"} mt={10}>
             {isRecordedVideo ? t("recordings") : t("video")}
 
-            <span style={{ color: "red" }}>*</span>
+            <span className="global-astrick"> *</span>
           </Text>
           <LessonVideoUpload
             formContext={useFormContext}
