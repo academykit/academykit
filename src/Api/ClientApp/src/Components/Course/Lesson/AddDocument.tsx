@@ -151,7 +151,7 @@ const AddDocument = ({
             </Tooltip>
           </Grid>
           <Text size={"sm"} mt={10}>
-            {t("file")} <span style={{ color: "red" }}>*</span>
+            {t("file")} <span className="global-astrick"> *</span>
           </Text>
           <FileUploadLesson
             currentFile={item?.documentUrl}
