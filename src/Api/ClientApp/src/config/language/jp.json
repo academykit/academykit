@@ -884,5 +884,6 @@
   "not_attended": "未参加",
   "submitted": "提出済み",
   "not_submitted": "未提出",
-  "resubmit": "再提出する"
+  "resubmit": "再提出する",
+  "viewed": "閲覧済み"
 }

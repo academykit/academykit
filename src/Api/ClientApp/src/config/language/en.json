@@ -877,12 +877,13 @@
   "Email sent successfully!": "Email sent successfully!",
   "img_too_small": "Image is too small",
   "passed": "Passed",
-  "failed":"Failed",
+  "failed": "Failed",
   "watched": "Watched",
   "not_watched": "Not Watched",
   "attended": "Attended",
   "not_attended": "Not Attended",
   "submitted": "Submitted",
   "not_submitted": "Not Submitted",
-  "resubmit": "Resubmit Assignment"
+  "resubmit": "Resubmit Assignment",
+  "viewed": "Viewed"
 }
