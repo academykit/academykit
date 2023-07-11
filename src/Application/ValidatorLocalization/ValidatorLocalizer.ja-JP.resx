@@ -193,7 +193,7 @@
     <value>指定の長さは 50 以下である必要があります。</value>
   </data>
   <data name="DocumentTypeRequired" xml:space="preserve">
-    <value>レッスンタイプが documentn タイプである場合、無効なlessoDocumentが必要です。</value>
+    <value>レッスン タイプがドキュメント タイプの場合は、無効なレッスン ドキュメントが必要です。</value>
   </data>
   <data name="DurationRequired" xml:space="preserve">
     <value>期間は必須です</value>
@@ -481,7 +481,7 @@
     <value>パーセンテージは 0 ～ 100 の範囲にする必要があります。</value>
   </data>
   <data name="ValueCannotBeNullOrEmpty" xml:space="preserve">
-    <value>値を null または空にすることはできません</value>
+    <value>値を 空 または空にすることはできません</value>
   </data>
   <data name="VideoIsRequired" xml:space="preserve">
     <value>レッスンタイプがビデオまたは録画ビデオの場合、ビデオが必要です。</value>
