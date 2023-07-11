@@ -854,6 +854,10 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "show_reply": "返信を表示する",
+  "hide_reply": "返信を非表示にする",
+  "starts": "開始",
+  "started": "開始しました",
   "Drag & Drop your files or Browse": "ファイルをドラッグ＆ドロップするか、クリックして選択してください",
   "Field contains invalid files": "無効なファイルが含まれています",
   "Waiting for size": "サイズ待機中",

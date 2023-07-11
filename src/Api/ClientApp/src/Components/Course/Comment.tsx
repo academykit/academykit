@@ -207,7 +207,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
       )}
       <Box sx={{ display: "flex", justifyContent: "end" }}>
         <Button variant="subtle" mx={4} onClick={() => setToggle()}>
-          {toggle ? "Hide Reply" : `Show Reply(${comment.repliesCount}) `}
+          {toggle ? t('hide_reply') : `${t('show_reply')}(${comment.repliesCount}) `}
         </Button>
 
         {!edit && showEdit(comment.user, true) && (

@@ -220,6 +220,7 @@ const AddExam = ({
               label={t("start_time")}
               withAsterisk
               {...form.getInputProps("startTime")}
+              styles={{ error: { position: "absolute" } }}
             />
           </Grid.Col>
 
@@ -249,6 +250,7 @@ const AddExam = ({
               label={t("end_time")}
               withAsterisk
               {...form.getInputProps("endTime")}
+              styles={{ error: { position: "absolute" } }}
             />
           </Grid.Col>
 

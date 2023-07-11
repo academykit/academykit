@@ -854,6 +854,10 @@
       "AWS_VideoBucket": "भिडियो संग्रह"
     }
   },
+  "show_reply": "जवाफ देखाउनुहोस्",
+  "hide_reply": "जवाफ लुकाउनुहोस्",
+  "starts": "सुरु हुन्छ",
+  "started": "सुरु भयो",
   "Drag & Drop your files or Browse": "फाइलहरू ड्र्याग गर्नुहोस् वा ब्राउज गर्नुहोस्",
   "Field contains invalid files": "फिल्डमा अमान्य फाइलहरू छन्",
   "Waiting for size": "आकारको लागि प्रतीक्षा गर्दै",
