@@ -853,6 +853,10 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "show_reply": "Show Reply",
+  "hide_reply": "Hide Reply",
+  "starts": "Starts",
+  "started": "Started",
   "your_short_description": "Your short description",
   "course_description": "Description of Course",
   "Drag & Drop your files or Browse": "Drag & Drop your files or Browse",

@@ -44,7 +44,7 @@ const RowsCompleted = ({
           <Badge>{t("no")}</Badge>
         )}
       </td>
-      <td style={{ width: "150px", height: "100px" }}>
+      <td style={{ width: "19%", height: "100px" }}>
         <Modal
           opened={opened}
           size="xl"
@@ -53,7 +53,7 @@ const RowsCompleted = ({
         >
           <Image src={item?.certificateUrl}></Image>
         </Modal>
-        <div style={{ position: "relative", width: "19%", height: "100px" }}>
+        <div style={{ position: "relative", width: "150px", height: "100px" }}>
           <Anchor onClick={() => setOpened((v) => !v)}>
             <Image
               width={150}
@@ -68,7 +68,7 @@ const RowsCompleted = ({
             align={"center"}
             style={{
               position: "absolute",
-              left: 50,
+              left: 0,
               bottom: 0,
               right: 0,
               top: 0,
