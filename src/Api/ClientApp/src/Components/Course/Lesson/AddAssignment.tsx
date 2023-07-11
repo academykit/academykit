@@ -105,8 +105,9 @@ const AddAssignment = ({
       isMandatory: item?.isMandatory ?? false,
       eventStartDate: startDateTime ?? new Date(),
       eventEndDate: endDateTime ?? new Date(),
-      endTime: endDateTime ?? new Date(),
-      startTime: startDateTime ?? new Date(),
+      endTime: moment(endDateTime).format("HH:mm") ?? moment().format("HH:mm"),
+      startTime:
+        moment(startDateTime).format("HH:mm") ?? moment().format("HH:mm"),
     },
     validate: yupResolver(schema()),
   });
