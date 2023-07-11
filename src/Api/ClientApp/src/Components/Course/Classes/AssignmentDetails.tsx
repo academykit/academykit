@@ -39,7 +39,7 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
           component={Link}
           to={RoutePath.assignment.details(lesson.id).route}
         >
-          {lesson.isCompleted ? t("resubmit") : t("start_assignment")}
+          {lesson.isCompleted ? t('resubmit') : t("start_assignment")}
         </Button>
       ) : (
         <Text>
