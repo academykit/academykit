@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import { Container } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 
 export const AboutPage = () => {
   const markDownContent = `
@@ -29,9 +30,11 @@ Our mission is to provide a platform where learning happens anytime, anywhere fo
 
     `;
 
+  const { t } = useTranslation();
+
   return (
     <Container>
-      <ReactMarkdown children={markDownContent} />
+      <ReactMarkdown children={t("about_app")} />
     </Container>
   );
 };
