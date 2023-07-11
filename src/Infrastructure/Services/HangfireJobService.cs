@@ -544,9 +544,9 @@ namespace Lingtren.Infrastructure.Services
                     throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
                 }
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
-                var html = $"Dear {fullName}";
-                html += $"A recent change has been made to the email address associated with your account to {newEmail}.Please check you email to verify the email address.If you did not initiate this change, please contact your administrator immediately to address the issue.";
-                html += $"<br><br>Thank You, <br> {settings.CompanyName}";
+                var html = $"Dear {fullName} <br><br>";
+                html += $"A recent change has been made to the email address associated with your account to {newEmail}.Please check your email to verify the email address.If you did not initiate this change, please contact your administrator immediately to address the issue.";
+                html += $"<br><br>Best regards, <br> {settings.CompanyName}";
                 var model = new EmailRequestDto
                 {
                     To = oldEmail,

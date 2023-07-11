@@ -347,6 +347,11 @@ namespace Lingtren.Infrastructure.Services
                     while (csv.Read())
                     {
                         var user = csv.GetRecord<UserImportDto>();
+                        bool allMembersNull = string.IsNullOrEmpty(user.FirstName) && string.IsNullOrEmpty(user.LastName) && string.IsNullOrEmpty(user.Email) && string.IsNullOrEmpty(user.Role);
+                        if(allMembersNull)
+                        {
+                            continue;
+                        }
                         if (user != null)
                         {
                             checkForValidRows.userList.Add(user);
@@ -674,7 +679,7 @@ namespace Lingtren.Infrastructure.Services
 
             _unitOfWork.GetRepository<User>().Update(user);
             await _unitOfWork.SaveChangesAsync();
-            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailChangedMailAsync(newEmail, oldEmail, user.FullName, null));
+            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailChangedMailAsync(newEmail, oldEmail, user.FirstName, null));
         }
 
         /// <summary>
@@ -1197,7 +1202,7 @@ namespace Lingtren.Infrastructure.Services
                            @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                               @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
                     var invalidEmailRows = checkForValidRows.userList
-                       .Select((user, index) => (user.Email, index + 1))
+                       .Select((user, index) => (user.Email, index))
                          .Where(entry => !Regex.IsMatch(entry.Email, emailPattern))
                        .Select(entry => entry.Item2)
                        .ToList();
@@ -1208,13 +1213,10 @@ namespace Lingtren.Infrastructure.Services
                 }
                 if (!checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.MobileNumber)))
                 {
-                    string moblieNumberPattern = @"^\9779\d{9}$";
-
-                    // Create a regular expression object
-                    Regex regex = new Regex(moblieNumberPattern);
+                    string moblieNumberPattern = @"^\+\d*$";
 
                     var invalidMoblieNumberRows = checkForValidRows.userList
-                       .Select((user, index) => (user.MobileNumber, index + 1))
+                       .Select((user, index) => (user.MobileNumber, index))
                          .Where(entry => !Regex.IsMatch(entry.MobileNumber, moblieNumberPattern))
                        .Select(entry => entry.Item2)
                        .ToList();
@@ -1248,7 +1250,7 @@ namespace Lingtren.Infrastructure.Services
                     }
                 }
             }
-            catch (Exception ex)
+            catch (ForbiddenException ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to fetch user detail information.");
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
