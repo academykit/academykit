@@ -28,6 +28,7 @@ import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+import { getDateTime } from "@utils/getDateTime";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -75,7 +76,7 @@ const AddMeeting = ({
     initialValues: {
       name: "",
       meetingStartDate: new Date(),
-      meetingStartTime: new Date(),
+      meetingStartTime: "12:12",
       meetingDuration: 1,
       zoomLicenseId: "",
       isMandatory: false,
@@ -107,7 +108,7 @@ const AddMeeting = ({
         meetingDuration: data ? Number(data?.meeting?.duration) / 60 : 0,
         zoomLicenseId: data?.meeting?.zoomLicenseId ?? "",
         meetingStartDate: startDateTime,
-        meetingStartTime: startDateTime,
+        meetingStartTime: startDateTime.toTimeString(),
         isMandatory: data?.isMandatory,
         description: data?.description ?? "",
       });
@@ -119,9 +120,9 @@ const AddMeeting = ({
     const { meetingDuration, meetingStartTime, meetingStartDate } = form.values;
 
     if (meetingDuration && meetingStartTime && meetingStartDate) {
-      const time = new Date(meetingStartTime).toLocaleTimeString();
-      const date = new Date(meetingStartDate).toLocaleDateString();
-      setDateTime(() => date + " " + time);
+      const date = getDateTime(meetingStartDate, meetingStartTime);
+      console.log(date);
+      setDateTime(() => date.utcDateTime);
     }
   }, [form.values]);
 
@@ -146,9 +147,12 @@ const AddMeeting = ({
   const changeZoomLiscense = () => {
     const { meetingDuration, meetingStartTime, meetingStartDate } = form.values;
     if (meetingDuration && meetingStartTime && meetingStartDate) {
-      const time = new Date(meetingStartTime).toLocaleTimeString();
-      const date = new Date(meetingStartDate).toLocaleDateString();
-      setDateTime(() => date + " " + time);
+      // const time = new Date(meetingStartTime).toLocaleTimeString();
+      // const date = new Date(meetingStartDate).toLocaleDateString();
+      console.log("0--0=-0=0-=-0==-00-=");
+      console.log({ meetingStartDate, meetingStartTime });
+      const date = getDateTime(meetingStartDate, meetingStartTime);
+      setDateTime(() => date.utcDateTime);
     } else {
       form.setFieldValue("zoomLicenseId", "");
     }
