@@ -193,10 +193,10 @@
     <value>Designation length should be less than or equal to 50.</value>
   </data>
   <data name="DocumentTypeRequired" xml:space="preserve">
-    <value>Document is required for lesson type is document</value>
+    <value>Document is required for lesson type is document.</value>
   </data>
   <data name="DurationRequired" xml:space="preserve">
-    <value>Duration is required</value>
+    <value>Duration is required.</value>
   </data>
   <data name="EmailLength100" xml:space="preserve">
     <value>Email length must be less than or equal to 100 characters.</value>

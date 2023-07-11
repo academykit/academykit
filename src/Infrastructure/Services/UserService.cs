@@ -1213,7 +1213,7 @@ namespace Lingtren.Infrastructure.Services
                 }
                 if (!checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.MobileNumber)))
                 {
-                    string moblieNumberPattern = @"^\+\d*$";
+                    string moblieNumberPattern = @"^[+\d]+$";
 
                     var invalidMoblieNumberRows = checkForValidRows.userList
                        .Select((user, index) => (user.MobileNumber, index))
