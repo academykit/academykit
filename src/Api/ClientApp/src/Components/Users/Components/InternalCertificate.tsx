@@ -53,8 +53,7 @@ const RowsCompleted = ({
         >
           <Image src={item?.certificateUrl}></Image>
         </Modal>
-        {/* <Flex align={"center"}> */}
-        <div style={{ position: "relative", width: "150px", height: "100px" }}>
+        <div style={{ position: "relative", width: "19%", height: "100px" }}>
           <Anchor onClick={() => setOpened((v) => !v)}>
             <Image
               width={150}
@@ -69,7 +68,7 @@ const RowsCompleted = ({
             align={"center"}
             style={{
               position: "absolute",
-              left: 0,
+              left: 50,
               bottom: 0,
               right: 0,
               top: 0,
@@ -85,17 +84,16 @@ const RowsCompleted = ({
                   position="right"
                 >
                   <ActionIcon color={copied ? "teal" : "gray"} onClick={copy}>
-                    {copied ? <IconCheck size={18} /> : <IconEye size={18} />}
+                    {copied ? <IconCheck size={18} color="black"/> : <IconEye size={18} color="black"/>}
                   </ActionIcon>
                 </Tooltip>
               )}
             </CopyButton>
             <ActionIcon onClick={() => handleDownload()}>
-              <IconDownload />
+              <IconDownload color="black"/>
             </ActionIcon>
           </Flex>
         </div>
-        {/* </Flex> */}
       </td>
     </tr>
   );
