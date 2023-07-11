@@ -166,7 +166,7 @@
     <value>File extension should be csv format.</value>
   </data>
   <data name="AlreadyRegistered" xml:space="preserve">
-    <value>Some already registered.</value>
+    <value>पहिले नै दर्ता गरिएको प्रयोगकर्ता:</value>
   </data>
   <data name="ResetTokenNotMatched" xml:space="preserve">
     <value>Reset token not matched.</value>

@@ -20,7 +20,7 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
   const theme = useMantineTheme();
   const user = useAuth();
   const { t } = useTranslation();
-  console.log(lesson)
+  console.log(lesson);
   return (
     <Group sx={{ flexDirection: "column" }}>
       <Title>{lesson.name}</Title>

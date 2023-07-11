@@ -166,7 +166,7 @@
     <value> फाइल विस्तार csv ढाँचा हुनुपर्छ।</value>
   </data>
   <data name="AlreadyRegistered" xml:space="preserve">
-    <value> पहिले नै दर्ता छ।</value>
+    <value>すでに登録されているユーザー：</value>
   </data>
   <data name="ResetTokenNotMatched" xml:space="preserve">
     <value> हालको पासवर्ड मिलेको छैन।</value>

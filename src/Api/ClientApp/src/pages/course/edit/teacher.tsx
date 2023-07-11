@@ -13,6 +13,7 @@ import {
   Card,
   Text,
   Modal,
+  Select,
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
@@ -32,6 +33,8 @@ import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+import queryStringGenerator from "@utils/queryStringGenerator";
+import { useGetTrainers } from "@utils/services/adminService";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -126,6 +129,10 @@ const Teacher = () => {
       showNotification({ message: error, color: "red" });
     }
   };
+  const [search, setSearch] = useState("");
+  const { data: trainers, isLoading } = useGetTrainers(
+    queryStringGenerator({ search })
+  );
   return (
     <Container fluid>
       <Group sx={{ justifyContent: "space-between", alignItems: "center" }}>
@@ -144,13 +151,25 @@ const Teacher = () => {
           <Box mt={10}>
             <form onSubmit={form.onSubmit(onSubmitForm)}>
               <Group sx={{ alignItems: "start" }}>
-                <CustomTextFieldWithAutoFocus
+                <Select
+                  clearable
+                  placeholder={t("enter_email_trainer") as string}
+                  searchable
+                  nothingFound={isLoading ? "Loading..." : "No Trainers Found!"}
+                  data={trainers?.map((e) => e.email) ?? []}
+                  onSearchChange={setSearch}
+                  searchValue={search}
+                  {...form.getInputProps("email")}
+                />
+                {/* <CustomTextFieldWithAutoFocus
                   placeholder={t("enter_the_email") as string}
                   name="email"
                   type={"email"}
                   {...form.getInputProps("email")}
-                />
-                <Button type="submit">{t("add")}</Button>
+                /> */}
+                <Button loading={createTeacher.isLoading} type="submit">
+                  {t("add")}
+                </Button>
               </Group>
             </form>
           </Box>

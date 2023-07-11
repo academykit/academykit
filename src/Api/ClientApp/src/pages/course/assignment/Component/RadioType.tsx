@@ -45,6 +45,21 @@ const RadioType = ({ options, form, currentIndex }: Props) => {
     });
   };
   const { t } = useTranslation();
+  const onChangeRadioType = (index: number) => {
+    options.forEach((x, i) => {
+      if (i === index) {
+        return form.setFieldValue(
+          `${currentIndex}.assignmentQuestionOptions.${index}.isSelected`,
+          true
+        );
+      }
+      return form.setFieldValue(
+        `${currentIndex}.assignmentQuestionOptions.${index}.isSelected`,
+        false
+      );
+    });
+  };
+
   return (
     <Box mt={10} px={20} className={classes.option}>
       <Group>
@@ -57,12 +72,14 @@ const RadioType = ({ options, form, currentIndex }: Props) => {
           onClick={() => changeFieldValue(index)}
         >
           <input
-            type={"checkbox"}
+            type={"radio"}
             id={option.id}
             style={{ display: "none" }}
-            {...form.getInputProps(
-              `${currentIndex}.assignmentQuestionOptions.${index}.isSelected`
-            )}
+            onChange={() => onChangeRadioType(index)}
+            checked={
+              form.values[currentIndex].assignmentQuestionOptions![index]
+                .isSelected
+            }
           ></input>
           <Card
             shadow={"md"}
