@@ -53,7 +53,6 @@ const RowsCompleted = ({
         >
           <Image src={item?.certificateUrl}></Image>
         </Modal>
-        {/* <Flex align={"center"}> */}
         <div style={{ position: "relative", width: "150px", height: "100px" }}>
           <Anchor onClick={() => setOpened((v) => !v)}>
             <Image
@@ -95,7 +94,6 @@ const RowsCompleted = ({
             </ActionIcon>
           </Flex>
         </div>
-        {/* </Flex> */}
       </td>
     </tr>
   );
