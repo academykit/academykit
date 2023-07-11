@@ -134,7 +134,7 @@ const ExternalCertificate = () => {
                     <th>{t("duration")}</th>
                     <th>{t("issued_by")}</th>
                     <th>{t("issuer_location")}</th>
-                    <th>{t("certificate")}</th>
+                    <th>{t("external_certificate")}</th>
                   </tr>
                 </thead>
                 <tbody>
