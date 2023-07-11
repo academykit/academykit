@@ -99,14 +99,14 @@ const AddExam = ({
       allowedRetake: item?.questionSet?.allowedRetake ?? 0,
       duration: item?.duration ? item?.duration / 60 : 1,
       endDate: endDateTime,
-      endTime: moment(startDateTime).format("HH:mm"),
-      startTime: moment(endDateTime).format("HH:mm"),
+      endTime: moment(endDateTime).format("HH:mm"),
+      startTime: moment(startDateTime).format("HH:mm"),
       startDate: startDateTime,
       isMandatory: item?.isMandatory ?? false,
     },
     validate: yupResolver(schema()),
   });
-  
+
   const strippedFormValue = (value: Partial<typeof form.values>) => {
     const val = { ...value };
     delete val.isMandatory;
@@ -123,7 +123,6 @@ const AddExam = ({
     val.startTime = startTime?.utcDateTime;
     val.endTime = endTime?.utcDateTime;
 
-    
     delete val.startDate;
     delete val.endDate;
 
@@ -273,11 +272,7 @@ const AddExam = ({
             />
           </Grid.Col>
 
-          <Tooltip
-            multiline
-            label={t('mandatory_tooltip')}
-            width={220}
-          >
+          <Tooltip multiline label={t("mandatory_tooltip")} width={220}>
             <Grid.Col span={6} lg={4}>
               <Switch
                 label={t("is_mandatory")}
