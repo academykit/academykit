@@ -198,6 +198,7 @@ const EditAssignment = ({
               <TextEditor
                 placeholder={t("question_description") as string}
                 formContext={useFormContext}
+                label="description"
               />
             </Box>
 
@@ -206,6 +207,7 @@ const EditAssignment = ({
               <TextEditor
                 placeholder={t("question_hint") as string}
                 formContext={useFormContext}
+                label="hint"
               />
             </Box>
             <Select

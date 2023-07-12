@@ -72,6 +72,13 @@ const AddMeeting = ({
   );
   const { t } = useTranslation();
 
+  // const startDateTime = item?.
+  // ? moment(item?.questionSet?.startTime + "z")
+  //     .local()
+  //     .toDate()
+  // : new Date();
+  console.log(item)
+
   const form = useForm({
     initialValues: {
       name: "",
@@ -108,7 +115,8 @@ const AddMeeting = ({
         meetingDuration: data ? Number(data?.meeting?.duration) / 60 : 0,
         zoomLicenseId: data?.meeting?.zoomLicenseId ?? "",
         meetingStartDate: startDateTime,
-        meetingStartTime: startDateTime.toTimeString(),
+        // meetingStartTime: startDateTime.toTimeString(),
+        meetingStartTime: moment(startDateTime).format("HH:mm"),
         isMandatory: data?.isMandatory,
         description: data?.description ?? "",
       });

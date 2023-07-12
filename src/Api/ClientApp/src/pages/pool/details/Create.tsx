@@ -235,7 +235,7 @@ const Create = () => {
             <Box mt={20}>
               <Text size={"lg"}>{t("hint")}</Text>
               <TextEditor
-                label={t("hint") as string}
+                label={t("hints") as string}
                 placeholder={t("question_hint")}
                 formContext={useFormContext}
               />
@@ -298,11 +298,7 @@ const Create = () => {
                         <IconTrash color="red" />
                       </UnstyledButton>
                     )}
-                    {typeof form.errors[`answers.${i}.option`] === "string" && (
-                      <span style={{ color: "red" }}>
-                        {form.errors[`answers.${i}.option`]}
-                      </span>
-                    )}
+
                   </Flex>
                 ))}
                 {typeof form.errors[`answers`] === "string" && (

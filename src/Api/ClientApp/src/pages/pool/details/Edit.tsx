@@ -259,7 +259,7 @@ const EditQuestion = () => {
               <Text size={"md"}>{t("hint")}</Text>
               <TextEditor
                 placeholder={t("question_hint") as string}
-                label={t("hint") as string}
+                label={"hints"}
                 formContext={useFormContext}
               />
             </Box>
@@ -279,7 +279,7 @@ const EditQuestion = () => {
                 {form.values.answers.map((x, i) => (
                   <Flex
                     align={"center"}
-                    justify={"center"}
+                    justify={"start"}
                     gap={"md"}
                     key={i}
                     mb={30}
