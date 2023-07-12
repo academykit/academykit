@@ -126,8 +126,9 @@
             try
             {
                 var html = $"Dear {firstName},<br><br>";
-                html += @$"Please <a href='{_appUrl}/changeEmail?token={token}'> <u  style='color:blue;'>Click here</u></a> to change the email for E-learning. 
-                                <br> The link will expire in {expiredTime} minute.<br><br>";
+                html += @$"Your request to change the email address for LMS has been successfully processed. To finalize the update, please click on the provided link within {expiredTime} minutes.";
+                html += @$" <a href='{_appUrl}/changeEmail?token={token}'> <u  style='color:blue;'>Click here</u></a> to change the email.<br>";
+                html += $@"If you encounter any issues or have any questions, please don't hesitate to reach out to us.<br><br>";
                 html += $"Thank You,<br> {companyName}";
 
                 var mail = new EmailRequestDto

@@ -557,7 +557,8 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(ex.Message, ex);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
     }
