@@ -235,7 +235,6 @@ const Create = () => {
               <Text size={"lg"}>{t("hint")}</Text>
               <TextEditor
                 placeholder={t("question_hint")}
-                label={t("hints") as string}
                 formContext={useFormContext}
               />
             </Box>
