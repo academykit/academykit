@@ -410,7 +410,7 @@ namespace Lingtren.Infrastructure.Services
                         await _unitOfWork.GetRepository<User>().InsertAsync(newUsers).ConfigureAwait(false);
                         await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                         BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailImportedUserAsync(newUserEmails, null));
-                        message.AppendLine(_localizer.GetString("UserImported"));
+                        message.AppendLine($"{newUsers.Count}" + " " + _localizer.GetString("UserImported"));
                     }
                 }
                 else
