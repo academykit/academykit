@@ -399,7 +399,7 @@ namespace Lingtren.Infrastructure.Services
 
                             var userEmailDto = new UserEmailDto
                             {
-                                FullName = userEntity.FullName,
+                                FullName = userEntity.FirstName,
                                 Email = userEntity.Email,
                                 Password = password,
                                 CompanyName = company.CompanyName
@@ -1164,7 +1164,7 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.FirstName)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                    .Select((user, index) => new { User = user, Index = index})
+                    .Select((user, index) => new { User = user, Index = index +2})
                     .Where(x => string.IsNullOrWhiteSpace(x.User.FirstName))
                      .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
                      .ToList();
@@ -1176,7 +1176,7 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.LastName)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                    .Select((user, index) => new { User = user, Index = index })
+                    .Select((user, index) => new { User = user, Index = index +2})
                     .Where(x => string.IsNullOrWhiteSpace(x.User.LastName))
                      .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
                      .ToList();
@@ -1190,7 +1190,7 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Email)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                     .Select((user, index) => new { User = user, Index = index })
+                     .Select((user, index) => new { User = user, Index = index + 2 })
                      .Where(x => string.IsNullOrWhiteSpace(x.User.Email))
                       .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
                       .ToList();
@@ -1202,7 +1202,7 @@ namespace Lingtren.Infrastructure.Services
                            @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                               @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
                     var invalidEmailRows = checkForValidRows.userList
-                       .Select((user, index) => (user.Email, index))
+                       .Select((user, index) => (user.Email, index +2))
                          .Where(entry => !Regex.IsMatch(entry.Email, emailPattern))
                        .Select(entry => entry.Item2)
                        .ToList();
@@ -1216,7 +1216,7 @@ namespace Lingtren.Infrastructure.Services
                     string moblieNumberPattern = @"^[+\d]+$";
 
                     var invalidMoblieNumberRows = checkForValidRows.userList
-                       .Select((user, index) => (user.MobileNumber, index))
+                       .Select((user, index) => (user.MobileNumber, index +2))
                          .Where(entry => !Regex.IsMatch(entry.MobileNumber, moblieNumberPattern))
                        .Select(entry => entry.Item2)
                        .ToList();
@@ -1228,7 +1228,7 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Role) || !Enum.TryParse<UserRole>(x.Role, out _)))
                 {
                     var selectedSN = checkForValidRows.userList
-                      .Select((user, index) => new { User = user, Index = index })
+                      .Select((user, index) => new { User = user, Index = index +2})
                       .Where(x => string.IsNullOrWhiteSpace(x.User.Role))
                        .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
                        .ToList();
@@ -1239,7 +1239,7 @@ namespace Lingtren.Infrastructure.Services
                     }
 
                      var selectedSNs = checkForValidRows.userList
-                      .Select((user, index) => new { User = user, Index = index })
+                      .Select((user, index) => new { User = user, Index = index +2})
                       .Where(user => !Enum.GetNames(typeof(UserRole)).Any(enumvalue => string.Equals(enumvalue,user.User.Role,StringComparison.OrdinalIgnoreCase)))
                        .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
                        .ToList();
