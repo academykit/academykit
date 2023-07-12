@@ -298,11 +298,7 @@ const Create = () => {
                         <IconTrash color="red" />
                       </UnstyledButton>
                     )}
-                    {typeof form.errors[`answers.${i}.option`] === "string" && (
-                      <span style={{ color: "red" }}>
-                        {form.errors[`answers.${i}.option`]}
-                      </span>
-                    )}
+
                   </Flex>
                 ))}
                 {typeof form.errors[`answers`] === "string" && (
