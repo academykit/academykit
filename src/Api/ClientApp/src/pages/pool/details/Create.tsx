@@ -269,8 +269,7 @@ const Create = () => {
                       ></Radio>
                     )}
                     <TextEditor
-                      placeholder={t("option_placeholder")}
-                      label={`answers.${i}.option`}
+                      placeholder={t("option_placeholder") as string}
                       formContext={useFormContext}
                     ></TextEditor>
                     <UnstyledButton
