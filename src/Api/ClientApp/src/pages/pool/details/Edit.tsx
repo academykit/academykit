@@ -279,7 +279,7 @@ const EditQuestion = () => {
                 {form.values.answers.map((x, i) => (
                   <Flex
                     align={"center"}
-                    justify={"center"}
+                    justify={"start"}
                     gap={"md"}
                     key={i}
                     mb={30}
