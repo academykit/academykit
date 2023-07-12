@@ -204,6 +204,7 @@ const Create = () => {
             <Box mt={20}>
               <Text size={"lg"}>{t("description")}</Text>
               <TextEditor
+                label={t("description") as string}
                 placeholder={t("question_description") as string}
                 formContext={useFormContext}
               />
@@ -234,8 +235,8 @@ const Create = () => {
             <Box mt={20}>
               <Text size={"lg"}>{t("hint")}</Text>
               <TextEditor
+                label={t("hint") as string}
                 placeholder={t("question_hint")}
-                label={t("hints") as string}
                 formContext={useFormContext}
               />
             </Box>
@@ -268,7 +269,9 @@ const Create = () => {
                         // {...form.getInputProps(`answers.${i}.isCorrect`)}
                       ></Radio>
                     )}
-                    <TextEditor
+                     <TextEditor
+                      placeholder={t("option_placeholder")}
+                      label={`answers.${i}.option`}
                       placeholder={t("option_placeholder") as string}
                       formContext={useFormContext}
                     ></TextEditor>

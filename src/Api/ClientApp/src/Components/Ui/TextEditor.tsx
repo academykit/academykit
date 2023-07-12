@@ -87,7 +87,7 @@ const TextEditor = ({
 
   return (
     <Box>
-      {label && <label>{t(label)}</label>}
+      {/* {label && <label>{t(label)}</label>} */}
       <RichTextEditor editor={editor} sx={sx}>
         <RichTextEditor.Toolbar sticky stickyOffset={60}>
           <RichTextEditor.ControlsGroup>
