@@ -242,8 +242,8 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var user =  await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Email == email).ConfigureAwait(false);
-                if(user == default)
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Email == email).ConfigureAwait(false);
+                if (user == default)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
                 }
@@ -295,30 +295,30 @@ namespace Lingtren.Infrastructure.Services
         {
             return await ExecuteWithResultAsync(async () =>
             {
-              var isValidUser = await IsSuperAdminOrAdminOrTrainer(currentUserId).ConfigureAwait(false);
-              if (!isValidUser)
-              {
-                  throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
-              }
-              var predicate = PredicateBuilder.New<User>(true);
-              if (!string.IsNullOrWhiteSpace(critera.Search))
-              {
-                  var search = critera.Search.ToLower().Trim();
-                  predicate = predicate.And(x => x.FirstName.ToLower().Trim().Contains(search)
-                  || x.LastName.ToLower().Trim().Contains(search)
-                  || x.Email.ToLower().Trim().Contains(search));
-              }
+                var isValidUser = await IsSuperAdminOrAdminOrTrainer(currentUserId).ConfigureAwait(false);
+                if (!isValidUser)
+                {
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
+                }
+                var predicate = PredicateBuilder.New<User>(true);
+                if (!string.IsNullOrWhiteSpace(critera.Search))
+                {
+                    var search = critera.Search.ToLower().Trim();
+                    predicate = predicate.And(x => x.FirstName.ToLower().Trim().Contains(search)
+                    || x.LastName.ToLower().Trim().Contains(search)
+                    || x.Email.ToLower().Trim().Contains(search));
+                }
                 predicate = predicate.And(p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer);
                 if (!string.IsNullOrWhiteSpace(critera.CourseIdentity))
                 {
                     var courseTeacher = await _unitOfWork.GetRepository<CourseTeacher>().GetAllAsync(predicate: p => p.CourseId.ToString() == critera.CourseIdentity ||
                     p.Course.Slug.ToLower() == critera.CourseIdentity.ToLower().Trim()).ConfigureAwait(false);
 
-                    var userIds = courseTeacher.Select(x=>x.UserId).ToList();
+                    var userIds = courseTeacher.Select(x => x.UserId).ToList();
                     predicate = predicate.And(p => !userIds.Contains(p.Id));
                 }
-                    return await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: predicate,
-                   selector: s => new TrainerResponseModel(s)).ConfigureAwait(false);
+                return await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: predicate,
+               selector: s => new TrainerResponseModel(s)).ConfigureAwait(false);
             });
         }
 
@@ -340,7 +340,7 @@ namespace Lingtren.Infrastructure.Services
                     throw new ArgumentException(_localizer.GetString("CSVFileExtension"));
                 }
                 var users = new List<UserImportDto>();
-                (List<UserImportDto> userList,List<int> SN) checkForValidRows = (new List<UserImportDto>(), new List<int>());
+                (List<UserImportDto> userList, List<int> SN) checkForValidRows = (new List<UserImportDto>(), new List<int>());
                 using (var reader = new StreamReader(file.OpenReadStream()))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
@@ -348,7 +348,7 @@ namespace Lingtren.Infrastructure.Services
                     {
                         var user = csv.GetRecord<UserImportDto>();
                         bool allMembersNull = string.IsNullOrEmpty(user.FirstName) && string.IsNullOrEmpty(user.LastName) && string.IsNullOrEmpty(user.Email) && string.IsNullOrEmpty(user.Role);
-                        if(allMembersNull)
+                        if (allMembersNull)
                         {
                             continue;
                         }
@@ -399,7 +399,7 @@ namespace Lingtren.Infrastructure.Services
 
                             var userEmailDto = new UserEmailDto
                             {
-                                FullName = userEntity.FullName,
+                                FullName = userEntity.FirstName,
                                 Email = userEntity.Email,
                                 Password = password,
                                 CompanyName = company.CompanyName
@@ -410,7 +410,7 @@ namespace Lingtren.Infrastructure.Services
                         await _unitOfWork.GetRepository<User>().InsertAsync(newUsers).ConfigureAwait(false);
                         await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                         BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailImportedUserAsync(newUserEmails, null));
-                        message.AppendLine(_localizer.GetString("UserImported"));
+                        message.AppendLine($"{newUsers.Count}" + " " + _localizer.GetString("UserImported"));
                     }
                 }
                 else
@@ -560,7 +560,7 @@ namespace Lingtren.Infrastructure.Services
                 _logger.LogWarning("User with email : {email} not found.", model.OldEmail);
                 throw new ForbiddenException(_localizer.GetString("UserNotFoundWithEmail") + " " + model.OldEmail);
             }
-            var newUser = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p=>p.Email == model.NewEmail).ConfigureAwait(false);
+            var newUser = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Email == model.NewEmail).ConfigureAwait(false);
             if (newUser != null)
             {
                 _logger.LogWarning("User with new email : {email} found in the system.", model.NewEmail);
@@ -826,7 +826,7 @@ namespace Lingtren.Infrastructure.Services
             }
 
         }
-                
+
         /// <summary>
         /// updates child entity before updating user
         /// </summary>
@@ -834,7 +834,7 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         protected override async Task ResolveChildEntitiesAsync(User user)
         {
-            var oldUser = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p=>p.Id == user.Id).ConfigureAwait(false);
+            var oldUser = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == user.Id).ConfigureAwait(false);
             if (oldUser != null)
             {
                 var allowed = userRecordModificationValidity(user, oldUser);
@@ -870,7 +870,7 @@ namespace Lingtren.Infrastructure.Services
                     }
                 }
             }
-            
+
         }
 
         /// <summary>
@@ -879,21 +879,21 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="newUser">old user's credentials <see cref="User"></param>
         /// <param name="oldUser">new user's credentials <see cref="User"></param>
         /// <returns>Bool</returns>
-        private bool userRecordModificationValidity(User newUser,User oldUser)
+        private bool userRecordModificationValidity(User newUser, User oldUser)
         {
             if (newUser.Role == UserRole.Admin && oldUser.Role == UserRole.Trainer)
-            { 
+            {
                 return false;
             }
 
             if (newUser.Role == UserRole.Trainer && oldUser.Role == UserRole.Admin)
-            { 
+            {
                 return false;
             }
 
             if (newUser.Role == oldUser.Role)
-            { 
-                return false; 
+            {
+                return false;
             }
             if (newUser.Role == UserRole.Admin && oldUser.Role == UserRole.Trainee)
             {
@@ -904,7 +904,7 @@ namespace Lingtren.Infrastructure.Services
                 return false;
             }
 
-               return true;
+            return true;
         }
 
 
@@ -974,7 +974,7 @@ namespace Lingtren.Infrastructure.Services
                 var user = await GetAsync(userRefreshToken.UserId, includeProperties: false);
                 return user;
             }
-            
+
             return null;
         }
 
@@ -1164,7 +1164,7 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.FirstName)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                    .Select((user, index) => new { User = user, Index = index})
+                    .Select((user, index) => new { User = user, Index = index + 2 })
                     .Where(x => string.IsNullOrWhiteSpace(x.User.FirstName))
                      .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
                      .ToList();
@@ -1176,7 +1176,7 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.LastName)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                    .Select((user, index) => new { User = user, Index = index })
+                    .Select((user, index) => new { User = user, Index = index + 2 })
                     .Where(x => string.IsNullOrWhiteSpace(x.User.LastName))
                      .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
                      .ToList();
@@ -1190,7 +1190,7 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Email)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                     .Select((user, index) => new { User = user, Index = index })
+                     .Select((user, index) => new { User = user, Index = index + 2 })
                      .Where(x => string.IsNullOrWhiteSpace(x.User.Email))
                       .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
                       .ToList();
@@ -1202,7 +1202,7 @@ namespace Lingtren.Infrastructure.Services
                            @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                               @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
                     var invalidEmailRows = checkForValidRows.userList
-                       .Select((user, index) => (user.Email, index))
+                       .Select((user, index) => (user.Email, index + 2))
                          .Where(entry => !Regex.IsMatch(entry.Email, emailPattern))
                        .Select(entry => entry.Item2)
                        .ToList();
@@ -1216,7 +1216,7 @@ namespace Lingtren.Infrastructure.Services
                     string moblieNumberPattern = @"^[+\d]+$";
 
                     var invalidMoblieNumberRows = checkForValidRows.userList
-                       .Select((user, index) => (user.MobileNumber, index))
+                       .Select((user, index) => (user.MobileNumber, index + 2))
                          .Where(entry => !Regex.IsMatch(entry.MobileNumber, moblieNumberPattern))
                        .Select(entry => entry.Item2)
                        .ToList();
@@ -1228,7 +1228,7 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Role) || !Enum.TryParse<UserRole>(x.Role, out _)))
                 {
                     var selectedSN = checkForValidRows.userList
-                      .Select((user, index) => new { User = user, Index = index })
+                      .Select((user, index) => new { User = user, Index = index + 2 })
                       .Where(x => string.IsNullOrWhiteSpace(x.User.Role))
                        .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
                        .ToList();
@@ -1238,11 +1238,11 @@ namespace Lingtren.Infrastructure.Services
                         throw new ForbiddenException(_localizer.GetString("IncorrectRole") + " " + string.Join(", ", selectedSN) + " " + _localizer.GetString("TryAgain"));
                     }
 
-                     var selectedSNs = checkForValidRows.userList
-                      .Select((user, index) => new { User = user, Index = index })
-                      .Where(user => !Enum.GetNames(typeof(UserRole)).Any(enumvalue => string.Equals(enumvalue,user.User.Role,StringComparison.OrdinalIgnoreCase)))
-                       .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
-                       .ToList();
+                    var selectedSNs = checkForValidRows.userList
+                    .Select((user, index) => new { User = user, Index = index + 2 })
+                    .Where(x => !Enum.GetNames(typeof(UserRole))
+                    .Any(enumvalue => string.Equals(enumvalue, x.User.Role, StringComparison.OrdinalIgnoreCase)))
+                    .Join(checkForValidRows.SN.Select((sn, index) => new { SN = sn, Index = index }),x => x.Index,sn => sn.Index,(x, sn) => sn.SN).ToList();
 
                     if (selectedSNs.Any())
                     {

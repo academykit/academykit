@@ -917,16 +917,14 @@ namespace Lingtren.Infrastructure.Services
                     predicate: p => p.CourseId == course.Id && !p.IsDeleted && !p.Section.IsDeleted,
                     include: src => src.Include(x => x.Section)
                     ).ConfigureAwait(false);
-
                 var response = new List<LessonStatisticsResponseModel>();
-                var liveLessionId = lessons.Select(x=>x.Id).ToList();
-
-
-                var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(predicate : p => p.CourseId == course.Id  && liveLessionId.Contains(p.LessonId)).ConfigureAwait(false);
-
-                watchHistory = watchHistory.DistinctBy(x => x.UserId).ToList();
-                
-                foreach(var lesson in lessons.OrderBy(o=>o.Section.Id).ThenBy(o=>o.Order))
+                var LessonIds = lessons.Select(x=>x.Id).ToList();
+                var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(predicate: p => p.CourseId == course.Id && LessonIds.Contains(p.LessonId)).ConfigureAwait(false);
+                watchHistory = watchHistory
+                              .GroupBy(x => x.LessonId)
+                              .SelectMany(group => group.DistinctBy(x => x.UserId))
+                              .ToList();
+                foreach (var lesson in lessons.OrderBy(o=>o.Section.Id).ThenBy(o=>o.Order))
                 {
                     response.Add(new LessonStatisticsResponseModel
                     {
@@ -945,7 +943,6 @@ namespace Lingtren.Infrastructure.Services
                         LessonWatched = watchHistory.Where(x=>x.LessonId == lesson.Id && x.CourseId == course.Id).Count(),
                     });
                 } 
-
                 return response;
             }
             catch (Exception ex)
