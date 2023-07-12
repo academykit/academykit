@@ -60,12 +60,17 @@ const TextEditor = ({
     content: form ? form.values[label ?? "description"] : value,
   });
 
+  // console.log(form?.values.answers[1])
+  // form?.getInputProps(label || 'description').value
   useMemo(() => {
-    const textValue = form?.values[label ?? "description"] || value;
+    const textValue = form?.getInputProps(label ?? 'description').value ?? value;
+
     if (editor && textValue !== editor.getHTML()) {
+      console.log("txt value: ", textValue)
+      console.log("if ran")
       editor.chain().insertContent(textValue).run();
     }
-  }, [form?.values[label ?? "description"], value]);
+  }, [form?.getInputProps(label ?? 'description').value, value, editor]);
 
   editor?.on("update", (d) => {
     const text = editor.getHTML();

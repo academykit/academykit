@@ -79,7 +79,7 @@ const AddExam = ({
   );
 
   const startDateTime = item?.questionSet?.startTime
-    ? moment(item?.questionSet?.startTime + "z")
+      ? moment(item?.questionSet?.startTime + "z")
         .local()
         .toDate()
     : new Date();
