@@ -86,6 +86,7 @@ const UsersList = ({
         onClose={() => {
           setCurrentTab("user");
           setOpened(false);
+          form.reset();
         }}
         title={t("add_more_user")}
         styles={{ title: { fontWeight: "bold" } }}

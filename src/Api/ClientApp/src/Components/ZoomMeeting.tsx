@@ -60,9 +60,9 @@ const ZoomMettingMessage = () => {
     return (
       <Center pt="20%">
         <Container>
-          <Title align="center">Thank you for attending the meeting.</Title>
+          <Title align="center">{t('thank_for_attending_meeting')}</Title>
           <Text size={"xl"} align="center">
-            You have left the Meeting.
+            {t('left_meeting')}
           </Text>
           <Box my={20} ml={180}>
             <Group>
@@ -86,7 +86,7 @@ const ZoomMettingMessage = () => {
                   component="a"
                   href={`/meet.html?l=${lessonId}&c=${courseId}`}
                 >
-                  Rejoin
+                  {t('rejoin')}
                 </Button>
               </Anchor>
             </Group>
@@ -99,9 +99,9 @@ const ZoomMettingMessage = () => {
   return (
     <Center pt={"20%"}>
       <Container>
-        <Title>Meeting has been ended</Title>
+        <Title>{t('meeting_end')}</Title>
         <Text size={"xl"} align="center">
-          Meeting has Ended
+          {t('meeting_end_desc')}
         </Text>
         <Box my={20} ml={125}>
           <Group>
