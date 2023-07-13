@@ -191,7 +191,7 @@ const MyTrainingExternal = () => {
           {t("add_certificate")}
         </Button>
       </Group>
-      {certificateList.isSuccess && certificateList.data?.length < 0 && (
+      {certificateList.isSuccess && certificateList.data?.length <= 0 && (
         <Box>{t("no_external_training")}</Box>
       )}
       {certificateList.isSuccess &&

@@ -106,7 +106,7 @@ const UserProfile = () => {
               value="certificate"
               icon={<IconFileDescription size={14} />}
             >
-              {t("certificate")}
+              {t("only_certificate")}
             </Tabs.Tab>
             <Tabs.Tab value="training" icon={<IconSchool size={14} />}>
               {t("training")}
