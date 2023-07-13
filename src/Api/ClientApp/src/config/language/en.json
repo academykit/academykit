@@ -220,6 +220,7 @@
   "issued_by": "Issued By",
   "issuer_location": "Issuer Location",
   "certificate": "Internal Certificate",
+  "only_certificate": "Certificate",
   "profile": "Profile",
   "account": "Account",
   "admin_settings": "Admin Settings",

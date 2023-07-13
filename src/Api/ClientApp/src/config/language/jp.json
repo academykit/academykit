@@ -220,6 +220,7 @@
   "issued_by": "発行元",
   "issuer_location": "発行者の場所",
   "certificate": "証明書",
+  "only_certificate": "証明書",
   "profile": "プロフィール",
   "account": "アカウント",
   "admin_settings": "管理者設定",
