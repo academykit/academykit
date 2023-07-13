@@ -374,7 +374,7 @@ namespace Lingtren.Infrastructure.Services
 
                 foreach (var teacher in course.CourseTeachers)
                 {
-                    var fullName = string.IsNullOrEmpty(teacher.User?.MiddleName) ? $"{teacher.User?.FirstName} {teacher.User?.LastName}" : $"{teacher.User?.FirstName} {teacher.User?.MiddleName} {teacher.User?.LastName}";
+                    var fullName = teacher.User.FirstName;
                     var html = $"Dear {fullName},<br><br>";
                     html += $"A new user has enrolled in your {courseName} course. Here are the details:";
                     html += $"<ul><li>Training: {courseName}</li><li>Enrolled User: {userName}</li> <li>User Email:{userEmail}</li></ul>";
