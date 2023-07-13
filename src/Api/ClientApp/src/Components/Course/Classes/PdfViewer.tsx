@@ -41,8 +41,6 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
   const matchesSmallScreen = useMediaQuery("(min-width: 550px");
   const auth = useAuth();
   const userRole = auth?.auth?.role;
-  console.log(auth?.auth?.role);
-  console.log(lesson);
 
   const theme = useMantineColorScheme();
   const { t } = useTranslation();
