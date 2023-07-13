@@ -72,7 +72,7 @@ const ZoomMettingMessage = () => {
                 to={`/classes/${courseId}/1`}
                 color={"dimmed"}
               >
-                <Button>Back to Course</Button>
+                <Button>{t("back_course")}</Button>
               </Anchor>
               <Anchor
                 size={"xs"}
@@ -111,7 +111,7 @@ const ZoomMettingMessage = () => {
               to={`/classes/${courseId}/1`}
               color={"dimmed"}
             >
-              <Button>Back to Course</Button>
+              <Button>{t("back_course")}</Button>
             </Anchor>
             <Anchor
               size={"xs"}
