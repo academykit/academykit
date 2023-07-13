@@ -202,6 +202,7 @@ const Exam = ({
         </Button>
       </Modal>
       <Grid m={20}>
+        {/* exam display section */}
         <Grid.Col span={matches ? 9 : 12}>
           <Box
             sx={{
@@ -281,6 +282,8 @@ const Exam = ({
             )}
           </Card>
         </Grid.Col>
+
+        {/* question counter section */}
         <Grid.Col span={matches ? 3 : 12} m={0}>
           <Group p={10} className={classes.navigateWrapper}>
             {form.values.map((x, i) => (

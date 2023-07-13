@@ -855,6 +855,10 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "thank_for_attending_meeting": "ミーティングへの参加ありがとうございました。",
+  "left_meeting": "ミーティングから退出しました。",
+  "meeting_end": "ミーティングが終了しました。",
+  "meeting_end_desc": "ミーティングが終了しました。",
   "no_active_department": "アクティブな部署はありません",
   "hour_s": "時間",
   "show_reply": "返信を表示する",
