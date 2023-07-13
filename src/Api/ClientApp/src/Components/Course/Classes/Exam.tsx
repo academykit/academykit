@@ -42,6 +42,7 @@ const useStyle = createStyles((theme) => ({
       cursor: "pointer",
     },
     marginBottom: "15px",
+    // height: "fit-content"
   },
   navigate: {
     display: "flex",
@@ -78,6 +79,18 @@ const useStyle = createStyles((theme) => ({
   },
   answered: {
     backgroundColor: theme.colors[theme.primaryColor][1],
+  },
+  questionGridCol: {
+    flexDirection: "row",
+
+    [theme.fn.smallerThan('lg')]: {
+      flexDirection: "column",
+    },
+  },
+  optionsGridCol: {
+    [theme.fn.smallerThan('lg')]: {
+      maxWidth: "100%"
+    },
   },
 }));
 
@@ -164,9 +177,10 @@ const Exam = ({
       setShowConfirmation();
     } catch (err) {}
   };
-
+console.log(matches ? 9 : 12)
   return (
     <form onSubmit={form.onSubmit(onSubmitHandler)}>
+      {/* confirmation poop-up Modal */}
       <Modal
         title={t("submit_exam_confirmation")}
         opened={showConfirmation}
@@ -186,6 +200,8 @@ const Exam = ({
           </Button>
         </Group>
       </Modal>
+
+      {/* Notice pop-up Modal */}
       <Modal
         opened={examSubmission.isSuccess}
         onClose={() => {
@@ -201,9 +217,11 @@ const Exam = ({
           {t("close")}
         </Button>
       </Modal>
-      <Grid m={20}>
+      
+      <Grid m={20} className={classes.questionGridCol}>
         {/* exam display section */}
-        <Grid.Col span={matches ? 9 : 12}>
+        {/* <Grid.Col span={matches ? 9 : 12}> */}
+        <Grid.Col span={matches ? 9 : 9} sx={{maxWidth: "100%"}}>
           <Box
             sx={{
               flexDirection: "column",
@@ -284,7 +302,8 @@ const Exam = ({
         </Grid.Col>
 
         {/* question counter section */}
-        <Grid.Col span={matches ? 3 : 12} m={0}>
+        {/* <Grid.Col span={matches ? 3 : 12} m={0}> */}
+        <Grid.Col span={matches ? 3 : 3} m={0} className={classes.optionsGridCol}>
           <Group p={10} className={classes.navigateWrapper}>
             {form.values.map((x, i) => (
               <div
