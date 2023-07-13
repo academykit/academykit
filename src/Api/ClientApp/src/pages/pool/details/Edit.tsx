@@ -237,7 +237,6 @@ const EditQuestion = () => {
               <MultiSelect
                 searchable
                 mt={10}
-                labelProps="name"
                 creatable
                 sx={{ maxWidth: "500px" }}
                 data={tagsList}
@@ -246,6 +245,7 @@ const EditQuestion = () => {
                 getCreateLabel={(query) => `+ Create ${query}`}
                 onCreate={(query) => {
                   mutate(query);
+                  return null;
                 }}
                 size={"md"}
                 label={t("tags")}

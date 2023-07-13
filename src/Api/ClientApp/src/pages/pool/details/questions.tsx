@@ -9,9 +9,7 @@ import {
   Center,
   Container,
   Flex,
-  Group,
   Loader,
-  Modal,
   Paper,
   Table,
 } from "@mantine/core";
@@ -136,7 +134,7 @@ const QuestionRow = ({
       <td>{data.name}</td>
       <td style={{ width: "400px" }}>
         {data.tags.map((x) => (
-          <Badge color={"green"} mx={2}>
+          <Badge key={x.id} color={"green"} mx={2}>
             {" "}
             {x.tagName}
           </Badge>

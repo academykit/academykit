@@ -214,15 +214,14 @@ const Create = () => {
               <MultiSelect
                 mt={15}
                 searchable
-                labelProps="name"
                 creatable
                 sx={{ maxWidth: "500px" }}
                 data={tagsList}
-                value={[]}
                 {...form.getInputProps("tags")}
                 getCreateLabel={(query) => `+ ${t("create")} ${query}`}
                 onCreate={(query) => {
                   mutate(query);
+                  return null;
                 }}
                 size={"lg"}
                 label={t("tags")}
@@ -236,7 +235,7 @@ const Create = () => {
               <Text size={"lg"}>{t("hint")}</Text>
               <TextEditor
                 label={t("hints") as string}
-                placeholder={t("question_hint")}
+                placeholder={t("question_hint") as string}
                 formContext={useFormContext}
               />
             </Box>
