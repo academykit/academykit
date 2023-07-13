@@ -40,6 +40,8 @@ const useStyles = createStyles((theme) => ({
     maxWidth: "230px",
     minWidth: "230px",
     width: "230px",
+    overflow: "hidden",
+    textOverflow: "ellipsis"
   },
   roleContainer: {
     maxWidth: "120px",

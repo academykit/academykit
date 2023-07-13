@@ -853,6 +853,7 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "no_active_department": "No active department",
   "hour_s": "Hour(s)",
   "show_reply": "Show Reply",
   "hide_reply": "Hide Reply",

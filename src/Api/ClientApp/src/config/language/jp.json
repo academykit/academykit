@@ -854,6 +854,7 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "no_active_department": "アクティブな部署はありません",
   "hour_s": "時間",
   "show_reply": "返信を表示する",
   "hide_reply": "返信を非表示にする",

@@ -854,6 +854,7 @@
       "AWS_VideoBucket": "भिडियो संग्रह"
     }
   },
+  "no_active_department": "कुनै सक्रिय विभाग छैन",
   "hour_s": "घण्टा(हरु)",
   "show_reply": "जवाफ देखाउनुहोस्",
   "hide_reply": "जवाफ लुकाउनुहोस्",
