@@ -166,15 +166,19 @@ const AddMeeting = ({
     }
   };
   const handleSubmit = async (values: any) => {
-    const time = new Date(values?.meetingStartTime).toLocaleTimeString();
-    const date = new Date(values?.meetingStartDate).toLocaleDateString();
-
+    // const time = new Date(values?.meetingStartTime).toLocaleTimeString();
+    // const date = new Date(values?.meetingStartDate).toLocaleDateString();
+    const time = moment(values?.meetingStartTime, 'HH:mm').format('HH:mm');
+    const date = moment(values?.meetingStartDate, 'MM/DD/YYYY').format('MM/DD/YYYY');
+    
     const meeting = {
       ...values,
       meetingStartDate: isEditing
-        ? new Date(date + " " + time)
+        // ? new Date(date + " " + time)
+        ? moment(date + " " + time, 'MM/DD/YYYY HH:mm').toDate()
         : new Date(dateTime).toISOString(),
     };
+    
     delete meeting.isMandatory;
     delete meeting.meetingStartTime;
 
