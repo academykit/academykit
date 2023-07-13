@@ -1,5 +1,13 @@
 import { useEffect } from "react";
-import { Group, TextInput, Switch, Select, Button, Grid } from "@mantine/core";
+import {
+  Group,
+  TextInput,
+  Switch,
+  Select,
+  Button,
+  Grid,
+  createStyles,
+} from "@mantine/core";
 import { UserRole, UserStatus } from "@utils/enums";
 import { useDepartmentSetting } from "@utils/services/adminService";
 import { useForm, yupResolver } from "@mantine/form";
@@ -12,6 +20,19 @@ import { PHONE_VALIDATION } from "@utils/constants";
 import { useTranslation } from "react-i18next";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+import { IconInfoCircle } from "@tabler/icons";
+
+const useStyles = createStyles((theme) => ({
+  departmentInfo: {
+    fontSize: "12px",
+    position: "absolute",
+    marginTop: "5px",
+    display: "flex",
+    alignItems: "center",
+    columnGap: "5px",
+    lineHeight: "1px",
+  },
+}));
 
 const schema = () => {
   const { t } = useTranslation();
@@ -60,6 +81,7 @@ const AddUpdateUserForm = ({
   item?: IUserProfile;
 }) => {
   const { t } = useTranslation();
+  const { classes } = useStyles();
   const form = useForm<IUserProfile>({
     initialValues: item,
     validate: yupResolver(schema()),
@@ -73,7 +95,7 @@ const AddUpdateUserForm = ({
       IsActive: true,
     })
   );
-
+  console.log(department);
   useEffect(() => {
     form.setFieldValue("role", item?.role ?? 4);
     item?.departmentId &&
@@ -196,11 +218,12 @@ const AddUpdateUserForm = ({
             {...form.getInputProps("role")}
           />
         </Grid.Col>
-        <Grid.Col xs={6} lg={4}>
+        <Grid.Col xs={6} lg={4} mt={5}>
           <Select
             label={t("department")}
             placeholder={t("pick_department") as string}
             searchable
+            nothingFound={t('no_department')}
             data={
               department
                 ? department.items.map((x) => ({
@@ -211,6 +234,12 @@ const AddUpdateUserForm = ({
             }
             {...form.getInputProps("departmentId")}
           />
+          {department && department?.items.length < 1 && (
+            <span className={classes.departmentInfo}>
+              <IconInfoCircle size={12} />
+              {t('no_active_department')}
+            </span>
+          )}
         </Grid.Col>
       </Grid>
 

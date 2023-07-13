@@ -96,8 +96,6 @@ const EditQuestion = () => {
     []
   );
 
-  console.log(getQuestion);
-
   const form = useForm({
     initialValues: {
       name: "",
@@ -176,7 +174,7 @@ const EditQuestion = () => {
         description: getQuestion.data.description,
         hints: getQuestion.data.hints,
         type: getQuestion.data.type.toString(),
-        answers,
+        answers: answers,
         tags: data,
       });
 
@@ -243,7 +241,7 @@ const EditQuestion = () => {
                 creatable
                 sx={{ maxWidth: "500px" }}
                 data={tagsList}
-                value={[]}
+                // value={[]}
                 {...form.getInputProps("tags")}
                 getCreateLabel={(query) => `+ Create ${query}`}
                 onCreate={(query) => {
@@ -260,8 +258,8 @@ const EditQuestion = () => {
             <Box mt={20}>
               <Text size={"md"}>{t("hint")}</Text>
               <TextEditor
-                placeholder={t("question_hint")}
-                label={t("hints") as string}
+                placeholder={t("question_hint") as string}
+                label={"hints"}
                 formContext={useFormContext}
               />
             </Box>
@@ -281,7 +279,7 @@ const EditQuestion = () => {
                 {form.values.answers.map((x, i) => (
                   <Flex
                     align={"center"}
-                    justify={"center"}
+                    justify={"start"}
                     gap={"md"}
                     key={i}
                     mb={30}
@@ -289,19 +287,19 @@ const EditQuestion = () => {
                     {QuestionType.MultipleChoice.toString() ===
                     form.values.type ? (
                       <Checkbox
-                        checked={form.values.answers[i].isCorrect}
+                        checked={x.isCorrect}
                         {...form.getInputProps(`answers.${i}.isCorrect`)}
                         name=""
                       ></Checkbox>
                     ) : (
                       <Radio
                         onChange={() => onChangeRadioType(i)}
-                        checked={form.values.answers[i].isCorrect}
+                        checked={x.isCorrect}
                         // {...form.getInputProps(`answers.${i}.isCorrect`)}
                       ></Radio>
                     )}
                     <TextEditor
-                      placeholder={t("option_placeholder")}
+                      placeholder={t("option_placeholder") as string}
                       label={`answers.${i}.option`}
                       formContext={useFormContext}
                     ></TextEditor>

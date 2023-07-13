@@ -15,6 +15,7 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using System;
+    using System.Net.Mail;
     using System.Text;
     using static Dapper.SqlMapper;
 
@@ -188,10 +189,12 @@ namespace Lingtren.Infrastructure.Services
                 foreach (var emailDto in dtos)
                 {
                     var html = $"Dear {emailDto.FullName},<br><br>";
-                    html += $"Your account has been created in LMS" +
-                        @$"<a href ='{this._appUrl}' ><u  style='color:blue;'> Click Here </u></a>. to go to application:" +
-                        $"<br> Your Login Password is <b><u>{emailDto.Password}</u></b><br><br>";
-                    html += $"<br><br>Thank You,<br> {emailDto.CompanyName}";
+                    html += $@"Your account has been created in the <a href = '{this._appUrl}'><u  style='color:blue;'>LMS</u></a>.<br><br>";
+                    html += "Here are the login details for your LMS account:<br><br>";
+                    html += $"Email:{emailDto.Email}<br>";
+                    html += $"Password:{emailDto.Password}<br><br>";
+                    html += $"Please use the above login credentials to access your account.<br><br>";
+                    html += $"Best regards,<br> {emailDto.CompanyName}";
                     var model = new EmailRequestDto
                     {
                         To = emailDto.Email,

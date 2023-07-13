@@ -204,6 +204,7 @@ const Create = () => {
             <Box mt={20}>
               <Text size={"lg"}>{t("description")}</Text>
               <TextEditor
+                label={t("description") as string}
                 placeholder={t("question_description") as string}
                 formContext={useFormContext}
               />
@@ -234,8 +235,8 @@ const Create = () => {
             <Box mt={20}>
               <Text size={"lg"}>{t("hint")}</Text>
               <TextEditor
-                placeholder={t("question_hint")}
                 label={t("hints") as string}
+                placeholder={t("question_hint")}
                 formContext={useFormContext}
               />
             </Box>
@@ -268,9 +269,9 @@ const Create = () => {
                         // {...form.getInputProps(`answers.${i}.isCorrect`)}
                       ></Radio>
                     )}
-                    <TextEditor
-                      placeholder={t("option_placeholder")}
+                     <TextEditor
                       label={`answers.${i}.option`}
+                      placeholder={t("option_placeholder") as string}
                       formContext={useFormContext}
                     ></TextEditor>
                     <UnstyledButton
@@ -296,11 +297,7 @@ const Create = () => {
                         <IconTrash color="red" />
                       </UnstyledButton>
                     )}
-                    {typeof form.errors[`answers.${i}.option`] === "string" && (
-                      <span style={{ color: "red" }}>
-                        {form.errors[`answers.${i}.option`]}
-                      </span>
-                    )}
+
                   </Flex>
                 ))}
                 {typeof form.errors[`answers`] === "string" && (

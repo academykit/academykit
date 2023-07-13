@@ -40,6 +40,8 @@ const useStyles = createStyles((theme) => ({
     maxWidth: "230px",
     minWidth: "230px",
     width: "230px",
+    overflow: "hidden",
+    textOverflow: "ellipsis"
   },
   roleContainer: {
     maxWidth: "120px",
@@ -111,7 +113,7 @@ const UserRow = ({
         </Modal>
         <div style={{ display: "flex", textDecoration: "none" }}>
           <Link
-            to={`/userProfile/${item.id}`}
+            to={`/userProfile/${item.id}/certificate`}
             style={{ textDecoration: "none" }}
           >
             <Avatar size={26} src={item?.imageUrl} radius={26}>

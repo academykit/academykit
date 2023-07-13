@@ -20,8 +20,8 @@
         public WatchHistoryService(
             IUnitOfWork unitOfWork,
             ILogger<WatchHistoryService> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer) 
-            : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer)
+            : base(unitOfWork, logger, localizer)
         {
         }
 
@@ -91,6 +91,7 @@
         /// </remarks>
         public async Task<WatchHistoryResponseModel> CreateAsync(WatchHistoryRequestModel model, Guid currentUserId)
         {
+            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == currentUserId && (p.Role == UserRole.Admin || p.Role == UserRole.SuperAdmin)).ConfigureAwait(false);
             var course = await ValidateAndGetCourse(currentUserId, model.CourseIdentity, validateForModify: false).ConfigureAwait(false);
             if (course == null)
             {
@@ -104,7 +105,10 @@
                 _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and training with id : {courseId}.", model.LessonIdentity, currentUserId, course.Id);
                 throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
             }
-
+            if (course.CourseTeachers.Any(x => x.UserId == currentUserId) || user != default)
+            {
+                return new WatchHistoryResponseModel();
+            }
             var isCompleted = false;
             var isPassed = false;
             var currentTimeStamp = DateTime.UtcNow;
@@ -172,6 +176,7 @@
         {
             try
             {
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == currentUserId && (p.Role == UserRole.Admin || p.Role == UserRole.SuperAdmin)).ConfigureAwait(false);
                 var course = await ValidateAndGetCourse(currentUserId, model.CourseIdentity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
@@ -185,37 +190,40 @@
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and training with id : {courseId}.", model.LessonIdentity, currentUserId, course.Id);
                     throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
-                var currentTimeStamp = DateTime.UtcNow;
-                var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
-                    predicate: p => p.CourseId == course.Id && p.LessonId == lesson.Id && p.UserId == userId
-                    ).ConfigureAwait(false);
-                if (watchHistory == null)
+                if (course.CourseTeachers.Any(x => x.UserId != currentUserId) || user == default)
                 {
-                    watchHistory = new WatchHistory
+                    var currentTimeStamp = DateTime.UtcNow;
+                    var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
+                        predicate: p => p.CourseId == course.Id && p.LessonId == lesson.Id && p.UserId == userId
+                        ).ConfigureAwait(false);
+                    if (watchHistory == null)
                     {
-                        Id = Guid.NewGuid(),
-                        CourseId = course.Id,
-                        LessonId = lesson.Id,
-                        UserId = userId,
-                        IsCompleted = false,
-                        IsPassed = true,
-                        CreatedBy = currentUserId,
-                        CreatedOn = currentTimeStamp,
-                        UpdatedBy = currentUserId,
-                        UpdatedOn = currentTimeStamp
-                    };
-                    await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
-                }
-                else
-                {
-                    watchHistory.IsCompleted = true;
-                    watchHistory.IsPassed = true;
-                    watchHistory.UpdatedBy = currentUserId;
-                    watchHistory.UpdatedOn = DateTime.UtcNow;
-                    _unitOfWork.GetRepository<WatchHistory>().Update(watchHistory);
-                }
+                        watchHistory = new WatchHistory
+                        {
+                            Id = Guid.NewGuid(),
+                            CourseId = course.Id,
+                            LessonId = lesson.Id,
+                            UserId = userId,
+                            IsCompleted = false,
+                            IsPassed = true,
+                            CreatedBy = currentUserId,
+                            CreatedOn = currentTimeStamp,
+                            UpdatedBy = currentUserId,
+                            UpdatedOn = currentTimeStamp
+                        };
+                        await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        watchHistory.IsCompleted = true;
+                        watchHistory.IsPassed = true;
+                        watchHistory.UpdatedBy = currentUserId;
+                        watchHistory.UpdatedOn = DateTime.UtcNow;
+                        _unitOfWork.GetRepository<WatchHistory>().Update(watchHistory);
+                    }
 
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                    await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                }
             }
             catch (Exception ex)
             {

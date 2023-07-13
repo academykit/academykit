@@ -157,7 +157,7 @@
   "publish": "公開",
   "watch_course": "学習を始める",
   "preview": "プレビュー",
-  "enroll_course": "コースに登録",
+  "enroll_course": "トレーニングに登録する",
   "unable_get_course": "コースの詳細を取得できません。",
   "total_enrollments": "総受講者数",
   "total_lessons": "総レッスン数",
@@ -854,6 +854,8 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "no_active_department": "アクティブな部署はありません",
+  "hour_s": "時間",
   "show_reply": "返信を表示する",
   "hide_reply": "返信を非表示にする",
   "starts": "開始",
