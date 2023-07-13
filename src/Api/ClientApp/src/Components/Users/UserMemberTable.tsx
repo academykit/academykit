@@ -113,7 +113,7 @@ const UserRow = ({
         </Modal>
         <div style={{ display: "flex", textDecoration: "none" }}>
           <Link
-            to={`/userProfile/${item.id}`}
+            to={`/userProfile/${item.id}/certificate`}
             style={{ textDecoration: "none" }}
           >
             <Avatar size={26} src={item?.imageUrl} radius={26}>
