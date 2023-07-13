@@ -20,11 +20,10 @@ const MCQPoolRoute = () => {
         nav.setBreadCrumb([
           { href: "/pools", title: "Pools" },
           {
-            href: `/trainings/stat/${pool.data.slug}`,
+            href: `/pools/${pool.data.slug}`,
             title: pool?.data?.name ?? "",
           },
         ]);
-      // }
     }
   }, [pool.isSuccess, pool.isRefetching]);
   return (
