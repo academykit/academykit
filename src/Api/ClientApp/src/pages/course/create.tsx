@@ -212,7 +212,7 @@ const CreateCoursePage = () => {
                   label={t("level")}
                   {...form.getInputProps("level")}
                   data={
-                    label.data.length > 1
+                    label.data.length > 0
                       ? label.data.map((x) => ({ value: x.id, label: x.name }))
                       : [
                           {
