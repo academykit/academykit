@@ -27,6 +27,8 @@ import FullScreen from "./PdfComponents/FullScreen";
 import Zoom from "./PdfComponents/Zoom";
 import SwitchPage from "./PdfComponents/SwitchPage";
 import { useTranslation } from "react-i18next";
+import useAuth from "@hooks/useAuth";
+import { UserRole } from "@utils/enums";
 
 interface PdfViewerProps {
   lesson: ICourseLesson;
@@ -37,6 +39,10 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
   const watchHistory = useWatchHistory(lesson.courseId, lesson.id);
   const matches = useMediaQuery("(min-width: 991px");
   const matchesSmallScreen = useMediaQuery("(min-width: 550px");
+  const auth = useAuth();
+  const userRole = auth?.auth?.role;
+  console.log(auth?.auth?.role);
+  console.log(lesson);
 
   const theme = useMantineColorScheme();
   const { t } = useTranslation();
@@ -67,13 +73,22 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
                 </Group>
 
                 <Group>
+                  {/* Mark as completed button hidden for:
+                    - Org Admin
+                    - Org Superadmin
+                    - Training's trainer
+                  */}
                   {!lesson.isCompleted ? (
-                    <Button
-                      onClick={onMarkComplete}
-                      loading={watchHistory.isLoading}
-                    >
-                      {t("mark_complete")}
-                    </Button>
+                    userRole != UserRole.SuperAdmin &&
+                    userRole != UserRole.Admin &&
+                    userRole != lesson.user.role && (
+                      <Button
+                        onClick={onMarkComplete}
+                        loading={watchHistory.isLoading}
+                      >
+                        {t("mark_complete")}
+                      </Button>
+                    )
                   ) : (
                     <Badge>{t("Completed")}</Badge>
                   )}

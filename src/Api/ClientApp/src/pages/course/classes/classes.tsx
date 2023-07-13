@@ -84,7 +84,7 @@ const useStyle = createStyles((theme) => ({
 const Classes = () => {
   const navigate = useNavigate();
   const { classes, theme, cx } = useStyle();
-  console.log(theme.breakpoints.md);
+
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.md})`);
   const params = useParams();
   const tab = params["*"];
