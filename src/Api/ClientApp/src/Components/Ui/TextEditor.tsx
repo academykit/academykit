@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { UseFormReturnType } from "@mantine/form";
 import { FileAccess, uploadFile } from "@utils/services/fileService";
 
@@ -13,7 +13,7 @@ import Superscript from "@tiptap/extension-text-align";
 import SubScript from "@tiptap/extension-subscript";
 import { Box, Sx, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { useDebouncedState, useDebouncedValue } from "@mantine/hooks";
+import { useDebouncedState } from "@mantine/hooks";
 
 type IProps = {
   formContext?: () => UseFormReturnType<any, (values: any) => any>;
@@ -39,12 +39,12 @@ const TextEditor = ({
   const form = formContext && formContext();
   const [data, setData] = useDebouncedState("", 200);
 
-  useEffect(() => {
-    if (data) {
-      if (form) form.setFieldValue(label || "description", data);
-      if (onChange) onChange(data);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) {
+  //     if (form) form.setFieldValue(label || "description", data);
+  //     if (onChange) onChange(data);
+  //   }
+  // }, [data]);
 
   const editor = useEditor({
     extensions: [
@@ -63,18 +63,20 @@ const TextEditor = ({
   // console.log(form?.values.answers[1])
   // form?.getInputProps(label || 'description').value
   useMemo(() => {
-    const textValue = form?.getInputProps(label ?? 'description').value ?? value;
+    const textValue =
+      form?.getInputProps(label ?? "description").value ?? value;
 
     if (editor && textValue !== editor.getHTML()) {
-      console.log("txt value: ", textValue)
-      console.log("if ran")
+      console.log("txt value: ", textValue);
+      console.log("if ran");
       editor.chain().insertContent(textValue).run();
     }
-  }, [form?.getInputProps(label ?? 'description').value, value, editor]);
+  }, [form?.getInputProps(label ?? "description").value, value, editor]);
 
   editor?.on("update", (d) => {
-    const text = editor.getHTML();
-    setData(text);
+    const data = editor.getHTML();
+    if (form) form.setFieldValue(label || "description", data);
+    if (onChange) onChange(data);
   });
 
   const handleImageUpload = useCallback(
