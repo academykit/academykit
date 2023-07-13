@@ -90,6 +90,7 @@ const Lesson = ({
         color: "red",
         title: t("error"),
       });
+      toggle()
     }
   };
   return (
