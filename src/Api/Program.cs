@@ -34,7 +34,7 @@ builder.Services.AddRequestLocalization(x =>
     x.SupportedCultures = new List<CultureInfo> { new("ne-NP"), new("en-US"), new("ja-JP") };
     x.SupportedUICultures = new List<CultureInfo> { new("ne-NP"), new("en-US"), new("ja-JP") };
 });
-builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment);
 builder.Services.AddCors(options => options.AddDefaultPolicy(
                builder => builder
                 .AllowAnyOrigin()
