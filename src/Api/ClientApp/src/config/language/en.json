@@ -854,7 +854,11 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "thank_for_attending_meeting": "Thank you for attending the meeting.",
+  "left_meeting": "You have left the Meeting.",
   "no_active_department": "No active department",
+  "meeting_end": "Meeting has been ended",
+  "meeting_end_desc": "Meeting has Ended",
   "hour_s": "Hour(s)",
   "show_reply": "Show Reply",
   "hide_reply": "Hide Reply",
