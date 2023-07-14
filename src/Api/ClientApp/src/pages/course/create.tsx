@@ -176,6 +176,8 @@ const CreateCoursePage = () => {
                   searchable
                   creatable
                   sx={{ maxWidth: '500px' }}
+                  // eslint-disable-next-line prettier/prettier
+                  style={{marginTop: "3px"}}
                   data={
                     tagsList.length
                       ? tagsList
