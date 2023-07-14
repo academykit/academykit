@@ -3,7 +3,7 @@ import MyTrainingExternal from './myTrainingExternal';
 const AdminViewCertificate = () => {
   return (
     <div>
-      <MyTrainingExternal isAdmin={true} />
+      <MyTrainingExternal />
     </div>
   );
 };

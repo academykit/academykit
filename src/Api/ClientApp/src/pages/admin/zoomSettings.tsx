@@ -11,7 +11,6 @@ import {
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import {
-  IZoomSetting,
   useUpdateZoomSetting,
   useZoomSetting,
 } from '@utils/services/adminService';
@@ -44,11 +43,7 @@ const Row = ({
       {data && (
         <>
           <Text fz="md" weight={'bold'}>
-            {
-              //@ts-ignore
-
-              t(`${mapData[label]}`)
-            }
+            {t(`${mapData[label as keyof typeof mapData]}`)}
           </Text>
           <Text fz="sm">{String(data)}</Text>
         </>

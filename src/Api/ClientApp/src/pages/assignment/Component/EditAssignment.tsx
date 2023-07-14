@@ -113,13 +113,11 @@ const EditAssignment = ({
       description: assignmentQuestion ? assignmentQuestion.description : '',
       hints: assignmentQuestion ? assignmentQuestion?.hints || '' : '',
       type: assignmentQuestion ? assignmentQuestion.type.toString() : '',
-      // @ts-ignore
-      answers: assignmentQuestion
-        ? assignmentQuestion.assignmentQuestionOptions?.map((x) => ({
-            option: x.option,
-            isCorrect: x.isCorrect,
-          }))
-        : [{ option: '', isCorrect: false }],
+      answers: assignmentQuestion?.assignmentQuestionOptions?.map((x) => ({
+        option: x.option,
+        isCorrect: x.isCorrect ?? false,
+        isSelected: x.isSelected,
+      })) ?? [{ option: '', isCorrect: false, isSelected: false }],
     },
     validate: yupResolver(schema()),
   });

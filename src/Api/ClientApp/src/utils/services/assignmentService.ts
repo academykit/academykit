@@ -80,13 +80,11 @@ export interface ICreateAssignment {
   hints: string;
   type: string;
   fileUrls?: string[];
-  answers?: [
-    {
-      option: string;
-      isCorrect: boolean;
-      isSelected: boolean;
-    },
-  ];
+  answers?: {
+    option: string;
+    isCorrect: boolean;
+    isSelected: boolean;
+  }[];
 }
 
 const addAssignmentQuestion = ({ data }: { data: ICreateAssignment }) => {

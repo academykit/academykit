@@ -58,7 +58,7 @@ const AssignmentResult = () => {
         opened={showReviewBox}
         onClose={() => setShowReviewBox()}
         title={
-          !!getAssignment.data?.assignmentReview?.review
+          getAssignment.data?.assignmentReview?.review
             ? t('edit_assignment_review')
             : t('review_assignment')
         }
@@ -99,6 +99,7 @@ const AssignmentResult = () => {
             x.assignmentQuestionOptions &&
             x.assignmentQuestionOptions.map((option) => (
               <Card
+                key={option.id}
                 shadow={'md'}
                 my={10}
                 p={10}

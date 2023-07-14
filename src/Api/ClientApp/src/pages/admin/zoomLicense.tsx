@@ -27,7 +27,6 @@ import {
 } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import { IUser } from '@utils/services/types';
-import { TFunction } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
@@ -99,7 +98,7 @@ export default function ZoomLicense() {
               item.licenseEmail
             }"?`}
             open={opened}
-            onClose={setOpened}
+            onClose={() => setOpened(false)}
             onConfirm={handleDelete}
           />
         )}

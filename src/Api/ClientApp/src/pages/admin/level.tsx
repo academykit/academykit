@@ -8,7 +8,6 @@ import {
   Group,
   Modal,
   Paper,
-  Switch,
   Table,
   Text,
   TextInput,
@@ -16,7 +15,7 @@ import {
   Transition,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
-import { randomId, useToggle } from '@mantine/hooks';
+import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconPencil, IconTrash } from '@tabler/icons';
 import {
@@ -111,7 +110,7 @@ const Level = () => {
               <form
                 onSubmit={form.onSubmit(async (data) => {
                   try {
-                    const up = await updateLevel.mutateAsync({
+                    await updateLevel.mutateAsync({
                       name: data.eName,
                       id: item.id,
                     });
@@ -154,7 +153,7 @@ const Level = () => {
           <DeleteModal
             title={`${t('want_to_delete')} "${item?.name}" ${t('level?')}`}
             open={opened}
-            onClose={setOpened}
+            onClose={() => setOpened(false)}
             onConfirm={handleDelete}
             loading={deleteLevel.isLoading}
           />
@@ -213,7 +212,7 @@ const Level = () => {
         duration={200}
         timingFunction="ease"
       >
-        {(style) => (
+        {() => (
           <Paper
             shadow={'sm'}
             radius="md"

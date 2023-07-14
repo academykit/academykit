@@ -5,7 +5,7 @@ import AddFeedback from '@components/Course/Lesson/AddFeedback';
 import AddLecture from '@components/Course/Lesson/AddLecture';
 import AddMeeting from '@components/Course/Lesson/AddMeeting';
 import DeleteModal from '@components/Ui/DeleteModal';
-import { Button, createStyles, Grid, Group, Modal, Text } from '@mantine/core';
+import { Button, createStyles, Grid, Group, Text } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconTrashX } from '@tabler/icons';
@@ -32,7 +32,7 @@ const useStyles = createStyles((theme) => ({
       theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[7]
     }`,
     padding: `${theme.spacing.sm}px ${theme.spacing.xl}px`,
-    paddingLeft: theme.spacing.xl - theme.spacing.md, // to offset drag handle
+    paddingLeft: `calc(${theme.spacing.xl} - ${theme.spacing.md})`, // to offset drag handle
     backgroundColor:
       theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
     marginBottom: theme.spacing.sm,
@@ -64,7 +64,7 @@ const Lesson = ({
   lesson: ILessons;
   sectionId: string;
 }) => {
-  const { classes, cx } = useStyles();
+  const { classes } = useStyles();
   const { id: slug } = useParams();
   const { t } = useTranslation();
 
@@ -189,7 +189,7 @@ const LessonEditCase = ({
         <AddExam
           sectionId={sectionId}
           item={item as ILessonMCQ}
-          setAddState={setAddState}
+          setAddState={() => setAddState('')}
           isEditing={true}
           setIsEditing={setIsEditing}
         />
@@ -199,7 +199,7 @@ const LessonEditCase = ({
         <AddAssignment
           sectionId={sectionId}
           item={item as ILessonAssignment}
-          setAddState={setAddState}
+          setAddState={() => setAddState('')}
           isEditing={true}
           setIsEditing={setIsEditing}
         />

@@ -30,7 +30,7 @@ type Props = {
 const RadioType = ({ options, form, currentIndex }: Props) => {
   const { classes, cx } = useStyle();
   const changeFieldValue = (optionCurrentIndex: number) => {
-    options.map((option, index) => {
+    options.map((_option, index) => {
       if (index !== optionCurrentIndex) {
         form.setFieldValue(
           `${currentIndex}.assignmentQuestionOptions.${index}.isSelected`,
@@ -87,8 +87,7 @@ const RadioType = ({ options, form, currentIndex }: Props) => {
             p={10}
             className={cx({
               [classes.active]:
-                //@ts-ignore
-                form.values[currentIndex].assignmentQuestionOptions[index]
+                form.values[currentIndex].assignmentQuestionOptions![index]
                   .isSelected,
             })}
           >

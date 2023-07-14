@@ -16,7 +16,7 @@ const CoursePage = ({
   pagination,
   searchComponent,
 }: IWithSearchPagination) => {
-  const { data, isSuccess, isLoading } = useCourse(searchParams);
+  const { data, isLoading } = useCourse(searchParams);
   const auth = useAuth();
   const role = auth?.auth?.role ?? UserRole.Trainee;
   const { t } = useTranslation();
