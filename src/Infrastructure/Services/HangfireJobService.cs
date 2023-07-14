@@ -374,8 +374,7 @@ namespace Lingtren.Infrastructure.Services
 
                 foreach (var teacher in course.CourseTeachers)
                 {
-                    var fullName = teacher.User.FirstName;
-                    var html = $"Dear {fullName},<br><br>";
+                    var html = $"Dear {teacher.User.FirstName},<br><br>";
                     html += $"A new user has enrolled in your {courseName} course. Here are the details:";
                     html += $"<ul><li>Training: {courseName}</li><li>Enrolled User: {userName}</li> <li>User Email:{userEmail}</li></ul>";
                     html += $"Thank you for your attention to this enrollment. We appreciate your dedication to providing an exceptional learning experience.<br>";
