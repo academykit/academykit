@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { UseFormReturnType } from '@mantine/form';
 
 import { RichTextEditor, Link } from '@mantine/tiptap';
@@ -12,6 +11,7 @@ import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
 import { Box, Sx, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
+import { useMemo } from 'react';
 
 type IProps = {
   formContext?: () => UseFormReturnType<any, (values: any) => any>;
@@ -48,22 +48,20 @@ const TextEditor = ({
       Placeholder.configure({ placeholder: cPlaceholder }),
     ],
     content: form ? form.values[label ?? 'description'] : value,
+    onUpdate: ({ editor }) => {
+      const data = editor.getHTML();
+      if (form) form?.setFieldValue(label ?? 'description', editor.getHTML());
+      if (onChange) onChange(data);
+    },
   });
 
   useMemo(() => {
     const textValue =
       form?.getInputProps(label ?? 'description').value ?? value;
-
     if (editor && textValue !== editor.getHTML()) {
-      editor.chain().insertContent(textValue).run();
+      editor.commands.setContent(textValue);
     }
   }, [form?.getInputProps(label ?? 'description').value, value, editor]);
-
-  editor?.on('update', () => {
-    const data = editor.getHTML();
-    if (form) form.setFieldValue(label || 'description', data);
-    if (onChange) onChange(data);
-  });
 
   // const handleImageUpload = useCallback(
   //   (file: File): Promise<string> =>

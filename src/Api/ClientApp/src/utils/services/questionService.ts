@@ -49,9 +49,10 @@ const addQuestion = ({
   poolId: string;
   data: IAddQuestionType;
 }) => {
-  data.type = Number(data.type).toString();
-  console.log(data);
-  return httpClient.post(api.questions.list(poolId), data);
+  return httpClient.post(api.questions.list(poolId), {
+    ...data,
+    type: Number(data.type),
+  });
 };
 
 export const useAddQuestion = (poolId: string, search: string) => {
@@ -145,8 +146,10 @@ const editQuestion = ({
   questionId: string;
   data: IAddQuestionType;
 }) => {
-  data.type = Number(data.type).toString();
-  return httpClient.put(api.questions.put(poolId, questionId), data);
+  return httpClient.put(api.questions.put(poolId, questionId), {
+    ...data,
+    type: Number(data.type),
+  });
 };
 export const useEditQuestion = (poolId: string, quesitonId: string) => {
   return useMutation([api.questions.put(poolId, quesitonId)], editQuestion, {});
