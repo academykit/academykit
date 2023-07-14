@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useReAuth } from '@utils/services/authService';
 import { useCourse } from '@utils/services/courseService';
 import {

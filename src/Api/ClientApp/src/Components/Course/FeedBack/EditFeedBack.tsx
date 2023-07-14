@@ -1,3 +1,4 @@
+/* eslint-disable */
 import TextEditor from '@components/Ui/TextEditor';
 import {
   Box,

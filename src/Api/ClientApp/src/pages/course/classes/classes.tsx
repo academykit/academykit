@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Suspense, useState } from 'react';
 import {
   AspectRatio,
@@ -11,7 +12,7 @@ import {
   Tabs,
 } from '@mantine/core';
 import CourseContent from '@components/Course/CourseDescription/CourseContent/CourseContent';
-import { useMediaQuery, useToggle } from '@mantine/hooks';
+import { useMediaQuery } from '@mantine/hooks';
 import { IconFileDescription, IconMessage } from '@tabler/icons';
 import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
 import {

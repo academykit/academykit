@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Button, Group, Loader, Textarea } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';

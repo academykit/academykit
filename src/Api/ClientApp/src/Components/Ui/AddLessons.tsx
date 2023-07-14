@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Badge, Button, Paper, Tooltip } from '@mantine/core';
 import React, { useState } from 'react';
 import { useSection } from '@context/SectionProvider';

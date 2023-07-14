@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect } from 'react';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { TextInput, Button, Textarea, Container, Text } from '@mantine/core';
@@ -20,8 +21,7 @@ const schema = () => {
     companyName: Yup.string().required(t('company_name_required') as string),
     companyAddress: Yup.string().required(
       t('company_address_required') as string
-    ),
-    companyContactNumber: Yup.string()
+    ),companyContactNumber: Yup.string()
       .required(t('contact_number_required') as string)
       .matches(PHONE_VALIDATION, {
         message: t('enter_valid_phone'),

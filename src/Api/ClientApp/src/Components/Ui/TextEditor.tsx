@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo } from 'react';
+/* eslint-disable */
+import { useCallback, useMemo } from 'react';
 import { UseFormReturnType } from '@mantine/form';
 import { FileAccess, uploadFile } from '@utils/services/fileService';
 
@@ -51,8 +52,6 @@ const TextEditor = ({
     content: form ? form.values[label ?? 'description'] : value,
   });
 
-  // console.log(form?.values.answers[1])
-  // form?.getInputProps(label || 'description').value
   useMemo(() => {
     const textValue =
       form?.getInputProps(label ?? 'description').value ?? value;

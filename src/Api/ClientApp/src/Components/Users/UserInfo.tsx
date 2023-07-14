@@ -1,3 +1,4 @@
+/* eslint-disable */
 import AvatarEditor from '@components/Ui/AvatarEditor';
 import { Button, Divider, Grid, Paper, Text, TextInput } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';

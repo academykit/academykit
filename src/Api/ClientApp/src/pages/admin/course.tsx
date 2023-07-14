@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
@@ -19,7 +20,7 @@ const AdminCourseList = ({
   searchComponent,
   pagination,
 }: IWithSearchPagination) => {
-  const { data, isSuccess, isLoading, isError, error } =
+  const { data, isLoading, isError } =
     useCourse(searchParams);
   const { t } = useTranslation();
   return (

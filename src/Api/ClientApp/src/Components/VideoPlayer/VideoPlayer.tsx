@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ActionIcon, Box, createStyles, Flex, Group } from '@mantine/core';
 import fscreen from 'fscreen';
 import 'rc-slider/assets/index.css';

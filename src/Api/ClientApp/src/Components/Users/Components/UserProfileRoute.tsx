@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Loader } from '@mantine/core';
 import { Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';

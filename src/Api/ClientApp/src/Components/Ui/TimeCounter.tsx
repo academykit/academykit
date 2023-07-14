@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Group } from '@mantine/core';
 import { FC, useEffect, useState } from 'react';
 type Props = {

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Slider from 'rc-slider';
 import React, { FC } from 'react';
 

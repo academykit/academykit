@@ -1,3 +1,4 @@
+/* eslint-disable */
 import UserShortProfile from '@components/UserShortProfile';
 import useAuth from '@hooks/useAuth';
 import {

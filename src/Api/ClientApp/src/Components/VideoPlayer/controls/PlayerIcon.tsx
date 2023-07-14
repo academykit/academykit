@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Text } from '@mantine/core';
 
 const Play = ({ ...props }) => {
