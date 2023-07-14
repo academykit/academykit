@@ -58,8 +58,6 @@ const ExamDetails = ({
 
   const theme = useMantineTheme();
 
-  console.log("et", exam?.endTime)
-  console.log("newD", new Date(exam!.endTime))
   return (
     <Group
       p={10}

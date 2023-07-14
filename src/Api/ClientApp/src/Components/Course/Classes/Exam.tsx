@@ -185,7 +185,7 @@ const Exam = ({
       setShowConfirmation();
     } catch (err) {}
   };
-console.log(matches ? 9 : 12)
+  
   return (
     <form onSubmit={form.onSubmit(onSubmitHandler)}>
       {/* confirmation poop-up Modal */}
