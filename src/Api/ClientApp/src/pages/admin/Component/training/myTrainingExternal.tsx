@@ -34,6 +34,7 @@ import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import useCustomForm from '@hooks/useCustomForm';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import moment from 'moment';
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
 
@@ -73,18 +74,31 @@ const MyTrainingExternal = () => {
   useEffect(() => {
     if (idd) {
       setShowConfirmation();
+      const range = [idd?.startDate, idd?.endDate];
       form.setValues({
         name: idd?.name,
         duration: idd?.duration,
         location: idd?.location,
         institute: idd?.institute,
         imageUrl: idd?.imageUrl,
+        range: [new Date(range[0]), new Date(range[1])],
       });
+      console.log('idd', new Date(range[0]), new Date(range[1]));
+      console.log('idd:2-', range);
     }
   }, [idd]);
 
   const handleSubmit = async (data: any) => {
-    data = { ...data, startDate: value[0], endDate: value[1] };
+    // eslint-disable-next-line prettier/prettier
+    data = { ...data, startDate: moment(data.range[0] + 'Z').local().toDate(), endDate: moment(data.range[1] + 'Z').local().toDate() };
+    console.log(
+      'moment',
+      moment(data.range[0] + 'Z')
+        .local()
+        .toDate()
+    );
+    console.log('data', data);
+    console.log(value);
     try {
       if (updates) {
         await update.mutateAsync({ data, id: idd?.id });
