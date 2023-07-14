@@ -959,4 +959,7 @@
   <data name="SectionNameCannotBeNull" xml:space="preserve">
     <value>セクション名を null にすることはできません</value>
   </data>
+  <data name="AdminCannotSubmitFeedBack" xml:space="preserve">
+    <value>管理者またはスーパー管理者トレーナーはフィードバックを送信できません。</value>
+  </data>
 </root>
