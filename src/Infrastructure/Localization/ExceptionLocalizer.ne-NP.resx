@@ -956,4 +956,7 @@
   <data name="SectionNameCannotBeNull" xml:space="preserve">
     <value>खण्डको नाम शून्य हुन सक्दैन</value>
   </data>
+  <data name="AdminCannotSubmitFeedBack" xml:space="preserve">
+    <value>प्रशासक वा सुपरएडमिन प्रशिक्षकले प्रतिक्रिया पेश गर्न सक्दैन।</value>
+  </data>
 </root>

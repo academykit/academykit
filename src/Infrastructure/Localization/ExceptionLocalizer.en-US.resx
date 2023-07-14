@@ -962,4 +962,7 @@ recorded cannot be deleted.</value>
   <data name="SectionNameCannotBeNull" xml:space="preserve">
     <value>Section name cannot be null</value>
   </data>
+  <data name="AdminCannotSubmitFeedBack" xml:space="preserve">
+    <value>Admin or SuperAdmin trainer cannot submit the feedback.</value>
+  </data>
 </root>
