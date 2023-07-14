@@ -255,6 +255,7 @@
   "add_signatures": "署名を追加する",
   "add_more": "さらに追加する",
   "add_certificate": "新しい証明書を追加",
+  "not_viewed": "未視聴",
   "duration_hour": "期間（時間）",
   "start_end_date": "開始日 - 終了日",
   "date_range": "日付範囲を選択",

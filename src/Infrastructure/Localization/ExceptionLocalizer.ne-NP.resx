@@ -959,4 +959,22 @@
   <data name="AdminCannotSubmitFeedBack" xml:space="preserve">
     <value>प्रशासक वा सुपरएडमिन प्रशिक्षकले प्रतिक्रिया पेश गर्न सक्दैन।</value>
   </data>
+  <data name="AssignmentContainsSubmission" xml:space="preserve">
+    <value>असाइनमेन्टमा प्रकारको साथ पाठको लागि सबमिशन समावेश छ:</value>
+  </data>
+  <data name="ContainsUsers" xml:space="preserve">
+    <value>पाठमा सबमिशन समावेश छ त्यसैले पाठ मेटाउन सकिँदैन</value>
+  </data>
+  <data name="EnrolledUserCan'tBeTrainer" xml:space="preserve">
+    <value>प्रयोगकर्ता प्रशिक्षार्थी रूपमा नामांकन गरिएको छ। त्यसकारण, यसलाई प्रशिक्षकको रूपमा थप्न सकिँदैन।</value>
+  </data>
+  <data name="ExamCannotBeDeleted" xml:space="preserve">
+    <value>परीक्षा सबमिशन समावेश गर्दछ। त्यसैले, यसलाई मेटाउन सकिँदैन।</value>
+  </data>
+  <data name="FeedBackContainsSubmission" xml:space="preserve">
+    <value>प्रतिक्रियामा सबमिशन समावेश छ। त्यसैले, यसलाई मेटाउन सकिँदैन।</value>
+  </data>
+  <data name="LessonWIthType" xml:space="preserve">
+    <value>प्रकारको साथ पाठ</value>
+  </data>
 </root>

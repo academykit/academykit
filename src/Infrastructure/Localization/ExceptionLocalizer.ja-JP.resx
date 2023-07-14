@@ -962,4 +962,22 @@
   <data name="AdminCannotSubmitFeedBack" xml:space="preserve">
     <value>管理者またはスーパー管理者トレーナーはフィードバックを送信できません。</value>
   </data>
+  <data name="AssignmentContainsSubmission" xml:space="preserve">
+    <value>課題には、次のタイプのレッスンの提出物が含まれています。</value>
+  </data>
+  <data name="ContainsUsers" xml:space="preserve">
+    <value>レッスンには提出物が含まれているため、レッスンを削除できません</value>
+  </data>
+  <data name="EnrolledUserCan'tBeTrainer" xml:space="preserve">
+    <value>ユーザーは研修生として登録されています。したがって、トレーナーとして追加することはできません。</value>
+  </data>
+  <data name="ExamCannotBeDeleted" xml:space="preserve">
+    <value>試験の提出が含まれます。したがって、削除することはできません。</value>
+  </data>
+  <data name="FeedBackContainsSubmission" xml:space="preserve">
+    <value>フィードバックには投稿が含まれているため、削除することはできません。</value>
+  </data>
+  <data name="LessonWIthType" xml:space="preserve">
+    <value>タイプを使ったレッスン</value>
+  </data>
 </root>

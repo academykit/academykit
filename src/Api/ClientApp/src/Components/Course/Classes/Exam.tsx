@@ -189,7 +189,7 @@ const Exam = ({
 
   return (
     <form onSubmit={form.onSubmit(onSubmitHandler)}>
-      {/* confirmation poop-up Modal */}
+      {/* confirmation pop-up Modal */}
       <Modal
         title={t('submit_exam_confirmation')}
         opened={showConfirmation}
