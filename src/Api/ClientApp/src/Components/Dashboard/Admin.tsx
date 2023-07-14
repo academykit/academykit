@@ -92,7 +92,7 @@ const Admin = ({
         }}
       >
         {dashboardCourses.length > 0 &&
-          dashboardCourses.map((x, idx) => <TrainingCards data={x} />)}
+          dashboardCourses.map((x) => <TrainingCards key={x.id} data={x} />)}
       </Group>
     </div>
   );

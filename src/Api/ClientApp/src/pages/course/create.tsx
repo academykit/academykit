@@ -9,7 +9,6 @@ import {
   MultiSelect,
   Select,
   Text,
-  TextInput,
 } from "@mantine/core";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
@@ -25,7 +24,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import useNav from "@hooks/useNav";
 import useCustomForm from "@hooks/useCustomForm";
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 
@@ -176,7 +174,7 @@ const CreateCoursePage = () => {
               {tags.isSuccess ? (
                 <MultiSelect
                   searchable
-                  labelProps="name"
+                 
                   creatable
                   sx={{ maxWidth: "500px" }}
                   data={
@@ -194,6 +192,7 @@ const CreateCoursePage = () => {
                   getCreateLabel={(query) => `+ Create ${query}`}
                   onCreate={(query) => {
                     mutate(query);
+                    return null;
                   }}
                   size={"lg"}
                   label={t("tags")}

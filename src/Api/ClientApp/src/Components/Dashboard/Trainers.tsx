@@ -104,7 +104,7 @@ const Trainers = ({
         ]}
       >
         {dashboardCourses.length > 0 &&
-          dashboardCourses.map((x, idx) => (
+          dashboardCourses.map((x) => (
             <TrainingCards key={x.id} data={x} />
           ))}
       </SimpleGrid>

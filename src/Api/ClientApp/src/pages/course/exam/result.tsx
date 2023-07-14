@@ -15,6 +15,8 @@ const ExamResult = () => {
   if (userResult.isSuccess) {
     return (
       <SubmittedResultDetails
+        user={userResult.data.user}
+        submissionDate={userResult.data.submissionDate}
         questions={userResult.data.results}
         duration={userResult.data.completeDuration}
         marks={userResult.data.obtainedMarks}

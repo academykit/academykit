@@ -9,11 +9,10 @@ import Placeholder from "@tiptap/extension-placeholder";
 import Highlight from "@tiptap/extension-highlight";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
-import Superscript from "@tiptap/extension-text-align";
+import Superscript from '@tiptap/extension-superscript';
 import SubScript from "@tiptap/extension-subscript";
 import { Box, Sx, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { useDebouncedState } from "@mantine/hooks";
 
 type IProps = {
   formContext?: () => UseFormReturnType<any, (values: any) => any>;
@@ -37,14 +36,6 @@ const TextEditor = ({
   const { t } = useTranslation();
   const cPlaceholder = t(placeholder ?? "");
   const form = formContext && formContext();
-  const [data, setData] = useDebouncedState("", 200);
-
-  // useEffect(() => {
-  //   if (data) {
-  //     if (form) form.setFieldValue(label || "description", data);
-  //     if (onChange) onChange(data);
-  //   }
-  // }, [data]);
 
   const editor = useEditor({
     extensions: [
@@ -67,13 +58,11 @@ const TextEditor = ({
       form?.getInputProps(label ?? "description").value ?? value;
 
     if (editor && textValue !== editor.getHTML()) {
-      console.log("txt value: ", textValue);
-      console.log("if ran");
       editor.chain().insertContent(textValue).run();
     }
   }, [form?.getInputProps(label ?? "description").value, value, editor]);
 
-  editor?.on("update", (d) => {
+  editor?.on("update", () => {
     const data = editor.getHTML();
     if (form) form.setFieldValue(label || "description", data);
     if (onChange) onChange(data);

@@ -26,7 +26,7 @@ const SubmitResultHeader = ({
       {duration && <Title order={textSize}>{duration}</Title>}
 
       <Button onClick={() => navigate(-1)} size={smallScreen ? "md" : "xs"}>
-        {t("cancel")}
+        {t("close")}
       </Button>
     </Group>
   );

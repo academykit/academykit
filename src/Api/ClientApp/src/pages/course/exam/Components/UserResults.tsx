@@ -23,7 +23,6 @@ const UserResults = ({
   lessonId: string;
   studentId: string;
 }) => {
-  const theme = useMantineTheme();
   const { t } = useTranslation();
   const result = useMyResult(lessonId, studentId);
   if (result.isLoading) {
