@@ -1,5 +1,4 @@
-/* eslint-disable */
-import { ActionIcon, Box, createStyles, Flex, Group } from '@mantine/core';
+import { ActionIcon, Box, createStyles, Flex } from '@mantine/core';
 import fscreen from 'fscreen';
 import 'rc-slider/assets/index.css';
 import React, { FC, useEffect, useRef, useState } from 'react';
@@ -26,7 +25,7 @@ interface Props extends ReactPlayerProps {
   >;
 }
 
-const useStyle = createStyles((theme) => ({
+const useStyle = createStyles(() => ({
   hidden: {
     display: 'none',
   },
@@ -62,22 +61,21 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
   url,
   config,
   thumbnailUrl,
-  onProgress,
   onEnded,
   setCurrentPlayerState,
 }) => {
   const { classes, cx } = useStyle();
-  const playerRef = useRef(null);
+  const playerRef = useRef<ReactPlayer>(null);
   const [playing, setPlaying] = useState(false);
-  const [controls, setControls] = useState(false);
-  const [playsinline, setPlaysinline] = useState(false);
+  const [controls] = useState(false);
+  const [playsinline] = useState(false);
   const [pip, setPip] = useState(false);
-  const [playbackRate, setPlaybackRate] = useState(1);
-  const [loop, setLoop] = useState(false);
+  const [playbackRate] = useState(1);
+  const [loop] = useState(false);
   const [volume, setVolume] = useState(0.8);
   const [prevVolume, setPrevVolume] = useState(volume);
   const [muted, setMuted] = useState(false);
-  const [seeking, setSeeking] = useState(false);
+  const [, setSeeking] = useState(false);
   const [played, setPlayed] = useState(0);
   const [loadedValue, setLoadedValue] = useState(0);
   const [hideControls, setHideControls] = useState(false);
@@ -111,8 +109,7 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
 
   const handleSeekComplete = (newValue: number) => {
     setSeeking(false);
-    // @ts-ignore
-    playerRef.current.seekTo(newValue / 100, 'fraction');
+    playerRef.current?.seekTo(newValue / 100, 'fraction');
   };
 
   const handleVolumeChange = (value: number) => {

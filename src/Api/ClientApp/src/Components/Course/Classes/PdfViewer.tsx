@@ -47,10 +47,11 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
   };
 
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
-    sidebarTabs: (_) => [],
+    sidebarTabs: () => [],
     renderToolbar(Toolbar) {
       return (
         <Toolbar
+          // eslint-disable-next-line react/no-children-prop
           children={(toolbarSlot) => (
             <Container w="100%" fluid>
               <Group position="apart">

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { UseFormReturnType } from '@mantine/form';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,6 +1,4 @@
-/* eslint-disable */
 import { Button, Group, Modal } from '@mantine/core';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 const ConfirmationModal = ({
@@ -9,10 +7,10 @@ const ConfirmationModal = ({
   open,
   onConfirm,
 }: {
-  onClose: Function;
+  onClose: () => void;
   title: string;
   open: boolean;
-  onConfirm: Function;
+  onConfirm: () => void;
 }) => {
   const { t } = useTranslation();
   return (

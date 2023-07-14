@@ -1,4 +1,3 @@
-/* eslint-disable */
 import moment from 'moment';
 import { FC, useEffect, useMemo, useState } from 'react';
 import TimeCounter from './TimeCounter';
@@ -6,7 +5,7 @@ import TimeCounter from './TimeCounter';
 type Props = {
   startDateTime: string;
   time: number;
-  cb: Function;
+  cb: () => void;
 };
 
 const CountDownTimer: FC<Props> = ({ startDateTime, cb, time }) => {

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useEffect, useState } from 'react';
 import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
@@ -109,7 +108,7 @@ const ThumbnailEditor = ({
         imageValidateSizeMinHeight={359}
         allowImageResize={true}
         imageValidateSizeMinResolution={229401}
-        onaddfile={(error, file) => {}}
+        onaddfile={() => {}}
         onupdatefiles={setFiles}
         onremovefile={() => form.setFieldValue(FormField, '')}
         allowMultiple={false}
@@ -146,7 +145,7 @@ const ThumbnailEditor = ({
               },
             };
           },
-          load: async (source, load, error, progress, abort, headers) => {
+          load: async (source, load, error, _progress, abort) => {
             cForm?.setReady();
             await fetch(
               `${source}?cache=${Math.random().toString(36).substring(2, 7)}`

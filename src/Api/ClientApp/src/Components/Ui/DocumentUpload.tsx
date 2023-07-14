@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useState } from 'react';
 import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
@@ -16,7 +15,7 @@ registerPlugin(
   FilePondPluginImageValidateSize
 );
 
-const DcoumentUpload = ({ setUrl }: { setUrl: Function }) => {
+const DcoumentUpload = ({ setUrl }: { setUrl: (url: string) => void }) => {
   const [files, setFiles] = useState<any>([]);
   const { t } = useTranslation();
   const filePondProps = {
@@ -46,7 +45,7 @@ const DcoumentUpload = ({ setUrl }: { setUrl: Function }) => {
     <Box my={10} sx={{ maxWidth: 470 }}>
       <FilePond
         files={files}
-        onaddfile={(error, file) => {
+        onaddfile={(error) => {
           if (!error) {
             setUrl('hello');
           }

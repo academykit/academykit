@@ -1,4 +1,3 @@
-/* eslint-disable */
 import DeleteModal from '@components/Ui/DeleteModal';
 import {
   Box,
@@ -25,7 +24,7 @@ import EditFeedback from './EditFeedBack';
 import { useTranslation } from 'react-i18next';
 import TextViewer from '@components/Ui/RichTextViewer';
 
-const useStyle = createStyles((theme) => ({
+const useStyle = createStyles(() => ({
   wrapper: {
     ':hover': {
       '.action': {

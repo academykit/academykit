@@ -1,6 +1,3 @@
-/* eslint-disable */
-import CourseContent from '@components/Course/CourseDescription/CourseContent/CourseContent';
-import UserShortProfile from '@components/UserShortProfile';
 import {
   AspectRatio,
   Badge,
@@ -17,7 +14,6 @@ import {
   Title,
 } from '@mantine/core';
 import { IconCheck } from '@tabler/icons';
-import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import { Link } from 'react-router-dom';
 const image = 'https://ui.mantine.dev/_next/static/media/image.9a65bd94.svg';
@@ -31,7 +27,7 @@ const useStyles = createStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     paddingTop: theme.spacing.xl,
-    paddingBottom: theme.spacing.xl * 4,
+    paddingBottom: `calc(${theme.spacing.xl} * 4)`,
     [theme.fn.smallerThan('sm')]: {
       flexDirection: 'column-reverse',
     },
@@ -39,7 +35,7 @@ const useStyles = createStyles((theme) => ({
 
   content: {
     width: '60%',
-    marginRight: theme.spacing.xl * 3,
+    marginRight: `calc(${theme.spacing.xl} * 3)`,
 
     [theme.fn.smallerThan('lg')]: {
       width: '50%',

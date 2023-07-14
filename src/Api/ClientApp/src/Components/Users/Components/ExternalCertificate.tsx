@@ -1,10 +1,6 @@
-/* eslint-disable */
 import {
   ActionIcon,
-  Anchor,
   Badge,
-  CopyButton,
-  Flex,
   Image,
   Box,
   Paper,
@@ -12,16 +8,14 @@ import {
   Table,
   Title,
   Tooltip,
-  useMantineTheme,
   Text,
 } from '@mantine/core';
-import { IconCheck, IconCopy, IconDownload, IconEye } from '@tabler/icons';
+import { IconDownload, IconEye } from '@tabler/icons';
 import {
   GetExternalCertificate,
   useGetUserCertificate,
 } from '@utils/services/certificateService';
 import moment from 'moment';
-import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import downloadImage from '@utils/downloadImage';
 import { TFunction } from 'i18next';
@@ -35,11 +29,6 @@ const RowsExternal = ({
   item: GetExternalCertificate;
   t: TFunction;
 }) => {
-  const theme = useMantineTheme();
-  const [opened, setOpened] = useState(false);
-  const handleDownload = () => {
-    window.open(item?.imageUrl);
-  };
   return (
     <tr key={item?.user?.id}>
       <td>{item?.name}</td>

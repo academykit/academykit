@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useEffect, useState } from 'react';
 import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
@@ -72,7 +71,7 @@ const LessonVideoUpload = ({
       <Box my={marginy} sx={{ maxWidth: 470 }} pos="relative">
         <FilePond
           files={files}
-          onaddfile={(error, file) => {}}
+          onaddfile={() => {}}
           onremovefile={() => form.setFieldValue('videoUrl', '')}
           fileValidateTypeLabelExpectedTypes="Expected .mp4 .avi .mov"
           chunkSize={2 * 1024 * 1024} // 2MB
@@ -112,7 +111,7 @@ const LessonVideoUpload = ({
                 },
               };
             },
-            load: async (source, load, error, progress, abort, headers) => {
+            load: async (source, load, error, _progress, abort) => {
               await fetch(
                 `${source}?cache=${Math.random().toString(36).substring(2, 7)}`
               )

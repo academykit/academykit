@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useEffect } from 'react';
 import {
   Group,
@@ -23,7 +22,7 @@ import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import { IconInfoCircle } from '@tabler/icons';
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(() => ({
   departmentInfo: {
     fontSize: '12px',
     position: 'absolute',
@@ -75,7 +74,7 @@ const AddUpdateUserForm = ({
   apiHooks,
   item,
 }: {
-  setOpened: Function;
+  setOpened: (b: boolean) => void;
   opened: boolean;
   isEditing: boolean;
   apiHooks: any;
@@ -118,9 +117,6 @@ const AddUpdateUserForm = ({
         });
       } else {
         const userData = { ...data };
-
-        //@ts-ignore
-        delete userData.isActive;
         const status =
           item?.status === UserStatus.Pending
             ? UserStatus.Pending
@@ -212,9 +208,15 @@ const AddUpdateUserForm = ({
             label={t('user_role')}
             placeholder={t('user_role_pick') as string}
             data={[
-              { value: UserRole.Admin, label: t('Admin') as string },
-              { value: UserRole.Trainer, label: t('Trainer') as string },
-              { value: UserRole.Trainee, label: t('Trainee') as string },
+              { value: UserRole.Admin.toString(), label: t('Admin') as string },
+              {
+                value: UserRole.Trainer.toString(),
+                label: t('Trainer') as string,
+              },
+              {
+                value: UserRole.Trainee.toString(),
+                label: t('Trainee') as string,
+              },
             ]}
             {...form.getInputProps('role')}
           />

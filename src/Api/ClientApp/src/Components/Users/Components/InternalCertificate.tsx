@@ -1,4 +1,3 @@
-/* eslint-disable */
 import {
   ActionIcon,
   Anchor,
@@ -106,7 +105,7 @@ const RowsCompleted = ({
 
 const InternalCertificate = () => {
   const { id } = useParams();
-  const { data, isSuccess } = useProfileAuth(id as string);
+  const { data } = useProfileAuth(id as string);
   const { t } = useTranslation();
   return (
     <>

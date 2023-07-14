@@ -1,4 +1,3 @@
-/* eslint-disable */
 import TextEditor from '@components/Ui/TextEditor';
 import { UseFormReturnType } from '@mantine/form';
 import { useDebouncedValue } from '@mantine/hooks';

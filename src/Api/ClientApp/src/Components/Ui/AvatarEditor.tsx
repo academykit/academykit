@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { UseFormReturnType } from '@mantine/form';
 import { FileAccess, uploadFile } from '@utils/services/fileService';
 import { useEffect, useState } from 'react';
@@ -102,12 +101,12 @@ const AvatarEditor = ({ label = 'files', url, formContext }: IProps) => {
           revert: null,
           //processing a file
           process: async (
-            fieldName,
+            _fieldName,
             file,
-            metadata,
+            _metadata,
             load,
             error,
-            progress,
+            _progress,
             abort
           ) => {
             try {
@@ -123,7 +122,7 @@ const AvatarEditor = ({ label = 'files', url, formContext }: IProps) => {
               },
             };
           },
-          load: async (source, load, error, progress, abort, headers) => {
+          load: async (source, load, error, _progress, abort) => {
             await fetch(
               `${source}?cache=${Math.random().toString(36).substring(2, 7)}`
             )

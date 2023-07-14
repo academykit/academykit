@@ -1,4 +1,3 @@
-/* eslint-disable */
 import UnAuthorize from '@pages/401';
 import Forbidden from '@pages/403';
 import NotFound from '@pages/404';

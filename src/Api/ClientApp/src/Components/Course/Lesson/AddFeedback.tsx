@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState } from 'react';
 import {
   Button,
@@ -9,7 +8,6 @@ import {
   ScrollArea,
   Switch,
   Textarea,
-  TextInput,
   Tooltip,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
@@ -43,7 +41,7 @@ const AddFeedback = ({
   sectionId,
   setIsEditing,
 }: {
-  setAddState: Function;
+  setAddState: (s: string) => void;
   item?: ILessonFeedback;
   isEditing?: boolean;
   sectionId: string;
@@ -77,7 +75,7 @@ const AddFeedback = ({
 
   const submitForm = async (values: { name: string; description: string }) => {
     try {
-      let assignmentData = {
+      const assignmentData = {
         courseId: slug,
         sectionIdentity: sectionId,
         type: LessonType.Feedback,

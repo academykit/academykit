@@ -53,8 +53,7 @@ const FeedbackCheckBoxType = ({ options, form, currentIndex }: Props) => {
             p={10}
             className={cx({
               [classes.active]:
-                //@ts-ignore
-                form.values[currentIndex].feedbackQuestionOptions[index]
+                form.values[currentIndex].feedbackQuestionOptions![index]
                   .isSelected,
             })}
           >

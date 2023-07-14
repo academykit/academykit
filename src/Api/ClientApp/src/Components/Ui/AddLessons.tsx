@@ -1,5 +1,4 @@
-/* eslint-disable */
-import { Badge, Button, Paper, Tooltip } from '@mantine/core';
+import { Badge, Button, Tooltip } from '@mantine/core';
 import React, { useState } from 'react';
 import { useSection } from '@context/SectionProvider';
 import AddLecture from '@components/Course/Lesson/AddLecture';
@@ -38,7 +37,7 @@ const LessonAddList = ({
       returnDiv = (
         <AddExam
           setIsEditing={() => {}}
-          setAddState={setAddState}
+          setAddState={() => setAddState('')}
           sectionId={sectionId}
         />
       );
@@ -47,7 +46,7 @@ const LessonAddList = ({
       returnDiv = (
         <AddAssignment
           setIsEditing={() => {}}
-          setAddState={setAddState}
+          setAddState={() => setAddState('')}
           sectionId={sectionId}
         />
       );
@@ -81,6 +80,7 @@ const LessonAddList = ({
           setAddLessonClick={setAddLessonClick}
         />
       );
+      break;
     default:
       break;
   }

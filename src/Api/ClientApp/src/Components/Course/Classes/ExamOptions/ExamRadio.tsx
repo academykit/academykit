@@ -33,7 +33,7 @@ const ExamRadio = ({ form, options, currentIndex }: Props) => {
   const { classes, cx } = useStyle();
   const { t } = useTranslation();
   const changeFieldValue = (optionCurrentIndex: number) => {
-    options.map((option, index) => {
+    options.map((_option, index) => {
       if (index !== optionCurrentIndex) {
         form.setFieldValue(
           `${currentIndex}.questionOptions.${index}.isCorrect`,

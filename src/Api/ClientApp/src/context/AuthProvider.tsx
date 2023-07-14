@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { AppShell, Button, Center, Group, Loader, Modal } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';

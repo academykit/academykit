@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { TextInput, TextInputProps } from '@mantine/core';
 import { FC, useEffect, useRef, useState } from 'react';
 

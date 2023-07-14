@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { NavContext } from '@context/NavContext';
 import { useContext } from 'react';
 

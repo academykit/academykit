@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useEffect, useState } from 'react';
 import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
@@ -7,11 +6,7 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import { Box, Text } from '@mantine/core';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginImageValidateSize from 'filepond-plugin-image-validate-size';
-import {
-  FileAccess,
-  uploadFile,
-  uploadVideo,
-} from '@utils/services/fileService';
+import { FileAccess, uploadFile } from '@utils/services/fileService';
 import { UseFormReturnType } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
 
@@ -78,7 +73,7 @@ const FileUploadLesson = ({
         labelIdle={`${t(
           'drag_and_drop_file'
         )} <span class="filepond--label-action">${t('browse')}</span>`}
-        onaddfile={(error, file) => {}}
+        onaddfile={() => {}}
         onremovefile={() => form.setFieldValue('documentUrl', '')}
         onupdatefiles={setFiles}
         acceptedFileTypes={['application/pdf']}
@@ -111,7 +106,7 @@ const FileUploadLesson = ({
               },
             };
           },
-          load: async (source, load, error, progress, abort, headers) => {
+          load: async (source, load, error, _progress, abort) => {
             await fetch(
               `${source}?cache=${Math.random().toString(36).substring(2, 7)}`
             )
