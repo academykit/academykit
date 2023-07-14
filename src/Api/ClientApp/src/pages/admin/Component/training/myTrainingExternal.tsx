@@ -1,5 +1,5 @@
-import ThumbnailEditor from "@components/Ui/ThumbnailEditor";
-import useAuth from "@hooks/useAuth";
+import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
+import useAuth from '@hooks/useAuth';
 import {
   ActionIcon,
   Box,
@@ -12,37 +12,37 @@ import {
   Modal,
   Text,
   TextInput,
-} from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
-import { createFormContext, yupResolver } from "@mantine/form";
-import { useToggle } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
-import { IconDownload, IconEdit, IconEye } from "@tabler/icons";
-import downloadImage from "@utils/downloadImage";
-import { UserRole } from "@utils/enums";
-import errorType from "@utils/services/axiosError";
+} from '@mantine/core';
+import { DatePickerInput } from '@mantine/dates';
+import { createFormContext, yupResolver } from '@mantine/form';
+import { useToggle } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
+import { IconDownload, IconEdit, IconEye } from '@tabler/icons';
+import downloadImage from '@utils/downloadImage';
+import { UserRole } from '@utils/enums';
+import errorType from '@utils/services/axiosError';
 import {
   CertificateStatus,
   useAddCertificate,
   useGetExternalCertificate,
   useUpdateCertificate,
-} from "@utils/services/certificateService";
-import { useEffect, useState } from "react";
-import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
-import * as Yup from "yup";
-import useCustomForm from "@hooks/useCustomForm";
-import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+} from '@utils/services/certificateService';
+import { useEffect, useState } from 'react';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+import * as Yup from 'yup';
+import useCustomForm from '@hooks/useCustomForm';
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
 
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t("certificate_name_required") as string),
-    duration: Yup.number().typeError(t("duration_in_hour") as string),
-    range: Yup.array().min(2, t("start_end_date_required") as string),
+    name: Yup.string().required(t('certificate_name_required') as string),
+    duration: Yup.number().typeError(t('duration_in_hour') as string),
+    range: Yup.array().min(2, t('start_end_date_required') as string),
   });
 };
 
@@ -60,11 +60,11 @@ const MyTrainingExternal = () => {
 
   const form = useForm({
     initialValues: {
-      name: "",
+      name: '',
       duration: 0,
-      location: "",
-      institute: "",
-      imageUrl: "",
+      location: '',
+      institute: '',
+      imageUrl: '',
       range: [],
     },
     validate: yupResolver(schema()),
@@ -93,14 +93,14 @@ const MyTrainingExternal = () => {
       }
       showNotification({
         message: updates
-          ? t("training_certificate_edited")
-          : t("training_certificate_added"),
+          ? t('training_certificate_edited')
+          : t('training_certificate_added'),
       });
       form.reset();
     } catch (error) {
       const err = errorType(error);
       showNotification({
-        color: "red",
+        color: 'red',
         message: err,
       });
     }
@@ -114,7 +114,7 @@ const MyTrainingExternal = () => {
   return (
     <div>
       <Modal
-        title={t("add_certificate")}
+        title={t('add_certificate')}
         opened={showConfirmation}
         onClose={() => {
           setShowConfirmation();
@@ -124,7 +124,7 @@ const MyTrainingExternal = () => {
         }}
         styles={{
           title: {
-            fontWeight: "bold",
+            fontWeight: 'bold',
           },
         }}
       >
@@ -132,45 +132,45 @@ const MyTrainingExternal = () => {
           {showConfirmation && (
             <form onSubmit={form.onSubmit(handleSubmit)}>
               <CustomTextFieldWithAutoFocus
-                label={t("name")}
+                label={t('name')}
                 name="name"
-                placeholder={t("Name of Training") as string}
+                placeholder={t('Name of Training') as string}
                 withAsterisk
-                {...form.getInputProps("name")}
+                {...form.getInputProps('name')}
               />
               <TextInput
                 withAsterisk
-                label={t("duration_hour")}
-                placeholder={t("Duration of Training") as string}
+                label={t('duration_hour')}
+                placeholder={t('Duration of Training') as string}
                 name="duration"
-                {...form.getInputProps("duration")}
+                {...form.getInputProps('duration')}
               />
               <DatePickerInput
                 required
                 valueFormat="MMM DD, YYYY"
-                label={t("start_end_date")}
-                placeholder={t("date_range") as string}
+                label={t('start_end_date')}
+                placeholder={t('date_range') as string}
                 type="range"
                 //@ts-ignore
                 onChange={setValue}
-                {...form.getInputProps("range")}
+                {...form.getInputProps('range')}
               />
               <TextInput
-                label={t("location")}
-                placeholder={t("Location of Training") as string}
+                label={t('location')}
+                placeholder={t('Location of Training') as string}
                 name="location"
-                {...form.getInputProps("location")}
+                {...form.getInputProps('location')}
               />
               <TextInput
-                label={t("institute")}
-                placeholder={t("Name of institute") as string}
+                label={t('institute')}
+                placeholder={t('Name of institute') as string}
                 name="institute"
-                {...form.getInputProps("institute")}
+                {...form.getInputProps('institute')}
               />
-              <Text>{t("certificate_image")}</Text>
+              <Text>{t('certificate_image')}</Text>
               <ThumbnailEditor
                 formContext={useFormContext}
-                label={t("certificate_image") as string}
+                label={t('certificate_image') as string}
                 FormField="imageUrl"
                 currentThumbnail={idd?.imageUrl}
               />
@@ -179,7 +179,7 @@ const MyTrainingExternal = () => {
                 type="submit"
                 loading={addCertificate.isLoading}
               >
-                {t("submit")}
+                {t('submit')}
               </Button>
             </form>
           )}
@@ -188,19 +188,19 @@ const MyTrainingExternal = () => {
 
       <Group position="right">
         <Button onClick={() => setShowConfirmation()}>
-          {t("add_certificate")}
+          {t('add_certificate')}
         </Button>
       </Group>
       {certificateList.isSuccess && certificateList.data?.length <= 0 && (
-        <Box>{t("no_external_training")}</Box>
+        <Box>{t('no_external_training')}</Box>
       )}
       {certificateList.isSuccess &&
         certificateList.data.map((x) => (
           <Card withBorder mt={10}>
-            <Flex justify={"space-between"}>
+            <Flex justify={'space-between'}>
               <Box>
                 <Flex>
-                  <Text weight={"bold"}>
+                  <Text weight={'bold'}>
                     {x.name}
                     <Badge ml={20}>{t(`${CertificateStatus[x.status]}`)}</Badge>
                   </Text>
@@ -231,28 +231,28 @@ const MyTrainingExternal = () => {
                 </Text>
               </Box>
               <Box
-                style={{ width: 150, marginTop: "auto", marginBottom: "auto" }}
+                style={{ width: 150, marginTop: 'auto', marginBottom: 'auto' }}
               >
                 {x.imageUrl && (
-                  <div style={{ position: "relative" }}>
+                  <div style={{ position: 'relative' }}>
                     <Image
-                      src={x.imageUrl || ""}
+                      src={x.imageUrl || ''}
                       radius="md"
                       style={{
-                        opacity: "0.5",
+                        opacity: '0.5',
                       }}
                     />
                     <div
                       style={{
-                        position: "absolute",
+                        position: 'absolute',
                         left: 0,
                         bottom: 0,
                         right: 0,
-                        margin: "auto",
+                        margin: 'auto',
                         top: 0,
-                        width: "45px",
-                        height: "30px",
-                        display: "flex",
+                        width: '45px',
+                        height: '30px',
+                        display: 'flex',
                       }}
                     >
                       <ActionIcon
@@ -263,7 +263,7 @@ const MyTrainingExternal = () => {
                       </ActionIcon>
                       <ActionIcon
                         onClick={() =>
-                          downloadImage(x.imageUrl, x.user.fullName ?? "")
+                          downloadImage(x.imageUrl, x.user.fullName ?? '')
                         }
                       >
                         <IconDownload color="black" />
@@ -277,9 +277,9 @@ const MyTrainingExternal = () => {
               auth.auth.role <= UserRole.Admin &&
               auth.auth.id !== x.user.id && (
                 <Box mt={10}>
-                  <Button>{t("approve")}</Button>
-                  <Button ml={10} variant="outline" color={"red"}>
-                    {t("reject")}
+                  <Button>{t('approve')}</Button>
+                  <Button ml={10} variant="outline" color={'red'}>
+                    {t('reject')}
                   </Button>
                 </Box>
               )}

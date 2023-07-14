@@ -1,19 +1,19 @@
-import { Button, Card, Group, Title } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import { QuestionType } from "@utils/enums";
+import { Button, Card, Group, Title } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import { QuestionType } from '@utils/enums';
 import {
   IAssignmentQuestion,
   IAssignmentSubmission,
   useSubmitAssignment,
-} from "@utils/services/assignmentService";
-import errorType from "@utils/services/axiosError";
-import { useNavigate, useParams } from "react-router-dom";
-import CheckboxType from "./CheckboxType";
-import RadioType from "./RadioType";
-import SubjectiveType from "./SubjectiveType";
-import { useTranslation } from "react-i18next";
-import TextViewer from "@components/Ui/RichTextViewer";
+} from '@utils/services/assignmentService';
+import errorType from '@utils/services/axiosError';
+import { useNavigate, useParams } from 'react-router-dom';
+import CheckboxType from './CheckboxType';
+import RadioType from './RadioType';
+import SubjectiveType from './SubjectiveType';
+import { useTranslation } from 'react-i18next';
+import TextViewer from '@components/Ui/RichTextViewer';
 
 const AssignmentForm = ({
   item,
@@ -35,11 +35,11 @@ const AssignmentForm = ({
     const finalData: IAssignmentSubmission[] = [];
     values.forEach((x) => {
       var data: any = {};
-      if (x.assignmentSubmissionId) data["id"] = x.assignmentSubmissionId;
-      data["assignmentId"] = x.id;
-      data["answer"] = x.answer;
+      if (x.assignmentSubmissionId) data['id'] = x.assignmentSubmissionId;
+      data['assignmentId'] = x.id;
+      data['answer'] = x.answer;
       if (x.assignmentQuestionOptions) {
-        data["selectedOption"] = x.assignmentQuestionOptions
+        data['selectedOption'] = x.assignmentQuestionOptions
           .filter((y) => y.isSelected)
           .map((y) => y.id);
       }
@@ -51,16 +51,16 @@ const AssignmentForm = ({
         data: finalData,
       });
       showNotification({
-        message: t("submit_assignment_success"),
-        title: t("success"),
+        message: t('submit_assignment_success'),
+        title: t('success'),
       });
       navigation(-1);
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        title: t("error"),
-        color: "red",
+        title: t('error'),
+        color: 'red',
       });
     }
   };
@@ -73,7 +73,7 @@ const AssignmentForm = ({
           <TextViewer
             styles={{
               root: {
-                border: "none",
+                border: 'none',
               },
             }}
             content={x.description}
@@ -101,10 +101,10 @@ const AssignmentForm = ({
       ))}
       <Group mt={20}>
         <Button loading={submitAssignment.isLoading} type="submit">
-          {t("submit")}
+          {t('submit')}
         </Button>
         <Button type="reset" variant="outline" onClick={() => navigation(-1)}>
-          {t("cancel")}
+          {t('cancel')}
         </Button>
       </Group>
     </form>

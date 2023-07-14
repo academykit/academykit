@@ -1,20 +1,20 @@
-import { Button, Card, Group, Rating, Title } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import { FeedbackType } from "@utils/enums";
+import { Button, Card, Group, Rating, Title } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import { FeedbackType } from '@utils/enums';
 
-import errorType from "@utils/services/axiosError";
+import errorType from '@utils/services/axiosError';
 import {
   IFeedbackQuestions,
   IFeedbackSubmission,
   useFeedbackSubmission,
-} from "@utils/services/feedbackService";
-import { useNavigate, useParams } from "react-router-dom";
-import FeedbackCheckBoxType from "./Options/FeedbackCheckBox";
-import FeedbackRadio from "./Options/FeedbackRadio";
-import FeedbackRating from "./Options/FeedbackRating";
-import FeedbackSubjective from "./Options/FeedbackSubjective";
-import { useTranslation } from "react-i18next";
+} from '@utils/services/feedbackService';
+import { useNavigate, useParams } from 'react-router-dom';
+import FeedbackCheckBoxType from './Options/FeedbackCheckBox';
+import FeedbackRadio from './Options/FeedbackRadio';
+import FeedbackRating from './Options/FeedbackRating';
+import FeedbackSubjective from './Options/FeedbackSubjective';
+import { useTranslation } from 'react-i18next';
 
 const FeedbackForm = ({
   item,
@@ -35,11 +35,11 @@ const FeedbackForm = ({
     const finalData: IFeedbackSubmission[] = [];
     values.forEach((x) => {
       var data: any = {};
-      data["feedbackId"] = x.id;
-      data["answer"] = x.answer;
-      data["rating"] = x.rating;
+      data['feedbackId'] = x.id;
+      data['answer'] = x.answer;
+      data['rating'] = x.rating;
       if (x.feedbackQuestionOptions) {
-        data["selectedOption"] = x.feedbackQuestionOptions
+        data['selectedOption'] = x.feedbackQuestionOptions
           .filter((y) => y.isSelected)
           .map((y) => y.id);
       }
@@ -52,15 +52,15 @@ const FeedbackForm = ({
         data: finalData,
       });
       showNotification({
-        message: t("thankyou_feedback"),
+        message: t('thankyou_feedback'),
       });
       navigation(-1);
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        title: t("error"),
-        color: "red",
+        title: t('error'),
+        color: 'red',
       });
     }
   };
@@ -101,10 +101,10 @@ const FeedbackForm = ({
       ))}
       <Group mt={20}>
         <Button loading={submitFeedback.isLoading} type="submit">
-          {t("submit")}
+          {t('submit')}
         </Button>
         <Button type="reset" variant="outline" onClick={() => navigation(-1)}>
-          {t("cancel")}
+          {t('cancel')}
         </Button>
       </Group>
     </form>

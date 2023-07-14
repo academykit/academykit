@@ -6,19 +6,19 @@ import {
   Table,
   Box,
   Loader,
-} from "@mantine/core";
-import { showNotification } from "@mantine/notifications";
-import { LessonType } from "@utils/enums";
-import errorType from "@utils/services/axiosError";
-import { exportFeedback } from "@utils/services/feedbackService";
-import { useGetLessonStatisticsDetails } from "@utils/services/manageCourseService";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import CourseLessonDetails from "./Components/CourseLessonDetails";
-import { useTranslation } from "react-i18next";
+} from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
+import { LessonType } from '@utils/enums';
+import errorType from '@utils/services/axiosError';
+import { exportFeedback } from '@utils/services/feedbackService';
+import { useGetLessonStatisticsDetails } from '@utils/services/manageCourseService';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import CourseLessonDetails from './Components/CourseLessonDetails';
+import { useTranslation } from 'react-i18next';
 import withSearchPagination, {
   IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+} from '@hoc/useSearchPagination';
 
 const LessonDetails = ({
   searchComponent,
@@ -36,7 +36,7 @@ const LessonDetails = ({
   const [loading, setLoading] = useState(false);
 
   if (lessonDetails.data && lessonDetails.data?.totalCount < 1) {
-    return <Box>{t("no_enrolled_student_found")}</Box>;
+    return <Box>{t('no_enrolled_student_found')}</Box>;
   }
 
   if (lessonDetails.isLoading) return <Loader />;
@@ -48,23 +48,23 @@ const LessonDetails = ({
     try {
       const res = await exportFeedback(lessonId as string);
 
-      var element = document.createElement("a");
+      const element = document.createElement('a');
       setLoading(false);
 
       element.setAttribute(
-        "href",
-        "data:text/plain;charset=utf-8," +
+        'href',
+        'data:text/plain;charset=utf-8,' +
           encodeURIComponent(res.data as string)
       );
-      element.setAttribute("download", "Feedback-" + lessonId + ".csv");
+      element.setAttribute('download', 'Feedback-' + lessonId + '.csv');
       document.body.appendChild(element);
       element.click();
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        title: t("error"),
-        color: "red",
+        title: t('error'),
+        color: 'red',
       });
     }
     setLoading(false);
@@ -75,21 +75,21 @@ const LessonDetails = ({
       {lessonDetails.data?.items[0].lessonType === LessonType.Feedback && (
         <Group position="right" my="md">
           <Button onClick={handleExport} loading={loading}>
-            {t("export")}
+            {t('export')}
           </Button>
         </Group>
       )}
       <Paper>
-        <Box mb={"sm"}>{searchComponent("Search Student")}</Box>
+        <Box mb={'sm'}>{searchComponent('Search Student')}</Box>
         <Table striped withBorder>
           <thead>
             <tr>
-              <th>{t("trainees")}</th>
+              <th>{t('trainees')}</th>
               <th>
-                <Center>{t("status")}</Center>
+                <Center>{t('status')}</Center>
               </th>
 
-              <th>{t("actions")}</th>
+              <th>{t('actions')}</th>
             </tr>
           </thead>
           <tbody>

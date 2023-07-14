@@ -1,22 +1,22 @@
-import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from "@utils/constants";
-import { BASE_URL } from "@utils/env";
+import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from '@utils/constants';
+import { BASE_URL } from '@utils/env';
 import axios, {
   AxiosDefaults,
   AxiosError,
   AxiosRequestConfig,
   AxiosResponse,
-} from "axios";
-import { api } from "./service-api";
-import { LanguageString } from "@utils/enums";
+} from 'axios';
+import { api } from './service-api';
+import { LanguageString } from '@utils/enums';
 
 type RequestData = Record<string, any>;
 
 const THREE_MINUTES = 3 * 60 * 1000;
-const baseURL = "/";
+const baseURL = '/';
 const baseConfig = {
   baseURL,
   timeout: THREE_MINUTES,
-  "Content-Type": "Application/json",
+  'Content-Type': 'Application/json',
 };
 /**
  * Axios HTTP Client
@@ -74,30 +74,30 @@ export const httpClient = {
 
 axiosInstance.interceptors.request.use(
   async function (config: AxiosRequestConfig) {
-    const token = localStorage.getItem("token");
-    const lang = localStorage.getItem("lang");
+    const token = localStorage.getItem('token');
+    const lang = localStorage.getItem('lang');
 
     if (config.headers) {
-      config.headers["Accept-Language"] =
-        LanguageString[lang as keyof typeof LanguageString] ?? "en-US";
+      config.headers['Accept-Language'] =
+        LanguageString[lang as keyof typeof LanguageString] ?? 'en-US';
     }
 
     if (token && config.headers) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
     config.data = filterFalseyValues(config.data);
     if (
       config.headers &&
-      config.headers["content-type"] === "multipart/form-data"
+      config.headers['content-type'] === 'multipart/form-data'
     ) {
       config.data = toFormData(config.data);
-      delete config.headers["formData"];
+      delete config.headers['formData'];
     }
     if (config.data) {
-      for (let key in config.data) {
+      for (const key in config.data) {
         // Check if the value is a string
 
-        if (typeof config.data[key] === "string") {
+        if (typeof config.data[key] === 'string') {
           // Trim the string value
           config.data[key] = config.data[key].trim();
         }
@@ -106,10 +106,6 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   function (error: any) {
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 404) {
-      }
-    }
     return Promise.reject(error);
   }
 );
@@ -132,8 +128,6 @@ function handleRefreshToken(refreshToken: string) {
 
       localStorage.setItem(REFRESH_TOKEN_STORAGE, res.data?.refreshToken);
       localStorage.setItem(TOKEN_STORAGE, res.data?.token);
-      // @ts-ignore
-
       failedRequestQueue.forEach((request) => request.onSuccess(token));
       failedRequestQueue = [];
     })
@@ -192,7 +186,7 @@ axiosInstance.interceptors.response.use(
  */
 export function filterFalseyValues(obj: Record<string, any>) {
   for (const propName in obj) {
-    if (["", null, undefined].includes(obj[propName])) {
+    if (['', null, undefined].includes(obj[propName])) {
       delete obj[propName];
     } else if (
       obj[propName] instanceof Object &&

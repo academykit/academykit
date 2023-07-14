@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useState } from "react";
-import TextEditor from "@components/Ui/TextEditor";
+import React, { FC, useEffect, useState } from 'react';
+import TextEditor from '@components/Ui/TextEditor';
 import {
   Box,
   Checkbox,
@@ -10,14 +10,14 @@ import {
   Text,
   TextInput,
   UnstyledButton,
-} from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
-import { IconPlus, IconTrash } from "@tabler/icons";
-import { QuestionType, ReadableEnum } from "@utils/enums";
-import queryStringGenerator from "@utils/queryStringGenerator";
-import { IAddQuestionType } from "@utils/services/questionService";
-import { useAddTag, useTags } from "@utils/services/tagService";
-import { useTranslation } from "react-i18next";
+} from '@mantine/core';
+import { UseFormReturnType } from '@mantine/form';
+import { IconPlus, IconTrash } from '@tabler/icons';
+import { QuestionType, ReadableEnum } from '@utils/enums';
+import queryStringGenerator from '@utils/queryStringGenerator';
+import { IAddQuestionType } from '@utils/services/questionService';
+import { useAddTag, useTags } from '@utils/services/tagService';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   form: UseFormReturnType<
@@ -34,7 +34,7 @@ type Props = {
   >;
 };
 
-const fieldSize = "md";
+const fieldSize = 'md';
 const getQuestionType = () => {
   return Object.entries(QuestionType)
     .splice(0, Object.entries(QuestionType).length / 2)
@@ -51,7 +51,7 @@ const CreateForm: FC<Props> = ({ form, onSubmit, useFormContext }) => {
   );
   const tags = useTags(
     queryStringGenerator({
-      search: "",
+      search: '',
       size: 10000,
     })
   );
@@ -69,12 +69,12 @@ const CreateForm: FC<Props> = ({ form, onSubmit, useFormContext }) => {
       <TextInput
         size={fieldSize}
         withAsterisk
-        label={t("title_for_question")}
-        placeholder={t("title_for_question_placeholder") as string}
-        {...form.getInputProps("name")}
+        label={t('title_for_question')}
+        placeholder={t('title_for_question_placeholder') as string}
+        {...form.getInputProps('name')}
       ></TextInput>
       <Box mt={20}>
-        <Text size={"sm"}>{t("description")}</Text>
+        <Text size={'sm'}>{t('description')}</Text>
         <TextEditor formContext={useFormContext} />
       </Box>
 
@@ -84,17 +84,17 @@ const CreateForm: FC<Props> = ({ form, onSubmit, useFormContext }) => {
           withAsterisk
           labelProps="name"
           creatable
-          sx={{ maxWidth: "500px" }}
+          sx={{ maxWidth: '500px' }}
           data={tagsList}
           value={[]}
-          {...form.getInputProps("tags")}
+          {...form.getInputProps('tags')}
           getCreateLabel={(query) => `+ Create ${query}`}
           onCreate={(query) => {
             mutate(query);
           }}
-          size={"lg"}
-          label={t("tags")}
-          placeholder={t("select_tags") as string}
+          size={'lg'}
+          label={t('tags')}
+          placeholder={t('select_tags') as string}
         />
       ) : (
         <Loader />
@@ -105,23 +105,23 @@ const CreateForm: FC<Props> = ({ form, onSubmit, useFormContext }) => {
       </Box>
       <Select
         mt={20}
-        placeholder={t("select_question_type") as string}
+        placeholder={t('select_question_type') as string}
         size={fieldSize}
-        label={t("select_question")}
-        {...form.getInputProps("type")}
+        label={t('select_question')}
+        {...form.getInputProps('type')}
         data={getQuestionType()}
       ></Select>
       {(form.values.type === QuestionType.MultipleChoice.toString() ||
         form.values.type === QuestionType.SingleChoice.toString()) && (
         <Box>
-          <Text mt={20}>{t("options")}</Text>
+          <Text mt={20}>{t('options')}</Text>
           {form.values.answers.map((x, i) => (
             <Flex
               key={i}
               mb={30}
               style={{
-                width: "100%",
-                flexWrap: "nowrap",
+                width: '100%',
+                flexWrap: 'nowrap',
               }}
             >
               <Checkbox
@@ -130,16 +130,16 @@ const CreateForm: FC<Props> = ({ form, onSubmit, useFormContext }) => {
               ></Checkbox>
               asdas
               <TextEditor
-                placeholder={t("option_placeholder") as string}
+                placeholder={t('option_placeholder') as string}
                 label={`answers.${i}.option`}
                 formContext={useFormContext}
               ></TextEditor>
               <UnstyledButton
                 onClick={() => {
                   form.insertListItem(
-                    "answers",
+                    'answers',
                     {
-                      option: "",
+                      option: '',
                       isCorrect: false,
                     },
                     i + 1
@@ -151,21 +151,21 @@ const CreateForm: FC<Props> = ({ form, onSubmit, useFormContext }) => {
               {form.values.answers.length > 1 && (
                 <UnstyledButton
                   onClick={() => {
-                    form.removeListItem("option", i);
+                    form.removeListItem('option', i);
                   }}
                 >
                   <IconTrash color="red" />
                 </UnstyledButton>
               )}
-              {typeof form.errors[`answers.${i}.option`] === "string" && (
-                <span style={{ color: "red" }}>
+              {typeof form.errors[`answers.${i}.option`] === 'string' && (
+                <span style={{ color: 'red' }}>
                   {form.errors[`answers.${i}.option`]}
                 </span>
               )}
             </Flex>
           ))}
-          {typeof form.errors[`answers`] === "string" && (
-            <span style={{ color: "red" }}>{form.errors[`answers`]}</span>
+          {typeof form.errors[`answers`] === 'string' && (
+            <span style={{ color: 'red' }}>{form.errors[`answers`]}</span>
           )}
         </Box>
       )}

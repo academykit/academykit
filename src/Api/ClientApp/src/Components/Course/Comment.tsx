@@ -1,4 +1,4 @@
-import useAuth from "@hooks/useAuth";
+import useAuth from '@hooks/useAuth';
 import {
   createStyles,
   Text,
@@ -9,23 +9,23 @@ import {
   Button,
   Transition,
   Textarea,
-} from "@mantine/core";
-import { UserRole } from "@utils/enums";
-import { useForm } from "@mantine/form";
-import { useToggle } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
-import errorType from "@utils/services/axiosError";
+} from '@mantine/core';
+import { UserRole } from '@utils/enums';
+import { useForm } from '@mantine/form';
+import { useToggle } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
+import errorType from '@utils/services/axiosError';
 import {
   IComment,
   useDeleteComment,
   useEditComment,
-} from "@utils/services/commentService";
-import { IUser } from "@utils/services/types";
-import moment from "moment";
-import { useParams } from "react-router-dom";
-import CommentReplies from "./CommentReplies";
-import DeleteModal from "@components/Ui/DeleteModal";
-import { useTranslation } from "react-i18next";
+} from '@utils/services/commentService';
+import { IUser } from '@utils/services/types';
+import moment from 'moment';
+import { useParams } from 'react-router-dom';
+import CommentReplies from './CommentReplies';
+import DeleteModal from '@components/Ui/DeleteModal';
+import { useTranslation } from 'react-i18next';
 const useStyles = createStyles((theme) => ({
   comment: {
     padding: `${theme.spacing.lg}px ${theme.spacing.xl}px`,
@@ -42,20 +42,20 @@ const useStyles = createStyles((theme) => ({
   },
 
   content: {
-    "& > p:last-child": {
+    '& > p:last-child': {
       marginBottom: 0,
     },
   },
   editor: {
     backgroundColor:
-      theme.colorScheme === "dark"
+      theme.colorScheme === 'dark'
         ? theme.colors.dark[1]
         : theme.colors.gray[2],
   },
 
   replies: {
     backgroundColor:
-      theme.colorScheme === "dark"
+      theme.colorScheme === 'dark'
         ? theme.colors.dark[3]
         : theme.colors.gray[1],
 
@@ -97,13 +97,13 @@ const Comment = ({ comment }: { comment: IComment }) => {
         courseId: id as string,
       });
       showNotification({
-        message: t("delete_comment_success"),
+        message: t('delete_comment_success'),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: "red",
+        color: 'red',
       });
     }
   };
@@ -116,14 +116,14 @@ const Comment = ({ comment }: { comment: IComment }) => {
         content,
       });
       showNotification({
-        message: t("edit_comment_success"),
+        message: t('edit_comment_success'),
       });
       setEdit();
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: "red",
+        color: 'red',
       });
     }
   };
@@ -143,7 +143,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
       shadow="md"
     >
       <DeleteModal
-        title={t("delete_comment_confirmation")}
+        title={t('delete_comment_confirmation')}
         open={deleteConfirmation}
         onClose={setDeleteConfirmation}
         onConfirm={onDelete}
@@ -158,7 +158,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
         <div>
           <Text size="sm">{comment.user.fullName}</Text>
           <Text size="xs" color="dimmed">
-            {moment(comment.createdOn + "Z").fromNow()}
+            {moment(comment.createdOn + 'Z').fromNow()}
           </Text>
         </div>
       </Group>
@@ -169,12 +169,12 @@ const Comment = ({ comment }: { comment: IComment }) => {
             className={cx({ [classes.editor]: !edit })}
             mt={20}
             mb={10}
-            {...form.getInputProps("content")}
-            sx={{ minHeight: edit && "5rem" }}
+            {...form.getInputProps('content')}
+            sx={{ minHeight: edit && '5rem' }}
             readOnly={edit ? false : true}
             styles={{
               root: {
-                border: "none",
+                border: 'none',
               },
             }}
           />
@@ -185,7 +185,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
                 type="submit"
                 disabled={!form.values.content.trim()}
               >
-                {t("save")}
+                {t('save')}
               </Button>
               <Button
                 variant="outline"
@@ -195,7 +195,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
                   form.reset();
                 }}
               >
-                {t("cancel")}
+                {t('cancel')}
               </Button>
             </Group>
           )}
@@ -205,16 +205,16 @@ const Comment = ({ comment }: { comment: IComment }) => {
           {comment?.content}
         </Text>
       )}
-      <Box sx={{ display: "flex", justifyContent: "end" }}>
+      <Box sx={{ display: 'flex', justifyContent: 'end' }}>
         <Button variant="subtle" mx={4} onClick={() => setToggle()}>
           {toggle
-            ? t("hide_reply")
-            : `${t("show_reply")}(${comment.repliesCount}) `}
+            ? t('hide_reply')
+            : `${t('show_reply')}(${comment.repliesCount}) `}
         </Button>
 
         {!edit && showEdit(comment.user, true) && (
           <Button variant="subtle" mx={4} onClick={() => setEdit()}>
-            {t("edit")}
+            {t('edit')}
           </Button>
         )}
         {showEdit(comment.user) && comment.repliesCount <= 0 && (
@@ -224,13 +224,13 @@ const Comment = ({ comment }: { comment: IComment }) => {
             mx={4}
             onClick={() => setDeleteConfirmation()}
           >
-            {t("delete")}
+            {t('delete')}
           </Button>
         )}
       </Box>
       <Transition
         mounted={toggle}
-        transition={"pop-top-left"}
+        transition={'pop-top-left'}
         duration={200}
         timingFunction="ease"
       >

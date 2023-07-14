@@ -1,5 +1,5 @@
-import { TextInput, TextInputProps } from "@mantine/core";
-import { FC, useEffect, useRef, useState } from "react";
+import { TextInput, TextInputProps } from '@mantine/core';
+import { FC, useEffect, useRef, useState } from 'react';
 
 interface ICustomTextFieldWithAutoFocus extends TextInputProps {}
 
@@ -26,7 +26,7 @@ const CustomTextFieldWithAutoFocus: FC<ICustomTextFieldWithAutoFocus> = (
       <TextInput
         ref={myRef}
         {...props}
-        autoComplete={isFocused ? "on" : "off"}
+        autoComplete={isFocused ? 'on' : 'off'}
         autoFocus={isFocused}
         onClick={handleClick}
         onBlur={handleBlur}

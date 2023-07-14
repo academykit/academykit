@@ -1,18 +1,18 @@
-import { useCallback, useEffect, useMemo } from "react";
-import { UseFormReturnType } from "@mantine/form";
-import { FileAccess, uploadFile } from "@utils/services/fileService";
+import { useCallback, useEffect, useMemo } from 'react';
+import { UseFormReturnType } from '@mantine/form';
+import { FileAccess, uploadFile } from '@utils/services/fileService';
 
-import { RichTextEditor, Link } from "@mantine/tiptap";
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Placeholder from "@tiptap/extension-placeholder";
-import Highlight from "@tiptap/extension-highlight";
-import Underline from "@tiptap/extension-underline";
-import TextAlign from "@tiptap/extension-text-align";
-import Superscript from "@tiptap/extension-superscript";
-import SubScript from "@tiptap/extension-subscript";
-import { Box, Sx, Text } from "@mantine/core";
-import { useTranslation } from "react-i18next";
+import { RichTextEditor, Link } from '@mantine/tiptap';
+import { useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Placeholder from '@tiptap/extension-placeholder';
+import Highlight from '@tiptap/extension-highlight';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
+import Superscript from '@tiptap/extension-superscript';
+import SubScript from '@tiptap/extension-subscript';
+import { Box, Sx, Text } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 
 type IProps = {
   formContext?: () => UseFormReturnType<any, (values: any) => any>;
@@ -34,7 +34,7 @@ const TextEditor = ({
   sx,
 }: IProps) => {
   const { t } = useTranslation();
-  const cPlaceholder = t(placeholder ?? "");
+  const cPlaceholder = t(placeholder ?? '');
   const form = formContext && formContext();
 
   const editor = useEditor({
@@ -44,27 +44,27 @@ const TextEditor = ({
       Superscript,
       SubScript,
       Highlight,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
       StarterKit,
       Placeholder.configure({ placeholder: cPlaceholder }),
     ],
-    content: form ? form.values[label ?? "description"] : value,
+    content: form ? form.values[label ?? 'description'] : value,
   });
 
   // console.log(form?.values.answers[1])
   // form?.getInputProps(label || 'description').value
   useMemo(() => {
     const textValue =
-      form?.getInputProps(label ?? "description").value ?? value;
+      form?.getInputProps(label ?? 'description').value ?? value;
 
     if (editor && textValue !== editor.getHTML()) {
       editor.chain().insertContent(textValue).run();
     }
-  }, [form?.getInputProps(label ?? "description").value, value, editor]);
+  }, [form?.getInputProps(label ?? 'description').value, value, editor]);
 
-  editor?.on("update", () => {
+  editor?.on('update', () => {
     const data = editor.getHTML();
-    if (form) form.setFieldValue(label || "description", data);
+    if (form) form.setFieldValue(label || 'description', data);
     if (onChange) onChange(data);
   });
 
@@ -72,11 +72,11 @@ const TextEditor = ({
     (file: File): Promise<string> =>
       new Promise((resolve, reject) => {
         const formData = new FormData();
-        formData.append("image", file);
+        formData.append('image', file);
 
         uploadFile(file, FileAccess.Public)
           .then((result) => resolve(result.data))
-          .catch(() => reject(new Error("Upload failed")));
+          .catch(() => reject(new Error('Upload failed')));
       }),
     []
   );
@@ -128,7 +128,7 @@ const TextEditor = ({
         <RichTextEditor.Content />
       </RichTextEditor>
       <Text color="red" size={13} mt={5}>
-        {form ? form.errors[label ?? "description"] : error}
+        {form ? form.errors[label ?? 'description'] : error}
       </Text>
     </Box>
   );

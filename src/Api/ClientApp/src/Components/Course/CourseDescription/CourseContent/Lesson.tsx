@@ -7,24 +7,24 @@ import {
   Popover,
   Text,
   Title,
-} from "@mantine/core";
-import { useHover, useMediaQuery } from "@mantine/hooks";
-import { LessonType, ReadableEnum } from "@utils/enums";
-import formatDuration from "@utils/formatDuration";
-import RoutePath from "@utils/routeConstants";
-import { ILessons } from "@utils/services/courseService";
-import { Link, useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+} from '@mantine/core';
+import { useHover, useMediaQuery } from '@mantine/hooks';
+import { LessonType } from '@utils/enums';
+import formatDuration from '@utils/formatDuration';
+import RoutePath from '@utils/routeConstants';
+import { ILessons } from '@utils/services/courseService';
+import { Link, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const useStyle = createStyles((theme) => {
   return {
     paper: {
-      "&:hover": {
+      '&:hover': {
         backgroundColor:
-          theme.colorScheme === "light"
+          theme.colorScheme === 'light'
             ? theme.colors.dark[2]
             : theme.colors.gray[7],
-        transform: "scale(1.02)",
+        transform: 'scale(1.02)',
       },
     },
   };
@@ -49,44 +49,44 @@ const Lesson = ({
       width={200}
       position="top"
       withArrow
-      shadow={"lg"}
+      shadow={'lg'}
       opened={hovered}
     >
       <Popover.Target>
         <Paper
           my={15}
           radius={10}
-          w={"100%"}
-          shadow={"md"}
+          w={'100%'}
+          shadow={'md'}
           className={classes.paper}
           withBorder
           sx={{
             backgroundColor:
               lessonId === lesson.slug
-                ? theme.colorScheme === "light"
+                ? theme.colorScheme === 'light'
                   ? theme.colors.dark[0]
                   : theme.colors.gray[7]
-                : "",
+                : '',
           }}
-          //@ts-ignore
-          ref={ref}
           component={Link}
           replace={true}
           to={`${RoutePath.classes}/${courseSlug}/${lesson.slug}/description`}
         >
-          <Group>
-            <Box w={"100%"} p={15}>
-              <Title size={matches ? 14 : 13} lineClamp={2}>
-                {index + 1}. {lesson.name}
-              </Title>
-              <Badge color="blue" variant="light" ml={10}>
-                {t(`${LessonType[lesson.type]}`)}
-              </Badge>
-            </Box>
-          </Group>
+          <div ref={ref}>
+            <Group>
+              <Box w={'100%'} p={15}>
+                <Title size={matches ? 14 : 13} lineClamp={2}>
+                  {index + 1}. {lesson.name}
+                </Title>
+                <Badge color="blue" variant="light" ml={10}>
+                  {t(`${LessonType[lesson.type]}`)}
+                </Badge>
+              </Box>
+            </Group>
+          </div>
         </Paper>
       </Popover.Target>
-      <Popover.Dropdown sx={{ pointerEvents: "none" }}>
+      <Popover.Dropdown sx={{ pointerEvents: 'none' }}>
         <Text fw={700} size="md">
           {lesson.name}
         </Text>
@@ -96,7 +96,7 @@ const Lesson = ({
           lesson.type === LessonType.RecordedVideo ||
           lesson.type === LessonType.Video) && (
           <Text>
-            {t("Duration")}
+            {t('Duration')}
             {formatDuration(lesson.duration, false, t)}
           </Text>
         )}

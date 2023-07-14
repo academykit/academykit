@@ -1,7 +1,7 @@
-import { Loader } from "@mantine/core";
-import { useGetOneExamResult } from "@utils/services/examService";
-import { useParams } from "react-router-dom";
-import SubmittedResultDetails from "./Components/SubmittedResultDetails";
+import { Loader } from '@mantine/core';
+import { useGetOneExamResult } from '@utils/services/examService';
+import { useParams } from 'react-router-dom';
+import SubmittedResultDetails from './Components/SubmittedResultDetails';
 
 const ExamResult = () => {
   const { id, submissionId } = useParams();

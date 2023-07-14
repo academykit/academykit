@@ -1,23 +1,23 @@
-import DeleteModal from "@components/Ui/DeleteModal";
-import ThumbnailEditor from "@components/Ui/ThumbnailEditor";
-import { Button, Group, Paper, Text, TextInput } from "@mantine/core";
-import { createFormContext, yupResolver } from "@mantine/form";
-import { useToggle } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
-import errorType from "@utils/services/axiosError";
+import DeleteModal from '@components/Ui/DeleteModal';
+import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
+import { Button, Group, Paper, Text, TextInput } from '@mantine/core';
+import { createFormContext, yupResolver } from '@mantine/form';
+import { useToggle } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
+import errorType from '@utils/services/axiosError';
 import {
   IGetSignature,
   useAddSignature,
   useDeleteSignature,
   useEditSignature,
-} from "@utils/services/courseService";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import * as Yup from "yup";
-import { useTranslation } from "react-i18next";
-import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import useCustomForm from "@hooks/useCustomForm";
-import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+} from '@utils/services/courseService';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import * as Yup from 'yup';
+import { useTranslation } from 'react-i18next';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import useCustomForm from '@hooks/useCustomForm';
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IGetSignature>();
@@ -25,9 +25,9 @@ const [FormProvider, useFormContext, useForm] =
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    fullName: Yup.string().required(t("signature_name_required") as string),
-    designation: Yup.string().required(t("designation_required") as string),
-    fileUrl: Yup.string().required(t("file_url_required") as string),
+    fullName: Yup.string().required(t('signature_name_required') as string),
+    designation: Yup.string().required(t('designation_required') as string),
+    fileUrl: Yup.string().required(t('file_url_required') as string),
   });
 };
 
@@ -43,7 +43,7 @@ const CreateSignature = ({
   const createCertificate = useAddSignature(id as string);
   const deleteSignature = useDeleteSignature(id as string);
   const editSignature = useEditSignature(id as string);
-  const [signatureUrl, setSignatureUrl] = useState(data?.fileUrl ?? "");
+  const [signatureUrl, setSignatureUrl] = useState(data?.fileUrl ?? '');
   const [confirmDelete, setConfirmDelete] = useToggle();
   const { t } = useTranslation();
 
@@ -58,16 +58,16 @@ const CreateSignature = ({
     try {
       await createCertificate.mutateAsync({ data, id: id as string });
       showNotification({
-        title: t("success"),
-        message: t("add_signature_success"),
+        title: t('success'),
+        message: t('add_signature_success'),
       });
       onClose && onClose();
     } catch (error) {
       const err = errorType(error);
       showNotification({
-        title: t("error"),
+        title: t('error'),
         message: err,
-        color: "red",
+        color: 'red',
       });
     }
   };
@@ -75,16 +75,16 @@ const CreateSignature = ({
     try {
       await editSignature.mutateAsync({ data, id: id as string });
       showNotification({
-        title: t("success"),
-        message: t("edit_signature_success"),
+        title: t('success'),
+        message: t('edit_signature_success'),
       });
       window.location.reload(); // refresh page on successful edit
     } catch (error) {
       const err = errorType(error);
       showNotification({
-        title: t("error"),
+        title: t('error'),
         message: err,
-        color: "red",
+        color: 'red',
       });
     }
   };
@@ -93,15 +93,15 @@ const CreateSignature = ({
       await deleteSignature.mutateAsync({ id: id as string, sigId });
       onClose && onClose();
       showNotification({
-        title: t("success"),
-        message: t("delete_signature_success"),
+        title: t('success'),
+        message: t('delete_signature_success'),
       });
     } catch (error) {
       const err = errorType(error);
       showNotification({
-        title: t("error"),
+        title: t('error'),
         message: err,
-        color: "red",
+        color: 'red',
       });
     }
     setConfirmDelete();
@@ -112,7 +112,7 @@ const CreateSignature = ({
       {data && (
         <DeleteModal
           loading={deleteSignature.isLoading}
-          title={t("sure_want_to_delete")}
+          title={t('sure_want_to_delete')}
           open={confirmDelete}
           onClose={setConfirmDelete}
           onConfirm={() => handleDelete(data.id)}
@@ -120,34 +120,34 @@ const CreateSignature = ({
       )}
 
       <form onSubmit={form.onSubmit(edit ? handelEdit : handleSubmit)}>
-        <Paper p={10} style={{ marginBottom: "20px" }} withBorder>
+        <Paper p={10} style={{ marginBottom: '20px' }} withBorder>
           <Group noWrap mb={10}>
             <CustomTextFieldWithAutoFocus
-              w={"100%"}
-              label={t("name")}
-              placeholder={t("enter_name") as string}
+              w={'100%'}
+              label={t('name')}
+              placeholder={t('enter_name') as string}
               withAsterisk
               {...form.getInputProps(`fullName`)}
             />
             <TextInput
-              w={"100%"}
+              w={'100%'}
               ml={5}
-              label={t("designation")}
+              label={t('designation')}
               withAsterisk
-              placeholder={t("designation_placeholder") as string}
+              placeholder={t('designation_placeholder') as string}
               {...form.getInputProps(`designation`)}
             />
           </Group>
-          <Text size={"sm"}>
-            {t("signature")}{" "}
-            <sup style={{ verticalAlign: "bottom" }} className="global-astrick">
-              {" "}
+          <Text size={'sm'}>
+            {t('signature')}{' '}
+            <sup style={{ verticalAlign: 'bottom' }} className="global-astrick">
+              {' '}
               *
             </sup>
           </Text>
           <ThumbnailEditor
             formContext={useFormContext}
-            label={t("signature") as string}
+            label={t('signature') as string}
             FormField={`fileUrl`}
             currentThumbnail={signatureUrl}
             width="48.5%"
@@ -158,7 +158,7 @@ const CreateSignature = ({
               loading={createCertificate.isLoading || editSignature.isLoading}
               type="submit"
             >
-              {edit ? t("save_edit") : t("add")}
+              {edit ? t('save_edit') : t('add')}
             </Button>
             {edit ? (
               <Button
@@ -166,11 +166,11 @@ const CreateSignature = ({
                 type="reset"
                 variant="outline"
               >
-                {t("delete")}
+                {t('delete')}
               </Button>
             ) : (
               <Button onClick={onClose} type="reset" variant="outline">
-                {t("cancel")}
+                {t('cancel')}
               </Button>
             )}
           </Group>

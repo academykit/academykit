@@ -2,16 +2,16 @@ import {
   RichTextEditor,
   Link,
   RichTextEditorStylesNames,
-} from "@mantine/tiptap";
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Placeholder from "@tiptap/extension-placeholder";
-import Highlight from "@tiptap/extension-highlight";
-import Underline from "@tiptap/extension-underline";
-import TextAlign from "@tiptap/extension-text-align";
-import Superscript from "@tiptap/extension-superscript";
-import SubScript from "@tiptap/extension-subscript";
-import { Styles, Sx } from "@mantine/core";
+} from '@mantine/tiptap';
+import { useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Placeholder from '@tiptap/extension-placeholder';
+import Highlight from '@tiptap/extension-highlight';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
+import Superscript from '@tiptap/extension-superscript';
+import SubScript from '@tiptap/extension-subscript';
+import { Styles, Sx } from '@mantine/core';
 
 type IProps = {
   content: string;
@@ -27,9 +27,9 @@ const TextViewer = ({ content, styles, sx }: IProps) => {
       Superscript,
       SubScript,
       Highlight,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
       StarterKit,
-      Placeholder.configure({ placeholder: "This is placeholder" }),
+      Placeholder.configure({ placeholder: 'This is placeholder' }),
     ],
     content,
   });

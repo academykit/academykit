@@ -1,14 +1,14 @@
-import Admin from "@components/Dashboard/Admin";
-import Trainers from "@components/Dashboard/Trainers";
-import { User } from "@components/Dashboard/User";
-import useAuth from "@hooks/useAuth";
-import { Container, Text, Select } from "@mantine/core";
-import { UserRole } from "@utils/enums";
+import Admin from '@components/Dashboard/Admin';
+import Trainers from '@components/Dashboard/Trainers';
+import { User } from '@components/Dashboard/User';
+import useAuth from '@hooks/useAuth';
+import { Container, Text } from '@mantine/core';
+import { UserRole } from '@utils/enums';
 import {
   useDashboard,
   useDashboardCourse,
-} from "@utils/services/dashboardService";
-import { useTranslation } from "react-i18next";
+} from '@utils/services/dashboardService';
+import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {
   const dashboard = useDashboard();
@@ -20,8 +20,8 @@ const Dashboard = () => {
 
   return (
     <Container fluid>
-      <Text size="lg" weight="bolder" mb={"sm"}>
-        {t("overview")}
+      <Text size="lg" weight="bolder" mb={'sm'}>
+        {t('overview')}
       </Text>
       {dashboard.isSuccess && dashboardCourses.isSuccess && (
         <>

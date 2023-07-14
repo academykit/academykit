@@ -1,8 +1,8 @@
-import CourseCard from "@components/Course/CourseCard";
-import CourseCardHorizontal from "@components/Course/CourseCardHorizontal";
-import { Group } from "@mantine/core";
-import { UserRole } from "@utils/enums";
-import { ICourse } from "@utils/services/courseService";
+import CourseCard from '@components/Course/CourseCard';
+import CourseCardHorizontal from '@components/Course/CourseCardHorizontal';
+import { Group } from '@mantine/core';
+import { UserRole } from '@utils/enums';
+import { ICourse } from '@utils/services/courseService';
 
 const CourseList = ({
   role,
@@ -25,7 +25,7 @@ const CourseList = ({
   return (
     <Group
       sx={{
-        justifyContent: "space-around",
+        justifyContent: 'space-around',
       }}
     >
       {courses.map((d) => (

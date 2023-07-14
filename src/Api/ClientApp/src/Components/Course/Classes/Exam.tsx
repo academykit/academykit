@@ -1,4 +1,4 @@
-import useCustomLayout from "@context/LayoutProvider";
+import useCustomLayout from '@context/LayoutProvider';
 import {
   Box,
   Button,
@@ -10,64 +10,64 @@ import {
   Modal,
   Text,
   Title,
-} from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { useMediaQuery, useToggle } from "@mantine/hooks";
-import { CourseUserStatus, QuestionType, UserRole } from "@utils/enums";
+} from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { useMediaQuery, useToggle } from '@mantine/hooks';
+import { CourseUserStatus, QuestionType, UserRole } from '@utils/enums';
 import {
   ILessonExamStart,
   ILessonExamSubmit,
   ILessonStartQuestion,
   ILessonStartQuestionOption,
   useSubmitExam,
-} from "@utils/services/examService";
-import { useTranslation } from "react-i18next";
-import { RefObject, useEffect, useRef, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import ExamCounter from "./ExamCounter";
-import ExamCheckBox from "./ExamOptions/ExamCheckBox";
-import ExamRadio from "./ExamOptions/ExamRadio";
-import useAuth from "@hooks/useAuth";
-import TextViewer from "@components/Ui/RichTextViewer";
+} from '@utils/services/examService';
+import { useTranslation } from 'react-i18next';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import ExamCounter from './ExamCounter';
+import ExamCheckBox from './ExamOptions/ExamCheckBox';
+import ExamRadio from './ExamOptions/ExamRadio';
+import useAuth from '@hooks/useAuth';
+import TextViewer from '@components/Ui/RichTextViewer';
 
 const useStyle = createStyles((theme) => ({
   option: {
     padding: 20,
-    width: "100%",
-    justifyContent: "start",
-    alignItems: "start",
-    borderRadius: "5px",
-    border: "1px solid gray",
-    ">label": {
-      cursor: "pointer",
+    width: '100%',
+    justifyContent: 'start',
+    alignItems: 'start',
+    borderRadius: '5px',
+    border: '1px solid gray',
+    '>label': {
+      cursor: 'pointer',
     },
-    marginBottom: "15px",
+    marginBottom: '15px',
   },
   navigate: {
-    display: "flex",
-    height: "50px",
-    width: "50px",
-    justifyContent: "center",
-    alignItems: "center",
-    cursor: "pointer",
+    display: 'flex',
+    height: '50px',
+    width: '50px',
+    justifyContent: 'center',
+    alignItems: 'center',
+    cursor: 'pointer',
   },
   navigateWrapper: {
-    border: "1px solid grey",
-    borderRadius: "5px",
+    border: '1px solid grey',
+    borderRadius: '5px',
 
-    maxHeight: "80vh",
-    height: "100%",
-    overflowY: "auto",
-    alignContent: "start",
-    justifyContent: "start",
+    maxHeight: '80vh',
+    height: '100%',
+    overflowY: 'auto',
+    alignContent: 'start',
+    justifyContent: 'start',
   },
   buttonNav: {
-    display: "flex",
-    justifyContent: "space-between",
-    position: "fixed",
-    bottom: "0",
-    right: "0",
-    width: "100%",
+    display: 'flex',
+    justifyContent: 'space-between',
+    position: 'fixed',
+    bottom: '0',
+    right: '0',
+    width: '100%',
     zIndex: 100,
   },
   active: {
@@ -101,7 +101,7 @@ const Exam = ({
     initialValues: questions,
   });
 
-  const submitButtonRef = useRef<RefObject<HTMLButtonElement>>();
+  const submitButtonRef = useRef<HTMLButtonElement | null>(null);
   const [showConfirmation, setShowConfirmation] = useToggle();
 
   useEffect(() => {
@@ -116,13 +116,12 @@ const Exam = ({
           !isAuthorOrTeacher ? (
           <ExamCounter
             duration={data.duration}
-            // @ts-ignore
-            onSubmit={() => submitButtonRef.current.click()}
+            onSubmit={() => submitButtonRef.current?.click()}
             isLoading={examSubmission.isLoading}
             onClick={() => setShowConfirmation()}
           />
         ) : (
-          <Button onClick={() => navigate(-1)}>{t("close")}</Button>
+          <Button onClick={() => navigate(-1)}>{t('close')}</Button>
         )
       );
     customLayout.setExamPageTitle &&
@@ -162,43 +161,44 @@ const Exam = ({
         questionSetSubmissionId: data.id,
       });
       setShowConfirmation();
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
     <form onSubmit={form.onSubmit(onSubmitHandler)}>
       <Modal
-        title={t("submit_exam_confirmation")}
+        title={t('submit_exam_confirmation')}
         opened={showConfirmation}
         onClose={setShowConfirmation}
       >
         <Group>
           <Button
             onClick={() => {
-              // @ts-ignore
               submitButtonRef && submitButtonRef.current?.click();
             }}
           >
-            {t("submit")}
+            {t('submit')}
           </Button>
           <Button variant="outline" onClick={() => setShowConfirmation()}>
-            {t("cancel")}
+            {t('cancel')}
           </Button>
         </Group>
       </Modal>
       <Modal
         opened={examSubmission.isSuccess}
         onClose={() => {
-          navigate(location.state + "?invalidate=true" ?? "/");
+          navigate(location.state + '?invalidate=true' ?? '/');
         }}
-        title={t("submission_success")}
+        title={t('submission_success')}
       >
         <Button
           onClick={() => {
-            navigate(location.state + "?invalidate=true" ?? "/");
+            navigate(location.state + '?invalidate=true' ?? '/');
           }}
         >
-          {t("close")}
+          {t('close')}
         </Button>
       </Modal>
       <Grid m={20}>
@@ -206,25 +206,25 @@ const Exam = ({
         <Grid.Col span={matches ? 9 : 12}>
           <Box
             sx={{
-              flexDirection: "column",
-              overflow: "auto",
+              flexDirection: 'column',
+              overflow: 'auto',
             }}
           >
             <Box
               p={10}
               pb={20}
               sx={{
-                flexDirection: "column",
-                width: "100%",
-                justifyContent: "start",
-                alignContent: "start",
+                flexDirection: 'column',
+                width: '100%',
+                justifyContent: 'start',
+                alignContent: 'start',
               }}
             >
               <Title mb={20}>{questions[currentIndex]?.name}</Title>
               {questions[currentIndex]?.description && (
                 <TextViewer
                   content={questions[currentIndex]?.description}
-                  sx={{ wordBreak: "break-all" }}
+                  sx={{ wordBreak: 'break-all' }}
                 />
               )}
             </Box>
@@ -256,13 +256,12 @@ const Exam = ({
                   setCurrentIndex(currentIndex - 1);
                 }}
               >
-                {t("previous")}
+                {t('previous')}
               </Button>
             ) : (
               <div></div>
             )}
-            {/* @ts-ignore */}
-            <button style={{ display: "none" }} ref={submitButtonRef}></button>
+            <button style={{ display: 'none' }} ref={submitButtonRef}></button>
             <Text my={5}>
               {currentIndex + 1}/{questions.length}
             </Text>
@@ -275,7 +274,7 @@ const Exam = ({
                   setCurrentIndex((currentIndex) => currentIndex + 1);
                 }}
               >
-                {t("next")}
+                {t('next')}
               </Button>
             ) : (
               <div></div>
@@ -294,9 +293,9 @@ const Exam = ({
                   setCurrentIndex(i);
                 }}
                 style={{
-                  outline: "none",
-                  border: "none",
-                  backgroundColor: "none",
+                  outline: 'none',
+                  border: 'none',
+                  backgroundColor: 'none',
                 }}
               >
                 <Card

@@ -1,7 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "./service-api";
-import { httpClient } from "./service-axios";
-import { IPaginated, IUser } from "./types";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { api } from './service-api';
+import { httpClient } from './service-axios';
+import { IPaginated, IUser } from './types';
 
 export interface IComment {
   id: string;

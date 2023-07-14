@@ -1,16 +1,16 @@
 import withSearchPagination, {
   IWithSearchPagination,
-} from "@hoc/useSearchPagination";
-import useAuth from "@hooks/useAuth";
-import { Box, Button, Container, Flex, Loader } from "@mantine/core";
-import { UserRole } from "@utils/enums";
-import RoutePath from "@utils/routeConstants";
-import { useCourse } from "@utils/services/courseService";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
-import CourseList from "./component/List";
-import { CourseStatus } from "@utils/enums";
-import { useTranslation } from "react-i18next";
+} from '@hoc/useSearchPagination';
+import useAuth from '@hooks/useAuth';
+import { Box, Button, Container, Flex, Loader } from '@mantine/core';
+import { UserRole } from '@utils/enums';
+import RoutePath from '@utils/routeConstants';
+import { useCourse } from '@utils/services/courseService';
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import CourseList from './component/List';
+import { CourseStatus } from '@utils/enums';
+import { useTranslation } from 'react-i18next';
 
 const ReviewedCourse = ({
   setInitialSearch,
@@ -21,7 +21,7 @@ const ReviewedCourse = ({
   useEffect(() => {
     setInitialSearch([
       {
-        key: "Status",
+        key: 'Status',
         value: CourseStatus.Review.toString(),
       },
     ]);
@@ -36,11 +36,11 @@ const ReviewedCourse = ({
         <Flex
           pb={20}
           sx={{
-            justifyContent: "end",
-            alignItems: "center",
+            justifyContent: 'end',
+            alignItems: 'center',
           }}
         >
-          {searchComponent(t("search_trainings") as string)}
+          {searchComponent(t('search_trainings') as string)}
         </Flex>
       </Container>
 
@@ -49,7 +49,7 @@ const ReviewedCourse = ({
         (data.totalCount >= 1 ? (
           <CourseList role={role} courses={data.items} search={searchParams} />
         ) : (
-          <Box>{t("no_trainings_found")}</Box>
+          <Box>{t('no_trainings_found')}</Box>
         ))}
       {isLoading && <Loader />}
       {data && pagination(data.totalPage, data.items.length)}

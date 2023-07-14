@@ -14,30 +14,29 @@ import {
   Checkbox,
   Text,
   Tooltip,
-  useMantineTheme,
   Loader,
-} from "@mantine/core";
-import { Link, useParams } from "react-router-dom";
-import ProgressBar from "@components/Ui/ProgressBar";
+} from '@mantine/core';
+import { Link, useParams } from 'react-router-dom';
+import ProgressBar from '@components/Ui/ProgressBar';
 import withSearchPagination, {
   IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+} from '@hoc/useSearchPagination';
 import {
   IStudentStat,
   useGetStudentStatistics,
   usePostStatisticsCertificate,
-} from "@utils/services/manageCourseService";
-import RoutePath from "@utils/routeConstants";
-import { Dispatch, SetStateAction, useState, useTransition } from "react";
-import ConfirmationModal from "@components/Ui/ConfirmationModal";
-import { showNotification } from "@mantine/notifications";
-import errorType from "@utils/services/axiosError";
-import moment from "moment";
-import { getInitials } from "@utils/getInitialName";
-import { IconDownload, IconEye } from "@tabler/icons";
-import downloadImage from "@utils/downloadImage";
-import { useTranslation } from "react-i18next";
-import { DATE_FORMAT } from "@utils/constants";
+} from '@utils/services/manageCourseService';
+import RoutePath from '@utils/routeConstants';
+import { Dispatch, SetStateAction, useState } from 'react';
+import ConfirmationModal from '@components/Ui/ConfirmationModal';
+import { showNotification } from '@mantine/notifications';
+import errorType from '@utils/services/axiosError';
+import moment from 'moment';
+import { getInitials } from '@utils/getInitialName';
+import { IconDownload, IconEye } from '@tabler/icons';
+import downloadImage from '@utils/downloadImage';
+import { useTranslation } from 'react-i18next';
+import { DATE_FORMAT } from '@utils/constants';
 
 const Rows = ({
   item,
@@ -53,7 +52,6 @@ const Rows = ({
   const { id } = useParams();
   const course_id = id as string;
   const postUserData = usePostStatisticsCertificate(course_id, searchParams);
-  const theme = useMantineTheme();
   const { t } = useTranslation();
 
   const handleSubmit = async (dataUser: string[]) => {
@@ -63,13 +61,13 @@ const Rows = ({
         issueAll: false,
         identity: course_id,
       });
-      showNotification({ message: t("certificate_issue_success") });
+      showNotification({ message: t('certificate_issue_success') });
     } catch (error) {
       const err = errorType(error);
 
       showNotification({
-        title: t("error"),
-        color: "red",
+        title: t('error'),
+        color: 'red',
         message: err,
       });
     }
@@ -96,16 +94,16 @@ const Rows = ({
           component={Link}
           to={`${RoutePath.userProfile}/${item.userId}`}
           size="sm"
-          sx={{ display: "flex" }}
+          sx={{ display: 'flex' }}
         >
           <Avatar
-            sx={{ cursor: "pointer" }}
+            sx={{ cursor: 'pointer' }}
             size={26}
             mr={8}
             src={item?.imageUrl}
             radius={26}
           >
-            {!item?.imageUrl && getInitials(item?.fullName ?? "")}
+            {!item?.imageUrl && getInitials(item?.fullName ?? '')}
           </Avatar>
 
           {item?.fullName}
@@ -115,20 +113,20 @@ const Rows = ({
         <ProgressBar total={100} positive={item?.percentage} />
         <UnstyledButton component={Link} to={item.userId}>
           <Badge color="green" variant="outline" mt={10}>
-            {t("view")}
+            {t('view')}
           </Badge>
         </UnstyledButton>
       </td>
       <td>
-        <Flex direction={"column"} justify={"center"} align={"center"}>
+        <Flex direction={'column'} justify={'center'} align={'center'}>
           {item?.hasCertificateIssued ? (
-            <div style={{ marginTop: "10px" }}>
+            <div style={{ marginTop: '10px' }}>
               <Text>
-                {t("issued_on")}{" "}
-                {moment(item?.certificateIssuedDate + "Z").format(DATE_FORMAT)}
+                {t('issued_on')}{' '}
+                {moment(item?.certificateIssuedDate + 'Z').format(DATE_FORMAT)}
               </Text>
-              <Flex justify={"center"} mt={8}>
-                <Tooltip label={t("view_certificate")}>
+              <Flex justify={'center'} mt={8}>
+                <Tooltip label={t('view_certificate')}>
                   <UnstyledButton
                     mr="sm"
                     onClick={() => {
@@ -138,7 +136,7 @@ const Rows = ({
                     <IconEye size={23} color="green" />
                   </UnstyledButton>
                 </Tooltip>
-                <Tooltip label={t("download_certificate")}>
+                <Tooltip label={t('download_certificate')}>
                   <UnstyledButton
                     onClick={() =>
                       downloadImage(item.certificateUrl, item.fullName)
@@ -151,20 +149,20 @@ const Rows = ({
             </div>
           ) : (
             <>
-              <Badge>{t("not_issued")}</Badge>
+              <Badge>{t('not_issued')}</Badge>
               <Button
                 size="xs"
                 mt={10}
                 loading={postUserData.isLoading}
                 onClick={() => handleSubmit([item.userId])}
               >
-                {t("issue")}
+                {t('issue')}
               </Button>
             </>
           )}
         </Flex>
       </td>
-      <td style={{ textAlign: "center" }}>
+      <td style={{ textAlign: 'center' }}>
         <Anchor
           component={Link}
           to={`${RoutePath.classes}/${course_id}/${item.lessonSlug}`}
@@ -199,13 +197,13 @@ const ManageStudents = ({
         issueAll: true,
         identity: course_id,
       });
-      showNotification({ message: t("certificate_issue_success_all") });
+      showNotification({ message: t('certificate_issue_success_all') });
     } catch (error) {
       const err = errorType(error);
 
       showNotification({
-        title: t("error"),
-        color: "red",
+        title: t('error'),
+        color: 'red',
         message: err,
       });
     }
@@ -218,13 +216,13 @@ const ManageStudents = ({
         issueAll: false,
         identity: course_id,
       });
-      showNotification({ message: t("certificate_issue_success") });
+      showNotification({ message: t('certificate_issue_success') });
     } catch (error) {
       const err = errorType(error);
 
       showNotification({
-        title: t("error"),
-        color: "red",
+        title: t('error'),
+        color: 'red',
         message: err,
       });
     }
@@ -235,19 +233,19 @@ const ManageStudents = ({
   return (
     <ScrollArea>
       <ConfirmationModal
-        title={t("sure_to_issue_certificate_everyone")}
+        title={t('sure_to_issue_certificate_everyone')}
         open={opened}
         onClose={() => setOpened(false)}
         onConfirm={handleIssueAll}
       />
       <ConfirmationModal
-        title={t("sure_to_issue_certificate")}
+        title={t('sure_to_issue_certificate')}
         open={submitModal}
         onClose={() => setSubmitModal(false)}
         onConfirm={handleSubmit}
       />
-      <Group position="apart" mb={"lg"}>
-        <Title>{t("trainee")}</Title>
+      <Group position="apart" mb={'lg'}>
+        <Title>{t('trainee')}</Title>
         <Flex>
           {getStudentStat.data && getStudentStat.data?.items.length >= 1 && (
             <Button
@@ -256,7 +254,7 @@ const ManageStudents = ({
               mr={20}
               loading={selected.length !== 0 && postUserData.isLoading}
             >
-              {t("issue_certificate")}
+              {t('issue_certificate')}
             </Button>
           )}
 
@@ -266,15 +264,15 @@ const ManageStudents = ({
               disabled={selected.length > 0}
               onClick={() => setOpened(true)}
             >
-              {t("issue_certificates_to_all")}
+              {t('issue_certificates_to_all')}
             </Button>
           )}
         </Flex>
       </Group>
 
-      <div style={{ display: "flex" }}>
-        <Box mx={3} sx={{ width: "100%" }}>
-          {searchComponent(t("search_trainees") as string)}
+      <div style={{ display: 'flex' }}>
+        <Box mx={3} sx={{ width: '100%' }}>
+          {searchComponent(t('search_trainees') as string)}
         </Box>
       </div>
       {getStudentStat.data && getStudentStat.data?.totalCount > 0 ? (
@@ -288,14 +286,14 @@ const ManageStudents = ({
             <thead>
               <tr>
                 <th></th>
-                <th>{t("name")}</th>
-                <th>{t("progress")}</th>
+                <th>{t('name')}</th>
+                <th>{t('progress')}</th>
                 <th>
-                  <Flex align={"center"} direction={"column"}>
-                    {t("certificate")}
+                  <Flex align={'center'} direction={'column'}>
+                    {t('certificate')}
                   </Flex>
                 </th>
-                <th style={{ textAlign: "center" }}>{t("current_lesson")}</th>
+                <th style={{ textAlign: 'center' }}>{t('current_lesson')}</th>
               </tr>
             </thead>
             <tbody>
@@ -312,7 +310,7 @@ const ManageStudents = ({
           </Table>
         </Paper>
       ) : (
-        <Box>{t("no_trainees")}</Box>
+        <Box>{t('no_trainees')}</Box>
       )}
 
       {getStudentStat.data &&

@@ -1,4 +1,4 @@
-import useAuth from "@hooks/useAuth";
+import useAuth from '@hooks/useAuth';
 import {
   Box,
   Button,
@@ -7,13 +7,13 @@ import {
   Loader,
   Tabs,
   Title,
-} from "@mantine/core";
-import NotFound from "@pages/404";
-import { UserRole } from "@utils/enums";
-import lazyWithRetry from "@utils/lazyImportWithReload";
-import RoutePath from "@utils/routeConstants";
-import React, { Suspense } from "react";
-import { useTranslation } from "react-i18next";
+} from '@mantine/core';
+import NotFound from '@pages/404';
+import { UserRole } from '@utils/enums';
+import lazyWithRetry from '@utils/lazyImportWithReload';
+import RoutePath from '@utils/routeConstants';
+import React, { Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Link,
   Outlet,
@@ -21,25 +21,25 @@ import {
   Routes,
   useLocation,
   useNavigate,
-} from "react-router-dom";
+} from 'react-router-dom';
 const CoursePage = lazyWithRetry(
-  () => import("@pages/course/courseList/course")
+  () => import('@pages/course/courseList/course')
 );
 const CreatedCoursePage = lazyWithRetry(
-  () => import("@pages/course/courseList/createdCourses")
+  () => import('@pages/course/courseList/createdCourses')
 );
 const CompletedCourseList = lazyWithRetry(
-  () => import("@pages/course/courseList/completedCourse")
+  () => import('@pages/course/courseList/completedCourse')
 );
 
 const CourseListRoute = () => {
   return (
     <Routes>
       <Route element={<CourseListPageNav />}>
-        <Route path={""} element={<CoursePage />} />
-        <Route path={"/completed"} element={<CompletedCourseList />} />
-        <Route path={"/review"} element={<CreatedCoursePage />} />
-        <Route path={"/*"} element={<NotFound />} />
+        <Route path={''} element={<CoursePage />} />
+        <Route path={'/completed'} element={<CompletedCourseList />} />
+        <Route path={'/review'} element={<CreatedCoursePage />} />
+        <Route path={'/*'} element={<NotFound />} />
       </Route>
     </Routes>
   );
@@ -58,14 +58,14 @@ const CourseListPageNav = () => {
     <Container fluid>
       <Box
         my={10}
-        sx={{ justifyContent: "space-between", alignItems: "center" }}
+        sx={{ justifyContent: 'space-between', alignItems: 'center' }}
       >
         <Group position="apart">
-          <Title sx={{ flexGrow: 2 }}>{t("trainings")}</Title>
+          <Title sx={{ flexGrow: 2 }}>{t('trainings')}</Title>
           {role != UserRole.Trainee && (
             <Link to={RoutePath.courses.create}>
               <Button my={10} ml={5}>
-                {t("new_training")}
+                {t('new_training')}
               </Button>
             </Link>
           )}
@@ -76,13 +76,13 @@ const CourseListPageNav = () => {
           onTabChange={(value) => navigate(`${value}`)}
         >
           <Tabs.List>
-            <Tabs.Tab value="/trainings/list">{t("all_trainings")}</Tabs.Tab>
+            <Tabs.Tab value="/trainings/list">{t('all_trainings')}</Tabs.Tab>
             <Tabs.Tab value="/trainings/list/completed">
-              {t("completed_trainings")}
+              {t('completed_trainings')}
             </Tabs.Tab>
             {role <= UserRole.Admin && (
               <Tabs.Tab value="/trainings/list/review">
-                {t("review_trainings")}
+                {t('review_trainings')}
               </Tabs.Tab>
             )}
           </Tabs.List>

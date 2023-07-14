@@ -1,11 +1,11 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { EFileStorageType } from "@utils/enums";
-import queryStringGenerator from "@utils/queryStringGenerator";
-import axios from "axios";
-import errorType from "./axiosError";
-import { api } from "./service-api";
-import { httpClient } from "./service-axios";
-import { IPaginated, IUserProfile, IAddUser, IUser } from "./types";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { EFileStorageType } from '@utils/enums';
+import queryStringGenerator from '@utils/queryStringGenerator';
+import axios from 'axios';
+import errorType from './axiosError';
+import { api } from './service-api';
+import { httpClient } from './service-axios';
+import { IPaginated, IUserProfile, IAddUser, IUser } from './types';
 
 export interface IDepartmentSetting {
   id: string;
@@ -96,7 +96,7 @@ const getUsers = (search: string) => {
 
 export const useUsers = (search: string) =>
   useQuery(
-    ["user-list", search],
+    ['user-list', search],
     () => {
       return getUsers(search);
     },
@@ -110,8 +110,8 @@ const updateUser = ({ data, id }: { data: any; id: string }) =>
   httpClient.put(api.auth.getUser(id), data);
 export const useUpdateUser = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation(["update" + api.auth.getUser], updateUser, {
-    onSuccess: (data) => {
+  return useMutation(['update' + api.auth.getUser], updateUser, {
+    onSuccess: () => {
       queryClient.invalidateQueries([api.auth.me]);
 
       queryClient.invalidateQueries([api.auth.getUser(id)]);
@@ -129,9 +129,9 @@ const updateUserStatus = async ({
 
 export const useUpdateUserStatus = (search: string) => {
   const queryClient = useQueryClient();
-  return useMutation(["user-list", search], updateUserStatus, {
+  return useMutation(['user-list', search], updateUserStatus, {
     onSuccess: () => {
-      queryClient.invalidateQueries(["user-list", search]);
+      queryClient.invalidateQueries(['user-list', search]);
     },
   });
 };
@@ -143,7 +143,7 @@ export const useAddUser = (search: string) => {
   const queryClient = useQueryClient();
   return useMutation([api.adminUser.addUsers], addUser, {
     onSuccess: () => {
-      queryClient.invalidateQueries(["user-list", search]);
+      queryClient.invalidateQueries(['user-list', search]);
     },
   });
 };
@@ -153,9 +153,9 @@ const editUser = async ({ id, data }: { id: string; data: IAddUser }) =>
 
 export const useEditUser = (id: string, search: string) => {
   const queryClient = useQueryClient();
-  return useMutation(["update" + api.adminUser.editUsers(id)], editUser, {
+  return useMutation(['update' + api.adminUser.editUsers(id)], editUser, {
     onSuccess: () => {
-      queryClient.invalidateQueries(["user-list", search]);
+      queryClient.invalidateQueries(['user-list', search]);
     },
   });
 };
@@ -173,7 +173,7 @@ export const useLevelSetting = () => {
 export const usePostLevelSetting = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    ["post" + api.adminUser.postLevelSetting],
+    ['post' + api.adminUser.postLevelSetting],
     (data: { name: string }) => {
       return httpClient.post<ILevel>(api.adminUser.postLevelSetting, data);
     },
@@ -198,7 +198,7 @@ const updateLevelSetting = async ({
 export const useUpdateLevelSetting = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation(
-    ["update" + api.adminUser.updateLevelSetting(id)],
+    ['update' + api.adminUser.updateLevelSetting(id)],
     updateLevelSetting,
     {
       onSuccess: () => {
@@ -231,7 +231,7 @@ export const useDeleteLevelSetting = () => {
 export const updateDepartmentStatus = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation(
-    ["update" + api.adminUser.updateDepartmentSetting(id)],
+    ['update' + api.adminUser.updateDepartmentSetting(id)],
     (data: { name: string }) => {
       return httpClient.put<ILevel>(
         api.adminUser.updateDepartmentSetting(id),
@@ -261,7 +261,7 @@ export const useDepartmentSetting = (search: string) => {
 export const usePostDepartmentSetting = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    ["post" + api.adminUser.getDepartmentSettings],
+    ['post' + api.adminUser.getDepartmentSettings],
     (data: { name: string; isActive: boolean }) => {
       return httpClient.post<IDepartmentSetting>(
         api.adminUser.getDepartmentSettings,
@@ -269,7 +269,7 @@ export const usePostDepartmentSetting = () => {
       );
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([api.adminUser.getDepartmentSettings]);
       },
     }
@@ -287,7 +287,7 @@ export const useDeleteDepartmentSetting = () => {
     deleteDepartmentSetting,
 
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([api.adminUser.getDepartmentSettings]);
       },
       onError: (err) => {
@@ -303,12 +303,12 @@ export const useUpdateDepartmentSettingStatus = (
 ) => {
   const queryClient = useQueryClient();
   return useMutation(
-    ["patch" + api.adminUser.updateDepartmentStatus(id, status)],
+    ['patch' + api.adminUser.updateDepartmentStatus(id, status)],
     () => {
       return httpClient.patch(api.adminUser.updateDepartmentStatus(id, status));
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([api.adminUser.getDepartmentSettings]);
       },
     }
@@ -331,10 +331,10 @@ const updateDepartmentSetting = async ({
 export const useUpdateDepartmentSetting = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation(
-    ["update" + api.adminUser.updateDepartmentSetting(id)],
+    ['update' + api.adminUser.updateDepartmentSetting(id)],
     updateDepartmentSetting,
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([api.adminUser.getDepartmentSettings]);
       },
     }
@@ -355,7 +355,7 @@ export const useZoomSetting = () => {
 export const useUpdateZoomSetting = (id: string | undefined) => {
   const queryClient = useQueryClient();
   return useMutation(
-    ["update" + api.adminUser.getZoomSettings],
+    ['update' + api.adminUser.getZoomSettings],
     (data: {
       apiKey: string;
       apiSecret: string;
@@ -369,7 +369,7 @@ export const useUpdateZoomSetting = (id: string | undefined) => {
       );
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([api.adminUser.getZoomSettings]);
       },
     }
@@ -389,7 +389,7 @@ export const useSMTPSetting = () => {
 export const useUpdateSMTPSetting = (id: string | undefined) => {
   const queryClient = useQueryClient();
   return useMutation(
-    ["update" + api.adminUser.getSMTPSettings],
+    ['update' + api.adminUser.getSMTPSettings],
     (data: ISMTPSettingUpdate) => {
       return httpClient.put<ISMTPSetting>(
         api.adminUser.updateSMTPSettings(id),
@@ -397,7 +397,7 @@ export const useUpdateSMTPSetting = (id: string | undefined) => {
       );
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([api.adminUser.getZoomSettings]);
       },
     }
@@ -424,12 +424,12 @@ export const useCompanySetting = () => {
 export const useUpdateGeneralSetting = (id: string | undefined) => {
   const queryClient = useQueryClient();
   return useMutation(
-    ["update" + api.adminUser.getGeneralSettings],
+    ['update' + api.adminUser.getGeneralSettings],
     (data: IGeneralSettingUpdate) => {
       return httpClient.put(api.adminUser.updateGeneralSettings(id), data);
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([api.adminUser.getGeneralSettings]);
       },
     }
@@ -469,7 +469,7 @@ export const useActiveZoomLicense = (
   lessonIdentity?: string
 ) => {
   return useQuery(
-    ["active" + api.adminUser.getZoomLicense, startDateTime, duration],
+    ['active' + api.adminUser.getZoomLicense, startDateTime, duration],
     () => getActiveZoomLicense(startDateTime, duration, lessonIdentity),
     {
       select: (data) => data,
@@ -501,7 +501,7 @@ export const useDeleteZoomLicense = () => {
     deleteZoomLicense,
 
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([api.adminUser.getZoomLicense]);
       },
       onError: (err) => {
@@ -519,10 +519,10 @@ const addZoomLicense = (data: {
 export const useAddZoomLicense = () => {
   const queryClient = useQueryClient();
   return useMutation([api.adminUser.addZoomLicense], addZoomLicense, {
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries([api.adminUser.getZoomLicense]);
     },
-    onError: (err) => {},
+    onError: () => {},
   });
 };
 
@@ -578,7 +578,7 @@ export const useUpdateFileStorage = () => {
     [api.fileStorage.updateFileStorageSetting],
     updateFileStorage,
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([api.fileStorage.getFileStorageSetting]);
       },
       onError: (err) => {
@@ -624,7 +624,7 @@ const getLogs = async (query: string) => {
 };
 
 export const useGetServerLogs = (query: string) => {
-  return useQuery(["logs" + query], () => getLogs(query), {
+  return useQuery(['logs' + query], () => getLogs(query), {
     select: (data) => data.data,
     //enabled: !!startDateTime && !!duration,
   });
@@ -635,7 +635,7 @@ const getSingleLog = async (id: string) => {
 };
 
 export const useGetSingleLog = (id: string) => {
-  return useQuery(["log" + id], () => getSingleLog(id), {
+  return useQuery(['log' + id], () => getSingleLog(id), {
     select: (data) => data.data,
   });
 };

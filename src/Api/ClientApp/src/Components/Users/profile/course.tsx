@@ -1,5 +1,5 @@
-import AttendedTrainings from "@components/Users/profile/attendedTrainings";
-import MyTrainings from "./myTrainings";
+import AttendedTrainings from '@components/Users/profile/attendedTrainings';
+import MyTrainings from './myTrainings';
 
 const UserCourse = () => {
   return (

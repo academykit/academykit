@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FeedbackType } from "@utils/enums";
-import { api } from "./service-api";
-import { httpClient } from "./service-axios";
-import { IUser } from "./types";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { FeedbackType } from '@utils/enums';
+import { api } from './service-api';
+import { httpClient } from './service-axios';
+import { IUser } from './types';
 
 export interface IFeedbackOptions {
   id: string;
@@ -38,13 +38,12 @@ export interface ICreateFeedback {
     {
       option: string;
       isSelected: boolean;
-    }
+    },
   ];
 }
 
 const addFeedbackQuestion = ({ data }: { data: ICreateFeedback }) => {
-  //@ts-ignore
-  data.type = Number(data.type);
+  data.type = Number(data.type).toString();
   return httpClient.post(api.feedback.add, data);
 };
 export const useAddFeedbackQuestion = (lessonId: string, search: string) => {
@@ -114,8 +113,7 @@ const editFeedbackQuestion = ({
   data: ICreateFeedback;
   feedbackId: string;
 }) => {
-  // @ts-ignore
-  data.type = Number(data.type);
+  data.type = Number(data.type).toString();
   return httpClient.put(api.feedback.listOne(feedbackId), data);
 };
 
@@ -148,9 +146,9 @@ const postFeedbackSubmission = ({
 };
 export const useFeedbackSubmission = ({ lessonId }: { lessonId: string }) => {
   const queryClient = useQueryClient();
-  return useMutation(["submitFeeback"], postFeedbackSubmission, {
+  return useMutation(['submitFeeback'], postFeedbackSubmission, {
     onSuccess: () => {
-      queryClient.invalidateQueries([api.feedback.list(lessonId, "")]);
+      queryClient.invalidateQueries([api.feedback.list(lessonId, '')]);
     },
   });
 };

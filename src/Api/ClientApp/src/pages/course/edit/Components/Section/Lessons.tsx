@@ -1,8 +1,8 @@
-import AddLesson from "@components/Ui/AddLessons";
-import { CourseStatus } from "@utils/enums";
-import { ILessons } from "@utils/services/courseService";
-import { Draggable, Droppable } from "react-beautiful-dnd";
-import Lesson from "./Lesson";
+import AddLesson from '@components/Ui/AddLessons';
+import { CourseStatus } from '@utils/enums';
+import { ILessons } from '@utils/services/courseService';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
+import Lesson from './Lesson';
 
 const Lessons = ({
   lessons,

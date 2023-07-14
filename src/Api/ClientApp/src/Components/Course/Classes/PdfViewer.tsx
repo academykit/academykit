@@ -1,11 +1,11 @@
-import * as React from "react";
-import { Viewer, Worker } from "@react-pdf-viewer/core";
+import * as React from 'react';
+import { Viewer, Worker } from '@react-pdf-viewer/core';
 // @ts-ignore
-import { toolbarPlugin } from "@react-pdf-viewer/toolbar";
-import { useMediaQuery } from "@mantine/hooks";
+import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
+import { useMediaQuery } from '@mantine/hooks';
 
-import "@react-pdf-viewer/core/lib/styles/index.css";
-import "@react-pdf-viewer/toolbar/lib/styles/index.css";
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/toolbar/lib/styles/index.css';
 import {
   ActionIcon,
   Badge,
@@ -16,19 +16,19 @@ import {
   Menu,
   Popover,
   useMantineColorScheme,
-} from "@mantine/core";
-import { ICourseLesson } from "@utils/services/courseService";
-import { useWatchHistory } from "@utils/services/watchHistory";
-import { showNotification } from "@mantine/notifications";
-import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
-import "@react-pdf-viewer/default-layout/lib/styles/index.css";
-import Download from "./PdfComponents/Download";
-import FullScreen from "./PdfComponents/FullScreen";
-import Zoom from "./PdfComponents/Zoom";
-import SwitchPage from "./PdfComponents/SwitchPage";
-import { useTranslation } from "react-i18next";
-import useAuth from "@hooks/useAuth";
-import { UserRole } from "@utils/enums";
+} from '@mantine/core';
+import { ICourseLesson } from '@utils/services/courseService';
+import { useWatchHistory } from '@utils/services/watchHistory';
+import { showNotification } from '@mantine/notifications';
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import Download from './PdfComponents/Download';
+import FullScreen from './PdfComponents/FullScreen';
+import Zoom from './PdfComponents/Zoom';
+import SwitchPage from './PdfComponents/SwitchPage';
+import { useTranslation } from 'react-i18next';
+import useAuth from '@hooks/useAuth';
+import { UserRole } from '@utils/enums';
 
 interface PdfViewerProps {
   lesson: ICourseLesson;
@@ -37,8 +37,8 @@ interface PdfViewerProps {
 
 const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
   const watchHistory = useWatchHistory(lesson.courseId, lesson.id);
-  const matches = useMediaQuery("(min-width: 991px");
-  const matchesSmallScreen = useMediaQuery("(min-width: 550px");
+  const matches = useMediaQuery('(min-width: 991px');
+  const matchesSmallScreen = useMediaQuery('(min-width: 550px');
   const auth = useAuth();
   const userRole = auth?.auth?.role;
 
@@ -47,8 +47,8 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
   const onMarkComplete = () => {
     onEnded();
     showNotification({
-      title: t("success"),
-      message: t("mark_pdf_complete"),
+      title: t('success'),
+      message: t('mark_pdf_complete'),
     });
   };
 
@@ -84,11 +84,11 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
                         onClick={onMarkComplete}
                         loading={watchHistory.isLoading}
                       >
-                        {t("mark_complete")}
+                        {t('mark_complete')}
                       </Button>
                     )
                   ) : (
-                    <Badge>{t("Completed")}</Badge>
+                    <Badge>{t('Completed')}</Badge>
                   )}
                   <FullScreen toolbarSlot={toolbarSlot} />
                   {/* <Download toolbarSlot={toolbarSlot} /> */}
@@ -138,16 +138,16 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
       <div
         className="js-viewer-container"
         style={{
-          border: "1px solid rgba(0, 0, 0, 0.3)",
-          display: "flex",
-          flexDirection: "column",
-          height: matches ? "100%" : "405px",
+          border: '1px solid rgba(0, 0, 0, 0.3)',
+          display: 'flex',
+          flexDirection: 'column',
+          height: matches ? '100%' : '405px',
         }}
       >
         <div
           style={{
             flex: 1,
-            overflow: "hidden",
+            overflow: 'hidden',
           }}
         >
           <Viewer

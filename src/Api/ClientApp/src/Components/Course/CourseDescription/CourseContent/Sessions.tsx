@@ -1,10 +1,9 @@
-import useAuth from "@hooks/useAuth";
-import { Box, Text, Title } from "@mantine/core";
-import { CourseUserStatus, UserRole } from "@utils/enums";
-import formatDuration from "@utils/formatDuration";
-import { ISection } from "@utils/services/courseService";
-import Lesson from "./Lesson";
-import { useTranslation } from "react-i18next";
+import useAuth from '@hooks/useAuth';
+import { Box, Text, Title } from '@mantine/core';
+import { CourseUserStatus, UserRole } from '@utils/enums';
+import { ISection } from '@utils/services/courseService';
+import Lesson from './Lesson';
+import { useTranslation } from 'react-i18next';
 
 const Sessions = ({
   section,
@@ -26,15 +25,15 @@ const Sessions = ({
 
   return (
     <Box>
-      <Title size={"h6"}>{section?.name}</Title>
-      <Text size={10} color={"dimmed"}>
-        {section.lessons?.length} {t("Lesson")}
+      <Title size={'h6'}>{section?.name}</Title>
+      <Text size={10} color={'dimmed'}>
+        {section.lessons?.length} {t('Lesson')}
       </Text>
       <Box
         my={20}
         mx={10}
         sx={{
-          pointerEvents: canClickLessons ? "none" : "auto",
+          pointerEvents: canClickLessons ? 'none' : 'auto',
         }}
       >
         {section.lessons?.map((x, i) => (

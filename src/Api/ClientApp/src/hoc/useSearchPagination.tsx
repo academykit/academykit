@@ -1,11 +1,11 @@
-import SearchBar from "@components/Ui/SearchBar";
-import { Pagination, Select, UnstyledButton } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
-import queryStringGenerator from "@utils/queryStringGenerator";
-import React, { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { IconChevronDown, IconChevronUp, IconArrowsSort } from "@tabler/icons";
-import moment from "moment";
+import SearchBar from '@components/Ui/SearchBar';
+import { Pagination, Select, UnstyledButton } from '@mantine/core';
+import { DatePickerInput } from '@mantine/dates';
+import queryStringGenerator from '@utils/queryStringGenerator';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { IconChevronDown, IconChevronUp, IconArrowsSort } from '@tabler/icons';
+import moment from 'moment';
 
 export interface IWithSearchPagination {
   searchParams: string;
@@ -41,12 +41,13 @@ export interface IWithSearchPagination {
   ) => JSX.Element;
 }
 
-const withSearchPagination =
-  <P extends object>(Component: React.FC<P & IWithSearchPagination>) =>
-  (props: P) => {
+const withSearchPagination = <P extends object>(
+  Component: React.FC<P & IWithSearchPagination>
+) => {
+  const withSearchPagination = (props: P) => {
     const [params, setParams] = useSearchParams();
-    const [sort, setSort] = useState(params.get("so") ?? "");
-    const [filterKey, setFilterKey] = useState<string>("");
+    const [sort, setSort] = useState(params.get('so') ?? '');
+    const [filterKey, setFilterKey] = useState<string>('');
     const [initialSearch, setInitialSearch] = useState<
       {
         key: string;
@@ -54,23 +55,23 @@ const withSearchPagination =
       }[]
     >([
       {
-        key: "",
-        value: "",
+        key: '',
+        value: '',
       },
     ]);
 
-    let search = params.get("s") ?? null;
-    let pageSize = 12;
+    const search = params.get('s') ?? null;
+    const pageSize = 12;
     const [itemLength, setItemLength] = useState<number>();
-    const [filterValue, setFilterValue] = useState<string>("");
+    const [filterValue, setFilterValue] = useState<string>('');
     const [currentPage, setCurrentPage] = useState(
-      parseInt(params.get("p") ?? "1")
+      parseInt(params.get('p') ?? '1')
     );
-    const [startDate, setStartDate] = useState<string>("");
-    const [startDateKey, setStartDateKey] = useState<string>("");
+    const [startDate, setStartDate] = useState<string>('');
+    const [startDateKey, setStartDateKey] = useState<string>('');
 
-    const [endDate, setEndDate] = useState<string>("");
-    const [endDateKey, setEndDateKey] = useState<string>("");
+    const [endDate, setEndDate] = useState<string>('');
+    const [endDateKey, setEndDateKey] = useState<string>('');
 
     useEffect(() => {
       if (currentPage !== 1 && itemLength == 0) {
@@ -78,7 +79,7 @@ const withSearchPagination =
       }
     }, [itemLength]);
     const qs = useMemo(() => {
-      const [by, type] = sort.split(":");
+      const [by, type] = sort.split(':');
       const initSearchObject: Record<string, string> = {};
       initialSearch.forEach((x) => {
         initSearchObject[x.key] = x.value;
@@ -96,13 +97,13 @@ const withSearchPagination =
         [endDateKey]: endDate,
       });
 
-      !!search && params.set("s", search);
-      sort && params.set("so", sort);
+      !!search && params.set('s', search);
+      sort && params.set('so', sort);
 
-      pageSize && params.set("si", pageSize?.toString());
-      currentPage && params.set("p", currentPage.toString());
-      startDate && params.set("sd", startDate.toString());
-      endDate && params.set("ed", endDate.toString());
+      pageSize && params.set('si', pageSize?.toString());
+      currentPage && params.set('p', currentPage.toString());
+      startDate && params.set('sd', startDate.toString());
+      endDate && params.set('ed', endDate.toString());
 
       setParams(params, { replace: true });
       return qs;
@@ -118,42 +119,42 @@ const withSearchPagination =
     ]);
 
     const setSearch = (search: string) => {
-      for (let value of params.entries()) {
-        if (value[0] !== "s") params.delete(value[0]);
+      for (const value of params.entries()) {
+        if (value[0] !== 's') params.delete(value[0]);
       }
-      params.set("s", search);
+      params.set('s', search);
       setParams(params);
     };
 
     const sortComponent = (props: { title: string; sortKey: string }) => {
-      const sortKey = sort && sort.split(":").length > 0 && sort.split(":")[0];
+      const sortKey = sort && sort.split(':').length > 0 && sort.split(':')[0];
       const sortValue =
-        sort && sort.split(":").length > 0 && sort.split(":")[1];
-      const isAscending = sortKey === props.sortKey && sortValue === "1";
+        sort && sort.split(':').length > 0 && sort.split(':')[1];
+      const isAscending = sortKey === props.sortKey && sortValue === '1';
 
       return (
         <UnstyledButton
           style={{
-            display: "flex",
-            alignItems: "center",
-            fontWeight: "bold",
-            color: "#495057",
-            fontSize: "inherit",
+            display: 'flex',
+            alignItems: 'center',
+            fontWeight: 'bold',
+            color: '#495057',
+            fontSize: 'inherit',
           }}
           onClick={() => {
-            setSort(() => props.sortKey + `:${!isAscending ? "1" : "0"}`);
+            setSort(() => props.sortKey + `:${!isAscending ? '1' : '0'}`);
           }}
         >
           {props.title}
 
           {props.sortKey === sortKey ? (
             isAscending ? (
-              <IconChevronUp style={{ marginLeft: "10px" }} size={20} />
+              <IconChevronUp style={{ marginLeft: '10px' }} size={20} />
             ) : (
-              <IconChevronDown style={{ marginLeft: "10px" }} size={20} />
+              <IconChevronDown style={{ marginLeft: '10px' }} size={20} />
             )
           ) : (
-            <IconArrowsSort style={{ marginLeft: "10px" }} size={20} />
+            <IconArrowsSort style={{ marginLeft: '10px' }} size={20} />
           )}
         </UnstyledButton>
       );
@@ -169,7 +170,7 @@ const withSearchPagination =
           placeholder={placeholder}
           ml={5}
           clearable
-          maw={"184px"}
+          maw={'184px'}
           value={filterValue}
           data={data}
           onChange={(e: string) => {
@@ -199,7 +200,7 @@ const withSearchPagination =
     };
     const searchComponent = (placeholder?: string) => (
       <SearchBar
-        search={search ?? ""}
+        search={search ?? ''}
         setSearch={setSearch}
         placeholder={placeholder}
       />
@@ -261,5 +262,7 @@ const withSearchPagination =
       />
     );
   };
+  return withSearchPagination;
+};
 
 export default withSearchPagination;

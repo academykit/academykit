@@ -1,9 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { QuestionType } from "@utils/enums";
-import { api } from "./service-api";
-import { httpClient } from "./service-axios";
-import { ITag } from "./tagService";
-import { IPaginated, IUser } from "./types";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { QuestionType } from '@utils/enums';
+import { api } from './service-api';
+import { httpClient } from './service-axios';
+import { ITag } from './tagService';
+import { IPaginated, IUser } from './types';
 
 export interface IQuestion {
   id: string;
@@ -49,8 +49,7 @@ const addQuestion = ({
   poolId: string;
   data: IAddQuestionType;
 }) => {
-  // @ts-ignore
-  data.type = Number(data.type);
+  data.type = Number(data.type).toString();
   console.log(data);
   return httpClient.post(api.questions.list(poolId), data);
 };
@@ -79,7 +78,7 @@ export const useDeleteQuestion = (poolId: string, search: string) => {
     [api.questions.list(poolId) + `?${search}`],
     deleteQuestion,
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([api.questions.list(poolId), search]);
       },
     }
@@ -97,7 +96,7 @@ const addQueSet = (data: {
 export const useAddQuestionQuestionSet = (identity: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation(["post" + api.questionSet.common], addQueSet, {
+  return useMutation(['post' + api.questionSet.common], addQueSet, {
     onSuccess: () => {
       queryClient.invalidateQueries([api.questionSet.getQuestion(identity)]);
     },
@@ -146,8 +145,7 @@ const editQuestion = ({
   questionId: string;
   data: IAddQuestionType;
 }) => {
-  //@ts-ignore
-  data.type = Number(data.type);
+  data.type = Number(data.type).toString();
   return httpClient.put(api.questions.put(poolId, questionId), data);
 };
 export const useEditQuestion = (poolId: string, quesitonId: string) => {

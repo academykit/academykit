@@ -1,27 +1,25 @@
 import {
   TextInput,
-  PasswordInput,
   Paper,
   Title,
   Container,
   Button,
   Center,
   Anchor,
-  Box,
   Group,
   Image,
-} from "@mantine/core";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useForm, yupResolver } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import { useEffect } from "react";
-import useAuth from "../../hooks/useAuth";
-import { useForgotPassword, useLogin } from "@utils/services/authService";
-import RoutePath from "@utils/routeConstants";
-import errorType from "@utils/services/axiosError";
-import { useCompanySetting } from "@utils/services/adminService";
-import { useTranslation } from "react-i18next";
-import * as Yup from "yup";
+} from '@mantine/core';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useForm, yupResolver } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import { useEffect } from 'react';
+import useAuth from '../../hooks/useAuth';
+import { useForgotPassword } from '@utils/services/authService';
+import RoutePath from '@utils/routeConstants';
+import errorType from '@utils/services/axiosError';
+import { useCompanySetting } from '@utils/services/adminService';
+import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
 
 const ForgotPassword = () => {
   const schema = () => {
@@ -29,19 +27,19 @@ const ForgotPassword = () => {
     return Yup.object().shape({
       email: Yup.string()
         .trim()
-        .email(t("invalid_email") as string)
-        .required(t("email_required") as string),
+        .email(t('invalid_email') as string)
+        .required(t('email_required') as string),
     });
   };
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
+  const from = location.state?.from?.pathname || '/';
   const navigate = useNavigate();
   const forgotPassword = useForgotPassword();
   const { t } = useTranslation();
   const form = useForm({
     validate: yupResolver(schema()),
     initialValues: {
-      email: "",
+      email: '',
     },
   });
 
@@ -51,7 +49,7 @@ const ForgotPassword = () => {
       await forgotPassword.mutateAsync({ email: values.email });
 
       showNotification({
-        message: t("check_email"),
+        message: t('check_email'),
       });
       navigate(RoutePath.confirmToken + `?email=${values.email}`, {
         replace: true,
@@ -60,9 +58,9 @@ const ForgotPassword = () => {
       const err = errorType(error);
 
       showNotification({
-        color: "red",
+        color: 'red',
         message: err,
-        title: t("error"),
+        title: t('error'),
       });
     }
   };
@@ -75,18 +73,16 @@ const ForgotPassword = () => {
 
   const setHeader = () => {
     const info =
-      localStorage.getItem("app-info") &&
-      JSON.parse(localStorage.getItem("app-info") ?? "");
+      localStorage.getItem('app-info') &&
+      JSON.parse(localStorage.getItem('app-info') ?? '');
     if (info) {
-      let link = document.querySelector("link[rel~='icon']");
+      let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
       document.title = info.name;
       if (!link) {
-        link = document.createElement("link");
-        // @ts-ignore
-        link.rel = "icon";
-        document.getElementsByTagName("head")[0].appendChild(info.logo);
+        link = document.createElement('link');
+        link.rel = 'icon';
+        document.getElementsByTagName('head')[0].appendChild(info.logo);
       }
-      // @ts-ignore
       link.href = info.logo;
     }
   };
@@ -96,7 +92,7 @@ const ForgotPassword = () => {
 
     if (companySettings.isSuccess) {
       localStorage.setItem(
-        "app-info",
+        'app-info',
         JSON.stringify({
           name: companySettings.data.data.name,
           logo: companySettings.data.data.imageUrl,
@@ -108,8 +104,8 @@ const ForgotPassword = () => {
 
   return (
     <Container size={470} my={40}>
-      <Center m={"lg"}>
-        <Link to={"/"}>
+      <Center m={'lg'}>
+        <Link to={'/'}>
           <Image
             height={50}
             width={50}
@@ -124,14 +120,14 @@ const ForgotPassword = () => {
           fontWeight: 500,
         })}
       >
-        {t("change_email_title")}!
+        {t('change_email_title')}!
       </Title>
       <form onSubmit={form.onSubmit(onFormSubmit)}>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <TextInput
-            {...form.getInputProps("email")}
-            label={t("email")}
-            placeholder={t("your_email") as string}
+            {...form.getInputProps('email')}
+            label={t('email')}
+            placeholder={t('your_email') as string}
           />
 
           <Group position="right" mt={10}>
@@ -143,7 +139,7 @@ const ForgotPassword = () => {
                 color="dimmed"
                 size="xs"
               >
-                {t("want_login")}?
+                {t('want_login')}?
               </Anchor>
             </Link>
           </Group>
@@ -153,7 +149,7 @@ const ForgotPassword = () => {
             mt="xl"
             type="submit"
           >
-            {t("proceed")}
+            {t('proceed')}
           </Button>
         </Paper>
       </form>
