@@ -106,7 +106,7 @@ const AddMeeting = ({
   useEffect(() => {
     if (lessonDetails.isSuccess && isEditing) {
       const data = lessonDetails.data;
-      const startDateTime = moment(data?.meeting?.startDate + "z")
+      const startDateTime = moment(data?.meeting?.startDate + "Z")
         .local()
         .toDate();
 

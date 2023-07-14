@@ -80,7 +80,7 @@ const useStyle = createStyles((theme) => ({
   answered: {
     backgroundColor: theme.colors[theme.primaryColor][1],
   },
-  questionGridCol: {
+  parentGrid: {
     flexDirection: "row",
 
     [theme.fn.smallerThan('lg')]: {
@@ -88,8 +88,16 @@ const useStyle = createStyles((theme) => ({
     },
   },
   optionsGridCol: {
+    order: 2,
     [theme.fn.smallerThan('lg')]: {
+      order: 1, 
       maxWidth: "100%"
+    },
+  },
+  questionGridCol: {
+    order: 1,
+    [theme.fn.smallerThan('lg')]: {
+      order: 2, 
     },
   },
 }));
@@ -218,10 +226,10 @@ console.log(matches ? 9 : 12)
         </Button>
       </Modal>
       
-      <Grid m={20} className={classes.questionGridCol}>
+      <Grid m={20} className={classes.parentGrid}>
         {/* exam display section */}
         {/* <Grid.Col span={matches ? 9 : 12}> */}
-        <Grid.Col span={matches ? 9 : 9} sx={{maxWidth: "100%"}}>
+        <Grid.Col span={matches ? 9 : 9} sx={{maxWidth: "100%"}} className={classes.questionGridCol}>
           <Box
             sx={{
               flexDirection: "column",
