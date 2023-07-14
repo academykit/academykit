@@ -88,8 +88,10 @@ export interface ICreateAssignment {
 }
 
 const addAssignmentQuestion = ({ data }: { data: ICreateAssignment }) => {
-  data.type = Number(data.type).toString();
-  return httpClient.post(api.assignment.add, data);
+  return httpClient.post(api.assignment.add, {
+    ...data,
+    type: Number(data.type),
+  });
 };
 
 export const useAddAssignmentQuestion = (lessonId: string, search: string) => {
@@ -109,8 +111,10 @@ const editAssignmentQuestion = ({
   data: ICreateAssignment;
   assignmentId: string;
 }) => {
-  data.type = Number(data.type).toString();
-  return httpClient.put(api.assignment.listOne(assignmentId), data);
+  return httpClient.put(api.assignment.listOne(assignmentId), {
+    ...data,
+    type: Number(data.type),
+  });
 };
 
 export const useEditAssignmentQuestion = (lessonId: string, search: string) => {

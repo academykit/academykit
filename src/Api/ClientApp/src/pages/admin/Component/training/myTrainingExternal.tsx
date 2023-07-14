@@ -51,7 +51,6 @@ const MyTrainingExternal = () => {
   const cForm = useCustomForm();
   const [showConfirmation, setShowConfirmation] = useToggle();
   const { id } = useParams();
-  const [value] = useState<[Date, Date]>([new Date(), new Date()]);
   const addCertificate = useAddCertificate();
   const certificateList = useGetExternalCertificate(id ? false : true);
   const update = useUpdateCertificate();
@@ -89,16 +88,15 @@ const MyTrainingExternal = () => {
   }, [idd]);
 
   const handleSubmit = async (data: any) => {
-    // eslint-disable-next-line prettier/prettier
-    data = { ...data, startDate: moment(data.range[0] + 'Z').local().toDate(), endDate: moment(data.range[1] + 'Z').local().toDate() };
-    console.log(
-      'moment',
-      moment(data.range[0] + 'Z')
+    data = {
+      ...data,
+      startDate: moment(data.range[0] + 'Z')
         .local()
-        .toDate()
-    );
-    console.log('data', data);
-    console.log(value);
+        .toDate(),
+      endDate: moment(data.range[1] + 'Z')
+        .local()
+        .toDate(),
+    };
     try {
       if (updates) {
         await update.mutateAsync({ data, id: idd?.id });

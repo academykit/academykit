@@ -174,14 +174,14 @@ const Create = () => {
 
   useEffect(() => {
     if (form.values.type && !addQuestion.isSuccess) {
-      form.values.answers.forEach((x, i) => {
+      form.values.answers.forEach((_x, i) => {
         return form.setFieldValue(`answers.${i}.isCorrect`, false);
       });
     }
   }, [form.values.type]);
 
   const onChangeRadioType = (index: number) => {
-    form.values.answers.forEach((x, i) => {
+    form.values.answers.forEach((_x, i) => {
       if (i === index) {
         return form.setFieldValue(`answers.${index}.isCorrect`, true);
       }
@@ -226,6 +226,7 @@ const Create = () => {
                 size={'lg'}
                 label={t('tags')}
                 placeholder={t('select_tags') as string}
+                
               />
             ) : (
               <Loader />
@@ -253,7 +254,7 @@ const Create = () => {
               form.values.type === QuestionType.SingleChoice.toString()) && (
               <Box>
                 <Text mt={20}>{t('options')}</Text>
-                {form.values.answers.map((x, i) => (
+                {form.values.answers.map((_x, i) => (
                   <Flex align={'center'} gap={'md'} key={i} mb={30}>
                     {QuestionType.MultipleChoice.toString() ===
                     form.values.type ? (
@@ -311,7 +312,9 @@ const Create = () => {
               >
                 {t('save')}
               </Button>
-              <Button type="submit" onClick={() => setIsReset(true)}>
+              <Button type="submit" 
+               loading={addQuestion.isLoading}
+                onClick={() => setIsReset(true)}>
                 {t('save_more')}
               </Button>
             </Group>

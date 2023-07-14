@@ -41,8 +41,10 @@ export interface ICreateFeedback {
 }
 
 const addFeedbackQuestion = ({ data }: { data: ICreateFeedback }) => {
-  data.type = Number(data.type).toString();
-  return httpClient.post(api.feedback.add, data);
+  return httpClient.post(api.feedback.add, {
+    ...data,
+    type: Number(data.type),
+  });
 };
 export const useAddFeedbackQuestion = (lessonId: string, search: string) => {
   const queryClient = useQueryClient();
@@ -111,8 +113,10 @@ const editFeedbackQuestion = ({
   data: ICreateFeedback;
   feedbackId: string;
 }) => {
-  data.type = Number(data.type).toString();
-  return httpClient.put(api.feedback.listOne(feedbackId), data);
+  return httpClient.put(api.feedback.listOne(feedbackId), {
+    ...data,
+    type: Number(data.type),
+  });
 };
 
 export const useEditFeedbackQuestion = (lessonId: string, search: string) => {
