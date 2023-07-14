@@ -141,7 +141,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="companyName"> the company name </param>
         /// <returns></returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password, string companyName, PerformContext context = null)
+        public async Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password, GeneralSetting company, PerformContext context = null)
         {
             try
             {
@@ -156,7 +156,7 @@ namespace Lingtren.Infrastructure.Services
                 html += $"Email:{emailAddress}<br>";
                 html += $"Password:{password}<br><br>";
                 html += $"Please use the above login credentials to access your account.<br><br>";
-                html += $"Best regards,<br> {companyName}";
+                html += $"Best regards,<br> {company.CompanyName}<br>{company.CompanyContactNumber}";
                 var mail = new EmailRequestDto
                 {
                     To = emailAddress,
@@ -194,7 +194,7 @@ namespace Lingtren.Infrastructure.Services
                     html += $"Email:{emailDto.Email}<br>";
                     html += $"Password:{emailDto.Password}<br><br>";
                     html += $"Please use the above login credentials to access your account.<br><br>";
-                    html += $"Best regards,<br> {emailDto.CompanyName}";
+                    html += $"Best regards,<br> {emailDto.CompanyName}<br>{emailDto.CompanyNumber}";
                     var model = new EmailRequestDto
                     {
                         To = emailDto.Email,
