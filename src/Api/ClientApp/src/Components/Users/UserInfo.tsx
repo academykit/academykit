@@ -8,7 +8,7 @@ import { useReAuth } from "@utils/services/authService";
 import errorType from "@utils/services/axiosError";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import * as Yup from "yup";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import TextEditor from "@components/Ui/TextEditor";
@@ -61,7 +61,16 @@ const UserInfo = () => {
   const userId = localStorage.getItem("id");
   const { data, isLoading, isSuccess } = useReAuth();
   const [imageURL, setImageURL] = useState(data?.imageUrl ?? "");
-  const [viewMode, setViewMode] = useState(true);
+  // const [viewMode, setViewMode] = useState(true);
+  const [params, setParams] = useSearchParams()
+  const viewMode = params.get('edit') == '1' ? false : true
+
+  const createEditMode = (editView: '0' | '1') => {
+    // 0 = view
+    // 1 = edit
+    params.set('edit', editView)
+    setParams(params)
+  }
 
   const formData = useForm({
     initialValues: {
@@ -91,7 +100,7 @@ const UserInfo = () => {
         mobileNumber: data?.mobileNumber ?? "",
         profession: data?.profession ?? "",
         address: data?.address ?? "",
-        bio: data?.bio ?? "",
+        bio: data?.bio ?? "hm",
         role: data?.role ?? 1,
         isActive: data?.isActive ?? false,
         imageUrl: data?.imageUrl ?? "",
@@ -213,12 +222,12 @@ const UserInfo = () => {
                 />
               )}
               {viewMode && (
-                <TextViewer content={formData.values.bio as string} />
+                <TextViewer content={data?.bio as string} />
               )}
             </Grid.Col>
             <Grid.Col lg={12}>
               {viewMode && (
-                <Button onClick={() => setViewMode(false)} type="button">
+                <Button onClick={() => createEditMode('1')} type="button">
                   Edit
                 </Button>
               )}
@@ -232,7 +241,7 @@ const UserInfo = () => {
                   >
                     {t("save")}
                   </Button>
-                  <Button onClick={() => setViewMode(true)} variant="outline">
+                  <Button onClick={() => createEditMode('0')} variant="outline">
                     Cancel
                   </Button>
                 </>

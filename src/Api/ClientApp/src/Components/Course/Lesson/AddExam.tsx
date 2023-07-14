@@ -79,12 +79,12 @@ const AddExam = ({
   );
 
   const startDateTime = item?.questionSet?.startTime
-    ? moment(item?.questionSet?.startTime + "z")
+      ? moment(item?.questionSet?.startTime + "Z")
         .local()
         .toDate()
     : new Date();
   const endDateTime = item?.questionSet?.endTime
-    ? moment(item?.questionSet?.endTime + "z")
+    ? moment(item?.questionSet?.endTime + "Z")
         .local()
         .toDate()
     : new Date();

@@ -58,7 +58,7 @@ const UserProfile = () => {
             <Group>
               <Text size={"xl"}>{data?.fullName}</Text>
               {isSuccess && id === local_id ? (
-                <Link to={"/settings"}>
+                <Link to={"/settings?edit=1"}>
                   <IconEdit style={{ marginLeft: "5px" }} />
                 </Link>
               ) : (

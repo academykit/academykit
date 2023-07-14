@@ -57,6 +57,7 @@ const ExamDetails = ({
   }, [invalidate]);
 
   const theme = useMantineTheme();
+
   return (
     <Group
       p={10}
@@ -110,7 +111,7 @@ const ExamDetails = ({
                 </MantineProvider>
               )}
             </Box>
-            {moment().isBetween(exam?.startTime + "z", exam?.endTime + "z") ? (
+            {moment().isBetween(exam?.startTime + "Z", exam?.endTime + "Z") ? (
               <>
                 {data.remainingAttempt > 0 ? (
                   <Button
@@ -127,11 +128,11 @@ const ExamDetails = ({
               </>
             ) : (
               <Box mt={10}>
-                {moment.utc().isBefore(exam?.startTime + "z")
-                  ? `Starts ${moment(exam?.startTime + "z")
+                {moment.utc().isBefore(exam?.startTime + "Z")
+                  ? `Starts ${moment(exam?.startTime + "Z")
                       .utc()
                       .fromNow()}`
-                  : `Ended ${moment(exam?.endTime + "z")
+                  : `Ended ${moment(exam?.endTime + "Z")
                       .utc()
                       .fromNow()}`}
               </Box>

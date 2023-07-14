@@ -87,13 +87,13 @@ const AddAssignment = ({
   const [lessonId, setLessonId] = useState("");
 
   const startDateTime = item?.startDate
-    ? moment(item?.startDate + "z")
+    ? moment(item?.startDate + "Z")
         .local()
         .toDate()
     : new Date();
 
   const endDateTime = item?.endDate
-    ? moment(item?.endDate + "z")
+    ? moment(item?.endDate + "Z")
         .local()
         .toDate()
     : new Date();

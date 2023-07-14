@@ -96,11 +96,15 @@ const withSearchPagination =
         [endDateKey]: endDate,
       });
 
-      !!search && params.set("s", search);
+      !!search && search != "" && params.set("s", search);
       sort && params.set("so", sort);
 
-      pageSize && params.set("si", pageSize?.toString());
-      currentPage && params.set("p", currentPage.toString());
+      pageSize && pageSize != 12 && params.set("si", pageSize?.toString());
+
+
+      currentPage &&
+        currentPage != 1 &&
+        params.set("p", currentPage.toString());
       startDate && params.set("sd", startDate.toString());
       endDate && params.set("ed", endDate.toString());
 
@@ -121,7 +125,10 @@ const withSearchPagination =
       for (let value of params.entries()) {
         if (value[0] !== "s") params.delete(value[0]);
       }
-      params.set("s", search);
+
+      if(search != ""){
+        params.set("s", search);
+      }
       setParams(params);
     };
 
