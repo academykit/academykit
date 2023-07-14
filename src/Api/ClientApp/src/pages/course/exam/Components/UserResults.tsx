@@ -1,12 +1,4 @@
-import {
-  ActionIcon,
-  Box,
-  Loader,
-  MantineProvider,
-  Table,
-  Title,
-  useMantineTheme,
-} from "@mantine/core";
+import { ActionIcon, Box, Loader, Table, Title } from "@mantine/core";
 import { IconEye } from "@tabler/icons";
 import { DATE_FORMAT } from "@utils/constants";
 import RoutePath from "@utils/routeConstants";

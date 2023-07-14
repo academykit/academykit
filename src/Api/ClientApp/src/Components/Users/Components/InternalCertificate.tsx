@@ -79,18 +79,22 @@ const RowsCompleted = ({
             <CopyButton value={item?.certificateUrl} timeout={2000}>
               {({ copied, copy }) => (
                 <Tooltip
-                  label={copied ? t('copied') : t('copy')}
+                  label={copied ? t("copied") : t("copy")}
                   withArrow
                   position="right"
                 >
                   <ActionIcon color={copied ? "teal" : "gray"} onClick={copy}>
-                    {copied ? <IconCheck size={18} color="black"/> : <IconEye size={18} color="black"/>}
+                    {copied ? (
+                      <IconCheck size={18} color="black" />
+                    ) : (
+                      <IconEye size={18} color="black" />
+                    )}
                   </ActionIcon>
                 </Tooltip>
               )}
             </CopyButton>
             <ActionIcon onClick={() => handleDownload()}>
-              <IconDownload color="black"/>
+              <IconDownload color="black" />
             </ActionIcon>
           </Flex>
         </div>

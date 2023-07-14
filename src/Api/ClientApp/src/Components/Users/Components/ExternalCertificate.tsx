@@ -52,7 +52,9 @@ const RowsExternal = ({
       </td>
       <td>{moment(item?.startDate).format(DATE_FORMAT)}</td>
       <td>{moment(item?.endDate).format(DATE_FORMAT)}</td>
-      <td>{item?.duration} {t('hour_s')}</td>
+      <td>
+        {item?.duration} {t("hour_s")}
+      </td>
       <td>{item?.institute}</td>
       <td style={{ wordBreak: "break-all" }}>{item.location}</td>
       <td>

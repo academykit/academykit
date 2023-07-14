@@ -145,11 +145,7 @@ const AddLecture = ({
                 styles={{ error: { position: "absolute" } }}
               />
             </Grid.Col>
-            <Tooltip
-              multiline
-              label={t('mandatory_tooltip')}
-              width={220}
-            >
+            <Tooltip multiline label={t("mandatory_tooltip")} width={220}>
               <Grid.Col span={4}>
                 {!isRecordedVideo && (
                   <Switch

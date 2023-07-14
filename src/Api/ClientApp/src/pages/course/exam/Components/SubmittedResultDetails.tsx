@@ -1,11 +1,8 @@
-import useCustomLayout from "@context/LayoutProvider";
 import {
   Box,
-  Button,
   Card,
   Container,
   createStyles,
-  Flex,
   Grid,
   Group,
   Paper,
@@ -18,12 +15,9 @@ import {
   ILessonResultQuestionOption,
   ILessonStartQuestion,
 } from "@utils/services/examService";
-import { useEffect, useState } from "react";
 import SubmitResultHeader from "./SubmitResultHeader";
-import { useTranslation } from "react-i18next";
 import TextViewer from "@components/Ui/RichTextViewer";
-import { Icon } from "@react-pdf-viewer/core";
-import { Icon123, IconSquareRoundedX } from "@tabler/icons";
+import { IconSquareRoundedX } from "@tabler/icons";
 import { IconCircleCheck } from "@tabler/icons-react";
 import UserShortProfile from "@components/UserShortProfile";
 import { IUser } from "@utils/services/types";
@@ -87,7 +81,6 @@ const SubmittedResultDetails = ({
   duration,
   marks,
   name,
-  totalDuration,
   totalMarks,
   submissionDate,
   user,
@@ -124,7 +117,6 @@ const SubmittedResultDetails = ({
       <Grid.Col span={matches ? 9 : 12}>
         <ScrollArea>
           {questions.map((question, i) => (
-
             <Card p={4} key={i} my={10} shadow="lg" withBorder>
               <Box
                 p={10}
@@ -185,7 +177,6 @@ const SubmittedResultDetails = ({
               </Container>
             </Card>
           ))}
-          
         </ScrollArea>
       </Grid.Col>
     </Grid>

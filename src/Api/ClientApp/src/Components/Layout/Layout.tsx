@@ -144,7 +144,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
   const auth = useAuth();
 
   const [opened, { toggle }] = useDisclosure(false);
-  const { classes, cx, theme } = useStyles();
+  const { classes, theme } = useStyles();
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.xs}px)`);
 
   const layout = useCustomLayout();

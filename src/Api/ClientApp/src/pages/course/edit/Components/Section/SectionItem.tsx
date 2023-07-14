@@ -76,7 +76,7 @@ const SectionItem = ({
         color: "red",
         title: t("error"),
       });
-      toggle()
+      toggle();
     }
   };
   const active = () => section?.activeSection === item.slug;

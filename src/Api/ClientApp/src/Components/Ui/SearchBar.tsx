@@ -43,7 +43,7 @@ const SearchBar: React.FC<React.PropsWithChildren<Props>> = ({
           size="sm"
           rightSection={
             form.values.search && (
-              <Tooltip label={t('clear_search')}>
+              <Tooltip label={t("clear_search")}>
                 <ActionIcon onClick={clearField}>
                   <Cross />
                 </ActionIcon>

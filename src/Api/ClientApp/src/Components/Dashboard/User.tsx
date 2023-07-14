@@ -103,7 +103,7 @@ export const User = ({
         ]}
       >
         {dashboard &&
-          incomingData.map((x, idx) => (
+          incomingData.map((x) => (
             //@ts-ignore
             <StatsCard key={x.key} data={x} dashboard={dashboard} />
           ))}

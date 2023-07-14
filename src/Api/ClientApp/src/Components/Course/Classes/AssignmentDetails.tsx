@@ -20,7 +20,7 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
   const theme = useMantineTheme();
   const user = useAuth();
   const { t } = useTranslation();
-  
+
   return (
     <Group sx={{ flexDirection: "column" }}>
       <Title>{lesson.name}</Title>
@@ -39,7 +39,7 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
           component={Link}
           to={RoutePath.assignment.details(lesson.id).route}
         >
-          {lesson.isCompleted ? t('resubmit') : t("start_assignment")}
+          {lesson.isCompleted ? t("resubmit") : t("start_assignment")}
         </Button>
       ) : (
         <Text>

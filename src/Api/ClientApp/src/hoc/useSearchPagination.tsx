@@ -114,7 +114,7 @@ const withSearchPagination =
       filterValue,
       initialSearch,
       startDate,
-      endDate
+      endDate,
     ]);
 
     const setSearch = (search: string) => {

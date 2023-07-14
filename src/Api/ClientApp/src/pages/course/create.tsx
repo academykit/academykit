@@ -174,7 +174,6 @@ const CreateCoursePage = () => {
               {tags.isSuccess ? (
                 <MultiSelect
                   searchable
-                 
                   creatable
                   sx={{ maxWidth: "500px" }}
                   data={

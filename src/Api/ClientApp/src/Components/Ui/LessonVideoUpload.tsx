@@ -67,11 +67,7 @@ const LessonVideoUpload = ({
   };
 
   return (
-    <Tooltip
-      multiline
-      label={t('acceptable_files')}
-      width={320}
-    >
+    <Tooltip multiline label={t("acceptable_files")} width={320}>
       <Box my={marginy} sx={{ maxWidth: 470 }} pos="relative">
         <FilePond
           files={files}

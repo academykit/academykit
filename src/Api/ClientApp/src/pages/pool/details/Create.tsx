@@ -268,7 +268,7 @@ const Create = () => {
                         // {...form.getInputProps(`answers.${i}.isCorrect`)}
                       ></Radio>
                     )}
-                     <TextEditor
+                    <TextEditor
                       label={`answers.${i}.option`}
                       placeholder={t("option_placeholder") as string}
                       formContext={useFormContext}
@@ -296,7 +296,6 @@ const Create = () => {
                         <IconTrash color="red" />
                       </UnstyledButton>
                     )}
-
                   </Flex>
                 ))}
                 {typeof form.errors[`answers`] === "string" && (
