@@ -1,4 +1,3 @@
-/* eslint-disable */
 import useAuth from '@hooks/useAuth';
 import { Box, Text, Title } from '@mantine/core';
 import { CourseUserStatus, UserRole } from '@utils/enums';

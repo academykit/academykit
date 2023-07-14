@@ -1,4 +1,3 @@
-/* eslint-disable */
 import TextViewer from '@components/Ui/RichTextViewer';
 import { Box, Card, createStyles, Group, Title } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';

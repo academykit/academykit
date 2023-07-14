@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Text } from '@mantine/core';
 import formatDuration from '@utils/formatDuration';
 import React, { FC, useEffect, useState } from 'react';

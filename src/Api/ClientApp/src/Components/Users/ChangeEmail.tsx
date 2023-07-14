@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Alert, Button, Container } from '@mantine/core';
 import { IconAlertCircle, IconTrophy } from '@tabler/icons';
 import { useVerifyChangeEmail } from '@utils/services/authService';

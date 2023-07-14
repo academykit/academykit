@@ -1,4 +1,3 @@
-/* eslint-disable */
 import TextViewer from '@components/Ui/RichTextViewer';
 import {
   Card,

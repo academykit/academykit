@@ -1,4 +1,3 @@
-/* eslint-disable */
 import SearchBar from '@components/Ui/SearchBar';
 import { Pagination, Select, UnstyledButton } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';

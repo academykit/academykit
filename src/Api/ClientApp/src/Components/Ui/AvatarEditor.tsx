@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { UseFormReturnType } from '@mantine/form';
 import { FileAccess, uploadFile } from '@utils/services/fileService';
 import { useEffect, useState } from 'react';

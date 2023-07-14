@@ -1,4 +1,3 @@
-/* eslint-disable */
 import ProgressBar from '@components/Ui/ProgressBar';
 import withSearchPagination, {
   IWithSearchPagination,

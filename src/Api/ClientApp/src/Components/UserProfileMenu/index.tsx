@@ -1,4 +1,3 @@
-/* eslint-disable */
 import useAuth from '@hooks/useAuth';
 import {
   Avatar,

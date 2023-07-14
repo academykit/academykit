@@ -1,4 +1,3 @@
-/* eslint-disable */
 import DeleteModal from '@components/Ui/DeleteModal';
 import useAuth from '@hooks/useAuth';
 import {

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { createStyles } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { useContext, useState } from 'react';
@@ -23,7 +22,7 @@ const useStyle = createStyles((theme) => ({
 }));
 
 export const EditSectionProvider = ({ children }: any) => {
-  const { classes, theme } = useStyle();
+  const { theme } = useStyle();
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.sm}px)`);
   const [isAddSection, setIsAddSection] = useState<boolean>(false);
   const [addLessonClick, setAddLessonClick] = useState<boolean>(false);

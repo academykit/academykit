@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { ActionIcon, Group, Text } from '@mantine/core';
 import { ToolbarSlot } from '@react-pdf-viewer/toolbar';
 import { IconZoomIn, IconZoomOut } from '@tabler/icons';

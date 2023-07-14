@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import errorType from '@utils/services/axiosError';

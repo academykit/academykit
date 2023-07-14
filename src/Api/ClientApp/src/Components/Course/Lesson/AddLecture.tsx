@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect, useState, useTransition } from 'react';
 import LessonVideoUpload from '@components/Ui/LessonVideoUpload';
 import {

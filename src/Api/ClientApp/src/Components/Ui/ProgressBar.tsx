@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { createStyles, Group, Progress, Text } from '@mantine/core';
 import React from 'react';
 

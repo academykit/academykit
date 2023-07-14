@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Routes } from 'react-router-dom';
 
 const MeetingRoute = () => {

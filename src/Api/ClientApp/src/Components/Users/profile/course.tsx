@@ -1,4 +1,3 @@
-/* eslint-disable */
 import AttendedTrainings from '@components/Users/profile/attendedTrainings';
 import MyTrainings from './myTrainings';
 

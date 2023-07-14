@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Button, Group, Modal } from '@mantine/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
