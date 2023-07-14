@@ -12,7 +12,7 @@ import NotFound from '@pages/404';
 import { UserRole } from '@utils/enums';
 import lazyWithRetry from '@utils/lazyImportWithReload';
 import RoutePath from '@utils/routeConstants';
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Link,

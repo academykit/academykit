@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { TextInput, Button, Textarea, Container, Text } from '@mantine/core';
 import ThumbnailEditor from '@components/Ui/ThumbnailEditor';

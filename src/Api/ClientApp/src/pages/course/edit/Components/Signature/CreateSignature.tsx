@@ -43,7 +43,7 @@ const CreateSignature = ({
   const createCertificate = useAddSignature(id as string);
   const deleteSignature = useDeleteSignature(id as string);
   const editSignature = useEditSignature(id as string);
-  const [signatureUrl, setSignatureUrl] = useState(data?.fileUrl ?? '');
+  const [signatureUrl] = useState(data?.fileUrl ?? '');
   const [confirmDelete, setConfirmDelete] = useToggle();
   const { t } = useTranslation();
 

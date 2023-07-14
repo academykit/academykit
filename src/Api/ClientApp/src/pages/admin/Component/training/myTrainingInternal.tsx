@@ -7,7 +7,6 @@ import {
   Text,
   ActionIcon,
   Tooltip,
-  useMantineTheme,
 } from '@mantine/core';
 import { IconDownload, IconEye } from '@tabler/icons';
 import { DATE_FORMAT } from '@utils/constants';
@@ -25,8 +24,8 @@ const MyTrainingInternal = () => {
         <Box>{t('no_certificates')} </Box>
       )}
       {internal.isSuccess &&
-        internal.data.data.map((x) => (
-          <Card withBorder mt={10}>
+        internal.data.data.map((x, i) => (
+          <Card key={i} withBorder mt={10}>
             <Flex justify={'space-between'}>
               <Box>
                 <Text weight={'bold'}>{x.courseName}</Text>

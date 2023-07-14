@@ -1,5 +1,5 @@
 import FileStorageUI from '@components/Admin/filestorage';
-import { Loader, Paper } from '@mantine/core';
+import { Loader } from '@mantine/core';
 import { useGetFileStorageSetting } from '@utils/services/adminService';
 
 const FileStorage = () => {

@@ -34,7 +34,7 @@ const AssignmentForm = ({
   const handleSubmit = async (values: IAssignmentQuestion[]) => {
     const finalData: IAssignmentSubmission[] = [];
     values.forEach((x) => {
-      var data: any = {};
+      const data: any = {};
       if (x.assignmentSubmissionId) data['id'] = x.assignmentSubmissionId;
       data['assignmentId'] = x.id;
       data['answer'] = x.answer;

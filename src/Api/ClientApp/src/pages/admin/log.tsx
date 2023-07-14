@@ -3,7 +3,6 @@ import withSearchPagination, {
 } from '@hoc/useSearchPagination';
 import {
   Group,
-  Button,
   Title,
   Paper,
   Table,
@@ -135,7 +134,7 @@ const paginatedData: IPaginated<IServerLogs> = {
   totalPage: Math.ceil(serverLogs.length / 10),
   items: serverLogs,
 };
-
+console.log(paginatedData);
 const DetailFields = ({
   title,
   content,
@@ -293,7 +292,7 @@ const Log = ({
               </thead>
               <tbody>
                 {getLogData.data.items.map((item) => (
-                  <Rows item={item} />
+                  <Rows key={item.id} item={item} />
                   // <Rows item={item} key={item.id} />
                 ))}
               </tbody>

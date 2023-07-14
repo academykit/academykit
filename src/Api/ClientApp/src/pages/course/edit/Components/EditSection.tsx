@@ -11,7 +11,6 @@ import {
 import CourseSection from './Section';
 import { useSection } from '@context/SectionProvider';
 import {
-  ISection,
   useCourseDescription,
   useCreateSection,
 } from '@utils/services/courseService';

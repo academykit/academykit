@@ -11,7 +11,7 @@ import {
   Tabs,
 } from '@mantine/core';
 import CourseContent from '@components/Course/CourseDescription/CourseContent/CourseContent';
-import { useMediaQuery, useToggle } from '@mantine/hooks';
+import { useMediaQuery } from '@mantine/hooks';
 import { IconFileDescription, IconMessage } from '@tabler/icons';
 import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
 import {
@@ -33,6 +33,7 @@ import errorType from '@utils/services/axiosError';
 import FeedbackDetails from '@components/Course/Classes/FeedbackDetails';
 import lazyWithRetry from '@utils/lazyImportWithReload';
 import { useTranslation } from 'react-i18next';
+import { AxiosError } from 'axios';
 
 const PdfViewer = lazyWithRetry(
   () => import('@components/Course/Classes/PdfViewer')
@@ -89,7 +90,7 @@ const Classes = () => {
   const params = useParams();
   const tab = params['*'];
   const { t } = useTranslation();
-  const [videoState, setVideoState] = useState<
+  const [, setVideoState] = useState<
     | 'loading'
     | 'completed'
     | 'loaded'
@@ -170,8 +171,9 @@ const Classes = () => {
               <Box className={cx(classes.videoSection, classes.errorSection)}>
                 <Box>{errorType(courseLesson.error)}</Box>
 
-                {courseLesson.error?.response?.status &&
-                  courseLesson.error?.response?.status === 403 && (
+                {(courseLesson.error as AxiosError)?.response?.status &&
+                  (courseLesson.error as AxiosError)?.response?.status ===
+                    403 && (
                     <Button
                       component={Link}
                       mt={20}

@@ -51,7 +51,7 @@ const SectionItem = ({
   snapshot: DraggableStateSnapshot;
   status: CourseStatus;
 }) => {
-  const { theme, cx, classes } = useStyle();
+  const { cx, classes } = useStyle();
   const [value, toggle] = useToggle();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const updateSection = useUpdateSectionName(slug);

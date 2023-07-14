@@ -85,7 +85,7 @@ const AssignmentReviewForm = ({
         <Switch
           checked={isPass}
           {...form.getInputProps('isPassed')}
-          onChange={(event) => {
+          onChange={() => {
             setIsPass(!isPass);
             form.setFieldValue('isPassed', !isPass);
           }}

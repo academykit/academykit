@@ -46,7 +46,7 @@ function AccordionLabel({ title, image, description }: AccordionLabelProps) {
 
 const Accordion = ({ items }: any) => {
   const [isActive, setIsActive] = useState(false);
-  const { theme, classes, cx } = useStyles();
+  const { classes, cx } = useStyles();
   const { t } = useTranslation();
   return (
     <div style={{ marginBottom: '20px' }}>
@@ -108,8 +108,8 @@ const PaymentMethod = () => {
   return (
     <div>
       <div className="accordion">
-        {accordionData.map((items, index) => (
-          <Accordion items={items} />
+        {accordionData.map((items, i) => (
+          <Accordion key={i} items={items} />
         ))}
       </div>
     </div>

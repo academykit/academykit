@@ -14,7 +14,6 @@ import {
   Badge,
   Image,
   ActionIcon,
-  useMantineTheme,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IconDownload, IconEye } from '@tabler/icons';
@@ -28,7 +27,6 @@ import {
   useUpdateCertificateStatus,
 } from '@utils/services/certificateService';
 import moment from 'moment';
-import React from 'react';
 import UserShortProfile from '@components/UserShortProfile';
 import { useTranslation } from 'react-i18next';
 import { DATE_FORMAT } from '@utils/constants';
@@ -43,7 +41,6 @@ const CertificateCard = ({
   search: string;
 }) => {
   const updateStatus = useUpdateCertificateStatus(item.id, search);
-  const theme = useMantineTheme();
   const { t } = useTranslation();
   const handleSubmit = async (approve: boolean) => {
     try {
@@ -162,7 +159,12 @@ const CertificateList = ({
 
       {listCertificate.isSuccess &&
         listCertificate.data.data.items.map((x) => (
-          <CertificateCard auth={auth} item={x} search={searchParams} />
+          <CertificateCard
+            key={x.id}
+            auth={auth}
+            item={x}
+            search={searchParams}
+          />
         ))}
       {listCertificate.isSuccess &&
         pagination(

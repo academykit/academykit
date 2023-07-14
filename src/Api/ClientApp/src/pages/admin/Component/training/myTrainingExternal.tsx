@@ -50,10 +50,10 @@ const MyTrainingExternal = () => {
   const cForm = useCustomForm();
   const [showConfirmation, setShowConfirmation] = useToggle();
   const { id } = useParams();
-  const [value, setValue] = useState<[Date, Date]>([new Date(), new Date()]);
+  const [value] = useState<[Date, Date]>([new Date(), new Date()]);
   const addCertificate = useAddCertificate();
   const certificateList = useGetExternalCertificate(id ? false : true);
-  const update = useUpdateCertificate(id as string);
+  const update = useUpdateCertificate();
   const [idd, setIdd] = useState<any>();
   const [updates, setUpdates] = useState(false);
   const { t } = useTranslation();
@@ -151,8 +151,6 @@ const MyTrainingExternal = () => {
                 label={t('start_end_date')}
                 placeholder={t('date_range') as string}
                 type="range"
-                //@ts-ignore
-                onChange={setValue}
                 {...form.getInputProps('range')}
               />
               <TextInput
@@ -196,7 +194,7 @@ const MyTrainingExternal = () => {
       )}
       {certificateList.isSuccess &&
         certificateList.data.map((x) => (
-          <Card withBorder mt={10}>
+          <Card key={x.id} withBorder mt={10}>
             <Flex justify={'space-between'}>
               <Box>
                 <Flex>

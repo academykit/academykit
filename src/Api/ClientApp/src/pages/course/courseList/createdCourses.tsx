@@ -2,12 +2,10 @@ import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import useAuth from '@hooks/useAuth';
-import { Box, Button, Container, Flex, Loader } from '@mantine/core';
+import { Box, Container, Flex, Loader } from '@mantine/core';
 import { UserRole } from '@utils/enums';
-import RoutePath from '@utils/routeConstants';
 import { useCourse } from '@utils/services/courseService';
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import CourseList from './component/List';
 import { CourseStatus } from '@utils/enums';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +25,7 @@ const ReviewedCourse = ({
     ]);
   }, []);
   const auth = useAuth();
-  const { data, isSuccess, isLoading } = useCourse(searchParams);
+  const { data, isLoading } = useCourse(searchParams);
   const role = auth?.auth?.role ?? UserRole.Trainee;
   const { t } = useTranslation();
   return (
