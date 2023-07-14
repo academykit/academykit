@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import useAuth from '@hooks/useAuth';
 import {
   createStyles,
@@ -26,6 +27,7 @@ import { useParams } from 'react-router-dom';
 import CommentReplies from './CommentReplies';
 import DeleteModal from '@components/Ui/DeleteModal';
 import { useTranslation } from 'react-i18next';
+
 const useStyles = createStyles((theme) => ({
   comment: {
     padding: `${theme.spacing.lg}px ${theme.spacing.xl}px`,
@@ -131,6 +133,25 @@ const Comment = ({ comment }: { comment: IComment }) => {
   const form = useForm({
     initialValues: {
       content: comment.content,
+    },
+  });
+
+  moment.updateLocale("en", {
+    relativeTime: {
+      future: "in %s",
+      past: `%s`,
+      s: `%d ${t('few_seconds_ago')}`,
+      ss: `%d ${t('seconds_ago')}`,
+      m: `%d ${t('minute_ago')}`,
+      mm: `%d ${t('minutes_ago')}`,
+      h: `%d ${t('hour_ago')}`,
+      hh: `%d ${t('hours_ago')}`,
+      d: `%d ${t('day_ago')}`,
+      dd: `%d ${t('days_ago')}`,
+      M: `%d ${t('month_ago')}`,
+      MM: `%d ${t('months_ago')}`,
+      y: `%d ${t('year_ago')}`,
+      yy: `%d ${t('years_ago')}`,
     },
   });
 
