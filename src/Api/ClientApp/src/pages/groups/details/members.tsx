@@ -64,7 +64,7 @@ const GroupMember = ({
         </Box>
         {auth?.auth && auth?.auth?.role <= UserRole.Trainer && (
           <Transition mounted={!showAddMember} transition={a} duration={400}>
-            {(styles) => (
+            {() => (
               <>
                 <Button onClick={() => setShowAddMember()}>
                   {t('add_group_member')}
@@ -76,7 +76,7 @@ const GroupMember = ({
       </Group>
       <Box my={10}>
         <Transition mounted={showAddMember} transition={a} duration={400}>
-          {(styles) => (
+          {() => (
             <>
               <Box pb={20}>
                 <AddMember
