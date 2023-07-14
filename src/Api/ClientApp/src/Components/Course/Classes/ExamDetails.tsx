@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import useAuth from '@hooks/useAuth';
 import {
   Box,
@@ -54,6 +55,25 @@ const ExamDetails = ({
       );
     }
   }, [invalidate]);
+
+  moment.updateLocale("en", {
+    relativeTime: {
+      future: `${t('in')} %s`,
+      past: `%s`,
+      s: `%d ${t('few_seconds_ago')}`,
+      ss: `%d ${t('seconds_ago')}`,
+      m: `%d ${t('minute_ago')}`,
+      mm: `%d ${t('minutes_ago')}`,
+      h: `%d ${t('hour_ago')}`,
+      hh: `%d ${t('hours_ago')}`,
+      d: `%d ${t('day_ago')}`,
+      dd: `%d ${t('days_ago')}`,
+      M: `%d ${t('month_ago')}`,
+      MM: `%d ${t('months_ago')}`,
+      y: `%d ${t('year_ago')}`,
+      yy: `%d ${t('years_ago')}`,
+    },
+  });
 
   return (
     <Group
@@ -126,10 +146,10 @@ const ExamDetails = ({
             ) : (
               <Box mt={10}>
                 {moment.utc().isBefore(exam?.startTime + 'Z')
-                  ? `Starts ${moment(exam?.startTime + 'Z')
+                  ? `${t('starts')} ${moment(exam?.startTime + 'Z')
                       .utc()
                       .fromNow()}`
-                  : `Ended ${moment(exam?.endTime + 'Z')
+                  : `${t('ended')} ${moment(exam?.endTime + 'Z')
                       .utc()
                       .fromNow()}`}
               </Box>

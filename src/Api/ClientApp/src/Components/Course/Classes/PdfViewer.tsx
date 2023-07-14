@@ -36,9 +36,12 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
   const auth = useAuth();
   const userRole = auth?.auth?.role;
 
+  const [disable, setDisable] = React.useState(false);
+
   const theme = useMantineColorScheme();
   const { t } = useTranslation();
   const onMarkComplete = () => {
+    setDisable(true);
     onEnded();
     showNotification({
       title: t('success'),
@@ -78,6 +81,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
                       <Button
                         onClick={onMarkComplete}
                         loading={watchHistory.isLoading}
+                        disabled={disable}
                       >
                         {t('mark_complete')}
                       </Button>
