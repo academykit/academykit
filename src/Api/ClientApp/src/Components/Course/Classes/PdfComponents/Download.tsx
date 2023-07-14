@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { ActionIcon } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { ToolbarSlot } from '@react-pdf-viewer/toolbar';

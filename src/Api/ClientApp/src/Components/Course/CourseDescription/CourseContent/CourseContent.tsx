@@ -1,4 +1,3 @@
-/* eslint-disable */
 import UserShortProfile from '@components/UserShortProfile';
 import { Box, Group, Text, Title } from '@mantine/core';
 import formatDuration from '@utils/formatDuration';

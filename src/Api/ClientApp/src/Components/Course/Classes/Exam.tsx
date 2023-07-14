@@ -1,4 +1,3 @@
-/* eslint-disable */
 import useCustomLayout from '@context/LayoutProvider';
 import {
   Box,

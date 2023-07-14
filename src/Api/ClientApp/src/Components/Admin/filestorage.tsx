@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Button, Card, Group, Radio, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
@@ -35,7 +34,6 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
   return (
     <form onSubmit={form.onSubmit(submitHandler)}>
       <Group>
-        {/* @ts-ignore */}
         <Radio
           onChange={() => {
             form.setFieldValue(`0.isActive`, true);
@@ -46,7 +44,6 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
           checked={form.values[0].isActive}
           label={t(`${EFileStorageType[form.values[0].type]}`)}
         />
-        {/* @ts-ignore */}
         <Radio
           onChange={() => {
             setActiveIndex(1);

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import TextViewer from '@components/Ui/RichTextViewer';
 import { Box, Card, createStyles, Group, Title } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
@@ -75,7 +74,6 @@ const ExamRadio = ({ form, options, currentIndex }: Props) => {
             p={10}
             className={cx({
               [classes.active]:
-                //@ts-ignore
                 form.values[currentIndex].questionOptions[index].isCorrect,
             })}
           >
