@@ -103,7 +103,7 @@ export const User = ({
         ]}
       >
         {dashboard &&
-          incomingData.map((x, idx) => (
+          incomingData.map((x) => (
             //@ts-ignore
             <StatsCard key={x.key} data={x} dashboard={dashboard} />
           ))}
@@ -126,7 +126,7 @@ export const User = ({
         ]}
       >
         {dashboardCourses.length > 0 &&
-          dashboardCourses.map((x, idx) => <TrainingCards data={x} />)}
+          dashboardCourses.map((x) => <TrainingCards key={x.id} data={x} />)}
       </SimpleGrid>
     </div>
   );

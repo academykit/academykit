@@ -1,15 +1,9 @@
-import { Box, Flex, Group, Paper, SimpleGrid, Text } from "@mantine/core";
-import {
-  IconActivity,
-  IconBook,
-  IconCertificate,
-  IconFileCheck,
-} from "@tabler/icons";
+import { Flex, Group, Paper, SimpleGrid, Text } from "@mantine/core";
+import { IconActivity, IconCertificate, IconFileCheck } from "@tabler/icons";
 import {
   DashboardCourses,
   DashboardStats,
 } from "@utils/services/dashboardService";
-import React from "react";
 import { StatsCard } from "./StatsCard";
 import TrainingCards from "./TrainingCards";
 import { useTranslation } from "react-i18next";
@@ -79,7 +73,7 @@ const Trainers = ({
         ]}
       >
         {dashboard &&
-          incomingData.map((x, idx) => (
+          incomingData.map((x) => (
             //@ts-ignore
             <StatsCard key={x.key} data={x} dashboard={dashboard} />
           ))}
@@ -104,9 +98,7 @@ const Trainers = ({
         ]}
       >
         {dashboardCourses.length > 0 &&
-          dashboardCourses.map((x, idx) => (
-            <TrainingCards key={x.id} data={x} />
-          ))}
+          dashboardCourses.map((x) => <TrainingCards key={x.id} data={x} />)}
       </SimpleGrid>
     </div>
   );

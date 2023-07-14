@@ -97,7 +97,7 @@ const PoolCard = ({
                   sx={{
                     flexDirection: "column",
                     alignItems: "start",
-                    gap: "0px"
+                    gap: "0px",
                   }}
                 >
                   <NavLink

@@ -90,7 +90,7 @@ const Lesson = ({
         color: "red",
         title: t("error"),
       });
-      toggle()
+      toggle();
     }
   };
   return (
@@ -104,13 +104,15 @@ const Lesson = ({
       <div className={classes.item}>
         <Grid grow justify={"center"}>
           <Grid.Col span={4}>
-            <div style={{ display: "flex", alignItems: "center", padding:"10px" }}>
+            <div
+              style={{ display: "flex", alignItems: "center", padding: "10px" }}
+            >
               {lesson?.name}
             </div>
           </Grid.Col>
           <Grid.Col span={4}>
             <Group position="center">
-              <Text m={"auto"} style={{padding: "10px"}}>
+              <Text m={"auto"} style={{ padding: "10px" }}>
                 {ReadableEnum[
                   t(`${LessonType[lesson.type]}`) as keyof typeof ReadableEnum
                 ] ?? t(`${LessonType[lesson.type]}`)}
@@ -133,7 +135,7 @@ const Lesson = ({
               <Button
                 variant="outline"
                 onClick={() => setIsEditing(!isEditing)}
-                style={{marginRight: "10px", marginTop: "5px"}}
+                style={{ marginRight: "10px", marginTop: "5px" }}
               >
                 {isEditing ? t("cancel") : t("edit")}
               </Button>

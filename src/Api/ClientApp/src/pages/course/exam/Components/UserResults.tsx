@@ -1,12 +1,4 @@
-import {
-  ActionIcon,
-  Box,
-  Loader,
-  MantineProvider,
-  Table,
-  Title,
-  useMantineTheme,
-} from "@mantine/core";
+import { ActionIcon, Box, Loader, Table, Title } from "@mantine/core";
 import { IconEye } from "@tabler/icons";
 import { DATE_FORMAT } from "@utils/constants";
 import RoutePath from "@utils/routeConstants";
@@ -23,7 +15,6 @@ const UserResults = ({
   lessonId: string;
   studentId: string;
 }) => {
-  const theme = useMantineTheme();
   const { t } = useTranslation();
   const result = useMyResult(lessonId, studentId);
   if (result.isLoading) {

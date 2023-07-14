@@ -223,7 +223,7 @@ const AddUpdateUserForm = ({
             label={t("department")}
             placeholder={t("pick_department") as string}
             searchable
-            nothingFound={t('no_department')}
+            nothingFound={t("no_department")}
             data={
               department
                 ? department.items.map((x) => ({
@@ -237,7 +237,7 @@ const AddUpdateUserForm = ({
           {department && department?.items.length < 1 && (
             <span className={classes.departmentInfo}>
               <IconInfoCircle size={12} />
-              {t('no_active_department')}
+              {t("no_active_department")}
             </span>
           )}
         </Grid.Col>

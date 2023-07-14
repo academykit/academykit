@@ -1,12 +1,12 @@
-import useCustomLayout from "@context/LayoutProvider";
 import {
   Box,
-  Button,
   Card,
   Container,
   createStyles,
   Grid,
   Group,
+  Paper,
+  ScrollArea,
   Text,
   Title,
 } from "@mantine/core";
@@ -15,17 +15,15 @@ import {
   ILessonResultQuestionOption,
   ILessonStartQuestion,
 } from "@utils/services/examService";
-import { useEffect, useState } from "react";
 import SubmitResultHeader from "./SubmitResultHeader";
-import { useTranslation } from "react-i18next";
 import TextViewer from "@components/Ui/RichTextViewer";
+import { IconSquareRoundedX } from "@tabler/icons";
+import { IconCircleCheck } from "@tabler/icons-react";
+import UserShortProfile from "@components/UserShortProfile";
+import { IUser } from "@utils/services/types";
+import moment from "moment";
 const useStyle = createStyles((theme) => ({
   option: {
-    padding: 20,
-    width: "100%",
-    justifyContent: "start",
-    alignItems: "start",
-    border: "1px solid gray",
     ">label": {
       cursor: "pointer",
     },
@@ -39,7 +37,6 @@ const useStyle = createStyles((theme) => ({
     cursor: "pointer",
   },
   navigateWrapper: {
-    border: "1px solid grey",
     maxHeight: "80vh",
     height: "100%",
     overflowY: "auto",
@@ -56,7 +53,7 @@ const useStyle = createStyles((theme) => ({
     zIndex: 100,
   },
   active: {
-    backgroundColor: theme.colors[theme.primaryColor][1],
+    border: "2px solid " + theme.colors[theme.primaryColor][1],
   },
   activeCircle: {
     outline: `4px solid ${theme.colors[theme.primaryColor][1]}`,
@@ -84,8 +81,9 @@ const SubmittedResultDetails = ({
   duration,
   marks,
   name,
-  totalDuration,
   totalMarks,
+  submissionDate,
+  user,
 }: {
   questions: ILessonStartQuestion<ILessonResultQuestionOption>[];
   name: string;
@@ -93,142 +91,93 @@ const SubmittedResultDetails = ({
   marks: number;
   totalDuration: string;
   totalMarks: number;
+  submissionDate: string;
+  user: IUser;
 }) => {
   const { classes, theme, cx } = useStyle();
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.md}px)`);
-  const { t } = useTranslation();
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const customLayout = useCustomLayout();
-
-  useEffect(() => {
-    customLayout.setExamPage && customLayout.setExamPage(true);
-    customLayout.setExamPageAction &&
-      customLayout.setExamPageAction(
-        <SubmitResultHeader
-          duration={duration}
-          marks={marks}
-          totalMarks={totalMarks}
-        />
-      );
-    customLayout.setExamPageTitle &&
-      customLayout.setExamPageTitle(<Title>{name}</Title>);
-    return () => {
-      customLayout.setExamPage && customLayout.setExamPage(false);
-    };
-  }, [customLayout.examPage]);
-
   return (
     <Grid m={20}>
-      <Grid.Col span={matches ? 9 : 12}>
-        <Box
-          sx={{
-            flexDirection: "column",
-            overflow: "auto",
-          }}
-        >
-          <Box
-            p={10}
-            pb={20}
-            sx={{
-              flexDirection: "column",
-              width: "100%",
-              justifyContent: "start",
-              alignContent: "start",
-            }}
-          >
-            <Title mb={20}>{questions[currentIndex]?.name}</Title>
-            {questions[currentIndex]?.description && (
-              <TextViewer content={questions[currentIndex]?.description} />
-            )}
-          </Box>
-          <Container className={classes.option}>
-            {questions[currentIndex]?.questionOptions?.map((x) => (
-              <Card
-                className={cx({
-                  [classes.active]: x.isSelected,
-                  [classes.wrong]: !x.isCorrect && x.isSelected,
-                  [classes.correct]: x.isCorrect,
-                })}
-                id={x.id}
-                shadow={"lg"}
-                radius={10}
-                my={10}
-              >
-                <TextViewer
-                  styles={{
-                    root: {
-                      border: "none",
-                      backgroundColor: "transparent",
-                    },
-                  }}
-                  content={x.value}
-                />
-              </Card>
-            ))}
-          </Container>
-        </Box>
-        <Card p={4} px={20} className={classes.buttonNav}>
-          {currentIndex !== 0 ? (
-            <Button
-              onClick={() => {
-                setCurrentIndex(currentIndex - 1);
-              }}
-            >
-              {t("previous")}
-            </Button>
-          ) : (
-            <div></div>
-          )}
-          {/* @ts-ignore */}
-          <button style={{ display: "none" }}></button>
-          <Text>
-            {currentIndex + 1}/{questions.length}
-          </Text>
-
-          {currentIndex < questions.length - 1 ? (
-            <Button
-              onClick={() => {
-                setCurrentIndex((currentIndex) => currentIndex + 1);
-              }}
-            >
-              {t("next")}
-            </Button>
-          ) : (
-            <></>
-          )}
-        </Card>
-      </Grid.Col>
-      <Grid.Col span={matches ? 3 : 12} m={0}>
-        <Group p={10} className={classes.navigateWrapper}>
-          {questions.map((x, i) => (
-            <div
-              key={i}
-              onClick={() => {
-                setCurrentIndex(i);
-              }}
-              style={{
-                outline: "none",
-                border: "none",
-                backgroundColor: "none",
-              }}
-            >
-              <Card
-                className={cx(classes.navigate, {
-                  [classes.activeCircle]: currentIndex === i,
-                  [classes.correctCircle]: x.isCorrect,
-                  [classes.errorCircle]:
-                    x.questionOptions.filter((x) => x.isSelected).length >= 1 &&
-                    !x.isCorrect,
-                  [classes.unanswered]:
-                    x.questionOptions.filter((x) => x.isSelected).length === 0,
-                })}
-                radius={10000}
-              >
-                {i + 1}
-              </Card>
+      <Grid.Col>
+        <Paper radius={10} p={10}>
+          <Group position="apart">
+            <div>
+              <Title>{name}</Title>
+              <Text>{moment(submissionDate + "Z").fromNow()}</Text>
             </div>
+            <UserShortProfile user={user}></UserShortProfile>
+            <SubmitResultHeader
+              duration={duration}
+              marks={marks}
+              totalMarks={totalMarks}
+            />
+          </Group>
+        </Paper>
+      </Grid.Col>
+      <Grid.Col span={matches ? 9 : 12}>
+        <ScrollArea>
+          {questions.map((question, i) => (
+            <Card p={4} key={i} my={10} shadow="lg" withBorder>
+              <Box
+                p={10}
+                pb={20}
+                sx={{
+                  flexDirection: "column",
+                  width: "100%",
+                  justifyContent: "start",
+                  alignContent: "start",
+                }}
+              >
+                <Group position="apart" align="center">
+                  <h3>{question?.name}</h3>
+                </Group>
+                {question?.description && (
+                  <TextViewer content={question?.description} />
+                )}
+              </Box>
+              <Container fluid className={classes.option}>
+                {question?.questionOptions?.map((x) => (
+                  <Card
+                    key={x.id}
+                    className={cx({
+                      [classes.active]: x.isSelected,
+                    })}
+                    id={x.id}
+                    shadow={"lg"}
+                    my={5}
+                  >
+                    <Grid justify="space-between" align="center">
+                      {x.isCorrect && x.isSelected && (
+                        <IconCircleCheck
+                          size={36}
+                          color={theme.colors.green[6]}
+                        />
+                      )}
+                      {!x.isCorrect && x.isSelected && (
+                        <IconSquareRoundedX
+                          size={36}
+                          color={theme.colors.red[6]}
+                        />
+                      )}
+                      <Grid.Col span={11}>
+                        <TextViewer
+                          key={x.id}
+                          styles={{
+                            root: {
+                              border: "none",
+                              background: "transparent",
+                            },
+                          }}
+                          content={x.value}
+                        />
+                      </Grid.Col>
+                    </Grid>
+                  </Card>
+                ))}
+              </Container>
+            </Card>
           ))}
-        </Group>
+        </ScrollArea>
       </Grid.Col>
     </Grid>
   );

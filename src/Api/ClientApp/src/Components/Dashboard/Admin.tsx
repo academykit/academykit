@@ -1,4 +1,4 @@
-import { Box, Group, SimpleGrid, Text } from "@mantine/core";
+import { Group, SimpleGrid, Text } from "@mantine/core";
 import {
   DashboardCourses,
   DashboardStats,
@@ -92,7 +92,7 @@ const Admin = ({
         }}
       >
         {dashboardCourses.length > 0 &&
-          dashboardCourses.map((x, idx) => <TrainingCards data={x} />)}
+          dashboardCourses.map((x) => <TrainingCards key={x.id} data={x} />)}
       </Group>
     </div>
   );

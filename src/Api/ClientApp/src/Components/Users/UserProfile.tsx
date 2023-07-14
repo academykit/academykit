@@ -41,7 +41,7 @@ const UserProfile = () => {
   const location = useLocation();
 
   const { data, isSuccess } = useProfileAuth(id as string);
-  const currentLocation = location.pathname.split('/').slice(-1)[0] // accessing the endpoint of the url
+  const currentLocation = location.pathname.split("/").slice(-1)[0]; // accessing the endpoint of the url
 
   return (
     <>

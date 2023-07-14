@@ -1280,6 +1280,11 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-subscript/-/extension-subscript-2.0.3.tgz#26be9609b52dcdc1ff0f0f00e9e3bc01dd464f78"
   integrity sha512-XFAEUaKxWRmTq7ePEF4aj7knelJPr2fTz0y/iSXydtS094LKwBHBzxatIZY3phrgfpDc+f51ycwarsgz27UJfg==
 
+"@tiptap/extension-superscript@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-superscript/-/extension-superscript-2.0.3.tgz#7d57b2517a2f2e1ffb603edba5f05c6631bfe3a7"
+  integrity sha512-5EBjUvkw2SXL1e8C1i0UF26/GBNHxEbiNQKw7Shy88omVa4HTY+D8KWC/j29ZW/IomUbGPlbpXp1z+1TETzmyw==
+
 "@tiptap/extension-text-align@^2.0.3":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-text-align/-/extension-text-align-2.0.3.tgz#00a7ce067cb033aa54edb82e8c2a023c73d7ef3c"

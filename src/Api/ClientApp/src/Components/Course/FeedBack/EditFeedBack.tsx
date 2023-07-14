@@ -160,7 +160,6 @@ const EditFeedback = ({
             <TextInput
               autoFocus
               autoComplete="off"
-              
               size={fieldSize}
               withAsterisk
               label={t("title_feeback")}

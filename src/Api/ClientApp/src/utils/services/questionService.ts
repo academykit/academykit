@@ -51,7 +51,7 @@ const addQuestion = ({
 }) => {
   // @ts-ignore
   data.type = Number(data.type);
-  console.log(data)
+  console.log(data);
   return httpClient.post(api.questions.list(poolId), data);
 };
 
