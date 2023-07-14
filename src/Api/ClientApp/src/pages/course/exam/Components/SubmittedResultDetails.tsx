@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   Container,
   createStyles,
@@ -22,6 +23,8 @@ import { IconCircleCheck } from '@tabler/icons-react';
 import UserShortProfile from '@components/UserShortProfile';
 import { IUser } from '@utils/services/types';
 import moment from 'moment';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 const useStyle = createStyles((theme) => ({
   option: {
     '>label': {
@@ -96,6 +99,8 @@ const SubmittedResultDetails = ({
 }) => {
   const { classes, theme, cx } = useStyle();
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.md}px)`);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const { t } = useTranslation();
   return (
     <Grid m={20}>
       <Grid.Col>
@@ -116,68 +121,125 @@ const SubmittedResultDetails = ({
       </Grid.Col>
       <Grid.Col span={matches ? 9 : 12}>
         <ScrollArea>
-          {questions.map((question, i) => (
-            <Card p={4} key={i} my={10} shadow="lg" withBorder>
-              <Box
-                p={10}
-                pb={20}
-                sx={{
-                  flexDirection: 'column',
-                  width: '100%',
-                  justifyContent: 'start',
-                  alignContent: 'start',
-                }}
-              >
-                <Group position="apart" align="center">
-                  <h3>{question?.name}</h3>
-                </Group>
-                {question?.description && (
-                  <TextViewer content={question?.description} />
-                )}
-              </Box>
-              <Container fluid className={classes.option}>
-                {question?.questionOptions?.map((x) => (
-                  <Card
-                    key={x.id}
-                    className={cx({
-                      [classes.active]: x.isSelected,
-                    })}
-                    id={x.id}
-                    shadow={'lg'}
-                    my={5}
-                  >
-                    <Grid justify="space-between" align="center">
-                      {x.isCorrect && x.isSelected && (
-                        <IconCircleCheck
-                          size={36}
-                          color={theme.colors.green[6]}
-                        />
-                      )}
-                      {!x.isCorrect && x.isSelected && (
-                        <IconSquareRoundedX
-                          size={36}
-                          color={theme.colors.red[6]}
-                        />
-                      )}
-                      <Grid.Col span={11}>
-                        <TextViewer
-                          key={x.id}
-                          styles={{
-                            root: {
-                              border: 'none',
-                              background: 'transparent',
-                            },
-                          }}
-                          content={x.value}
-                        />
-                      </Grid.Col>
-                    </Grid>
-                  </Card>
-                ))}
-              </Container>
-            </Card>
-          ))}
+          <Card p={4} my={10} shadow="lg" withBorder>
+            <Box
+              p={10}
+              pb={20}
+              sx={{
+                flexDirection: 'column',
+                width: '100%',
+                justifyContent: 'start',
+                alignContent: 'start',
+              }}
+            >
+              <Group position="apart" align="center">
+                <h3>{questions[currentIndex]?.name}</h3>
+              </Group>
+              {questions[currentIndex]?.description && (
+                <TextViewer content={questions[currentIndex]?.description} />
+              )}
+            </Box>
+            <Container fluid className={classes.option}>
+              {questions[currentIndex]?.questionOptions?.map((x) => (
+                <Card
+                  key={x.id}
+                  className={cx({
+                    [classes.active]: x.isSelected,
+                  })}
+                  id={x.id}
+                  shadow={'lg'}
+                  my={5}
+                >
+                  <Grid justify="space-between" align="center">
+                    {x.isCorrect && x.isSelected && (
+                      <IconCircleCheck
+                        size={36}
+                        color={theme.colors.green[6]}
+                      />
+                    )}
+                    {!x.isCorrect && x.isSelected && (
+                      <IconSquareRoundedX
+                        size={36}
+                        color={theme.colors.red[6]}
+                      />
+                    )}
+                    <Grid.Col span={11}>
+                      <TextViewer
+                        key={x.id}
+                        styles={{
+                          root: {
+                            border: 'none',
+                            background: 'transparent',
+                          },
+                        }}
+                        content={x.value}
+                      />
+                    </Grid.Col>
+                  </Grid>
+                </Card>
+              ))}
+            </Container>
+          </Card>
         </ScrollArea>
+        <Card p={4} px={20} className={classes.buttonNav}>
+          {currentIndex !== 0 ? (
+            <Button
+              onClick={() => {
+                setCurrentIndex(currentIndex - 1);
+              }}
+            >
+              {t('previous')}
+            </Button>
+          ) : (
+            <div></div>
+          )}
+          <Text>
+            {currentIndex + 1}/{questions.length}
+          </Text>
+          {currentIndex < questions.length - 1 ? (
+            <Button
+              onClick={() => {
+                setCurrentIndex((currentIndex) => currentIndex + 1);
+              }}
+            >
+              {t('next')}
+            </Button>
+          ) : (
+            <div></div>
+          )}
+        </Card>
+      </Grid.Col>
+      <Grid.Col span={matches ? 3 : 12} m={0}>
+        <Group p={10} className={classes.navigateWrapper}>
+          {questions.map((x, i) => (
+            <div
+              key={i}
+              onClick={() => {
+                setCurrentIndex(i);
+              }}
+              style={{
+                outline: 'none',
+                border: 'none',
+                backgroundColor: 'none',
+              }}
+            >
+              <Card
+                className={cx(classes.navigate, {
+                  [classes.activeCircle]: currentIndex === i,
+                  [classes.correctCircle]: x.isCorrect,
+                  [classes.errorCircle]:
+                    x.questionOptions.filter((x) => x.isSelected).length >= 1 &&
+                    !x.isCorrect,
+                  [classes.unanswered]:
+                    x.questionOptions.filter((x) => x.isSelected).length === 0,
+                })}
+                radius={10000}
+              >
+                {i + 1}
+              </Card>
+            </div>
+          ))}
+        </Group>
       </Grid.Col>
     </Grid>
   );

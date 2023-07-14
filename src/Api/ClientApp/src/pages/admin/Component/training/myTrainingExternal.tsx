@@ -51,7 +51,6 @@ const MyTrainingExternal = () => {
   const cForm = useCustomForm();
   const [showConfirmation, setShowConfirmation] = useToggle();
   const { id } = useParams();
-  const [value] = useState<[Date, Date]>([new Date(), new Date()]);
   const addCertificate = useAddCertificate();
   const certificateList = useGetExternalCertificate(id ? false : true);
   const update = useUpdateCertificate();
