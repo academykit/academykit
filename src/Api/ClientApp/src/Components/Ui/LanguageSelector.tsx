@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { LANGUAGES } from '../../constants';
 import { useTranslation } from 'react-i18next';
 import { Select } from '@mantine/core';

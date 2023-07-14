@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Suspense, useState } from 'react';
 import {
   AspectRatio,

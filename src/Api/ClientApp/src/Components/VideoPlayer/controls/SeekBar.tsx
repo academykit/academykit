@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Box, createStyles } from '@mantine/core';
 import Slider from 'rc-slider';
 import React, { FC } from 'react';

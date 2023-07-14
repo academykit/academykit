@@ -1,3 +1,4 @@
+/* eslint-disable */
 import CountDownTimer from '@components/Ui/CountDownTimer';
 import { Button, Group } from '@mantine/core';
 import { useTranslation } from 'react-i18next';

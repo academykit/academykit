@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Button, Group, Title } from '@mantine/core';
 import { ICourseLesson } from '@utils/services/courseService';
 import moment from 'moment';

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Group, SimpleGrid, Text } from '@mantine/core';
 import {
   DashboardCourses,

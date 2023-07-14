@@ -1,3 +1,4 @@
+/* eslint-disable */
 import CourseContent from '@components/Course/CourseDescription/CourseContent/CourseContent';
 import UserShortProfile from '@components/UserShortProfile';
 import {

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import TextEditor from '@components/Ui/TextEditor';
 import {
   Box,

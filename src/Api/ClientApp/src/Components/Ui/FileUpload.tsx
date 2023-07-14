@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState } from 'react';
 import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';

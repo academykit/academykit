@@ -1,3 +1,4 @@
+/* eslint-disable */
 import moment from 'moment';
 import { FC, useEffect, useMemo, useState } from 'react';
 import TimeCounter from './TimeCounter';

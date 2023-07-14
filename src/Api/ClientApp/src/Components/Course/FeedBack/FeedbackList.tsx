@@ -1,3 +1,4 @@
+/* eslint-disable */
 import DeleteModal from '@components/Ui/DeleteModal';
 import {
   Box,

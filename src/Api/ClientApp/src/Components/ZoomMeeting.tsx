@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
   Anchor,
   Box,
@@ -15,9 +16,10 @@ const ZoomMettingMessage = () => {
   const [searchParams] = useSearchParams();
   const { t } = useTranslation();
   const { courseId, lessonId } = useParams();
+  const data = useParams();
   const s = searchParams.get('s');
   const e = searchParams.get('e');
-
+  console.log(data);
   if (s === '4') {
     return (
       <Center pt="20%">

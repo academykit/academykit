@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Rating } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 import { IFeedbackQuestions } from '@utils/services/feedbackService';

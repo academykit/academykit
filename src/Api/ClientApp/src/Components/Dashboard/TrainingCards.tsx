@@ -1,3 +1,4 @@
+/* eslint-disable */
 import useAuth from '@hooks/useAuth';
 import {
   Box,

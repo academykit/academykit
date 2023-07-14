@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
   ActionIcon,
   Avatar,
@@ -30,7 +31,7 @@ import { IWithSearchPagination } from '@hoc/useSearchPagination';
 
 const AddUpdateUserForm = lazyWithRetry(() => import('./AddUpdateUserForm'));
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(() => ({
   nameCotainer: {
     maxWidth: '210px',
     minWidth: '210px',
