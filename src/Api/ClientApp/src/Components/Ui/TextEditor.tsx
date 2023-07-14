@@ -1,6 +1,5 @@
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { UseFormReturnType } from '@mantine/form';
-import { FileAccess, uploadFile } from '@utils/services/fileService';
 
 import { RichTextEditor, Link } from '@mantine/tiptap';
 import { useEditor } from '@tiptap/react';
@@ -66,18 +65,18 @@ const TextEditor = ({
     if (onChange) onChange(data);
   });
 
-  const handleImageUpload = useCallback(
-    (file: File): Promise<string> =>
-      new Promise((resolve, reject) => {
-        const formData = new FormData();
-        formData.append('image', file);
+  // const handleImageUpload = useCallback(
+  //   (file: File): Promise<string> =>
+  //     new Promise((resolve, reject) => {
+  //       const formData = new FormData();
+  //       formData.append('image', file);
 
-        uploadFile(file, FileAccess.Public)
-          .then((result) => resolve(result.data))
-          .catch(() => reject(new Error('Upload failed')));
-      }),
-    []
-  );
+  //       uploadFile(file, FileAccess.Public)
+  //         .then((result) => resolve(result.data))
+  //         .catch(() => reject(new Error('Upload failed')));
+  //     }),
+  //   []
+  // );
 
   return (
     <Box>

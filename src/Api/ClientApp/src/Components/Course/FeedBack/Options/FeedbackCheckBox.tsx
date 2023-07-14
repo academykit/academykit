@@ -1,5 +1,5 @@
 import TextViewer from '@components/Ui/RichTextViewer';
-import { Box, Card, createStyles, Group, Text, Title } from '@mantine/core';
+import { Box, Card, createStyles, Group, Title } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 
 import {
@@ -53,8 +53,7 @@ const FeedbackCheckBoxType = ({ options, form, currentIndex }: Props) => {
             p={10}
             className={cx({
               [classes.active]:
-                //@ts-ignore
-                form.values[currentIndex].feedbackQuestionOptions[index]
+                form.values[currentIndex].feedbackQuestionOptions![index]
                   .isSelected,
             })}
           >

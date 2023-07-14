@@ -45,7 +45,7 @@ const getQuestionType = () => {
     }));
 };
 
-const CreateForm: FC<Props> = ({ form, onSubmit, useFormContext }) => {
+const CreateForm: FC<Props> = ({ form, useFormContext }) => {
   const [tagsList, setTagsList] = useState<{ value: string; label: string }[]>(
     []
   );
@@ -82,15 +82,14 @@ const CreateForm: FC<Props> = ({ form, onSubmit, useFormContext }) => {
         <MultiSelect
           searchable
           withAsterisk
-          labelProps="name"
           creatable
           sx={{ maxWidth: '500px' }}
           data={tagsList}
-          value={[]}
           {...form.getInputProps('tags')}
           getCreateLabel={(query) => `+ Create ${query}`}
           onCreate={(query) => {
             mutate(query);
+            return undefined;
           }}
           size={'lg'}
           label={t('tags')}

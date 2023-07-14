@@ -6,7 +6,6 @@ import {
   Paper,
   Switch,
   Textarea,
-  TextInput,
   Tooltip,
 } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
@@ -45,9 +44,9 @@ const AddDocument = ({
   setAddLessonClick,
   setIsEditing,
 }: {
-  setAddState: Function;
+  setAddState: (s: string) => void;
   item?: ILessonAssignment;
-  setAddLessonClick: Function;
+  setAddLessonClick: (b: boolean) => void;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   isEditing?: boolean;
   sectionId: string;
@@ -66,8 +65,8 @@ const AddDocument = ({
     item?.isMandatory ?? false
   );
 
-  const [opened, setOpened] = useState(false);
-  const [lessonId, setLessonId] = useState('');
+  const [, setOpened] = useState(false);
+  const [, setLessonId] = useState('');
 
   const form = useForm({
     initialValues: {
@@ -82,7 +81,7 @@ const AddDocument = ({
 
   const submitForm = async (values: any) => {
     try {
-      let fileData = {
+      const fileData = {
         courseId: slug,
         sectionIdentity: sectionId,
         type: LessonType.Document,

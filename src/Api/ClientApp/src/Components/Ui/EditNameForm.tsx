@@ -12,7 +12,7 @@ const EditNameForm = ({
 }: {
   item: any;
   slug: string;
-  setIsEditing: Function;
+  setIsEditing: (b: boolean) => void;
   updateFunction: any;
 }) => {
   const { t } = useTranslation();

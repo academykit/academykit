@@ -2,15 +2,7 @@ import ProgressBar from '@components/Ui/ProgressBar';
 import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
-import {
-  Title,
-  Paper,
-  Anchor,
-  Table,
-  useMantineTheme,
-  Box,
-  Loader,
-} from '@mantine/core';
+import { Title, Paper, Anchor, Table, Box, Loader } from '@mantine/core';
 import { DATE_FORMAT } from '@utils/constants';
 import RoutePath from '@utils/routeConstants';
 import { useMyCourse } from '@utils/services/courseService';
@@ -20,12 +12,10 @@ import { Link, useParams } from 'react-router-dom';
 
 const AttendedTrainings = ({
   searchParams,
-  searchComponent,
   pagination,
 }: IWithSearchPagination) => {
   const { id } = useParams();
   const { data, isLoading } = useMyCourse(id as string, searchParams);
-  const theme = useMantineTheme();
   const { t } = useTranslation();
 
   return (
@@ -47,7 +37,7 @@ const AttendedTrainings = ({
             {data &&
               data.totalCount > 0 &&
               data.items.map((x) => (
-                <tr>
+                <tr key={x.id}>
                   <td>
                     <Anchor
                       component={Link}

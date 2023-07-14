@@ -1,4 +1,4 @@
-import { Box, Button, Group, Title } from '@mantine/core';
+import { Button, Group, Title } from '@mantine/core';
 import RoutePath from '@utils/routeConstants';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';

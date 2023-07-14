@@ -1,3 +1,5 @@
+/* eslint-disable react/no-children-prop */
+/* eslint-disable react/prop-types */
 import { ActionIcon, Group, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { ToolbarSlot } from '@react-pdf-viewer/toolbar';

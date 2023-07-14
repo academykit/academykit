@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useTransition } from 'react';
+import React, { useState } from 'react';
 import LessonVideoUpload from '@components/Ui/LessonVideoUpload';
 import {
   Button,
@@ -8,7 +8,6 @@ import {
   Switch,
   Text,
   Textarea,
-  TextInput,
   Tooltip,
 } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
@@ -35,9 +34,9 @@ const schema = () => {
   });
 };
 type IProps = {
-  setAddState: Function;
+  setAddState: (s: string) => void;
   item?: ILessons;
-  setAddLessonClick: Function;
+  setAddLessonClick: (b: boolean) => void;
   isEditing?: boolean;
   sectionId: string;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
@@ -63,7 +62,7 @@ const AddLecture = ({
 }: IProps) => {
   const { id: slug } = useParams();
   const { t } = useTranslation();
-  const [videoUrl, setVideoUrl] = React.useState<string>(item?.videoUrl ?? '');
+  const [videoUrl] = React.useState<string>(item?.videoUrl ?? '');
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
   const isRecordedVideo = item?.type === LessonType.RecordedVideo;

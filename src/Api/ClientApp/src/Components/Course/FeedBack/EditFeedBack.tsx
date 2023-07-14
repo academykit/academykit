@@ -2,7 +2,6 @@ import TextEditor from '@components/Ui/TextEditor';
 import {
   Box,
   Button,
-  Checkbox,
   Container,
   Flex,
   Group,
@@ -27,7 +26,6 @@ import {
 
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import { useTranslation } from 'react-i18next';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 const fieldSize = 'md';
 
 const schema = () => {
@@ -109,12 +107,11 @@ const EditFeedback = ({
       lessonId: lessonId,
       name: feedbackQuestion ? feedbackQuestion.name : '',
       type: feedbackQuestion ? feedbackQuestion.type.toString() : '',
-      // @ts-ignore
-      answers: feedbackQuestion
-        ? feedbackQuestion.feedbackQuestionOptions?.map((x) => ({
-            option: x.option,
-          }))
-        : [{ option: '' }],
+      answers:
+        feedbackQuestion?.feedbackQuestionOptions?.map((x) => ({
+          option: x.option,
+          isSelected: x.isSelected,
+        })) ?? [],
     },
     validate: yupResolver(schema()),
   });

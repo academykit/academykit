@@ -56,7 +56,6 @@ const ExamCheckBox = ({ form, options, currentIndex }: Props) => {
             p={10}
             className={cx({
               [classes.active]:
-                //@ts-ignore
                 form.values[currentIndex].questionOptions[index].isCorrect,
             })}
           >

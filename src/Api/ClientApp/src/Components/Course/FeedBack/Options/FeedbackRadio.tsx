@@ -1,20 +1,11 @@
 import TextViewer from '@components/Ui/RichTextViewer';
-import {
-  Box,
-  Button,
-  Card,
-  createStyles,
-  Group,
-  Text,
-  Title,
-} from '@mantine/core';
+import { Box, Card, createStyles, Group, Title } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 
 import {
   IFeedbackOptions,
   IFeedbackQuestions,
 } from '@utils/services/feedbackService';
-import { useTransition } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const useStyle = createStyles((theme) => ({
@@ -41,7 +32,7 @@ const FeedbackRadio = ({ options, form, currentIndex }: Props) => {
   const { classes, cx } = useStyle();
   const { t } = useTranslation();
   const changeFieldValue = (optionCurrentIndex: number) => {
-    options.map((option, index) => {
+    options.map((_option, index) => {
       if (index !== optionCurrentIndex) {
         form.setFieldValue(
           `${currentIndex}.feedbackQuestionOptions.${index}.isSelected`,
@@ -81,8 +72,7 @@ const FeedbackRadio = ({ options, form, currentIndex }: Props) => {
             p={10}
             className={cx({
               [classes.active]:
-                //@ts-ignore
-                form.values[currentIndex].feedbackQuestionOptions[index]
+                form.values[currentIndex].feedbackQuestionOptions![index]
                   .isSelected,
             })}
           >

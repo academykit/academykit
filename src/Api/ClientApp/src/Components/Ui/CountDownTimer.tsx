@@ -5,7 +5,7 @@ import TimeCounter from './TimeCounter';
 type Props = {
   startDateTime: string;
   time: number;
-  cb: Function;
+  cb: () => void;
 };
 
 const CountDownTimer: FC<Props> = ({ startDateTime, cb, time }) => {

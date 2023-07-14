@@ -1,4 +1,4 @@
-import { Button, Card, Group, Rating, Title } from '@mantine/core';
+import { Button, Card, Group, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { FeedbackType } from '@utils/enums';
@@ -34,7 +34,7 @@ const FeedbackForm = ({
   const handleSubmit = async (values: IFeedbackQuestions[]) => {
     const finalData: IFeedbackSubmission[] = [];
     values.forEach((x) => {
-      var data: any = {};
+      const data: any = {};
       data['feedbackId'] = x.id;
       data['answer'] = x.answer;
       data['rating'] = x.rating;

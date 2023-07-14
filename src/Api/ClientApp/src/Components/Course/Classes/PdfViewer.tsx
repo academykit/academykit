@@ -1,20 +1,15 @@
 import * as React from 'react';
 import { Viewer, Worker } from '@react-pdf-viewer/core';
-// @ts-ignore
-import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
 import { useMediaQuery } from '@mantine/hooks';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/toolbar/lib/styles/index.css';
 import {
-  ActionIcon,
   Badge,
   Button,
   Container,
   Divider,
   Group,
-  Menu,
-  Popover,
   useMantineColorScheme,
 } from '@mantine/core';
 import { ICourseLesson } from '@utils/services/courseService';
@@ -22,7 +17,6 @@ import { useWatchHistory } from '@utils/services/watchHistory';
 import { showNotification } from '@mantine/notifications';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
-import Download from './PdfComponents/Download';
 import FullScreen from './PdfComponents/FullScreen';
 import Zoom from './PdfComponents/Zoom';
 import SwitchPage from './PdfComponents/SwitchPage';
@@ -53,10 +47,11 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
   };
 
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
-    sidebarTabs: (_) => [],
+    sidebarTabs: () => [],
     renderToolbar(Toolbar) {
       return (
         <Toolbar
+          // eslint-disable-next-line react/no-children-prop
           children={(toolbarSlot) => (
             <Container w="100%" fluid>
               <Group position="apart">

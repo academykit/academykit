@@ -1,5 +1,4 @@
 import { createStyles, Group, Progress, Text } from '@mantine/core';
-import React from 'react';
 
 const useStyles = createStyles((theme) => ({
   progressBar: {
@@ -18,8 +17,7 @@ const ProgressBar = ({
   total: number;
   positive: number;
 }) => {
-  let positiveNumber = total > 0 ? (positive / total) * 100 : 0;
-  let negativeNumber = 100 - positiveNumber;
+  const positiveNumber = total > 0 ? (positive / total) * 100 : 0;
   const { classes, theme } = useStyles();
 
   return (

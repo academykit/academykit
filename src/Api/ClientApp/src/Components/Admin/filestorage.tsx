@@ -34,7 +34,6 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
   return (
     <form onSubmit={form.onSubmit(submitHandler)}>
       <Group>
-        {/* @ts-ignore */}
         <Radio
           onChange={() => {
             form.setFieldValue(`0.isActive`, true);
@@ -45,7 +44,6 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
           checked={form.values[0].isActive}
           label={t(`${EFileStorageType[form.values[0].type]}`)}
         />
-        {/* @ts-ignore */}
         <Radio
           onChange={() => {
             setActiveIndex(1);

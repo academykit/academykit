@@ -34,12 +34,10 @@ export interface ICreateFeedback {
   lessonId: string;
   name: string;
   type: string;
-  answers?: [
-    {
-      option: string;
-      isSelected: boolean;
-    },
-  ];
+  answers?: {
+    option: string;
+    isSelected: boolean;
+  }[];
 }
 
 const addFeedbackQuestion = ({ data }: { data: ICreateFeedback }) => {

@@ -31,7 +31,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const CourseCard = ({ course }: { course: ICourse }) => {
-  const { classes, cx } = useStyles();
+  const { classes } = useStyles();
   const { t } = useTranslation();
   return (
     <Card

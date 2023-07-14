@@ -23,7 +23,6 @@ import { showNotification } from '@mantine/notifications';
 import {
   IconCalendar,
   IconChevronRight,
-  IconClock,
   IconDotsVertical,
 } from '@tabler/icons';
 import { DATE_FORMAT, color } from '@utils/constants';
@@ -115,7 +114,7 @@ const CourseCardHorizontal = ({
 
         <Flex
           gap={'lg'}
-          sx={(theme) => ({
+          sx={() => ({
             flexWrap: 'wrap',
             '@media (min-width: 55em)': {
               flexWrap: 'nowrap',

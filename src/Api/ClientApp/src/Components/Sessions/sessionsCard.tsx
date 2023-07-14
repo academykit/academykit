@@ -1,12 +1,4 @@
-import {
-  Badge,
-  Card,
-  createStyles,
-  Grid,
-  Group,
-  Image,
-  Text,
-} from '@mantine/core';
+import { Badge, Card, createStyles, Group, Image, Text } from '@mantine/core';
 
 function SessionCard() {
   const useStyles = createStyles((theme) => ({
@@ -28,7 +20,7 @@ function SessionCard() {
       },
     },
   }));
-  const { classes, cx } = useStyles();
+  const { classes } = useStyles();
   return (
     <Card
       shadow="sm"

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 import { ActionIcon } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { ToolbarSlot } from '@react-pdf-viewer/toolbar';
@@ -11,6 +12,7 @@ const Download = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {
         <ActionIcon
           size={matchesSmallScreen ? 'md' : 'sm'}
           color={'dimmed'}
+          // eslint-disable-next-line react/prop-types
           onClick={props.onClick}
         >
           <IconDownload />

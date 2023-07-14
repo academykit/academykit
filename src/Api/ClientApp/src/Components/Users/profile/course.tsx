@@ -5,7 +5,6 @@ const UserCourse = () => {
   return (
     <>
       <AttendedTrainings />
-
       <MyTrainings />
     </>
   );
