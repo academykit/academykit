@@ -6,7 +6,6 @@ import {
   Paper,
   Switch,
   Textarea,
-  TextInput,
   Tooltip,
 } from '@mantine/core';
 import { DatePickerInput, TimeInput } from '@mantine/dates';
@@ -63,7 +62,7 @@ const AddExam = ({
   sectionId,
   setIsEditing,
 }: {
-  setAddState: Function;
+  setAddState: () => void;
   item?: ILessonMCQ;
   isEditing?: boolean;
   sectionId: string;
@@ -79,12 +78,12 @@ const AddExam = ({
   );
 
   const startDateTime = item?.questionSet?.startTime
-    ? moment(item?.questionSet?.startTime + 'z')
+    ? moment(item?.questionSet?.startTime + 'Z')
         .local()
         .toDate()
     : new Date();
   const endDateTime = item?.questionSet?.endTime
-    ? moment(item?.questionSet?.endTime + 'z')
+    ? moment(item?.questionSet?.endTime + 'Z')
         .local()
         .toDate()
     : new Date();
@@ -110,8 +109,6 @@ const AddExam = ({
   const strippedFormValue = (value: Partial<typeof form.values>) => {
     const val = { ...value };
     delete val.isMandatory;
-    // @ts-ignore
-    delete val.isRequired;
     const startTime =
       val.startDate && val.startTime
         ? getDateTime(val.startDate, val.startTime)
@@ -307,7 +304,7 @@ const AddExam = ({
           {!isEditing && (
             <Button
               onClick={() => {
-                setAddState('');
+                setAddState();
               }}
               variant="outline"
             >

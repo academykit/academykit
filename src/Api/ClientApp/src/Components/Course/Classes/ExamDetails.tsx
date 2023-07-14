@@ -6,7 +6,6 @@ import {
   MantineProvider,
   Text,
   Title,
-  useMantineTheme,
 } from '@mantine/core';
 import UserResults from '@pages/course/exam/Components/UserResults';
 import { useQueryClient } from '@tanstack/react-query';
@@ -56,7 +55,6 @@ const ExamDetails = ({
     }
   }, [invalidate]);
 
-  const theme = useMantineTheme();
   return (
     <Group
       p={10}
@@ -127,11 +125,11 @@ const ExamDetails = ({
               </>
             ) : (
               <Box mt={10}>
-                {moment.utc().isBefore(exam?.startTime + 'z')
-                  ? `Starts ${moment(exam?.startTime + 'z')
+                {moment.utc().isBefore(exam?.startTime + 'Z')
+                  ? `Starts ${moment(exam?.startTime + 'Z')
                       .utc()
                       .fromNow()}`
-                  : `Ended ${moment(exam?.endTime + 'z')
+                  : `Ended ${moment(exam?.endTime + 'Z')
                       .utc()
                       .fromNow()}`}
               </Box>

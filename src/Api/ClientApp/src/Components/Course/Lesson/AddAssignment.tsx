@@ -7,7 +7,6 @@ import {
   ScrollArea,
   Switch,
   Textarea,
-  TextInput,
   Tooltip,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
@@ -57,8 +56,8 @@ interface SubmitType {
   isMandatory?: boolean;
   eventStartDate?: Date;
   eventEndDate?: Date;
-  startTime?: Date;
-  endTime?: Date;
+  startTime?: string;
+  endTime?: string;
 }
 
 const AddAssignment = ({
@@ -68,7 +67,7 @@ const AddAssignment = ({
   sectionId,
   setIsEditing,
 }: {
-  setAddState: Function;
+  setAddState: () => void;
   item?: ILessonAssignment;
   isEditing?: boolean;
   sectionId: string;
@@ -87,13 +86,13 @@ const AddAssignment = ({
   const [lessonId, setLessonId] = useState('');
 
   const startDateTime = item?.startDate
-    ? moment(item?.startDate + 'z')
+    ? moment(item?.startDate + 'Z')
         .local()
         .toDate()
     : new Date();
 
   const endDateTime = item?.endDate
-    ? moment(item?.endDate + 'z')
+    ? moment(item?.endDate + 'Z')
         .local()
         .toDate()
     : new Date();
@@ -122,18 +121,12 @@ const AddAssignment = ({
 
     const startDate =
       values?.eventStartDate &&
-      getDateTime(
-        values?.eventStartDate?.toString() ?? '',
-        values?.startTime?.toString() ?? ''
-      );
+      getDateTime(values?.eventStartDate, values?.startTime?.toString() ?? '');
     const endDate =
       values?.eventEndDate &&
-      getDateTime(
-        values?.eventEndDate?.toString() ?? '',
-        values?.endTime?.toString() ?? ''
-      );
+      getDateTime(values?.eventEndDate, values?.endTime?.toString() ?? '');
     try {
-      let assignmentData = {
+      const assignmentData = {
         courseId: slug,
         sectionIdentity: sectionId,
         type: LessonType.Assignment,
@@ -181,7 +174,7 @@ const AddAssignment = ({
         transitionProps={{ transition: 'slide-up' }}
         onClose={() => {
           setOpened(false);
-          setAddState('');
+          setAddState();
         }}
         size="100%"
         style={{
@@ -287,7 +280,7 @@ const AddAssignment = ({
             {!isEditing && (
               <Button
                 onClick={() => {
-                  setAddState('');
+                  setAddState();
                 }}
                 variant="outline"
               >

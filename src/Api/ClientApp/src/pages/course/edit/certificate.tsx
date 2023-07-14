@@ -75,10 +75,10 @@ const Certificate = () => {
 
       form.setValues({
         title: data.data.title,
-        eventEndDate: moment(data.data.eventEndDate + 'z')
+        eventEndDate: moment(data.data.eventEndDate + 'Z')
           .local()
           .toDate(),
-        eventStartDate: moment(data.data.eventStartDate + 'z')
+        eventStartDate: moment(data.data.eventStartDate + 'Z')
           .local()
           .toDate(),
       });
