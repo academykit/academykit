@@ -1,9 +1,9 @@
-import { Cross } from "@components/Icons";
-import { ActionIcon, TextInput, Tooltip } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { IconClearAll, IconSearch } from "@tabler/icons";
-import React, { useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next";
+import { Cross } from '@components/Icons';
+import { ActionIcon, TextInput, Tooltip } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { IconSearch } from '@tabler/icons';
+import React, { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   placeholder?: string;
@@ -19,31 +19,31 @@ const SearchBar: React.FC<React.PropsWithChildren<Props>> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const form = useForm({
     initialValues: {
-      search: search ?? "",
+      search: search ?? '',
     },
   });
   useEffect(() => {
     if (!form.values.search) {
-      setSearch("");
+      setSearch('');
     }
   }, [form.values.search]);
   const clearField = () => {
-    setSearch("");
-    form.setFieldValue("search", "");
+    setSearch('');
+    form.setFieldValue('search', '');
     inputRef.current?.focus();
   };
   const { t } = useTranslation();
 
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: '100%' }}>
       <form onSubmit={form.onSubmit((values) => setSearch(values.search))}>
         <TextInput
           ref={inputRef}
-          radius={"md"}
+          radius={'md'}
           size="sm"
           rightSection={
             form.values.search && (
-              <Tooltip label={t("clear_search")}>
+              <Tooltip label={t('clear_search')}>
                 <ActionIcon onClick={clearField}>
                   <Cross />
                 </ActionIcon>
@@ -51,7 +51,7 @@ const SearchBar: React.FC<React.PropsWithChildren<Props>> = ({
             )
           }
           placeholder={placeholder}
-          {...form.getInputProps("search")}
+          {...form.getInputProps('search')}
           icon={<IconSearch size={14} stroke={1.5} />}
         />
       </form>

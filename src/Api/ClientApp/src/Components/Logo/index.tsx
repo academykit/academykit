@@ -1,8 +1,8 @@
-import { createStyles } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { createStyles } from '@mantine/core';
+import { useEffect, useState } from 'react';
 
 const useStyle = createStyles((theme) => ({}));
-const Logo = ({ className = "", type = "", ...props }) => {
+const Logo = ({ className = '', type = '', ...props }) => {
   const style = useStyle();
 
   const colorScheme = style.theme.colorScheme;
@@ -11,10 +11,10 @@ const Logo = ({ className = "", type = "", ...props }) => {
   useEffect(() => setMounted(true), []);
 
   if (!mounted) return null;
-  const colorName = colorScheme === "light" ? "#113645" : "#fff";
-  const playButtonColor = colorScheme === "light" ? "#3ed1b0" : "#3ed1b0";
-  const bigPlayButtonColor = colorScheme === "light" ? "#113645" : "#3ed1b0";
-  const vColor = colorScheme === "light" ? "#3ed1b0" : "#fff";
+  const colorName = colorScheme === 'light' ? '#113645' : '#fff';
+  const playButtonColor = colorScheme === 'light' ? '#3ed1b0' : '#3ed1b0';
+  const bigPlayButtonColor = colorScheme === 'light' ? '#113645' : '#3ed1b0';
+  const vColor = colorScheme === 'light' ? '#3ed1b0' : '#fff';
 
   return (
     <svg

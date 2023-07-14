@@ -1,5 +1,5 @@
-import { useReAuth } from "@utils/services/authService";
-import { useCourse } from "@utils/services/courseService";
+import { useReAuth } from '@utils/services/authService';
+import { useCourse } from '@utils/services/courseService';
 import {
   Title,
   Anchor,
@@ -12,15 +12,15 @@ import {
   Loader,
   Pagination,
   ScrollArea,
-} from "@mantine/core";
-import { IconEdit } from "@tabler/icons";
-import RoutePath from "@utils/routeConstants";
-import { CourseLanguage, UserRole } from "@utils/enums";
-import moment from "moment";
-import { Link, useParams } from "react-router-dom";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { DATE_FORMAT } from "@utils/constants";
+} from '@mantine/core';
+import { IconEdit } from '@tabler/icons';
+import RoutePath from '@utils/routeConstants';
+import { CourseLanguage, UserRole } from '@utils/enums';
+import moment from 'moment';
+import { Link, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { DATE_FORMAT } from '@utils/constants';
 
 const MyTrainings = () => {
   const auth = useReAuth();
@@ -36,7 +36,7 @@ const MyTrainings = () => {
       {auth.data && auth.data?.role !== UserRole.Trainee && (
         <div>
           <Title mt={20} size={30} mb={10}>
-            {t("my_trainings")}
+            {t('my_trainings')}
           </Title>
 
           <ScrollArea>
@@ -44,12 +44,12 @@ const MyTrainings = () => {
               <Table striped>
                 <thead>
                   <tr>
-                    <th>{t("title")}</th>
-                    <th>{t("created_date")}</th>
+                    <th>{t('title')}</th>
+                    <th>{t('created_date')}</th>
                     <th>
-                      {t("Language")} / {t("level")}
+                      {t('Language')} / {t('level')}
                     </th>
-                    <th>{t("action")}</th>
+                    <th>{t('action')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -69,14 +69,14 @@ const MyTrainings = () => {
                         <td>
                           <Badge color="pink" variant="light">
                             {CourseLanguage[x.language]}
-                          </Badge>{" "}
+                          </Badge>{' '}
                           /
                           <Badge color="blue" variant="light">
                             {x?.levelName}
                           </Badge>
                         </td>
                         <td>
-                          <Tooltip label={t("edit_this_course")}>
+                          <Tooltip label={t('edit_this_course')}>
                             <ActionIcon
                               component={Link}
                               to={RoutePath.manageCourse.edit(x.slug).route}
@@ -106,7 +106,7 @@ const MyTrainings = () => {
           }
 
           {authorCourse.data && authorCourse.data.totalCount === 0 && (
-            <Box mt={5}>{t("no_trainings_found")}</Box>
+            <Box mt={5}>{t('no_trainings_found')}</Box>
           )}
         </div>
       )}

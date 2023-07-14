@@ -1,12 +1,12 @@
-import { ActionIcon, Box, createStyles, Flex, Group } from "@mantine/core";
-import fscreen from "fscreen";
-import "rc-slider/assets/index.css";
-import React, { FC, useEffect, useRef, useState } from "react";
-import ReactPlayer, { Config, ReactPlayerProps } from "react-player";
-import PlayerIcon from "./controls/PlayerIcon";
-import RemainingTimeDisplay from "./controls/RemaningTimeDisplay";
-import SeekBar from "./controls/SeekBar";
-import VolumeControlBar from "./controls/VolumeControlBar";
+import { ActionIcon, Box, createStyles, Flex, Group } from '@mantine/core';
+import fscreen from 'fscreen';
+import 'rc-slider/assets/index.css';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import ReactPlayer, { Config, ReactPlayerProps } from 'react-player';
+import PlayerIcon from './controls/PlayerIcon';
+import RemainingTimeDisplay from './controls/RemaningTimeDisplay';
+import SeekBar from './controls/SeekBar';
+import VolumeControlBar from './controls/VolumeControlBar';
 
 interface Props extends ReactPlayerProps {
   url?: string;
@@ -14,42 +14,42 @@ interface Props extends ReactPlayerProps {
   thumbnailUrl?: string;
   setCurrentPlayerState: React.Dispatch<
     React.SetStateAction<
-      | "loading"
-      | "completed"
-      | "loaded"
-      | "playing"
-      | "paused"
-      | "viewing"
-      | "buffering"
+      | 'loading'
+      | 'completed'
+      | 'loaded'
+      | 'playing'
+      | 'paused'
+      | 'viewing'
+      | 'buffering'
     >
   >;
 }
 
 const useStyle = createStyles((theme) => ({
   hidden: {
-    display: "none",
+    display: 'none',
   },
   seekWrapper: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     left: 0,
-    width: "100%",
-    alignItems: "center",
+    width: '100%',
+    alignItems: 'center',
     padding: 20,
     paddingTop: 10,
     paddingBottom: 10,
 
-    display: "flex",
-    justifyContent: "space-between",
-    backgroundColor: "black",
-    opacity: "0.5",
+    display: 'flex',
+    justifyContent: 'space-between',
+    backgroundColor: 'black',
+    opacity: '0.5',
 
-    "&>div": {
+    '&>div': {
       marginLeft: 20,
     },
   },
   seek: {
-    display: "flex",
+    display: 'flex',
     flexGrow: 2,
   },
   volume: {
@@ -86,8 +86,8 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
   config = config ?? {
     file: {
       attributes: {
-        crossOrigin: "anonymous",
-        controlsList: "nodownload",
+        crossOrigin: 'anonymous',
+        controlsList: 'nodownload',
         onContextMenu: (e: any) => e.preventDefault(),
       },
     },
@@ -111,7 +111,7 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
   const handleSeekComplete = (newValue: number) => {
     setSeeking(false);
     // @ts-ignore
-    playerRef.current.seekTo(newValue / 100, "fraction");
+    playerRef.current.seekTo(newValue / 100, 'fraction');
   };
 
   const handleVolumeChange = (value: number) => {
@@ -151,12 +151,12 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
   };
 
   const handleReady = () => {
-    setCurrentPlayerState("loading");
+    setCurrentPlayerState('loading');
   };
 
   const onVideoCompleted = () => {
     setPlaying(false);
-    setCurrentPlayerState("completed");
+    setCurrentPlayerState('completed');
     if (onEnded) {
       onEnded();
     }
@@ -209,14 +209,14 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
         autoHideControls(true);
       }}
       sx={{
-        heightL: "100%",
-        width: "100%",
-        position: "relative",
+        heightL: '100%',
+        width: '100%',
+        position: 'relative',
       }}
     >
       <Flex
-        direction={"column"}
-        sx={{ width: "100%", height: "100%" }}
+        direction={'column'}
+        sx={{ width: '100%', height: '100%' }}
         onClick={() => {
           togglePlay();
         }}
@@ -238,24 +238,24 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
           progressInterval={1000}
           stopOnUnmount={!pip}
           onReady={handleReady}
-          onStart={() => setCurrentPlayerState("viewing")}
+          onStart={() => setCurrentPlayerState('viewing')}
           onPlay={() => {
             setPlaying(true);
-            setCurrentPlayerState("playing");
+            setCurrentPlayerState('playing');
           }}
           onEnablePIP={() => setPip(true)}
           onDisablePIP={handleDisablePiP}
           onPause={() => {
             setPlaying(false);
-            setCurrentPlayerState("paused");
+            setCurrentPlayerState('paused');
           }}
-          onBuffer={() => setCurrentPlayerState("buffering")}
+          onBuffer={() => setCurrentPlayerState('buffering')}
           onEnded={onVideoCompleted}
           onClickPreview={() => setPlaying(true)}
           onProgress={handleProgress}
           onDuration={(duration: number) => {
             setDuration(duration);
-            setCurrentPlayerState("loaded");
+            setCurrentPlayerState('loaded');
           }}
           config={config}
           playIcon={<PlayerIcon.BigCirclePlay />}
@@ -281,12 +281,12 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
           <RemainingTimeDisplay duration={duration} played={played} />
           <Flex
             sx={{
-              justifyContent: "center",
-              alignItems: "center",
+              justifyContent: 'center',
+              alignItems: 'center',
               paddingRight: 8,
             }}
           >
-            <ActionIcon color={"white"} mx={5} onClick={toggleMute}>
+            <ActionIcon color={'white'} mx={5} onClick={toggleMute}>
               {muted ? <PlayerIcon.VolumeMuted /> : <PlayerIcon.Volume />}
             </ActionIcon>
             <VolumeControlBar
@@ -296,12 +296,12 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
             ></VolumeControlBar>
           </Flex>
           {ReactPlayer.canEnablePIP(url) && (
-            <ActionIcon mx={3} color={"white"} onClick={handleTogglePIP}>
+            <ActionIcon mx={3} color={'white'} onClick={handleTogglePIP}>
               {pip ? <PlayerIcon.PiPExit /> : <PlayerIcon.PiP />}
             </ActionIcon>
           )}
           {fscreen.fullscreenEnabled && (
-            <ActionIcon mx={3} color={"white"} onClick={toggleFullscreen}>
+            <ActionIcon mx={3} color={'white'} onClick={toggleFullscreen}>
               {inFullscreenMode ? (
                 <PlayerIcon.FullScreenExit />
               ) : (

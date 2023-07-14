@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { QuestionType } from "@utils/enums";
-import { api } from "./service-api";
-import { httpClient } from "./service-axios";
-import { IUser } from "./types";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { QuestionType } from '@utils/enums';
+import { api } from './service-api';
+import { httpClient } from './service-axios';
+import { IUser } from './types';
 
 interface IAssignmentAttachment {
   assignmentId: string;
@@ -85,13 +85,12 @@ export interface ICreateAssignment {
       option: string;
       isCorrect: boolean;
       isSelected: boolean;
-    }
+    },
   ];
 }
 
 const addAssignmentQuestion = ({ data }: { data: ICreateAssignment }) => {
-  // @ts-ignore
-  data.type = Number(data.type);
+  data.type = Number(data.type).toString();
   return httpClient.post(api.assignment.add, data);
 };
 
@@ -112,8 +111,7 @@ const editAssignmentQuestion = ({
   data: ICreateAssignment;
   assignmentId: string;
 }) => {
-  // @ts-ignore
-  data.type = Number(data.type);
+  data.type = Number(data.type).toString();
   return httpClient.put(api.assignment.listOne(assignmentId), data);
 };
 
@@ -175,9 +173,9 @@ const postAssigmentSubmit = ({
 };
 export const useSubmitAssignment = ({ lessonId }: { lessonId: string }) => {
   const queryClient = useQueryClient();
-  return useMutation(["submitAssignment"], postAssigmentSubmit, {
+  return useMutation(['submitAssignment'], postAssigmentSubmit, {
     onSuccess: () => {
-      queryClient.invalidateQueries([api.assignment.list(lessonId, "")]);
+      queryClient.invalidateQueries([api.assignment.list(lessonId, '')]);
     },
   });
 };
@@ -185,7 +183,7 @@ export const useSubmitAssignment = ({ lessonId }: { lessonId: string }) => {
 export interface IAssignmentReview {
   user: IUser;
   lessonId: string;
-  lessonSlug: "string";
+  lessonSlug: 'string';
   assignmentReview: {
     id: string;
     lessonId: string;

@@ -9,55 +9,55 @@ import {
   ScrollArea,
   Text,
   Title,
-} from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
+} from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import {
   ILessonResultQuestionOption,
   ILessonStartQuestion,
-} from "@utils/services/examService";
-import SubmitResultHeader from "./SubmitResultHeader";
-import TextViewer from "@components/Ui/RichTextViewer";
-import { IconSquareRoundedX } from "@tabler/icons";
-import { IconCircleCheck } from "@tabler/icons-react";
-import UserShortProfile from "@components/UserShortProfile";
-import { IUser } from "@utils/services/types";
-import moment from "moment";
+} from '@utils/services/examService';
+import SubmitResultHeader from './SubmitResultHeader';
+import TextViewer from '@components/Ui/RichTextViewer';
+import { IconSquareRoundedX } from '@tabler/icons';
+import { IconCircleCheck } from '@tabler/icons-react';
+import UserShortProfile from '@components/UserShortProfile';
+import { IUser } from '@utils/services/types';
+import moment from 'moment';
 const useStyle = createStyles((theme) => ({
   option: {
-    ">label": {
-      cursor: "pointer",
+    '>label': {
+      cursor: 'pointer',
     },
   },
   navigate: {
-    display: "flex",
-    height: "50px",
-    width: "50px",
-    justifyContent: "center",
-    alignItems: "center",
-    cursor: "pointer",
+    display: 'flex',
+    height: '50px',
+    width: '50px',
+    justifyContent: 'center',
+    alignItems: 'center',
+    cursor: 'pointer',
   },
   navigateWrapper: {
-    maxHeight: "80vh",
-    height: "100%",
-    overflowY: "auto",
-    alignContent: "start",
-    justifyContent: "start",
+    maxHeight: '80vh',
+    height: '100%',
+    overflowY: 'auto',
+    alignContent: 'start',
+    justifyContent: 'start',
   },
   buttonNav: {
-    display: "flex",
-    justifyContent: "space-between",
-    position: "fixed",
-    bottom: "0",
-    right: "0",
-    width: "100%",
+    display: 'flex',
+    justifyContent: 'space-between',
+    position: 'fixed',
+    bottom: '0',
+    right: '0',
+    width: '100%',
     zIndex: 100,
   },
   active: {
-    border: "2px solid " + theme.colors[theme.primaryColor][1],
+    border: '2px solid ' + theme.colors[theme.primaryColor][1],
   },
   activeCircle: {
     outline: `4px solid ${theme.colors[theme.primaryColor][1]}`,
-    transform: "scale(1.08)",
+    transform: 'scale(1.08)',
   },
   unanswered: {
     backgroundColor: theme.colors.orange[6],
@@ -103,7 +103,7 @@ const SubmittedResultDetails = ({
           <Group position="apart">
             <div>
               <Title>{name}</Title>
-              <Text>{moment(submissionDate + "Z").fromNow()}</Text>
+              <Text>{moment(submissionDate + 'Z').fromNow()}</Text>
             </div>
             <UserShortProfile user={user}></UserShortProfile>
             <SubmitResultHeader
@@ -122,10 +122,10 @@ const SubmittedResultDetails = ({
                 p={10}
                 pb={20}
                 sx={{
-                  flexDirection: "column",
-                  width: "100%",
-                  justifyContent: "start",
-                  alignContent: "start",
+                  flexDirection: 'column',
+                  width: '100%',
+                  justifyContent: 'start',
+                  alignContent: 'start',
                 }}
               >
                 <Group position="apart" align="center">
@@ -143,7 +143,7 @@ const SubmittedResultDetails = ({
                       [classes.active]: x.isSelected,
                     })}
                     id={x.id}
-                    shadow={"lg"}
+                    shadow={'lg'}
                     my={5}
                   >
                     <Grid justify="space-between" align="center">
@@ -164,8 +164,8 @@ const SubmittedResultDetails = ({
                           key={x.id}
                           styles={{
                             root: {
-                              border: "none",
-                              background: "transparent",
+                              border: 'none',
+                              background: 'transparent',
                             },
                           }}
                           content={x.value}

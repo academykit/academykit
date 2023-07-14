@@ -1,4 +1,4 @@
-import InlineInput from "@components/Ui/InlineInput";
+import InlineInput from '@components/Ui/InlineInput';
 import {
   Box,
   Button,
@@ -7,25 +7,25 @@ import {
   Grid,
   Text,
   Title,
-} from "@mantine/core";
-import CourseSection from "./Section";
-import { useSection } from "@context/SectionProvider";
+} from '@mantine/core';
+import CourseSection from './Section';
+import { useSection } from '@context/SectionProvider';
 import {
   ISection,
   useCourseDescription,
   useCreateSection,
-} from "@utils/services/courseService";
-import { useParams } from "react-router-dom";
-import { showNotification } from "@mantine/notifications";
-import { useForm } from "@mantine/form";
-import errorType from "@utils/services/axiosError";
-import { IconDragDrop } from "@tabler/icons";
-import { CourseStatus } from "@utils/enums";
-import { useTranslation } from "react-i18next";
+} from '@utils/services/courseService';
+import { useParams } from 'react-router-dom';
+import { showNotification } from '@mantine/notifications';
+import { useForm } from '@mantine/form';
+import errorType from '@utils/services/axiosError';
+import { IconDragDrop } from '@tabler/icons';
+import { CourseStatus } from '@utils/enums';
+import { useTranslation } from 'react-i18next';
 
 const useStyle = createStyles((theme) => ({
   section: {
-    background: theme.colorScheme === "dark" ? theme.black[2] : theme.white[2],
+    background: theme.colorScheme === 'dark' ? theme.black[2] : theme.white[2],
   },
 }));
 
@@ -41,9 +41,9 @@ const EditSection = () => {
     <Container fluid>
       <Grid mt={20}>
         <Grid.Col span={section?.matches ? 10 : 12}>
-          <Title mb={10}>{t("sections_and_lessons")}</Title>
+          <Title mb={10}>{t('sections_and_lessons')}</Title>
           <Text>
-            {t("group_lessons_sections")} {<IconDragDrop />}
+            {t('group_lessons_sections')} {<IconDragDrop />}
           </Text>
         </Grid.Col>
       </Grid>
@@ -61,7 +61,7 @@ const EditSection = () => {
       </Box>
 
       {getCourseDetails.data?.status !== CourseStatus.Completed && (
-        <div style={{ marginTop: "20px" }}>
+        <div style={{ marginTop: '20px' }}>
           {!section?.isAddSection ? (
             <Button
               onClick={() => {
@@ -69,7 +69,7 @@ const EditSection = () => {
                 section?.setAddLessonClick(false);
               }}
             >
-              {t("add_new_section")}
+              {t('add_new_section')}
             </Button>
           ) : (
             <AddSectionForm slug={slug as string} />
@@ -84,7 +84,7 @@ const AddSectionForm = ({ slug }: { slug: string }) => {
   const section = useSection();
   const form = useForm({
     initialValues: {
-      name: "",
+      name: '',
     },
   });
   const addSection = useCreateSection(slug);
@@ -102,14 +102,14 @@ const AddSectionForm = ({ slug }: { slug: string }) => {
             section?.setActiveSection(data.data.slug);
             section?.setIsAddSection(!section?.isAddSection);
             showNotification({
-              message: t("section_add_success") as string,
+              message: t('section_add_success') as string,
             });
           } catch (error) {
             const err = errorType(error);
             showNotification({
               message: err,
-              color: "red",
-              title: t("error"),
+              color: 'red',
+              title: t('error'),
             });
           }
           form.reset();
@@ -117,9 +117,9 @@ const AddSectionForm = ({ slug }: { slug: string }) => {
       })}
     >
       <InlineInput
-        placeholder={t("section_name_placeholder")}
+        placeholder={t('section_name_placeholder')}
         onCloseEdit={() => section?.setIsAddSection(!section?.isAddSection)}
-        {...form.getInputProps("name")}
+        {...form.getInputProps('name')}
       ></InlineInput>
     </form>
   );

@@ -1,10 +1,9 @@
-import useAuth from "@hooks/useAuth";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from "@utils/constants";
-import { UserRole } from "@utils/enums";
-import { api } from "./service-api";
-import { httpClient } from "./service-axios";
-import { IPasswordResetResponse, IUserProfile } from "./types";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from '@utils/constants';
+import { UserRole } from '@utils/enums';
+import { api } from './service-api';
+import { httpClient } from './service-axios';
+import { IPasswordResetResponse, IUserProfile } from './types';
 
 export interface ILogin {
   firstName: string;
@@ -24,11 +23,11 @@ export const useLogin = () => {
       return httpClient.post<ILogin>(api.auth.login, { email, password });
     },
     {
-      onError: (data, {}, context) => {},
+      onError: () => {},
       onSuccess: (data) => {
         localStorage.setItem(TOKEN_STORAGE, data?.data?.token);
         localStorage.setItem(REFRESH_TOKEN_STORAGE, data?.data?.refreshToken);
-        localStorage.setItem("id", data?.data?.userId);
+        localStorage.setItem('id', data?.data?.userId);
       },
     }
   );
@@ -38,15 +37,15 @@ export const useLogout = () => {
   return useMutation(
     [api.auth.logout],
     () => {
-      return httpClient.post<any>(api.auth.logout, {
+      return httpClient.post(api.auth.logout, {
         token: localStorage.getItem(REFRESH_TOKEN_STORAGE),
       });
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         localStorage.removeItem(TOKEN_STORAGE);
         localStorage.removeItem(REFRESH_TOKEN_STORAGE);
-        localStorage.removeItem("id");
+        localStorage.removeItem('id');
       },
     }
   );
@@ -58,7 +57,6 @@ export const useReAuth = () => {
     () => {
       return httpClient.get<IUserProfile>(api.auth.me);
     },
-
     {
       retry: false,
       refetchOnMount: false,
@@ -69,7 +67,7 @@ export const useReAuth = () => {
       onError: () => {},
       select: (data) => data.data,
       enabled: !!localStorage.getItem(TOKEN_STORAGE),
-      onSuccess: (data) => {},
+      onSuccess: () => {},
     }
   );
 };
@@ -85,7 +83,7 @@ export const useProfileAuth = (id: string) => {
       onError: () => {},
       select: (data) => data.data,
       enabled: !!localStorage.getItem(TOKEN_STORAGE),
-      onSuccess: (data) => {},
+      onSuccess: () => {},
     }
   );
 };
@@ -97,8 +95,6 @@ const changePassword = (data: {
 }) => httpClient.post<IPasswordResetResponse>(api.auth.changePassword, data);
 
 export const useChangePassword = () => {
-  const auth = useAuth();
-
   return useMutation([api.auth.changePassword], changePassword, {});
 };
 

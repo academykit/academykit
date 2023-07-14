@@ -1,4 +1,4 @@
-import MyTrainingExternal from "./myTrainingExternal";
+import MyTrainingExternal from './myTrainingExternal';
 
 const AdminViewCertificate = () => {
   return (

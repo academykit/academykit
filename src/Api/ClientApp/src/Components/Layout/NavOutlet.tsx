@@ -1,5 +1,5 @@
-import Breadcrumb from "@components/Ui/BreadCrumb";
-import useAuth from "@hooks/useAuth";
+import Breadcrumb from '@components/Ui/BreadCrumb';
+import useAuth from '@hooks/useAuth';
 import {
   AppShell,
   Navbar,
@@ -12,11 +12,11 @@ import {
   MediaQuery,
   Flex,
   Loader,
-} from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { UserRole } from "@utils/enums";
-import { Suspense } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { UserRole } from '@utils/enums';
+import { Suspense } from 'react';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 
 const NavOutlet = ({
   data,
@@ -39,33 +39,33 @@ const NavOutlet = ({
       sx={{}}
       styles={(theme) => ({
         main: {
-          padding: "0px",
-          width: "100%",
+          padding: '0px',
+          width: '100%',
           backgroundColor:
-            theme.colorScheme === "dark"
+            theme.colorScheme === 'dark'
               ? theme.colors.dark[8]
               : theme.colors.gray[0],
         },
         header: {
-          height: "0",
-          backgroundColor: "red",
+          height: '0',
+          backgroundColor: 'red',
         },
         inner: {
-          height: "0px",
+          height: '0px',
         },
       })}
       navbarOffsetBreakpoint="sm"
       asideOffsetBreakpoint="sm"
       navbar={
         <Navbar
-          sx={{ position: "sticky", zIndex: 20, overflowY: "auto" }}
+          sx={{ position: 'sticky', zIndex: 20, overflowY: 'auto' }}
           p="xs"
           hiddenBreakpoint="sm"
           hidden={!opened}
           width={{ sm: 200 }}
         >
-          <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-            <Flex direction={"row-reverse"}>
+          <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
+            <Flex direction={'row-reverse'}>
               <Burger
                 sx={{}}
                 aria-label="Toggle navbar"
@@ -114,11 +114,11 @@ const NavOutlet = ({
       <Box mt={20} mx={20}>
         <MediaQuery
           smallerThan="sm"
-          styles={{ display: opened ? "none" : "block" }}
+          styles={{ display: opened ? 'none' : 'block' }}
         >
           <Box>
             <Group mx={5}>
-              <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+              <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
                 <Burger
                   aria-label="Toggle navbar"
                   opened={opened}
@@ -129,7 +129,7 @@ const NavOutlet = ({
                 />
               </MediaQuery>
               <Breadcrumb
-                start={{ href: "/", title: "home" }}
+                start={{ href: '/', title: 'home' }}
                 hide={hideBreadCrumb}
               />
             </Group>

@@ -5,8 +5,8 @@ import {
   Paper,
   Center,
   Group,
-} from "@mantine/core";
-import { IconArrowUpRight, IconArrowDownRight } from "@tabler/icons";
+} from '@mantine/core';
+import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons';
 
 interface StatsRingProps {
   data: {
@@ -14,7 +14,7 @@ interface StatsRingProps {
     stats: string;
     progress: number;
     color: string;
-    icon: "up" | "down";
+    icon: 'up' | 'down';
   }[];
 }
 

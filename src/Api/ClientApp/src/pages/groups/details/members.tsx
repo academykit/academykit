@@ -1,9 +1,9 @@
-import DeleteModal from "@components/Ui/DeleteModal";
-import { IAuthContext } from "@context/AuthProvider";
+import DeleteModal from '@components/Ui/DeleteModal';
+import { IAuthContext } from '@context/AuthProvider';
 import withSearchPagination, {
   IWithSearchPagination,
-} from "@hoc/useSearchPagination";
-import useAuth from "@hooks/useAuth";
+} from '@hoc/useSearchPagination';
+import useAuth from '@hooks/useAuth';
 import {
   Avatar,
   Box,
@@ -16,26 +16,26 @@ import {
   Text,
   Title,
   Transition,
-} from "@mantine/core";
-import { useToggle } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
-import { IconTrash } from "@tabler/icons";
-import errorType from "@utils/services/axiosError";
+} from '@mantine/core';
+import { useToggle } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
+import { IconTrash } from '@tabler/icons';
+import errorType from '@utils/services/axiosError';
 import {
   IGroupMember,
   useGroupMember,
   useRemoveGroupMember,
-} from "@utils/services/groupService";
-import { Link, useParams } from "react-router-dom";
-import AddMember from "../Components/AddMember";
-import { UserRole } from "@utils/enums";
-import { useTranslation } from "react-i18next";
+} from '@utils/services/groupService';
+import { Link, useParams } from 'react-router-dom';
+import AddMember from '../Components/AddMember';
+import { UserRole } from '@utils/enums';
+import { useTranslation } from 'react-i18next';
 
 const a = {
   in: { opacity: 1 },
   out: { opacity: 0 },
-  common: { transformOrigin: "top" },
-  transitionProperty: "transform, opacity",
+  common: { transformOrigin: 'top' },
+  transitionProperty: 'transform, opacity',
 };
 const GroupMember = ({
   pagination,
@@ -55,19 +55,19 @@ const GroupMember = ({
   return (
     <Container fluid>
       <Group
-        sx={{ justifyContent: "space-between", alignItems: "center" }}
+        sx={{ justifyContent: 'space-between', alignItems: 'center' }}
         mt={20}
       >
         <Box>
-          <Title>{t("group_members")}</Title>
-          <Text>{t("group_members_description")}</Text>
+          <Title>{t('group_members')}</Title>
+          <Text>{t('group_members_description')}</Text>
         </Box>
         {auth?.auth && auth?.auth?.role <= UserRole.Trainer && (
           <Transition mounted={!showAddMember} transition={a} duration={400}>
             {(styles) => (
               <>
                 <Button onClick={() => setShowAddMember()}>
-                  {t("add_group_member")}
+                  {t('add_group_member')}
                 </Button>
               </>
             )}
@@ -88,22 +88,22 @@ const GroupMember = ({
           )}
         </Transition>
       </Box>
-      <Box mt={10}>{searchComponent(t("search_group_members") as string)}</Box>
-      {groupMember.isError && <>{t("unable_to_fetch")}</>}
+      <Box mt={10}>{searchComponent(t('search_group_members') as string)}</Box>
+      {groupMember.isError && <>{t('unable_to_fetch')}</>}
 
       {groupMember.isLoading && <Loader />}
       {groupMember.data && groupMember.data?.totalCount < 1 && (
-        <Box mt={10}>{t("no_members_found")}</Box>
+        <Box mt={10}>{t('no_members_found')}</Box>
       )}
       {groupMember.isSuccess && groupMember.data.totalCount !== 0 && (
         <Paper mt={10}>
           <Table striped>
             <thead>
               <tr>
-                <th>{t("user_name")}</th>
-                <th>{t("email_or_phone")}</th>
+                <th>{t('user_name')}</th>
+                <th>{t('email_or_phone')}</th>
                 {auth?.auth && auth?.auth?.role <= UserRole.Trainer && (
-                  <th>{t("actions")}</th>
+                  <th>{t('actions')}</th>
                 )}
               </tr>
             </thead>
@@ -152,14 +152,14 @@ const GroupMemberRow = ({
     const error = errorType(removeGroupMember.error);
     showNotification({
       message: error,
-      color: "red",
+      color: 'red',
     });
     removeGroupMember.reset();
     setDeleteDialog();
   }
   if (removeGroupMember.isSuccess) {
     showNotification({
-      message: `${t("remove_success")} ${data.user.fullName}`,
+      message: `${t('remove_success')} ${data.user.fullName}`,
     });
     removeGroupMember.reset();
     setDeleteDialog();
@@ -167,9 +167,9 @@ const GroupMemberRow = ({
   return (
     <tr>
       <DeleteModal
-        title={`${t("sure_want_to_remove")} "${
-          data.user.fullName?.split(" ")[0]
-        }" ?`}
+        title={`${t('sure_want_to_remove')} "${data.user.fullName?.split(
+          ' '
+        )[0]}" ?`}
         open={deleteDialog}
         onClose={setDeleteDialog}
         onConfirm={deleteMember}
@@ -178,7 +178,7 @@ const GroupMemberRow = ({
       <td>
         <Group spacing="sm">
           <Link to={`/userProfile/${data.user.id}`}>
-            <Avatar size={26} src={data?.user?.imageUrl || ""} radius={26} />
+            <Avatar size={26} src={data?.user?.imageUrl || ''} radius={26} />
           </Link>
           <Text size="sm" weight={500}>
             {data?.user?.fullName}
@@ -196,7 +196,7 @@ const GroupMemberRow = ({
             <Button
               onClick={() => setDeleteDialog()}
               variant="subtle"
-              color={"red"}
+              color={'red'}
             >
               <IconTrash />
             </Button>

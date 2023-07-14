@@ -1,8 +1,8 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { CourseUserStatus, QuestionType } from "@utils/enums";
-import { api } from "./service-api";
-import { httpClient } from "./service-axios";
-import { IUser } from "./types";
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { CourseUserStatus, QuestionType } from '@utils/enums';
+import { api } from './service-api';
+import { httpClient } from './service-axios';
+import { IUser } from './types';
 
 export interface ILessonStartQuestionOption {
   id: string;
@@ -58,7 +58,7 @@ const postExamSubmit = ({
   httpClient.post(api.exam.submitExam(lessonId, questionSetSubmissionId), data);
 
 export const useSubmitExam = () =>
-  useMutation(["submitExam"], postExamSubmit, {});
+  useMutation(['submitExam'], postExamSubmit, {});
 
 export interface QuestionSetSubmissionResult {
   attemptCount: 0;

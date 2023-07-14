@@ -1,5 +1,5 @@
-import Breadcrumb from "@components/Ui/BreadCrumb";
-import { useEffect, useState } from "react";
+import Breadcrumb from '@components/Ui/BreadCrumb';
+import { useEffect, useState } from 'react';
 import {
   Checkbox,
   Group,
@@ -13,20 +13,22 @@ import {
   Paper,
   Pagination,
   Loader,
-} from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
-import { usePools } from "@utils/services/poolService";
-import { useTags } from "@utils/services/tagService";
+  TransferListItemComponent,
+  TransferListItemComponentProps,
+} from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
+import { usePools } from '@utils/services/poolService';
+import { useTags } from '@utils/services/tagService';
 import {
   useAddQuestionQuestionSet,
   useQuestion,
   useQuestionSetQuestions,
-} from "@utils/services/questionService";
-import { showNotification } from "@mantine/notifications";
-import { useNavigate, useParams } from "react-router-dom";
-import errorType from "@utils/services/axiosError";
-import { useTranslation } from "react-i18next";
-import TextViewer from "@components/Ui/RichTextViewer";
+} from '@utils/services/questionService';
+import { showNotification } from '@mantine/notifications';
+import { useNavigate, useParams } from 'react-router-dom';
+import errorType from '@utils/services/axiosError';
+import { useTranslation } from 'react-i18next';
+import TextViewer from '@components/Ui/RichTextViewer';
 
 interface ISelectList {
   label: string;
@@ -41,30 +43,27 @@ interface IQuestionListData {
 
 const useStyle = createStyles({});
 
-const ItemComponent = ({
+const ItemComponent: TransferListItemComponent = ({
   data,
   selected,
-}: {
-  data: IQuestionListData;
-  selected: boolean;
-}) => (
+}: TransferListItemComponentProps) => (
   <Group noWrap>
     <Checkbox
       checked={selected}
       onChange={() => {}}
       tabIndex={-1}
-      sx={{ pointerEvents: "none" }}
+      sx={{ pointerEvents: 'none' }}
     />
     <div style={{ flex: 1 }}>
       <Text size="sm" weight={500}>
         {data.label}
       </Text>
       {data && data?.description !== null && (
-        <Text lineClamp={3} sx={{ overflow: "hidden" }}>
+        <Text lineClamp={3} sx={{ overflow: 'hidden' }}>
           <TextViewer
             content={data?.description}
             sx={{
-              wordBreak: "break-all",
+              wordBreak: 'break-all',
             }}
           />
         </Text>
@@ -88,14 +87,14 @@ const Questions = () => {
   const [data, setData] = useState<TransferListData>([firstList, secondList]);
   const [poolValue, setPoolValue] = useState<string | null>(null);
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.sm}px)`);
-  const questionPools = usePools("");
-  const questionPoolTags = useTags("");
-  const questions = useQuestion(poolValue ?? "", `page=${activePage}&size=12`);
+  const questionPools = usePools('');
+  const questionPoolTags = useTags('');
+  const questions = useQuestion(poolValue ?? '', `page=${activePage}&size=12`);
   const addQuestions = useAddQuestionQuestionSet(lessonSlug as string);
   const navigate = useNavigate();
 
-  let poolData: ISelectList[] = [];
-  let questionTag: ISelectList[] = [];
+  const poolData: ISelectList[] = [];
+  const questionTag: ISelectList[] = [];
   questionPools.data?.items.map((e) => {
     poolData.push({ value: e.slug, label: e.name });
   });
@@ -128,7 +127,7 @@ const Questions = () => {
   }, [questions.isSuccess, poolValue, activePage]);
 
   useEffect(() => {
-    const i: any = questionList.data?.map((e, i) => {
+    const i: any = questionList.data?.map((e) => {
       return {
         value: e.questionPoolQuestionId,
         label: e.name,
@@ -142,8 +141,8 @@ const Questions = () => {
   const addQuestion = async () => {
     if (!data[1].length) {
       showNotification({
-        message: t("question_list_cannot_empty"),
-        color: "red",
+        message: t('question_list_cannot_empty'),
+        color: 'red',
       });
       return;
     }
@@ -154,19 +153,19 @@ const Questions = () => {
       });
       await addQuestions.mutateAsync({
         questionPoolQuestionIds,
-        identity: params.lessonSlug ?? "",
+        identity: params.lessonSlug ?? '',
       });
       showNotification({
-        message: t("add_questions_success"),
+        message: t('add_questions_success'),
       });
       navigate(-1);
     } catch (error) {
       const err = errorType(error);
 
       showNotification({
-        title: t("error"),
+        title: t('error'),
         message: err,
-        color: "red",
+        color: 'red',
       });
     }
   };
@@ -179,12 +178,12 @@ const Questions = () => {
           <Grid.Col span={matches ? 3 : 6}>
             <Select
               size="md"
-              placeholder={t("pick_one") as string}
-              label={t("mcq_pools")}
+              placeholder={t('pick_one') as string}
+              label={t('mcq_pools')}
               searchable
               clearable
               allowDeselect
-              nothingFound={t("no_options")}
+              nothingFound={t('no_options')}
               maxDropdownHeight={280}
               data={poolData}
               onChange={(e) => {
@@ -195,26 +194,25 @@ const Questions = () => {
           </Grid.Col>
         </Grid>
 
-        {questions.fetchStatus !== "idle" && questions.isLoading ? (
+        {questions.fetchStatus !== 'idle' && questions.isLoading ? (
           <Loader />
         ) : (
           <>
             <TransferList
               value={data}
               onChange={setData}
-              searchPlaceholder={t("search_for_questions") as string}
+              searchPlaceholder={t('search_for_questions') as string}
               nothingFound={
-                questionList.isLoading ? <Loader /> : t("no_question_found")
+                questionList.isLoading ? <Loader /> : t('no_question_found')
               }
               titles={[
-                t("questions_list"),
-                `${t("selected_questions")} (${data[1].length})`,
+                t('questions_list'),
+                `${t('selected_questions')} (${data[1].length})`,
               ]}
               listHeight={600}
               breakpoint="sm"
-              //@ts-ignore
               itemComponent={ItemComponent}
-              sx={{ height: "85%" }}
+              sx={{ height: '85%' }}
             />
 
             {questions.data && questions.data.totalPage > 1 && (
@@ -228,14 +226,14 @@ const Questions = () => {
           </>
         )}
         <Group position="left" mt={30}>
-          <Button onClick={addQuestion}>{t("submit")}</Button>
+          <Button onClick={addQuestion}>{t('submit')}</Button>
           <Button
             variant="outline"
             onClick={() => {
               navigate(-1);
             }}
           >
-            {t("cancel")}
+            {t('cancel')}
           </Button>
         </Group>
       </Paper>

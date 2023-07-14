@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ICertificateList } from "./manageCourseService";
-import { api } from "./service-api";
-import { httpClient } from "./service-axios";
-import { IPaginated, IUser } from "./types";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { ICertificateList } from './manageCourseService';
+import { api } from './service-api';
+import { httpClient } from './service-axios';
+import { IPaginated, IUser } from './types';
 
 export interface ExternalCertificatePost {
   name: string;
@@ -34,7 +34,7 @@ const getExternalCertificate = () => {
 
 export const useGetExternalCertificate = (isEnabled: boolean) => {
   return useQuery(
-    ["certificate", api.externalCertificate.add],
+    ['certificate', api.externalCertificate.add],
 
     () => getExternalCertificate(),
     {
@@ -50,10 +50,10 @@ const addCertificate = (data: ExternalCertificatePost) => {
 
 export const useAddCertificate = () => {
   const queryClient = useQueryClient();
-  return useMutation(["post" + api.externalCertificate.add], addCertificate, {
+  return useMutation(['post' + api.externalCertificate.add], addCertificate, {
     onSuccess: () => {
       queryClient.invalidateQueries([
-        "certificate",
+        'certificate',
         api.externalCertificate.add,
       ]);
     },
@@ -70,15 +70,15 @@ const updateCertificate = ({
   return httpClient.put(api.externalCertificate.update(id), data);
 };
 
-export const useUpdateCertificate = (id: string) => {
+export const useUpdateCertificate = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    ["update" + api.externalCertificate.add],
+    ['update' + api.externalCertificate.add],
     updateCertificate,
     {
       onSuccess: () => {
         queryClient.invalidateQueries([
-          "certificate",
+          'certificate',
           api.externalCertificate.add,
         ]);
       },
@@ -126,7 +126,7 @@ const updateCertificateStatus = ({
   status: CertificateStatus;
 }) =>
   httpClient.patch(
-    api.externalCertificate.updateStatus(id) + "?status=" + status
+    api.externalCertificate.updateStatus(id) + '?status=' + status
   );
 export const useUpdateCertificateStatus = (id: string, search: string) => {
   const queryClient = useQueryClient();

@@ -13,19 +13,19 @@ import {
   Tooltip,
   useMantineTheme,
   Text,
-} from "@mantine/core";
-import { IconCheck, IconCopy, IconDownload, IconEye } from "@tabler/icons";
+} from '@mantine/core';
+import { IconCheck, IconCopy, IconDownload, IconEye } from '@tabler/icons';
 import {
   GetExternalCertificate,
   useGetUserCertificate,
-} from "@utils/services/certificateService";
-import moment from "moment";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import downloadImage from "@utils/downloadImage";
-import { TFunction } from "i18next";
-import { useTranslation } from "react-i18next";
-import { DATE_FORMAT } from "@utils/constants";
+} from '@utils/services/certificateService';
+import moment from 'moment';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import downloadImage from '@utils/downloadImage';
+import { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
+import { DATE_FORMAT } from '@utils/constants';
 
 const RowsExternal = ({
   item,
@@ -45,43 +45,43 @@ const RowsExternal = ({
 
       <td>
         {item?.status === 2 ? (
-          <Badge>{t("yes")}</Badge>
+          <Badge>{t('yes')}</Badge>
         ) : (
-          <Badge>{t("No")}</Badge>
+          <Badge>{t('No')}</Badge>
         )}
       </td>
       <td>{moment(item?.startDate).format(DATE_FORMAT)}</td>
       <td>{moment(item?.endDate).format(DATE_FORMAT)}</td>
       <td>
-        {item?.duration} {t("hour_s")}
+        {item?.duration} {t('hour_s')}
       </td>
       <td>{item?.institute}</td>
-      <td style={{ wordBreak: "break-all" }}>{item.location}</td>
+      <td style={{ wordBreak: 'break-all' }}>{item.location}</td>
       <td>
-        <Box style={{ width: 150, marginTop: "auto", marginBottom: "auto" }}>
+        <Box style={{ width: 150, marginTop: 'auto', marginBottom: 'auto' }}>
           {item?.imageUrl ? (
-            <div style={{ position: "relative" }}>
+            <div style={{ position: 'relative' }}>
               <Image
                 width={150}
                 height={100}
                 fit="contain"
-                sx={{ opacity: "0.5" }}
+                sx={{ opacity: '0.5' }}
                 src={item?.imageUrl}
               />
               <div
                 style={{
-                  position: "absolute",
+                  position: 'absolute',
                   left: 0,
                   bottom: 0,
                   right: 0,
-                  margin: "auto",
+                  margin: 'auto',
                   top: 0,
-                  width: "45px",
-                  height: "30px",
-                  display: "flex",
+                  width: '45px',
+                  height: '30px',
+                  display: 'flex',
                 }}
               >
-                <Tooltip label={t("view_certificate")}>
+                <Tooltip label={t('view_certificate')}>
                   <ActionIcon
                     onClick={() => window.open(item?.imageUrl)}
                     mr={10}
@@ -89,10 +89,10 @@ const RowsExternal = ({
                     <IconEye color="black" />
                   </ActionIcon>
                 </Tooltip>
-                <Tooltip label={t("download_certificate")}>
+                <Tooltip label={t('download_certificate')}>
                   <ActionIcon
                     onClick={() =>
-                      downloadImage(item?.imageUrl, item?.user?.fullName ?? "")
+                      downloadImage(item?.imageUrl, item?.user?.fullName ?? '')
                     }
                   >
                     <IconDownload color="black" />
@@ -101,7 +101,7 @@ const RowsExternal = ({
               </div>
             </div>
           ) : (
-            <Text>{t("no_certificate")}</Text>
+            <Text>{t('no_certificate')}</Text>
           )}
         </Box>
       </td>
@@ -117,7 +117,7 @@ const ExternalCertificate = () => {
     <>
       {externalCertificate.data && externalCertificate.data.length > 0 && (
         <>
-          <Title mt={"xl"}>{t("external_certificate")}</Title>
+          <Title mt={'xl'}>{t('external_certificate')}</Title>
           <ScrollArea>
             <Paper mt={10}>
               <Table
@@ -129,14 +129,14 @@ const ExternalCertificate = () => {
               >
                 <thead>
                   <tr>
-                    <th>{t("training_name")}</th>
-                    <th>{t("verified")}</th>
-                    <th>{t("start_date")}</th>
-                    <th>{t("end_date")}</th>
-                    <th>{t("duration")}</th>
-                    <th>{t("issued_by")}</th>
-                    <th>{t("issuer_location")}</th>
-                    <th>{t("external_certificate")}</th>
+                    <th>{t('training_name')}</th>
+                    <th>{t('verified')}</th>
+                    <th>{t('start_date')}</th>
+                    <th>{t('end_date')}</th>
+                    <th>{t('duration')}</th>
+                    <th>{t('issued_by')}</th>
+                    <th>{t('issuer_location')}</th>
+                    <th>{t('external_certificate')}</th>
                   </tr>
                 </thead>
                 <tbody>

@@ -1,16 +1,16 @@
-import { ActionIcon, Group, Text } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
-import { ToolbarSlot } from "@react-pdf-viewer/toolbar";
-import { IconArrowUp, IconArrowDown } from "@tabler/icons";
+import { ActionIcon, Group, Text } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
+import { ToolbarSlot } from '@react-pdf-viewer/toolbar';
+import { IconArrowUp, IconArrowDown } from '@tabler/icons';
 
 const SwitchPage = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {
-  const matchesSmallScreen = useMediaQuery("(min-width: 450px");
+  const matchesSmallScreen = useMediaQuery('(min-width: 450px');
   return (
     <Group>
       <toolbarSlot.GoToPreviousPage
         children={(props) => (
           <ActionIcon
-            size={matchesSmallScreen ? "md" : "sm"}
+            size={matchesSmallScreen ? 'md' : 'sm'}
             disabled={props.isDisabled}
             onClick={props.onClick}
           >
@@ -20,17 +20,17 @@ const SwitchPage = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {
       />
       <toolbarSlot.CurrentPageLabel
         children={(props) => (
-          <Text size={matchesSmallScreen ? "md" : "sm"} color={"dimmed"}>
+          <Text size={matchesSmallScreen ? 'md' : 'sm'} color={'dimmed'}>
             {props.currentPage + 1}
           </Text>
         )}
       />
-      <Text color={"dimmed"} size={matchesSmallScreen ? "md" : "sm"}>
+      <Text color={'dimmed'} size={matchesSmallScreen ? 'md' : 'sm'}>
         /
       </Text>
       <toolbarSlot.NumberOfPages
         children={(props) => (
-          <Text size={matchesSmallScreen ? "md" : "sm"} color={"dimmed"}>
+          <Text size={matchesSmallScreen ? 'md' : 'sm'} color={'dimmed'}>
             {props.numberOfPages}
           </Text>
         )}
@@ -38,7 +38,7 @@ const SwitchPage = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {
       <toolbarSlot.GoToNextPage
         children={(props) => (
           <ActionIcon
-            size={matchesSmallScreen ? "md" : "sm"}
+            size={matchesSmallScreen ? 'md' : 'sm'}
             disabled={props.isDisabled}
             onClick={props.onClick}
           >

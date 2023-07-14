@@ -1,4 +1,4 @@
-import FeedbackResult from "./result";
+import FeedbackResult from './result';
 
 const MyFeedback = () => {
   return <FeedbackResult />;

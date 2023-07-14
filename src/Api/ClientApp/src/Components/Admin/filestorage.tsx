@@ -1,14 +1,14 @@
-import { Button, Card, Group, Radio, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import { EFileStorageType } from "@utils/enums";
+import { Button, Card, Group, Radio, TextInput } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import { EFileStorageType } from '@utils/enums';
 import {
   IFileStorage,
   useUpdateFileStorage,
-} from "@utils/services/adminService";
-import errorType from "@utils/services/axiosError";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+} from '@utils/services/adminService';
+import errorType from '@utils/services/axiosError';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
   const form = useForm({ initialValues: data });
@@ -21,12 +21,12 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
     try {
       await fileStorage.mutateAsync(data);
       showNotification({
-        message: t("update_file_storage_success"),
+        message: t('update_file_storage_success'),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
-        color: "red",
+        color: 'red',
         message: error,
       });
     }
@@ -63,11 +63,11 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
             key={x.key}
             mt={10}
             {...form.getInputProps(`${activeIndex}.values.${index}.value`)}
-            label={t("settings_screen.file_storage." + x.key)}
+            label={t('settings_screen.file_storage.' + x.key)}
           />
         ))}
         <Button mt={20} type="submit">
-          {t("save")}
+          {t('save')}
         </Button>
       </Card>
     </form>

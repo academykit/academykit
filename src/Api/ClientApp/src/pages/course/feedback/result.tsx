@@ -1,4 +1,4 @@
-import TextViewer from "@components/Ui/RichTextViewer";
+import TextViewer from '@components/Ui/RichTextViewer';
 import {
   Button,
   Card,
@@ -8,18 +8,18 @@ import {
   Loader,
   Rating,
   Title,
-} from "@mantine/core";
-import { FeedbackType } from "@utils/enums";
-import { useReAuth } from "@utils/services/authService";
+} from '@mantine/core';
+import { FeedbackType } from '@utils/enums';
+import { useReAuth } from '@utils/services/authService';
 
-import { useGetUserFeedback } from "@utils/services/feedbackService";
-import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useGetUserFeedback } from '@utils/services/feedbackService';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const useStyle = createStyles((theme) => ({
   option: {
-    ">label": {
-      cursor: "pointer",
+    '>label': {
+      cursor: 'pointer',
     },
   },
   active: {
@@ -35,7 +35,7 @@ const FeedbackResult = () => {
   const { t } = useTranslation();
   const getUserFeedback = useGetUserFeedback(
     id as string,
-    studentId ? (studentId as string) : auth.data?.id ?? ""
+    studentId ? (studentId as string) : auth.data?.id ?? ''
   );
 
   if (getUserFeedback.isError) {
@@ -47,19 +47,20 @@ const FeedbackResult = () => {
 
   return (
     <Container>
-      {getUserFeedback.data?.map((x, currentIndex) => (
+      {getUserFeedback.data?.map((x) => (
         <Card key={x.id} shadow="sm" my={10} withBorder>
           <Title>{x.name}</Title>
 
           {x.type === FeedbackType.Subjective ? (
-            <TextViewer content={x.answer ?? ""} />
+            <TextViewer content={x.answer ?? ''} />
           ) : x.type === FeedbackType.Rating ? (
-            <Rating value={x.rating} size={"xl"} mt={10} readOnly={true} />
+            <Rating value={x.rating} size={'xl'} mt={10} readOnly={true} />
           ) : (
             x.feedbackQuestionOptions &&
             x.feedbackQuestionOptions.map((option) => (
               <Card
-                shadow={"md"}
+                key={option.id}
+                shadow={'md'}
                 my={10}
                 p={10}
                 className={cx({
@@ -69,7 +70,7 @@ const FeedbackResult = () => {
                 <TextViewer
                   styles={{
                     root: {
-                      border: "none",
+                      border: 'none',
                     },
                   }}
                   content={option.option}
@@ -81,7 +82,7 @@ const FeedbackResult = () => {
       ))}
       <Group mt={20}>
         <Button type="reset" variant="outline" onClick={() => navigate(-1)}>
-          {t("go_back_button")}
+          {t('go_back_button')}
         </Button>
       </Group>
     </Container>

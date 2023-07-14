@@ -1,5 +1,5 @@
-import UserShortProfile from "@components/UserShortProfile";
-import useAuth from "@hooks/useAuth";
+import UserShortProfile from '@components/UserShortProfile';
+import useAuth from '@hooks/useAuth';
 import {
   createStyles,
   Image,
@@ -12,27 +12,27 @@ import {
   Box,
   Loader,
   Badge,
-} from "@mantine/core";
-import { showNotification } from "@mantine/notifications";
+} from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
 import {
   CourseUserStatus,
   UserRole,
   CourseStatus,
   CourseUserStatusValue,
-} from "@utils/enums";
-import getCourseOgImageUrl from "@utils/getCourseOGImage";
-import RoutePath from "@utils/routeConstants";
-import errorType from "@utils/services/axiosError";
+} from '@utils/enums';
+import getCourseOgImageUrl from '@utils/getCourseOGImage';
+import RoutePath from '@utils/routeConstants';
+import errorType from '@utils/services/axiosError';
 import {
   useCourseDescription,
   useCourseStatus,
   useEnrollCourse,
-} from "@utils/services/courseService";
-import { Link, useParams } from "react-router-dom";
-import CourseContent from "./CourseContent/CourseContent";
-import { useTranslation } from "react-i18next";
-import { color } from "@utils/constants";
-import TextViewer from "@components/Ui/RichTextViewer";
+} from '@utils/services/courseService';
+import { Link, useParams } from 'react-router-dom';
+import CourseContent from './CourseContent/CourseContent';
+import { useTranslation } from 'react-i18next';
+import { color } from '@utils/constants';
+import TextViewer from '@components/Ui/RichTextViewer';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -40,75 +40,75 @@ const useStyles = createStyles((theme) => ({
     marginRight: 40,
   },
   inner: {
-    display: "flex",
-    justifyContent: "space-between",
-    paddingTop: "80px",
-    paddingBottom: "80px",
-    [theme.fn.smallerThan("sm")]: {
-      flexDirection: "column-reverse",
+    display: 'flex',
+    justifyContent: 'space-between',
+    paddingTop: '80px',
+    paddingBottom: '80px',
+    [theme.fn.smallerThan('sm')]: {
+      flexDirection: 'column-reverse',
     },
   },
 
   content: {
-    width: "60%",
-    marginRight: "80px",
+    width: '60%',
+    marginRight: '80px',
 
-    [theme.fn.smallerThan("lg")]: {
-      width: "50%",
+    [theme.fn.smallerThan('lg')]: {
+      width: '50%',
     },
-    [theme.fn.smallerThan("sm")]: {
-      width: "100%",
+    [theme.fn.smallerThan('sm')]: {
+      width: '100%',
     },
   },
 
   title: {
-    color: theme.colorScheme === "dark" ? theme.white : theme.black,
+    color: theme.colorScheme === 'dark' ? theme.white : theme.black,
     fontFamily: `Greycliff CF, ${theme.fontFamily}`,
     fontSize: 42,
     lineHeight: 1.2,
     fontWeight: 800,
 
-    [theme.fn.smallerThan("xs")]: {
+    [theme.fn.smallerThan('xs')]: {
       fontSize: 28,
     },
   },
 
   control: {
-    [theme.fn.smallerThan("xs")]: {
+    [theme.fn.smallerThan('xs')]: {
       flex: 1,
     },
   },
 
   aside: {
-    width: "40%",
-    [theme.fn.smallerThan("lg")]: {
-      width: "50%",
+    width: '40%',
+    [theme.fn.smallerThan('lg')]: {
+      width: '50%',
     },
-    [theme.fn.smallerThan("sm")]: {
-      width: "100%",
+    [theme.fn.smallerThan('sm')]: {
+      width: '100%',
     },
   },
 
   highlight: {
-    position: "relative",
+    position: 'relative',
     backgroundColor: theme.fn.variant({
-      variant: "light",
+      variant: 'light',
       color: theme.primaryColor,
     }).background,
     borderRadius: theme.radius.sm,
-    padding: "4px 12px",
+    padding: '4px 12px',
   },
   CourseContentSmall: {
-    display: "none",
-    [theme.fn.smallerThan("sm")]: {
-      display: "block",
+    display: 'none',
+    [theme.fn.smallerThan('sm')]: {
+      display: 'block',
     },
   },
 
   CourseContentLarge: {
-    display: "block",
-    [theme.fn.smallerThan("sm")]: {
-      display: "none",
+    display: 'block',
+    [theme.fn.smallerThan('sm')]: {
+      display: 'none',
     },
   },
 }));
@@ -117,7 +117,7 @@ const CourseDescription = () => {
   const { classes } = useStyles();
   const { id } = useParams();
   const auth = useAuth();
-  const courseStatus = useCourseStatus(id as string, "");
+  const courseStatus = useCourseStatus(id as string, '');
   const onPublish = async () => {
     try {
       await courseStatus.mutateAsync({
@@ -125,13 +125,13 @@ const CourseDescription = () => {
         status: CourseStatus.Published,
       });
       showNotification({
-        message: t("publish_training_success"),
+        message: t('publish_training_success'),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: "red",
+        color: 'red',
       });
     }
   };
@@ -142,10 +142,10 @@ const CourseDescription = () => {
   const onEnroll = async () => {
     try {
       await enrollCourse.mutateAsync({ id: id as string });
-      showNotification({ message: t("enroll_course_success") });
+      showNotification({ message: t('enroll_course_success') });
     } catch (err) {
       const error = errorType(err);
-      showNotification({ message: error, color: "red" });
+      showNotification({ message: error, color: 'red' });
     }
   };
   if (course.isError) {
@@ -160,7 +160,7 @@ const CourseDescription = () => {
     );
   }
   if (course.isError) {
-    <Center>{t("unable_get_course")}</Center>;
+    <Center>{t('unable_get_course')}</Center>;
   }
 
   const firstLessonSlugs = course?.data?.sections?.find(
@@ -169,7 +169,7 @@ const CourseDescription = () => {
 
   const slug = firstLessonSlugs?.lessons
     ? firstLessonSlugs?.lessons[0].slug
-    : "";
+    : '';
 
   return (
     <div>
@@ -192,7 +192,7 @@ const CourseDescription = () => {
 
             <Group my={4}>
               {course.data?.user && (
-                <UserShortProfile user={course?.data?.user} size={"md"} />
+                <UserShortProfile user={course?.data?.user} size={'md'} />
               )}
             </Group>
             <TextViewer content={course.data?.description} />
@@ -220,7 +220,7 @@ const CourseDescription = () => {
                           size="md"
                           className={classes.control}
                         >
-                          {t("preview")}
+                          {t('preview')}
                         </Button>
                       </Link>
                     )}
@@ -233,7 +233,7 @@ const CourseDescription = () => {
                     loading={enrollCourse.isLoading}
                     onClick={onEnroll}
                   >
-                    {t("enroll_course")}
+                    {t('enroll_course')}
                   </Button>
                 ) : course.data?.userStatus === CourseUserStatus.Author ? (
                   <>
@@ -246,7 +246,7 @@ const CourseDescription = () => {
                           size="md"
                           className={classes.control}
                         >
-                          {t("preview")}
+                          {t('preview')}
                         </Button>
                       </Link>
                     )}
@@ -262,7 +262,7 @@ const CourseDescription = () => {
                           size="md"
                           className={classes.control}
                         >
-                          {t("watch_course")}
+                          {t('watch_course')}
                         </Button>
                       </Link>
                     )}
@@ -277,7 +277,7 @@ const CourseDescription = () => {
                       size="md"
                       className={classes.control}
                     >
-                      {t("publish")}
+                      {t('publish')}
                     </Button>
                   )}
                 {auth?.auth &&
@@ -285,7 +285,7 @@ const CourseDescription = () => {
                   course.data?.status === CourseStatus.Draft && (
                     <Link to={RoutePath.manageCourse.edit(id).route}>
                       <Button radius="xl" size="md" className={classes.control}>
-                        {t("edit")}
+                        {t('edit')}
                       </Button>
                     </Link>
                   )}
@@ -297,7 +297,7 @@ const CourseDescription = () => {
                     course.data?.userStatus === CourseUserStatus.Teacher) && (
                     <Link to={RoutePath.manageCourse.dashboard(id).route}>
                       <Button radius="xl" size="md" className={classes.control}>
-                        {t("manage")}
+                        {t('manage')}
                       </Button>
                     </Link>
                   )}

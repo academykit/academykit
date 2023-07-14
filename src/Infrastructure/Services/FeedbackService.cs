@@ -299,6 +299,7 @@
                 }
 
                 var course = await ValidateAndGetCourse(currentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
+                var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (course.Status == CourseStatus.Completed)
                 {
                     _logger.LogWarning("training with id : {courseId} is in {status} status to give Feedback for the user with id: {userId}.",
@@ -310,6 +311,12 @@
                     _logger.LogWarning("User with id: {userId} is a teacher of the training with id: {courseId} and lesson with id: {lessonId} to submit the feedback.",
                         currentUserId, course.Id, lesson.Id);
                     throw new ForbiddenException(_localizer.GetString("TrainingTrainerCannotSubmitFeedback"));
+                }
+                if (isAdmin)
+                {
+                    _logger.LogWarning("User with id: {userId} is a teacher of the training with id: {courseId} and lesson with id: {lessonId} to submit the feedback.",
+                       currentUserId, course.Id, lesson.Id);
+                    throw new ForbiddenException(_localizer.GetString("AdminCannotSubmitFeedBack"));
                 }
 
                 var feedbacks = await _unitOfWork.GetRepository<Feedback>().GetAllAsync(
@@ -323,12 +330,13 @@
                     predicate: p => feedbackIds.Contains(p.FeedbackId) && p.UserId == currentUserId
                     ).ConfigureAwait(false);
 
+              
                 if (feebackSubmissionExists)
                 {
                     _logger.LogWarning("User with id: {userId} cannot resubmit the feedback having id: {feedbackId}.", currentUserId, lesson.Id);
                     throw new ForbiddenException(_localizer.GetString("FeedBackCannotReSubmit"));
                 }
-
+               
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
                     predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
                     ).ConfigureAwait(false);

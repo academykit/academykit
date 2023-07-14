@@ -1,5 +1,5 @@
-import CourseContent from "@components/Course/CourseDescription/CourseContent/CourseContent";
-import UserShortProfile from "@components/UserShortProfile";
+import CourseContent from '@components/Course/CourseDescription/CourseContent/CourseContent';
+import UserShortProfile from '@components/UserShortProfile';
 import {
   AspectRatio,
   Badge,
@@ -14,12 +14,12 @@ import {
   Text,
   ThemeIcon,
   Title,
-} from "@mantine/core";
-import { IconCheck } from "@tabler/icons";
-import { UserRole } from "@utils/enums";
-import RoutePath from "@utils/routeConstants";
-import { Link } from "react-router-dom";
-const image = "https://ui.mantine.dev/_next/static/media/image.9a65bd94.svg";
+} from '@mantine/core';
+import { IconCheck } from '@tabler/icons';
+import { UserRole } from '@utils/enums';
+import RoutePath from '@utils/routeConstants';
+import { Link } from 'react-router-dom';
+const image = 'https://ui.mantine.dev/_next/static/media/image.9a65bd94.svg';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -27,80 +27,80 @@ const useStyles = createStyles((theme) => ({
     marginRight: 40,
   },
   inner: {
-    display: "flex",
-    justifyContent: "space-between",
+    display: 'flex',
+    justifyContent: 'space-between',
     paddingTop: theme.spacing.xl,
     paddingBottom: theme.spacing.xl * 4,
-    [theme.fn.smallerThan("sm")]: {
-      flexDirection: "column-reverse",
+    [theme.fn.smallerThan('sm')]: {
+      flexDirection: 'column-reverse',
     },
   },
 
   content: {
-    width: "60%",
+    width: '60%',
     marginRight: theme.spacing.xl * 3,
 
-    [theme.fn.smallerThan("lg")]: {
-      width: "50%",
+    [theme.fn.smallerThan('lg')]: {
+      width: '50%',
     },
-    [theme.fn.smallerThan("sm")]: {
-      width: "100%",
+    [theme.fn.smallerThan('sm')]: {
+      width: '100%',
     },
   },
 
   title: {
-    color: theme.colorScheme === "dark" ? theme.white : theme.black,
+    color: theme.colorScheme === 'dark' ? theme.white : theme.black,
     fontFamily: `Greycliff CF, ${theme.fontFamily}`,
     fontSize: 42,
     lineHeight: 1.2,
     fontWeight: 800,
-    position: "relative",
+    position: 'relative',
 
-    [theme.fn.smallerThan("xs")]: {
+    [theme.fn.smallerThan('xs')]: {
       fontSize: 28,
     },
   },
 
   control: {
-    [theme.fn.smallerThan("xs")]: {
+    [theme.fn.smallerThan('xs')]: {
       flex: 1,
     },
   },
 
   aside: {
-    width: "40%",
-    [theme.fn.smallerThan("lg")]: {
-      width: "50%",
+    width: '40%',
+    [theme.fn.smallerThan('lg')]: {
+      width: '50%',
     },
-    [theme.fn.smallerThan("sm")]: {
-      width: "100%",
+    [theme.fn.smallerThan('sm')]: {
+      width: '100%',
     },
   },
 
   highlight: {
-    position: "relative",
+    position: 'relative',
     backgroundColor: theme.fn.variant({
-      variant: "light",
+      variant: 'light',
       color: theme.primaryColor,
     }).background,
     borderRadius: theme.radius.sm,
-    padding: "4px 12px",
+    padding: '4px 12px',
   },
   CourseContentSmall: {
-    display: "none",
-    [theme.fn.smallerThan("sm")]: {
-      display: "block",
+    display: 'none',
+    [theme.fn.smallerThan('sm')]: {
+      display: 'block',
     },
   },
 
   CourseContentLarge: {
-    display: "block",
-    [theme.fn.smallerThan("sm")]: {
-      display: "none",
+    display: 'block',
+    [theme.fn.smallerThan('sm')]: {
+      display: 'none',
     },
   },
   innerContent: {
-    display: "flex",
+    display: 'flex',
   },
 }));
 
@@ -129,7 +129,7 @@ const SessionDescription = () => {
                 size={60}
               /> */}
             </Group>
-            <Text mt={"md"} weight={750}>
+            <Text mt={'md'} weight={750}>
               Description
             </Text>
             <Text color="dimmed" mt="sm">
@@ -167,14 +167,14 @@ const SessionDescription = () => {
             </AspectRatio>
             <Center>
               <Group my={30}>
-                <Link to={RoutePath.classes + "/1"}>
+                <Link to={RoutePath.classes + '/1'}>
                   <Button radius="xl" size="md" className={classes.control}>
                     Enroll Now Rs.(500)
                   </Button>
                 </Link>
               </Group>
             </Center>
-            <Text align="center" weight={200} sx={{ marginBottom: "50px" }}>
+            <Text align="center" weight={200} sx={{ marginBottom: '50px' }}>
               Pay here to enroll in this live session
             </Text>
           </div>

@@ -1,7 +1,7 @@
-import { createStyles } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
-import { useContext, useState } from "react";
-import { createContext } from "react";
+import { createStyles } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
+import { useContext, useState } from 'react';
+import { createContext } from 'react';
 
 interface ISectionContext {
   setIsAddSection: any;
@@ -17,7 +17,7 @@ const SectionContext = createContext<ISectionContext | null>(null);
 
 const useStyle = createStyles((theme) => ({
   section: {
-    background: theme.colorScheme === "dark" ? theme.black[2] : theme.white[2],
+    background: theme.colorScheme === 'dark' ? theme.black[2] : theme.white[2],
   },
 }));
 

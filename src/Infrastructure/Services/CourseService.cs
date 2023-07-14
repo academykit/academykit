@@ -463,7 +463,7 @@ namespace Lingtren.Infrastructure.Services
 
                 if (courseEnrollment.EnrollmentMemberStatus.Equals(EnrollmentMemberStatusEnum.Enrolled))
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseEnrollmentMailAsync(user.FirstName,user.Email,course.Id, course.Name, null));
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseEnrollmentMailAsync(user.FullName,user.Email,course.Id, course.Name, null));
                 }
 
                 await _unitOfWork.GetRepository<CourseEnrollment>().InsertAsync(courseEnrollment).ConfigureAwait(false);
