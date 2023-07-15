@@ -82,8 +82,6 @@ const MyTrainingExternal = () => {
         imageUrl: idd?.imageUrl,
         range: [new Date(range[0]), new Date(range[1])],
       });
-      console.log('idd', new Date(range[0]), new Date(range[1]));
-      console.log('idd:2-', range);
     }
   }, [idd]);
 

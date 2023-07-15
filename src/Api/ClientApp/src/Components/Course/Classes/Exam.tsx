@@ -186,7 +186,9 @@ const Exam = ({
       console.log(err);
     }
   };
-
+  // console.log(form.values[currentIndex].description);
+  // console.log('ci', currentIndex);
+  // console.log('qs', questions[currentIndex]?.description);
   return (
     <form onSubmit={form.onSubmit(onSubmitHandler)}>
       {/* confirmation pop-up Modal */}

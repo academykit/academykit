@@ -107,11 +107,10 @@ const EditFeedback = ({
       lessonId: lessonId,
       name: feedbackQuestion ? feedbackQuestion.name : '',
       type: feedbackQuestion ? feedbackQuestion.type.toString() : '',
-      answers:
-        feedbackQuestion?.feedbackQuestionOptions?.map((x) => ({
-          option: x.option,
-          isSelected: x.isSelected,
-        })) ?? [],
+      answers: feedbackQuestion?.feedbackQuestionOptions?.map((x) => ({
+        option: x.option,
+        isSelected: x.isSelected,
+      })) ?? [{ option: '', isSelected: false }],
     },
     validate: yupResolver(schema()),
   });
@@ -149,6 +148,7 @@ const EditFeedback = ({
       });
     }
   };
+  console.log(form.values.answers);
   return (
     <Container fluid>
       <FormProvider form={form}>
@@ -185,7 +185,10 @@ const EditFeedback = ({
                 <Text mt={20}>{t('options')}</Text>
                 {form.values.answers &&
                   form.values.answers.map((x, i) => (
-                    <div key={i} style={{ marginBottom: '30px' }}>
+                    <div
+                      key={i}
+                      style={{ marginBottom: '30px', width: '100%' }}
+                    >
                       <Flex>
                         <TextEditor
                           placeholder={t('option_placeholder') as string}

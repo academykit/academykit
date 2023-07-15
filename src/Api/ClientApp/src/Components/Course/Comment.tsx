@@ -140,7 +140,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
     relativeTime: {
       future: "in %s",
       past: `%s`,
-      s: `%d ${t('few_seconds_ago')}`,
+      s: `${t('few_seconds_ago')}`,
       ss: `%d ${t('seconds_ago')}`,
       m: `%d ${t('minute_ago')}`,
       mm: `%d ${t('minutes_ago')}`,
