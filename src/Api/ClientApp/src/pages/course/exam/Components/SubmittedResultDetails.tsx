@@ -78,6 +78,12 @@ const useStyle = createStyles((theme) => ({
   errorCircle: {
     backgroundColor: theme.colors.red[5],
   },
+  optionContainer: {
+    order: 1,
+  },
+  examContainer: {
+    order: 2,
+  },
 }));
 const SubmittedResultDetails = ({
   questions,
@@ -119,7 +125,7 @@ const SubmittedResultDetails = ({
           </Group>
         </Paper>
       </Grid.Col>
-      <Grid.Col span={matches ? 9 : 12}>
+      <Grid.Col span={matches ? 9 : 12} className={classes.examContainer}>
         <ScrollArea>
           <Card p={4} my={10} shadow="lg" withBorder>
             <Box
@@ -209,7 +215,11 @@ const SubmittedResultDetails = ({
           )}
         </Card>
       </Grid.Col>
-      <Grid.Col span={matches ? 3 : 12} m={0}>
+      <Grid.Col
+        span={matches ? 3 : 12}
+        m={0}
+        className={classes.optionContainer}
+      >
         <Group p={10} className={classes.navigateWrapper}>
           {questions.map((x, i) => (
             <div

@@ -95,7 +95,7 @@ const AddUpdateUserForm = ({
       IsActive: true,
     })
   );
-  console.log(department);
+
   useEffect(() => {
     form.setFieldValue('role', item?.role ?? 4);
     item?.departmentId &&

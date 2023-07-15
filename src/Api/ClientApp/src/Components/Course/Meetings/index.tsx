@@ -9,6 +9,25 @@ const Meetings = ({ data }: { data: ICourseLesson }) => {
     .add(data.meeting.duration, 'seconds');
   const StartTime = moment.utc(data.meeting.startDate);
   const { t } = useTranslation();
+
+  moment.updateLocale('en', {
+    relativeTime: {
+      future: `${t('in')} %s`,
+      past: `%s`,
+      // s: `%d ${t('few_seconds_ago')}`,
+      // ss: `%d ${t('seconds_ago')}`,
+      m: `%d ${t('minute_ago')}`,
+      // mm: `%d ${t('minutes_ago')}`,
+      // h: `%d ${t('hour_ago')}`,
+      // hh: `%d ${t('hours_ago')}`,
+      // d: `%d ${t('day_ago')}`,
+      // dd: `%d ${t('days_ago')}`,
+      // M: `%d ${t('month_ago')}`,
+      // MM: `%d ${t('months_ago')}`,
+      // y: `%d ${t('year_ago')}`,
+      // yy: `%d ${t('years_ago')}`,
+    },
+  });
   return (
     <Group px={40} sx={{ flexDirection: 'column' }}>
       <Title lineClamp={3} align="justify">

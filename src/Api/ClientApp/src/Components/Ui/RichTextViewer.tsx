@@ -33,7 +33,7 @@ const TextViewer = ({ content, styles, sx }: IProps) => {
     ],
     content,
   });
-
+  console.log('cc', content);
   return (
     <RichTextEditor styles={styles} editor={editor} sx={sx}>
       <RichTextEditor.Content />

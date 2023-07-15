@@ -82,7 +82,7 @@ const AddMeeting = ({
     initialValues: {
       name: '',
       meetingStartDate: new Date(),
-      meetingStartTime: '12:12',
+      meetingStartTime: moment(new Date()).format('HH:mm'), // adding current time as default
       meetingDuration: 1,
       zoomLicenseId: '',
       isMandatory: false,
@@ -156,8 +156,6 @@ const AddMeeting = ({
     if (meetingDuration && meetingStartTime && meetingStartDate) {
       // const time = new Date(meetingStartTime).toLocaleTimeString();
       // const date = new Date(meetingStartDate).toLocaleDateString();
-      console.log('0--0=-0=0-=-0==-00-=');
-      console.log({ meetingStartDate, meetingStartTime });
       const date = getDateTime(meetingStartDate, meetingStartTime);
       setDateTime(() => date.utcDateTime);
     } else {
