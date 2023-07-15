@@ -39,9 +39,9 @@ const RowsCompleted = ({
       <td>{item?.percentage}%</td>
       <td>
         {item?.hasCertificateIssued ? (
-          <Badge>{t('yes')}</Badge>
+          <Badge color="cyan">{t('yes')}</Badge>
         ) : (
-          <Badge>{t('no')}</Badge>
+          <Badge color="cyan">{t('no')}</Badge>
         )}
       </td>
       <td style={{ width: '19%', height: '100px' }}>
