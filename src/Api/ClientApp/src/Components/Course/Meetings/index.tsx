@@ -10,24 +10,47 @@ const Meetings = ({ data }: { data: ICourseLesson }) => {
   const StartTime = moment.utc(data.meeting.startDate);
   const { t } = useTranslation();
 
+  // render 'in [time] [s/min/hr/...]' if time left
+  // render '[time] [s/min/hr/...] ago' if meeting ended
   moment.updateLocale('en', {
     relativeTime: {
       future: `${t('in')} %s`,
       past: `%s`,
-      // s: `%d ${t('few_seconds_ago')}`,
-      // ss: `%d ${t('seconds_ago')}`,
-      m: `%d ${t('minute_ago')}`,
-      // mm: `%d ${t('minutes_ago')}`,
-      // h: `%d ${t('hour_ago')}`,
-      // hh: `%d ${t('hours_ago')}`,
-      // d: `%d ${t('day_ago')}`,
-      // dd: `%d ${t('days_ago')}`,
-      // M: `%d ${t('month_ago')}`,
-      // MM: `%d ${t('months_ago')}`,
-      // y: `%d ${t('year_ago')}`,
-      // yy: `%d ${t('years_ago')}`,
+      s: `%d ${t('in_second')}`,
+      ss: `%d ${t('in_seconds')}`,
+      m: moment().isBefore(StartTime)
+        ? `%d ${t('in_minute')}`
+        : `%d ${t('minute_ago')}`,
+      mm: moment().isBefore(StartTime)
+        ? `%d ${t('in_minutes')}`
+        : `%d ${t('minutes_ago')}`,
+      h: moment().isBefore(StartTime)
+        ? `%d ${t('in_hour')}`
+        : `%d ${t('hour_ago')}`,
+      hh: moment().isBefore(StartTime)
+        ? `%d ${t('in_hours')}`
+        : `%d ${t('hours_ago')}`,
+      d: moment().isBefore(StartTime)
+        ? `%d ${t('in_day')}`
+        : `%d ${t('day_ago')}`,
+      dd: moment().isBefore(StartTime)
+        ? `%d ${t('in_days')}`
+        : `%d ${t('days_ago')}`,
+      M: moment().isBefore(StartTime)
+        ? `%d ${t('in_month')}`
+        : `%d ${t('month_ago')}`,
+      MM: moment().isBefore(StartTime)
+        ? `%d ${t('in_months')}`
+        : `%d ${t('months_ago')}`,
+      y: moment().isBefore(StartTime)
+        ? `%d ${t('in_year')}`
+        : `%d ${t('year_ago')}`,
+      yy: moment().isBefore(StartTime)
+        ? `%d ${t('in_years')}`
+        : `%d ${t('years_ago')}`,
     },
   });
+
   return (
     <Group px={40} sx={{ flexDirection: 'column' }}>
       <Title lineClamp={3} align="justify">
