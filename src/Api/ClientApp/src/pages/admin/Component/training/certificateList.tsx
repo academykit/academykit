@@ -68,7 +68,9 @@ const CertificateCard = ({
         <Box>
           <Text weight={'bold'}>
             {item.name}
-            <Badge ml={20}>{CertificateStatus[item.status]}</Badge>
+            <Badge ml={20} color="cyan">
+              {CertificateStatus[item.status]}
+            </Badge>
           </Text>
           <Text mt={5}>
             {t('from')} {moment(item.startDate).format(DATE_FORMAT)} {t('to')}{' '}

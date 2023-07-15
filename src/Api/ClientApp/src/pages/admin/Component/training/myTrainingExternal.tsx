@@ -210,7 +210,9 @@ const MyTrainingExternal = () => {
                 <Flex>
                   <Text weight={'bold'}>
                     {x.name}
-                    <Badge ml={20}>{t(`${CertificateStatus[x.status]}`)}</Badge>
+                    <Badge color="cyan" ml={20}>
+                      {t(`${CertificateStatus[x.status]}`)}
+                    </Badge>
                   </Text>
                   {x.status !== CertificateStatus.Approved && (
                     <ActionIcon

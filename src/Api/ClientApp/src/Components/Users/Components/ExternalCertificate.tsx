@@ -35,9 +35,9 @@ const RowsExternal = ({
 
       <td>
         {item?.status === 2 ? (
-          <Badge>{t('yes')}</Badge>
+          <Badge color="cyan">{t('yes')}</Badge>
         ) : (
-          <Badge>{t('No')}</Badge>
+          <Badge color="cyan">{t('No')}</Badge>
         )}
       </td>
       <td>{moment(item?.startDate).format(DATE_FORMAT)}</td>

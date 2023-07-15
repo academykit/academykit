@@ -161,7 +161,7 @@ const CourseCardHorizontal = ({
                   {course?.levelName}
                 </Badge>
                 {/* {auth?.auth && auth?.auth?.role > UserRole.Admin && ( */}
-                <Badge>
+                <Badge color="cyan">
                   {t(`${CourseUserStatusValue[course.userStatus]}`)}
                 </Badge>
                 {/* )} */}

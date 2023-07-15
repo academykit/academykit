@@ -15,10 +15,9 @@ const ZoomMettingMessage = () => {
   const [searchParams] = useSearchParams();
   const { t } = useTranslation();
   const { courseId, lessonId } = useParams();
-  const data = useParams();
   const s = searchParams.get('s');
   const e = searchParams.get('e');
-  console.log(data);
+
   if (s === '4') {
     return (
       <Center pt="20%">
@@ -30,7 +29,7 @@ const ZoomMettingMessage = () => {
               <Anchor
                 size={'xs'}
                 component={Link}
-                to={`/classes/${courseId}/1`}
+                to={`/classes/${courseId}/${lessonId}/description`}
                 color={'dimmed'}
               >
                 <Button>{t('back_course')}</Button>
@@ -70,7 +69,7 @@ const ZoomMettingMessage = () => {
               <Anchor
                 size={'xs'}
                 component={Link}
-                to={`/classes/${courseId}/1`}
+                to={`/classes/${courseId}/${lessonId}/description`}
                 color={'dimmed'}
               >
                 <Button>{t('back_course')}</Button>
@@ -109,7 +108,7 @@ const ZoomMettingMessage = () => {
             <Anchor
               size={'xs'}
               component={Link}
-              to={`/classes/${courseId}/1`}
+              to={`/classes/${courseId}/${lessonId}/description`}
               color={'dimmed'}
             >
               <Button>{t('back_course')}</Button>
