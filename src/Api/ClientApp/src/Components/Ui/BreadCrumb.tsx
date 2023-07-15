@@ -66,7 +66,11 @@ const Breadcrumb = ({
   const items = breadCrumb ?? newPath;
   return (
     <>
-      <Breadcrumbs py={py} pb={5}>
+      <Breadcrumbs
+        py={py}
+        pb={5}
+        styles={{ breadcrumb: { lineHeight: '20px' } }}
+      >
         {getItems({ items: start ? [start, ...items] : items, hide })}
       </Breadcrumbs>
       <Divider />
