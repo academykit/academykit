@@ -402,7 +402,8 @@ namespace Lingtren.Infrastructure.Services
                                 FullName = userEntity.FirstName,
                                 Email = userEntity.Email,
                                 Password = password,
-                                CompanyName = company.CompanyName
+                                CompanyName = company.CompanyName,
+                                CompanyNumber = company.CompanyContactNumber
                             };
                             newUsers.Add(userEntity);
                             newUserEmails.Add(userEmailDto);
@@ -618,7 +619,7 @@ namespace Lingtren.Infrastructure.Services
                 _unitOfWork.GetRepository<User>().Update(user);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(user.Email, user.FullName, password, company.CompanyName, null));
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(user.Email, user.FullName, password, company, null));
             }
             catch (Exception ex)
             {
