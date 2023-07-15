@@ -619,7 +619,7 @@ namespace Lingtren.Infrastructure.Services
                 _unitOfWork.GetRepository<User>().Update(user);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(user.Email, user.FullName, password, company, null));
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(user.Email, user.FullName, password,company.CompanyName,company.CompanyContactNumber, null));
             }
             catch (Exception ex)
             {
