@@ -142,7 +142,10 @@ const SubmittedResultDetails = ({
                 <h3>{questions[currentIndex]?.name}</h3>
               </Group>
               {questions[currentIndex]?.description && (
-                <TextViewer content={questions[currentIndex]?.description} />
+                <TextViewer
+                  key={currentIndex}
+                  content={questions[currentIndex]?.description}
+                />
               )}
             </Box>
             <Container fluid className={classes.option}>

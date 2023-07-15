@@ -72,7 +72,7 @@ const useStyle = createStyles((theme) => ({
     zIndex: 100,
   },
   active: {
-    border: `3px solid ${theme.colors[theme.primaryColor][1]}`,
+    border: `3px solid ${theme.colors.green[4]}`,
   },
   visited: {
     border: `2px solid ${theme.colors.yellow[4]}`,
@@ -255,6 +255,7 @@ const Exam = ({
               <Title mb={20}>{questions[currentIndex]?.name}</Title>
               {questions[currentIndex]?.description && (
                 <TextViewer
+                  key={currentIndex}
                   content={questions[currentIndex]?.description}
                   sx={{ wordBreak: 'break-all' }}
                 />
