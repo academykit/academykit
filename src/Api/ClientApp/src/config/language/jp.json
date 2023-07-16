@@ -515,6 +515,7 @@
   "capacity_required": "容量は0より大きくする必要があります。",
   "certificate_name_required": "証明書の名前が必要です。",
   "duration_in_hour": "時間で期間を指定する必要があります。",
+  "invalid_duration": "無効な期間です。",
   "one_option_selected_on_multiple_choice": "複数回答の選択肢では、少なくとも 1 つの選択肢を選択する必要があります",
   "one_option_selected_on_single_choice": "単一選択肢では、1つのオプションのみを選択する必要があります。",
   "section_update_success": "セクションの更新に成功しました！",

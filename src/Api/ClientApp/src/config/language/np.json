@@ -515,6 +515,7 @@
   "capacity_required": "क्षमता ० भन्दा बढी हुनुपर्छ।",
   "certificate_name_required": "प्रमाणपत्रको नाम आवश्यक छ।",
   "duration_in_hour": "अवधिलाई घण्टामा होनुपर्छ।",
+  "invalid_duration": "अवैध अवधि।",
   "one_option_selected_on_multiple_choice": "बहुउत्तर छनोटमा, कम्तिमा एउटा विकल्प चयन गर्नुपर्छ।",
   "one_option_selected_on_single_choice": "एकल विकल्पमा केवल एक विकल्प चयन गर्नुपर्छ।",
   "section_update_success": "सेक्शन सफलतापूर्वक अपडेट गरियो!",
