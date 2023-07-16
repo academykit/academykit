@@ -45,7 +45,17 @@ const schema = () => {
     duration: Yup.number()
       .required(t('duration_in_hour') as string)
       .typeError(t('invalid_duration') as string),
-    range: Yup.array().min(2, t('start_end_date_required') as string),
+    range: Yup.array()
+      .min(2, t('start_end_date_required') as string)
+      .of(Yup.string().required(t('start_end_date_required') as string))
+      .test(
+        // checking if array contains null values
+        'not-null-values',
+        t('start_end_date_required') as string,
+        (arr) => {
+          return arr !== undefined && arr.every((element) => element !== null);
+        }
+      ),
   });
 };
 
