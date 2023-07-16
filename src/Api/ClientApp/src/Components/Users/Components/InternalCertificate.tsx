@@ -109,7 +109,7 @@ const InternalCertificate = () => {
   const { t } = useTranslation();
   return (
     <>
-      <Title mt={'xl'}>{t('certificate')}</Title>
+      <Title mt={'xl'}>{t('internal_certificate')}</Title>
       {data && data?.certificates.length > 0 ? (
         <ScrollArea>
           <Paper mt={10}>

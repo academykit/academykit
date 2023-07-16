@@ -221,6 +221,7 @@
   "issuer_location": "जारीकर्ताको स्थान",
   "certificate": "प्रमाणपत्र",
   "only_certificate": "प्रमाणपत्र",
+  "internal_certificate": "आन्तरिक प्रमाणपत्र",
   "profile": "प्रोफाइल",
   "account": "खाता",
   "admin_settings": "व्यवस्थापक सेटिङ्ग्स",

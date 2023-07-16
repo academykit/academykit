@@ -290,7 +290,7 @@ const ManageStudents = ({
                 <th>{t('progress')}</th>
                 <th>
                   <Flex align={'center'} direction={'column'}>
-                    {t('certificate')}
+                    {t('internal_certificate')}
                   </Flex>
                 </th>
                 <th style={{ textAlign: 'center' }}>{t('current_lesson')}</th>
