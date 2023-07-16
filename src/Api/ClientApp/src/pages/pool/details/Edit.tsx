@@ -48,7 +48,7 @@ const schema = () => {
           .min(1, t('option_more_than_one') as string)
           .test(
             t('test'),
-            t('multiple_choice_option_atleast ') as string,
+            t('multiple_choice_option_atleast') as string,
             function (value: any) {
               const a = value?.filter((x: any) => x.isCorrect).length > 0;
               return a;
