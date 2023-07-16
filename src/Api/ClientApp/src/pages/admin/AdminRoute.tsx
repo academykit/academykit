@@ -58,7 +58,7 @@ const AdminRoutesChild = () => {
           <Route path={'/department'} element={<Department />} />
           <Route path={'/log'} element={<Log />} />
           <Route path={'/courses'} element={<AdminCourseList />} />
-          <Route path={'/user/certificate'} element={<CertificateList />} />
+          <Route path={'/certificate'} element={<CertificateList />} />
           <Route path={'/zoomlicense'} element={<ZoomLicense />} />
           <Route path={'/filestorage'} element={<FileStorage />} />
           <Route path="*" element={<Navigate to={RoutePath[404]} replace />} />

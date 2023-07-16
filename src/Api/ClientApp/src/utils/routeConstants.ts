@@ -101,7 +101,7 @@ const RoutePath = {
       return this.base + '/account';
     },
     userCertificate: function () {
-      return this.base + '/user/certificate';
+      return this.base + '/certificate';
     },
 
     training: function () {

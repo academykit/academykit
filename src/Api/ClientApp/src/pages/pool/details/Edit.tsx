@@ -48,7 +48,7 @@ const schema = () => {
           .min(1, t('option_more_than_one') as string)
           .test(
             t('test'),
-            t('multiple_choice_option_atleast ') as string,
+            t('multiple_choice_option_atleast') as string,
             function (value: any) {
               const a = value?.filter((x: any) => x.isCorrect).length > 0;
               return a;
@@ -211,6 +211,10 @@ const EditQuestion = () => {
     });
   };
 
+  const cancelEditing = () => {
+    navigate(-1);
+  };
+
   return (
     <Container fluid>
       <FormProvider form={form}>
@@ -340,6 +344,14 @@ const EditQuestion = () => {
             <Group mt={20}>
               <Button size="sm" type="submit" loading={editQuestion.isLoading}>
                 {t('save')}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                loading={editQuestion.isLoading}
+                onClick={() => cancelEditing()}
+              >
+                {t('cancel')}
               </Button>
             </Group>
           </form>

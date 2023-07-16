@@ -49,7 +49,7 @@ const AssignmentPage = () => {
             onClick={() => navigate(-1)}
             className={classes.control}
           >
-            {t('go_back')}
+            {t('back_course')}
           </Button>
         </div>
       </Container>
