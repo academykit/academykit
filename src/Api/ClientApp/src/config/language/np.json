@@ -107,7 +107,7 @@
   "tags": "ट्यागहरू",
   "type": "प्रकार",
   "actions": "कार्यहरू",
-  "no_question_found": "कुनै प्रश्न फेला परेन!",
+  "no_question_found": "कुनै प्रश्न फेला परेन।",
   "question_delete_confirmation": "के तपाईं प्रश्न हटाउन चाहानुहुन्छ?",
   "success_delete_question": "सफलतापूर्वक प्रश्न हटाइयो",
   "SingleChoice": "एकल चयन",

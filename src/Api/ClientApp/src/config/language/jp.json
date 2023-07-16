@@ -107,7 +107,7 @@
   "tags": "タグ",
   "type": "タイプ",
   "actions": "アクション",
-  "no_question_found": "問題が見つかりません！",
+  "no_question_found": "問題が見つかりません",
   "question_delete_confirmation": "問題を削除してもよろしいですか？",
   "success_delete_question": "問題が正常に削除されました",
   "SingleChoice": "単一選択",

@@ -107,7 +107,7 @@
   "tags": "Tags",
   "type": "Type",
   "actions": "Actions",
-  "no_question_found": "No Questions Found!",
+  "no_question_found": "No Questions Found.",
   "question_delete_confirmation": "Are you sure you want to delete question?",
   "success_delete_question": "Successfully Deleted Question",
   "SingleChoice": "Single Choice",
