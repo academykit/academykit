@@ -263,7 +263,7 @@
   "location": "Location",
   "institute": "Institute",
   "certificate_image": "Certificate Image",
-  "no_external_training": "No external certificate.",
+  "no_external_training": "No external certificate found.",
   "Draft": "Draft",
   "Approved": "Approved",
   "Rejected": "Rejected",
