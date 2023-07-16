@@ -29,7 +29,7 @@ const Rows = ({
   course_id: string;
 }) => {
   const { t } = useTranslation();
-  console.log(LessonType[item.lessonType]);
+
   return (
     <tr key={item?.id}>
       <td style={{ maxWidth: '200px' }}>

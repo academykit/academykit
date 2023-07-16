@@ -71,13 +71,6 @@ const AddMeeting = ({
   );
   const { t } = useTranslation();
 
-  // const startDateTime = item?.
-  // ? moment(item?.questionSet?.startTime + "z")
-  //     .local()
-  //     .toDate()
-  // : new Date();
-  console.log(item);
-
   const form = useForm({
     initialValues: {
       name: '',
@@ -128,7 +121,7 @@ const AddMeeting = ({
 
     if (meetingDuration && meetingStartTime && meetingStartDate) {
       const date = getDateTime(meetingStartDate, meetingStartTime);
-      console.log(date);
+
       setDateTime(() => date.utcDateTime);
     }
   }, [form.values]);

@@ -13,7 +13,7 @@ import {
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconEdit, IconTrash } from '@tabler/icons';
-import { QuestionType, ReadableEnum } from '@utils/enums';
+import { QuestionType } from '@utils/enums';
 import {
   IAssignmentQuestion,
   useDeleteAssignmentQuestion,
@@ -47,18 +47,17 @@ const AssignmentItem = ({
 }) => {
   const { classes } = useStyle();
   const [edit, setEdit] = useToggle();
+  const { t } = useTranslation();
   const getQuestionType = () => {
     return Object.entries(QuestionType)
       .splice(0, Object.entries(QuestionType).length / 2)
       .map(([key, value]) => ({
         value: key,
-        label:
-          ReadableEnum[value as keyof typeof ReadableEnum] ?? value.toString(),
+        label: t(value.toString()),
       }));
   };
   const deleteQuestion = useDeleteAssignmentQuestion(lessonId, search);
   const [confirmDelete, setConfirmDelete] = useToggle();
-  const { t } = useTranslation();
   const deleteHandler = async () => {
     try {
       await deleteQuestion.mutateAsync({ assignmentId: data.id });

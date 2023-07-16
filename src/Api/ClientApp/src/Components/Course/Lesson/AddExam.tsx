@@ -158,7 +158,6 @@ const AddExam = ({
         } ${t('successfully')}`,
       });
     } catch (error) {
-      console.log(error);
       const err = errorType(error);
       showNotification({
         message: err,

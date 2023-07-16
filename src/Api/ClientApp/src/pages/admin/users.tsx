@@ -106,6 +106,7 @@ const UsersList = ({
                       opened={opened}
                       apiHooks={addUser}
                       isEditing={false}
+                      // currentTab={currentTab}
                     />
                   )}
                 </Box>

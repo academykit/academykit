@@ -857,6 +857,7 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "Rating": "Rating",
   "few_seconds_ago": "a few seconds ago",
   "seconds_ago": "seconds ago",
   "minute_ago": "minute ago",
