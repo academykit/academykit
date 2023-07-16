@@ -32,6 +32,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+// import RoutePath from '@utils/routeConstants';
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IAddQuestionType>();
 
@@ -189,6 +190,10 @@ const Create = () => {
     });
   };
 
+  const cancelCreation = () => {
+    navigate(-1);
+  }
+
   return (
     <Container fluid>
       <FormProvider form={form}>
@@ -226,7 +231,6 @@ const Create = () => {
                 size={'lg'}
                 label={t('tags')}
                 placeholder={t('select_tags') as string}
-                
               />
             ) : (
               <Loader />
@@ -312,10 +316,15 @@ const Create = () => {
               >
                 {t('save')}
               </Button>
-              <Button type="submit" 
-               loading={addQuestion.isLoading}
-                onClick={() => setIsReset(true)}>
+              <Button
+                type="submit"
+                loading={addQuestion.isLoading}
+                onClick={() => setIsReset(true)}
+              >
                 {t('save_more')}
+              </Button>
+              <Button type="button" variant='outline' loading={addQuestion.isLoading} onClick={() => cancelCreation()}>
+                {t('cancel')}
               </Button>
             </Group>
           </form>

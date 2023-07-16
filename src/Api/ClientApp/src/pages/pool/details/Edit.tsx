@@ -211,6 +211,10 @@ const EditQuestion = () => {
     });
   };
 
+  const cancelEditing = () => {
+    navigate(-1);
+  };
+
   return (
     <Container fluid>
       <FormProvider form={form}>
@@ -340,6 +344,14 @@ const EditQuestion = () => {
             <Group mt={20}>
               <Button size="sm" type="submit" loading={editQuestion.isLoading}>
                 {t('save')}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                loading={editQuestion.isLoading}
+                onClick={() => cancelEditing()}
+              >
+                {t('cancel')}
               </Button>
             </Group>
           </form>
