@@ -14,7 +14,7 @@ import {
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { IconPlus, IconTrash } from '@tabler/icons';
-import { FeedbackType, ReadableEnum } from '@utils/enums';
+import { FeedbackType } from '@utils/enums';
 import * as Yup from 'yup';
 import errorType from '@utils/services/axiosError';
 import {
@@ -79,15 +79,6 @@ const schema = () => {
       }),
   });
 };
-const getQuestionType = () => {
-  return Object.entries(FeedbackType)
-    .splice(0, Object.entries(FeedbackType).length / 2)
-    .map(([key, value]) => ({
-      value: key,
-      label:
-        ReadableEnum[value as keyof typeof ReadableEnum] ?? value.toString(),
-    }));
-};
 
 const [FormProvider, useFormContext, useForm] =
   createFormContext<ICreateFeedback>();
@@ -120,6 +111,15 @@ const EditFeedback = ({
   const addFeedbackQuestions = useAddFeedbackQuestion(lessonId, search);
   const editFeedbackQuestion = useEditFeedbackQuestion(lessonId, search);
 
+  const getQuestionType = () => {
+    return Object.entries(FeedbackType)
+      .splice(0, Object.entries(FeedbackType).length / 2)
+      .map(([key, value]) => ({
+        value: key,
+        label: t(value.toString()),
+      }));
+  };
+
   const onSubmit = async (data: ICreateFeedback) => {
     try {
       if (feedbackQuestion) {
@@ -148,7 +148,7 @@ const EditFeedback = ({
       });
     }
   };
-  console.log(form.values.answers);
+
   return (
     <Container fluid>
       <FormProvider form={form}>

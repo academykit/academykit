@@ -31,7 +31,7 @@ const UserShortProfile: FC<Props> = ({
   return (
     <Anchor
       component={Link}
-      to={`/userProfile/${id}`}
+      to={`/userProfile/${id}/certificate`}
       sx={{ textDecoration: 'none' }}
     >
       <Flex direction={direction} gap={'md'} sx={{ alignItems: 'center' }}>
