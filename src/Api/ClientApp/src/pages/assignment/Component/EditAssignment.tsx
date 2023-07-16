@@ -39,6 +39,24 @@ const getQuestionType = () => {
     }));
 };
 
+// const getQuestionType = () => {
+//   const { t } = useTranslation();
+//   return [
+//     {
+//       value: QuestionType.SingleChoice.toString(),
+//       label: t(`SingleChoice`),
+//     },
+//     {
+//       value: QuestionType.MultipleChoice.toString(),
+//       label: t(`MultipleChoice`),
+//     },
+//     {
+//       value: QuestionType.Subjective.toString(),
+//       label: t(`Subjective`),
+//     },
+//   ];
+// };
+
 const schema = () => {
   const { t } = useTranslation();
 
@@ -124,7 +142,7 @@ const EditAssignment = ({
   useFormErrorHooks(form);
 
   const data = useMemo(() => getQuestionType(), []);
-
+  console.log(data);
   const addAssignmentQuestion = useAddAssignmentQuestion(lessonId, search);
   const editAssignment = useEditAssignmentQuestion(lessonId, search);
   const { t } = useTranslation();
