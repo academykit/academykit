@@ -1,19 +1,17 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { UseFormReturnType } from "@mantine/form";
-import { FileAccess, uploadFile } from "@utils/services/fileService";
+import { UseFormReturnType } from '@mantine/form';
 
-import { RichTextEditor, Link } from "@mantine/tiptap";
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Placeholder from "@tiptap/extension-placeholder";
-import Highlight from "@tiptap/extension-highlight";
-import Underline from "@tiptap/extension-underline";
-import TextAlign from "@tiptap/extension-text-align";
-import Superscript from "@tiptap/extension-text-align";
-import SubScript from "@tiptap/extension-subscript";
-import { Box, Sx, Text } from "@mantine/core";
-import { useTranslation } from "react-i18next";
-import { useDebouncedState, useDebouncedValue } from "@mantine/hooks";
+import { RichTextEditor, Link } from '@mantine/tiptap';
+import { useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Placeholder from '@tiptap/extension-placeholder';
+import Highlight from '@tiptap/extension-highlight';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
+import Superscript from '@tiptap/extension-superscript';
+import SubScript from '@tiptap/extension-subscript';
+import { Box, Sx, Text } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
+import { useMemo } from 'react';
 
 type IProps = {
   formContext?: () => UseFormReturnType<any, (values: any) => any>;
@@ -35,16 +33,8 @@ const TextEditor = ({
   sx,
 }: IProps) => {
   const { t } = useTranslation();
-  const cPlaceholder = t(placeholder ?? "");
+  const cPlaceholder = t(placeholder ?? '');
   const form = formContext && formContext();
-  const [data, setData] = useDebouncedState("", 200);
-
-  useEffect(() => {
-    if (data) {
-      if (form) form.setFieldValue(label || "description", data);
-      if (onChange) onChange(data);
-    }
-  }, [data]);
 
   const editor = useEditor({
     extensions: [
@@ -53,37 +43,38 @@ const TextEditor = ({
       Superscript,
       SubScript,
       Highlight,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
       StarterKit,
       Placeholder.configure({ placeholder: cPlaceholder }),
     ],
-    content: form ? form.values[label ?? "description"] : value,
+    content: form ? form.values[label ?? 'description'] : value,
+    onUpdate: ({ editor }) => {
+      const data = editor.getHTML();
+      if (form) form?.setFieldValue(label ?? 'description', editor.getHTML());
+      if (onChange) onChange(data);
+    },
   });
 
   useMemo(() => {
-    const textValue = form?.values[label ?? "description"] || value;
+    const textValue =
+      form?.getInputProps(label ?? 'description').value ?? value;
     if (editor && textValue !== editor.getHTML()) {
-      editor.chain().insertContent(textValue).run();
+      editor.commands.setContent(textValue);
     }
-  }, [form?.values[label ?? "description"], value]);
+  }, [form?.getInputProps(label ?? 'description').value, value, editor]);
 
-  editor?.on("update", (d) => {
-    const text = editor.getHTML();
-    setData(text);
-  });
+  // const handleImageUpload = useCallback(
+  //   (file: File): Promise<string> =>
+  //     new Promise((resolve, reject) => {
+  //       const formData = new FormData();
+  //       formData.append('image', file);
 
-  const handleImageUpload = useCallback(
-    (file: File): Promise<string> =>
-      new Promise((resolve, reject) => {
-        const formData = new FormData();
-        formData.append("image", file);
-
-        uploadFile(file, FileAccess.Public)
-          .then((result) => resolve(result.data))
-          .catch(() => reject(new Error("Upload failed")));
-      }),
-    []
-  );
+  //       uploadFile(file, FileAccess.Public)
+  //         .then((result) => resolve(result.data))
+  //         .catch(() => reject(new Error('Upload failed')));
+  //     }),
+  //   []
+  // );
 
   return (
     <Box>
@@ -132,7 +123,7 @@ const TextEditor = ({
         <RichTextEditor.Content />
       </RichTextEditor>
       <Text color="red" size={13} mt={5}>
-        {form ? form.errors[label ?? "description"] : error}
+        {form ? form.errors[label ?? 'description'] : error}
       </Text>
     </Box>
   );

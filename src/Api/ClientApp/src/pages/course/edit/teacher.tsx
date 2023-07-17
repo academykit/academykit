@@ -1,47 +1,42 @@
-import DeleteModal from "@components/Ui/DeleteModal";
-import UserShortProfile from "@components/UserShortProfile";
-import useAuth from "@hooks/useAuth";
+import DeleteModal from '@components/Ui/DeleteModal';
+import UserShortProfile from '@components/UserShortProfile';
+import useAuth from '@hooks/useAuth';
 import {
-  Anchor,
   Box,
   Button,
   Container,
   Group,
-  TextInput,
   Title,
   Transition,
   Card,
   Text,
-  Modal,
   Select,
-} from "@mantine/core";
-import { useForm, yupResolver } from "@mantine/form";
-import { useToggle } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
-import { IconTrash } from "@tabler/icons";
-import { UserRole } from "@utils/enums";
-import errorType from "@utils/services/axiosError";
+} from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
+import { useToggle } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
+import { IconTrash } from '@tabler/icons';
+import errorType from '@utils/services/axiosError';
 import {
   ICreateCourseTeacher,
   useCourseTeacher,
   useCreateTeacherCourse,
   useDeleteCourseTeacher,
-} from "@utils/services/courseService";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
-import * as Yup from "yup";
-import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
-import queryStringGenerator from "@utils/queryStringGenerator";
-import { useGetTrainers } from "@utils/services/adminService";
+} from '@utils/services/courseService';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+import * as Yup from 'yup';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import queryStringGenerator from '@utils/queryStringGenerator';
+import { useGetTrainers } from '@utils/services/adminService';
 
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
     email: Yup.string()
-      .email(t("invalid_email") as string)
-      .required(t("email_required") as string),
+      .email(t('invalid_email') as string)
+      .required(t('email_required') as string),
   });
 };
 
@@ -55,10 +50,10 @@ const TeacherCards = ({
   const handleDelete = async () => {
     try {
       await deleteTeacher.mutateAsync(id);
-      showNotification({ message: t("trainer_deleted") });
+      showNotification({ message: t('trainer_deleted') });
     } catch (err) {
       const error = errorType(err);
-      showNotification({ message: error, color: "red" });
+      showNotification({ message: error, color: 'red' });
     }
   };
   const [deletePopup, setDeletePopUP] = useState(false);
@@ -67,25 +62,25 @@ const TeacherCards = ({
   return (
     <>
       <DeleteModal
-        title={`${t("delete_trainer?")}`}
+        title={`${t('delete_trainer?')}`}
         open={deletePopup}
-        onClose={setDeletePopUP}
+        onClose={() => setDeletePopUP(false)}
         onConfirm={handleDelete}
       />
 
-      <Card radius={"lg"} mb={10}>
+      <Card radius={'lg'} mb={10}>
         <Group py={5} position="apart">
           {user && (
-            <UserShortProfile user={user} size={"md"} page="Trainings" />
+            <UserShortProfile user={user} size={'md'} page="Trainings" />
           )}
           <Group>
-            <Text color={"dimmed"} size={"sm"}></Text>
+            <Text color={'dimmed'} size={'sm'}></Text>
             {auth?.auth &&
               auth?.auth.id !== user?.id &&
               user?.id !== courseCreatedBy && (
                 <IconTrash
                   color="red"
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: 'pointer' }}
                   onClick={() => setDeletePopUP(true)}
                 />
               )}
@@ -101,7 +96,7 @@ const Teacher = () => {
 
   const form = useForm({
     initialValues: {
-      email: "",
+      email: '',
     },
     validate: yupResolver(schema()),
   });
@@ -119,47 +114,47 @@ const Teacher = () => {
         email: email,
       });
       showNotification({
-        message: t("add_trainer_success"),
+        message: t('add_trainer_success'),
       });
       form.reset();
 
       toggleAddForm();
     } catch (err) {
       const error = errorType(err);
-      showNotification({ message: error, color: "red" });
+      showNotification({ message: error, color: 'red' });
     }
   };
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const { data: trainers, isLoading } = useGetTrainers(
     queryStringGenerator({ search })
   );
   return (
     <Container fluid>
-      <Group sx={{ justifyContent: "space-between", alignItems: "center" }}>
-        <Title>{t("trainers")}</Title>
+      <Group sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+        <Title>{t('trainers')}</Title>
         <Button onClick={() => toggleAddForm()}>
-          {!showAddForm ? t("add_trainer") : t("cancel")}
+          {!showAddForm ? t('add_trainer') : t('cancel')}
         </Button>
       </Group>
       <Transition
         mounted={showAddForm}
-        transition={"slide-down"}
+        transition={'slide-down'}
         duration={200}
         timingFunction="ease"
       >
-        {(style) => (
+        {() => (
           <Box mt={10}>
             <form onSubmit={form.onSubmit(onSubmitForm)}>
-              <Group sx={{ alignItems: "start" }}>
+              <Group sx={{ alignItems: 'start' }}>
                 <Select
                   clearable
-                  placeholder={t("enter_email_trainer") as string}
+                  placeholder={t('enter_email_trainer') as string}
                   searchable
-                  nothingFound={isLoading ? "Loading..." : "No Trainers Found!"}
+                  nothingFound={isLoading ? 'Loading...' : 'No Trainers Found!'}
                   data={trainers?.map((e) => e.email) ?? []}
                   onSearchChange={setSearch}
                   searchValue={search}
-                  {...form.getInputProps("email")}
+                  {...form.getInputProps('email')}
                 />
                 {/* <CustomTextFieldWithAutoFocus
                   placeholder={t("enter_the_email") as string}
@@ -168,7 +163,7 @@ const Teacher = () => {
                   {...form.getInputProps("email")}
                 /> */}
                 <Button loading={createTeacher.isLoading} type="submit">
-                  {t("add")}
+                  {t('add')}
                 </Button>
               </Group>
             </form>

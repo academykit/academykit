@@ -1,34 +1,26 @@
-import {
-  Badge,
-  Card,
-  createStyles,
-  Grid,
-  Group,
-  Image,
-  Text,
-} from "@mantine/core";
+import { Badge, Card, createStyles, Group, Image, Text } from '@mantine/core';
 
 function SessionCard() {
   const useStyles = createStyles((theme) => ({
     BadgeWrapperLive: {
-      position: "absolute",
+      position: 'absolute',
       top: 5,
-      color: "red",
+      color: 'red',
     },
     BadgeWrapperEnrolled: {
-      position: "absolute",
+      position: 'absolute',
       top: 5,
-      left: "25%",
-      marginLeft: "5px",
-      [theme.fn.smallerThan("lg")]: {
-        marginLeft: "35px",
+      left: '25%',
+      marginLeft: '5px',
+      [theme.fn.smallerThan('lg')]: {
+        marginLeft: '35px',
       },
-      [theme.fn.smallerThan("sm")]: {
-        marginLeft: "30px",
+      [theme.fn.smallerThan('sm')]: {
+        marginLeft: '30px',
       },
     },
   }));
-  const { classes, cx } = useStyles();
+  const { classes } = useStyles();
   return (
     <Card
       shadow="sm"

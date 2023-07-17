@@ -1,9 +1,9 @@
-import { Box, Button, Container } from "@mantine/core";
-import { useToggle } from "@mantine/hooks";
-import { useFeedbackQuestion } from "@utils/services/feedbackService";
-import EditFeedback from "./EditFeedBack";
-import FeedbackItem from "./FeedbackList";
-import { useTranslation } from "react-i18next";
+import { Box, Button, Container } from '@mantine/core';
+import { useToggle } from '@mantine/hooks';
+import { useFeedbackQuestion } from '@utils/services/feedbackService';
+import EditFeedback from './EditFeedBack';
+import FeedbackItem from './FeedbackList';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   lessonId: string;
@@ -12,7 +12,7 @@ interface Props {
 const CreateFeedback = ({ lessonId }: Props) => {
   const [addQuestion, setAddQuestion] = useToggle();
   const { t } = useTranslation();
-  const feedbackList = useFeedbackQuestion(lessonId, "");
+  const feedbackList = useFeedbackQuestion(lessonId, '');
   return (
     <Container>
       {feedbackList.isSuccess && (
@@ -23,13 +23,13 @@ const CreateFeedback = ({ lessonId }: Props) => {
                 <FeedbackItem
                   key={x.id}
                   data={x}
-                  search={""}
+                  search={''}
                   lessonId={lessonId}
                 />
               ))}
             </Box>
           ) : (
-            <Box mb={10}>{t("no_feedback_questions")}</Box>
+            <Box mb={10}>{t('no_feedback_questions')}</Box>
           )}
         </>
       )}
@@ -37,11 +37,11 @@ const CreateFeedback = ({ lessonId }: Props) => {
         <EditFeedback
           onCancel={() => setAddQuestion()}
           lessonId={lessonId}
-          search={""}
+          search={''}
         />
       )}
       <Button onClick={() => setAddQuestion()} mt={10}>
-        {t("add_feedback")}
+        {t('add_feedback')}
       </Button>
     </Container>
   );

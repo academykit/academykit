@@ -1,16 +1,16 @@
-import TextViewer from "@components/Ui/RichTextViewer";
-import { Box, Card, createStyles, Group, Title } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
+import TextViewer from '@components/Ui/RichTextViewer';
+import { Box, Card, createStyles, Group, Title } from '@mantine/core';
+import { UseFormReturnType } from '@mantine/form';
 import {
   ILessonStartQuestion,
   ILessonStartQuestionOption,
-} from "@utils/services/examService";
-import { useTranslation } from "react-i18next";
+} from '@utils/services/examService';
+import { useTranslation } from 'react-i18next';
 
 const useStyle = createStyles((theme) => ({
   option: {
-    ">label": {
-      cursor: "pointer",
+    '>label': {
+      cursor: 'pointer',
     },
   },
   active: {
@@ -36,34 +36,33 @@ const ExamCheckBox = ({ form, options, currentIndex }: Props) => {
   return (
     <Box mt={10} px={20} className={classes.option}>
       <Group>
-        <Title size={"xs"} mb={5}>
-          {t("options")}
+        <Title size={'xs'} mb={5}>
+          {t('options')}
         </Title>
       </Group>
       {options.map((option, index) => (
         <label key={option.id} htmlFor={option.id}>
           <input
-            type={"checkbox"}
+            type={'checkbox'}
             id={option.id}
-            style={{ display: "none" }}
+            style={{ display: 'none' }}
             {...form.getInputProps(
               `${currentIndex}.questionOptions.${index}.isCorrect`
             )}
           ></input>
           <Card
-            shadow={"md"}
+            shadow={'md'}
             my={10}
             p={10}
             className={cx({
               [classes.active]:
-                //@ts-ignore
                 form.values[currentIndex].questionOptions[index].isCorrect,
             })}
           >
             <TextViewer
               styles={{
                 root: {
-                  border: "none",
+                  border: 'none',
                 },
               }}
               content={option.option}

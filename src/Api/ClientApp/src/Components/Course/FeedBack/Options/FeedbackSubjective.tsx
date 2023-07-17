@@ -1,8 +1,8 @@
-import TextEditor from "@components/Ui/TextEditor";
-import { UseFormReturnType } from "@mantine/form";
-import { useDebouncedValue } from "@mantine/hooks";
-import { IFeedbackQuestions } from "@utils/services/feedbackService";
-import { useEffect, useState } from "react";
+import TextEditor from '@components/Ui/TextEditor';
+import { UseFormReturnType } from '@mantine/form';
+import { useDebouncedValue } from '@mantine/hooks';
+import { IFeedbackQuestions } from '@utils/services/feedbackService';
+import { useEffect, useState } from 'react';
 
 type Props = {
   form: UseFormReturnType<

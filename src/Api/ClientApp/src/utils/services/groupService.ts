@@ -1,10 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import errorType from "./axiosError";
-import { ICourse } from "./courseService";
-import { api } from "./service-api";
-import { httpClient } from "./service-axios";
-import { IPaginated, IUser, IUserProfile } from "./types";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import errorType from './axiosError';
+import { ICourse } from './courseService';
+import { api } from './service-api';
+import { httpClient } from './service-axios';
+import { IPaginated, IUser, IUserProfile } from './types';
 
 export interface IGroup {
   id: string;
@@ -41,7 +41,7 @@ export const useUpdateGroup = (id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation([api.groups.details(id)], updateGroupDetail, {
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries([api.groups.details(id)]);
     },
   });
@@ -61,7 +61,7 @@ const addGroup = async (name: string) =>
 export const useAddGroup = () => {
   const queryClient = useQueryClient();
   return useMutation([api.groups.list], addGroup, {
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries([api.groups.list]);
     },
     onError: (err) => {
@@ -93,7 +93,7 @@ const addMember = ({ id, data }: { id: string; data: any }) => {
 export const useAddGroupMember = (id: string, query: string) => {
   const queryClient = useQueryClient();
   return useMutation([api.groups.addMember(id)], addMember, {
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries([api.groups.member(id, query)]);
     },
     onError: (err) => {
@@ -120,7 +120,7 @@ export const useRemoveGroupMember = (
     [api.groups.removeMember(id, memberId)],
     removeGroupMember,
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([api.groups.member(id, query)]);
       },
       onError: (err) => {
@@ -134,8 +134,8 @@ const deleteGroup = ({ id }: { id: string }) =>
   httpClient.delete(api.groups.details(id));
 export const useDeleteGroup = (id: string, query: string) => {
   const queryClient = useQueryClient();
-  return useMutation(["delete", api.groups.details(id)], deleteGroup, {
-    onSuccess: (data) => {
+  return useMutation(['delete', api.groups.details(id)], deleteGroup, {
+    onSuccess: () => {
       queryClient.invalidateQueries([api.groups.list, query]);
     },
   });
@@ -213,7 +213,7 @@ const addGroupAttachement = ({
     },
     {
       headers: {
-        "content-type": "multipart/form-data",
+        'content-type': 'multipart/form-data',
       },
     }
   );
@@ -221,7 +221,7 @@ const addGroupAttachement = ({
 export const useAddGroupAttachment = (search: string) => {
   const queryClient = useQueryClient();
   return useMutation([api.groups.addAttachment], addGroupAttachement, {
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries([api.groups.attachment + search]);
     },
     onError: (err) => {
@@ -248,7 +248,7 @@ export const useRemoveGroupAttachment = (
     [api.groups.removeAttachment(id, fileId)],
     removeGroupAttachment,
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([api.groups.attachment + search]);
       },
       onError: (err) => {

@@ -1,16 +1,16 @@
-import TextViewer from "@components/Ui/RichTextViewer";
-import { Box, Card, createStyles, Group, Title } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
+import TextViewer from '@components/Ui/RichTextViewer';
+import { Box, Card, createStyles, Group, Title } from '@mantine/core';
+import { UseFormReturnType } from '@mantine/form';
 import {
   IAssignmentOptions,
   IAssignmentQuestion,
-} from "@utils/services/assignmentService";
-import { useTranslation } from "react-i18next";
+} from '@utils/services/assignmentService';
+import { useTranslation } from 'react-i18next';
 
 const useStyle = createStyles((theme) => ({
   option: {
-    ">label": {
-      cursor: "pointer",
+    '>label': {
+      cursor: 'pointer',
     },
   },
   active: {
@@ -30,7 +30,7 @@ type Props = {
 const RadioType = ({ options, form, currentIndex }: Props) => {
   const { classes, cx } = useStyle();
   const changeFieldValue = (optionCurrentIndex: number) => {
-    options.map((option, index) => {
+    options.map((_option, index) => {
       if (index !== optionCurrentIndex) {
         form.setFieldValue(
           `${currentIndex}.assignmentQuestionOptions.${index}.isSelected`,
@@ -63,18 +63,18 @@ const RadioType = ({ options, form, currentIndex }: Props) => {
   return (
     <Box mt={10} px={20} className={classes.option}>
       <Group>
-        <Title size={"xs"}>{t("options")}</Title>
+        <Title size={'xs'}>{t('options')}</Title>
       </Group>
       {options.map((option, index) => (
         <div
-          style={{ cursor: "pointer" }}
+          style={{ cursor: 'pointer' }}
           key={option.id}
           onClick={() => changeFieldValue(index)}
         >
           <input
-            type={"radio"}
+            type={'radio'}
             id={option.id}
-            style={{ display: "none" }}
+            style={{ display: 'none' }}
             onChange={() => onChangeRadioType(index)}
             checked={
               form.values[currentIndex].assignmentQuestionOptions![index]
@@ -82,21 +82,20 @@ const RadioType = ({ options, form, currentIndex }: Props) => {
             }
           ></input>
           <Card
-            shadow={"md"}
+            shadow={'md'}
             my={10}
             p={10}
             className={cx({
               [classes.active]:
-                //@ts-ignore
-                form.values[currentIndex].assignmentQuestionOptions[index]
+                form.values[currentIndex].assignmentQuestionOptions![index]
                   .isSelected,
             })}
           >
-            <input type={"checkbox"} style={{ display: "none" }} />
+            <input type={'checkbox'} style={{ display: 'none' }} />
             <TextViewer
               styles={{
                 root: {
-                  border: "none",
+                  border: 'none',
                 },
               }}
               content={option.option}

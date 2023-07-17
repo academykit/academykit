@@ -8,26 +8,26 @@ import {
   Box,
   Table,
   ScrollArea,
-} from "@mantine/core";
-import { useToggle } from "@mantine/hooks";
-import UserResults from "@pages/course/exam/Components/UserResults";
-import { IconCheck, IconEye } from "@tabler/icons";
-import { LessonType } from "@utils/enums";
-import RoutePath from "@utils/routeConstants";
-import { Link, useParams } from "react-router-dom";
-import { useWatchHistoryUser } from "@utils/services/watchHistory";
-import { showNotification } from "@mantine/notifications";
-import errorType from "@utils/services/axiosError";
+} from '@mantine/core';
+import { useToggle } from '@mantine/hooks';
+import UserResults from '@pages/course/exam/Components/UserResults';
+import { IconCheck, IconEye } from '@tabler/icons';
+import { LessonType } from '@utils/enums';
+import RoutePath from '@utils/routeConstants';
+import { Link, useParams } from 'react-router-dom';
+import { useWatchHistoryUser } from '@utils/services/watchHistory';
+import { showNotification } from '@mantine/notifications';
+import errorType from '@utils/services/axiosError';
 import {
   IReportDetail,
   useGetMeetingReport,
-} from "@utils/services/liveSessionService";
-import moment from "moment";
-import formatDuration from "@utils/formatDuration";
-import { getType } from "./LessonStatusColor";
-import { IStudentInfoLesson } from "@utils/services/manageCourseService";
-import { useTranslation } from "react-i18next";
-import { DATE_FORMAT } from "@utils/constants";
+} from '@utils/services/liveSessionService';
+import moment from 'moment';
+import formatDuration from '@utils/formatDuration';
+import { getType } from './LessonStatusColor';
+import { IStudentInfoLesson } from '@utils/services/manageCourseService';
+import { useTranslation } from 'react-i18next';
+import { DATE_FORMAT } from '@utils/constants';
 
 const TableRow = ({ values }: { values: IReportDetail }) => {
   const { t } = useTranslation();
@@ -80,7 +80,7 @@ const StudentLessonDetails = ({
     switch (type) {
       case LessonType.Exam:
         return (
-          <Tooltip label={t("view_result")}>
+          <Tooltip label={t('view_result')}>
             <ActionIcon
               color="green"
               variant="subtle"
@@ -92,7 +92,7 @@ const StudentLessonDetails = ({
         );
       case LessonType.LiveClass:
         return (
-          <Tooltip label={t("view_live_class_report")}>
+          <Tooltip label={t('view_live_class_report')}>
             <ActionIcon
               color="green"
               variant="subtle"
@@ -104,7 +104,7 @@ const StudentLessonDetails = ({
         );
       case LessonType.Assignment:
         return (
-          <Tooltip label={t("view_assignment_result")}>
+          <Tooltip label={t('view_assignment_result')}>
             <ActionIcon
               component={Link}
               color="green"
@@ -118,7 +118,7 @@ const StudentLessonDetails = ({
 
       case LessonType.Feedback:
         return (
-          <Tooltip label={t("view_feedback")}>
+          <Tooltip label={t('view_feedback')}>
             <ActionIcon
               component={Link}
               color="green"
@@ -137,14 +137,14 @@ const StudentLessonDetails = ({
     try {
       await watchHistory.mutateAsync({ courseId, lessonId, userId: studentId });
       showNotification({
-        message: t("pass_student_success"),
+        message: t('pass_student_success'),
       });
       setConfirmComplete();
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: "red",
+        color: 'red',
       });
     }
   };
@@ -155,15 +155,15 @@ const StudentLessonDetails = ({
         onClose={() => setExamResultModal()}
         trapFocus={true}
         opened={examResultModal}
-        transitionProps={{ transition: "slide-up" }}
-        size={"100%"}
+        transitionProps={{ transition: 'slide-up' }}
+        size={'100%'}
         styles={{
           inner: {
             paddingLeft: 0,
             paddingRight: 0,
             paddingBottom: 0,
-            paddingTop: "100px",
-            height: "100%",
+            paddingTop: '100px',
+            height: '100%',
           },
         }}
       >
@@ -174,27 +174,27 @@ const StudentLessonDetails = ({
       <Modal
         opened={confirmComplete}
         onClose={() => setConfirmComplete()}
-        title={`${t("pass_student_confirmation")} "${lessonName}" ${t(
-          "lesson?"
+        title={`${t('pass_student_confirmation')} "${lessonName}" ${t(
+          'lesson?'
         )}`}
       >
         <Group>
-          <Button onClick={onCompletedClick}>{t("confirm")}</Button>
+          <Button onClick={onCompletedClick}>{t('confirm')}</Button>
           <Button onClick={() => setConfirmComplete()} variant="outline">
-            {t("cancel")}
+            {t('cancel')}
           </Button>
         </Group>
       </Modal>
       <Modal
-        size={"xl"}
+        size={'xl'}
         scrollAreaComponent={ScrollArea.Autosize}
         opened={liveClassReportModal}
         onClose={() => setLiveClassReportModal()}
-        title={t("meeting_report")}
+        title={t('meeting_report')}
         styles={{
           title: {
-            fontWeight: "bold",
-            fontSize: "22px",
+            fontWeight: 'bold',
+            fontSize: '22px',
           },
         }}
       >
@@ -207,10 +207,10 @@ const StudentLessonDetails = ({
                 <Table>
                   <thead>
                     <tr>
-                      <th>{t("start_date")}</th>
-                      <th>{t("join_time")}</th>
-                      <th>{t("left_time")}</th>
-                      <th>{t("duration")}</th>
+                      <th>{t('start_date')}</th>
+                      <th>{t('join_time')}</th>
+                      <th>{t('left_time')}</th>
+                      <th>{t('duration')}</th>
                     </tr>
                   </thead>
 
@@ -221,7 +221,7 @@ const StudentLessonDetails = ({
                   </tbody>
                 </Table>
               )}
-              {meetingReport.isError && <Box>{t("something_went_wrong")}</Box>}
+              {meetingReport.isError && <Box>{t('something_went_wrong')}</Box>}
             </>
           )}
         </>
@@ -229,11 +229,11 @@ const StudentLessonDetails = ({
       <Group>
         {getViewButton()}
         {!isCompleted && (
-          <Tooltip label={`${t("mark_as")} ${getType(type).true}`}>
+          <Tooltip label={`${t('mark_as')} ${getType(type).true}`}>
             <ActionIcon
               onClick={() => setConfirmComplete()}
               variant="subtle"
-              color={"primary"}
+              color={'primary'}
             >
               {watchHistory.isLoading ? (
                 <Loader variant="oval" />

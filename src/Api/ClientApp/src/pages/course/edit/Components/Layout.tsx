@@ -1,8 +1,8 @@
-import { useParams } from "react-router-dom";
-import RoutePath from "@utils/routeConstants";
-import NavOutlet from "@components/Layout/NavOutlet";
-import { UserRole } from "@utils/enums";
-import { useTranslation } from "react-i18next";
+import { useParams } from 'react-router-dom';
+import RoutePath from '@utils/routeConstants';
+import NavOutlet from '@components/Layout/NavOutlet';
+import { UserRole } from '@utils/enums';
+import { useTranslation } from 'react-i18next';
 
 function CourseEditNav() {
   const params = useParams();
@@ -10,44 +10,44 @@ function CourseEditNav() {
 
   const navLink = [
     {
-      label: t("statistics"),
+      label: t('statistics'),
       to: RoutePath.manageCourse.manage(params.id).route,
       role: UserRole.Trainer,
     },
 
     {
-      label: t("settings"),
+      label: t('settings'),
       to: RoutePath.manageCourse.dashboard(params.id).route,
       role: UserRole.Trainer,
     },
     {
-      label: t("details"),
+      label: t('details'),
       to: RoutePath.manageCourse.edit(params.id).routes(),
       role: UserRole.Trainer,
     },
 
     {
-      label: t("lessons"),
+      label: t('lessons'),
       to: RoutePath.manageCourse.lessons(params.id).route,
       role: UserRole.Trainer,
     },
     {
-      label: t("trainers"),
+      label: t('trainers'),
       to: RoutePath.manageCourse.teachers(params.id).route,
       role: UserRole.Trainer,
     },
     {
-      label: t("certificates"),
+      label: t('certificates'),
       to: RoutePath.manageCourse.certificate(params.id).route,
       role: UserRole.Trainer,
     },
     {
-      label: t("lesson_stats"),
+      label: t('lesson_stats'),
       to: RoutePath.manageCourse.lessonsStat(params.id).route,
       role: UserRole.Trainer,
     },
     {
-      label: t("trainee"),
+      label: t('trainee'),
       to: RoutePath.manageCourse.student(params.id).route,
       role: UserRole.Trainer,
     },

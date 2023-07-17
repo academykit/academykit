@@ -1,5 +1,5 @@
-import DeleteModal from "@components/Ui/DeleteModal";
-import UserShortProfile from "@components/UserShortProfile";
+import DeleteModal from '@components/Ui/DeleteModal';
+import UserShortProfile from '@components/UserShortProfile';
 import {
   Button,
   Card,
@@ -9,15 +9,15 @@ import {
   Popover,
   Text,
   Title,
-} from "@mantine/core";
-import { useToggle } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
-import { IconChevronRight, IconDotsVertical } from "@tabler/icons";
-import RoutePath from "@utils/routeConstants";
-import errorType from "@utils/services/axiosError";
-import { IPool, useDeleteQuestionPool } from "@utils/services/poolService";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+} from '@mantine/core';
+import { useToggle } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
+import { IconDotsVertical } from '@tabler/icons';
+import RoutePath from '@utils/routeConstants';
+import errorType from '@utils/services/axiosError';
+import { IPool, useDeleteQuestionPool } from '@utils/services/poolService';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 const PoolCard = ({
   pool: { id: poolId, name, slug, user, questionCount },
@@ -33,14 +33,14 @@ const PoolCard = ({
     try {
       await deletePool.mutateAsync(poolId);
       showNotification({
-        title: t("successful"),
-        message: t("question_pool_delete"),
+        title: t('successful'),
+        message: t('question_pool_delete'),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
-        color: "red",
-        title: t("error"),
+        color: 'red',
+        title: t('error'),
         message: error as string,
       });
     }
@@ -50,23 +50,23 @@ const PoolCard = ({
   return (
     <div
       style={{
-        position: "relative",
+        position: 'relative',
       }}
     >
       <Link
-        style={{ textDecoration: "none" }}
+        style={{ textDecoration: 'none' }}
         to={RoutePath.pool.questions(slug).route}
       >
         <div
           style={{
-            position: "absolute",
+            position: 'absolute',
             zIndex: 10,
-            width: "100%",
-            height: "100%",
+            width: '100%',
+            height: '100%',
           }}
         ></div>
       </Link>
-      <Card my={10} radius={"lg"}>
+      <Card my={10} radius={'lg'}>
         <DeleteModal
           title={t(`pool_delete_confirmation`)}
           open={deleteModal}
@@ -75,11 +75,11 @@ const PoolCard = ({
         />
 
         <Group position="apart">
-          <Title size={"lg"} lineClamp={1} w={"80%"}>
+          <Title size={'lg'} lineClamp={1} w={'80%'}>
             {name}
           </Title>
           <Popover
-            position={"left-start"}
+            position={'left-start'}
             arrowSize={12}
             styles={{
               dropdown: { padding: 5 },
@@ -95,14 +95,15 @@ const PoolCard = ({
                 <Group
                   p={0}
                   sx={{
-                    flexDirection: "column",
-                    alignItems: "start",
+                    flexDirection: 'column',
+                    alignItems: 'start',
+                    gap: '0px',
                   }}
                 >
                   <NavLink
                     w={90}
                     variant="subtle"
-                    label={t("edit")}
+                    label={t('edit')}
                     component={Link}
                     to={RoutePath.pool.details(slug).route}
                   ></NavLink>
@@ -110,8 +111,8 @@ const PoolCard = ({
                   <NavLink
                     onClick={() => setDeleteModal()}
                     variant="subtle"
-                    label={t("delete")}
-                    component={"button"}
+                    label={t('delete')}
+                    component={'button'}
                   ></NavLink>
                 </Group>
               </Paper>
@@ -120,10 +121,10 @@ const PoolCard = ({
         </Group>
         <Group py={5} position="apart">
           <div style={{ zIndex: 20 }}>
-            <UserShortProfile size={"sm"} user={user} />
+            <UserShortProfile size={'sm'} user={user} />
           </div>
-          <Text color={"dimmed"} size={"sm"}>
-            {t("total_question")} {questionCount}
+          <Text color={'dimmed'} size={'sm'}>
+            {t('total_question')} {questionCount}
           </Text>
         </Group>
       </Card>

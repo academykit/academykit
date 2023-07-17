@@ -1,8 +1,7 @@
-import TextEditor from "@components/Ui/TextEditor";
+import TextEditor from '@components/Ui/TextEditor';
 import {
   Box,
   Button,
-  Checkbox,
   Container,
   Flex,
   Group,
@@ -11,42 +10,41 @@ import {
   Text,
   TextInput,
   UnstyledButton,
-} from "@mantine/core";
-import { createFormContext, yupResolver } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import { IconPlus, IconTrash } from "@tabler/icons";
-import { FeedbackType, ReadableEnum } from "@utils/enums";
-import * as Yup from "yup";
-import errorType from "@utils/services/axiosError";
+} from '@mantine/core';
+import { createFormContext, yupResolver } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import { IconPlus, IconTrash } from '@tabler/icons';
+import { FeedbackType } from '@utils/enums';
+import * as Yup from 'yup';
+import errorType from '@utils/services/axiosError';
 import {
   ICreateFeedback,
   IFeedbackQuestions,
   useAddFeedbackQuestion,
   useEditFeedbackQuestion,
-} from "@utils/services/feedbackService";
+} from '@utils/services/feedbackService';
 
-import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import { useTranslation } from "react-i18next";
-import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
-const fieldSize = "md";
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import { useTranslation } from 'react-i18next';
+const fieldSize = 'md';
 
 const schema = () => {
   const { t } = useTranslation();
 
   return Yup.object().shape({
-    name: Yup.string().required(t("feedback_title_required") as string),
+    name: Yup.string().required(t('feedback_title_required') as string),
     type: Yup.string()
-      .required(t("feedback_type_required") as string)
+      .required(t('feedback_type_required') as string)
       .nullable(),
 
     answers: Yup.array()
-      .when(["type"], {
+      .when(['type'], {
         is: FeedbackType.MultipleChoice.toString(),
         then: Yup.array()
-          .min(1, t("more_option_required") as string)
+          .min(1, t('more_option_required') as string)
           .test(
-            t("test"),
-            t("more_option_required") as string,
+            t('test'),
+            t('more_option_required') as string,
             function (value: any) {
               const a = value.length > 1;
               return a;
@@ -56,16 +54,16 @@ const schema = () => {
             Yup.object().shape({
               option: Yup.string()
                 .trim()
-                .required(t("option_required") as string),
+                .required(t('option_required') as string),
             })
           ),
       })
-      .when(["type"], {
+      .when(['type'], {
         is: FeedbackType.SingleChoice.toString(),
         then: Yup.array()
           .test(
-            t("test"),
-            t("more_option_required") as string,
+            t('test'),
+            t('more_option_required') as string,
             function (value: any) {
               const length: number = value && value.length;
               return length > 1;
@@ -75,20 +73,11 @@ const schema = () => {
             Yup.object().shape({
               option: Yup.string()
                 .trim()
-                .required(t("option_required") as string),
+                .required(t('option_required') as string),
             })
           ),
       }),
   });
-};
-const getQuestionType = () => {
-  return Object.entries(FeedbackType)
-    .splice(0, Object.entries(FeedbackType).length / 2)
-    .map(([key, value]) => ({
-      value: key,
-      label:
-        ReadableEnum[value as keyof typeof ReadableEnum] ?? value.toString(),
-    }));
 };
 
 const [FormProvider, useFormContext, useForm] =
@@ -107,14 +96,12 @@ const EditFeedback = ({
   const form = useForm({
     initialValues: {
       lessonId: lessonId,
-      name: feedbackQuestion ? feedbackQuestion.name : "",
-      type: feedbackQuestion ? feedbackQuestion.type.toString() : "",
-      // @ts-ignore
-      answers: feedbackQuestion
-        ? feedbackQuestion.feedbackQuestionOptions?.map((x) => ({
-            option: x.option,
-          }))
-        : [{ option: "" }],
+      name: feedbackQuestion ? feedbackQuestion.name : '',
+      type: feedbackQuestion ? feedbackQuestion.type.toString() : '',
+      answers: feedbackQuestion?.feedbackQuestionOptions?.map((x) => ({
+        option: x.option,
+        isSelected: x.isSelected,
+      })) ?? [{ option: '', isSelected: false }],
     },
     validate: yupResolver(schema()),
   });
@@ -124,6 +111,15 @@ const EditFeedback = ({
   const addFeedbackQuestions = useAddFeedbackQuestion(lessonId, search);
   const editFeedbackQuestion = useEditFeedbackQuestion(lessonId, search);
 
+  const getQuestionType = () => {
+    return Object.entries(FeedbackType)
+      .splice(0, Object.entries(FeedbackType).length / 2)
+      .map(([key, value]) => ({
+        value: key,
+        label: t(value.toString()),
+      }));
+  };
+
   const onSubmit = async (data: ICreateFeedback) => {
     try {
       if (feedbackQuestion) {
@@ -132,14 +128,14 @@ const EditFeedback = ({
           feedbackId: feedbackQuestion.id,
         });
         showNotification({
-          title: t("successful"),
-          message: t("edit_feedback_question_success"),
+          title: t('successful'),
+          message: t('edit_feedback_question_success'),
         });
       } else {
         await addFeedbackQuestions.mutateAsync({ data });
         showNotification({
-          title: t("successful"),
-          message: t("add_feedback_question_success"),
+          title: t('successful'),
+          message: t('add_feedback_question_success'),
         });
         form.reset();
       }
@@ -148,10 +144,11 @@ const EditFeedback = ({
       const error = errorType(err);
       showNotification({
         message: error,
-        color: "red",
+        color: 'red',
       });
     }
   };
+
   return (
     <Container fluid>
       <FormProvider form={form}>
@@ -160,25 +157,24 @@ const EditFeedback = ({
             <TextInput
               autoFocus
               autoComplete="off"
-              
               size={fieldSize}
               withAsterisk
-              label={t("title_feeback")}
-              placeholder={t("enter_feedback") as string}
-              {...form.getInputProps("name")}
+              label={t('title_feeback')}
+              placeholder={t('enter_feedback') as string}
+              {...form.getInputProps('name')}
             />
 
             <Select
               mt={20}
-              placeholder={t("enter_feedback_type") as string}
+              placeholder={t('enter_feedback_type') as string}
               size={fieldSize}
-              label={t("feedback_type")}
-              {...form.getInputProps("type")}
+              label={t('feedback_type')}
+              {...form.getInputProps('type')}
               data={getQuestionType()}
               onClick={() => {
                 feedbackQuestion &&
-                  form.setFieldValue("answers", [
-                    { option: "", isSelected: false },
+                  form.setFieldValue('answers', [
+                    { option: '', isSelected: false },
                   ]);
               }}
               withAsterisk
@@ -186,13 +182,16 @@ const EditFeedback = ({
             {(form.values.type === FeedbackType.MultipleChoice.toString() ||
               form.values.type === FeedbackType.SingleChoice.toString()) && (
               <Box>
-                <Text mt={20}>{t("options")}</Text>
+                <Text mt={20}>{t('options')}</Text>
                 {form.values.answers &&
                   form.values.answers.map((x, i) => (
-                    <div key={i} style={{ marginBottom: "30px" }}>
+                    <div
+                      key={i}
+                      style={{ marginBottom: '30px', width: '100%' }}
+                    >
                       <Flex>
                         <TextEditor
-                          placeholder={t("option_placeholder") as string}
+                          placeholder={t('option_placeholder') as string}
                           label={`answers.${i}.option`}
                           formContext={useFormContext}
                         ></TextEditor>
@@ -200,9 +199,9 @@ const EditFeedback = ({
                           mx={10}
                           onClick={() => {
                             form.insertListItem(
-                              "answers",
+                              'answers',
                               {
-                                option: "",
+                                option: '',
                               },
                               i + 1
                             );
@@ -214,7 +213,7 @@ const EditFeedback = ({
                           form.values.answers.length > 1 && (
                             <UnstyledButton
                               onClick={() => {
-                                form.removeListItem("answers", i);
+                                form.removeListItem('answers', i);
                               }}
                             >
                               <IconTrash color="red" />
@@ -222,15 +221,15 @@ const EditFeedback = ({
                           )}
                       </Flex>
                       {typeof form.errors[`answers.${i}.option`] ===
-                        "string" && (
-                        <span style={{ color: "red" }}>
+                        'string' && (
+                        <span style={{ color: 'red' }}>
                           {form.errors[`answers.${i}.option`]}
                         </span>
                       )}
                     </div>
                   ))}
-                {typeof form.errors[`answers`] === "string" && (
-                  <span style={{ color: "red" }}>{form.errors[`answers`]}</span>
+                {typeof form.errors[`answers`] === 'string' && (
+                  <span style={{ color: 'red' }}>{form.errors[`answers`]}</span>
                 )}
               </Box>
             )}
@@ -243,7 +242,7 @@ const EditFeedback = ({
                   // || editAssignment.isLoading
                 }
               >
-                {t("save")}
+                {t('save')}
               </Button>
               <Button
                 size="sm"
@@ -251,7 +250,7 @@ const EditFeedback = ({
                 onClick={onCancel}
                 variant="outline"
               >
-                {t("cancel")}
+                {t('cancel')}
               </Button>
             </Group>
           </Paper>

@@ -1,4 +1,5 @@
-import TextEditor from "@components/Ui/TextEditor";
+/* eslint-disable prettier/prettier */
+import TextEditor from '@components/Ui/TextEditor';
 import {
   Box,
   Button,
@@ -12,26 +13,26 @@ import {
   Radio,
   Select,
   Text,
-  TextInput,
   UnstyledButton,
-} from "@mantine/core";
-import { createFormContext, yupResolver } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import { IconPlus, IconTrash } from "@tabler/icons";
-import { QuestionType, ReadableEnum } from "@utils/enums";
-import queryStringGenerator from "@utils/queryStringGenerator";
-import errorType from "@utils/services/axiosError";
+} from '@mantine/core';
+import { createFormContext, yupResolver } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import { IconPlus, IconTrash } from '@tabler/icons';
+import { QuestionType } from '@utils/enums';
+import queryStringGenerator from '@utils/queryStringGenerator';
+import errorType from '@utils/services/axiosError';
 import {
   IAddQuestionType,
   useAddQuestion,
-} from "@utils/services/questionService";
-import { useAddTag, useTags } from "@utils/services/tagService";
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
-import * as Yup from "yup";
-import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+} from '@utils/services/questionService';
+import { useAddTag, useTags } from '@utils/services/tagService';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
+import * as Yup from 'yup';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+// import RoutePath from '@utils/routeConstants';
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IAddQuestionType>();
 
@@ -39,19 +40,19 @@ const schema = () => {
   const { t } = useTranslation();
 
   return Yup.object().shape({
-    name: Yup.string().required(t("question_title_required") as string),
+    name: Yup.string().required(t('question_title_required') as string),
     type: Yup.string()
-      .required(t("question_type_required") as string)
+      .required(t('question_type_required') as string)
       .nullable(),
 
     answers: Yup.array()
-      .when(["type"], {
+      .when(['type'], {
         is: QuestionType.MultipleChoice.toString(),
         then: Yup.array()
-          .min(1, t("option_more_than_one") as string)
+          .min(1, t('option_more_than_one') as string)
           .test(
-            "test",
-            t("multiple_choice_option_atleast") as string,
+            'test',
+            t('multiple_choice_option_atleast') as string,
             function (value: any) {
               const a = value?.filter((x: any) => x.isCorrect).length > 0;
               return a;
@@ -61,16 +62,16 @@ const schema = () => {
             Yup.object().shape({
               option: Yup.string()
                 .trim()
-                .required(t("option_required") as string),
+                .required(t('option_required') as string),
             })
           ),
       })
-      .when(["type"], {
+      .when(['type'], {
         is: QuestionType.SingleChoice.toString(),
         then: Yup.array()
           .test(
-            t("test"),
-            t("single_choice_option_atleast") as string,
+            t('test'),
+            t('single_choice_option_atleast') as string,
             function (value: any) {
               const length: number =
                 value && value.filter((e: any) => e?.isCorrect).length;
@@ -81,7 +82,7 @@ const schema = () => {
             Yup.object().shape({
               option: Yup.string()
                 .trim()
-                .required(t("option_required") as string),
+                .required(t('option_required') as string),
             })
           ),
       }),
@@ -94,12 +95,12 @@ const Create = () => {
 
   const form = useForm({
     initialValues: {
-      name: "",
-      description: "",
-      hints: "",
+      name: '',
+      description: '',
+      hints: '',
       tags: [],
-      type: "1",
-      answers: [{ option: "", isCorrect: false }],
+      type: '1',
+      answers: [{ option: '', isCorrect: false }],
     },
     validate: yupResolver(schema()),
     validateInputOnChange: true,
@@ -120,7 +121,7 @@ const Create = () => {
   };
 
   const { id } = useParams();
-  const addQuestion = useAddQuestion(id as string, "");
+  const addQuestion = useAddQuestion(id as string, '');
   const { mutate, data: addTagData, isSuccess } = useAddTag();
   const [isReset, setIsReset] = useState(false);
 
@@ -132,20 +133,20 @@ const Create = () => {
       if (!isReset) {
         navigate(-1);
       }
-      form.setFieldValue("tags", tags);
+      form.setFieldValue('tags', tags);
       showNotification({
-        title: t("successful"),
-        message: t("question_created_success"),
+        title: t('successful'),
+        message: t('question_created_success'),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: "red",
+        color: 'red',
       });
     }
   };
-  const [searchParams, setSearchParams] = useState("");
+  const [searchParams] = useState('');
   const [tagsList, setTagsList] = useState<{ value: string; label: string }[]>(
     []
   );
@@ -168,20 +169,20 @@ const Create = () => {
         ...tagsList,
         { label: addTagData.data.name, value: addTagData.data.id },
       ]);
-      form.setFieldValue("tags", [...form.values.tags, addTagData?.data?.id]);
+      form.setFieldValue('tags', [...form.values.tags, addTagData?.data?.id]);
     }
   }, [isSuccess]);
 
   useEffect(() => {
     if (form.values.type && !addQuestion.isSuccess) {
-      form.values.answers.forEach((x, i) => {
+      form.values.answers.forEach((_x, i) => {
         return form.setFieldValue(`answers.${i}.isCorrect`, false);
       });
     }
   }, [form.values.type]);
 
   const onChangeRadioType = (index: number) => {
-    form.values.answers.forEach((x, i) => {
+    form.values.answers.forEach((_x, i) => {
       if (i === index) {
         return form.setFieldValue(`answers.${index}.isCorrect`, true);
       }
@@ -189,23 +190,27 @@ const Create = () => {
     });
   };
 
+  const cancelCreation = () => {
+    navigate(-1);
+  }
+
   return (
     <Container fluid>
       <FormProvider form={form}>
         <Card mt={20}>
           <form onSubmit={form.onSubmit(onSubmit)}>
             <CustomTextFieldWithAutoFocus
-              size={"lg"}
+              size={'lg'}
               withAsterisk
-              label={t("title_question")}
-              placeholder={t("enter_question_title") as string}
-              {...form.getInputProps("name")}
+              label={t('title_question')}
+              placeholder={t('enter_question_title') as string}
+              {...form.getInputProps('name')}
             />
             <Box mt={20}>
-              <Text size={"lg"}>{t("description")}</Text>
+              <Text size={'lg'}>{t('description')}</Text>
               <TextEditor
-                label={t("description") as string}
-                placeholder={t("question_description") as string}
+                label={t('description') as string}
+                placeholder={t('question_description') as string}
                 formContext={useFormContext}
               />
             </Box>
@@ -214,48 +219,47 @@ const Create = () => {
               <MultiSelect
                 mt={15}
                 searchable
-                labelProps="name"
                 creatable
-                sx={{ maxWidth: "500px" }}
+                sx={{ maxWidth: '500px' }}
                 data={tagsList}
-                value={[]}
-                {...form.getInputProps("tags")}
-                getCreateLabel={(query) => `+ ${t("create")} ${query}`}
+                {...form.getInputProps('tags')}
+                getCreateLabel={(query) => `+ ${t('create')} ${query}`}
                 onCreate={(query) => {
                   mutate(query);
+                  return null;
                 }}
-                size={"lg"}
-                label={t("tags")}
-                placeholder={t("select_tags") as string}
+                size={'lg'}
+                label={t('tags')}
+                placeholder={t('select_tags') as string}
               />
             ) : (
               <Loader />
             )}
 
             <Box mt={20}>
-              <Text size={"lg"}>{t("hint")}</Text>
+              <Text size={'lg'}>{t('hint')}</Text>
               <TextEditor
-                label={t("hint") as string}
-                placeholder={t("question_hint")}
+                label={t('hints') as string}
+                placeholder={t('question_hint') as string}
                 formContext={useFormContext}
               />
             </Box>
 
             <Select
               mt={20}
-              placeholder={t("select_question_type") as string}
-              size={"lg"}
+              placeholder={t('select_question_type') as string}
+              size={'lg'}
               withAsterisk
-              label={t("question_type")}
-              {...form.getInputProps("type")}
+              label={t('question_type')}
+              {...form.getInputProps('type')}
               data={getQuestionType()}
             ></Select>
             {(form.values.type === QuestionType.MultipleChoice.toString() ||
               form.values.type === QuestionType.SingleChoice.toString()) && (
               <Box>
-                <Text mt={20}>{t("options")}</Text>
-                {form.values.answers.map((x, i) => (
-                  <Flex align={"center"} gap={"md"} key={i} mb={30}>
+                <Text mt={20}>{t('options')}</Text>
+                {form.values.answers.map((_x, i) => (
+                  <Flex align={'center'} gap={'md'} key={i} mb={30}>
                     {QuestionType.MultipleChoice.toString() ===
                     form.values.type ? (
                       <Checkbox
@@ -269,18 +273,17 @@ const Create = () => {
                         // {...form.getInputProps(`answers.${i}.isCorrect`)}
                       ></Radio>
                     )}
-                     <TextEditor
-                      placeholder={t("option_placeholder")}
+                    <TextEditor
                       label={`answers.${i}.option`}
-                      placeholder={t("option_placeholder") as string}
+                      placeholder={t('option_placeholder') as string}
                       formContext={useFormContext}
                     ></TextEditor>
                     <UnstyledButton
                       onClick={() => {
                         form.insertListItem(
-                          "answers",
+                          'answers',
                           {
-                            option: "",
+                            option: '',
                             isCorrect: false,
                           },
                           i + 1
@@ -292,21 +295,16 @@ const Create = () => {
                     {form.values.answers.length > 1 && (
                       <UnstyledButton
                         onClick={() => {
-                          form.removeListItem("answers", i);
+                          form.removeListItem('answers', i);
                         }}
                       >
                         <IconTrash color="red" />
                       </UnstyledButton>
                     )}
-                    {typeof form.errors[`answers.${i}.option`] === "string" && (
-                      <span style={{ color: "red" }}>
-                        {form.errors[`answers.${i}.option`]}
-                      </span>
-                    )}
                   </Flex>
                 ))}
-                {typeof form.errors[`answers`] === "string" && (
-                  <span style={{ color: "red" }}>{form.errors[`answers`]}</span>
+                {typeof form.errors[`answers`] === 'string' && (
+                  <span style={{ color: 'red' }}>{form.errors[`answers`]}</span>
                 )}
               </Box>
             )}
@@ -316,10 +314,17 @@ const Create = () => {
                 loading={addQuestion.isLoading}
                 onClick={() => setIsReset(false)}
               >
-                {t("save")}
+                {t('save')}
               </Button>
-              <Button type="submit" onClick={() => setIsReset(true)}>
-                {t("save_more")}
+              <Button
+                type="submit"
+                loading={addQuestion.isLoading}
+                onClick={() => setIsReset(true)}
+              >
+                {t('save_more')}
+              </Button>
+              <Button type="button" variant='outline' loading={addQuestion.isLoading} onClick={() => cancelCreation()}>
+                {t('cancel')}
               </Button>
             </Group>
           </form>

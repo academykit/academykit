@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { QuestionType } from "@utils/enums";
-import { api } from "./service-api";
-import { httpClient } from "./service-axios";
-import { IUser } from "./types";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { QuestionType } from '@utils/enums';
+import { api } from './service-api';
+import { httpClient } from './service-axios';
+import { IUser } from './types';
 
 interface IAssignmentAttachment {
   assignmentId: string;
@@ -80,19 +80,18 @@ export interface ICreateAssignment {
   hints: string;
   type: string;
   fileUrls?: string[];
-  answers?: [
-    {
-      option: string;
-      isCorrect: boolean;
-      isSelected: boolean;
-    }
-  ];
+  answers?: {
+    option: string;
+    isCorrect: boolean;
+    isSelected: boolean;
+  }[];
 }
 
 const addAssignmentQuestion = ({ data }: { data: ICreateAssignment }) => {
-  // @ts-ignore
-  data.type = Number(data.type);
-  return httpClient.post(api.assignment.add, data);
+  return httpClient.post(api.assignment.add, {
+    ...data,
+    type: Number(data.type),
+  });
 };
 
 export const useAddAssignmentQuestion = (lessonId: string, search: string) => {
@@ -112,9 +111,10 @@ const editAssignmentQuestion = ({
   data: ICreateAssignment;
   assignmentId: string;
 }) => {
-  // @ts-ignore
-  data.type = Number(data.type);
-  return httpClient.put(api.assignment.listOne(assignmentId), data);
+  return httpClient.put(api.assignment.listOne(assignmentId), {
+    ...data,
+    type: Number(data.type),
+  });
 };
 
 export const useEditAssignmentQuestion = (lessonId: string, search: string) => {
@@ -175,9 +175,9 @@ const postAssigmentSubmit = ({
 };
 export const useSubmitAssignment = ({ lessonId }: { lessonId: string }) => {
   const queryClient = useQueryClient();
-  return useMutation(["submitAssignment"], postAssigmentSubmit, {
+  return useMutation(['submitAssignment'], postAssigmentSubmit, {
     onSuccess: () => {
-      queryClient.invalidateQueries([api.assignment.list(lessonId, "")]);
+      queryClient.invalidateQueries([api.assignment.list(lessonId, '')]);
     },
   });
 };
@@ -185,7 +185,7 @@ export const useSubmitAssignment = ({ lessonId }: { lessonId: string }) => {
 export interface IAssignmentReview {
   user: IUser;
   lessonId: string;
-  lessonSlug: "string";
+  lessonSlug: 'string';
   assignmentReview: {
     id: string;
     lessonId: string;

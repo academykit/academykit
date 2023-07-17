@@ -6,9 +6,8 @@ import {
   Container,
   Group,
   Anchor,
-} from "@mantine/core";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+} from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -17,37 +16,37 @@ const useStyles = createStyles((theme) => ({
   },
 
   label: {
-    textAlign: "center",
+    textAlign: 'center',
     fontWeight: 900,
     fontSize: 220,
     lineHeight: 1,
-    marginBottom: theme.spacing.xl * 1.5,
+    marginBottom: `calc(${theme.spacing.xl} * 1.5)`,
     color:
-      theme.colorScheme === "dark"
+      theme.colorScheme === 'dark'
         ? theme.colors.dark[4]
         : theme.colors.gray[2],
 
-    [theme.fn.smallerThan("sm")]: {
+    [theme.fn.smallerThan('sm')]: {
       fontSize: 120,
     },
   },
 
   title: {
     fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-    textAlign: "center",
+    textAlign: 'center',
     fontWeight: 900,
     fontSize: 38,
 
-    [theme.fn.smallerThan("sm")]: {
+    [theme.fn.smallerThan('sm')]: {
       fontSize: 32,
     },
   },
 
   description: {
     maxWidth: 500,
-    margin: "auto",
+    margin: 'auto',
     marginTop: theme.spacing.xl,
-    marginBottom: theme.spacing.xl * 1.5,
+    marginBottom: `calc(${theme.spacing.xl} * 1.5)`,
   },
 }));
 
@@ -56,20 +55,20 @@ const NotFound = () => {
   const { t } = useTranslation();
   return (
     <Container className={classes.root}>
-      <div className={classes.label}>{t("404")}</div>
-      <Title className={classes.title}>{t("found_a_secret_place")}</Title>
+      <div className={classes.label}>{t('404')}</div>
+      <Title className={classes.title}>{t('found_a_secret_place')}</Title>
       <Text
         color="dimmed"
         size="lg"
         align="center"
         className={classes.description}
       >
-        {t("mistyped_or_moved")}{" "}
+        {t('mistyped_or_moved')}{' '}
       </Text>
       <Group position="center">
         <Anchor href="/">
           <Button variant="subtle" size="md">
-            {t("back_to_home")}
+            {t('back_to_home')}
           </Button>
         </Anchor>
       </Group>

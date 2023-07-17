@@ -1,17 +1,17 @@
-import DeleteModal from "@components/Ui/DeleteModal";
-import UserShortProfile from "@components/UserShortProfile";
-import useAuth from "@hooks/useAuth";
-import { Button, Card, Group, Modal } from "@mantine/core";
-import { useToggle } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
-import { IconTrash } from "@tabler/icons";
-import { PoolRole, UserRole } from "@utils/enums";
-import errorType from "@utils/services/axiosError";
+import DeleteModal from '@components/Ui/DeleteModal';
+import UserShortProfile from '@components/UserShortProfile';
+import useAuth from '@hooks/useAuth';
+import { Card, Group } from '@mantine/core';
+import { useToggle } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
+import { IconTrash } from '@tabler/icons';
+import { PoolRole } from '@utils/enums';
+import errorType from '@utils/services/axiosError';
 import {
   IPoolTeacher,
   useDeletePoolTeacher,
-} from "@utils/services/poolService";
-import { useTranslation } from "react-i18next";
+} from '@utils/services/poolService';
+import { useTranslation } from 'react-i18next';
 
 const TeacherCard = ({
   teacher,
@@ -28,20 +28,20 @@ const TeacherCard = ({
     try {
       setConfirmation();
       await deleteTeacher.mutateAsync(teacher.id as string);
-      showNotification({ message: t("delete_teacher_success") });
+      showNotification({ message: t('delete_teacher_success') });
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: "red",
+        color: 'red',
       });
     }
   };
 
   return (
-    <Card radius={"lg"} my={10}>
+    <Card radius={'lg'} my={10}>
       <DeleteModal
-        title={t("want_to_delete_trainer")}
+        title={t('want_to_delete_trainer')}
         open={confirmation}
         onClose={setConfirmation}
         onConfirm={handleDelete}
@@ -49,7 +49,7 @@ const TeacherCard = ({
 
       <Group py={5} position="apart">
         <UserShortProfile
-          size={"md"}
+          size={'md'}
           user={{ ...teacher.user, role: teacher?.role }}
         />
 
@@ -59,7 +59,7 @@ const TeacherCard = ({
             <Group>
               <IconTrash
                 color="red"
-                style={{ cursor: "pointer" }}
+                style={{ cursor: 'pointer' }}
                 onClick={() => setConfirmation()}
               />
             </Group>

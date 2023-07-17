@@ -1,5 +1,5 @@
-import { EditSectionProvider } from "@context/SectionProvider";
-import EditSection from "./Components/EditSection";
+import { EditSectionProvider } from '@context/SectionProvider';
+import EditSection from './Components/EditSection';
 
 const CourseLessons = () => {
   return (

@@ -1,19 +1,19 @@
-import { UseFormReturnType } from "@mantine/form";
-import { FileAccess, uploadFile } from "@utils/services/fileService";
-import { useEffect, useState } from "react";
-import { FilePond, registerPlugin } from "react-filepond";
-import "filepond/dist/filepond.min.css";
-import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-import FilePondPluginImageCrop from "filepond-plugin-image-crop";
-import FilePondPluginImageTransform from "filepond-plugin-image-transform";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import { UseFormReturnType } from '@mantine/form';
+import { FileAccess, uploadFile } from '@utils/services/fileService';
+import { useEffect, useState } from 'react';
+import { FilePond, registerPlugin } from 'react-filepond';
+import 'filepond/dist/filepond.min.css';
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
+import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import {
   default as FilePondPluginFileValidateSize,
   default as FilePondPluginImageResize,
-} from "filepond-plugin-file-validate-size";
-import { useTranslation } from "react-i18next";
+} from 'filepond-plugin-file-validate-size';
+import { useTranslation } from 'react-i18next';
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -31,14 +31,14 @@ type IProps = {
   formContext: () => UseFormReturnType<any, (values: any) => any>;
 };
 
-const AvatarEditor = ({ label = "files", url, formContext }: IProps) => {
+const AvatarEditor = ({ label = 'files', url, formContext }: IProps) => {
   useEffect(() => {
     if (url) {
       setFiles([
         {
           source: url,
           options: {
-            type: "local",
+            type: 'local',
           },
         },
       ]);
@@ -50,28 +50,28 @@ const AvatarEditor = ({ label = "files", url, formContext }: IProps) => {
   const [files, setFiles] = useState<any>([]);
 
   const filePondProps = {
-    labelInvalidField: t("Field contains invalid files"),
-    labelFileWaitingForSize: t("Waiting for size"),
-    labelFileSizeNotAvailable: t("Size not available"),
-    labelFileLoading: t("Loading"),
-    labelFileLoadError: t("Error during load"),
-    labelFileProcessing: t("Processing"),
-    labelFileProcessingComplete: t("Processing complete"),
-    labelFileProcessingAborted: t("Processing aborted"),
-    labelFileProcessingError: t("Error during processing"),
-    labelFileProcessingRevertError: t("Error during revert"),
-    labelFileRemoveError: t("Error during removal"),
-    labelTapToCancel: t("Tap to cancel"),
-    labelTapToRetry: t("Tap to retry"),
-    labelTapToUndo: t("Tap to undo"),
-    labelButtonRemoveItem: t("Remove"),
-    labelButtonAbortItemLoad: t("Abort"),
-    labelButtonRetryItemLoad: t("Retry"),
-    labelButtonAbortItemProcessing: t("Abort"),
-    labelButtonUndoItemProcessing: t("Undo"),
-    labelButtonRetryItemProcessing: t("Retry"),
-    labelButtonProcessItem: t("Process"),
-    imageValidateSizeLabelImageSizeTooSmall: t("img_too_small")
+    labelInvalidField: t('Field contains invalid files'),
+    labelFileWaitingForSize: t('Waiting for size'),
+    labelFileSizeNotAvailable: t('Size not available'),
+    labelFileLoading: t('Loading'),
+    labelFileLoadError: t('Error during load'),
+    labelFileProcessing: t('Processing'),
+    labelFileProcessingComplete: t('Processing complete'),
+    labelFileProcessingAborted: t('Processing aborted'),
+    labelFileProcessingError: t('Error during processing'),
+    labelFileProcessingRevertError: t('Error during revert'),
+    labelFileRemoveError: t('Error during removal'),
+    labelTapToCancel: t('Tap to cancel'),
+    labelTapToRetry: t('Tap to retry'),
+    labelTapToUndo: t('Tap to undo'),
+    labelButtonRemoveItem: t('Remove'),
+    labelButtonAbortItemLoad: t('Abort'),
+    labelButtonRetryItemLoad: t('Retry'),
+    labelButtonAbortItemProcessing: t('Abort'),
+    labelButtonUndoItemProcessing: t('Undo'),
+    labelButtonRetryItemProcessing: t('Retry'),
+    labelButtonProcessItem: t('Process'),
+    imageValidateSizeLabelImageSizeTooSmall: t('img_too_small'),
   };
 
   return (
@@ -81,17 +81,17 @@ const AvatarEditor = ({ label = "files", url, formContext }: IProps) => {
         imageCropAspectRatio="1:1"
         styleLoadIndicatorPosition="center bottom"
         instantUpload={true}
-        onremovefile={() => form.setFieldValue("imageUrl", "")}
-        acceptedFileTypes={["image/png", "image/jpeg", "image/gif"]}
+        onremovefile={() => form.setFieldValue('imageUrl', '')}
+        acceptedFileTypes={['image/png', 'image/jpeg', 'image/gif']}
         // imageValidateSizeMinWidth={639}
         // imageValidateSizeMinHeight={359}
         // imageValidateSizeMinResolution={229401}
         stylePanelLayout="compact circle"
         stylePanelAspectRatio="1:1"
         files={files}
-        labelIdle={`${t("drag_and_drop")} ${label} ${t(
-          "or"
-        )} <span class="filepond--label-action">${t("browse")}</span>`}
+        labelIdle={`${t('drag_and_drop')} ${label} ${t(
+          'or'
+        )} <span class="filepond--label-action">${t('browse')}</span>`}
         onupdatefiles={setFiles}
         allowMultiple={false}
         maxFiles={1}
@@ -101,20 +101,20 @@ const AvatarEditor = ({ label = "files", url, formContext }: IProps) => {
           revert: null,
           //processing a file
           process: async (
-            fieldName,
+            _fieldName,
             file,
-            metadata,
+            _metadata,
             load,
             error,
-            progress,
+            _progress,
             abort
           ) => {
             try {
               const res = await uploadFile(file as File, FileAccess.Public);
               load(res.data);
-              form.setFieldValue("imageUrl", res.data);
+              form.setFieldValue('imageUrl', res.data);
             } catch (e) {
-              error(t("unable_to_upload"));
+              error(t('unable_to_upload'));
             }
             return {
               abort: () => {
@@ -122,7 +122,7 @@ const AvatarEditor = ({ label = "files", url, formContext }: IProps) => {
               },
             };
           },
-          load: async (source, load, error, progress, abort, headers) => {
+          load: async (source, load, error, _progress, abort) => {
             await fetch(
               `${source}?cache=${Math.random().toString(36).substring(2, 7)}`
             )

@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import errorType from "./axiosError";
-import { api } from "./service-api";
-import { httpClient } from "./service-axios";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import errorType from './axiosError';
+import { api } from './service-api';
+import { httpClient } from './service-axios';
 
 const watchHistory = ({
   courseId,
@@ -51,9 +51,9 @@ export const useWatchHistoryUser = (
 ) => {
   const queryClient = useQueryClient();
   return useMutation([api.watchHistory.updateUser(userId)], watchHistoryUser, {
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries([
-        api.course.lessonStatDetails(courseId, lessonId),
+        api.course.lessonStatDetails(courseId, lessonId, ''),
       ]);
     },
     onError: (err) => {

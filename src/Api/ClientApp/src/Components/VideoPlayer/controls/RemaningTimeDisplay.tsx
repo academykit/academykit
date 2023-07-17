@@ -1,7 +1,7 @@
-import { Text } from "@mantine/core";
-import formatDuration from "@utils/formatDuration";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Text } from '@mantine/core';
+import formatDuration from '@utils/formatDuration';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   played: number;
@@ -14,7 +14,7 @@ const RemainingTimeDisplay: FC<React.PropsWithChildren<Props>> = ({
 }) => {
   const { t } = useTranslation();
 
-  const [formattedTime, setFormattedTime] = useState("");
+  const [formattedTime, setFormattedTime] = useState('');
   useEffect(() => {
     const remainingTime = duration - duration * played;
     setFormattedTime(formatDuration(remainingTime, true, t));
@@ -23,7 +23,7 @@ const RemainingTimeDisplay: FC<React.PropsWithChildren<Props>> = ({
     <div>
       {formattedTime && (
         <div aria-live="off">
-          <Text size={"xs"}>{`- ${formattedTime}`}</Text>
+          <Text size={'xs'}>{`- ${formattedTime}`}</Text>
         </div>
       )}
     </div>

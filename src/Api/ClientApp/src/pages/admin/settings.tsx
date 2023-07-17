@@ -1,4 +1,4 @@
-import UserInfo from "@components/Users/UserInfo";
+import UserInfo from '@components/Users/UserInfo';
 
 const Settings = () => {
   return <UserInfo />;

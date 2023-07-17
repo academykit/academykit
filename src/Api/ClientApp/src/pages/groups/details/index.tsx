@@ -1,6 +1,6 @@
-import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
-import useAuth from "@hooks/useAuth";
-import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import useAuth from '@hooks/useAuth';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Box,
   Button,
@@ -9,21 +9,20 @@ import {
   Flex,
   Paper,
   Text,
-  TextInput,
   Title,
-} from "@mantine/core";
-import { useForm, yupResolver } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import { UserRole } from "@utils/enums";
-import errorType from "@utils/services/axiosError";
+} from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import { UserRole } from '@utils/enums';
+import errorType from '@utils/services/axiosError';
 import {
   useGetGroupDetail,
   useUpdateGroup,
-} from "@utils/services/groupService";
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
-import * as Yup from "yup";
+} from '@utils/services/groupService';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+import * as Yup from 'yup';
 
 const useStyle = createStyles({});
 
@@ -32,8 +31,8 @@ const schema = () => {
   return Yup.object().shape({
     name: Yup.string()
       .trim()
-      .required(t("group_name_required") as string)
-      .max(250, t("group_character_limit") as string),
+      .required(t('group_name_required') as string)
+      .max(250, t('group_character_limit') as string),
   });
 };
 const GroupDetail = () => {
@@ -42,7 +41,7 @@ const GroupDetail = () => {
   const { t } = useTranslation();
   const form = useForm({
     initialValues: {
-      name: "",
+      name: '',
     },
     validate: yupResolver(schema()),
   });
@@ -55,7 +54,7 @@ const GroupDetail = () => {
 
   useEffect(() => {
     if (groupDetail.data) {
-      form.setFieldValue("name", groupDetail.data.data.name);
+      form.setFieldValue('name', groupDetail.data.data.name);
     }
   }, [groupDetail.data]);
 
@@ -68,14 +67,14 @@ const GroupDetail = () => {
       });
       setEdit(false);
       showNotification({
-        title: t("successful"),
-        message: t("group_update_success"),
+        title: t('successful'),
+        message: t('group_update_success'),
       });
     } catch (error) {
       const err = errorType(error);
       showNotification({
         message: err,
-        color: "red",
+        color: 'red',
       });
     }
     setEdit(false);
@@ -87,21 +86,21 @@ const GroupDetail = () => {
 
   return (
     <Container fluid>
-      <Flex justify={"space-between"} w={"100%"}>
-        <Title>{t("group_details")}</Title>
+      <Flex justify={'space-between'} w={'100%'}>
+        <Title>{t('group_details')}</Title>
 
         {!edit && auth?.auth && auth?.auth?.role < UserRole.Trainer && (
           <Button
             onClick={() => {
               setEdit(true);
               form.setFieldValue(
-                "name",
-                groupDetail.data ? groupDetail.data.data.name : ""
+                'name',
+                groupDetail.data ? groupDetail.data.data.name : ''
               );
             }}
             variant="outline"
           >
-            {t("edit")}
+            {t('edit')}
           </Button>
         )}
       </Flex>
@@ -109,8 +108,8 @@ const GroupDetail = () => {
         {!edit ? (
           <Paper withBorder p={10} mt={10}>
             <Flex direction="column">
-              <Text size="lg" weight={"bold"}>
-                {t("group_name")}
+              <Text size="lg" weight={'bold'}>
+                {t('group_name')}
               </Text>
               <Text>{groupDetail?.data?.data?.name}</Text>
             </Flex>
@@ -121,13 +120,13 @@ const GroupDetail = () => {
               <CustomTextFieldWithAutoFocus
                 sx={{ maxWidth: theme.breakpoints.xs }}
                 name="name"
-                label={t("group_name")}
+                label={t('group_name')}
                 withAsterisk
-                placeholder={t("your_group_name") as string}
-                {...form.getInputProps("name")}
+                placeholder={t('your_group_name') as string}
+                {...form.getInputProps('name')}
               />
               <Button loading={updateGroups.isLoading} mt={20} type="submit">
-                {t("save")}
+                {t('save')}
               </Button>
               <Button
                 variant="outline"
@@ -137,7 +136,7 @@ const GroupDetail = () => {
                 }}
                 ml={10}
               >
-                {t("cancel")}
+                {t('cancel')}
               </Button>
             </Box>
           </Paper>

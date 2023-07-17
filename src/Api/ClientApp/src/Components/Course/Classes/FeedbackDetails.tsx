@@ -1,7 +1,7 @@
-import { Box, Button, Group, Title } from "@mantine/core";
-import RoutePath from "@utils/routeConstants";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Button, Group, Title } from '@mantine/core';
+import RoutePath from '@utils/routeConstants';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 const FeedbackDetails = ({
   name,
@@ -14,15 +14,15 @@ const FeedbackDetails = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <Group sx={{ flexDirection: "column" }}>
+    <Group sx={{ flexDirection: 'column' }}>
       <Title>{name}</Title>
       {!hasFeedbackSubmitted ? (
         <Button component={Link} to={RoutePath.feedback.details(id).route}>
-          {t("give_feedback")}
+          {t('give_feedback')}
         </Button>
       ) : (
         <Button component={Link} to={RoutePath.feedback.myDetails(id).route}>
-          {t("view_feedback")}
+          {t('view_feedback')}
         </Button>
       )}
     </Group>
