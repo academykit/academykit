@@ -17,6 +17,7 @@ import {
   Text,
   Title,
   useMantineTheme,
+  createStyles,
 } from '@mantine/core';
 import { useMediaQuery, useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
@@ -41,6 +42,23 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
+const useStyles = createStyles((theme) => ({
+  linksTop: {
+    '&:hover': {
+      borderTopLeftRadius: '3px',
+      borderTopRightRadius: '3px',
+      backgroundColor: theme.colorScheme == 'dark' ? '#128797' : '#7AD1DD',
+    },
+  },
+  linksBottom: {
+    '&:hover': {
+      borderBottomLeftRadius: '3px',
+      borderBottomRightRadius: '3px',
+      backgroundColor: theme.colorScheme == 'dark' ? '#128797' : '#7AD1DD',
+    },
+  },
+}));
+
 const CourseCardHorizontal = ({
   course,
   search,
@@ -48,6 +66,7 @@ const CourseCardHorizontal = ({
   course: ICourse;
   search: string;
 }) => {
+  const { classes } = useStyles();
   const [deleteModal, setDeleteModal] = useToggle();
   const deleteCourse = useDeleteCourse(search);
   const handleDelete = async () => {
@@ -201,6 +220,7 @@ const CourseCardHorizontal = ({
                         style={{ gap: '0px' }}
                       >
                         <NavLink
+                          className={classes.linksTop}
                           variant="subtle"
                           label={t('manage')}
                           component={Link}
@@ -211,6 +231,7 @@ const CourseCardHorizontal = ({
                         ></NavLink>
 
                         <NavLink
+                          className={classes.linksBottom}
                           onClick={() => setDeleteModal()}
                           variant="subtle"
                           label={t('delete')}
