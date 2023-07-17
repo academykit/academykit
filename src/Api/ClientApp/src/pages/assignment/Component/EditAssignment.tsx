@@ -170,7 +170,6 @@ const EditAssignment = ({
 
   const onSubmit = async (data: ICreateAssignment) => {
     try {
-      console.log(data.answers);
       if (assignmentQuestion) {
         const dat = { ...data, lessonId: lessonId };
         await editAssignment.mutateAsync({

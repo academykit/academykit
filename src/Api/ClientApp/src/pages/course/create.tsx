@@ -207,7 +207,7 @@ const CreateCoursePage = () => {
                 <Select
                   withAsterisk
                   size="lg"
-                  placeholder={t('level_placeholder') as string}
+                  placeholder={t('level_placecancholder') as string}
                   label={t('level')}
                   {...form.getInputProps('level')}
                   data={
@@ -221,6 +221,7 @@ const CreateCoursePage = () => {
                           },
                         ]
                   }
+                  styles={{ error: { position: 'absolute' } }}
                 ></Select>
               ) : (
                 <div>
