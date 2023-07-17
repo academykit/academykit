@@ -58,7 +58,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="password">the login password of the receiver</param>
         /// <param name="companyName"> the company name </param>
         /// <returns> the task complete </returns>
-        Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password,GeneralSetting company, PerformContext context = null);
+        Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password,string companyName,string companyNumber, PerformContext context = null);
 
         /// <summary>
         /// Handle to update information of lesson video

@@ -383,7 +383,7 @@ namespace Lingtren.Infrastructure.Services
 
             if (model.Status == CourseStatus.Rejected)
             {
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.CourseRejectedMailAsync(course.Id, model.Message, null));
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.CourseRejectedMailAsync(course.Id,model.Message, null));
             }
         }
 
@@ -1461,6 +1461,17 @@ namespace Lingtren.Infrastructure.Services
             try
             {
                 var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+
+                course.CourseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
+                    predicate: p => p.CourseId == course.Id
+                    ).ConfigureAwait(false);
+
+                if (course.CourseCertificate == null)
+                {
+                    _logger.LogWarning("Certificate detail information not found for training with id :{courseId}.", course.Id);
+                    throw new EntityNotFoundException(_localizer.GetString("CertificateNotFound"));
+                }
+
                 course.Signatures = new List<Signature>();
                 course.Signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
                     predicate: p => p.CourseId == course.Id
@@ -1470,15 +1481,7 @@ namespace Lingtren.Infrastructure.Services
                     _logger.LogWarning("At least one trainer signature detail is required for training with id :{courseId}.", course.Id);
                     throw new EntityNotFoundException(_localizer.GetString("AtLeastOneTrainerSignatureRequired"));
                 }
-                course.CourseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
-                     predicate: p => p.CourseId == course.Id
-                     ).ConfigureAwait(false);
-
-                if (course.CourseCertificate == null)
-                {
-                    _logger.LogWarning("Certificate detail information not found for training with id :{courseId}.", course.Id);
-                    throw new EntityNotFoundException(_localizer.GetString("CertificateNotFound"));
-                }
+               
 
                 var predicate = PredicateBuilder.New<CourseEnrollment>(true);
                 predicate = predicate.And(p => p.CourseId == course.Id && !p.IsDeleted && p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled);
