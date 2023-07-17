@@ -56,7 +56,15 @@ const schema = () => {
             Yup.object().shape({
               option: Yup.string()
                 .trim()
-                .required(t('option_required') as string),
+                .required(t('option_required') as string)
+                .test(
+                  t('test_option_format'),
+                  t('option_required') as string,
+                  function (value: any) {
+                    // Check if the value is "<p></p>"
+                    return value !== '<p></p>';
+                  }
+                ),
             })
           ),
       })
@@ -77,7 +85,15 @@ const schema = () => {
             Yup.object().shape({
               option: Yup.string()
                 .trim()
-                .required(t('option_required') as string),
+                .required(t('option_required') as string)
+                .test(
+                  t('test_option_format_single'),
+                  t('option_required') as string,
+                  function (value: any) {
+                    // Check if the value is "<p></p>"
+                    return value !== '<p></p>';
+                  }
+                ),
             })
           ),
       }),
@@ -287,12 +303,6 @@ const EditAssignment = ({
                             </UnstyledButton>
                           )}
                       </Flex>
-                      {typeof form.errors[`answers.${i}.option`] ===
-                        'string' && (
-                        <span style={{ color: 'red' }}>
-                          {form.errors[`answers.${i}.option`]}
-                        </span>
-                      )}
                     </div>
                   ))}
                 {typeof form.errors[`answers`] === 'string' && (

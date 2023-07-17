@@ -93,7 +93,14 @@ const UsersList = ({
       >
         {opened && (
           <Suspense fallback={<Loader />}>
-            <Tabs value={currentTab} onTabChange={setCurrentTab}>
+            <Tabs
+              value={currentTab}
+              onTabChange={(val) => {
+                setCurrentTab(val);
+                form.reset(); // resetting csv file on every tab change
+              }}
+              keepMounted={false} // resetting input fields on every tab change
+            >
               <Tabs.List>
                 <Tabs.Tab value="user">{t('add_user')}</Tabs.Tab>
                 <Tabs.Tab value="import">{t('import_users')}</Tabs.Tab>
@@ -106,7 +113,6 @@ const UsersList = ({
                       opened={opened}
                       apiHooks={addUser}
                       isEditing={false}
-                      // currentTab={currentTab}
                     />
                   )}
                 </Box>
