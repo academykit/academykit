@@ -127,7 +127,7 @@ const CreateForm: FC<Props> = ({ form, useFormContext }) => {
                 {...form.getInputProps(`answers.${i}.isCorrect`)}
                 name=""
               ></Checkbox>
-              asdas
+
               <TextEditor
                 placeholder={t('option_placeholder') as string}
                 label={`answers.${i}.option`}
