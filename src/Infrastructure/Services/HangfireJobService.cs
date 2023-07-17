@@ -88,7 +88,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="context"> the instance of <see cref="PerformContext" /> .</param>
         /// <returns> the task complete </returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task CourseRejectedMailAsync(Guid courseId, string message, PerformContext context = null)
+        public async Task CourseRejectedMailAsync(Guid courseId,string message,PerformContext context = null)
         {
             try
             {
@@ -110,14 +110,17 @@ namespace Lingtren.Infrastructure.Services
                 {
                     if (!string.IsNullOrEmpty(teacher.User?.Email))
                     {
-                        var html = $"Dear {teacher?.User.FullName},<br><br>";
-                        html += $"Your {course.Name} course has been rejected. <br>{message}</b><br><br> ";
-                        html += $"Thank You,<br> {settings.CompanyName}";
+                        var html = $"Dear {teacher?.User.FirstName},<br><br>";
+                        html += $"We regret to inform you that your training, [Training Name] has been rejected for the following reason:<br><br>";
+                        html += $"{message}<br><br>";
+                        html += $"However, we encourage you to make the necessary corrections and adjustments based on the provided feedback. Once you have addressed the identified issues, please resubmit the training program for further review.<br><br>";
+                        html += $"Thank you for your understanding and cooperation.<br><br>";
+                        html += $"Best regards,<br> {settings.CompanyName}";
 
                         var model = new EmailRequestDto
                         {
                             To = teacher.User.Email,
-                            Subject = "Course Rejected",
+                            Subject = "Training Rejection",
                             Message = html,
                         };
                         await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
@@ -141,7 +144,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="companyName"> the company name </param>
         /// <returns></returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password, GeneralSetting company, PerformContext context = null)
+        public async Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password,string companyName,string companyNumber, PerformContext context = null)
         {
             try
             {
@@ -156,7 +159,7 @@ namespace Lingtren.Infrastructure.Services
                 html += $"Email:{emailAddress}<br>";
                 html += $"Password:{password}<br><br>";
                 html += $"Please use the above login credentials to access your account.<br><br>";
-                html += $"Best regards,<br> {company.CompanyName}<br>{company.CompanyContactNumber}";
+                html += $"Best regards,<br> {companyName}<br>{companyNumber}";
                 var mail = new EmailRequestDto
                 {
                     To = emailAddress,
@@ -509,8 +512,8 @@ namespace Lingtren.Infrastructure.Services
                     throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
                 }
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
-                var html = $"Dear {fullName}<br>";
-                html += @$"A recent change has been made to the email address associated with your account to {Newemail}.Please check your email for the login credentials. If you encounter any difficulties, please contact your administrator immediately.";
+                var html = $"Dear {fullName}<br><br>";
+                html += @$"A recent change has been made to the email address associated with your account to {Newemail}<br>.Please check your email for the login credentials. If you encounter any difficulties, please contact your administrator immediately.";
                 html += $"<br><br>Thank You, <br> {settings.CompanyName}";
                 var model = new EmailRequestDto
                 {

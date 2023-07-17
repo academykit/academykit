@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import TextEditor from '@components/Ui/TextEditor';
 import {
   Box,
@@ -28,34 +29,6 @@ import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
-
-const getQuestionType = () => {
-  return Object.entries(QuestionType)
-    .splice(0, Object.entries(QuestionType).length / 2)
-    .map(([key, value]) => ({
-      value: key,
-      label:
-        ReadableEnum[value as keyof typeof ReadableEnum] ?? value.toString(),
-    }));
-};
-
-// const getQuestionType = () => {
-//   const { t } = useTranslation();
-//   return [
-//     {
-//       value: QuestionType.SingleChoice.toString(),
-//       label: t(`SingleChoice`),
-//     },
-//     {
-//       value: QuestionType.MultipleChoice.toString(),
-//       label: t(`MultipleChoice`),
-//     },
-//     {
-//       value: QuestionType.Subjective.toString(),
-//       label: t(`Subjective`),
-//     },
-//   ];
-// };
 
 const schema = () => {
   const { t } = useTranslation();
@@ -141,11 +114,21 @@ const EditAssignment = ({
   });
   useFormErrorHooks(form);
 
+  const { t } = useTranslation();
+
+  const getQuestionType = () => {
+    return Object.entries(QuestionType)
+      .splice(0, Object.entries(QuestionType).length / 2)
+      .map(([key, value]) => ({
+        value: key,
+        label: t(value.toString()),
+      }));
+  };
+
   const data = useMemo(() => getQuestionType(), []);
-  console.log(data);
+
   const addAssignmentQuestion = useAddAssignmentQuestion(lessonId, search);
   const editAssignment = useEditAssignmentQuestion(lessonId, search);
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (

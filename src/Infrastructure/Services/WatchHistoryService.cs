@@ -184,7 +184,7 @@
         {
             try
             {
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == currentUserId && (p.Role == UserRole.Admin || p.Role == UserRole.SuperAdmin)).ConfigureAwait(false);
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == userId && (p.Role == UserRole.Admin || p.Role == UserRole.SuperAdmin)).ConfigureAwait(false);
                 var course = await ValidateAndGetCourse(currentUserId, model.CourseIdentity, validateForModify: true).ConfigureAwait(false);
                 if (course == null)
                 {
@@ -198,7 +198,7 @@
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and training with id : {courseId}.", model.LessonIdentity, currentUserId, course.Id);
                     throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
-                if (course.CourseTeachers.Any(x => x.UserId != currentUserId) || user == default)
+                if (course.CourseTeachers.Any(x => x.UserId != userId) || user == default)
                 {
                     var currentTimeStamp = DateTime.UtcNow;
                     var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(

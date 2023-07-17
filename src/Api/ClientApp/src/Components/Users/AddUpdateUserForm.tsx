@@ -72,13 +72,14 @@ const AddUpdateUserForm = ({
   opened,
   isEditing,
   apiHooks,
-  item,
+  item, // currentTab,
 }: {
   setOpened: (b: boolean) => void;
   opened: boolean;
   isEditing: boolean;
   apiHooks: any;
   item?: IUserProfile;
+  // currentTab: string;
 }) => {
   const { t } = useTranslation();
   const { classes } = useStyles();

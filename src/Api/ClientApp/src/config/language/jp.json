@@ -858,6 +858,7 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "Rating": "評価",
   "few_seconds_ago": "数秒前",
   "seconds_ago": "秒前",
   "minute_ago": "分前",
