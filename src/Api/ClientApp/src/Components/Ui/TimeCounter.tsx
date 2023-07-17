@@ -1,19 +1,16 @@
-import { Group } from "@mantine/core";
-import { FC, useEffect, useState } from "react";
+import { Group } from '@mantine/core';
+import { FC, useEffect, useState } from 'react';
 type Props = {
   time: number;
 };
 const TimeCounter: FC<Props> = ({ time }) => {
-  var subTime = time < 10;
-  var prepTime = time < 60;
-
-  var [detailedTime, setDetailedPlan] = useState({
+  const [detailedTime, setDetailedPlan] = useState({
     day: 0,
     hour: 0,
     minute: 0,
     seconds: 0,
   });
-  var timeValue = time;
+  let timeValue = time;
   useEffect(() => {
     let hour = 0;
     let day = 0;

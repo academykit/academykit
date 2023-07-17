@@ -122,7 +122,7 @@ namespace Lingtren.Api.Controllers
 
             var response = await _userService.CreateAsync(entity).ConfigureAwait(false);
             var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
-            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(entity.Email, entity.FirstName, password, company.CompanyName,null));
+            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(entity.Email, entity.FirstName, password, company.CompanyName,company.CompanyContactNumber,null));
             return new UserResponseModel(response);
         }
 
@@ -244,7 +244,7 @@ namespace Lingtren.Api.Controllers
             if (password != null)
             {
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.AccountUpdatedMailAsync(existing.FullName,model.Email,oldEmail,null));
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(existing.Email, existing.FullName, password, company.CompanyName, null));
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(existing.Email, existing.FullName, password,company.CompanyName,company.CompanyContactNumber, null));
             }
 
             return new UserResponseModel(savedEntity);

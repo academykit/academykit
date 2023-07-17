@@ -1,6 +1,6 @@
 import withSearchPagination, {
   IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+} from '@hoc/useSearchPagination';
 import {
   Box,
   Button,
@@ -8,39 +8,38 @@ import {
   createStyles,
   Group,
   Paper,
-  TextInput,
   Title,
   Transition,
   Loader,
-} from "@mantine/core";
-import { useForm, yupResolver } from "@mantine/form";
-import { useToggle } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
-import errorType from "@utils/services/axiosError";
-import { useAddPool, usePools } from "@utils/services/poolService";
-import PoolCard from "./Components/PoolCard";
-import * as Yup from "yup";
-import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
-import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+} from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
+import { useToggle } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
+import errorType from '@utils/services/axiosError';
+import { useAddPool, usePools } from '@utils/services/poolService';
+import PoolCard from './Components/PoolCard';
+import * as Yup from 'yup';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 const useStyle = createStyles((theme) => ({
   paper: {
-    [theme.fn.smallerThan("md")]: {
-      width: "100%",
+    [theme.fn.smallerThan('md')]: {
+      width: '100%',
     },
-    [theme.fn.smallerThan("lg")]: {
-      width: "100%",
+    [theme.fn.smallerThan('lg')]: {
+      width: '100%',
     },
 
-    width: "50%",
-    marginBottom: "20px",
+    width: '50%',
+    marginBottom: '20px',
   },
 }));
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t("pool_name_required") as string),
+    name: Yup.string().required(t('pool_name_required') as string),
   });
 };
 
@@ -57,7 +56,7 @@ const MCQPool = ({
   const { classes } = useStyle();
   const form = useForm({
     initialValues: {
-      name: "",
+      name: '',
     },
     validate: yupResolver(schema()),
   });
@@ -67,46 +66,46 @@ const MCQPool = ({
       const res = await addPool.mutateAsync(name);
       form.reset();
       toggleAddForm();
-      navigate(res.data.slug + "/questions");
+      navigate(res.data.slug + '/questions');
     } catch (err) {
       const error = errorType(err);
-      showNotification({ message: error, color: "red" });
+      showNotification({ message: error, color: 'red' });
     }
   };
   return (
     <Container fluid>
-      <Group sx={{ justifyContent: "space-between", alignItems: "center" }}>
-        <Title>{t("mcq_pools")}</Title>
+      <Group sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+        <Title>{t('mcq_pools')}</Title>
         {!showAddForm && (
-          <Button onClick={() => toggleAddForm()}>{t("create_pool")}</Button>
+          <Button onClick={() => toggleAddForm()}>{t('create_pool')}</Button>
         )}
       </Group>
       <Transition
         mounted={showAddForm}
-        transition={"slide-down"}
+        transition={'slide-down'}
         duration={200}
         timingFunction="ease"
       >
-        {(style) => (
+        {() => (
           <Box mt={10}>
             <form onSubmit={form.onSubmit(onSubmitForm)}>
               <Group>
                 <Paper
-                  shadow={"sm"}
+                  shadow={'sm'}
                   radius="md"
                   p="xl"
                   withBorder
                   className={classes.paper}
                 >
                   <CustomTextFieldWithAutoFocus
-                    label={t("pool_name")}
-                    placeholder={t("enter_pool_name") as string}
+                    label={t('pool_name')}
+                    placeholder={t('enter_pool_name') as string}
                     name="name"
-                    {...form.getInputProps("name")}
+                    {...form.getInputProps('name')}
                   />
                   <Group mt={10}>
                     <Button type="submit" top={5}>
-                      {t("create")}
+                      {t('create')}
                     </Button>
                     {showAddForm && (
                       <Button
@@ -114,7 +113,7 @@ const MCQPool = ({
                         onClick={() => toggleAddForm()}
                         variant="outline"
                       >
-                        {t("cancel")}
+                        {t('cancel')}
                       </Button>
                     )}
                   </Group>
@@ -129,12 +128,12 @@ const MCQPool = ({
       <Box mt={20}>
         {pools.isSuccess && (
           <>
-            {searchComponent(t("search_pools") as string)}
+            {searchComponent(t('search_pools') as string)}
             {pools.data.items.length >= 1 &&
               pools.data?.items.map((x) => (
                 <PoolCard search={searchParams} pool={x} key={x.id} />
               ))}
-            {pools.data?.items.length < 1 && <Box mt={10}>{t("no_pools")}</Box>}
+            {pools.data?.items.length < 1 && <Box mt={10}>{t('no_pools')}</Box>}
           </>
         )}
         {pools.data &&

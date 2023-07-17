@@ -1,64 +1,64 @@
-import NavOutlet from "@components/Layout/NavOutlet";
-import { UserRole } from "@utils/enums";
-import RoutePath from "@utils/routeConstants";
-import { useTranslation } from "react-i18next";
+import NavOutlet from '@components/Layout/NavOutlet';
+import { UserRole } from '@utils/enums';
+import RoutePath from '@utils/routeConstants';
+import { useTranslation } from 'react-i18next';
 
 const AdminNav = () => {
   const { t } = useTranslation();
   const adminNavLink = [
     {
-      label: t("profile"),
+      label: t('profile'),
       to: RoutePath.settings.base,
       role: UserRole.Trainee,
     },
     {
-      label: t("account"),
+      label: t('account'),
       to: RoutePath.settings.profile(),
       role: UserRole.Trainee,
     },
     {
-      label: t("my_certificate"),
+      label: t('my_certificate'),
       to: RoutePath.settings.training(),
       role: UserRole.Trainee,
     },
     {
-      label: t("admin_settings"),
+      label: t('admin_settings'),
       to: RoutePath.settings.base,
       separator: true,
       role: UserRole.Admin,
     },
     {
-      label: t("general_settings"),
+      label: t('general_settings'),
       to: RoutePath.settings.general(),
       role: UserRole.SuperAdmin,
     },
     {
-      label: t("zoom_settings"),
+      label: t('zoom_settings'),
       to: RoutePath.settings.zoom(),
       role: UserRole.SuperAdmin,
     },
     {
-      label: t("zoom_license"),
+      label: t('zoom_license'),
       to: RoutePath.settings.zoomlicense(),
       role: UserRole.Admin,
     },
     {
-      label: t("smtp"),
+      label: t('smtp'),
       to: RoutePath.settings.smtp(),
       role: UserRole.Admin,
     },
     {
-      label: t("file_storage"),
+      label: t('file_storage'),
       to: RoutePath.settings.filestorage(),
       role: UserRole.Admin,
     },
     {
-      label: t("levels"),
+      label: t('levels'),
       to: RoutePath.level,
       role: UserRole.Admin,
     },
     {
-      label: t("departments"),
+      label: t('departments'),
       to: RoutePath.settings.department(),
       role: UserRole.Admin,
     },
@@ -68,18 +68,18 @@ const AdminNav = () => {
     //   role: UserRole.Admin,
     // },
     {
-      label: t("reviews"),
+      label: t('reviews'),
       to: RoutePath.settings.base,
       separator: true,
       role: UserRole.Admin,
     },
     {
-      label: t("trainings"),
+      label: t('trainings'),
       to: RoutePath.settings.courses(),
       role: UserRole.Admin,
     },
     {
-      label: t("certificates"),
+      label: t('certificates'),
       to: RoutePath.settings.userCertificate(),
       role: UserRole.Admin,
     },

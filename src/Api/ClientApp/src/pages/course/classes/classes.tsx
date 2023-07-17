@@ -1,4 +1,5 @@
-import { Suspense, useState } from "react";
+/* eslint-disable prettier/prettier */
+import { Suspense, useState } from 'react';
 import {
   AspectRatio,
   Box,
@@ -9,75 +10,76 @@ import {
   Grid,
   Loader,
   Tabs,
-} from "@mantine/core";
-import CourseContent from "@components/Course/CourseDescription/CourseContent/CourseContent";
-import { useMediaQuery, useToggle } from "@mantine/hooks";
-import { IconFileDescription, IconMessage } from "@tabler/icons";
-import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
+} from '@mantine/core';
+import CourseContent from '@components/Course/CourseDescription/CourseContent/CourseContent';
+import { useMediaQuery } from '@mantine/hooks';
+import { IconFileDescription, IconMessage } from '@tabler/icons';
+import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
 import {
   useCourseDescription,
   useGetCourseLesson,
-} from "@utils/services/courseService";
-import { CourseUserStatus, LessonType, UserRole } from "@utils/enums";
-import ExamDetails from "@components/Course/Classes/ExamDetails";
-import AssignmentDetails from "@components/Course/Classes/AssignmentDetails";
+} from '@utils/services/courseService';
+import { CourseUserStatus, LessonType, UserRole } from '@utils/enums';
+import ExamDetails from '@components/Course/Classes/ExamDetails';
+import AssignmentDetails from '@components/Course/Classes/AssignmentDetails';
 const VideoPlayer = lazyWithRetry(
-  () => import("@components/VideoPlayer/VideoPlayer")
+  () => import('@components/VideoPlayer/VideoPlayer')
 );
-import Meetings from "@components/Course/Meetings";
-import useAuth from "@hooks/useAuth";
-import { useWatchHistory } from "@utils/services/watchHistory";
-import RoutePath from "@utils/routeConstants";
-import { showNotification } from "@mantine/notifications";
-import errorType from "@utils/services/axiosError";
-import FeedbackDetails from "@components/Course/Classes/FeedbackDetails";
-import lazyWithRetry from "@utils/lazyImportWithReload";
-import { useTranslation } from "react-i18next";
+import Meetings from '@components/Course/Meetings';
+import useAuth from '@hooks/useAuth';
+import { useWatchHistory } from '@utils/services/watchHistory';
+import RoutePath from '@utils/routeConstants';
+import { showNotification } from '@mantine/notifications';
+import errorType from '@utils/services/axiosError';
+import FeedbackDetails from '@components/Course/Classes/FeedbackDetails';
+import lazyWithRetry from '@utils/lazyImportWithReload';
+import { useTranslation } from 'react-i18next';
+import { AxiosError } from 'axios';
 
 const PdfViewer = lazyWithRetry(
-  () => import("@components/Course/Classes/PdfViewer")
+  () => import('@components/Course/Classes/PdfViewer')
 );
 const useStyle = createStyles((theme) => ({
   wrapper: {
     [theme.fn.largerThan(theme.breakpoints.md)]: {},
   },
   videoSection: {
-    backgroundColor: "black",
-    color: "white",
+    backgroundColor: 'black',
+    color: 'white',
 
     [theme.fn.largerThan(theme.breakpoints.md)]: {
-      height: "70vh",
-      marginTop: "-8px",
+      height: '70vh',
+      marginTop: '-8px',
     },
   },
   section: {
-    background: theme.colorScheme == "dark" ? theme.colors.dark[6] : "white",
-    overflowY: "auto",
+    background: theme.colorScheme == 'dark' ? theme.colors.dark[6] : 'white',
+    overflowY: 'auto',
     [theme.fn.largerThan(theme.breakpoints.md)]: {
-      height: "70vh",
+      height: '70vh',
     },
   },
   errorSection: {
-    display: "flex",
-    flexDirection: "column",
-    overflowY: "hidden",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    overflowY: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   assignmentSection: {
-    display: "flex",
-    flexDirection: "column",
-    overflowY: "hidden",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    overflowY: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   fileSection: {},
   meetingSection: {
-    display: "flex",
-    flexDirection: "column",
-    overflowY: "hidden",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    overflowY: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }));
 
@@ -87,27 +89,27 @@ const Classes = () => {
 
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.md})`);
   const params = useParams();
-  const tab = params["*"];
+  const tab = params['*'];
   const { t } = useTranslation();
-  const [videoState, setVideoState] = useState<
-    | "loading"
-    | "completed"
-    | "loaded"
-    | "playing"
-    | "paused"
-    | "viewing"
-    | "buffering"
-  >("loading");
+  const [, setVideoState] = useState<
+    | 'loading'
+    | 'completed'
+    | 'loaded'
+    | 'playing'
+    | 'paused'
+    | 'viewing'
+    | 'buffering'
+  >('loading');
 
   const { data, isLoading } = useCourseDescription(params.id as string);
   const auth = useAuth();
   const watchHistory = useWatchHistory(
     params.id as string,
-    params.lessonId === "1" ? undefined : params.lessonId
+    params.lessonId === '1' ? undefined : params.lessonId
   );
   const courseLesson = useGetCourseLesson(
     params.id as string,
-    params.lessonId === "1" ? undefined : params.lessonId
+    params.lessonId === '1' ? undefined : params.lessonId
   );
 
   const goToNextLesson = (nextLesson: string) =>
@@ -115,8 +117,8 @@ const Classes = () => {
   const onCourseEnded = async (nextLesson: string) => {
     try {
       await watchHistory.mutateAsync({
-        courseId: courseLesson.data?.courseId ?? "",
-        lessonId: courseLesson.data?.id ?? "",
+        courseId: courseLesson.data?.courseId ?? '',
+        lessonId: courseLesson.data?.id ?? '',
       });
       if (nextLesson) {
         goToNextLesson(nextLesson);
@@ -125,7 +127,7 @@ const Classes = () => {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: "red",
+        color: 'red',
       });
     }
   };
@@ -135,7 +137,7 @@ const Classes = () => {
     auth?.auth?.role !== UserRole.SuperAdmin &&
     data?.userStatus === CourseUserStatus.NotEnrolled
   ) {
-    navigate("/404", { replace: true });
+    navigate('/404', { replace: true });
   }
 
   if (isLoading) {
@@ -149,16 +151,16 @@ const Classes = () => {
   return (
     <Box p={0}>
       <Grid className={classes.wrapper}>
-        <Grid.Col p={0} m={"auto"} span={matches ? 8 : 12}>
+        <Grid.Col p={0} m={'auto'} span={matches ? 8 : 12}>
           <Suspense fallback={<Loader />}>
             {courseLesson.isLoading && (
               <Box
                 className={classes.videoSection}
                 sx={{
-                  display: "flex",
-                  overflowY: "hidden",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  display: 'flex',
+                  overflowY: 'hidden',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}
               >
                 <Box>
@@ -170,14 +172,15 @@ const Classes = () => {
               <Box className={cx(classes.videoSection, classes.errorSection)}>
                 <Box>{errorType(courseLesson.error)}</Box>
 
-                {courseLesson.error?.response?.status &&
-                  courseLesson.error?.response?.status === 403 && (
+                {(courseLesson.error as AxiosError)?.response?.status &&
+                  (courseLesson.error as AxiosError)?.response?.status ===
+                    403 && (
                     <Button
                       component={Link}
                       mt={20}
                       to={`${RoutePath.classes}/${params.id}/1`}
                     >
-                      {t("view_previous_lesson")}
+                      {t('view_previous_lesson')}
                     </Button>
                   )}
               </Box>
@@ -209,7 +212,7 @@ const Classes = () => {
             {courseLesson.data?.type === LessonType.LiveClass && (
               <Box
                 className={cx(classes.videoSection, classes.meetingSection)}
-                sx={{ overflowY: "hidden" }}
+                sx={{ overflowY: 'hidden' }}
               >
                 <Meetings data={courseLesson.data} />
               </Box>
@@ -217,12 +220,12 @@ const Classes = () => {
             {courseLesson.data?.type == LessonType.Exam && (
               <Box
                 className={classes.videoSection}
-                sx={{ overflowY: "hidden" }}
+                sx={{ overflowY: 'hidden' }}
               >
                 <ExamDetails
                   id={params.id as string}
                   lessonId={
-                    params.lessonId === "1" ? undefined : params.lessonId
+                    params.lessonId === '1' ? undefined : params.lessonId
                   }
                 />
               </Box>
@@ -255,7 +258,7 @@ const Classes = () => {
             <CourseContent
               user={data?.user}
               courseName={data?.name}
-              courseSlug={data?.slug || ""}
+              courseSlug={data?.slug || ''}
               duration={data?.duration || 0}
               sections={data?.sections || []}
               enrollmentStatus={data?.userStatus || 0}
@@ -267,7 +270,7 @@ const Classes = () => {
         <Box>
           <Tabs
             defaultChecked={true}
-            defaultValue={t("description")}
+            defaultValue={t('description')}
             value={tab}
             onTabChange={(value) =>
               navigate(`${value}`, { preventScrollReset: true })
@@ -278,10 +281,10 @@ const Classes = () => {
                 value="description"
                 icon={<IconFileDescription size={14} />}
               >
-                {t("description")}
+                {t('description')}
               </Tabs.Tab>
               <Tabs.Tab value="comments" icon={<IconMessage size={14} />}>
-                {t("comments")}
+                {t('comments')}
               </Tabs.Tab>
             </Tabs.List>
 

@@ -502,7 +502,6 @@ namespace Lingtren.Infrastructure.Services
                     _logger.LogWarning("DeleteLessonAsync(): Training with identity : {identity} not found for user with id :{currentUserId}.", identity, currentUserId);
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
-
                 var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                     predicate: p => (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity) && p.CourseId == course.Id
                     ).ConfigureAwait(false);
@@ -515,11 +514,15 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
                 }
-
                 if (lesson.Type == LessonType.RecordedVideo)
                 {
                     _logger.LogWarning("DeleteLessonAsync(): Lesson with id : {lessonId} has type : {type}.", lesson.Id, lesson.Type);
                     throw new ForbiddenException(_localizer.GetString("LessonTypeRecordedCannotDeleted"));
+                }
+                if (course.CourseEnrollments.Any(x => x.CurrentLessonId == lesson.Id))
+                {
+                    _logger.LogWarning("DeleteLessonAsync(): Course with courseID:{CourseId} contains enrolled user so it cannot be deleted.", course.Id);
+                    throw new ForbiddenException(_localizer.GetString("ContainsUsers"));
                 }
 
                 if (lesson.Type == LessonType.Exam)
@@ -538,7 +541,7 @@ namespace Lingtren.Infrastructure.Services
                     if (hasAnyAttempt)
                     {
                         _logger.LogWarning("DeleteLessonAsync(): Lesson with id: {lessonId} and question set with id: {questionSetId} having type: {type} contains exam submission.", lesson.Id, lesson.QuestionSetId, lesson.Type);
-                        throw new ForbiddenException($"Lesson with type {lesson.Type} contains exam submission. So, it cannot be deleted.");
+                        throw new ForbiddenException(_localizer.GetString("LessonWIthType") +" "+ lesson.Type +" "+ _localizer.GetString("ExamCannotBeDeleted"));
                     }
 
                     _unitOfWork.GetRepository<QuestionSetQuestion>().Delete(questionSet.QuestionSetQuestions);
@@ -569,7 +572,7 @@ namespace Lingtren.Infrastructure.Services
                     {
                         _logger.LogWarning("DeleteLessonAsync(): Lesson with id:{lessonId} and type: {type} contains assignmentSubmissions.",
                                            lesson.Id, lesson.Type);
-                        throw new EntityNotFoundException($"Assignment contains submission for lesson with type: {lesson.Type}.");
+                        throw new EntityNotFoundException(_localizer.GetString("AssignmentContainsSubmission")+ " " + lesson.Type +".");
                     }
 
                     var assignmentAttachments = await _unitOfWork.GetRepository<AssignmentAttachment>().GetAllAsync(
@@ -595,7 +598,7 @@ namespace Lingtren.Infrastructure.Services
                     {
                         _logger.LogWarning("DeleteLessonAsync(): Lesson with id:{lessonId} and type: {type} contains feedbackSubmissions.",
                                            lesson.Id, lesson.Type);
-                        throw new EntityNotFoundException(_localizer.GetString("FeedbackSubmissionNotFound"));
+                        throw new EntityNotFoundException(_localizer.GetString("FeedBackContainsSubmission"));
                     }
                     var feedbackOptions = await _unitOfWork.GetRepository<FeedbackQuestionOption>().GetAllAsync(
                         predicate: p => feedbackIds.Contains(p.FeedbackId)).ConfigureAwait(false);

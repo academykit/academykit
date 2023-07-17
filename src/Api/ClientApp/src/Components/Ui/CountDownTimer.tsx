@@ -1,15 +1,15 @@
-import moment from "moment";
-import { FC, useEffect, useMemo, useState } from "react";
-import TimeCounter from "./TimeCounter";
+import moment from 'moment';
+import { FC, useEffect, useMemo, useState } from 'react';
+import TimeCounter from './TimeCounter';
 
 type Props = {
   startDateTime: string;
   time: number;
-  cb: Function;
+  cb: () => void;
 };
 
 const CountDownTimer: FC<Props> = ({ startDateTime, cb, time }) => {
-  const end = useMemo(() => moment(startDateTime).add(time, "seconds"), [time]);
+  const end = useMemo(() => moment(startDateTime).add(time, 'seconds'), [time]);
   const [timer, setTimer] = useState<number>();
   const [timeOut, setTimeOut] = useState<NodeJS.Timeout>();
 

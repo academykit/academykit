@@ -962,4 +962,25 @@ recorded cannot be deleted.</value>
   <data name="SectionNameCannotBeNull" xml:space="preserve">
     <value>Section name cannot be null</value>
   </data>
+  <data name="AdminCannotSubmitFeedBack" xml:space="preserve">
+    <value>Admin or SuperAdmin trainer cannot submit the feedback.</value>
+  </data>
+  <data name="AssignmentContainsSubmission" xml:space="preserve">
+    <value>Assignment contains submission for lesson with type:</value>
+  </data>
+  <data name="ContainsUsers" xml:space="preserve">
+    <value>The lesson contains submission so the lesson cannot be deleted</value>
+  </data>
+  <data name="EnrolledUserCan'tBeTrainer" xml:space="preserve">
+    <value>User is enrolled as trainee. So, it cannot be added as trainer.</value>
+  </data>
+  <data name="ExamCannotBeDeleted" xml:space="preserve">
+    <value>contains exam submission. So, it cannot be deleted.</value>
+  </data>
+  <data name="FeedBackContainsSubmission" xml:space="preserve">
+    <value>Feedback contains submission.So, it cannot be deleted.</value>
+  </data>
+  <data name="LessonWIthType" xml:space="preserve">
+    <value>Lesson with type</value>
+  </data>
 </root>

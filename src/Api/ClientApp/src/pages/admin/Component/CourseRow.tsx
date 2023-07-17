@@ -1,5 +1,5 @@
-import UserShortProfile from "@components/UserShortProfile";
-import useAuth from "@hooks/useAuth";
+import UserShortProfile from '@components/UserShortProfile';
+import useAuth from '@hooks/useAuth';
 import {
   ActionIcon,
   Badge,
@@ -9,19 +9,19 @@ import {
   Text,
   Textarea,
   Tooltip,
-} from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { useToggle } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
-import { IconEdit, IconEye, IconFileCheck } from "@tabler/icons";
-import { color } from "@utils/constants";
-import { CourseStatus, UserRole, CourseUserStatus } from "@utils/enums";
-import RoutePath from "@utils/routeConstants";
-import errorType from "@utils/services/axiosError";
-import { ICourse, useCourseStatus } from "@utils/services/courseService";
-import moment from "moment";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+} from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { useToggle } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
+import { IconEdit, IconEye, IconFileCheck } from '@tabler/icons';
+import { color } from '@utils/constants';
+import { CourseStatus, UserRole, CourseUserStatus } from '@utils/enums';
+import RoutePath from '@utils/routeConstants';
+import errorType from '@utils/services/axiosError';
+import { ICourse, useCourseStatus } from '@utils/services/courseService';
+import moment from 'moment';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
   const [confirmPublish, togglePublish] = useToggle();
@@ -32,11 +32,11 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
 
   const form = useForm({
     initialValues: {
-      message: "",
+      message: '',
     },
     validate: {
       message: (value) =>
-        value.length === 0 ? "Rejection message is required!" : null,
+        value.length === 0 ? 'Rejection message is required!' : null,
     },
   });
 
@@ -56,19 +56,19 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
       await courseStatus.mutateAsync({
         identity: course.id as string,
         status: message ? CourseStatus.Rejected : CourseStatus.Published,
-        message: message ?? "",
+        message: message ?? '',
       });
       showNotification({
-        title: t("successful"),
+        title: t('successful'),
         message: message
-          ? t("training_rejected_success")
-          : t("training_published_success"),
+          ? t('training_rejected_success')
+          : t('training_published_success'),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: "red",
+        color: 'red',
       });
     }
     togglePublished();
@@ -81,8 +81,8 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
           onClose={togglePublished}
           title={
             isRejected
-              ? t("leave_message_reject")
-              : `${t("publish_confirmation")} "${course.name}"${t("?")}`
+              ? t('leave_message_reject')
+              : `${t('publish_confirmation')} "${course.name}"${t('?')}`
           }
         >
           {!isRejected ? (
@@ -91,7 +91,7 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
                 onClick={() => onPublish()}
                 loading={courseStatus.isLoading}
               >
-                {t("publish")}
+                {t('publish')}
               </Button>
               <Button
                 variant="outline"
@@ -99,30 +99,30 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
                   toggleRejected();
                 }}
               >
-                {t("reject")}
+                {t('reject')}
               </Button>
             </Group>
           ) : (
             <form onSubmit={form.onSubmit((value) => onPublish(value.message))}>
               <Group>
-                <Textarea {...form.getInputProps("message")} w={"100%"} />
+                <Textarea {...form.getInputProps('message')} w={'100%'} />
                 <Button loading={courseStatus.isLoading} type="submit">
-                  {t("submit")}
+                  {t('submit')}
                 </Button>
                 <Button variant="outline" onClick={() => toggleRejected()}>
-                  {t("cancel")}
+                  {t('cancel')}
                 </Button>
               </Group>
             </form>
           )}
         </Modal>
-        <Text maw={"300px"} sx={{ wordBreak: "break-all" }}>
+        <Text maw={'300px'} sx={{ wordBreak: 'break-all' }}>
           {course.name}
         </Text>
       </td>
-      <td>{moment(course.createdOn).format("DD/MM/YY")}</td>
+      <td>{moment(course.createdOn).format('DD/MM/YY')}</td>
       <td>
-        <UserShortProfile size={"xs"} user={course.user} page="" />
+        <UserShortProfile size={'xs'} user={course.user} page="" />
       </td>
 
       <td>
@@ -133,18 +133,18 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
       <td>
         <Group>
           {canPreviewEdit && (
-            <Tooltip label={t("preview")}>
+            <Tooltip label={t('preview')}>
               <ActionIcon
                 component={Link}
                 to={RoutePath.courses.description(course.slug).route}
-                color={"primary"}
+                color={'primary'}
               >
                 <IconEye />
               </ActionIcon>
             </Tooltip>
           )}
           {canPreviewEdit && (
-            <Tooltip label={t("edit_course")}>
+            <Tooltip label={t('edit_course')}>
               <ActionIcon
                 component={Link}
                 to={RoutePath.manageCourse.edit(course.slug).route}
@@ -154,8 +154,8 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
             </Tooltip>
           )}
           {course.status === CourseStatus.Review && (
-            <Tooltip label={t("publish_course")}>
-              <ActionIcon onClick={togglePublished} color={"green"}>
+            <Tooltip label={t('publish_course')}>
+              <ActionIcon onClick={togglePublished} color={'green'}>
                 <IconFileCheck />
               </ActionIcon>
             </Tooltip>

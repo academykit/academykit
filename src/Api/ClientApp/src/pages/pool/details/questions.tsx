@@ -1,7 +1,7 @@
-import DeleteModal from "@components/Ui/DeleteModal";
+import DeleteModal from '@components/Ui/DeleteModal';
 import withSearchPagination, {
   IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+} from '@hoc/useSearchPagination';
 import {
   Badge,
   Box,
@@ -9,25 +9,23 @@ import {
   Center,
   Container,
   Flex,
-  Group,
   Loader,
-  Modal,
   Paper,
   Table,
-} from "@mantine/core";
-import { useToggle } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
-import { IconEdit, IconTrash } from "@tabler/icons";
-import { QuestionType } from "@utils/enums";
-import errorType from "@utils/services/axiosError";
+} from '@mantine/core';
+import { useToggle } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
+import { IconEdit, IconTrash } from '@tabler/icons';
+import { QuestionType } from '@utils/enums';
+import errorType from '@utils/services/axiosError';
 import {
   IQuestion,
   useDeleteQuestion,
   useQuestion,
-} from "@utils/services/questionService";
-import { TFunction } from "i18next";
-import { useTranslation } from "react-i18next";
-import { Link, useParams, useNavigate } from "react-router-dom";
+} from '@utils/services/questionService';
+import { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 
 const MCQQuestions = ({
   searchParams,
@@ -35,19 +33,16 @@ const MCQQuestions = ({
   pagination,
 }: IWithSearchPagination) => {
   const { id } = useParams();
-  const { data, isLoading, isSuccess, isError } = useQuestion(
-    id as string,
-    searchParams
-  );
+  const { data, isLoading, isError } = useQuestion(id as string, searchParams);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   return (
     <Container fluid>
-      <Flex justify={"end"}>
-        {searchComponent(t("search_for_questions") as string)}
+      <Flex justify={'end'}>
+        {searchComponent(t('search_for_questions') as string)}
         <Button component={Link} ml={5} to="create">
-          {t("add_question")}
+          {t('add_question')}
         </Button>
       </Flex>
 
@@ -56,11 +51,11 @@ const MCQQuestions = ({
           <Table striped>
             <thead>
               <tr>
-                <th>{t("name")}</th>
-                <th>{t("tags")}</th>
-                <th>{t("type")}</th>
+                <th>{t('name')}</th>
+                <th>{t('tags')}</th>
+                <th>{t('type')}</th>
                 <th>
-                  <Center>{t("actions")}</Center>
+                  <Center>{t('actions')}</Center>
                 </th>
               </tr>
             </thead>
@@ -82,9 +77,9 @@ const MCQQuestions = ({
       {isLoading && <Loader />}
 
       {data && pagination(data.totalPage, data.items.length)}
-      {isError && <Box>{t("something_wrong")}</Box>}
+      {isError && <Box>{t('something_wrong')}</Box>}
       {data && data?.totalCount < 1 && (
-        <Box mt={10}>{t("no_question_found")}</Box>
+        <Box mt={10}>{t('no_question_found')}</Box>
       )}
     </Container>
   );
@@ -100,7 +95,7 @@ const QuestionRow = ({
   data: IQuestion;
   search: string;
   poolId: string;
-  navigate: Function;
+  navigate: (path: string) => void;
   t: TFunction;
 }) => {
   const [showDelete, setShowDelete] = useToggle();
@@ -118,7 +113,7 @@ const QuestionRow = ({
       const error = errorType(err);
       showNotification({
         message: error,
-        color: "red",
+        color: 'red',
       });
     }
     setShowDelete();
@@ -134,10 +129,10 @@ const QuestionRow = ({
       />
 
       <td>{data.name}</td>
-      <td style={{ width: "400px" }}>
+      <td style={{ width: '400px' }}>
         {data.tags.map((x) => (
-          <Badge color={"green"} mx={2}>
-            {" "}
+          <Badge key={x.id} color={'green'} mx={2}>
+            {' '}
             {x.tagName}
           </Badge>
         ))}
@@ -149,7 +144,7 @@ const QuestionRow = ({
           <Button
             variant="subtle"
             onClick={() => {
-              navigate("edit/" + data.id);
+              navigate('edit/' + data.id);
             }}
           >
             <IconEdit />
@@ -157,7 +152,7 @@ const QuestionRow = ({
           <Button
             onClick={() => setShowDelete()}
             variant="subtle"
-            color={"red"}
+            color={'red'}
           >
             <IconTrash />
           </Button>

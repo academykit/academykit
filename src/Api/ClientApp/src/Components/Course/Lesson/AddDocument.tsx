@@ -6,32 +6,31 @@ import {
   Paper,
   Switch,
   Textarea,
-  TextInput,
   Tooltip,
-} from "@mantine/core";
-import { createFormContext, yupResolver } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import { LessonType } from "@utils/enums";
+} from '@mantine/core';
+import { createFormContext, yupResolver } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import { LessonType } from '@utils/enums';
 import {
   useCreateLesson,
   useUpdateLesson,
-} from "@utils/services/courseService";
-import { ILessonAssignment, ILessonFile } from "@utils/services/types";
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
-import errorType from "@utils/services/axiosError";
-import * as Yup from "yup";
-import FileUploadLesson from "@components/Ui/FileUploadLesson";
-import { useTranslation } from "react-i18next";
-import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+} from '@utils/services/courseService';
+import { ILessonAssignment, ILessonFile } from '@utils/services/types';
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import errorType from '@utils/services/axiosError';
+import * as Yup from 'yup';
+import FileUploadLesson from '@components/Ui/FileUploadLesson';
+import { useTranslation } from 'react-i18next';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 
 const schema = () => {
   const { t } = useTranslation();
 
   return Yup.object().shape({
-    name: Yup.string().required(t("file_name_required") as string),
-    documentUrl: Yup.string().required(t("file_required") as string),
+    name: Yup.string().required(t('file_name_required') as string),
+    documentUrl: Yup.string().required(t('file_required') as string),
   });
 };
 
@@ -45,9 +44,9 @@ const AddDocument = ({
   setAddLessonClick,
   setIsEditing,
 }: {
-  setAddState: Function;
+  setAddState: (s: string) => void;
   item?: ILessonAssignment;
-  setAddLessonClick: Function;
+  setAddLessonClick: (b: boolean) => void;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   isEditing?: boolean;
   sectionId: string;
@@ -66,14 +65,14 @@ const AddDocument = ({
     item?.isMandatory ?? false
   );
 
-  const [opened, setOpened] = useState(false);
-  const [lessonId, setLessonId] = useState("");
+  const [, setOpened] = useState(false);
+  const [, setLessonId] = useState('');
 
   const form = useForm({
     initialValues: {
-      name: item?.name ?? "",
-      description: item?.description ?? "",
-      documentUrl: item?.documentUrl ?? "",
+      name: item?.name ?? '',
+      description: item?.description ?? '',
+      documentUrl: item?.documentUrl ?? '',
       isMandatory: item?.isMandatory ?? false,
     },
     validate: yupResolver(schema()),
@@ -82,7 +81,7 @@ const AddDocument = ({
 
   const submitForm = async (values: any) => {
     try {
-      let fileData = {
+      const fileData = {
         courseId: slug,
         sectionIdentity: sectionId,
         type: LessonType.Document,
@@ -102,9 +101,9 @@ const AddDocument = ({
         setIsEditing(false);
       }
       showNotification({
-        title: t("success"),
-        message: `${t("file")} ${isEditing ? t("edited") : t("added")} ${t(
-          "successfully"
+        title: t('success'),
+        message: `${t('file')} ${isEditing ? t('edited') : t('added')} ${t(
+          'successfully'
         )}`,
       });
       setAddLessonClick(true);
@@ -112,9 +111,9 @@ const AddDocument = ({
       const err = errorType(error);
 
       showNotification({
-        title: t("error"),
+        title: t('error'),
         message: err,
-        color: "red",
+        color: 'red',
       });
     }
   };
@@ -122,62 +121,58 @@ const AddDocument = ({
     <FormProvider form={form}>
       <form onSubmit={form.onSubmit(submitForm)}>
         <Paper withBorder p="md">
-          <Grid align={"center"} justify="space-around">
+          <Grid align={'center'} justify="space-around">
             <Grid.Col span={12} lg={8}>
               <CustomTextFieldWithAutoFocus
                 withAsterisk
-                label={t("file_title")}
-                placeholder={t("file_name") as string}
-                {...form.getInputProps("name")}
-                styles={{ error: { position: "absolute" } }}
+                label={t('file_title')}
+                placeholder={t('file_name') as string}
+                {...form.getInputProps('name')}
+                styles={{ error: { position: 'absolute' } }}
               />
             </Grid.Col>
-            <Tooltip
-              multiline
-              label={t('mandatory_tooltip')}
-              width={220}
-            >
+            <Tooltip multiline label={t('mandatory_tooltip')} width={220}>
               <Grid.Col span={4}>
                 <Switch
-                  label={t("is_mandatory")}
-                  {...form.getInputProps("isMandatory")}
+                  label={t('is_mandatory')}
+                  {...form.getInputProps('isMandatory')}
                   checked={isMandatory}
                   onChange={() => {
                     setIsMandatory(() => !isMandatory);
-                    form.setFieldValue("isMandatory", !isMandatory);
+                    form.setFieldValue('isMandatory', !isMandatory);
                   }}
                 />
               </Grid.Col>
             </Tooltip>
           </Grid>
-          <Text size={"sm"} mt={10}>
-            {t("file")} <span className="global-astrick"> *</span>
+          <Text size={'sm'} mt={10}>
+            {t('file')} <span className="global-astrick"> *</span>
           </Text>
           <FileUploadLesson
             currentFile={item?.documentUrl}
             formContext={useFormContext}
           />
           <Textarea
-            placeholder={t("file_description") as string}
-            label={t("file_description")}
-            my={form.errors["documentUrl"] ? 20 : 10}
-            {...form.getInputProps("description")}
+            placeholder={t('file_description') as string}
+            label={t('file_description')}
+            my={form.errors['documentUrl'] ? 20 : 10}
+            {...form.getInputProps('description')}
           />
           <Group position="left" mt="md">
             <Button
               type="submit"
               loading={lesson.isLoading || updateLesson.isLoading}
             >
-              {t("submit")}
+              {t('submit')}
             </Button>
             {!isEditing && (
               <Button
                 onClick={() => {
-                  setAddState("");
+                  setAddState('');
                 }}
                 variant="outline"
               >
-                {t("close")}
+                {t('close')}
               </Button>
             )}
           </Group>

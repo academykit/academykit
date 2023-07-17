@@ -1,5 +1,5 @@
-import Slider from "rc-slider";
-import React, { FC } from "react";
+import Slider from 'rc-slider';
+import React, { FC } from 'react';
 
 interface Props {
   currentVolume: number;
@@ -19,11 +19,11 @@ const VolumeControlBar: FC<React.PropsWithChildren<Props>> = ({
         max={100}
         value={currentVolume}
         trackStyle={{
-          backgroundColor: "#26ab95",
+          backgroundColor: '#26ab95',
         }}
         handleStyle={{
-          borderColor: "#26ab95",
-          backgroundColor: "#26ab95",
+          borderColor: '#26ab95',
+          backgroundColor: '#26ab95',
         }}
         onChange={(value: number | number[]) =>
           onValueChanged && onValueChanged(value as number)

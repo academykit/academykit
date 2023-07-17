@@ -1,27 +1,27 @@
-import { Badge, Group } from "@mantine/core";
-import { LessonType } from "@utils/enums";
-import { IStudentInfoLesson } from "@utils/services/manageCourseService";
-import { useTranslation } from "react-i18next";
+import { Badge, Group } from '@mantine/core';
+import { LessonType } from '@utils/enums';
+import { IStudentInfoLesson } from '@utils/services/manageCourseService';
+import { useTranslation } from 'react-i18next';
 
 const videoType = {
-  true: "Watched",
-  false: "not_watched",
+  true: 'Watched',
+  false: 'not_watched',
 };
 const examType = {
-  true: "passed",
-  false: "failed",
+  true: 'passed',
+  false: 'failed',
 };
 const liveSessionType = {
-  true: "attended",
-  false: "not_attended",
+  true: 'attended',
+  false: 'not_attended',
 };
 const documentType = {
-  true: "viewed",
-  false: "not_viewed",
+  true: 'viewed',
+  false: 'not_viewed',
 };
 const feedBackType = {
-  true: "submitted",
-  false: "not-submitted",
+  true: 'submitted',
+  false: 'not-submitted',
 };
 
 export const getType = (type: LessonType) => {
@@ -55,14 +55,14 @@ const LessonStatusColor = ({
     <>
       <Group position="center">
         {isPassed ? (
-          <Badge color={"green"}>{t(getType(type).true)}</Badge>
+          <Badge color={'green'}>{t(getType(type).true)}</Badge>
         ) : (
-          <Badge color={"red"}>{t(getType(type).false)}</Badge>
+          <Badge color={'red'}>{t(getType(type).false)}</Badge>
         )}
         {isCompleted ? (
-          <Badge color={"green"}>{t("completed")}</Badge>
+          <Badge color={'green'}>{t('completed')}</Badge>
         ) : (
-          <Badge color={"red"}>{t("not_completed")}</Badge>
+          <Badge color={'red'}>{t('not_completed')}</Badge>
         )}
       </Group>
     </>

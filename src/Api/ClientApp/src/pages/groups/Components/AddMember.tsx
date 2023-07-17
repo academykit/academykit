@@ -1,16 +1,16 @@
-import { Box, Button, Loader, MultiSelect } from "@mantine/core";
-import { useForm, yupResolver } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import errorType from "@utils/services/axiosError";
+import { Box, Button, Loader, MultiSelect } from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import errorType from '@utils/services/axiosError';
 import {
   useAddGroupMember,
   useGroupNotMember,
-} from "@utils/services/groupService";
-import { useEffect, useState, useRef } from "react";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
-import * as Yup from "yup";
-import useFormErrorHooks from "@hooks/useFormErrorHooks";
+} from '@utils/services/groupService';
+import { useEffect, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+import * as Yup from 'yup';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 
 interface IAddMember {
   email: string[];
@@ -19,7 +19,7 @@ interface IAddMember {
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    email: Yup.array().min(1, t("one_email_required") as string),
+    email: Yup.array().min(1, t('one_email_required') as string),
   });
 };
 const AddMember = ({
@@ -29,7 +29,7 @@ const AddMember = ({
   onCancel: () => void;
   searchParams: string;
 }) => {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const { t } = useTranslation();
 
   const { id } = useParams();
@@ -58,7 +58,7 @@ const AddMember = ({
       });
       const mergedData = [...data, ...t];
       setData([
-        ...new Map(mergedData.map((item) => [item["label"], item])).values(),
+        ...new Map(mergedData.map((item) => [item['label'], item])).values(),
       ]);
     }
   }, [getNotMemberList.isSuccess]);
@@ -76,29 +76,29 @@ const AddMember = ({
         });
       }
       showNotification({
-        message: response.data?.message ?? t("add_group_member_success"),
+        message: response.data?.message ?? t('add_group_member_success'),
       });
       onCancel();
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: "red",
+        color: 'red',
       });
     }
   };
   return (
-    <Box sx={{ maxWidth: "500px" }}>
+    <Box sx={{ maxWidth: '500px' }}>
       <form onSubmit={form.onSubmit(({ email }) => onSubmitForm(email))}>
         <MultiSelect
           tabIndex={0}
           autoComplete="off"
-          placeholder={t("email_address") as string}
+          placeholder={t('email_address') as string}
           ref={ref}
           searchable
           data={data}
           mb={10}
-          label={t("email_address")}
+          label={t('email_address')}
           withAsterisk
           name="email"
           size="md"
@@ -106,27 +106,27 @@ const AddMember = ({
             getNotMemberList.isLoading ? (
               <Loader />
             ) : (
-              <Box>{t("User Not found")}</Box>
+              <Box>{t('User Not found')}</Box>
             )
           }
           getCreateLabel={(query) => `+ Create ${query}`}
           onSearchChange={(d) => {
             setSearch(d);
           }}
-          {...form.getInputProps("email")}
+          {...form.getInputProps('email')}
         />
 
         <Button loading={isLoading} mr={10} type="submit" size="md">
-          {t("submit")}
+          {t('submit')}
         </Button>
         <Button
           variant="outline"
           disabled={isLoading}
           type="reset"
-          onClick={(e: any) => onCancel()}
-          size={"md"}
+          onClick={() => onCancel()}
+          size={'md'}
         >
-          {t("cancel")}
+          {t('cancel')}
         </Button>
       </form>
     </Box>

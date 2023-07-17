@@ -141,7 +141,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="companyName"> the company name </param>
         /// <returns></returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password, string companyName, PerformContext context = null)
+        public async Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password, string companyName,string companyNumber, PerformContext context = null)
         {
             try
             {
@@ -156,7 +156,7 @@ namespace Lingtren.Infrastructure.Services
                 html += $"Email:{emailAddress}<br>";
                 html += $"Password:{password}<br><br>";
                 html += $"Please use the above login credentials to access your account.<br><br>";
-                html += $"Best regards,<br> {companyName}";
+                html += $"Best regards,<br> {companyName}<br>{companyNumber}";
                 var mail = new EmailRequestDto
                 {
                     To = emailAddress,
@@ -194,7 +194,7 @@ namespace Lingtren.Infrastructure.Services
                     html += $"Email:{emailDto.Email}<br>";
                     html += $"Password:{emailDto.Password}<br><br>";
                     html += $"Please use the above login credentials to access your account.<br><br>";
-                    html += $"Best regards,<br> {emailDto.CompanyName}";
+                    html += $"Best regards,<br> {emailDto.CompanyName}<br>{emailDto.CompanyNumber}";
                     var model = new EmailRequestDto
                     {
                         To = emailDto.Email,
@@ -374,8 +374,7 @@ namespace Lingtren.Infrastructure.Services
 
                 foreach (var teacher in course.CourseTeachers)
                 {
-                    var fullName = string.IsNullOrEmpty(teacher.User?.MiddleName) ? $"{teacher.User?.FirstName} {teacher.User?.LastName}" : $"{teacher.User?.FirstName} {teacher.User?.MiddleName} {teacher.User?.LastName}";
-                    var html = $"Dear {fullName},<br><br>";
+                    var html = $"Dear {teacher.User.FirstName},<br><br>";
                     html += $"A new user has enrolled in your {courseName} course. Here are the details:";
                     html += $"<ul><li>Training: {courseName}</li><li>Enrolled User: {userName}</li> <li>User Email:{userEmail}</li></ul>";
                     html += $"Thank you for your attention to this enrollment. We appreciate your dedication to providing an exceptional learning experience.<br>";

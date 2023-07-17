@@ -1,4 +1,4 @@
-import useAuth from "@hooks/useAuth";
+import useAuth from '@hooks/useAuth';
 import {
   Box,
   Button,
@@ -12,23 +12,22 @@ import {
   NavLink,
   Avatar,
   AspectRatio,
-  useMantineTheme,
-} from "@mantine/core";
-import { IconChevronRight, IconDotsVertical } from "@tabler/icons";
-import { UserRole } from "@utils/enums";
-import getCourseOgImageUrl from "@utils/getCourseOGImage";
-import { getInitials } from "@utils/getInitialName";
-import RoutePath from "@utils/routeConstants";
-import { DashboardCourses } from "@utils/services/dashboardService";
-import { IUser } from "@utils/services/types";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+} from '@mantine/core';
+import { IconChevronRight, IconDotsVertical } from '@tabler/icons';
+import { UserRole } from '@utils/enums';
+import getCourseOgImageUrl from '@utils/getCourseOGImage';
+import { getInitials } from '@utils/getInitialName';
+import RoutePath from '@utils/routeConstants';
+import { DashboardCourses } from '@utils/services/dashboardService';
+import { IUser } from '@utils/services/types';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 const StudentAvatar = ({ data }: { data: IUser }) => {
   return (
     <Avatar src={data.imageUrl} radius="xl">
-      {" "}
-      {!data.imageUrl && getInitials(data.fullName ?? "")}
+      {' '}
+      {!data.imageUrl && getInitials(data.fullName ?? '')}
     </Avatar>
   );
 };
@@ -41,40 +40,40 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
   return (
     <Card
       sx={{
-        ["@media (max-width: 400px)"]: {
-          width: "100%",
+        ['@media (max-width: 400px)']: {
+          width: '100%',
         },
-        position: "relative",
-        overflow: "visible",
-        width: "350px",
+        position: 'relative',
+        overflow: 'visible',
+        width: '350px',
       }}
       withBorder
     >
       <Link
         to={RoutePath.courses.description(data.slug).route}
-        style={{ position: "absolute", height: "100%", width: "100%" }}
+        style={{ position: 'absolute', height: '100%', width: '100%' }}
       ></Link>
-      <Flex sx={{ justifyContent: "start", alignItems: "start" }} gap={"sm"}>
+      <Flex sx={{ justifyContent: 'start', alignItems: 'start' }} gap={'sm'}>
         <Box sx={{ height: 65, width: 160 }}>
           <AspectRatio ratio={16 / 9}>
             <Image
               src={getCourseOgImageUrl(data.user, data.name, data.thumbnailUrl)}
               radius="sm"
-              height={"100%"}
-              width={"100%"}
+              height={'100%'}
+              width={'100%'}
               fit="contain"
             />
           </AspectRatio>
         </Box>
-        <Box w={"100%"}>
-          <Flex justify={"space-between"} sx={{ width: "100%" }}>
-            <Text lineClamp={1} h={"95%"} weight="bold">
+        <Box w={'100%'}>
+          <Flex justify={'space-between'} sx={{ width: '100%' }}>
+            <Text lineClamp={1} h={'95%'} weight="bold">
               {data.name}
             </Text>
             <div>
               {(role === UserRole.Admin || role === UserRole.SuperAdmin) && (
                 <Popover
-                  position={"left-start"}
+                  position={'left-start'}
                   arrowSize={12}
                   zIndex="100"
                   styles={{
@@ -91,13 +90,13 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
                       <Group
                         p={0}
                         sx={{
-                          flexDirection: "column",
-                          alignItems: "start",
+                          flexDirection: 'column',
+                          alignItems: 'start',
                         }}
                       >
                         <NavLink
                           variant="subtle"
-                          label={t("manage")}
+                          label={t('manage')}
                           component={Link}
                           to={RoutePath.manageCourse.manage(data.slug).route}
                           rightSection={
@@ -113,16 +112,16 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
           </Flex>
           {role === UserRole.Trainee ? (
             <Text size="sm">
-              {data.percentage}% {t("progress")}
+              {data.percentage}% {t('progress')}
             </Text>
           ) : (
-            <Avatar.Group spacing={"lg"}>
+            <Avatar.Group spacing={'lg'}>
               {data.students.length > 0 ? (
-                data.students.slice(0, 3).map((x, idx) => {
+                data.students.slice(0, 3).map((x) => {
                   return <StudentAvatar data={x} key={x.id} />;
                 })
               ) : (
-                <Text size="xs">{t("no_user_enrolled")}</Text>
+                <Text size="xs">{t('no_user_enrolled')}</Text>
               )}
               {data.students.length > 3 && (
                 <Avatar radius="xl">+{data.students.length - 3}</Avatar>

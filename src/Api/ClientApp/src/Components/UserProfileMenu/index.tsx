@@ -1,6 +1,5 @@
-import useAuth from "@hooks/useAuth";
+import useAuth from '@hooks/useAuth';
 import {
-  Anchor,
   Avatar,
   Box,
   createStyles,
@@ -10,29 +9,28 @@ import {
   Menu,
   SystemProp,
   Text,
-  UnstyledButton,
-} from "@mantine/core";
-import { IconLock, IconLogout, IconPencil, IconUser } from "@tabler/icons";
-import { UserRole } from "@utils/enums";
-import { getInitials } from "@utils/getInitialName";
-import { IUser } from "@utils/services/types";
-import { CSSProperties, FC, forwardRef } from "react";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+} from '@mantine/core';
+import { IconLock, IconLogout, IconPencil, IconUser } from '@tabler/icons';
+import { UserRole } from '@utils/enums';
+import { getInitials } from '@utils/getInitialName';
+import { IUser } from '@utils/services/types';
+import { CSSProperties, FC } from 'react';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   user: IUser;
   size?: MantineNumberSize | undefined;
-  direction?: SystemProp<CSSProperties["flexDirection"]>;
+  direction?: SystemProp<CSSProperties['flexDirection']>;
 };
 const useStyle = createStyles({
   item: {
-    width: "100%",
+    width: '100%',
   },
 });
 const UserProfileMenu: FC<Props> = ({
-  user: { email, fullName, id, imageUrl, mobileNumber, role },
-  size = "md",
+  user: { fullName, id, imageUrl, role },
+  size = 'md',
 }) => {
   const { classes } = useStyle();
   const auth = useAuth();
@@ -44,7 +42,7 @@ const UserProfileMenu: FC<Props> = ({
         withArrow
         styles={{
           item: {
-            width: "130px",
+            width: '130px',
           },
         }}
       >
@@ -57,20 +55,20 @@ const UserProfileMenu: FC<Props> = ({
                 color="cyan"
                 radius={10000}
                 size={size}
-                sx={{ cursor: "pointer" }}
+                sx={{ cursor: 'pointer' }}
               >
-                {!imageUrl && getInitials(fullName ?? "")}
+                {!imageUrl && getInitials(fullName ?? '')}
               </Avatar>
             </div>
           )}
         </Menu.Target>
 
-        <Menu.Dropdown miw={"200px"}>
-          <Box sx={{ textAlign: "center" }}>
-            <Text size={"xl"} weight="bolder">
+        <Menu.Dropdown miw={'200px'}>
+          <Box sx={{ textAlign: 'center' }}>
+            <Text size={'xl'} weight="bolder">
               {fullName}
             </Text>
-            <Text size={"sm"} color={"dimmed"}>
+            <Text size={'sm'} color={'dimmed'}>
               {t(`${UserRole[role]}`)}
             </Text>
           </Box>
@@ -82,7 +80,7 @@ const UserProfileMenu: FC<Props> = ({
             className={classes.item}
             icon={<IconUser size={14} />}
           >
-            <Text size={size}>{t("myProfile")}</Text>
+            <Text size={size}>{t('myProfile')}</Text>
           </Menu.Item>
           <Menu.Item
             component={Link}
@@ -90,7 +88,7 @@ const UserProfileMenu: FC<Props> = ({
             className={classes.item}
             icon={<IconPencil size={14} />}
           >
-            <Text size={size}>{t("editProfile")}</Text>
+            <Text size={size}>{t('editProfile')}</Text>
           </Menu.Item>
 
           <Menu.Item
@@ -99,14 +97,14 @@ const UserProfileMenu: FC<Props> = ({
             className={classes.item}
             icon={<IconLock size={14} />}
           >
-            <Text size={size}>{t("Account")}</Text>
+            <Text size={size}>{t('Account')}</Text>
           </Menu.Item>
           <Menu.Item
             onClick={auth?.logout}
             className={classes.item}
             icon={<IconLogout size={14} />}
           >
-            <Text size={size}>{t("Logout")}</Text>
+            <Text size={size}>{t('Logout')}</Text>
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>

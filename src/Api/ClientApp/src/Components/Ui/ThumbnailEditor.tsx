@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
-import { FilePond, registerPlugin } from "react-filepond";
-import "filepond/dist/filepond.min.css";
-import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import { UseFormReturnType } from "@mantine/form/lib/types";
-import FilePondPluginImageValidateSize from "filepond-plugin-image-validate-size";
-import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import { FileAccess, uploadFile } from "@utils/services/fileService";
-import { Text } from "@mantine/core";
-import { useTranslation } from "react-i18next";
-import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
-import FilePondPluginImageResize from "filepond-plugin-image-resize";
-import FilePondPluginImageTransform from "filepond-plugin-image-transform";
-import useCustomForm from "@hooks/useCustomForm";
+import { useEffect, useState } from 'react';
+import { FilePond, registerPlugin } from 'react-filepond';
+import 'filepond/dist/filepond.min.css';
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import { UseFormReturnType } from '@mantine/form/lib/types';
+import FilePondPluginImageValidateSize from 'filepond-plugin-image-validate-size';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+import { FileAccess, uploadFile } from '@utils/services/fileService';
+import { Text } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
+import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
+import FilePondPluginImageResize from 'filepond-plugin-image-resize';
+import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
+import useCustomForm from '@hooks/useCustomForm';
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -34,8 +34,8 @@ type IProps = {
 
 const ThumbnailEditor = ({
   formContext,
-  label = "files",
-  FormField = "thumbnail",
+  label = 'files',
+  FormField = 'thumbnail',
   currentThumbnail,
   width,
 }: IProps) => {
@@ -49,7 +49,7 @@ const ThumbnailEditor = ({
         {
           source: currentThumbnail,
           options: {
-            type: "local",
+            type: 'local',
           },
         },
       ]);
@@ -58,59 +58,59 @@ const ThumbnailEditor = ({
   const form = formContext();
   const [files, setFiles] = useState<any>([]);
   const filePondProps = {
-    labelInvalidField: t("Field contains invalid files"),
-    labelFileWaitingForSize: t("Waiting for size"),
-    labelFileSizeNotAvailable: t("Size not available"),
-    labelFileLoading: t("Loading"),
-    labelFileLoadError: t("Error during load"),
-    labelFileProcessing: t("Processing"),
-    labelFileProcessingComplete: t("Processing complete"),
-    labelFileProcessingAborted: t("Processing aborted"),
-    labelFileProcessingError: t("Error during processing"),
-    labelFileProcessingRevertError: t("Error during revert"),
-    labelFileRemoveError: t("Error during removal"),
-    labelTapToCancel: t("Tap to cancel"),
-    labelTapToRetry: t("Tap to retry"),
-    labelTapToUndo: t("Tap to undo"),
-    labelButtonRemoveItem: t("Remove"),
-    labelButtonAbortItemLoad: t("Abort"),
-    labelButtonRetryItemLoad: t("Retry"),
-    labelButtonAbortItemProcessing: t("Abort"),
-    labelButtonUndoItemProcessing: t("Undo"),
-    labelButtonRetryItemProcessing: t("Retry"),
-    labelButtonProcessItem: t("Process"),
-    imageValidateSizeLabelImageSizeTooSmall: t("img_too_small")
+    labelInvalidField: t('Field contains invalid files'),
+    labelFileWaitingForSize: t('Waiting for size'),
+    labelFileSizeNotAvailable: t('Size not available'),
+    labelFileLoading: t('Loading'),
+    labelFileLoadError: t('Error during load'),
+    labelFileProcessing: t('Processing'),
+    labelFileProcessingComplete: t('Processing complete'),
+    labelFileProcessingAborted: t('Processing aborted'),
+    labelFileProcessingError: t('Error during processing'),
+    labelFileProcessingRevertError: t('Error during revert'),
+    labelFileRemoveError: t('Error during removal'),
+    labelTapToCancel: t('Tap to cancel'),
+    labelTapToRetry: t('Tap to retry'),
+    labelTapToUndo: t('Tap to undo'),
+    labelButtonRemoveItem: t('Remove'),
+    labelButtonAbortItemLoad: t('Abort'),
+    labelButtonRetryItemLoad: t('Retry'),
+    labelButtonAbortItemProcessing: t('Abort'),
+    labelButtonUndoItemProcessing: t('Undo'),
+    labelButtonRetryItemProcessing: t('Retry'),
+    labelButtonProcessItem: t('Process'),
+    imageValidateSizeLabelImageSizeTooSmall: t('img_too_small'),
   };
 
   return (
     <div
       style={{
-        maxWidth: width ? "" : 470,
-        position: "relative",
-        width: width ? width : "",
+        maxWidth: width ? '' : 470,
+        position: 'relative',
+        width: width ? width : '',
       }}
     >
       <FilePond
         instantUpload={true}
         acceptedFileTypes={[
-          "image/png",
-          "image/jpeg",
-          "image/gif",
-          "image/jpg",
+          'image/png',
+          'image/jpeg',
+          'image/gif',
+          'image/jpg',
         ]}
         files={files}
         labelIdle={`${t(
-          "drag_and_drop"
+          'drag_and_drop'
         )} ${label} or <span class="filepond--label-action">${t(
-          "browse"
+          'browse'
         )}</span>`}
         imageValidateSizeMinWidth={639}
         imageValidateSizeMinHeight={359}
         allowImageResize={true}
         imageValidateSizeMinResolution={229401}
-        onaddfile={(error, file) => {}}
+        onaddfile={() => {}}
         onupdatefiles={setFiles}
-        onremovefile={() => form.setFieldValue(FormField, "")}
+        onremovefile={() => form.setFieldValue(FormField, '')}
         allowMultiple={false}
         imageResizeTargetWidth={1280}
         imageResizeTargetHeight={700}
@@ -135,7 +135,7 @@ const ThumbnailEditor = ({
               load(res.data);
               form.setFieldValue(FormField, res.data);
             } catch (e) {
-              error(t("unable_to_upload"));
+              error(t('unable_to_upload'));
             }
             cForm?.setReady();
 
@@ -145,7 +145,7 @@ const ThumbnailEditor = ({
               },
             };
           },
-          load: async (source, load, error, progress, abort, headers) => {
+          load: async (source, load, error, _progress, abort) => {
             cForm?.setReady();
             await fetch(
               `${source}?cache=${Math.random().toString(36).substring(2, 7)}`
@@ -169,7 +169,7 @@ const ThumbnailEditor = ({
         {...filePondProps}
       />
       {form.errors[FormField] && (
-        <Text color={"red"} size={"xs"} pos="absolute" top={"100%"}>
+        <Text color={'red'} size={'xs'} pos="absolute" top={'100%'}>
           {form.errors[FormField]}
         </Text>
       )}

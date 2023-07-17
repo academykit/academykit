@@ -1,5 +1,5 @@
-import DeleteModal from "@components/Ui/DeleteModal";
-import useAuth from "@hooks/useAuth";
+import DeleteModal from '@components/Ui/DeleteModal';
+import useAuth from '@hooks/useAuth';
 import {
   createStyles,
   Text,
@@ -8,26 +8,26 @@ import {
   Box,
   Button,
   Textarea,
-} from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { useToggle } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
-import { UserRole } from "@utils/enums";
-import errorType from "@utils/services/axiosError";
+} from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { useToggle } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
+import { UserRole } from '@utils/enums';
+import errorType from '@utils/services/axiosError';
 import {
   ICommentReply,
   useDeleteCommentReply,
   useEditCommentReply,
-} from "@utils/services/commentService";
-import { IUser } from "@utils/services/types";
-import moment from "moment";
-import { useTranslation } from "react-i18next";
+} from '@utils/services/commentService';
+import { IUser } from '@utils/services/types';
+import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
     border: 1,
     backgroundColor:
-      theme.colorScheme === "dark"
+      theme.colorScheme === 'dark'
         ? theme.colors.dark[4]
         : theme.colors.gray[4],
     borderRadius: theme.radius.md,
@@ -59,12 +59,12 @@ const CommentReply = ({
         courseId,
         replyId: reply.id,
       });
-      showNotification({ message: t("delete_comment_reply_success") });
+      showNotification({ message: t('delete_comment_reply_success') });
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: "red",
+        color: 'red',
       });
     }
   };
@@ -101,13 +101,13 @@ const CommentReply = ({
       });
       setEdit();
       showNotification({
-        message: t("edit_reply_success"),
+        message: t('edit_reply_success'),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: "red",
+        color: 'red',
       });
     }
   };
@@ -115,7 +115,7 @@ const CommentReply = ({
   return (
     <Box m={10} p={10} className={classes.wrapper}>
       <DeleteModal
-        title={t("delete_reply_confirmation")}
+        title={t('delete_reply_confirmation')}
         open={deleteConfirmation}
         onClose={setDeleteConfirmation}
         onConfirm={onDelete}
@@ -130,7 +130,7 @@ const CommentReply = ({
         <div>
           <Text size="sm">{reply.user.fullName}</Text>
           <Text size="xs" color="dimmed">
-            {moment(reply.createdOn + "Z").fromNow()}
+            {moment(reply.createdOn + 'Z').fromNow()}
           </Text>
         </div>
       </Group>
@@ -139,11 +139,11 @@ const CommentReply = ({
           <form onSubmit={form.onSubmit(submitForm)}>
             <Textarea
               autoFocus
-              {...form.getInputProps("content")}
-              sx={{ width: "100%" }}
+              {...form.getInputProps('content')}
+              sx={{ width: '100%' }}
               mt={20}
               mb={10}
-              placeholder={t("your_comment") as string}
+              placeholder={t('your_comment') as string}
               withAsterisk
             />
             <Group>
@@ -153,7 +153,7 @@ const CommentReply = ({
                 type="submit"
                 disabled={!form.values.content.trim()}
               >
-                {t("edit")}
+                {t('edit')}
               </Button>
               <Button
                 size="sm"
@@ -163,7 +163,7 @@ const CommentReply = ({
                   form.reset();
                 }}
               >
-                {t("cancel")}
+                {t('cancel')}
               </Button>
             </Group>
           </form>
@@ -173,10 +173,10 @@ const CommentReply = ({
           {reply.content}
         </Text>
       )}
-      <Box sx={{ display: "flex", justifyContent: "end" }}>
+      <Box sx={{ display: 'flex', justifyContent: 'end' }}>
         {!edit && showEdit(reply.user, true) && (
           <Button variant="subtle" mx={4} onClick={() => setEdit()}>
-            {t("edit")}
+            {t('edit')}
           </Button>
         )}
         {showEdit(reply.user) && (
@@ -185,7 +185,7 @@ const CommentReply = ({
             variant="subtle"
             mx={4}
           >
-            {t("delete")}
+            {t('delete')}
           </Button>
         )}
       </Box>

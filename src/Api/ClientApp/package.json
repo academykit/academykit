@@ -9,7 +9,8 @@
     "dev": "vite --debug",
     "build": "vite build",
     "preview": "vite preview",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "lint": "eslint --ext .js"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -34,6 +35,7 @@
     "@tiptap/extension-link": "^2.0.3",
     "@tiptap/extension-placeholder": "^2.0.3",
     "@tiptap/extension-subscript": "^2.0.3",
+    "@tiptap/extension-superscript": "^2.0.3",
     "@tiptap/extension-text-align": "^2.0.3",
     "@tiptap/extension-underline": "^2.0.3",
     "@tiptap/pm": "^2.0.3",
@@ -58,7 +60,6 @@
     "moment": "^2.29.4",
     "path": "^0.12.7",
     "pdfjs-dist": "3.1.81",
-    "prettier": "^2.8.0",
     "query-string": "^7.1.1",
     "rc-slider": "^10.1.0",
     "react": "^18.2.0",
@@ -82,10 +83,18 @@
     "@types/react": "^18.0.22",
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^18.0.7",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^2.2.0",
     "dayjs": "^1.11.6",
+    "eslint": "^8.44.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.32.2",
+    "prettier": "^3.0.0",
     "typescript": "^4.8.4",
     "vite": "^3.2.0",
+    "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-mkcert": "^1.10.1"
   }
 }

@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FeedbackType } from "@utils/enums";
-import { api } from "./service-api";
-import { httpClient } from "./service-axios";
-import { IUser } from "./types";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { FeedbackType } from '@utils/enums';
+import { api } from './service-api';
+import { httpClient } from './service-axios';
+import { IUser } from './types';
 
 export interface IFeedbackOptions {
   id: string;
@@ -34,18 +34,17 @@ export interface ICreateFeedback {
   lessonId: string;
   name: string;
   type: string;
-  answers?: [
-    {
-      option: string;
-      isSelected: boolean;
-    }
-  ];
+  answers?: {
+    option: string;
+    isSelected: boolean;
+  }[];
 }
 
 const addFeedbackQuestion = ({ data }: { data: ICreateFeedback }) => {
-  //@ts-ignore
-  data.type = Number(data.type);
-  return httpClient.post(api.feedback.add, data);
+  return httpClient.post(api.feedback.add, {
+    ...data,
+    type: Number(data.type),
+  });
 };
 export const useAddFeedbackQuestion = (lessonId: string, search: string) => {
   const queryClient = useQueryClient();
@@ -114,9 +113,10 @@ const editFeedbackQuestion = ({
   data: ICreateFeedback;
   feedbackId: string;
 }) => {
-  // @ts-ignore
-  data.type = Number(data.type);
-  return httpClient.put(api.feedback.listOne(feedbackId), data);
+  return httpClient.put(api.feedback.listOne(feedbackId), {
+    ...data,
+    type: Number(data.type),
+  });
 };
 
 export const useEditFeedbackQuestion = (lessonId: string, search: string) => {
@@ -148,9 +148,9 @@ const postFeedbackSubmission = ({
 };
 export const useFeedbackSubmission = ({ lessonId }: { lessonId: string }) => {
   const queryClient = useQueryClient();
-  return useMutation(["submitFeeback"], postFeedbackSubmission, {
+  return useMutation(['submitFeeback'], postFeedbackSubmission, {
     onSuccess: () => {
-      queryClient.invalidateQueries([api.feedback.list(lessonId, "")]);
+      queryClient.invalidateQueries([api.feedback.list(lessonId, '')]);
     },
   });
 };

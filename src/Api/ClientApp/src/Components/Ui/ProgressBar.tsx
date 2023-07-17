@@ -1,11 +1,10 @@
-import { createStyles, Group, Progress, Text } from "@mantine/core";
-import React from "react";
+import { createStyles, Group, Progress, Text } from '@mantine/core';
 
 const useStyles = createStyles((theme) => ({
   progressBar: {
-    "&:not(:first-of-type)": {
+    '&:not(:first-of-type)': {
       borderLeft: `3px solid ${
-        theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white
+        theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white
       }`,
     },
   },
@@ -18,8 +17,7 @@ const ProgressBar = ({
   total: number;
   positive: number;
 }) => {
-  let positiveNumber = total > 0 ? (positive / total) * 100 : 0;
-  let negativeNumber = 100 - positiveNumber;
+  const positiveNumber = total > 0 ? (positive / total) * 100 : 0;
   const { classes, theme } = useStyles();
 
   return (
@@ -35,7 +33,7 @@ const ProgressBar = ({
           {
             value: positiveNumber,
             color:
-              theme.colorScheme === "dark"
+              theme.colorScheme === 'dark'
                 ? theme.colors.teal[9]
                 : theme.colors.teal[6],
           },

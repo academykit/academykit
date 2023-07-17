@@ -1,14 +1,14 @@
-import { Badge, Button, Paper, Tooltip } from "@mantine/core";
-import React, { useState } from "react";
-import { useSection } from "@context/SectionProvider";
-import AddLecture from "@components/Course/Lesson/AddLecture";
-import AddExam from "@components/Course/Lesson/AddExam";
-import AddAssignment from "@components/Course/Lesson/AddAssignment";
-import AddMeeting from "@components/Course/Lesson/AddMeeting";
-import AddFeedback from "@components/Course/Lesson/AddFeedback";
-import AddDocument from "@components/Course/Lesson/AddDocument";
-import { useTranslation } from "react-i18next";
-import { TFunction } from "i18next";
+import { Badge, Button, Tooltip } from '@mantine/core';
+import React, { useState } from 'react';
+import { useSection } from '@context/SectionProvider';
+import AddLecture from '@components/Course/Lesson/AddLecture';
+import AddExam from '@components/Course/Lesson/AddExam';
+import AddAssignment from '@components/Course/Lesson/AddAssignment';
+import AddMeeting from '@components/Course/Lesson/AddMeeting';
+import AddFeedback from '@components/Course/Lesson/AddFeedback';
+import AddDocument from '@components/Course/Lesson/AddDocument';
+import { useTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
 
 const LessonAddList = ({
   sectionId,
@@ -19,10 +19,10 @@ const LessonAddList = ({
   t: TFunction;
   sectionId: string;
 }) => {
-  const [addState, setAddState] = React.useState<string>("");
+  const [addState, setAddState] = React.useState<string>('');
   let returnDiv;
   switch (addState) {
-    case "lecture":
+    case 'lecture':
       returnDiv = (
         <AddLecture
           sectionId={sectionId}
@@ -33,25 +33,25 @@ const LessonAddList = ({
         />
       );
       break;
-    case "mcq":
+    case 'mcq':
       returnDiv = (
         <AddExam
           setIsEditing={() => {}}
-          setAddState={setAddState}
+          setAddState={() => setAddState('')}
           sectionId={sectionId}
         />
       );
       break;
-    case "assignment":
+    case 'assignment':
       returnDiv = (
         <AddAssignment
           setIsEditing={() => {}}
-          setAddState={setAddState}
+          setAddState={() => setAddState('')}
           sectionId={sectionId}
         />
       );
       break;
-    case "meeting":
+    case 'meeting':
       returnDiv = (
         <AddMeeting
           setIsEditing={() => {}}
@@ -62,7 +62,7 @@ const LessonAddList = ({
         />
       );
       break;
-    case "feedback":
+    case 'feedback':
       returnDiv = (
         <AddFeedback
           setIsEditing={() => {}}
@@ -71,7 +71,7 @@ const LessonAddList = ({
         />
       );
       break;
-    case "document":
+    case 'document':
       returnDiv = (
         <AddDocument
           setIsEditing={() => {}}
@@ -80,6 +80,7 @@ const LessonAddList = ({
           setAddLessonClick={setAddLessonClick}
         />
       );
+      break;
     default:
       break;
   }
@@ -88,54 +89,54 @@ const LessonAddList = ({
       {!addState ? (
         <>
           <Badge
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             variant="outline"
-            onClick={() => setAddState("lecture")}
+            onClick={() => setAddState('lecture')}
           >
-            + {t("video")}
-          </Badge>{" "}
+            + {t('video')}
+          </Badge>{' '}
           <Badge
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             variant="outline"
-            onClick={() => setAddState("mcq")}
+            onClick={() => setAddState('mcq')}
           >
-            + {t("exam")}
-          </Badge>{" "}
+            + {t('exam')}
+          </Badge>{' '}
           <Badge
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             variant="outline"
-            onClick={() => setAddState("assignment")}
+            onClick={() => setAddState('assignment')}
           >
-            + {t("assignment")}
-          </Badge>{" "}
+            + {t('assignment')}
+          </Badge>{' '}
           <Badge
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             variant="outline"
-            onClick={() => setAddState("meeting")}
+            onClick={() => setAddState('meeting')}
           >
-            + {t("live_class")}
-          </Badge>{" "}
+            + {t('live_class')}
+          </Badge>{' '}
           <Badge
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             variant="outline"
-            onClick={() => setAddState("feedback")}
+            onClick={() => setAddState('feedback')}
           >
-            + {t("feedback")}
-          </Badge>{" "}
+            + {t('feedback')}
+          </Badge>{' '}
           <Badge
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             variant="outline"
-            onClick={() => setAddState("document")}
+            onClick={() => setAddState('document')}
           >
-            + {t("document")}
-          </Badge>{" "}
+            + {t('document')}
+          </Badge>{' '}
           <Badge
             color="red"
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             variant="outline"
             onClick={() => setAddLessonClick(true)}
           >
-            X {t("close")}
+            X {t('close')}
           </Badge>
         </>
       ) : (
@@ -151,7 +152,7 @@ const AddLesson = ({ sectionId }: { sectionId: string }) => {
   const { t } = useTranslation();
 
   return (
-    <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+    <div style={{ marginTop: '10px', marginBottom: '10px' }}>
       {addLessonClick ? (
         <Tooltip
           position="right"
@@ -168,7 +169,7 @@ const AddLesson = ({ sectionId }: { sectionId: string }) => {
               section?.setIsAddSection(false);
             }}
           >
-            {t("add_lesson")}
+            {t('add_lesson')}
           </Button>
         </Tooltip>
       ) : (

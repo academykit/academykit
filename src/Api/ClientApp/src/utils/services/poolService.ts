@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import errorType from "./axiosError";
-import { api } from "./service-api";
-import { httpClient } from "./service-axios";
-import { IPaginated, IUser } from "./types";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import errorType from './axiosError';
+import { api } from './service-api';
+import { httpClient } from './service-axios';
+import { IPaginated, IUser } from './types';
 
 export interface IPoolTeacher {
   id: string;
@@ -39,7 +39,7 @@ const createTeacherPool = async (data: {
 export const useCreateTeacherPool = (id: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation(["post" + api.poolTeacher.list], createTeacherPool, {
+  return useMutation(['post' + api.poolTeacher.list], createTeacherPool, {
     onSuccess: () => {
       queryClient.invalidateQueries([api.poolTeacher.get(id)]);
     },
@@ -51,7 +51,7 @@ const deletePoolTeacher = async (id: string) => {
 };
 export const useDeletePoolTeacher = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation(["delete" + api.poolTeacher.detail], deletePoolTeacher, {
+  return useMutation(['delete' + api.poolTeacher.detail], deletePoolTeacher, {
     onSuccess: () => {
       queryClient.invalidateQueries([api.poolTeacher.get(id)]);
     },
@@ -81,7 +81,7 @@ const addPool = async (name: string) =>
 export const useAddPool = (searchParams: string) => {
   const queryClient = useQueryClient();
   return useMutation([api.pool.list, searchParams], addPool, {
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries([api.pool.list, searchParams]);
     },
     onError: (err) => {
@@ -104,7 +104,7 @@ const addOnePool = async ({ name, poolId }: { name: string; poolId: string }) =>
 export const useAddOnePool = (poolId: string) => {
   const queryClient = useQueryClient();
   return useMutation([api.pool.getOne(poolId)], addOnePool, {
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries([api.pool.getOne(poolId)]);
     },
     onError: (err) => {
@@ -122,10 +122,10 @@ export const useDeleteQuestionPool = (
 ) => {
   const queryClient = useQueryClient();
   return useMutation(
-    ["delete" + api.pool.getOne(identity)],
+    ['delete' + api.pool.getOne(identity)],
     deleteQuestionPool,
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([api.pool.list, searchParams]);
       },
       onError: (err) => {
