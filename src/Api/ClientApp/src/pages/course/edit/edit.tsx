@@ -143,8 +143,18 @@ const EditCourse = () => {
   const updateCourse = useUpdateCourse(slug.id as string);
   const navigator = useNavigate();
 
-  const submitHandler = async () => {
+  const submitHandler = async (values: typeof form.values) => {
     try {
+      await updateCourse.mutateAsync({
+        name: values.title,
+        thumbnailUrl: values.thumbnail,
+        description: values.description,
+        groupId: values.groups,
+        language: 1,
+        duration: 0,
+        levelId: values.level,
+        tagIds: values.tags,
+      });
       refetch();
       navigator(RoutePath.manageCourse.lessons(slug.id).route);
       showNotification({

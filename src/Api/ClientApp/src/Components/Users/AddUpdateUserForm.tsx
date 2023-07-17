@@ -79,7 +79,6 @@ const AddUpdateUserForm = ({
   isEditing: boolean;
   apiHooks: any;
   item?: IUserProfile;
-  // currentTab: string;
 }) => {
   const { t } = useTranslation();
   const { classes } = useStyles();
@@ -98,7 +97,9 @@ const AddUpdateUserForm = ({
   );
 
   useEffect(() => {
-    form.setFieldValue('role', item?.role ?? 4);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    form.setFieldValue('role', item?.role.toString() ?? '4');
     item?.departmentId &&
       form.setFieldValue('departmentId', item?.departmentId.toString() ?? '');
     form.setFieldValue(

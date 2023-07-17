@@ -28,7 +28,7 @@
             (configuration.GetConnectionString("DefaultConnection"), MySqlServerVersion.LatestSupportedServerVersion),
             ServiceLifetime.Scoped);
 
-            services.AddHangfireServer().AddHangfire(x =>
+            services.AddHangfireServer(x => x.WorkerCount = 2).AddHangfire(x =>
             {
                 x.UseFilter(new AutomaticRetryAttribute());
                 if (environment.IsProduction())

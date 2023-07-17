@@ -876,7 +876,7 @@ recorded cannot be deleted.</value>
     <value>some rows contained invalid users</value>
   </data>
   <data name="InvalidTimeIssue" xml:space="preserve">
-    <value>Exam start time and endtime must be greater than current time.</value>
+    <value>Exam start time and end time must be greater than current time.</value>
   </data>
   <data name="InvalidMeetingTimeIssue" xml:space="preserve">
     <value>Live lesson start time must be greater than curttent time.</value>
