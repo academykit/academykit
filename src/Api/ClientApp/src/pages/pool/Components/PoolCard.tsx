@@ -1,18 +1,9 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import UserShortProfile from '@components/UserShortProfile';
-import {
-  Button,
-  Card,
-  Group,
-  NavLink,
-  Paper,
-  Popover,
-  Text,
-  Title,
-} from '@mantine/core';
+import { Button, Card, Group, Menu, Text, Title } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconDotsVertical } from '@tabler/icons';
+import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons';
 import RoutePath from '@utils/routeConstants';
 import errorType from '@utils/services/axiosError';
 import { IPool, useDeleteQuestionPool } from '@utils/services/poolService';
@@ -78,46 +69,36 @@ const PoolCard = ({
           <Title size={'lg'} lineClamp={1} w={'80%'}>
             {name}
           </Title>
-          <Popover
-            position={'left-start'}
-            arrowSize={12}
-            styles={{
-              dropdown: { padding: 5 },
-            }}
+          <Menu
+            shadow="md"
+            width={200}
+            trigger="hover"
+            withArrow
+            position="right"
           >
-            <Popover.Target>
+            <Menu.Target>
               <Button sx={{ zIndex: 50 }} variant="subtle" px={4}>
                 <IconDotsVertical />
               </Button>
-            </Popover.Target>
-            <Popover.Dropdown>
-              <Paper>
-                <Group
-                  p={0}
-                  sx={{
-                    flexDirection: 'column',
-                    alignItems: 'start',
-                    gap: '0px',
-                  }}
-                >
-                  <NavLink
-                    w={90}
-                    variant="subtle"
-                    label={t('edit')}
-                    component={Link}
-                    to={RoutePath.pool.details(slug).route}
-                  ></NavLink>
-
-                  <NavLink
-                    onClick={() => setDeleteModal()}
-                    variant="subtle"
-                    label={t('delete')}
-                    component={'button'}
-                  ></NavLink>
-                </Group>
-              </Paper>
-            </Popover.Dropdown>
-          </Popover>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item
+                icon={<IconEdit size={14} />}
+                component={Link}
+                to={RoutePath.pool.details(slug).route}
+              >
+                {t('edit')}
+              </Menu.Item>
+              <Menu.Divider />
+              <Menu.Item
+                color="red"
+                icon={<IconTrash size={14} />}
+                onClick={() => setDeleteModal()}
+              >
+                {t('delete')}
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
         </Group>
         <Group py={5} position="apart">
           <div style={{ zIndex: 20 }}>

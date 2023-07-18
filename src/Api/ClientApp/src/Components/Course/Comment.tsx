@@ -136,9 +136,9 @@ const Comment = ({ comment }: { comment: IComment }) => {
     },
   });
 
-  moment.updateLocale("en", {
+  moment.updateLocale('en', {
     relativeTime: {
-      future: "in %s",
+      future: 'in %s',
       past: `%s`,
       s: `${t('few_seconds_ago')}`,
       ss: `%d ${t('seconds_ago')}`,
