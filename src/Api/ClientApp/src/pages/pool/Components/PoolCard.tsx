@@ -1,12 +1,12 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import UserShortProfile from '@components/UserShortProfile';
 import {
+  Anchor,
   Button,
   Card,
   Group,
   Menu,
   Text,
-  Title,
   createStyles,
   rem,
 } from '@mantine/core';
@@ -31,7 +31,7 @@ const useStyle = createStyles((theme) => ({
     padding: `${theme.spacing.xs} ${theme.spacing.lg}`,
     marginTop: theme.spacing.sm,
     borderTop: `${rem(1)} solid ${
-      theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
+      theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
     }`,
   },
 }));
@@ -66,36 +66,23 @@ const PoolCard = ({
   };
 
   return (
-    <div
-      style={{
-        position: 'relative',
-      }}
-    >
-      <Link
-        style={{ textDecoration: 'none' }}
-        to={RoutePath.pool.questions(slug).route}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            zIndex: 10,
-            width: '100%',
-            height: '100%',
-          }}
-        ></div>
-      </Link>
-      <Card my={10} radius={'lg'}>
-        <DeleteModal
-          title={t(`pool_delete_confirmation`)}
-          open={deleteModal}
-          onClose={setDeleteModal}
-          onConfirm={handleDelete}
-        />
-
+    <div>
+      <DeleteModal
+        title={t(`pool_delete_confirmation`)}
+        open={deleteModal}
+        onClose={setDeleteModal}
+        onConfirm={handleDelete}
+      />
+      <Card className={classes.card} p="md" withBorder radius={'md'}>
         <Group position="apart">
-          <Title size={'lg'} lineClamp={1} w={'80%'}>
+          <Anchor
+            size={'lg'}
+            lineClamp={1}
+            component={Link}
+            to={RoutePath.pool.questions(slug).route}
+          >
             {name}
-          </Title>
+          </Anchor>
           <Menu
             shadow="md"
             width={200}
