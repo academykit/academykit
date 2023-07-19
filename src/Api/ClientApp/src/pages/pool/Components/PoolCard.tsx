@@ -1,6 +1,15 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import UserShortProfile from '@components/UserShortProfile';
-import { Button, Card, Group, Menu, Text, Title } from '@mantine/core';
+import {
+  Button,
+  Card,
+  Group,
+  Menu,
+  Text,
+  Title,
+  createStyles,
+  rem,
+} from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons';
@@ -10,6 +19,23 @@ import { IPool, useDeleteQuestionPool } from '@utils/services/poolService';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
+const useStyle = createStyles((theme) => ({
+  card: {
+    transition: 'transform 150ms ease, box-shadow 150ms ease',
+    '&:hover': {
+      transform: 'scale(1.01)',
+      boxShadow: theme.shadows.md,
+    },
+  },
+  footer: {
+    padding: `${theme.spacing.xs} ${theme.spacing.lg}`,
+    marginTop: theme.spacing.sm,
+    borderTop: `${rem(1)} solid ${
+      theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
+    }`,
+  },
+}));
+
 const PoolCard = ({
   pool: { id: poolId, name, slug, user, questionCount },
   search,
@@ -17,6 +43,7 @@ const PoolCard = ({
   pool: IPool;
   search: string;
 }) => {
+  const { classes } = useStyle();
   const [deleteModal, setDeleteModal] = useToggle();
   const deletePool = useDeleteQuestionPool(poolId, search);
   const { t } = useTranslation();
@@ -74,7 +101,7 @@ const PoolCard = ({
             width={200}
             trigger="hover"
             withArrow
-            position="right"
+            position="left"
           >
             <Menu.Target>
               <Button sx={{ zIndex: 50 }} variant="subtle" px={4}>
@@ -100,14 +127,19 @@ const PoolCard = ({
             </Menu.Dropdown>
           </Menu>
         </Group>
-        <Group py={5} position="apart">
-          <div style={{ zIndex: 20 }}>
-            <UserShortProfile size={'sm'} user={user} />
-          </div>
-          <Text color={'dimmed'} size={'sm'}>
-            {t('total_question')} {questionCount}
-          </Text>
+        <Group mt={'sm'}>
+          <UserShortProfile user={user} size={'sm'} />
         </Group>
+        <Card.Section className={classes.footer}>
+          <Group position="apart">
+            <div>
+              <Text size="xs" color="dimmed">
+                {t('total_question')}
+              </Text>
+              <Text weight={500}>{questionCount}</Text>
+            </div>
+          </Group>
+        </Card.Section>
       </Card>
     </div>
   );

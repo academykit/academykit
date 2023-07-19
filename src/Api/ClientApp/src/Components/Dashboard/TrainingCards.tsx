@@ -4,16 +4,21 @@ import {
   Button,
   Card,
   Flex,
-  Group,
   Image,
-  Popover,
   Text,
-  Paper,
-  NavLink,
   Avatar,
   AspectRatio,
+  Menu,
+  Progress,
+  Group,
 } from '@mantine/core';
-import { IconChevronRight, IconDotsVertical } from '@tabler/icons';
+import {
+  IconChevronRight,
+  IconDotsVertical,
+  IconGraph,
+  IconSettings,
+  IconUsers,
+} from '@tabler/icons';
 import { UserRole } from '@utils/enums';
 import getCourseOgImageUrl from '@utils/getCourseOGImage';
 import { getInitials } from '@utils/getInitialName';
@@ -39,20 +44,12 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
 
   return (
     <Card
-      sx={{
-        ['@media (max-width: 400px)']: {
-          width: '100%',
-        },
-        position: 'relative',
-        overflow: 'visible',
-        width: '350px',
-      }}
       withBorder
+      p={2}
+      padding={0}
+      component={Link}
+      to={RoutePath.courses.description(data.slug).route}
     >
-      <Link
-        to={RoutePath.courses.description(data.slug).route}
-        style={{ position: 'absolute', height: '100%', width: '100%' }}
-      ></Link>
       <Flex sx={{ justifyContent: 'start', alignItems: 'start' }} gap={'sm'}>
         <Box sx={{ height: 65, width: 160 }}>
           <AspectRatio ratio={16 / 9}>
@@ -72,61 +69,71 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
             </Text>
             <div>
               {(role === UserRole.Admin || role === UserRole.SuperAdmin) && (
-                <Popover
-                  position={'left-start'}
-                  arrowSize={12}
-                  zIndex="100"
-                  styles={{
-                    dropdown: { padding: 5 },
-                  }}
+                <Menu
+                  shadow="md"
+                  width={200}
+                  trigger="hover"
+                  withArrow
+                  position="left"
                 >
-                  <Popover.Target>
+                  <Menu.Target>
                     <Button sx={{ zIndex: 50 }} variant="subtle" px={4}>
                       <IconDotsVertical />
                     </Button>
-                  </Popover.Target>
-                  <Popover.Dropdown>
-                    <Paper>
-                      <Group
-                        p={0}
-                        sx={{
-                          flexDirection: 'column',
-                          alignItems: 'start',
-                        }}
-                      >
-                        <NavLink
-                          variant="subtle"
-                          label={t('manage')}
-                          component={Link}
-                          to={RoutePath.manageCourse.manage(data.slug).route}
-                          rightSection={
-                            <IconChevronRight size={12} stroke={1.5} />
-                          }
-                        ></NavLink>
-                      </Group>
-                    </Paper>
-                  </Popover.Dropdown>
-                </Popover>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>{t('manage')}</Menu.Label>
+                    <Menu.Item
+                      icon={<IconSettings size={14} />}
+                      component={Link}
+                      to={RoutePath.manageCourse.manage(data.slug).route}
+                      rightSection={<IconChevronRight size={12} stroke={1.5} />}
+                    >
+                      {t('statistics')}
+                    </Menu.Item>
+                    <Menu.Item
+                      icon={<IconGraph size={14} />}
+                      component={Link}
+                      to={RoutePath.manageCourse.lessonsStat(data.slug).route}
+                      rightSection={<IconChevronRight size={12} stroke={1.5} />}
+                    >
+                      {t('lesson_stats')}
+                    </Menu.Item>
+                    <Menu.Item
+                      icon={<IconUsers size={14} />}
+                      component={Link}
+                      to={RoutePath.manageCourse.student(data.slug).route}
+                      rightSection={<IconChevronRight size={12} stroke={1.5} />}
+                    >
+                      {t('trainee')}
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
               )}
             </div>
           </Flex>
           {role === UserRole.Trainee ? (
-            <Text size="sm">
-              {data.percentage}% {t('progress')}
-            </Text>
+            <div>
+              <Text c="dimmed" fz="sm" mt="md">
+                {t('progress')}
+              </Text>
+              <Progress value={data.percentage} mt={5} size="sm"></Progress>
+            </div>
           ) : (
-            <Avatar.Group spacing={'lg'}>
-              {data.students.length > 0 ? (
-                data.students.slice(0, 3).map((x) => {
-                  return <StudentAvatar data={x} key={x.id} />;
-                })
-              ) : (
-                <Text size="xs">{t('no_user_enrolled')}</Text>
-              )}
-              {data.students.length > 3 && (
-                <Avatar radius="xl">+{data.students.length - 3}</Avatar>
-              )}
-            </Avatar.Group>
+            <Group position="apart">
+              <Avatar.Group spacing={'sm'}>
+                {data.students.length > 0 ? (
+                  data.students.slice(0, 3).map((x) => {
+                    return <StudentAvatar data={x} key={x.id} />;
+                  })
+                ) : (
+                  <Text size="xs">{t('no_user_enrolled')}</Text>
+                )}
+                {data.students.length > 3 && (
+                  <Avatar radius="xl">+{data.students.length - 3}</Avatar>
+                )}
+              </Avatar.Group>
+            </Group>
           )}
         </Box>
       </Flex>

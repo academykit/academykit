@@ -1,4 +1,3 @@
-import { Box, Button, createStyles, Paper, TextInput } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import errorType from '@utils/services/axiosError';
@@ -7,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import { useNavigate } from 'react-router-dom';
+import { Button, Group, Paper, Space, TextInput } from '@mantine/core';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -26,20 +26,6 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
     validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
-  const useStyles = createStyles((theme) => ({
-    paper: {
-      [theme.fn.smallerThan('md')]: {
-        width: '100%',
-      },
-      [theme.fn.smallerThan('lg')]: {
-        width: '100%',
-      },
-
-      width: '50%',
-      marginBottom: '20px',
-    },
-  }));
-  const { classes } = useStyles();
 
   if (isSuccess) {
     navigate(`./${data.data.slug}/members`);
@@ -62,41 +48,25 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
     }
   };
   return (
-    <Paper
-      shadow={'sm'}
-      radius="md"
-      p="xl"
-      withBorder
-      className={classes.paper}
-    >
-      <Box>
-        <form onSubmit={form.onSubmit(({ name }) => onSubmitForm(name))}>
-          <TextInput
-            autoFocus
-            autoComplete="off"
-            mb={10}
-            label={t('group_name')}
-            placeholder={t('your_group_name') as string}
-            withAsterisk
-            name="name"
-            size="md"
-            {...form.getInputProps('name')}
-          />
-
-          <Button loading={isLoading} mr={10} type="submit" size="md">
+    <Paper>
+      <form onSubmit={form.onSubmit(({ name }) => onSubmitForm(name))}>
+        <TextInput
+          autoFocus
+          autoComplete="off"
+          mb={10}
+          label={t('group_name')}
+          placeholder={t('your_group_name') as string}
+          withAsterisk
+          name="name"
+          {...form.getInputProps('name')}
+        />
+        <Space h="md" />
+        <Group position="right">
+          <Button loading={isLoading} type="submit">
             {t('submit')}
           </Button>
-          <Button
-            variant="outline"
-            disabled={isLoading}
-            type="reset"
-            onClick={() => onCancel()}
-            size={'md'}
-          >
-            {t('cancel')}
-          </Button>
-        </form>
-      </Box>
+        </Group>
+      </form>
     </Paper>
   );
 };
