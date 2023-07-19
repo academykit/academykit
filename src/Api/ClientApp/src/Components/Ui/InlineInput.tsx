@@ -38,7 +38,7 @@ const InlineInput: React.FC<React.PropsWithChildren<InlineInputProps>> = ({
   const { classes } = useStyles();
   return (
     <div style={{ display: 'flex' }}>
-      <TextInput autoFocus placeholder={placeholder} {...props} />
+      <TextInput placeholder={placeholder} {...props} />
       {!isLoading ? (
         <>
           <UnstyledButton type="submit" className={classes.check}>

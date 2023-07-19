@@ -186,7 +186,6 @@ const Comment = ({ comment }: { comment: IComment }) => {
       {edit ? (
         <form onSubmit={form.onSubmit(onEdit)}>
           <Textarea
-            autoFocus={true}
             className={cx({ [classes.editor]: !edit })}
             mt={20}
             mb={10}

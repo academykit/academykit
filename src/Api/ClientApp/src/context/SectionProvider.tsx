@@ -1,7 +1,6 @@
 import { createStyles } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { useContext, useState } from 'react';
-import { createContext } from 'react';
+import { useContext, useState, createContext } from 'react';
 
 interface ISectionContext {
   setIsAddSection: any;

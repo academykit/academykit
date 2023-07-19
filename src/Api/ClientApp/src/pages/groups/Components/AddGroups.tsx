@@ -51,7 +51,6 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
     <Paper>
       <form onSubmit={form.onSubmit(({ name }) => onSubmitForm(name))}>
         <TextInput
-          autoFocus
           autoComplete="off"
           mb={10}
           label={t('group_name')}
