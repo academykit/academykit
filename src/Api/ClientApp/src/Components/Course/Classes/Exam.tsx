@@ -78,7 +78,7 @@ const useStyle = createStyles((theme) => ({
     border: `2px solid ${theme.colors.yellow[4]}`,
   },
   answered: {
-    backgroundColor: theme.colors[theme.primaryColor][1],
+    backgroundColor: theme.colorScheme == 'dark' ? '#128797' : '#09ADC3',
   },
   parentGrid: {
     flexDirection: 'row',
@@ -151,6 +151,7 @@ const Exam = ({
       customLayout.setExamPage && customLayout.setExamPage(false);
     };
   }, [customLayout.examPage]);
+
   const { classes, theme, cx } = useStyle();
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.md}px)`);
   const [visited, setVisited] = useState<number[]>([]);

@@ -53,7 +53,7 @@ export const useWatchHistoryUser = (
   return useMutation([api.watchHistory.updateUser(userId)], watchHistoryUser, {
     onSuccess: () => {
       queryClient.invalidateQueries([
-        api.course.lessonStatDetails(courseId, lessonId, ''),
+        api.course.lessonStatDetails(courseId, lessonId, 'page=1&size=12'),
       ]);
     },
     onError: (err) => {
