@@ -165,7 +165,7 @@ namespace Lingtren.Infrastructure.Services
 
                 remainingAttempt = lesson.QuestionSet.AllowedRetake > 0 ? lesson.QuestionSet.AllowedRetake - submissionCount : submissionCount > 0 ? 0 : 1;
 
-                hasResult = containResults;
+                 hasResult = containResults;
             }
 
             bool? hasSubmitAssignment = null;
