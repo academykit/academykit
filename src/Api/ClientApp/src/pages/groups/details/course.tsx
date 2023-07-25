@@ -1,14 +1,14 @@
-import CourseCard from "@components/Course/CourseCard";
+import CourseCard from '@components/Course/CourseCard';
 import withSearchPagination, {
   IWithSearchPagination,
-} from "@hoc/useSearchPagination";
-import useAuth from "@hooks/useAuth";
-import { Box, Button, Container, Flex, Group, Loader } from "@mantine/core";
-import { UserRole } from "@utils/enums";
-import RoutePath from "@utils/routeConstants";
-import { useGroupCourse } from "@utils/services/groupService";
-import { useTranslation } from "react-i18next";
-import { Link, useParams } from "react-router-dom";
+} from '@hoc/useSearchPagination';
+import useAuth from '@hooks/useAuth';
+import { Box, Button, Container, Flex, Group, Loader } from '@mantine/core';
+import { UserRole } from '@utils/enums';
+import RoutePath from '@utils/routeConstants';
+import { useGroupCourse } from '@utils/services/groupService';
+import { useTranslation } from 'react-i18next';
+import { Link, useParams } from 'react-router-dom';
 
 const GroupCourse = ({
   searchParams,
@@ -27,12 +27,12 @@ const GroupCourse = ({
       {auth?.auth && auth.auth?.role < UserRole.Trainee && (
         <Group position="right" mb={10}>
           <Link to={RoutePath.courses.create + `?group=${id}`}>
-            <Button>{t("add_new_training")}</Button>
+            <Button>{t('add_new_training')}</Button>
           </Link>
         </Group>
       )}
 
-      {searchComponent(t("search_group_trainings") as string)}
+      {searchComponent(t('search_group_trainings') as string)}
       <Flex wrap="wrap" mt={15}>
         {data?.items &&
           (data.totalCount > 0 ? (
@@ -42,7 +42,7 @@ const GroupCourse = ({
               </div>
             ))
           ) : (
-            <Box>{t("no_trainings_found")}</Box>
+            <Box>{t('no_trainings_found')}</Box>
           ))}
       </Flex>
       {isLoading && <Loader />}

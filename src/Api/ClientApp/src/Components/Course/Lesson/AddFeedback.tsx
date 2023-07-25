@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Button,
   Grid,
@@ -8,30 +8,29 @@ import {
   ScrollArea,
   Switch,
   Textarea,
-  TextInput,
   Tooltip,
-} from "@mantine/core";
-import { useForm, yupResolver } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import { LessonType } from "@utils/enums";
+} from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import { LessonType } from '@utils/enums';
 import {
   useCreateLesson,
   useUpdateLesson,
-} from "@utils/services/courseService";
-import { ILessonFeedback } from "@utils/services/types";
-import { useParams } from "react-router-dom";
-import errorType from "@utils/services/axiosError";
-import * as Yup from "yup";
-import CreateFeedback from "../FeedBack/CreateFeedBack";
-import { useTranslation } from "react-i18next";
-import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+} from '@utils/services/courseService';
+import { ILessonFeedback } from '@utils/services/types';
+import { useParams } from 'react-router-dom';
+import errorType from '@utils/services/axiosError';
+import * as Yup from 'yup';
+import CreateFeedback from '../FeedBack/CreateFeedBack';
+import { useTranslation } from 'react-i18next';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 
 const schema = () => {
   const { t } = useTranslation();
 
   return Yup.object().shape({
-    name: Yup.string().required(t("feedback_name_required") as string),
+    name: Yup.string().required(t('feedback_name_required') as string),
   });
 };
 
@@ -42,7 +41,7 @@ const AddFeedback = ({
   sectionId,
   setIsEditing,
 }: {
-  setAddState: Function;
+  setAddState: (s: string) => void;
   item?: ILessonFeedback;
   isEditing?: boolean;
   sectionId: string;
@@ -62,12 +61,12 @@ const AddFeedback = ({
   );
 
   const [opened, setOpened] = useState(false);
-  const [lessonId, setLessonId] = useState("");
+  const [lessonId, setLessonId] = useState('');
 
   const form = useForm({
     initialValues: {
-      name: item?.name ?? "",
-      description: item?.description ?? "",
+      name: item?.name ?? '',
+      description: item?.description ?? '',
       isMandatory: item?.isMandatory ?? false,
     },
     validate: yupResolver(schema()),
@@ -76,7 +75,7 @@ const AddFeedback = ({
 
   const submitForm = async (values: { name: string; description: string }) => {
     try {
-      let assignmentData = {
+      const assignmentData = {
         courseId: slug,
         sectionIdentity: sectionId,
         type: LessonType.Feedback,
@@ -98,18 +97,18 @@ const AddFeedback = ({
         setIsEditing(false);
       }
       showNotification({
-        title: t("success"),
-        message: `${t("feedback")} ${isEditing ? t("edited") : t("added")} ${t(
-          "successfully"
+        title: t('success'),
+        message: `${t('feedback')} ${isEditing ? t('edited') : t('added')} ${t(
+          'successfully'
         )}`,
       });
     } catch (error: any) {
       const err = errorType(error);
 
       showNotification({
-        title: t("error"),
+        title: t('error'),
         message: err,
-        color: "red",
+        color: 'red',
       });
     }
   };
@@ -120,23 +119,23 @@ const AddFeedback = ({
         opened={opened}
         // exitTransitionDuration={100}
         transitionProps={{
-          transition: "slide-up",
+          transition: 'slide-up',
         }}
         onClose={() => {
           setOpened(false);
-          setAddState("");
+          setAddState('');
         }}
         size="100%"
         style={{
-          height: "100%",
+          height: '100%',
         }}
         styles={{
           inner: {
             paddingLeft: 0,
             paddingRight: 0,
             paddingBottom: 0,
-            paddingTop: "100px",
-            height: "100%",
+            paddingTop: '100px',
+            height: '100%',
           },
         }}
       >
@@ -145,60 +144,60 @@ const AddFeedback = ({
 
       <form onSubmit={form.onSubmit(submitForm)}>
         <Paper withBorder p="md">
-          <Grid align={"center"} justify="space-around">
+          <Grid align={'center'} justify="space-around">
             <Grid.Col span={12} lg={8}>
               <CustomTextFieldWithAutoFocus
                 withAsterisk
-                label={t("feedback_title")}
-                placeholder={t("feedback_title") as string}
-                {...form.getInputProps("name")}
+                label={t('feedback_title')}
+                placeholder={t('feedback_title') as string}
+                {...form.getInputProps('name')}
               />
             </Grid.Col>
-            <Tooltip multiline label={t("mandatory_tooltip")} width={220}>
+            <Tooltip multiline label={t('mandatory_tooltip')} width={220}>
               <Grid.Col span={4}>
                 <Switch
-                  label={t("is_mandatory")}
-                  {...form.getInputProps("isMandatory")}
+                  label={t('is_mandatory')}
+                  {...form.getInputProps('isMandatory')}
                   checked={isMandatory}
                   onChange={() => {
                     setIsMandatory(() => !isMandatory);
-                    form.setFieldValue("isMandatory", !isMandatory);
+                    form.setFieldValue('isMandatory', !isMandatory);
                   }}
                 />
               </Grid.Col>
             </Tooltip>
           </Grid>
           <Textarea
-            placeholder={t("feedback_description") as string}
-            label={t("feedback_description")}
+            placeholder={t('feedback_description') as string}
+            label={t('feedback_description')}
             mb={10}
-            {...form.getInputProps("description")}
+            {...form.getInputProps('description')}
           />
           <Group position="left" mt="md">
             <Button
               type="submit"
               loading={lesson.isLoading || updateLesson.isLoading}
             >
-              {t("submit")}
+              {t('submit')}
             </Button>
             {!isEditing && (
               <Button
                 onClick={() => {
-                  setAddState("");
+                  setAddState('');
                 }}
                 variant="outline"
               >
-                {t("close")}
+                {t('close')}
               </Button>
             )}
             {isEditing && (
               <Button
                 onClick={() => {
-                  setLessonId(item?.id ?? "");
+                  setLessonId(item?.id ?? '');
                   setOpened(true);
                 }}
               >
-                {t("add_more_feedback")}
+                {t('add_more_feedback')}
               </Button>
             )}
           </Group>

@@ -1,18 +1,24 @@
-import { AppShell, Container, Group, Header, Button } from "@mantine/core";
-import { Link, Outlet } from "react-router-dom";
-import { AppFooter } from "./AppFooter";
-import { useCompanySetting } from "@utils/services/adminService";
+import {
+  AppShell,
+  Container,
+  Group,
+  Header,
+  Button,
+  createStyles,
+} from '@mantine/core';
+import { Link, Outlet } from 'react-router-dom';
+import { AppFooter } from './AppFooter';
+import { useCompanySetting } from '@utils/services/adminService';
 
-import { createStyles } from "@mantine/core";
-import useAuth from "@hooks/useAuth";
-import UserProfileMenu from "@components/UserProfileMenu";
-import { IUser } from "@utils/services/types";
+import useAuth from '@hooks/useAuth';
+import UserProfileMenu from '@components/UserProfileMenu';
+import { IUser } from '@utils/services/types';
 
 const HEADER_HEIGHT = 60;
 const useStyles = createStyles((theme) => ({
   header: {
     backgroundColor: theme.fn.variant({
-      variant: "filled",
+      variant: 'filled',
       color: theme.primaryColor,
     }).background,
     borderBottom: 0,
@@ -20,26 +26,26 @@ const useStyles = createStyles((theme) => ({
 
   inner: {
     height: HEADER_HEIGHT,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 
   burger: {
-    [theme.fn.largerThan("sm")]: {
-      display: "none",
+    [theme.fn.largerThan('sm')]: {
+      display: 'none',
     },
   },
 
   links: {
     paddingTop: theme.spacing.lg,
     height: HEADER_HEIGHT,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
 
-    [theme.fn.smallerThan("sm")]: {
-      display: "none",
+    [theme.fn.smallerThan('sm')]: {
+      display: 'none',
     },
   },
 
@@ -48,32 +54,32 @@ const useStyles = createStyles((theme) => ({
   },
 
   mainLink: {
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
     fontSize: 13,
     color: theme.white,
     padding: `7px ${theme.spacing.sm}px`,
     fontWeight: 700,
-    borderBottom: "2px solid transparent",
-    transition: "border-color 100ms ease, opacity 100ms ease",
+    borderBottom: '2px solid transparent',
+    transition: 'border-color 100ms ease, opacity 100ms ease',
     opacity: 0.9,
     borderTopRightRadius: theme.radius.sm,
     borderTopLeftRadius: theme.radius.sm,
 
-    "&:hover": {
+    '&:hover': {
       opacity: 1,
-      textDecoration: "none",
+      textDecoration: 'none',
     },
   },
 
   secondaryLink: {
     color: theme.colors[theme.primaryColor][0],
     fontSize: theme.fontSizes.xs,
-    textTransform: "uppercase",
-    transition: "color 100ms ease",
+    textTransform: 'uppercase',
+    transition: 'color 100ms ease',
 
-    "&:hover": {
+    '&:hover': {
       color: theme.white,
-      textDecoration: "none",
+      textDecoration: 'none',
     },
   },
 
@@ -81,11 +87,11 @@ const useStyles = createStyles((theme) => ({
     color: theme.white,
     opacity: 1,
     borderBottomColor:
-      theme.colorScheme === "dark"
+      theme.colorScheme === 'dark'
         ? theme.white
         : theme.colors[theme.primaryColor][5],
     backgroundColor: theme.fn.lighten(
-      theme.fn.variant({ variant: "filled", color: theme.primaryColor })
+      theme.fn.variant({ variant: 'filled', color: theme.primaryColor })
         .background!,
       0.1
     ),
@@ -104,7 +110,7 @@ const PrivacyLayout = () => {
       header={
         <Header height={60}>
           <Container className={classes.inner} fluid>
-            <Group position={"apart"} w={"100%"}>
+            <Group position={'apart'} w={'100%'}>
               <Link to="/">
                 <img
                   height={50}
@@ -117,7 +123,7 @@ const PrivacyLayout = () => {
                   user={
                     {
                       email: auth.auth.email,
-                      fullName: auth.auth.firstName + " " + auth.auth.lastName,
+                      fullName: auth.auth.firstName + ' ' + auth.auth.lastName,
                       id: auth.auth.id,
                       role: auth.auth.role,
                       imageUrl: auth.auth.imageUrl,
@@ -125,7 +131,7 @@ const PrivacyLayout = () => {
                   }
                 />
               ) : (
-                <Button component={Link} to={"/login"}>
+                <Button component={Link} to={'/login'}>
                   Login
                 </Button>
               )}
@@ -136,13 +142,13 @@ const PrivacyLayout = () => {
       styles={(theme) => ({
         main: {
           backgroundColor:
-            theme.colorScheme === "dark"
+            theme.colorScheme === 'dark'
               ? theme.colors.dark[8]
               : theme.colors.gray[0],
         },
       })}
       footer={
-        <AppFooter name={companySettings.data?.data?.name ?? ""}></AppFooter>
+        <AppFooter name={companySettings.data?.data?.name ?? ''}></AppFooter>
       }
     >
       <Outlet />

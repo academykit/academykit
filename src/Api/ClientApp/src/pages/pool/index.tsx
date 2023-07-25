@@ -1,46 +1,33 @@
 import withSearchPagination, {
   IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+} from '@hoc/useSearchPagination';
 import {
   Box,
   Button,
   Container,
-  createStyles,
   Group,
-  Paper,
-  TextInput,
   Title,
-  Transition,
   Loader,
-} from "@mantine/core";
-import { useForm, yupResolver } from "@mantine/form";
-import { useToggle } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
-import errorType from "@utils/services/axiosError";
-import { useAddPool, usePools } from "@utils/services/poolService";
-import PoolCard from "./Components/PoolCard";
-import * as Yup from "yup";
-import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
-import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
-const useStyle = createStyles((theme) => ({
-  paper: {
-    [theme.fn.smallerThan("md")]: {
-      width: "100%",
-    },
-    [theme.fn.smallerThan("lg")]: {
-      width: "100%",
-    },
+  SimpleGrid,
+  Drawer,
+  Space,
+} from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
+import { useDisclosure } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
+import errorType from '@utils/services/axiosError';
+import { useAddPool, usePools } from '@utils/services/poolService';
+import PoolCard from './Components/PoolCard';
+import * as Yup from 'yup';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 
-    width: "50%",
-    marginBottom: "20px",
-  },
-}));
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t("pool_name_required") as string),
+    name: Yup.string().required(t('pool_name_required') as string),
   });
 };
 
@@ -50,91 +37,86 @@ const MCQPool = ({
   searchComponent,
 }: IWithSearchPagination) => {
   const pools = usePools(searchParams);
-  const addPool = useAddPool(searchParams);
-  const [showAddForm, toggleAddForm] = useToggle();
+  const { mutateAsync, isLoading } = useAddPool(searchParams);
+  const [opened, { open, close }] = useDisclosure(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { classes } = useStyle();
   const form = useForm({
     initialValues: {
-      name: "",
+      name: '',
     },
     validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
   const onSubmitForm = async ({ name }: { name: string }) => {
     try {
-      const res = await addPool.mutateAsync(name);
+      const res = await mutateAsync(name);
       form.reset();
-      toggleAddForm();
-      navigate(res.data.slug + "/questions");
+      navigate(res.data.slug + '/questions');
     } catch (err) {
       const error = errorType(err);
-      showNotification({ message: error, color: "red" });
+      showNotification({ message: error, color: 'red' });
     }
   };
   return (
     <Container fluid>
-      <Group sx={{ justifyContent: "space-between", alignItems: "center" }}>
-        <Title>{t("mcq_pools")}</Title>
-        {!showAddForm && (
-          <Button onClick={() => toggleAddForm()}>{t("create_pool")}</Button>
-        )}
-      </Group>
-      <Transition
-        mounted={showAddForm}
-        transition={"slide-down"}
-        duration={200}
-        timingFunction="ease"
+      <Group
+        sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+        mb={15}
       >
-        {(style) => (
-          <Box mt={10}>
-            <form onSubmit={form.onSubmit(onSubmitForm)}>
-              <Group>
-                <Paper
-                  shadow={"sm"}
-                  radius="md"
-                  p="xl"
-                  withBorder
-                  className={classes.paper}
-                >
-                  <CustomTextFieldWithAutoFocus
-                    label={t("pool_name")}
-                    placeholder={t("enter_pool_name") as string}
-                    name="name"
-                    {...form.getInputProps("name")}
-                  />
-                  <Group mt={10}>
-                    <Button type="submit" top={5}>
-                      {t("create")}
-                    </Button>
-                    {showAddForm && (
-                      <Button
-                        top={5}
-                        onClick={() => toggleAddForm()}
-                        variant="outline"
-                      >
-                        {t("cancel")}
-                      </Button>
-                    )}
-                  </Group>
-                </Paper>
-              </Group>
-            </form>
-          </Box>
-        )}
-      </Transition>
+        <Title>{t('mcq_pools')}</Title>
+
+        <Button onClick={open}>{t('create_pool')}</Button>
+      </Group>
+      <Drawer
+        opened={opened}
+        onClose={close}
+        title={t('create_pool')}
+        overlayProps={{ opacity: 0.5, blur: 4 }}
+      >
+        <Box>
+          <form onSubmit={form.onSubmit(onSubmitForm)}>
+            <CustomTextFieldWithAutoFocus
+              label={t('pool_name')}
+              placeholder={t('enter_pool_name') as string}
+              name="name"
+              withAsterisk
+              {...form.getInputProps('name')}
+            />
+            <Space h="md" />
+            <Group position="right">
+              <Button type="submit" loading={isLoading}>
+                {t('create')}
+              </Button>
+            </Group>
+          </form>
+        </Box>
+      </Drawer>
+      <Box>{searchComponent(t('search_pools') as string)}</Box>
       {pools.isLoading && <Loader />}
 
       <Box mt={20}>
         {pools.isSuccess && (
           <>
-            {searchComponent(t("search_pools") as string)}
-            {pools.data.items.length >= 1 &&
-              pools.data?.items.map((x) => (
-                <PoolCard search={searchParams} pool={x} key={x.id} />
-              ))}
-            {pools.data?.items.length < 1 && <Box mt={10}>{t("no_pools")}</Box>}
+            <SimpleGrid
+              cols={1}
+              spacing={10}
+              breakpoints={[
+                { minWidth: 'sx', cols: 1 },
+                { minWidth: 'sm', cols: 2 },
+                { minWidth: 'md', cols: 3 },
+                { minWidth: 1280, cols: 3 },
+                { minWidth: 1780, cols: 4 },
+              ]}
+            >
+              {pools.data.items.length >= 1 &&
+                pools.data?.items.map((x) => (
+                  <PoolCard search={searchParams} pool={x} key={x.id} />
+                ))}
+              {pools.data?.items.length < 1 && (
+                <Box mt={10}>{t('no_pools')}</Box>
+              )}
+            </SimpleGrid>
           </>
         )}
         {pools.data &&

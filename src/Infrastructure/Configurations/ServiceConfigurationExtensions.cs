@@ -13,31 +13,40 @@
     using Lingtren.Infrastructure.Services;
     using lingtrin.Application.Common.Validators;
     using Lingtring.Application.Common.Validators;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
 
     public static class ServiceConfigurationExtensions
     {
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseMySql
             (configuration.GetConnectionString("DefaultConnection"), MySqlServerVersion.LatestSupportedServerVersion),
             ServiceLifetime.Scoped);
 
-            services.AddHangfireServer().AddHangfire(x =>
+            services.AddHangfireServer(x => x.WorkerCount = 2).AddHangfire(x =>
             {
-               x.UseFilter(new AutomaticRetryAttribute());
-               x.UseStorage(new MySqlStorage(configuration.GetConnectionString("Hangfireconnection"), new MySqlStorageOptions
-               {
-                   QueuePollInterval = TimeSpan.FromSeconds(15),
-                   JobExpirationCheckInterval = TimeSpan.FromHours(1),
-                   CountersAggregateInterval = TimeSpan.FromMinutes(5),
-                   PrepareSchemaIfNecessary = true,
-                   DashboardJobListLimit = 50000,
-                   TablesPrefix = "Hangfire"
-               }));
+                x.UseFilter(new AutomaticRetryAttribute());
+                if (environment.IsProduction())
+                {
+                    x.UseStorage(new MySqlStorage(configuration.GetConnectionString("Hangfireconnection"), new MySqlStorageOptions
+                    {
+                        QueuePollInterval = TimeSpan.FromSeconds(15),
+                        JobExpirationCheckInterval = TimeSpan.FromHours(1),
+                        CountersAggregateInterval = TimeSpan.FromMinutes(5),
+                        PrepareSchemaIfNecessary = true,
+                        DashboardJobListLimit = 50000,
+                        TablesPrefix = "Hangfire"
+                    }));
+                }
+                else
+                {
+                    GlobalConfiguration.Configuration.UseInMemoryStorage();
+                }
             });
 
 
@@ -75,15 +84,15 @@
             services.AddTransient<IHangfireJobService, HangfireJobService>();
             services.AddTransient<ICertificateService, CertificateService>();
             services.AddTransient<IVideoService, VideoService>();
-            services.AddTransient<ILogsService,LogsService>();
+            services.AddTransient<ILogsService, LogsService>();
 
             #endregion Service DI
 
             #region Validator DI
             services.AddSingleton<IValidator<SettingValue>, SettingValueValidator>();
-            services.AddSingleton<IValidator<StorageSettingRequestModel>,StorageSettingRequestModelValidation>();
-            services.AddSingleton<IValidator<CertificateRequestModel>,CertificateRequestModelValidator>();
-            services.AddSingleton<IValidator<LiveClassLicenseRequestModel>,ZoomLicenseIdValidator>();
+            services.AddSingleton<IValidator<StorageSettingRequestModel>, StorageSettingRequestModelValidation>();
+            services.AddSingleton<IValidator<CertificateRequestModel>, CertificateRequestModelValidator>();
+            services.AddSingleton<IValidator<LiveClassLicenseRequestModel>, ZoomLicenseIdValidator>();
             services.AddSingleton<IValidator<LoginRequestModel>, LoginValidator>();
             services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();
             services.AddSingleton<IValidator<GroupRequestModel>, GroupValidator>();
@@ -93,7 +102,7 @@
             services.AddSingleton<IValidator<DepartmentRequestModel>, DepartmentValidator>();
             services.AddSingleton<IValidator<ZoomLicenseRequestModel>, ZoomLicenseValidator>();
             services.AddSingleton<IValidator<SectionRequestModel>, SectionValidator>();
-            services.AddSingleton<IValidator<CourseStatusRequestModel>,CourseStatusValidator>();
+            services.AddSingleton<IValidator<CourseStatusRequestModel>, CourseStatusValidator>();
             services.AddSingleton<IValidator<CourseRequestModel>, CourseValidator>();
             services.AddSingleton<IValidator<CourseTeacherRequestModel>, CourseTeacherValidator>();
             services.AddSingleton<IValidator<LessonRequestModel>, LessonValidator>();

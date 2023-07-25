@@ -1,4 +1,4 @@
-import { Group, Paper, Text } from "@mantine/core";
+import { Group, Paper, Text } from '@mantine/core';
 import {
   IconSchool,
   IconUserCheck,
@@ -10,12 +10,13 @@ import {
   IconBrandZoom,
   IconFile,
   IconUserCircle,
-  IconVideo,
   IconPencil,
-  IconPlayerPause,
   IconPlayerPlay,
-} from "@tabler/icons";
-import { DashboardStats } from "@utils/services/dashboardService";
+} from '@tabler/icons';
+import {
+  DashboardStats,
+  DashboardStatsData,
+} from '@utils/services/dashboardService';
 
 const icons = {
   userEnrollment: IconUserCircle,
@@ -36,18 +37,12 @@ const icons = {
 };
 
 interface StatsGridProps {
-  data: {
-    key: string;
-    label: string;
-    icon: keyof typeof icons;
-    signLabel: string;
-    pluLabel: string;
-  };
+  data: DashboardStatsData;
   dashboard: DashboardStats;
 }
 
 export const StatsCard = ({ data, dashboard }: StatsGridProps) => {
-  const Icon = icons[data.icon];
+  const Icon = icons[data.icon as keyof typeof icons];
   const backLabel =
     dashboard && dashboard[data.key as keyof DashboardStats] > 1
       ? data.pluLabel
@@ -60,7 +55,7 @@ export const StatsCard = ({ data, dashboard }: StatsGridProps) => {
         <Text size="md">{data.label}</Text>
       </Group>
       <Group mt={20}>
-        <Text size="lg" weight={"bold"}>
+        <Text size="lg" weight={'bold'}>
           {dashboard && dashboard[data.key as keyof DashboardStats]}
         </Text>
         <Text>{backLabel}</Text>

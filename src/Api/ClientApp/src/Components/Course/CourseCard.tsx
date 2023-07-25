@@ -1,4 +1,4 @@
-import TextViewer from "@components/Ui/RichTextViewer";
+import TextViewer from '@components/Ui/RichTextViewer';
 import {
   Card,
   Image,
@@ -7,31 +7,31 @@ import {
   Badge,
   Button,
   createStyles,
-} from "@mantine/core";
-import { CourseLanguage } from "@utils/enums";
-import getCourseOgImageUrl from "@utils/getCourseOGImage";
-import RoutePath from "@utils/routeConstants";
-import { ICourse } from "@utils/services/courseService";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+} from '@mantine/core';
+import { CourseLanguage } from '@utils/enums';
+import getCourseOgImageUrl from '@utils/getCourseOGImage';
+import RoutePath from '@utils/routeConstants';
+import { ICourse } from '@utils/services/courseService';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 const useStyles = createStyles((theme) => ({
   card: {
     [theme.fn.largerThan(theme.breakpoints.md)]: {
-      width: "400px",
-      minHeight: "300px",
+      width: '400px',
+      minHeight: '300px',
     },
     [theme.fn.smallerThan(theme.breakpoints.sm)]: {
-      width: "100%",
+      width: '100%',
     },
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
 }));
 
 const CourseCard = ({ course }: { course: ICourse }) => {
-  const { classes, cx } = useStyles();
+  const { classes } = useStyles();
   const { t } = useTranslation();
   return (
     <Card
@@ -75,22 +75,22 @@ const CourseCard = ({ course }: { course: ICourse }) => {
         )}
       </Group>
 
-      <Text size="sm" color="dimmed" lineClamp={2} sx={{ height: "60px" }}>
+      <Text size="sm" color="dimmed" lineClamp={2} sx={{ height: '60px' }}>
         <TextViewer
           styles={{
             root: {
-              border: "none",
+              border: 'none',
             },
           }}
           content={course.description}
         />
       </Text>
       <Link
-        style={{ textDecoration: "none" }}
+        style={{ textDecoration: 'none' }}
         to={RoutePath.courses.description(course.slug).route}
       >
         <Button variant="light" color="blue" fullWidth mt="md" radius="md">
-          {t("watch")}
+          {t('watch')}
         </Button>
       </Link>
     </Card>

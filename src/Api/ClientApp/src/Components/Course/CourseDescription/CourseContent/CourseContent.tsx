@@ -1,11 +1,10 @@
-import UserShortProfile from "@components/UserShortProfile";
-import { Box, Button, Group, Text, Title } from "@mantine/core";
-import { UserRole } from "@utils/enums";
-import formatDuration from "@utils/formatDuration";
-import { ISection } from "@utils/services/courseService";
-import { IUser } from "@utils/services/types";
-import Sessions from "./Sessions";
-import { useTranslation } from "react-i18next";
+import UserShortProfile from '@components/UserShortProfile';
+import { Box, Group, Text, Title } from '@mantine/core';
+import formatDuration from '@utils/formatDuration';
+import { ISection } from '@utils/services/courseService';
+import { IUser } from '@utils/services/types';
+import Sessions from './Sessions';
+import { useTranslation } from 'react-i18next';
 
 const CourseContent = ({
   sections,
@@ -26,13 +25,13 @@ const CourseContent = ({
   return (
     <Box my={20}>
       <Group my={4} position="apart">
-        {user && <UserShortProfile user={user} size={"md"} />}
+        {user && <UserShortProfile user={user} size={'md'} />}
       </Group>
-      <Title size={"h5"}>
-        {t("content_of")} {courseName}
+      <Title size={'h5'}>
+        {t('content_of')} {courseName}
       </Title>
-      <Text size={10} color={"dimmed"}>
-        {formatDuration(duration, false, t)} {sections.length} {t("section/s")}{" "}
+      <Text size={10} color={'dimmed'}>
+        {formatDuration(duration, false, t)} {sections.length} {t('section/s')}{' '}
       </Text>
 
       <Box m={4} mx={10}>

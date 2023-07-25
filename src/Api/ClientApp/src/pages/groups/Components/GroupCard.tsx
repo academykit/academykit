@@ -1,38 +1,49 @@
 import {
   Anchor,
-  Box,
   Button,
   Card,
   createStyles,
   Group,
-  Paper,
-  Popover,
-  Title,
-  NavLink,
-} from "@mantine/core";
-import { useToggle } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
-import { IconChevronRight, IconDotsVertical } from "@tabler/icons";
-import RoutePath from "@utils/routeConstants";
-import errorType from "@utils/services/axiosError";
-import { IGroup, useDeleteGroup } from "@utils/services/groupService";
-import { Link } from "react-router-dom";
-import DeleteModal from "@components/Ui/DeleteModal";
-import useAuth from "@hooks/useAuth";
-import { UserRole } from "@utils/enums";
-import { useTranslation } from "react-i18next";
+  Menu,
+  rem,
+  Text,
+} from '@mantine/core';
+import { useToggle } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
+import {
+  IconChevronRight,
+  IconDotsVertical,
+  IconEdit,
+  IconTrash,
+} from '@tabler/icons';
+import RoutePath from '@utils/routeConstants';
+import errorType from '@utils/services/axiosError';
+import { IGroup, useDeleteGroup } from '@utils/services/groupService';
+import { Link } from 'react-router-dom';
+import DeleteModal from '@components/Ui/DeleteModal';
+import useAuth from '@hooks/useAuth';
+import { UserRole } from '@utils/enums';
+import { useTranslation } from 'react-i18next';
+import UserShortProfile from '@components/UserShortProfile';
 
 const useStyle = createStyles((theme) => ({
-  wrapper: {
-    position: "relative",
-    minWidth: "300px",
-    [theme.fn.largerThan(450)]: {
-      minWidth: "24rem",
+  card: {
+    transition: 'transform 150ms ease, box-shadow 150ms ease',
+    '&:hover': {
+      transform: 'scale(1.01)',
+      boxShadow: theme.shadows.md,
     },
+  },
+  footer: {
+    padding: `${theme.spacing.xs} ${theme.spacing.lg}`,
+    marginTop: theme.spacing.sm,
+    borderTop: `${rem(1)} solid ${
+      theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
+    }`,
   },
 }));
 const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
-  const { classes, theme } = useStyle();
+  const { classes } = useStyle();
   const [deleteModal, setDeleteModal] = useToggle();
   const deleteGroup = useDeleteGroup(group.id, search);
   const auth = useAuth();
@@ -42,14 +53,14 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
     try {
       await deleteGroup.mutateAsync({ id: group.id });
       showNotification({
-        title: t("successful"),
-        message: t("group_deleted"),
+        title: t('successful'),
+        message: t('group_deleted'),
       });
     } catch (error) {
       const err = errorType(error);
       showNotification({
-        color: "red",
-        title: t("error"),
+        color: 'red',
+        title: t('error'),
         message: err as string,
       });
     }
@@ -57,113 +68,113 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
   };
 
   return (
-    <div style={{ position: "relative" }}>
-      <Link
-        to={RoutePath.groups.details(group.slug).route}
-        style={{
-          textDecoration: "none",
-          zIndex: 5,
-          position: "absolute",
-          height: "100%",
-          width: "100%",
-        }}
-      ></Link>
+    <div>
+      <DeleteModal
+        title={`${
+          group.memberCount > 0
+            ? t('Delete_group_withMember')
+            : t('want_to_delete') + ' ' + group.name + ' ' + t('group') + t('?')
+        }`}
+        open={deleteModal}
+        onClose={setDeleteModal}
+        onConfirm={handleDelete}
+      />
       <Card
-        className={classes.wrapper}
+        className={classes.card}
+        p="md"
         key={group.id}
         withBorder
-        radius={"md"}
-        sx={{ maxWidth: 200 }}
+        radius={'md'}
       >
-        <DeleteModal
-          title={`${
-            group.memberCount > 0
-              ? t("Delete_group_withMember")
-              : t("want_to_delete") +
-                " " +
-                group.name +
-                " " +
-                t("group") +
-                t("?")
-          }`}
-          open={deleteModal}
-          onClose={setDeleteModal}
-          onConfirm={handleDelete}
-        />
         <Group position="apart">
-          <Title size={22} lineClamp={1} w={"80%"}>
+          <Anchor
+            component={Link}
+            to={RoutePath.groups.details(group.slug).route}
+            size={22}
+            lineClamp={1}
+          >
             {group.name}
-          </Title>
+          </Anchor>
           {auth?.auth && auth.auth?.role < UserRole.Trainer && (
-            <Popover
-              position={"left-start"}
-              arrowSize={12}
-              styles={{
-                dropdown: { padding: 5 },
-              }}
+            <Menu
+              shadow="md"
+              width={150}
+              trigger="hover"
+              withArrow
+              position="left"
             >
-              <Popover.Target>
+              <Menu.Target>
                 <Button sx={{ zIndex: 50 }} variant="subtle" px={4}>
                   <IconDotsVertical />
                 </Button>
-              </Popover.Target>
-              <Popover.Dropdown>
-                <Paper>
-                  {/* <Group
-                    p={0}
-                    sx={{
-                      flexDirection: "column",
-                      alignItems: "start",
-                    }}
-                  > */}
-                  <NavLink
-                    variant="subtle"
-                    label={t("edit")}
-                    component={Link}
-                    to={RoutePath.groups.details(group.slug).route}
-                    rightSection={<IconChevronRight size={12} stroke={1.5} />}
-                  ></NavLink>
-
-                  <NavLink
-                    onClick={() => setDeleteModal()}
-                    variant="subtle"
-                    label={t("delete")}
-                    component={"button"}
-                    rightSection={<IconChevronRight size={12} stroke={1.5} />}
-                  ></NavLink>
-                  {/* </Group> */}
-                </Paper>
-              </Popover.Dropdown>
-            </Popover>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item
+                  icon={<IconEdit size={14} />}
+                  component={Link}
+                  to={RoutePath.groups.details(group.slug).route}
+                  rightSection={<IconChevronRight size={12} stroke={1.5} />}
+                >
+                  {t('edit')}
+                </Menu.Item>
+                <Menu.Divider />
+                <Menu.Item
+                  color="red"
+                  icon={<IconTrash size={14} />}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setDeleteModal();
+                  }}
+                >
+                  {t('delete')}
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
           )}
         </Group>
-        <Box style={{ zIndex: "10", position: "relative" }}>
-          <Anchor
-            style={{ width: "100%", display: "inline-block" }}
-            component={Link}
-            to={RoutePath.groups.members(group.slug).route}
-          >
-            {group.memberCount} {t("members")}
-          </Anchor>
-        </Box>
-        <Box style={{ zIndex: "10", position: "relative" }}>
-          <Anchor
-            style={{ width: "100%", display: "inline-block" }}
-            component={Link}
-            to={RoutePath.groups.courses(group.slug).route}
-          >
-            {group.courseCount} {t("trainings")}
-          </Anchor>
-        </Box>
-        <Box style={{ zIndex: "10", position: "relative" }}>
-          <Anchor
-            style={{ width: "100%", display: "inline-block" }}
-            component={Link}
-            to={RoutePath.groups.attachments(group.slug).route}
-          >
-            {group.attachmentCount} {t("attachments")}
-          </Anchor>
-        </Box>
+        <Group mt={'sm'}>
+          <UserShortProfile user={group.user} size={'sm'} />
+        </Group>
+        <Card.Section className={classes.footer}>
+          <Group position="apart">
+            <div>
+              <Text size="xs" color="dimmed">
+                {t('members')}
+              </Text>
+              <Anchor
+                weight={500}
+                component={Link}
+                to={RoutePath.groups.members(group.slug).route}
+              >
+                {group.memberCount}
+              </Anchor>
+            </div>
+            <div>
+              <Text size="xs" color="dimmed">
+                {t('trainings')}
+              </Text>
+              <Anchor
+                weight={500}
+                component={Link}
+                to={RoutePath.groups.courses(group.slug).route}
+              >
+                {group.courseCount}
+              </Anchor>
+            </div>
+            <div>
+              <Text size="xs" color="dimmed">
+                {t('attachments')}
+              </Text>
+              <Anchor
+                weight={500}
+                component={Link}
+                to={RoutePath.groups.attachments(group.slug).route}
+              >
+                {group.attachmentCount}
+              </Anchor>
+            </div>
+          </Group>
+        </Card.Section>
       </Card>
     </div>
   );

@@ -6,42 +6,42 @@ import {
   Paper,
   Tabs,
   Text,
-} from "@mantine/core";
-import { IconEdit, IconFileDescription, IconSchool } from "@tabler/icons";
-import { useProfileAuth } from "@utils/services/authService";
-import { useTranslation } from "react-i18next";
+} from '@mantine/core';
+import { IconEdit, IconFileDescription, IconSchool } from '@tabler/icons';
+import { useProfileAuth } from '@utils/services/authService';
+import { useTranslation } from 'react-i18next';
 import {
   Link,
   Outlet,
   useLocation,
   useNavigate,
   useParams,
-} from "react-router-dom";
-import TextViewer from "@components/Ui/RichTextViewer";
+} from 'react-router-dom';
+import TextViewer from '@components/Ui/RichTextViewer';
 
 const useStyles = createStyles((theme) => ({
   avatarImage: {
-    height: "200px",
+    height: '200px',
   },
   avatar: {
-    display: "flex",
-    alignItems: "center",
-    [theme.fn.smallerThan("sm")]: {
-      flexDirection: "column",
+    display: 'flex',
+    alignItems: 'center',
+    [theme.fn.smallerThan('sm')]: {
+      flexDirection: 'column',
       // flexWrap: "wrap",
     },
   },
 }));
 const UserProfile = () => {
-  const { id, tabValue } = useParams();
+  const { id } = useParams();
   const { classes } = useStyles();
-  const local_id = localStorage.getItem("id");
+  const local_id = localStorage.getItem('id');
   const navigate = useNavigate();
   const { t } = useTranslation();
   const location = useLocation();
 
   const { data, isSuccess } = useProfileAuth(id as string);
-  const currentLocation = location.pathname.split('/').slice(-1)[0] // accessing the endpoint of the url
+  const currentLocation = location.pathname.split('/').slice(-1)[0]; // accessing the endpoint of the url
 
   return (
     <>
@@ -50,40 +50,40 @@ const UserProfile = () => {
           <Avatar
             src={data?.imageUrl}
             size={200}
-            sx={{ borderRadius: "50%" }}
+            sx={{ borderRadius: '50%' }}
             alt={data?.fullName}
           />
 
-          <div style={{ marginLeft: "15px" }}>
+          <div style={{ marginLeft: '15px' }}>
             <Group>
-              <Text size={"xl"}>{data?.fullName}</Text>
+              <Text size={'xl'}>{data?.fullName}</Text>
               {isSuccess && id === local_id ? (
-                <Link to={"/settings"}>
-                  <IconEdit style={{ marginLeft: "5px" }} />
+                <Link to={'/settings?edit=1'}>
+                  <IconEdit style={{ marginLeft: '5px' }} />
                 </Link>
               ) : (
-                ""
+                ''
               )}
             </Group>
-            {`${data?.profession ?? ""}`}
+            {`${data?.profession ?? ''}`}
           </div>
         </div>
-        <Paper shadow={"lg"} withBorder sx={{ marginTop: "5px" }}>
-          <Text size={"md"} sx={{ padding: "5px 50px" }}>
-            {t("address")} : {data?.address}
+        <Paper shadow={'lg'} withBorder sx={{ marginTop: '5px' }}>
+          <Text size={'md'} sx={{ padding: '5px 50px' }}>
+            {t('address')} : {data?.address}
           </Text>
-          <Text size={"md"} sx={{ padding: "5px 50px" }}>
-            {t("mobilenumber")} : {data?.mobileNumber}
+          <Text size={'md'} sx={{ padding: '5px 50px' }}>
+            {t('mobilenumber')} : {data?.mobileNumber}
           </Text>
-          <Text size={"md"} sx={{ padding: "5px 50px" }} mb={10}>
-            {t("email")} : {data?.email}
+          <Text size={'md'} sx={{ padding: '5px 50px' }} mb={10}>
+            {t('email')} : {data?.email}
           </Text>
-          {data && data.bio && data?.bio.replace(/<[^>]+>/g, "").length > 0 && (
+          {data && data.bio && data?.bio.replace(/<[^>]+>/g, '').length > 0 && (
             <>
               <TextViewer
                 styles={{
                   root: {
-                    border: "none",
+                    border: 'none',
                   },
                 }}
                 content={data?.bio}
@@ -95,7 +95,7 @@ const UserProfile = () => {
       <Box mt={20}>
         <Tabs
           defaultChecked={true}
-          defaultValue={location.pathname?.split("/").at(-1) ?? "certificate"}
+          defaultValue={location.pathname?.split('/').at(-1) ?? 'certificate'}
           value={currentLocation}
           onTabChange={(value) =>
             navigate(`${value}`, { preventScrollReset: true })
@@ -106,10 +106,10 @@ const UserProfile = () => {
               value="certificate"
               icon={<IconFileDescription size={14} />}
             >
-              {t("certificate")}
+              {t('only_certificate')}
             </Tabs.Tab>
             <Tabs.Tab value="training" icon={<IconSchool size={14} />}>
-              {t("training")}
+              {t('training')}
             </Tabs.Tab>
           </Tabs.List>
 

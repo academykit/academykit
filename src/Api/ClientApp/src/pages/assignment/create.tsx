@@ -1,12 +1,12 @@
 import withSearchPagination, {
   IWithSearchPagination,
-} from "@hoc/useSearchPagination";
-import { Box, Button, Container } from "@mantine/core";
-import { useToggle } from "@mantine/hooks";
-import { useAssignmentQuestion } from "@utils/services/assignmentService";
-import AssignmentItem from "./Component/AssignmentItem";
-import EditAssignment from "./Component/EditAssignment";
-import { useTranslation } from "react-i18next";
+} from '@hoc/useSearchPagination';
+import { Box, Button, Container } from '@mantine/core';
+import { useToggle } from '@mantine/hooks';
+import { useAssignmentQuestion } from '@utils/services/assignmentService';
+import AssignmentItem from './Component/AssignmentItem';
+import EditAssignment from './Component/EditAssignment';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   lessonId: string;
@@ -36,7 +36,7 @@ const CreateAssignment = ({
               ))}
             </Box>
           ) : (
-            <Box mt={10}>{t("no_assignment_questions")}</Box>
+            <Box mt={10}>{t('no_assignment_questions')}</Box>
           )}
           {addQuestion && (
             <EditAssignment
@@ -48,7 +48,7 @@ const CreateAssignment = ({
 
           {!addQuestion && (
             <Button mt={10} onClick={() => setAddQuestion()}>
-              {t("add_question")}
+              {t('add_question')}
             </Button>
           )}
         </>

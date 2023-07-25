@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   IconCertificate,
   IconListDetails,
@@ -7,12 +7,12 @@ import {
   IconDashboard,
   IconUsers,
   IconInfoSquare,
-} from "@tabler/icons";
-import { ThemeIcon, NavLink } from "@mantine/core";
-import { Link, useLocation } from "react-router-dom";
-import useAuth from "@hooks/useAuth";
-import { UserRole } from "@utils/enums";
-import { useTranslation } from "react-i18next";
+} from '@tabler/icons';
+import { ThemeIcon, NavLink } from '@mantine/core';
+import { Link, useLocation } from 'react-router-dom';
+import useAuth from '@hooks/useAuth';
+import { UserRole } from '@utils/enums';
+import { useTranslation } from 'react-i18next';
 
 type MainLinkProps = {
   icon: React.ReactNode;
@@ -31,21 +31,21 @@ function MainLink({
   href,
   onClose,
   replace,
-  target = "_self",
+  target = '_self',
 }: MainLinkProps) {
   const router = useLocation();
   const { t } = useTranslation();
 
   return (
     <>
-      {target === "_self" && (
+      {target === '_self' && (
         <NavLink
           onClick={onClose}
           component={Link}
           to={href}
           target={target}
           replace={replace}
-          active={router.pathname.split("/")[1] === href.split("/")[1]}
+          active={router.pathname.split('/')[1] === href.split('/')[1]}
           label={t(`${label}`)}
           icon={<ThemeIcon color={color}>{icon}</ThemeIcon>}
           sx={(theme) => ({
@@ -54,7 +54,7 @@ function MainLink({
           })}
         />
       )}
-      {target !== "_self" && (
+      {target !== '_self' && (
         <NavLink
           component="a"
           href={href}
@@ -81,59 +81,59 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
   const data = [
     {
       icon: <IconDashboard size={16} />,
-      color: "purple",
-      label: "dashboard",
-      href: "/",
+      color: 'purple',
+      label: 'dashboard',
+      href: '/',
       replace: true,
       role: UserRole.Trainee,
     },
     {
       icon: <IconUser size={16} />,
-      color: "blue",
-      label: "users",
-      href: "/users",
+      color: 'blue',
+      label: 'users',
+      href: '/users',
       replace: true,
       role: UserRole.Admin,
     },
     {
       icon: <IconUsers size={16} />,
-      color: "yellow",
-      label: "groups",
-      href: "/groups",
+      color: 'yellow',
+      label: 'groups',
+      href: '/groups',
       replace: true,
       role: UserRole.Trainee,
     },
     {
       icon: <IconCertificate size={16} />,
-      color: "red",
-      label: "trainings",
-      href: "/trainings/list",
+      color: 'red',
+      label: 'trainings',
+      href: '/trainings/list',
       replace: true,
       role: UserRole.Trainee,
     },
 
     {
       icon: <IconListDetails size={16} />,
-      color: "violet",
-      label: "mcq_pools",
-      href: "/pools",
+      color: 'violet',
+      label: 'mcq_pools',
+      href: '/pools',
       replace: true,
       role: UserRole.Trainer,
     },
 
     {
       icon: <IconSettings size={16} />,
-      color: "teal",
-      label: "settings",
-      href: "/settings",
+      color: 'teal',
+      label: 'settings',
+      href: '/settings',
       replace: false,
       role: UserRole.Trainee,
     },
     {
       icon: <IconInfoSquare size={16} />,
-      color: "blue",
-      label: "help",
-      href: "https://docs.google.com/document/d/1S_wlCY7XH2oELa8ZvNPSGVik2117HuclOGC04iHpP-w/edit?usp=sharing ",
+      color: 'blue',
+      label: 'help',
+      href: 'https://docs.google.com/document/d/1S_wlCY7XH2oELa8ZvNPSGVik2117HuclOGC04iHpP-w/edit?usp=sharing ',
       replace: true,
       role: UserRole.Trainee,
     },
@@ -147,11 +147,11 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
             {...link}
             key={link.label}
             onClose={onClose}
-            target={link.label === "help" ? "_blank" : "_self"}
+            target={link.label === 'help' ? '_blank' : '_self'}
           />
         );
       }
     }
   });
-  return <div style={{ padding: "5px !important" }}>{links}</div>;
+  return <div style={{ padding: '5px !important' }}>{links}</div>;
 }

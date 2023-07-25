@@ -122,7 +122,7 @@ namespace Lingtren.Api.Controllers
 
             var response = await _userService.CreateAsync(entity).ConfigureAwait(false);
             var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
-            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(entity.Email, entity.FullName, password, company.CompanyName, company.CompanyContactNumber, null));
+            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(entity.Email, entity.FirstName, password, company.CompanyName,company.CompanyContactNumber,null));
             return new UserResponseModel(response);
         }
 

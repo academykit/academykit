@@ -1,46 +1,67 @@
-import { useEffect } from "react";
-import { Group, TextInput, Switch, Select, Button, Grid } from "@mantine/core";
-import { UserRole, UserStatus } from "@utils/enums";
-import { useDepartmentSetting } from "@utils/services/adminService";
-import { useForm, yupResolver } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import * as Yup from "yup";
-import errorType from "@utils/services/axiosError";
-import { IUserProfile } from "@utils/services/types";
-import queryStringGenerator from "@utils/queryStringGenerator";
-import { PHONE_VALIDATION } from "@utils/constants";
-import { useTranslation } from "react-i18next";
-import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+import { useEffect } from 'react';
+import {
+  Group,
+  TextInput,
+  Switch,
+  Select,
+  Button,
+  Grid,
+  createStyles,
+} from '@mantine/core';
+import { UserRole, UserStatus } from '@utils/enums';
+import { useDepartmentSetting } from '@utils/services/adminService';
+import { useForm, yupResolver } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import * as Yup from 'yup';
+import errorType from '@utils/services/axiosError';
+import { IUserProfile } from '@utils/services/types';
+import queryStringGenerator from '@utils/queryStringGenerator';
+import { PHONE_VALIDATION } from '@utils/constants';
+import { useTranslation } from 'react-i18next';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import { IconInfoCircle } from '@tabler/icons';
+
+const useStyles = createStyles(() => ({
+  departmentInfo: {
+    fontSize: '12px',
+    position: 'absolute',
+    marginTop: '5px',
+    display: 'flex',
+    alignItems: 'center',
+    columnGap: '5px',
+    lineHeight: '1px',
+  },
+}));
 
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
     email: Yup.string()
       .trim()
-      .email(t("invalid_email") as string)
-      .required(t("email_required") as string),
+      .email(t('invalid_email') as string)
+      .required(t('email_required') as string),
     firstName: Yup.string()
       .trim()
-      .max(100, t("first_name_character_required") as string)
-      .required(t("first_name_required") as string),
+      .max(100, t('first_name_character_required') as string)
+      .required(t('first_name_required') as string),
     lastName: Yup.string()
       .trim()
-      .max(100, t("last_name_character_required") as string)
-      .required(t("last_name_required") as string),
+      .max(100, t('last_name_character_required') as string)
+      .required(t('last_name_required') as string),
     middleName: Yup.string()
-      .max(100, t("middle_name_character_required") as string)
+      .max(100, t('middle_name_character_required') as string)
       .trim()
       .nullable()
       .notRequired(),
     role: Yup.string()
-      .oneOf(["1", "2", "3", "4"], t("role_required") as string)
-      .required(t("role_required") as string),
+      .oneOf(['1', '2', '3', '4'], t('role_required') as string)
+      .required(t('role_required') as string),
     mobileNumber: Yup.string()
       .trim()
       .nullable()
       .matches(PHONE_VALIDATION, {
-        message: t("enter_valid_phone"),
+        message: t('enter_valid_phone'),
         excludeEmptyString: true,
       }),
   });
@@ -51,15 +72,16 @@ const AddUpdateUserForm = ({
   opened,
   isEditing,
   apiHooks,
-  item,
+  item, // currentTab,
 }: {
-  setOpened: Function;
+  setOpened: (b: boolean) => void;
   opened: boolean;
   isEditing: boolean;
   apiHooks: any;
   item?: IUserProfile;
 }) => {
   const { t } = useTranslation();
+  const { classes } = useStyles();
   const form = useForm<IUserProfile>({
     initialValues: item,
     validate: yupResolver(schema()),
@@ -68,18 +90,20 @@ const AddUpdateUserForm = ({
 
   const { data: department } = useDepartmentSetting(
     queryStringGenerator({
-      search: "",
+      search: '',
       size: 200,
       IsActive: true,
     })
   );
 
   useEffect(() => {
-    form.setFieldValue("role", item?.role ?? 4);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    form.setFieldValue('role', item?.role.toString() ?? '4');
     item?.departmentId &&
-      form.setFieldValue("departmentId", item?.departmentId.toString() ?? "");
+      form.setFieldValue('departmentId', item?.departmentId.toString() ?? '');
     form.setFieldValue(
-      "isActive",
+      'isActive',
       item?.status === UserStatus.Active || item?.status === UserStatus.Pending
         ? true
         : false
@@ -95,9 +119,6 @@ const AddUpdateUserForm = ({
         });
       } else {
         const userData = { ...data };
-
-        //@ts-ignore
-        delete userData.isActive;
         const status =
           item?.status === UserStatus.Pending
             ? UserStatus.Pending
@@ -108,16 +129,16 @@ const AddUpdateUserForm = ({
         await apiHooks.mutateAsync({ id: item?.id as string, data });
       }
       showNotification({
-        message: isEditing ? t("user_edited_success") : t("user_added_success"),
-        title: t("successful"),
+        message: isEditing ? t('user_edited_success') : t('user_added_success'),
+        title: t('successful'),
       });
     } catch (error) {
       const err = errorType(error);
 
       showNotification({
         message: err,
-        title: t("error"),
-        color: "red",
+        title: t('error'),
+        color: 'red',
       });
     }
     setOpened(!opened);
@@ -125,98 +146,111 @@ const AddUpdateUserForm = ({
 
   return (
     <form onSubmit={form.onSubmit(onSubmitForm)}>
-      <Grid align={"center"}>
+      <Grid align={'center'}>
         <Grid.Col xs={6} lg={4}>
           <CustomTextFieldWithAutoFocus
             withAsterisk
-            label={t("firstname")}
-            placeholder={t("user_firstname") as string}
+            label={t('firstname')}
+            placeholder={t('user_firstname') as string}
             name="firstName"
-            {...form.getInputProps("firstName")}
+            {...form.getInputProps('firstName')}
           />
           {/* <TextInput /> */}
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <TextInput
-            label={t("middlename")}
-            placeholder={t("user_middlename") as string}
-            {...form.getInputProps("middleName")}
+            label={t('middlename')}
+            placeholder={t('user_middlename') as string}
+            {...form.getInputProps('middleName')}
           />
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <TextInput
             withAsterisk
-            label={t("lastname")}
-            placeholder={t("user_lastname") as string}
-            {...form.getInputProps("lastName")}
+            label={t('lastname')}
+            placeholder={t('user_lastname') as string}
+            {...form.getInputProps('lastName')}
           />
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <TextInput
             withAsterisk
-            label={t("email")}
+            label={t('email')}
             type="email"
-            placeholder={t("user_email") as string}
-            {...form.getInputProps("email")}
+            placeholder={t('user_email') as string}
+            {...form.getInputProps('email')}
           />
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <TextInput
-            label={t("mobilenumber")}
-            placeholder={t("user_phone_number") as string}
-            {...form.getInputProps("mobileNumber")}
+            label={t('mobilenumber')}
+            placeholder={t('user_phone_number') as string}
+            {...form.getInputProps('mobileNumber')}
           />
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <TextInput
-            label={t("profession")}
-            placeholder={t("user_profession") as string}
-            {...form.getInputProps("profession")}
+            label={t('profession')}
+            placeholder={t('user_profession') as string}
+            {...form.getInputProps('profession')}
           />
         </Grid.Col>
         {isEditing && item?.status !== UserStatus.Pending && (
           <Grid.Col xs={6} lg={4}>
             <Switch
-              label={t("user_status")}
-              {...form.getInputProps("isActive", { type: "checkbox" })}
+              label={t('user_status')}
+              {...form.getInputProps('isActive', { type: 'checkbox' })}
             />
           </Grid.Col>
         )}
         <Grid.Col xs={6} lg={4}>
           <Select
             withAsterisk
-            error={t("user_role_pick")}
-            label={t("user_role")}
-            placeholder={t("user_role_pick") as string}
+            error={t('user_role_pick')}
+            label={t('user_role')}
+            placeholder={t('user_role_pick') as string}
             data={[
-              { value: UserRole.Admin, label: t("Admin") as string },
-              { value: UserRole.Trainer, label: t("Trainer") as string },
-              { value: UserRole.Trainee, label: t("Trainee") as string },
+              { value: UserRole.Admin.toString(), label: t('Admin') as string },
+              {
+                value: UserRole.Trainer.toString(),
+                label: t('Trainer') as string,
+              },
+              {
+                value: UserRole.Trainee.toString(),
+                label: t('Trainee') as string,
+              },
             ]}
-            {...form.getInputProps("role")}
+            {...form.getInputProps('role')}
           />
         </Grid.Col>
-        <Grid.Col xs={6} lg={4}>
+        <Grid.Col xs={6} lg={4} mt={5}>
           <Select
-            label={t("department")}
-            placeholder={t("pick_department") as string}
+            label={t('department')}
+            placeholder={t('pick_department') as string}
             searchable
+            nothingFound={t('no_department')}
             data={
               department
                 ? department.items.map((x) => ({
                     label: x.name,
                     value: x.id,
                   }))
-                : [""]
+                : ['']
             }
-            {...form.getInputProps("departmentId")}
+            {...form.getInputProps('departmentId')}
           />
+          {department && department?.items.length < 1 && (
+            <span className={classes.departmentInfo}>
+              <IconInfoCircle size={12} />
+              {t('no_active_department')}
+            </span>
+          )}
         </Grid.Col>
       </Grid>
 
       <Group position="right" mt="md">
         <Button type="submit" loading={apiHooks.isLoading}>
-          {t("submit")}
+          {t('submit')}
         </Button>
       </Group>
     </form>

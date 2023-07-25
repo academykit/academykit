@@ -1,13 +1,13 @@
-import { Button, Group, Loader, Textarea } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import errorType from "@utils/services/axiosError";
+import { Button, Group, Loader, Textarea } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import errorType from '@utils/services/axiosError';
 import {
   useGetCommentReplies,
   usePostCommentReply,
-} from "@utils/services/commentService";
-import CommentReply from "./CommentReply";
-import { useTranslation } from "react-i18next";
+} from '@utils/services/commentService';
+import CommentReply from './CommentReply';
+import { useTranslation } from 'react-i18next';
 
 const CommentReplies = ({
   commentId,
@@ -18,7 +18,7 @@ const CommentReplies = ({
 }) => {
   const form = useForm({
     initialValues: {
-      content: "",
+      content: '',
     },
   });
   const addCommentReply = usePostCommentReply(courseId, commentId);
@@ -37,7 +37,7 @@ const CommentReplies = ({
       const error = errorType(err);
       showNotification({
         message: error,
-        color: "red",
+        color: 'red',
       });
     }
   };
@@ -58,10 +58,9 @@ const CommentReplies = ({
       <form onSubmit={form.onSubmit(submitHandler)}>
         <Group mx={14}>
           <Textarea
-            autoFocus
-            {...form.getInputProps("content")}
-            sx={{ width: "100%" }}
-            placeholder={t("your_comment") as string}
+            {...form.getInputProps('content')}
+            sx={{ width: '100%' }}
+            placeholder={t('your_comment') as string}
             withAsterisk
           />
           <Button
@@ -69,7 +68,7 @@ const CommentReplies = ({
             loading={addCommentReply.isLoading}
             disabled={!form.values.content.trim()}
           >
-            {t("reply")}
+            {t('reply')}
           </Button>
         </Group>
       </form>

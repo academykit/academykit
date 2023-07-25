@@ -1,6 +1,6 @@
-import { UserRole, UserStatus } from "@utils/enums";
-import { ILessons } from "./courseService";
-import { ICertificateList } from "./manageCourseService";
+import { UserRole, UserStatus } from '@utils/enums';
+import { ILessons } from './courseService';
+import { ICertificateList } from './manageCourseService';
 
 export interface IUser {
   id: string;

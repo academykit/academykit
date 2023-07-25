@@ -1,6 +1,5 @@
-import { Button, Group, Modal } from "@mantine/core";
-import React from "react";
-import { useTranslation } from "react-i18next";
+import { Button, Group, Modal } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 
 const ConfirmationModal = ({
   onClose,
@@ -8,10 +7,10 @@ const ConfirmationModal = ({
   open,
   onConfirm,
 }: {
-  onClose: Function;
+  onClose: () => void;
   title: string;
   open: boolean;
-  onConfirm: Function;
+  onConfirm: () => void;
 }) => {
   const { t } = useTranslation();
   return (
@@ -23,10 +22,10 @@ const ConfirmationModal = ({
             onClose();
           }}
         >
-          {t("confirm")}
+          {t('confirm')}
         </Button>
         <Button variant="outline" onClick={() => onClose()}>
-          {t("cancel")}
+          {t('cancel')}
         </Button>
       </Group>
     </Modal>

@@ -1,20 +1,20 @@
-import { CourseStatus } from "@utils/enums";
-import { ILessons } from "@utils/services/courseService";
-
+import { CourseStatus } from '@utils/enums';
 import {
+  ILessons,
   ISection,
   useLessonReorder,
   useSectionReorder,
-} from "@utils/services/courseService";
-import { useMemo, useState } from "react";
+} from '@utils/services/courseService';
+
+import { useMemo, useState } from 'react';
 import {
   DragDropContext,
   Draggable,
   Droppable,
   DropResult,
-} from "react-beautiful-dnd";
+} from 'react-beautiful-dnd';
 
-import SectionItem from "./Section/SectionItem";
+import SectionItem from './Section/SectionItem';
 
 const CourseSection = ({
   data,
@@ -32,12 +32,12 @@ const CourseSection = ({
   const sectionReorder = useSectionReorder(slug as string);
 
   const onDragEnd = (result: DropResult) => {
-    const { destination, source, draggableId, type } = result;
+    const { destination, source, type } = result;
     if (!destination) return;
-
+    const newList = [...data];
     switch (type) {
-      case "section":
-        let newList = [...data];
+      case 'section':
+        // eslint-disable-next-line no-case-declarations
         const temp = newList[source.index];
         newList.splice(source.index, 1);
         newList.splice(destination.index, 0, temp);
@@ -45,28 +45,32 @@ const CourseSection = ({
         setLessonData(newList);
         break;
       default:
-        let tempList = [...data];
-        const draggableIndex = tempList.findIndex(
+        // eslint-disable-next-line no-case-declarations
+        const draggableIndex = newList.findIndex(
           (x) => x.slug == source.droppableId
         );
-        const lessons = tempList[draggableIndex].lessons && [
-          ...(tempList[draggableIndex].lessons as ILessons[]),
+        // eslint-disable-next-line no-case-declarations
+        const lessons = newList[draggableIndex].lessons && [
+          ...(newList[draggableIndex].lessons as ILessons[]),
         ];
+        // eslint-disable-next-line no-case-declarations
         const tempLesson = lessons?.splice(source.index, 1);
-        tempList[draggableIndex].lessons = lessons;
-        const dropableIndex = tempList.findIndex(
+        newList[draggableIndex].lessons = lessons;
+        // eslint-disable-next-line no-case-declarations
+        const dropableIndex = newList.findIndex(
           (x) => x.slug == destination.droppableId
         );
         tempLesson &&
-          tempList[dropableIndex].lessons?.splice(
+          newList[dropableIndex].lessons?.splice(
             destination.index,
             0,
             tempLesson[0]
           );
-        setLessonData(tempList);
+        setLessonData(newList);
+        // eslint-disable-next-line no-case-declarations
         const requestData = {
-          sectionIdentity: tempList[dropableIndex].id,
-          ids: tempList[dropableIndex].lessons?.map((x) => x.id),
+          sectionIdentity: newList[dropableIndex].id,
+          ids: newList[dropableIndex].lessons?.map((x) => x.id),
         };
         lessonReorder.mutateAsync({ id: slug, data: requestData });
     }
@@ -92,7 +96,7 @@ const CourseSection = ({
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="dnd-list" direction="vertical" type="section">
-        {(provided, snapshot) => (
+        {(provided) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
             {items}
             {provided.placeholder}

@@ -1,6 +1,6 @@
-import Breadcrumb from "@components/Ui/BreadCrumb";
-import TextEditor from "@components/Ui/TextEditor";
-import ThumbnailEditor from "@components/Ui/ThumbnailEditor";
+import Breadcrumb from '@components/Ui/BreadCrumb';
+import TextEditor from '@components/Ui/TextEditor';
+import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
 import {
   Box,
   Button,
@@ -9,25 +9,23 @@ import {
   MultiSelect,
   Select,
   Text,
-  TextInput,
-} from "@mantine/core";
-import { createFormContext, yupResolver } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import queryStringGenerator from "@utils/queryStringGenerator";
-import RoutePath from "@utils/routeConstants";
-import errorType from "@utils/services/axiosError";
-import { useCreateCourse } from "@utils/services/courseService";
-import { useGroups } from "@utils/services/groupService";
-import { useLevels } from "@utils/services/levelService";
-import { useAddTag, useTags } from "@utils/services/tagService";
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import * as Yup from "yup";
-import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import useNav from "@hooks/useNav";
-import useCustomForm from "@hooks/useCustomForm";
-import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+} from '@mantine/core';
+import { createFormContext, yupResolver } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import queryStringGenerator from '@utils/queryStringGenerator';
+import RoutePath from '@utils/routeConstants';
+import errorType from '@utils/services/axiosError';
+import { useCreateCourse } from '@utils/services/courseService';
+import { useGroups } from '@utils/services/groupService';
+import { useLevels } from '@utils/services/levelService';
+import { useAddTag, useTags } from '@utils/services/tagService';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import * as Yup from 'yup';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import useCustomForm from '@hooks/useCustomForm';
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 
 interface FormValues {
   thumbnail: string;
@@ -42,12 +40,12 @@ const schema = () => {
   return Yup.object().shape({
     title: Yup.string()
       .trim()
-      .required(t("course_title_required") as string)
-      .max(100, t("course_title_must_be_less_than_100") as string),
-    level: Yup.string().required(t("level_required") as string),
+      .required(t('course_title_required') as string)
+      .max(100, t('course_title_must_be_less_than_100') as string),
+    level: Yup.string().required(t('level_required') as string),
     groups: Yup.string()
       .nullable()
-      .required(t("group_required") as string),
+      .required(t('group_required') as string),
   });
 };
 
@@ -56,7 +54,7 @@ export const [FormProvider, useFormContext, useForm] =
 
 const CreateCoursePage = () => {
   const cForm = useCustomForm();
-  const [searchParamGroup, setsearchParamGroup] = useState("");
+  const [searchParamGroup] = useState('');
   const { t } = useTranslation();
 
   const groups = useGroups(
@@ -66,33 +64,33 @@ const CreateCoursePage = () => {
     })
   );
   const [searchParams] = useSearchParams();
-  const groupSlug = searchParams.get("group");
+  const groupSlug = searchParams.get('group');
   useEffect(() => {
     if (groups.isSuccess && groups?.data && groupSlug) {
       form.setFieldValue(
-        "groups",
+        'groups',
         (
           groups.data &&
           groups.data.data.items.find((x) => x.slug === groupSlug)
-        )?.id ?? ""
+        )?.id ?? ''
       );
     }
   }, [groups.isSuccess]);
 
   const form = useForm({
     initialValues: {
-      thumbnail: "",
-      title: "",
-      level: "",
-      groups: "",
-      description: "",
+      thumbnail: '',
+      title: '',
+      level: '',
+      groups: '',
+      description: '',
       tags: [],
     },
     validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
 
-  const [searchParam, setsearchParam] = useState("");
+  const [searchParam] = useState('');
 
   const label = useLevels();
   const { mutate, data: addTagData, isSuccess } = useAddTag();
@@ -120,7 +118,7 @@ const CreateCoursePage = () => {
         ...tagsList,
         { label: addTagData.data.name, value: addTagData.data.id },
       ]);
-      form.setFieldValue("tags", [...form.values.tags, addTagData?.data?.id]);
+      form.setFieldValue('tags', [...form.values.tags, addTagData?.data?.id]);
     }
   }, [isSuccess]);
 
@@ -133,20 +131,20 @@ const CreateCoursePage = () => {
         tagIds: data.tags,
         levelId: data.level,
         language: 1,
-        name: data.title.trim().split(/ +/).join(" "),
+        name: data.title.trim().split(/ +/).join(' '),
         thumbnailUrl: data.thumbnail,
       });
       form.reset();
       showNotification({
-        title: t("success"),
-        message: t("create_training_success"),
+        title: t('success'),
+        message: t('create_training_success'),
       });
       navigate(RoutePath.manageCourse.lessons(res.data.slug).route);
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: "red",
+        color: 'red',
       });
     }
   };
@@ -159,15 +157,15 @@ const CreateCoursePage = () => {
           <Box mt={20}>
             <ThumbnailEditor
               formContext={useFormContext}
-              label={t("thumbnail") as string}
+              label={t('thumbnail') as string}
             />
             <Group mt={10} grow>
               <CustomTextFieldWithAutoFocus
-                placeholder={t("title_course") as string}
-                label={t("title")}
+                placeholder={t('title_course') as string}
+                label={t('title')}
                 name="Title"
                 withAsterisk
-                {...form.getInputProps("title")}
+                {...form.getInputProps('title')}
                 size="lg"
               />
             </Group>
@@ -176,28 +174,29 @@ const CreateCoursePage = () => {
               {tags.isSuccess ? (
                 <MultiSelect
                   searchable
-                  labelProps="name"
                   creatable
-                  sx={{ maxWidth: "500px" }}
+                  sx={{ maxWidth: '500px' }}
+                  style={{ marginTop: '3px' }}
                   data={
                     tagsList.length
                       ? tagsList
                       : [
                           {
-                            label: t("no_tags") as string,
-                            value: "null",
+                            label: t('no_tags') as string,
+                            value: 'null',
                             disabled: true,
                           },
                         ]
                   }
-                  {...form.getInputProps("tags")}
+                  {...form.getInputProps('tags')}
                   getCreateLabel={(query) => `+ Create ${query}`}
                   onCreate={(query) => {
                     mutate(query);
+                    return null;
                   }}
-                  size={"lg"}
-                  label={t("tags")}
-                  placeholder={t("tags_placeholder") as string}
+                  size={'lg'}
+                  label={t('tags')}
+                  placeholder={t('tags_placeholder') as string}
                 />
               ) : (
                 <div>
@@ -208,20 +207,21 @@ const CreateCoursePage = () => {
                 <Select
                   withAsterisk
                   size="lg"
-                  placeholder={t("level_placeholder") as string}
-                  label={t("level")}
-                  {...form.getInputProps("level")}
+                  placeholder={t('level_placeholder') as string}
+                  label={t('level')}
+                  {...form.getInputProps('level')}
                   data={
-                    label.data.length > 1
+                    label.data.length > 0
                       ? label.data.map((x) => ({ value: x.id, label: x.name }))
                       : [
                           {
-                            label: t("no_level") as string,
-                            value: "null",
+                            label: t('no_level') as string,
+                            value: 'null',
                             disabled: true,
                           },
                         ]
                   }
+                  styles={{ error: { position: 'absolute' } }}
                 ></Select>
               ) : (
                 <div>
@@ -234,34 +234,32 @@ const CreateCoursePage = () => {
                 mt={20}
                 searchable
                 withAsterisk
-                sx={{ maxWidth: "500px" }}
+                sx={{ maxWidth: '500px' }}
                 data={
-                  groups.data
-                    ? groups.data.data.items.map((x) => ({
-                        label: x.name,
-                        value: x.id,
-                      }))
-                    : [
-                        {
-                          label: t("no_groups"),
-                          value: "null",
-                          disabled: true,
-                        },
-                      ]
+                  groups?.data?.data?.items?.map((x) => ({
+                    label: x.name,
+                    value: x.id,
+                  })) ?? [
+                    {
+                      label: t('no_groups') as string,
+                      value: 'null',
+                      disabled: true,
+                    },
+                  ]
                 }
-                {...form.getInputProps("groups")}
-                size={"lg"}
-                label={t("group")}
-                placeholder={t("group_placeholder") as string}
+                {...form.getInputProps('groups')}
+                size={'lg'}
+                label={t('group')}
+                placeholder={t('group_placeholder') as string}
               />
             ) : (
               <Loader />
             )}
 
             <Box mt={20}>
-              <Text>{t("description")}</Text>
+              <Text>{t('description')}</Text>
               <TextEditor
-                placeholder={t("course_description") as string}
+                placeholder={t('course_description') as string}
                 formContext={useFormContext}
               />
             </Box>
@@ -272,7 +270,7 @@ const CreateCoursePage = () => {
                 type="submit"
                 loading={isLoading}
               >
-                {t("submit")}
+                {t('submit')}
               </Button>
             </Box>
           </Box>

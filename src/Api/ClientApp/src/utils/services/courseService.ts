@@ -1,13 +1,13 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   CourseLanguage,
   CourseStatus,
   CourseUserStatus,
   LessonType,
-} from "@utils/enums";
-import errorType from "./axiosError";
-import { api } from "./service-api";
-import { httpClient } from "./service-axios";
+} from '@utils/enums';
+import errorType from './axiosError';
+import { api } from './service-api';
+import { httpClient } from './service-axios';
 import {
   ILessonAssignment,
   ILessonFeedback,
@@ -16,7 +16,7 @@ import {
   ILessonMeeting,
   IPaginated,
   IUser,
-} from "./types";
+} from './types';
 
 interface ICourseTag {
   id: string;
@@ -76,7 +76,7 @@ const getCourseTeacher = async (course_id: string) =>
 
 export const useCourseTeacher = (course_id: string) =>
   useQuery(
-    ["get" + api.courseTeacher.list],
+    ['get' + api.courseTeacher.list],
     () => getCourseTeacher(course_id),
     {
       select: (data) => data.data,
@@ -104,9 +104,9 @@ const createTeacherCourse = async (data: {
 export const useCreateTeacherCourse = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(["post" + api.courseTeacher.list], createTeacherCourse, {
+  return useMutation(['post' + api.courseTeacher.list], createTeacherCourse, {
     onSuccess: () => {
-      queryClient.invalidateQueries(["get" + api.courseTeacher.list]);
+      queryClient.invalidateQueries(['get' + api.courseTeacher.list]);
     },
   });
 };
@@ -118,11 +118,11 @@ const deleteCourseTeacher = async (id: string) => {
 export const useDeleteCourseTeacher = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    ["delete" + api.courseTeacher.detail],
+    ['delete' + api.courseTeacher.detail],
     deleteCourseTeacher,
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["get" + api.courseTeacher.list]);
+        queryClient.invalidateQueries(['get' + api.courseTeacher.list]);
       },
     }
   );
@@ -194,12 +194,12 @@ export const useSectionReorder = (id: string) => {
 export const useUpdateCourse = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation(
-    ["update" + api.course.list],
+    ['update' + api.course.list],
     (data: any) => {
       return httpClient.put(api.course.update(id), data);
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([api.course.detail(id)]);
       },
     }
@@ -209,12 +209,12 @@ export const useUpdateCourse = (id: string) => {
 export const useUpdateGeneralSetting = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation(
-    ["update" + api.course.list],
+    ['update' + api.course.list],
     (data: any) => {
       return httpClient.put(api.course.update(id), data);
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([api.adminUser.getGeneralSettings]);
       },
     }
@@ -226,7 +226,7 @@ const deleteCourse = async (id: string) => {
 };
 export const useDeleteCourse = (search: string) => {
   const queryClient = useQueryClient();
-  return useMutation(["delete" + api.course.detail], deleteCourse, {
+  return useMutation(['delete' + api.course.detail], deleteCourse, {
     onSuccess: () => {
       queryClient.invalidateQueries([api.course.list, search]);
     },
@@ -284,7 +284,7 @@ const createSection = async (data: { courseIdentity: string; name: string }) =>
 export const useCreateSection = (slug: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation(["post" + api.section.common], createSection, {
+  return useMutation(['post' + api.section.common], createSection, {
     onSuccess: () => {
       queryClient.invalidateQueries([api.course.detail(slug)]);
     },
@@ -298,7 +298,7 @@ const getSection = async (courseIdentity: string) => {
 };
 export const useGetSection = (courseIdentity: string) => {
   return useQuery(
-    ["get" + api.section.common],
+    ['get' + api.section.common],
     () => getSection(courseIdentity),
     {
       select: (data) => {
@@ -320,7 +320,7 @@ const updateSectionName = async (data: {
 };
 export const useUpdateSectionName = (slug: string) => {
   const queryClient = useQueryClient();
-  return useMutation(["patch" + api.section.common], updateSectionName, {
+  return useMutation(['patch' + api.section.common], updateSectionName, {
     onSuccess: () => {
       queryClient.invalidateQueries([api.course.detail(slug)]);
     },
@@ -334,7 +334,7 @@ const deleteSection = async (data: { id: string; sectionId: string }) => {
 };
 export const useDeleteSection = (slug: string) => {
   const queryClient = useQueryClient();
-  return useMutation(["delete" + api.section.common], deleteSection, {
+  return useMutation(['delete' + api.section.common], deleteSection, {
     onSuccess: () => {
       queryClient.invalidateQueries([api.course.detail(slug)]);
     },
@@ -354,7 +354,7 @@ const createLesson = async (
 export const useCreateLesson = (slug: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation(["post" + api.lesson.common], createLesson, {
+  return useMutation(['post' + api.lesson.common], createLesson, {
     onSuccess: () => {
       queryClient.invalidateQueries([api.course.detail(slug)]);
     },
@@ -382,11 +382,11 @@ export const useUpdateLesson = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation(["update" + api.lesson.common], updateLesson, {
+  return useMutation(['update' + api.lesson.common], updateLesson, {
     onSuccess: () => {
       queryClient.invalidateQueries([api.lesson.courseLesson(courseIdentity)]);
       queryClient.invalidateQueries([
-        api.lesson.courseLesson(courseId ?? "", lessonId),
+        api.lesson.courseLesson(courseId ?? '', lessonId),
       ]);
       queryClient.invalidateQueries([api.course.detail(courseIdentity)]);
     },
@@ -400,7 +400,7 @@ const deleteLesson = async (data: { id: string; lessonId: string }) => {
 };
 export const useDeleteLesson = (slug: string) => {
   const queryClient = useQueryClient();
-  return useMutation(["delete" + api.lesson.common], deleteLesson, {
+  return useMutation(['delete' + api.lesson.common], deleteLesson, {
     onSuccess: () => {
       queryClient.invalidateQueries([api.course.detail(slug)]);
     },
@@ -544,7 +544,7 @@ export const useGetCourseLesson = (
       },
       enabled,
       retry: 0,
-      onError: (err) => {},
+      onError: () => {},
       refetchOnMount: false,
       refetchOnWindowFocus: false,
     }

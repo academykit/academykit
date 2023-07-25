@@ -1,7 +1,7 @@
-import { Button, Divider, Group, Title, useMantineTheme } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Button, Divider, Group, Title, useMantineTheme } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 const SubmitResultHeader = ({
   marks,
@@ -25,8 +25,8 @@ const SubmitResultHeader = ({
       <Divider orientation="vertical" />
       {duration && <Title order={textSize}>{duration}</Title>}
 
-      <Button onClick={() => navigate(-1)} size={smallScreen ? "md" : "xs"}>
-        {t("cancel")}
+      <Button onClick={() => navigate(-1)} size={smallScreen ? 'md' : 'xs'}>
+        {t('close')}
       </Button>
     </Group>
   );

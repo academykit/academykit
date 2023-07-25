@@ -1,13 +1,11 @@
 //manage lessons stat
 
-import SearchBar from "@components/Ui/SearchBar";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import errorType from "./axiosError";
-import { LessonType } from "@utils/enums";
-import { ICourseLesson } from "./courseService";
-import { api } from "./service-api";
-import { httpClient } from "./service-axios";
-import { IPaginated, IUser } from "./types";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import errorType from './axiosError';
+import { LessonType } from '@utils/enums';
+import { api } from './service-api';
+import { httpClient } from './service-axios';
+import { IPaginated, IUser } from './types';
 
 export interface ILessonStats {
   id: string;
