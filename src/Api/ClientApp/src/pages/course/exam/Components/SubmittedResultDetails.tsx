@@ -10,6 +10,7 @@ import {
   ScrollArea,
   Text,
   Title,
+  UnstyledButton,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import {
@@ -225,7 +226,7 @@ const SubmittedResultDetails = ({
       >
         <Group p={10} className={classes.navigateWrapper}>
           {questions.map((x, i) => (
-            <div
+            <UnstyledButton
               key={i}
               onClick={() => {
                 setCurrentIndex(i);
@@ -250,7 +251,7 @@ const SubmittedResultDetails = ({
               >
                 {i + 1}
               </Card>
-            </div>
+            </UnstyledButton>
           ))}
         </Group>
       </Grid.Col>

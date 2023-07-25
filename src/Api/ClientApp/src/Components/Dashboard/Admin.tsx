@@ -1,4 +1,4 @@
-import { Group, SimpleGrid, Text } from '@mantine/core';
+import { SimpleGrid, Text } from '@mantine/core';
 import {
   DashboardCourses,
   DashboardStats,
@@ -82,17 +82,20 @@ const Admin = ({
         <Text c="dimmed">{t('no_trainings')}</Text>
       )}
 
-      <Group
-        sx={{
-          '@media (max-width: 1345px)': {
-            justifyContent: 'space-evenly',
-          },
-          justifyContent: 'start',
-        }}
+      <SimpleGrid
+        cols={1}
+        spacing={10}
+        breakpoints={[
+          { minWidth: 'sx', cols: 1 },
+          { minWidth: 'sm', cols: 2 },
+          { minWidth: 'md', cols: 3 },
+          { minWidth: 1280, cols: 3 },
+          { minWidth: 1780, cols: 4 },
+        ]}
       >
         {dashboardCourses.length > 0 &&
           dashboardCourses.map((x) => <TrainingCards key={x.id} data={x} />)}
-      </Group>
+      </SimpleGrid>
     </div>
   );
 };

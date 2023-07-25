@@ -90,10 +90,14 @@ const Trainers = ({
       )}
 
       <SimpleGrid
-        cols={3}
+        cols={1}
+        spacing={10}
         breakpoints={[
-          { maxWidth: 'md', cols: 2 },
-          { maxWidth: 'xs', cols: 1 },
+          { minWidth: 'sx', cols: 1 },
+          { minWidth: 'sm', cols: 2 },
+          { minWidth: 'md', cols: 3 },
+          { minWidth: 1280, cols: 3 },
+          { minWidth: 1780, cols: 4 },
         ]}
       >
         {dashboardCourses.length > 0 &&

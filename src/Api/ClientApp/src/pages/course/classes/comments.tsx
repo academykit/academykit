@@ -44,7 +44,6 @@ const Comments = () => {
       {data?.items.map((x) => <Comment comment={x} key={x.id} />)}
       <form onSubmit={form.onSubmit(onSubmit)}>
         <Textarea
-          autoFocus
           placeholder={t('your_comment_here') as string}
           {...form.getInputProps('content')}
           mt={20}

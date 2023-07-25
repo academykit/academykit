@@ -1,11 +1,11 @@
 import {
-  Anchor,
   Avatar,
   Box,
   Flex,
   MantineNumberSize,
   SystemProp,
   Text,
+  UnstyledButton,
 } from '@mantine/core';
 import { PoolRole, UserRole } from '@utils/enums';
 import { getInitials } from '@utils/getInitialName';
@@ -29,7 +29,7 @@ const UserShortProfile: FC<Props> = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <Anchor
+    <UnstyledButton
       component={Link}
       to={`/userProfile/${id}/certificate`}
       sx={{ textDecoration: 'none' }}
@@ -49,7 +49,7 @@ const UserShortProfile: FC<Props> = ({
           </Text>
         </Box>
       </Flex>
-    </Anchor>
+    </UnstyledButton>
   );
 };
 

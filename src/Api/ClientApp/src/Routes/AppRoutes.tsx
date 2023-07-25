@@ -1,5 +1,5 @@
 import LoginPage from '@pages/auth/loginPage';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import RoutePath from '@utils/routeConstants';
 import ConfirmToken from '@pages/auth/confirmToken';
 import NotFound from '@pages/404';
@@ -14,7 +14,6 @@ import Verify from '@pages/verify';
 import ChangeEmail from '@components/Users/ChangeEmail';
 import TeacherRouteGuard from './TeacherRoute';
 import ZoomMettingMessage from '@components/ZoomMeeting';
-import { Navigate } from 'react-router-dom';
 import Layout from '@components/Layout/Layout';
 import AdminAuthRoute from './AdminRoute';
 import lazyWithRetry from '@utils/lazyImportWithReload';

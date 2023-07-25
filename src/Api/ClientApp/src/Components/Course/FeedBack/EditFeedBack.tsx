@@ -155,7 +155,6 @@ const EditFeedback = ({
         <form onSubmit={form.onSubmit(onSubmit)}>
           <Paper p={20} withBorder mt={20}>
             <TextInput
-              autoFocus
               autoComplete="off"
               size={fieldSize}
               withAsterisk

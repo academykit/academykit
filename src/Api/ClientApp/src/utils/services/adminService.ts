@@ -255,7 +255,11 @@ export const useDepartmentSetting = (search: string) => {
   return useQuery(
     [api.adminUser.getDepartmentSettings, search],
     () => getDepartment(search),
-    { staleTime: Infinity, cacheTime: Infinity, select: (data) => data.data }
+    {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      select: (data) => data.data,
+    }
   );
 };
 export const usePostDepartmentSetting = () => {

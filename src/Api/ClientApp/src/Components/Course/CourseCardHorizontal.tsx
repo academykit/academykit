@@ -11,13 +11,10 @@ import {
   Group,
   Image,
   TypographyStylesProvider,
-  NavLink,
-  Paper,
-  Popover,
   Text,
   Title,
   useMantineTheme,
-  createStyles,
+  Menu,
 } from '@mantine/core';
 import { useMediaQuery, useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
@@ -25,6 +22,10 @@ import {
   IconCalendar,
   IconChevronRight,
   IconDotsVertical,
+  IconGraph,
+  IconSettings,
+  IconTrash,
+  IconUsers,
 } from '@tabler/icons';
 import { DATE_FORMAT, color } from '@utils/constants';
 import {
@@ -42,23 +43,6 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-const useStyles = createStyles((theme) => ({
-  linksTop: {
-    '&:hover': {
-      borderTopLeftRadius: '3px',
-      borderTopRightRadius: '3px',
-      backgroundColor: theme.colorScheme == 'dark' ? '#128797' : '#7AD1DD',
-    },
-  },
-  linksBottom: {
-    '&:hover': {
-      borderBottomLeftRadius: '3px',
-      borderBottomRightRadius: '3px',
-      backgroundColor: theme.colorScheme == 'dark' ? '#128797' : '#7AD1DD',
-    },
-  },
-}));
-
 const CourseCardHorizontal = ({
   course,
   search,
@@ -66,7 +50,6 @@ const CourseCardHorizontal = ({
   course: ICourse;
   search: string;
 }) => {
-  const { classes } = useStyles();
   const [deleteModal, setDeleteModal] = useToggle();
   const deleteCourse = useDeleteCourse(search);
   const handleDelete = async () => {
@@ -197,53 +180,54 @@ const CourseCardHorizontal = ({
               {(course.userStatus === CourseUserStatus.Author ||
                 course.userStatus === CourseUserStatus.Teacher ||
                 (auth?.auth && auth.auth.role <= UserRole.Admin)) && (
-                <Popover
-                  position={'left-start'}
-                  arrowSize={12}
-                  styles={{
-                    dropdown: { padding: 5 },
-                  }}
+                <Menu
+                  shadow="md"
+                  width={200}
+                  trigger="hover"
+                  withArrow
+                  position="right"
                 >
-                  <Popover.Target>
+                  <Menu.Target>
                     <Button sx={{ zIndex: 50 }} variant="subtle" px={4}>
                       <IconDotsVertical />
                     </Button>
-                  </Popover.Target>
-                  <Popover.Dropdown>
-                    <Paper>
-                      <Group
-                        p={0}
-                        sx={{
-                          flexDirection: 'column',
-                          alignItems: 'start',
-                        }}
-                        style={{ gap: '0px' }}
-                      >
-                        <NavLink
-                          className={classes.linksTop}
-                          variant="subtle"
-                          label={t('manage')}
-                          component={Link}
-                          to={RoutePath.manageCourse.manage(course.slug).route}
-                          rightSection={
-                            <IconChevronRight size={12} stroke={1.5} />
-                          }
-                        ></NavLink>
-
-                        <NavLink
-                          className={classes.linksBottom}
-                          onClick={() => setDeleteModal()}
-                          variant="subtle"
-                          label={t('delete')}
-                          component={'button'}
-                          rightSection={
-                            <IconChevronRight size={12} stroke={1.5} />
-                          }
-                        ></NavLink>
-                      </Group>
-                    </Paper>
-                  </Popover.Dropdown>
-                </Popover>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>{t('manage')}</Menu.Label>
+                    <Menu.Item
+                      icon={<IconSettings size={14} />}
+                      component={Link}
+                      to={RoutePath.manageCourse.manage(course.slug).route}
+                      rightSection={<IconChevronRight size={12} stroke={1.5} />}
+                    >
+                      {t('statistics')}
+                    </Menu.Item>
+                    <Menu.Item
+                      icon={<IconGraph size={14} />}
+                      component={Link}
+                      to={RoutePath.manageCourse.lessonsStat(course.slug).route}
+                      rightSection={<IconChevronRight size={12} stroke={1.5} />}
+                    >
+                      {t('lesson_stats')}
+                    </Menu.Item>
+                    <Menu.Item
+                      icon={<IconUsers size={14} />}
+                      component={Link}
+                      to={RoutePath.manageCourse.student(course.slug).route}
+                      rightSection={<IconChevronRight size={12} stroke={1.5} />}
+                    >
+                      {t('trainee')}
+                    </Menu.Item>
+                    <Menu.Divider />
+                    <Menu.Item
+                      color="red"
+                      icon={<IconTrash size={14} />}
+                      onClick={() => setDeleteModal()}
+                    >
+                      {t('delete')}
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
               )}
             </Group>
             <Title size="xs" sx={{ textTransform: 'uppercase' }} weight={700}>

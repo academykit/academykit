@@ -6,12 +6,13 @@ import {
   Box,
   Button,
   Container,
+  Drawer,
   Group,
   Loader,
+  SimpleGrid,
   Title,
-  Transition,
 } from '@mantine/core';
-import { useToggle } from '@mantine/hooks';
+import { useDisclosure } from '@mantine/hooks';
 import { UserRole } from '@utils/enums';
 import { useGroups } from '@utils/services/groupService';
 
@@ -19,25 +20,12 @@ import AddGroups from './Components/AddGroups';
 import GroupCard from './Components/GroupCard';
 import { useTranslation } from 'react-i18next';
 
-const a = {
-  in: { opacity: 1 },
-  out: { opacity: 0 },
-  common: { transformOrigin: 'top' },
-  transitionProperty: 'transform, opacity',
-};
-const b = {
-  in: { opacity: 1 },
-  out: { opacity: 0 },
-  common: { transformOrigin: 'top' },
-  transitionProperty: 'transform, opacity',
-};
-
 const GroupsPage = ({
   searchParams,
   pagination,
   searchComponent,
 }: IWithSearchPagination) => {
-  const [showAddGroups, setShowAddGroups] = useToggle();
+  const [opened, { open, close }] = useDisclosure(false);
 
   const { isLoading, data } = useGroups(searchParams);
   const auth = useAuth();
@@ -52,36 +40,34 @@ const GroupsPage = ({
           <Title>{t('groups')}</Title>
 
           {auth?.auth && auth.auth.role <= UserRole.Admin && (
-            <Transition mounted={!showAddGroups} transition={b} duration={400}>
-              {(styles) => (
-                <Button
-                  style={{ ...styles }}
-                  onClick={() => setShowAddGroups()}
-                >
-                  {t('add_group')}
-                </Button>
-              )}
-            </Transition>
+            <Button onClick={open}>{t('add_group')}</Button>
           )}
         </Group>
 
-        <Transition mounted={showAddGroups} transition={a} duration={400}>
-          {() => (
-            <>
-              <Box pb={20}>
-                <AddGroups onCancel={setShowAddGroups} />
-              </Box>
-            </>
-          )}
-        </Transition>
+        <Drawer
+          opened={opened}
+          onClose={close}
+          title={t('groups')}
+          overlayProps={{ opacity: 0.5, blur: 4 }}
+        >
+          <AddGroups onCancel={close} />
+        </Drawer>
 
-        <div style={{ display: 'flex' }}>
-          <Box mx={3} sx={{ width: '100%' }}>
-            {searchComponent(t('search_groups') as string)}
-          </Box>
+        <div>
+          <Box>{searchComponent(t('search_groups') as string)}</Box>
         </div>
       </Box>
-      <Group sx={{ justifyContent: 'start' }}>
+      <SimpleGrid
+        cols={1}
+        spacing={10}
+        breakpoints={[
+          { minWidth: 'sx', cols: 1 },
+          { minWidth: 'sm', cols: 2 },
+          { minWidth: 'md', cols: 3 },
+          { minWidth: 1280, cols: 3 },
+          { minWidth: 1780, cols: 4 },
+        ]}
+      >
         {isLoading && <Loader />}
         {data?.data &&
           (data.data.totalCount > 0 ? (
@@ -91,7 +77,7 @@ const GroupsPage = ({
           ) : (
             <Box>{t('no_groups')}</Box>
           ))}
-      </Group>
+      </SimpleGrid>
       {data && pagination(data.data.totalPage, data.data.items.length)}
     </Container>
   );

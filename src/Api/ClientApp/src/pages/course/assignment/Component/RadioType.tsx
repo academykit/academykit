@@ -1,5 +1,12 @@
 import TextViewer from '@components/Ui/RichTextViewer';
-import { Box, Card, createStyles, Group, Title } from '@mantine/core';
+import {
+  Box,
+  Card,
+  createStyles,
+  Group,
+  Title,
+  UnstyledButton,
+} from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 import {
   IAssignmentOptions,
@@ -66,7 +73,7 @@ const RadioType = ({ options, form, currentIndex }: Props) => {
         <Title size={'xs'}>{t('options')}</Title>
       </Group>
       {options.map((option, index) => (
-        <div
+        <UnstyledButton
           style={{ cursor: 'pointer' }}
           key={option.id}
           onClick={() => changeFieldValue(index)}
@@ -101,7 +108,7 @@ const RadioType = ({ options, form, currentIndex }: Props) => {
               content={option.option}
             ></TextViewer>
           </Card>
-        </div>
+        </UnstyledButton>
       ))}
     </Box>
   );

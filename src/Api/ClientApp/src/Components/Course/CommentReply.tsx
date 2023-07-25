@@ -138,7 +138,6 @@ const CommentReply = ({
         <Box mx={40}>
           <form onSubmit={form.onSubmit(submitForm)}>
             <Textarea
-              autoFocus
               {...form.getInputProps('content')}
               sx={{ width: '100%' }}
               mt={20}

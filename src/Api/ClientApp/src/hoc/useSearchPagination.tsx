@@ -125,10 +125,7 @@ const withSearchPagination = <P extends object>(
       for (const value of params.entries()) {
         if (value[0] !== 's') params.delete(value[0]);
       }
-
-      if (search != '') {
-        params.set('s', search);
-      }
+      params.set('s', search);
       setParams(params);
     };
 
