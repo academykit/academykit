@@ -50,7 +50,6 @@ const LessonStatusColor = ({
   status: IStudentInfoLesson;
 }) => {
   const { t } = useTranslation();
-  isAssignmentReviewed = true;
 
   return (
     <>
