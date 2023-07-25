@@ -980,4 +980,7 @@
   <data name="LessonWIthType" xml:space="preserve">
     <value>タイプを使ったレッスン</value>
   </data>
+  <data name="AdminCannotAddAdmin" xml:space="preserve">
+    <value>管理者は管理者を追加できません</value>
+  </data>
 </root>

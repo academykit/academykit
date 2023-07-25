@@ -977,4 +977,7 @@
   <data name="LessonWIthType" xml:space="preserve">
     <value>प्रकारको साथ पाठ</value>
   </data>
+  <data name="AdminCannotAddAdmin" xml:space="preserve">
+    <value>प्रशासकले प्रशासक थप्न सक्दैन</value>
+  </data>
 </root>

@@ -359,7 +359,7 @@ namespace Lingtren.Infrastructure.Services
                         }
                     }
                 }
-                await CheckBulkImport(checkForValidRows);
+                await CheckBulkImport(checkForValidRows,currentUserId);
                 var message = new StringBuilder();
                 users = checkForValidRows.userList.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && !string.IsNullOrWhiteSpace(x.LastName) && !string.IsNullOrWhiteSpace(x.Email)).ToList();
                 var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
@@ -1152,11 +1152,11 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="checkForValidRows">instance of <see cref=""></param>
         /// <returns></returns>
         /// <exception cref="ForbiddenException"></exception>
-        private async Task CheckBulkImport((List<UserImportDto> userList, List<int> SN) checkForValidRows)
+        private async Task CheckBulkImport((List<UserImportDto> userList, List<int> SN) checkForValidRows,Guid currentUserId)
         {
             try
             {
-
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate : p=>p.Id == currentUserId).ConfigureAwait(false);
 
                 if (checkForValidRows.userList.Count == default)
                 {
@@ -1249,6 +1249,18 @@ namespace Lingtren.Infrastructure.Services
                     {
                         throw new ForbiddenException(_localizer.GetString("IncorrectRoleFormat") + " " + string.Join(", ", selectedSNs) + " " + _localizer.GetString("TryAgain"));
                     }
+
+                    var selectedIndices = Enum.GetValues(typeof(UserRole))
+                     .Cast<UserRole>()
+                     .Select((role, index) => new { Role = role, Index = index +2})
+                       .Where(x => string.Equals(x.Role.ToString(),UserRole.Admin.ToString(),StringComparison.OrdinalIgnoreCase))
+                      .Select(x => x.Index)
+                       .ToList();
+                    if (selectedIndices.Any() && user.Role != UserRole.SuperAdmin)
+                    {
+                        throw new ForbiddenException(_localizer.GetString("AdminCannotAddAdmin"));
+                    }
+
                 }
             }
             catch (ForbiddenException ex)
