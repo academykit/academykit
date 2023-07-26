@@ -17,7 +17,7 @@ const SubjectiveType = ({ form, currentIndex }: Props) => {
   const [debounced] = useDebouncedValue(value, 200);
   useEffect(() => {
     form.setFieldValue(`${currentIndex}.answer`, debounced);
-  }, [debounced]);
+  }, [debounced, currentIndex]);
   return <TextEditor value={value} onChange={setValue} />;
 };
 

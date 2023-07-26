@@ -19,6 +19,8 @@ const useStyle = createStyles((theme) => ({
     '>label': {
       cursor: 'pointer',
     },
+    display: 'flex',
+    flexDirection: 'column',
   },
   active: {
     outline: `2px solid ${theme.colors[theme.primaryColor][1]}`,

@@ -222,7 +222,7 @@ const EditAssignment = ({
               <TextEditor
                 placeholder={t('question_hint') as string}
                 formContext={useFormContext}
-                label="hint"
+                label="hints"
               />
             </Box>
             <Select
