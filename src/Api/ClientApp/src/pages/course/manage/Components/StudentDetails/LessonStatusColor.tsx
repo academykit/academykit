@@ -45,7 +45,7 @@ export const getType = (type: LessonType) => {
   }
 };
 const LessonStatusColor = ({
-  status: { isPassed, isCompleted, lessonType: type },
+  status: { isPassed, isAssignmentReviewed, isCompleted, lessonType: type },
 }: {
   status: IStudentInfoLesson;
 }) => {
@@ -54,11 +54,32 @@ const LessonStatusColor = ({
   return (
     <>
       <Group position="center">
-        {isPassed ? (
-          <Badge color={'green'}>{t(getType(type).true)}</Badge>
-        ) : (
-          <Badge color={'red'}>{t(getType(type).false)}</Badge>
-        )}
+        {/* show isPassed badge only when assignment is reviewed */}
+        {isPassed
+          ? isAssignmentReviewed && (
+              <Badge color={'green'}>{t(getType(type).true)}</Badge>
+            )
+          : isAssignmentReviewed && (
+              <Badge color={'red'}>{t(getType(type).false)}</Badge>
+            )}
+
+        {/* show review status badge until it is not reviewed i.e. isAssignmentReviewed=true */}
+        {/* null is not submitted
+            true is reviewed
+            false is in-review 
+        */}
+        {isAssignmentReviewed === null
+          ? !isAssignmentReviewed && (
+              <Badge color="red">{t('not_submitted')}</Badge>
+            )
+          : isAssignmentReviewed
+          ? !isAssignmentReviewed && (
+              <Badge color="green">{t('reviewed')}</Badge>
+            )
+          : !isAssignmentReviewed && (
+              <Badge color="orange">{t('in_review')}</Badge>
+            )}
+
         {isCompleted ? (
           <Badge color={'green'}>{t('completed')}</Badge>
         ) : (

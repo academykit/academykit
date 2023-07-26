@@ -50,6 +50,7 @@ export interface LessonStatDetails {
   isPassed: true;
   user: IUser;
   questionSetId: string;
+  isAssignmentReviewed: boolean | null;
 }
 
 const getLessonStatisticsDetails = async (
@@ -122,6 +123,7 @@ export interface IStudentInfoLesson {
   isPassed: boolean;
   user: IUser;
   questionSetId: string;
+  isAssignmentReviewed: boolean | null;
 }
 
 const getStudentStatisticsDetails = async (
