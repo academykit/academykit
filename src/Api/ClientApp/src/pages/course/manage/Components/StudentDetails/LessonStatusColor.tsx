@@ -54,14 +54,23 @@ const LessonStatusColor = ({
   return (
     <>
       <Group position="center">
+        {type !== LessonType.Assignment &&
+          // Logic for other lesson types
+          (isPassed ? (
+            <Badge color={'green'}>{t(getType(type).true)}</Badge>
+          ) : (
+            <Badge color={'red'}>{t(getType(type).false)}</Badge>
+          ))}
+
         {/* show isPassed badge only when assignment is reviewed */}
-        {isPassed
-          ? isAssignmentReviewed && (
-              <Badge color={'green'}>{t(getType(type).true)}</Badge>
-            )
-          : isAssignmentReviewed && (
-              <Badge color={'red'}>{t(getType(type).false)}</Badge>
-            )}
+        {type == LessonType.Assignment &&
+          (isPassed
+            ? isAssignmentReviewed && (
+                <Badge color={'green'}>{t(getType(type).true)}</Badge>
+              )
+            : isAssignmentReviewed && (
+                <Badge color={'red'}>{t(getType(type).false)}</Badge>
+              ))}
 
         {/* show review status badge until it is not reviewed i.e. isAssignmentReviewed=true */}
         {/* null is not submitted
@@ -69,14 +78,17 @@ const LessonStatusColor = ({
             false is in-review 
         */}
         {isAssignmentReviewed === null
-          ? !isAssignmentReviewed && (
+          ? !isAssignmentReviewed &&
+            type == LessonType.Assignment && (
               <Badge color="red">{t('not_submitted')}</Badge>
             )
           : isAssignmentReviewed
-          ? !isAssignmentReviewed && (
+          ? !isAssignmentReviewed &&
+            type == LessonType.Assignment && (
               <Badge color="green">{t('reviewed')}</Badge>
             )
-          : !isAssignmentReviewed && (
+          : !isAssignmentReviewed &&
+            type == LessonType.Assignment && (
               <Badge color="orange">{t('in_review')}</Badge>
             )}
 
