@@ -1088,6 +1088,7 @@ namespace Lingtren.Infrastructure.Services
                 include: src => src.Include(x => x.Lesson).Include(x => x.User)).ConfigureAwait(false);
 
                 var searchResult = enrollments.ToIPagedList(criteria.Page, criteria.Size);
+                
 
                 var response = new SearchResult<StudentCourseStatisticsResponseModel>
                 {
@@ -1137,8 +1138,30 @@ namespace Lingtren.Infrastructure.Services
                 ).ConfigureAwait(false);
             watchHistories = watchHistories.OrderBy(x => x.Lesson.Section.Order).ThenBy(x => x.Lesson.Order).ToList();
             var response = new List<LessonStudentResponseModel>();
+            var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p=>p.Type ==LessonType.Assignment && p.CourseId == course.Id).ConfigureAwait(false);
+
+            List<(Guid LessonId, bool UserResult)?> assignmentStatus = new List<(Guid, bool)?>();
+            if (lessons.Count != default)
+            {
+                var lessonIds = lessons.Select(x => x.Id).ToList();
+                var assignmentSubmission = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(predicate: p => lessonIds.Contains(p.LessonId)).ConfigureAwait(false);
+                var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetAllAsync(predicate: p =>lessonIds.Contains(p.LessonId)).ConfigureAwait(false);
+                if (assignmentSubmission.Count != default)
+                {
+                    foreach (var lessonId in lessonIds)
+                    {
+                        bool hasSubmitted = false;
+                        if (assignmentSubmission.Any(x => x.LessonId == lessonId && x.UserId == userId) && assignmentReview.Any(x => x.LessonId == lessonId && x.UserId == userId))
+                        {
+                            hasSubmitted = true;
+                        }
+                        assignmentStatus.Add((lessonId,hasSubmitted));
+                    }
+                }
+            }
             watchHistories.ForEach(x => response.Add(new LessonStudentResponseModel
             {
+                IsAssignmentReviewed = (bool?)(assignmentStatus.FirstOrDefault(ur => ur.Value.LessonId == x.LessonId)?.UserResult),
                 LessonId = x.LessonId,
                 LessonSlug = x.Lesson?.Slug,
                 LessonName = x.Lesson?.Name,
