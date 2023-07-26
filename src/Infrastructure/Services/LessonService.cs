@@ -165,17 +165,22 @@ namespace Lingtren.Infrastructure.Services
 
                 remainingAttempt = lesson.QuestionSet.AllowedRetake > 0 ? lesson.QuestionSet.AllowedRetake - submissionCount : submissionCount > 0 ? 0 : 1;
 
-                hasResult = containResults;
+                 hasResult = containResults;
             }
 
+            bool? hasSubmitAssignment = null;
             bool? hasReviewedAssignment = null;
             AssignmentReviewResponseModel? review = null;
 
             if (lesson.Type == LessonType.Assignment)
             {
                 lesson.Assignments = new List<Assignment>();
-                lesson.Assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
-                    predicate: p => p.LessonId == lesson.Id).ConfigureAwait(false);
+                lesson.Assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(predicate: p => p.LessonId == lesson.Id).ConfigureAwait(false);
+                var assignmentSubmission = await _unitOfWork.GetRepository<AssignmentSubmission>().ExistsAsync(predicate:p=>p.UserId == currentUserId && p.LessonId == lesson.Id).ConfigureAwait(false);
+                if(assignmentSubmission)
+                {
+                    hasSubmitAssignment = true;
+                }
                 var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetFirstOrDefaultAsync(
                     predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId && !p.IsDeleted,
                     include: src => src.Include(x => x.User)
@@ -247,6 +252,7 @@ namespace Lingtren.Infrastructure.Services
                 responseModel.AssignmentExpired = lesson.EndDate <= DateTime.UtcNow;
             }
 
+            responseModel.HasSubmittedAssigment = hasSubmitAssignment;
             responseModel.HasResult = hasResult;
             responseModel.HasReviewedAssignment = hasReviewedAssignment;
             responseModel.AssignmentReview = review;

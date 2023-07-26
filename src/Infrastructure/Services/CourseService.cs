@@ -1010,7 +1010,25 @@ namespace Lingtren.Infrastructure.Services
                     }              
                 }
             }
-
+            List<(Guid UserId, bool UserResult)?> assignmentStatus = new List<(Guid, bool)?>();
+            if (lesson.Type == LessonType.Assignment)
+            {
+                var assignmentSubmission = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(predicate: p=> p.LessonId == lesson.Id).ConfigureAwait(false);
+                var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetAllAsync(predicate: p=>p.LessonId == lesson.Id).ConfigureAwait(false);
+                if (assignmentSubmission.Count != default) 
+                {
+                    var userIds = assignmentSubmission.Select(x => x.UserId).ToList();
+                    foreach(var userId in userIds)
+                    {
+                        bool hasSubmitted = false;
+                        if (assignmentSubmission.Any(x => x.UserId == userId) && assignmentReview.Any(x=>x.UserId == userId))
+                        {
+                            hasSubmitted = true;
+                        }
+                        assignmentStatus.Add((userId,hasSubmitted));
+                    }
+                }
+            }
             var students = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
                 predicate: p => p.CourseId == course.Id,
                 include: src => src.Include(x => x.User)
@@ -1034,8 +1052,9 @@ namespace Lingtren.Infrastructure.Services
                            LessonType = lesson.Type,
                            QuestionSetId = lesson.Type == LessonType.Exam ? lesson.QuestionSetId : null,
                            IsCompleted = m?.IsCompleted,
-                           IsPassed = userResults.FirstOrDefault(ur => ur.UserId == student.Id) != default ? true : m?.IsPassed ?? false,
+                           IsPassed = userResults.FirstOrDefault(ur => ur.UserId == student.UserId) != default ? true : m?.IsPassed ?? false,
                            UpdatedOn = m?.UpdatedOn ?? m?.CreatedOn,
+                           IsAssignmentReviewed = (bool?)(assignmentStatus.FirstOrDefault(ur => ur.Value.UserId == student.UserId)?.UserResult),
                        };
 
             return data.ToList().ToIPagedList(criteria.Page, criteria.Size);
