@@ -160,19 +160,7 @@ const SubmittedResultDetails = ({
                   shadow={'lg'}
                   my={5}
                 >
-                  <Grid justify="space-between" align="center">
-                    {x.isCorrect && x.isSelected && (
-                      <IconCircleCheck
-                        size={36}
-                        color={theme.colors.green[6]}
-                      />
-                    )}
-                    {!x.isCorrect && x.isSelected && (
-                      <IconSquareRoundedX
-                        size={36}
-                        color={theme.colors.red[6]}
-                      />
-                    )}
+                  <Grid justify="start" align="center">
                     <Grid.Col span={11}>
                       <TextViewer
                         key={x.id}
@@ -185,6 +173,18 @@ const SubmittedResultDetails = ({
                         content={x.value}
                       />
                     </Grid.Col>
+                    {x.isCorrect && x.isSelected && (
+                      <IconCircleCheck
+                        size={36}
+                        color={theme.colors.green[6]}
+                      />
+                    )}
+                    {!x.isCorrect && x.isSelected && (
+                      <IconSquareRoundedX
+                        size={36}
+                        color={theme.colors.red[6]}
+                      />
+                    )}
                   </Grid>
                 </Card>
               ))}
