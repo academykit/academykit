@@ -92,7 +92,7 @@ const Rows = ({
       <td>
         <Anchor
           component={Link}
-          to={`${RoutePath.userProfile}/${item.userId}`}
+          to={`${RoutePath.userProfile}/${item.userId}/certificate`}
           size="sm"
           sx={{ display: 'flex' }}
         >

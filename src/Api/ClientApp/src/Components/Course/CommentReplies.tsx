@@ -58,7 +58,6 @@ const CommentReplies = ({
       <form onSubmit={form.onSubmit(submitHandler)}>
         <Group mx={14}>
           <Textarea
-            autoFocus
             {...form.getInputProps('content')}
             sx={{ width: '100%' }}
             placeholder={t('your_comment') as string}

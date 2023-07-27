@@ -97,7 +97,21 @@ const FeedbackItem = ({
       />
 
       <Paper shadow={'lg'} sx={{ width: '100%' }} my={20} withBorder p={20}>
-        <Title>{data.name}</Title>
+        <Flex justify={'space-between'}>
+          <Title>{data.name}</Title>
+          <Group>
+            <Button variant="subtle" onClick={() => setEdit()}>
+              <IconEdit />
+            </Button>
+            <Button
+              variant="subtle"
+              color="red"
+              onClick={() => setConfirmDelete()}
+            >
+              <IconTrash />
+            </Button>
+          </Group>
+        </Flex>
 
         {data.description && (
           <Box my={10}>
@@ -126,28 +140,17 @@ const FeedbackItem = ({
             <>
               <Text>{t('options')}</Text>
               {data.feedbackQuestionOptions?.map((x) => (
-                <Group my={10} key={x.id}>
-                  <TextViewer content={x.option}></TextViewer>
+                <Group my={10} key={x.id} id="hehe">
+                  <TextViewer
+                    content={x.option}
+                    styles={{ root: { flexGrow: 1 } }}
+                  ></TextViewer>
                 </Group>
               ))}
             </>
           )}
         </Box>
       </Paper>
-      <Flex
-        className={'action'}
-        direction={'column'}
-        align="center"
-        justify={'center'}
-        gap={20}
-      >
-        <Button variant="subtle" onClick={() => setEdit()}>
-          <IconEdit />
-        </Button>
-        <Button variant="subtle" color="red" onClick={() => setConfirmDelete()}>
-          <IconTrash />
-        </Button>
-      </Flex>
     </Flex>
   );
 };

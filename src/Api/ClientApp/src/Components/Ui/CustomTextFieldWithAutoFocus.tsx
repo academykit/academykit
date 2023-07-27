@@ -27,7 +27,6 @@ const CustomTextFieldWithAutoFocus: FC<ICustomTextFieldWithAutoFocus> = (
         ref={myRef}
         {...props}
         autoComplete={isFocused ? 'on' : 'off'}
-        autoFocus={isFocused}
         onClick={handleClick}
         onBlur={handleBlur}
       />

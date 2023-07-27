@@ -968,49 +968,25 @@ namespace Lingtren.Infrastructure.Services
             var enrolledUserlist = lesson.CourseEnrollments.Select(x => x.User);
 
             var userScore = new List<QuestionSetResultDetailModel>();
-            decimal totalMarks = 0;
-            List<(Guid UserId, bool UserResult)> userResults = new List<(Guid, bool)>();
-            if (lesson.QuestionSetId != null)
+            List<(Guid UserId, bool UserResult)?> assignmentStatus = new List<(Guid, bool)?>();
+            if (lesson.Type == LessonType.Assignment)
             {
-                lesson.QuestionSet = new QuestionSet();
-                lesson.QuestionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(predicate: p => p.Id == lesson.QuestionSetId,
-                include: src => src.Include(x => x.QuestionSetSubmissions).Include(x => x.QuestionSetResults).Include(x => x.QuestionSetQuestions)).ConfigureAwait(false);
-                if(lesson.QuestionSet.QuestionSetQuestions.Count != default)
+                var assignmentSubmission = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(predicate: p=> p.LessonId == lesson.Id).ConfigureAwait(false);
+                var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetAllAsync(predicate: p=>p.LessonId == lesson.Id).ConfigureAwait(false);
+                if (assignmentSubmission.Count != default) 
                 {
-                    totalMarks = lesson.QuestionSet.QuestionMarking * lesson.QuestionSet.QuestionSetQuestions.Count;
-                }
-                foreach (var user in enrolledUserlist)
-                {
-                    var userQuestionSubmissionSet = lesson.QuestionSet.QuestionSetResults.Where(x => x.UserId == user.Id).ToList();
-                    userScore.Add(new QuestionSetResultDetailModel
+                    var userIds = assignmentSubmission.Select(x => x.UserId).ToList();
+                    foreach(var userId in userIds)
                     {
-                        ObtainedMarks = userQuestionSubmissionSet.Count > 0 ? ((userQuestionSubmissionSet.Max(x=>x.TotalMark) - userQuestionSubmissionSet.Max(x=>x.NegativeMark))
-                           > 0 ? (userQuestionSubmissionSet.Max(x=>x.TotalMark) - userQuestionSubmissionSet.Max(x=>x.NegativeMark)) : 0).ToString() : "",
-                        Duration = lesson.QuestionSet.Duration != 0 ? TimeSpan.FromSeconds(lesson.QuestionSet.Duration).ToString(@"hh\:mm\:ss") : string.Empty,
-                    });
-                    if (userScore.Count() != 0)
-                    {
-                        var maxScore = userScore.Where(x => x.ObtainedMarks == userScore.Max(y => y.ObtainedMarks)).ToList();
-                        var maxnumber = maxScore.Max(x => decimal.Parse(x.ObtainedMarks));
-                        if (maxnumber != 0)
+                        bool hasSubmitted = false;
+                        if (assignmentSubmission.Any(x => x.UserId == userId) && assignmentReview.Any(x=>x.UserId == userId))
                         {
-                            bool userResult = maxnumber/totalMarks*100 >= lesson.QuestionSet.PassingWeightage;
-                            userResults.Add((user.Id, userResult));
+                            hasSubmitted = true;
                         }
-                        if(maxnumber == 0 & lesson.QuestionSet.PassingWeightage != 0)
-                        {
-                            bool userResult = false;
-                            userResults.Add((user.Id, userResult));
-                        }
-                        if(maxnumber == 0 && lesson.QuestionSet.PassingWeightage == 0)
-                        {
-                            bool userResult = true;
-                            userResults.Add((user.Id, userResult));
-                        }
-                    }              
+                        assignmentStatus.Add((userId,hasSubmitted));
+                    }
                 }
             }
-
             var students = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
                 predicate: p => p.CourseId == course.Id,
                 include: src => src.Include(x => x.User)
@@ -1034,8 +1010,9 @@ namespace Lingtren.Infrastructure.Services
                            LessonType = lesson.Type,
                            QuestionSetId = lesson.Type == LessonType.Exam ? lesson.QuestionSetId : null,
                            IsCompleted = m?.IsCompleted,
-                           IsPassed = userResults.FirstOrDefault(ur => ur.UserId == student.Id) != default ? true : m?.IsPassed ?? false,
+                           IsPassed = m?.IsPassed,
                            UpdatedOn = m?.UpdatedOn ?? m?.CreatedOn,
+                           IsAssignmentReviewed = (bool?)(assignmentStatus.FirstOrDefault(ur => ur.Value.UserId == student.UserId)?.UserResult),
                        };
 
             return data.ToList().ToIPagedList(criteria.Page, criteria.Size);
@@ -1069,6 +1046,7 @@ namespace Lingtren.Infrastructure.Services
                 include: src => src.Include(x => x.Lesson).Include(x => x.User)).ConfigureAwait(false);
 
                 var searchResult = enrollments.ToIPagedList(criteria.Page, criteria.Size);
+                
 
                 var response = new SearchResult<StudentCourseStatisticsResponseModel>
                 {
@@ -1118,8 +1096,30 @@ namespace Lingtren.Infrastructure.Services
                 ).ConfigureAwait(false);
             watchHistories = watchHistories.OrderBy(x => x.Lesson.Section.Order).ThenBy(x => x.Lesson.Order).ToList();
             var response = new List<LessonStudentResponseModel>();
+            var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p=>p.Type ==LessonType.Assignment && p.CourseId == course.Id).ConfigureAwait(false);
+
+            List<(Guid LessonId, bool UserResult)?> assignmentStatus = new List<(Guid, bool)?>();
+            if (lessons.Count != default)
+            {
+                var lessonIds = lessons.Select(x => x.Id).ToList();
+                var assignmentSubmission = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(predicate: p => lessonIds.Contains(p.LessonId)).ConfigureAwait(false);
+                var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetAllAsync(predicate: p =>lessonIds.Contains(p.LessonId)).ConfigureAwait(false);
+                if (assignmentSubmission.Count != default)
+                {
+                    foreach (var lessonId in lessonIds)
+                    {
+                        bool hasSubmitted = false;
+                        if (assignmentSubmission.Any(x => x.LessonId == lessonId && x.UserId == userId) && assignmentReview.Any(x => x.LessonId == lessonId && x.UserId == userId))
+                        {
+                            hasSubmitted = true;
+                        }
+                        assignmentStatus.Add((lessonId,hasSubmitted));
+                    }
+                }
+            }
             watchHistories.ForEach(x => response.Add(new LessonStudentResponseModel
             {
+                IsAssignmentReviewed = (bool?)(assignmentStatus.FirstOrDefault(ur => ur.Value.LessonId == x.LessonId)?.UserResult),
                 LessonId = x.LessonId,
                 LessonSlug = x.Lesson?.Slug,
                 LessonName = x.Lesson?.Name,
@@ -1630,6 +1630,17 @@ namespace Lingtren.Infrastructure.Services
                     _logger.LogWarning("Training with identity: {identity} not found.", identity);
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
+
+                var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
+                    predicate: p => p.CourseId == course.Id
+                    ).ConfigureAwait(false);
+                if(courseCertificate ==default)
+                {
+                    _logger.LogWarning("cannot Created Signature without Certificate in lesson :",identity);
+                    throw new ForbiddenException(_localizer.GetString("CannotAddSignatureWithoutCertificate"));
+                }
+                var existingCertificateUrlKey = courseCertificate?.SampleUrl;
+
                 var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
                     predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
                 if (signatures.Count >= 3)
@@ -1650,11 +1661,6 @@ namespace Lingtren.Infrastructure.Services
                     UpdatedOn = currentTimeStamp,
                     UpdatedBy = currentUserId
                 };
-
-                var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
-                    predicate: p => p.CourseId == course.Id
-                    ).ConfigureAwait(false);
-                var existingCertificateUrlKey = courseCertificate?.SampleUrl;
 
                 if (courseCertificate != null)
                 {

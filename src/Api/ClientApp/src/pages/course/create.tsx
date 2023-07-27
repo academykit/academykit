@@ -207,7 +207,7 @@ const CreateCoursePage = () => {
                 <Select
                   withAsterisk
                   size="lg"
-                  placeholder={t('level_placecancholder') as string}
+                  placeholder={t('level_placeholder') as string}
                   label={t('level')}
                   {...form.getInputProps('level')}
                   data={

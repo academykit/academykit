@@ -4,8 +4,7 @@ import { showNotification } from '@mantine/notifications';
 import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from '@utils/constants';
 import { useLogout, useReAuth } from '@utils/services/authService';
 import { IUserProfile } from '@utils/services/types';
-import React, { createContext, useState, FC } from 'react';
-import { useEffect } from 'react';
+import React, { createContext, useState, FC, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export interface IAuthContext {

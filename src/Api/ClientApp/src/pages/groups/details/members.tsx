@@ -177,7 +177,7 @@ const GroupMemberRow = ({
 
       <td>
         <Group spacing="sm">
-          <Link to={`/userProfile/${data.user.id}`}>
+          <Link to={`/userProfile/${data.user.id}/certificate`}>
             <Avatar size={26} src={data?.user?.imageUrl || ''} radius={26} />
           </Link>
           <Text size="sm" weight={500}>

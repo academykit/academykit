@@ -76,11 +76,7 @@ const AssignmentReviewForm = ({
   return (
     <Box>
       <form onSubmit={form.onSubmit(submitHandler)}>
-        <Textarea
-          autoFocus
-          label={t('comment')}
-          {...form.getInputProps('review')}
-        />
+        <Textarea label={t('comment')} {...form.getInputProps('review')} />
         <NumberInput {...form.getInputProps('marks')} label={t('marks')} />
         <Switch
           checked={isPass}

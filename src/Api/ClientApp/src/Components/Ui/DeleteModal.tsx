@@ -25,6 +25,7 @@ const DeleteModal = ({
     >
       <Group mt={10}>
         <Button
+          color="red"
           loading={loading}
           onClick={() => {
             onConfirm();

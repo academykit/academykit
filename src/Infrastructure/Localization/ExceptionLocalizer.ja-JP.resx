@@ -977,7 +977,13 @@
   <data name="FeedBackContainsSubmission" xml:space="preserve">
     <value>フィードバックには投稿が含まれているため、削除することはできません。</value>
   </data>
-  <data name="LessonWIthType" xml:space="preserve">
+  <data name="LessonWithType" xml:space="preserve">
     <value>タイプを使ったレッスン</value>
+  </data>
+  <data name="AdminCannotAddAdmin" xml:space="preserve">
+    <value>管理者は管理者を追加できません</value>
+  </data>
+  <data name="CannotAddSignatureWithoutCertificate" xml:space="preserve">
+    <value>署名を追加する前に証明書を追加してください。</value>
   </data>
 </root>

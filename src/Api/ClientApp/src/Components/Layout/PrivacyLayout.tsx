@@ -1,9 +1,15 @@
-import { AppShell, Container, Group, Header, Button } from '@mantine/core';
+import {
+  AppShell,
+  Container,
+  Group,
+  Header,
+  Button,
+  createStyles,
+} from '@mantine/core';
 import { Link, Outlet } from 'react-router-dom';
 import { AppFooter } from './AppFooter';
 import { useCompanySetting } from '@utils/services/adminService';
 
-import { createStyles } from '@mantine/core';
 import useAuth from '@hooks/useAuth';
 import UserProfileMenu from '@components/UserProfileMenu';
 import { IUser } from '@utils/services/types';

@@ -150,7 +150,7 @@ const ExamDetails = ({
                 </MantineProvider>
               )}
             </Box>
-            {moment().isBetween(exam?.startTime + 'z', exam?.endTime + 'z') ? (
+            {moment().isBetween(exam?.startTime + 'Z', exam?.endTime + 'Z') ? (
               <>
                 {data.remainingAttempt > 0 ? (
                   <Button

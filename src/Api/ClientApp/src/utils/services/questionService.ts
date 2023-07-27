@@ -133,7 +133,9 @@ export const useGetQuestion = (poolId: string, questionId: string) => {
   return useQuery(
     [api.questions.one(poolId, questionId)],
     () => getQuestion(poolId, questionId),
-    { select: (data) => data.data }
+    {
+      select: (data) => data.data,
+    }
   );
 };
 

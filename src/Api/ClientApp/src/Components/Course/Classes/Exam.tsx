@@ -78,7 +78,7 @@ const useStyle = createStyles((theme) => ({
     border: `2px solid ${theme.colors.yellow[4]}`,
   },
   answered: {
-    backgroundColor: theme.colors[theme.primaryColor][1],
+    backgroundColor: theme.colorScheme == 'dark' ? '#128797' : '#09ADC3',
   },
   parentGrid: {
     flexDirection: 'row',
@@ -123,7 +123,13 @@ const Exam = ({
   });
 
   const submitButtonRef = useRef<HTMLButtonElement | null>(null);
+  const [submitClicked, setSubmitClicked] = useState(false);
   const [showConfirmation, setShowConfirmation] = useToggle();
+
+  const handleCloseModal = () => {
+    setSubmitClicked(false); // disallow user to multiclick the button
+    setShowConfirmation();
+  };
 
   useEffect(() => {
     const isAuthorOrTeacher =
@@ -151,6 +157,7 @@ const Exam = ({
       customLayout.setExamPage && customLayout.setExamPage(false);
     };
   }, [customLayout.examPage]);
+
   const { classes, theme, cx } = useStyle();
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.md}px)`);
   const [visited, setVisited] = useState<number[]>([]);
@@ -193,17 +200,26 @@ const Exam = ({
       <Modal
         title={t('submit_exam_confirmation')}
         opened={showConfirmation}
-        onClose={setShowConfirmation}
+        onClose={handleCloseModal}
       >
         <Group>
           <Button
+            disabled={submitClicked}
             onClick={() => {
+              setSubmitClicked(true);
               submitButtonRef && submitButtonRef.current?.click();
             }}
           >
             {t('submit')}
           </Button>
-          <Button variant="outline" onClick={() => setShowConfirmation()}>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setSubmitClicked(false);
+
+              setShowConfirmation();
+            }}
+          >
             {t('cancel')}
           </Button>
         </Group>

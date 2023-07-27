@@ -1,11 +1,11 @@
 import { CourseStatus } from '@utils/enums';
-import { ILessons } from '@utils/services/courseService';
-
 import {
+  ILessons,
   ISection,
   useLessonReorder,
   useSectionReorder,
 } from '@utils/services/courseService';
+
 import { useMemo, useState } from 'react';
 import {
   DragDropContext,

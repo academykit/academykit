@@ -3,11 +3,10 @@ import withSearchPagination, {
 } from '@hoc/useSearchPagination';
 import useAuth from '@hooks/useAuth';
 import { Box, Container, Flex, Loader } from '@mantine/core';
-import { UserRole } from '@utils/enums';
+import { UserRole, CourseStatus } from '@utils/enums';
 import { useCourse } from '@utils/services/courseService';
 import { useEffect } from 'react';
 import CourseList from './component/List';
-import { CourseStatus } from '@utils/enums';
 import { useTranslation } from 'react-i18next';
 
 const ReviewedCourse = ({

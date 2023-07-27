@@ -10,6 +10,7 @@ import {
   ScrollArea,
   Text,
   Title,
+  UnstyledButton,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import {
@@ -73,7 +74,10 @@ const useStyle = createStyles((theme) => ({
   },
 
   correctCircle: {
-    backgroundColor: theme.colors.green[5],
+    backgroundColor:
+      theme.colorScheme == 'dark'
+        ? theme.colors.green[8]
+        : theme.colors.green[5],
   },
   errorCircle: {
     backgroundColor: theme.colors.red[5],
@@ -159,19 +163,7 @@ const SubmittedResultDetails = ({
                   shadow={'lg'}
                   my={5}
                 >
-                  <Grid justify="space-between" align="center">
-                    {x.isCorrect && x.isSelected && (
-                      <IconCircleCheck
-                        size={36}
-                        color={theme.colors.green[6]}
-                      />
-                    )}
-                    {!x.isCorrect && x.isSelected && (
-                      <IconSquareRoundedX
-                        size={36}
-                        color={theme.colors.red[6]}
-                      />
-                    )}
+                  <Grid justify="start" align="center">
                     <Grid.Col span={11}>
                       <TextViewer
                         key={x.id}
@@ -184,6 +176,18 @@ const SubmittedResultDetails = ({
                         content={x.value}
                       />
                     </Grid.Col>
+                    {x.isCorrect && x.isSelected && (
+                      <IconCircleCheck
+                        size={36}
+                        color={theme.colors.green[6]}
+                      />
+                    )}
+                    {!x.isCorrect && x.isSelected && (
+                      <IconSquareRoundedX
+                        size={36}
+                        color={theme.colors.red[6]}
+                      />
+                    )}
                   </Grid>
                 </Card>
               ))}
@@ -225,7 +229,7 @@ const SubmittedResultDetails = ({
       >
         <Group p={10} className={classes.navigateWrapper}>
           {questions.map((x, i) => (
-            <div
+            <UnstyledButton
               key={i}
               onClick={() => {
                 setCurrentIndex(i);
@@ -250,7 +254,7 @@ const SubmittedResultDetails = ({
               >
                 {i + 1}
               </Card>
-            </div>
+            </UnstyledButton>
           ))}
         </Group>
       </Grid.Col>

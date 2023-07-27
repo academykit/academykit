@@ -49,6 +49,7 @@ const StudentLessonDetails = ({
     lessonId,
     lessonName,
     questionSetId,
+    isPassed,
   },
   courseId,
   studentId,
@@ -228,7 +229,8 @@ const StudentLessonDetails = ({
       </Modal>
       <Group>
         {getViewButton()}
-        {!isCompleted && (
+        {/* show button when student is failed or has not completed exam */}
+        {(!isCompleted || !isPassed) && (
           <Tooltip label={`${t('mark_as')} ${getType(type).true}`}>
             <ActionIcon
               onClick={() => setConfirmComplete()}

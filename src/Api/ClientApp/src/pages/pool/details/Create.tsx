@@ -192,7 +192,7 @@ const Create = () => {
 
   const cancelCreation = () => {
     navigate(-1);
-  }
+  };
 
   return (
     <Container fluid>
@@ -323,7 +323,12 @@ const Create = () => {
               >
                 {t('save_more')}
               </Button>
-              <Button type="button" variant='outline' loading={addQuestion.isLoading} onClick={() => cancelCreation()}>
+              <Button
+                type="button"
+                variant="outline"
+                loading={addQuestion.isLoading}
+                onClick={() => cancelCreation()}
+              >
                 {t('cancel')}
               </Button>
             </Group>

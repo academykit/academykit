@@ -3,9 +3,8 @@ import withSearchPagination, {
 } from '@hoc/useSearchPagination';
 import useAuth from '@hooks/useAuth';
 import { Box, Container, Flex, Loader } from '@mantine/core';
-import { UserRole } from '@utils/enums';
+import { UserRole, CourseUserStatus } from '@utils/enums';
 import { useCourse } from '@utils/services/courseService';
-import { CourseUserStatus } from '@utils/enums';
 
 import CourseList from './component/List';
 import { useTranslation } from 'react-i18next';

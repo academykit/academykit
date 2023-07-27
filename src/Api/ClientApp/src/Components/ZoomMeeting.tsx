@@ -64,8 +64,8 @@ const ZoomMettingMessage = () => {
           <Text size={'xl'} align="center">
             {t('left_meeting')}
           </Text>
-          <Box my={20} ml={180}>
-            <Group>
+          <Box my={20}>
+            <Group style={{ display: 'flex', justifyContent: 'center' }}>
               <Anchor
                 size={'xs'}
                 component={Link}

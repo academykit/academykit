@@ -13,6 +13,11 @@ const CourseDescriptionSection = () => {
   return (
     <Box m={5}>
       <TextViewer
+        key={
+          isExam
+            ? courseLesson.data?.questionSet.description ?? ''
+            : courseLesson.data?.description ?? ''
+        }
         content={
           isExam
             ? courseLesson.data?.questionSet.description ?? ''

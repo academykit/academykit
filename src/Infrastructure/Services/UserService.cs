@@ -291,7 +291,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="currentUserId"> the current user id </param>
         /// <param name="critera"> the instance of <see cref="TeacherSearchCriteria"></see></param>
         /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
-        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId, TeacherSearchCriteria critera)
+        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId,TeacherSearchCriteria critera)
         {
             return await ExecuteWithResultAsync(async () =>
             {
@@ -309,12 +309,22 @@ namespace Lingtren.Infrastructure.Services
                     || x.Email.ToLower().Trim().Contains(search));
                 }
                 predicate = predicate.And(p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer);
-                if (!string.IsNullOrWhiteSpace(critera.CourseIdentity))
+                //for filtering course trainers
+                if (!string.IsNullOrWhiteSpace(critera.Identity) && critera.LessonType == TrainingTypeEnum.Course)
                 {
-                    var courseTeacher = await _unitOfWork.GetRepository<CourseTeacher>().GetAllAsync(predicate: p => p.CourseId.ToString() == critera.CourseIdentity ||
-                    p.Course.Slug.ToLower() == critera.CourseIdentity.ToLower().Trim()).ConfigureAwait(false);
+                    var courseTeacher = await _unitOfWork.GetRepository<CourseTeacher>().GetAllAsync(predicate: p => p.CourseId.ToString() == critera.Identity ||
+                    p.Course.Slug.ToLower() == critera.Identity.ToLower().Trim()).ConfigureAwait(false);
 
                     var userIds = courseTeacher.Select(x => x.UserId).ToList();
+                    predicate = predicate.And(p => !userIds.Contains(p.Id));
+                }
+                // for filtering questionpool trainers
+                if (!string.IsNullOrWhiteSpace(critera.Identity) && critera.LessonType == TrainingTypeEnum.QuestionPool)
+                {
+                    var questionPoolTeachers = await _unitOfWork.GetRepository<QuestionPoolTeacher>().GetAllAsync(predicate: p => p.QuestionPoolId.ToString() == critera.Identity ||
+                   p.QuestionPool.Slug.ToLower() == critera.Identity.ToLower().Trim()).ConfigureAwait(false);
+
+                    var userIds = questionPoolTeachers.Select(x => x.UserId).ToList();
                     predicate = predicate.And(p => !userIds.Contains(p.Id));
                 }
                 return await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: predicate,
@@ -359,7 +369,7 @@ namespace Lingtren.Infrastructure.Services
                         }
                     }
                 }
-                await CheckBulkImport(checkForValidRows);
+                await CheckBulkImport(checkForValidRows,currentUserId);
                 var message = new StringBuilder();
                 users = checkForValidRows.userList.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && !string.IsNullOrWhiteSpace(x.LastName) && !string.IsNullOrWhiteSpace(x.Email)).ToList();
                 var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
@@ -1153,11 +1163,11 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="checkForValidRows">instance of <see cref=""></param>
         /// <returns></returns>
         /// <exception cref="ForbiddenException"></exception>
-        private async Task CheckBulkImport((List<UserImportDto> userList, List<int> SN) checkForValidRows)
+        private async Task CheckBulkImport((List<UserImportDto> userList, List<int> SN) checkForValidRows,Guid currentUserId)
         {
             try
             {
-
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate : p=>p.Id == currentUserId).ConfigureAwait(false);
 
                 if (checkForValidRows.userList.Count == default)
                 {
@@ -1250,6 +1260,18 @@ namespace Lingtren.Infrastructure.Services
                     {
                         throw new ForbiddenException(_localizer.GetString("IncorrectRoleFormat") + " " + string.Join(", ", selectedSNs) + " " + _localizer.GetString("TryAgain"));
                     }
+
+                    var selectedIndices = Enum.GetValues(typeof(UserRole))
+                     .Cast<UserRole>()
+                     .Select((role, index) => new { Role = role, Index = index +2})
+                       .Where(x => string.Equals(x.Role.ToString(),UserRole.Admin.ToString(),StringComparison.OrdinalIgnoreCase))
+                      .Select(x => x.Index)
+                       .ToList();
+                    if (selectedIndices.Any() && user.Role != UserRole.SuperAdmin)
+                    {
+                        throw new ForbiddenException(_localizer.GetString("AdminCannotAddAdmin"));
+                    }
+
                 }
             }
             catch (ForbiddenException ex)

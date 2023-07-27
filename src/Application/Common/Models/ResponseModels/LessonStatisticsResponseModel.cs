@@ -30,5 +30,6 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public bool? IsPassed { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
+        public bool? IsAssignmentReviewed { get; set; } 
     }
 }

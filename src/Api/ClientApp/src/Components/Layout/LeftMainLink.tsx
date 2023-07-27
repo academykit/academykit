@@ -6,7 +6,6 @@ import {
   IconSettings,
   IconDashboard,
   IconUsers,
-  IconInfoSquare,
 } from '@tabler/icons';
 import { ThemeIcon, NavLink } from '@mantine/core';
 import { Link, useLocation } from 'react-router-dom';
@@ -127,14 +126,6 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
       label: 'settings',
       href: '/settings',
       replace: false,
-      role: UserRole.Trainee,
-    },
-    {
-      icon: <IconInfoSquare size={16} />,
-      color: 'blue',
-      label: 'help',
-      href: 'https://docs.google.com/document/d/1S_wlCY7XH2oELa8ZvNPSGVik2117HuclOGC04iHpP-w/edit?usp=sharing ',
-      replace: true,
       role: UserRole.Trainee,
     },
   ];

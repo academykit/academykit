@@ -155,7 +155,6 @@ const EditFeedback = ({
         <form onSubmit={form.onSubmit(onSubmit)}>
           <Paper p={20} withBorder mt={20}>
             <TextInput
-              autoFocus
               autoComplete="off"
               size={fieldSize}
               withAsterisk
@@ -220,12 +219,6 @@ const EditFeedback = ({
                             </UnstyledButton>
                           )}
                       </Flex>
-                      {typeof form.errors[`answers.${i}.option`] ===
-                        'string' && (
-                        <span style={{ color: 'red' }}>
-                          {form.errors[`answers.${i}.option`]}
-                        </span>
-                      )}
                     </div>
                   ))}
                 {typeof form.errors[`answers`] === 'string' && (

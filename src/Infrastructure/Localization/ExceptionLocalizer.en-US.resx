@@ -678,8 +678,8 @@
   <data name="ServerUrlNotFound" xml:space="preserve">
     <value>Server url not found.</value>
   </data>
-  <data name="String1" xml:space="preserve">
-    <value />
+  <data name="AdminCannotAddAdmin" xml:space="preserve">
+    <value>Admin cannot add admin.</value>
   </data>
   <data name="UserCanNotRemoveSameUser" xml:space="preserve">
     <value>User cannot be removed same user.</value>
@@ -980,7 +980,10 @@ recorded cannot be deleted.</value>
   <data name="FeedBackContainsSubmission" xml:space="preserve">
     <value>Feedback contains submission.So, it cannot be deleted.</value>
   </data>
-  <data name="LessonWIthType" xml:space="preserve">
+  <data name="LessonWithType" xml:space="preserve">
     <value>Lesson with type</value>
+  </data>
+  <data name="CannotAddSignatureWithoutCertificate" xml:space="preserve">
+    <value>Please add certificate before adding signature.</value>
   </data>
 </root>

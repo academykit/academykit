@@ -1,4 +1,6 @@
 ﻿
+using Lingtren.Domain.Enums;
+
 namespace Lingtren.Application.Common.Dtos
 {
     public class TeacherSearchCriteria:BaseSearchCriteria
@@ -6,8 +8,11 @@ namespace Lingtren.Application.Common.Dtos
         /// <summary>
         /// course id or slug of specific course
         /// </summary>
-        public string CourseIdentity { get; set; }
+        public string? Identity {get; set; }
 
-        public string Search { get; set; }
+        /// <summary>
+        ///specify type of enum 
+        /// </summary>
+        public TrainingTypeEnum LessonType { get; set; }
     }
 }
