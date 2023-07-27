@@ -97,7 +97,21 @@ const FeedbackItem = ({
       />
 
       <Paper shadow={'lg'} sx={{ width: '100%' }} my={20} withBorder p={20}>
-        <Title>{data.name}</Title>
+        <Flex justify={'space-between'}>
+          <Title>{data.name}</Title>
+          <Group>
+            <Button variant="subtle" onClick={() => setEdit()}>
+              <IconEdit />
+            </Button>
+            <Button
+              variant="subtle"
+              color="red"
+              onClick={() => setConfirmDelete()}
+            >
+              <IconTrash />
+            </Button>
+          </Group>
+        </Flex>
 
         {data.description && (
           <Box my={10}>
@@ -137,20 +151,6 @@ const FeedbackItem = ({
           )}
         </Box>
       </Paper>
-      <Flex
-        className={'action'}
-        direction={'column'}
-        align="center"
-        justify={'center'}
-        gap={20}
-      >
-        <Button variant="subtle" onClick={() => setEdit()}>
-          <IconEdit />
-        </Button>
-        <Button variant="subtle" color="red" onClick={() => setConfirmDelete()}>
-          <IconTrash />
-        </Button>
-      </Flex>
     </Flex>
   );
 };
