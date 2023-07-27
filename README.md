@@ -11,7 +11,7 @@
 ## Run In Development
 
 ```bash
-cd src/Api/ClientApp && npm i cd ../../../
+cd src/Api/ClientApp && npm i && cd ../../../
 dotnet watch run --project=src/Api/Api.csproj
 ```
 
