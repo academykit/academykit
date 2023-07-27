@@ -16,11 +16,13 @@ import {
 } from '@utils/services/courseService';
 import { useParams } from 'react-router-dom';
 import { showNotification } from '@mantine/notifications';
-import { useForm } from '@mantine/form';
+import { useForm, yupResolver } from '@mantine/form';
 import errorType from '@utils/services/axiosError';
 import { IconDragDrop } from '@tabler/icons';
 import { CourseStatus } from '@utils/enums';
 import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 
 const useStyle = createStyles((theme) => ({
   section: {
@@ -79,13 +81,23 @@ const EditSection = () => {
   );
 };
 
+const schema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    name: Yup.string().required(t('section_name_required') as string),
+  });
+};
+
 const AddSectionForm = ({ slug }: { slug: string }) => {
   const section = useSection();
   const form = useForm({
     initialValues: {
       name: '',
     },
+    validate: yupResolver(schema()),
   });
+  useFormErrorHooks(form);
+
   const addSection = useCreateSection(slug);
   const { t } = useTranslation();
 

@@ -858,6 +858,7 @@
       "AWS_VideoBucket": "भिडियो संग्रह"
     }
   },
+  "section_name_required": "खण्डको नाम आवश्यक छ",
   "in_review": "समीक्षा",
   "Rating": "रेटिङ",
   "few_seconds_ago": "केही सेकेण्ड पहिले",
