@@ -547,7 +547,7 @@ namespace Lingtren.Infrastructure.Services
                     if (hasAnyAttempt)
                     {
                         _logger.LogWarning("DeleteLessonAsync(): Lesson with id: {lessonId} and question set with id: {questionSetId} having type: {type} contains exam submission.", lesson.Id, lesson.QuestionSetId, lesson.Type);
-                        throw new ForbiddenException(_localizer.GetString("LessonWIthType") +" "+ lesson.Type +" "+ _localizer.GetString("ExamCannotBeDeleted"));
+                        throw new ForbiddenException(_localizer.GetString("LessonWithType") +" "+ lesson.Type +" "+ _localizer.GetString("ExamCannotBeDeleted"));
                     }
 
                     _unitOfWork.GetRepository<QuestionSetQuestion>().Delete(questionSet.QuestionSetQuestions);

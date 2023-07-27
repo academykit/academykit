@@ -968,48 +968,6 @@ namespace Lingtren.Infrastructure.Services
             var enrolledUserlist = lesson.CourseEnrollments.Select(x => x.User);
 
             var userScore = new List<QuestionSetResultDetailModel>();
-            decimal totalMarks = 0;
-            List<(Guid UserId, bool UserResult)> userResults = new List<(Guid, bool)>();
-            if (lesson.QuestionSetId != null)
-            {
-                lesson.QuestionSet = new QuestionSet();
-                lesson.QuestionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(predicate: p => p.Id == lesson.QuestionSetId,
-                include: src => src.Include(x => x.QuestionSetSubmissions).Include(x => x.QuestionSetResults).Include(x => x.QuestionSetQuestions)).ConfigureAwait(false);
-                if(lesson.QuestionSet.QuestionSetQuestions.Count != default)
-                {
-                    totalMarks = lesson.QuestionSet.QuestionMarking * lesson.QuestionSet.QuestionSetQuestions.Count;
-                }
-                foreach (var user in enrolledUserlist)
-                {
-                    var userQuestionSubmissionSet = lesson.QuestionSet.QuestionSetResults.Where(x => x.UserId == user.Id).ToList();
-                    userScore.Add(new QuestionSetResultDetailModel
-                    {
-                        ObtainedMarks = userQuestionSubmissionSet.Count > 0 ? ((userQuestionSubmissionSet.Max(x=>x.TotalMark) - userQuestionSubmissionSet.Max(x=>x.NegativeMark))
-                           > 0 ? (userQuestionSubmissionSet.Max(x=>x.TotalMark) - userQuestionSubmissionSet.Max(x=>x.NegativeMark)) : 0).ToString() : "",
-                        Duration = lesson.QuestionSet.Duration != 0 ? TimeSpan.FromSeconds(lesson.QuestionSet.Duration).ToString(@"hh\:mm\:ss") : string.Empty,
-                    });
-                    if (userScore.Count() != 0)
-                    {
-                        var maxScore = userScore.Where(x => x.ObtainedMarks == userScore.Max(y => y.ObtainedMarks)).ToList();
-                        var maxnumber = maxScore.Max(x => decimal.Parse(x.ObtainedMarks));
-                        if (maxnumber != 0)
-                        {
-                            bool userResult = maxnumber/totalMarks*100 >= lesson.QuestionSet.PassingWeightage;
-                            userResults.Add((user.Id, userResult));
-                        }
-                        if(maxnumber == 0 & lesson.QuestionSet.PassingWeightage != 0)
-                        {
-                            bool userResult = false;
-                            userResults.Add((user.Id, userResult));
-                        }
-                        if(maxnumber == 0 && lesson.QuestionSet.PassingWeightage == 0)
-                        {
-                            bool userResult = true;
-                            userResults.Add((user.Id, userResult));
-                        }
-                    }              
-                }
-            }
             List<(Guid UserId, bool UserResult)?> assignmentStatus = new List<(Guid, bool)?>();
             if (lesson.Type == LessonType.Assignment)
             {
@@ -1052,7 +1010,7 @@ namespace Lingtren.Infrastructure.Services
                            LessonType = lesson.Type,
                            QuestionSetId = lesson.Type == LessonType.Exam ? lesson.QuestionSetId : null,
                            IsCompleted = m?.IsCompleted,
-                           IsPassed = userResults.FirstOrDefault(ur => ur.UserId == student.UserId) != default ? true : m?.IsPassed ?? false,
+                           IsPassed = m?.IsPassed,
                            UpdatedOn = m?.UpdatedOn ?? m?.CreatedOn,
                            IsAssignmentReviewed = (bool?)(assignmentStatus.FirstOrDefault(ur => ur.Value.UserId == student.UserId)?.UserResult),
                        };
@@ -1672,6 +1630,17 @@ namespace Lingtren.Infrastructure.Services
                     _logger.LogWarning("Training with identity: {identity} not found.", identity);
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
+
+                var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
+                    predicate: p => p.CourseId == course.Id
+                    ).ConfigureAwait(false);
+                if(courseCertificate ==default)
+                {
+                    _logger.LogWarning("cannot Created Signature without Certificate in lesson :",identity);
+                    throw new ForbiddenException(_localizer.GetString("CannotAddSignatureWithoutCertificate"));
+                }
+                var existingCertificateUrlKey = courseCertificate?.SampleUrl;
+
                 var signatures = await _unitOfWork.GetRepository<Signature>().GetAllAsync(
                     predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
                 if (signatures.Count >= 3)
@@ -1692,11 +1661,6 @@ namespace Lingtren.Infrastructure.Services
                     UpdatedOn = currentTimeStamp,
                     UpdatedBy = currentUserId
                 };
-
-                var courseCertificate = await _unitOfWork.GetRepository<CourseCertificate>().GetFirstOrDefaultAsync(
-                    predicate: p => p.CourseId == course.Id
-                    ).ConfigureAwait(false);
-                var existingCertificateUrlKey = courseCertificate?.SampleUrl;
 
                 if (courseCertificate != null)
                 {
