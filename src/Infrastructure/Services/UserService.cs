@@ -291,7 +291,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="currentUserId"> the current user id </param>
         /// <param name="critera"> the instance of <see cref="TeacherSearchCriteria"></see></param>
         /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
-        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId, TeacherSearchCriteria critera)
+        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId,TeacherSearchCriteria critera)
         {
             return await ExecuteWithResultAsync(async () =>
             {
@@ -309,12 +309,22 @@ namespace Lingtren.Infrastructure.Services
                     || x.Email.ToLower().Trim().Contains(search));
                 }
                 predicate = predicate.And(p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer);
-                if (!string.IsNullOrWhiteSpace(critera.CourseIdentity))
+                //for filtering course trainers
+                if (!string.IsNullOrWhiteSpace(critera.Identity) && critera.LessonType == TrainingTypeEnum.Course)
                 {
-                    var courseTeacher = await _unitOfWork.GetRepository<CourseTeacher>().GetAllAsync(predicate: p => p.CourseId.ToString() == critera.CourseIdentity ||
-                    p.Course.Slug.ToLower() == critera.CourseIdentity.ToLower().Trim()).ConfigureAwait(false);
+                    var courseTeacher = await _unitOfWork.GetRepository<CourseTeacher>().GetAllAsync(predicate: p => p.CourseId.ToString() == critera.Identity ||
+                    p.Course.Slug.ToLower() == critera.Identity.ToLower().Trim()).ConfigureAwait(false);
 
                     var userIds = courseTeacher.Select(x => x.UserId).ToList();
+                    predicate = predicate.And(p => !userIds.Contains(p.Id));
+                }
+                // for filtering questionpool trainers
+                if (!string.IsNullOrWhiteSpace(critera.Identity) && critera.LessonType == TrainingTypeEnum.QuestionPool)
+                {
+                    var questionPoolTeachers = await _unitOfWork.GetRepository<QuestionPoolTeacher>().GetAllAsync(predicate: p => p.QuestionPoolId.ToString() == critera.Identity ||
+                   p.QuestionPool.Slug.ToLower() == critera.Identity.ToLower().Trim()).ConfigureAwait(false);
+
+                    var userIds = questionPoolTeachers.Select(x => x.UserId).ToList();
                     predicate = predicate.And(p => !userIds.Contains(p.Id));
                 }
                 return await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: predicate,
