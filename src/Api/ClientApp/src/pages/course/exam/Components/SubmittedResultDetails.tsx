@@ -74,7 +74,10 @@ const useStyle = createStyles((theme) => ({
   },
 
   correctCircle: {
-    backgroundColor: theme.colors.green[5],
+    backgroundColor:
+      theme.colorScheme == 'dark'
+        ? theme.colors.green[8]
+        : theme.colors.green[5],
   },
   errorCircle: {
     backgroundColor: theme.colors.red[5],

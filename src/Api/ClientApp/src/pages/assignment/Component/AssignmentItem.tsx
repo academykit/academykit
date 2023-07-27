@@ -3,8 +3,8 @@ import {
   Box,
   Button,
   Checkbox,
-  createStyles,
   Flex,
+  Group,
   Paper,
   Select,
   Text,
@@ -19,22 +19,9 @@ import {
   useDeleteAssignmentQuestion,
 } from '@utils/services/assignmentService';
 import errorType from '@utils/services/axiosError';
-import EditAssignment from './EditAssignment';
 import { useTranslation } from 'react-i18next';
 import TextViewer from '@components/Ui/RichTextViewer';
-
-const useStyle = createStyles(() => ({
-  wrapper: {
-    ':hover': {
-      '.action': {
-        display: 'flex',
-      },
-    },
-    '.action': {
-      display: 'none',
-    },
-  },
-}));
+import EditAssignment from './EditAssignment';
 
 const AssignmentItem = ({
   data,
@@ -45,7 +32,6 @@ const AssignmentItem = ({
   search: string;
   lessonId: string;
 }) => {
-  const { classes } = useStyle();
   const [edit, setEdit] = useToggle();
   const { t } = useTranslation();
   const getQuestionType = () => {
@@ -86,7 +72,7 @@ const AssignmentItem = ({
     );
   }
   return (
-    <Flex gap={'lg'} className={classes.wrapper}>
+    <Flex gap={'lg'}>
       <DeleteModal
         title={t('delete_assignment_question_confirmation')}
         open={confirmDelete}
@@ -95,8 +81,21 @@ const AssignmentItem = ({
       />
 
       <Paper shadow={'lg'} sx={{ width: '100%' }} my={20} withBorder p={20}>
-        <Title>{data.name}</Title>
-
+        <Flex justify={'space-between'}>
+          <Title>{data.name}</Title>
+          <Group>
+            <Button variant="subtle" onClick={() => setEdit()}>
+              <IconEdit />
+            </Button>
+            <Button
+              variant="subtle"
+              color="red"
+              onClick={() => setConfirmDelete()}
+            >
+              <IconTrash />
+            </Button>
+          </Group>
+        </Flex>
         {data.description && (
           <Box my={10}>
             <Text>{t('description')}</Text>
@@ -131,7 +130,7 @@ const AssignmentItem = ({
                   my={10}
                   key={x.id}
                 >
-                  <Checkbox onChange={() => {}} checked={x.isCorrect} />
+                  <Checkbox readOnly checked={x.isCorrect} />
                   <TextViewer
                     sx={{ width: '90%' }}
                     content={x.option}
@@ -142,20 +141,6 @@ const AssignmentItem = ({
           )}
         </Box>
       </Paper>
-      <Flex
-        className={'action'}
-        direction={'column'}
-        align="center"
-        justify={'center'}
-        gap={20}
-      >
-        <Button variant="subtle" onClick={() => setEdit()}>
-          <IconEdit />
-        </Button>
-        <Button variant="subtle" color="red" onClick={() => setConfirmDelete()}>
-          <IconTrash />
-        </Button>
-      </Flex>
     </Flex>
   );
 };

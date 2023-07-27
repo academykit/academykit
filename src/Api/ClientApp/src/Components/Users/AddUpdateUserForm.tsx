@@ -149,15 +149,15 @@ const AddUpdateUserForm = ({
       <Grid align={'center'}>
         <Grid.Col xs={6} lg={4}>
           <CustomTextFieldWithAutoFocus
+            styles={{ error: { position: 'absolute' } }}
             withAsterisk
             label={t('firstname')}
             placeholder={t('user_firstname') as string}
             name="firstName"
             {...form.getInputProps('firstName')}
           />
-          {/* <TextInput /> */}
         </Grid.Col>
-        <Grid.Col xs={6} lg={4}>
+        <Grid.Col xs={6} lg={4} mt={5}>
           <TextInput
             label={t('middlename')}
             placeholder={t('user_middlename') as string}
@@ -166,6 +166,7 @@ const AddUpdateUserForm = ({
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <TextInput
+            styles={{ error: { position: 'absolute' } }}
             withAsterisk
             label={t('lastname')}
             placeholder={t('user_lastname') as string}
@@ -174,6 +175,7 @@ const AddUpdateUserForm = ({
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <TextInput
+            styles={{ error: { position: 'absolute' } }}
             withAsterisk
             label={t('email')}
             type="email"
@@ -181,14 +183,15 @@ const AddUpdateUserForm = ({
             {...form.getInputProps('email')}
           />
         </Grid.Col>
-        <Grid.Col xs={6} lg={4}>
+        <Grid.Col xs={6} lg={4} mt={5}>
           <TextInput
+            styles={{ error: { position: 'absolute' } }}
             label={t('mobilenumber')}
             placeholder={t('user_phone_number') as string}
             {...form.getInputProps('mobileNumber')}
           />
         </Grid.Col>
-        <Grid.Col xs={6} lg={4}>
+        <Grid.Col xs={6} lg={4} mt={5}>
           <TextInput
             label={t('profession')}
             placeholder={t('user_profession') as string}

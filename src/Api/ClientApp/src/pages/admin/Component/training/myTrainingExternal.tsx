@@ -168,6 +168,7 @@ const MyTrainingExternal = () => {
                 {...form.getInputProps('duration')}
               />
               <DatePickerInput
+                allowSingleDateInRange
                 maxDate={new Date()}
                 required
                 valueFormat="MMM DD, YYYY"
@@ -223,7 +224,14 @@ const MyTrainingExternal = () => {
                 <Flex>
                   <Text weight={'bold'}>
                     {x.name}
-                    <Badge color="cyan" ml={20}>
+                    <Badge
+                      color={
+                        CertificateStatus[x.status] == 'Rejected'
+                          ? 'red'
+                          : 'cyan'
+                      }
+                      ml={20}
+                    >
                       {t(`${CertificateStatus[x.status]}`)}
                     </Badge>
                   </Text>
