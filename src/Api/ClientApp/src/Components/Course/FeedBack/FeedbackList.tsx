@@ -143,7 +143,7 @@ const FeedbackItem = ({
                 <Group my={10} key={x.id} id="hehe">
                   <TextViewer
                     content={x.option}
-                    styles={{ root: { flexGrow: 'inherit' } }}
+                    styles={{ root: { flexGrow: 1 } }}
                   ></TextViewer>
                 </Group>
               ))}
