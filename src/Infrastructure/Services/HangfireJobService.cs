@@ -471,7 +471,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var firstName = users.User.FirstName;
                     var html = $"Dear {firstName},<br><br>";
-                    html += @$"Your enrolled course entitled  <a href='{this._appUrl}/trainings/{courseSlug}' ><u  style='color:blue;'>'{courseName}'</u></a>  has been updated with new content. We encourage you to visit the course page and "
+                    html += @$"Your enrolled training entitled  <a href='{this._appUrl}/trainings/{courseSlug}' ><u  style='color:blue;'>'{courseName}'</u></a>  has been updated with new content. We encourage you to visit the course page and "
                         + $"explore the new materials to enhance your learning experience.<br><br>";
 
                     html += $"<br><br>Thank You, <br> {settings.CompanyName}";

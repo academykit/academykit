@@ -983,4 +983,7 @@ recorded cannot be deleted.</value>
   <data name="LessonWIthType" xml:space="preserve">
     <value>Lesson with type</value>
   </data>
+  <data name="CannotAddSignatureWithoutCertificate" xml:space="preserve">
+    <value>please add certificate before adding signature.</value>
+  </data>
 </root>

@@ -460,16 +460,6 @@
 
             var course = await ValidateAndGetCourse(searchCriteria.CurrentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
 
-            var isTeacher = course.CourseTeachers.Any(x => x.UserId == searchCriteria.CurrentUserId);
-            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(searchCriteria.CurrentUserId).ConfigureAwait(false);
-
-            if (!isTeacher && !isSuperAdminOrAdmin && searchCriteria.UserId == null)
-            {
-                searchCriteria.UserId = searchCriteria.CurrentUserId;
-            }
-
-            var showCorrectAndHints = isTeacher || isSuperAdminOrAdmin;
-
             var predicate = PredicateBuilder.New<Assignment>(true);
             predicate = predicate.And(x => x.LessonId == lesson.Id);
 
@@ -492,7 +482,7 @@
 
             foreach (var item in assignments)
             {
-                MapAssignment(showCorrectAndHints, userAssignments, item, response);
+                MapAssignment(false, userAssignments, item, response);
             }
             return response;
         }
@@ -855,7 +845,7 @@
                 Name = item.Name,
                 Description = item.Description,
                 Order = item.Order,
-                Hints = item.Hints,
+                Hints = showCorrectAndHints ? item.Hints : null,
                 Type = item.Type,
                 IsActive = item.IsActive,
                 User = item.User == null ? new UserModel() : new UserModel(item.User),
