@@ -59,7 +59,7 @@ const LessonExam = () => {
             onClick={() => navigate(-1)}
             className={classes.control}
           >
-            {t('go_back_button')}
+            {t('back_course')}
           </Button>
         </div>
       </Container>
