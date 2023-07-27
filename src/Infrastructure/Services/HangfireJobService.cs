@@ -59,15 +59,14 @@ namespace Lingtren.Infrastructure.Services
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
                 foreach (var user in users)
                 {
-                    var fullName = string.IsNullOrEmpty(user.MiddleName) ? $"{user.FirstName} {user.LastName}" : $"{user.FirstName} {user.MiddleName} {user.LastName}";
-                    var html = $"Dear {fullName},<br><br>";
-                    html += $"You have new {courseName} training available for the review process <br>" +
-                            @$"<a href = '{this._appUrl}/settings/courses'> <u  style='color:blue;'> Click Here </u></a> to redirect to the course.<br><br>";
-                    html += $"Thank You, <br> {settings.CompanyName}";
+                    var html = $"Dear {user.FirstName},<br><br>";
+                    html += $"Training " +
+                            @$"<a href = '{this._appUrl}/settings/courses'> <u  style='color:blue;'>""{courseName}""</u></a> is under review.Kindly provide feedback and assessment. Your input is vital for quality assurance. Thank you.<br><br>";
+                    html += $"Best regards, <br> {settings.CompanyName}";
                     var model = new EmailRequestDto
                     {
                         To = user.Email,
-                        Subject = "Review Courses",
+                        Subject = $"Training Review Status - {courseName}",
                         Message = html
                     };
                     await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
@@ -111,7 +110,7 @@ namespace Lingtren.Infrastructure.Services
                     if (!string.IsNullOrEmpty(teacher.User?.Email))
                     {
                         var html = $"Dear {teacher?.User.FirstName},<br><br>";
-                        html += $"We regret to inform you that your training, [Training Name] has been rejected for the following reason:<br><br>";
+                        html += $"We regret to inform you that your training, {course.Name} has been rejected for the following reason:<br><br>";
                         html += $"{message}<br><br>";
                         html += $"However, we encourage you to make the necessary corrections and adjustments based on the provided feedback. Once you have addressed the identified issues, please resubmit the training program for further review.<br><br>";
                         html += $"Thank you for your understanding and cooperation.<br><br>";
