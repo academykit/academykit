@@ -12,6 +12,9 @@ import {
   Navbar,
   ScrollArea,
   Box,
+  NavLink,
+  ThemeIcon,
+  rem,
 } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { useGeneralSetting } from '@utils/services/adminService';
@@ -20,6 +23,9 @@ import { useEffect } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { AppFooter } from './AppFooter';
 import { LeftMainLinks } from './LeftMainLink';
+import { IconInfoSquare } from '@tabler/icons';
+import { UserRole } from '@utils/enums';
+import { useTranslation } from 'react-i18next';
 
 const HEADER_HEIGHT = 60;
 const useStyles = createStyles((theme) => ({
@@ -103,6 +109,11 @@ const useStyles = createStyles((theme) => ({
       0.1
     ),
   },
+  footer: {
+    paddingTop: theme.spacing.xs,
+    marginTop: theme.spacing.md,
+    borderTop: `${rem(0.2)} solid `,
+  },
 }));
 
 const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
@@ -144,8 +155,17 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
   const [opened, { toggle }] = useDisclosure(false);
   const { classes, theme } = useStyles();
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.xs}px)`);
-
+  const footerMenu = {
+    icon: <IconInfoSquare size={16} />,
+    color: 'blue',
+    label: 'help',
+    href: 'https://docs.google.com/document/d/1S_wlCY7XH2oELa8ZvNPSGVik2117HuclOGC04iHpP-w/edit?usp=sharing ',
+    replace: true,
+    role: UserRole.Trainee,
+    target: '_blank',
+  };
   const layout = useCustomLayout();
+  const { t } = useTranslation();
   return (
     <AppShell
       styles={(theme) => ({
@@ -174,6 +194,25 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
                 {!layout.meetPage && <LeftMainLinks onClose={() => toggle()} />}
               </Box>
             </Navbar.Section>
+            {!layout.meetPage && (
+              <Navbar.Section className={classes.footer}>
+                <NavLink
+                  component="a"
+                  href={footerMenu.href}
+                  label={t(`${footerMenu.label}`)}
+                  target={footerMenu.target}
+                  icon={
+                    <ThemeIcon color={footerMenu.color}>
+                      {footerMenu.icon}
+                    </ThemeIcon>
+                  }
+                  sx={(theme) => ({
+                    padding: theme.spacing.xs,
+                    borderRadius: theme.radius.sm,
+                  })}
+                />
+              </Navbar.Section>
+            )}
           </Navbar>
         ) : (
           <></>

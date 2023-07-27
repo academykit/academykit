@@ -219,12 +219,6 @@ const EditFeedback = ({
                             </UnstyledButton>
                           )}
                       </Flex>
-                      {typeof form.errors[`answers.${i}.option`] ===
-                        'string' && (
-                        <span style={{ color: 'red' }}>
-                          {form.errors[`answers.${i}.option`]}
-                        </span>
-                      )}
                     </div>
                   ))}
                 {typeof form.errors[`answers`] === 'string' && (

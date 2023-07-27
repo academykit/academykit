@@ -55,6 +55,9 @@ export const useWatchHistoryUser = (
       queryClient.invalidateQueries([
         api.course.lessonStatDetails(courseId, lessonId, 'page=1&size=12'),
       ]);
+      queryClient.invalidateQueries([
+        api.course.studentStatDetails(courseId, userId),
+      ]);
     },
     onError: (err) => {
       return errorType(err);

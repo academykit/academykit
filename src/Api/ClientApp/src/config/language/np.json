@@ -858,6 +858,7 @@
       "AWS_VideoBucket": "भिडियो संग्रह"
     }
   },
+  "section_name_required": "खण्डको नाम आवश्यक छ",
   "in_review": "समीक्षा",
   "Rating": "रेटिङ",
   "few_seconds_ago": "केही सेकेण्ड पहिले",
@@ -886,8 +887,8 @@
   "in_months": "महिनामा",
   "in_year": "वर्षमा",
   "in_years": "वर्षमा",
-  "thank_for_attending_meeting": "मिलाउनुभयोको लागि धन्यवाद।",
-  "left_meeting": "तपाईंले मिटिङबाट बिदाउनुभयो।",
+  "thank_for_attending_meeting": "सहभागीताको लागि धन्यवाद।",
+  "left_meeting": "तपाईंले बैठक छोड्नुभएको छ।",
   "meeting_end": "मिटिङ सकिएको छ।",
   "meeting_end_desc": "मिटिङ सकिएको छ।",
   "no_active_department": "कुनै सक्रिय विभाग छैन",
