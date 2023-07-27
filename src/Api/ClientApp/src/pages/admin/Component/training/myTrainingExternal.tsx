@@ -168,6 +168,7 @@ const MyTrainingExternal = () => {
                 {...form.getInputProps('duration')}
               />
               <DatePickerInput
+                allowSingleDateInRange
                 maxDate={new Date()}
                 required
                 valueFormat="MMM DD, YYYY"
