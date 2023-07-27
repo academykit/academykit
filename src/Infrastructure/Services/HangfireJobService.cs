@@ -61,7 +61,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var html = $"Dear {user.FirstName},<br><br>";
                     html += $"Training " +
-                            @$"<a href = '{this._appUrl}/settings/courses'> <u  style='color:blue;'>""{courseName}""</u></a> is under review. Kindly provide feedback and assessment. Your input is vital for quality assurance. Thank you.<br><br>";
+                            @$"<a href = '{this._appUrl}/settings/courses'>""{courseName}""</a> is under review. Kindly provide feedback and assessment. Your input is vital for quality assurance. Thank you.<br><br>";
                     html += $"Best regards, <br> {settings.CompanyName}";
                     var model = new EmailRequestDto
                     {
