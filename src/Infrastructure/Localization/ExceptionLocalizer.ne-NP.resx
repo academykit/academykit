@@ -974,7 +974,7 @@
   <data name="FeedBackContainsSubmission" xml:space="preserve">
     <value>प्रतिक्रियामा सबमिशन समावेश छ। त्यसैले, यसलाई मेटाउन सकिँदैन।</value>
   </data>
-  <data name="LessonWIthType" xml:space="preserve">
+  <data name="LessonWithType" xml:space="preserve">
     <value>प्रकारको साथ पाठ</value>
   </data>
   <data name="AdminCannotAddAdmin" xml:space="preserve">
