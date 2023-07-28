@@ -7,7 +7,7 @@ const BASE_URL = ``;
 const api = (courseId: string, lessonId: string) =>
   `/api/course/${courseId}/lesson/${lessonId}/join`;
 
-ZoomMtg.setZoomJSLib('https://jssdk.zoomus.cn/2.13.0/lib', '/av'); // china cdn option
+ZoomMtg.setZoomJSLib('https://jssdk.zoomus.cn/2.14.0/lib', '/av'); // china cdn option
 ZoomMtg.preLoadWasm();
 ZoomMtg.prepareJssdk();
 export interface IStartExam {
@@ -64,7 +64,7 @@ function beginJoin(meetingConfig: IStartExam) {
           window.location.replace(`${leaveUrl}/?s=4&e=${encodeURIComponent(
             'Something went wrong while starting meeting.'
           )}
-    `);
+        `);
         },
       });
     },
