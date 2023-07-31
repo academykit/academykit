@@ -57,6 +57,13 @@ const schema = () => {
   });
 };
 
+const editSchema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    eName: Yup.string().required(t('level_name_required') as string),
+  });
+};
+
 const Level = () => {
   const form = useForm({
     initialValues: {
@@ -78,7 +85,10 @@ const Level = () => {
       initialValues: {
         eName: item.name,
       },
+      validate: yupResolver(editSchema()),
     });
+    useFormErrorHooks(form);
+
     const deleteLevel = useDeleteLevelSetting();
     const handleDelete = async () => {
       try {
