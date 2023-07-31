@@ -12,7 +12,10 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import TextEditor from '@components/Ui/TextEditor';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import CustomTextFieldWithAutoFocus, {
+  DynamicAutoFocusTextField,
+} from '@components/Ui/CustomTextFieldWithAutoFocus';
 import TextViewer from '@components/Ui/RichTextViewer';
 
 export interface FormValues {
@@ -146,7 +149,8 @@ const UserInfo = () => {
 
           <Grid>
             <Grid.Col xs={6} lg={4}>
-              <CustomTextFieldWithAutoFocus
+              <DynamicAutoFocusTextField
+                isViewMode={viewMode}
                 readOnly={viewMode}
                 withAsterisk
                 label={t('firstname') as string}
