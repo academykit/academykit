@@ -50,6 +50,10 @@ namespace Lingtren.Infrastructure.Services
                 {
                     certificate.Status = CertificateStatus.Approved;
                 }
+                if(model.StartDate.AddHours(model.Duration).Date > model.EndDate)
+                {
+                    throw new ForbiddenException(_localizer.GetString("AddingDuratrionError"));
+                }
                 await _unitOfWork.GetRepository<Certificate>().InsertAsync(certificate).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return new CertificateResponseModel(certificate);

@@ -147,6 +147,12 @@
   <data name="CapacityRequired" xml:space="preserve">
     <value>容量が必要です。</value>
   </data>
+  <data name="CertificateEndTimeError" xml:space="preserve">
+    <value>証明書の終了日は現在の日付以降であってはなりません。</value>
+  </data>
+  <data name="CertificateStartTimeError" xml:space="preserve">
+    <value>証明書の開始時刻は現在の日付以降であってはなりません</value>
+  </data>
   <data name="CompanyAddressLengthError" xml:space="preserve">
     <value>会社の住所の長さは 250 文字以下である必要があります。</value>
   </data>

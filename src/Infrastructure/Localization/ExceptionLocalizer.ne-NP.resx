@@ -983,4 +983,7 @@
   <data name="CannotAddSignatureWithoutCertificate" xml:space="preserve">
     <value>कृपया हस्ताक्षर थप्नु अघि प्रमाणपत्र थप्नुहोस्।</value>
   </data>
+  <data name="AddingDuratrionError" xml:space="preserve">
+    <value>अवधि थप्दा अन्तिम मिति नाघ्यो।</value>
+  </data>
 </root>
