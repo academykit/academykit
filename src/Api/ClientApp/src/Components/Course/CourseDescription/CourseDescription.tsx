@@ -12,6 +12,8 @@ import {
   Box,
   Loader,
   Badge,
+  Modal,
+  Textarea,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import {
@@ -33,6 +35,8 @@ import CourseContent from './CourseContent/CourseContent';
 import { useTranslation } from 'react-i18next';
 import { color } from '@utils/constants';
 import TextViewer from '@components/Ui/RichTextViewer';
+import { useToggle } from '@mantine/hooks';
+import { useForm } from '@mantine/form';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -118,14 +122,31 @@ const CourseDescription = () => {
   const { id } = useParams();
   const auth = useAuth();
   const courseStatus = useCourseStatus(id as string, '');
-  const onPublish = async () => {
+  const [isRejected, toggleRejected] = useToggle();
+  const [confirmPublish, togglePublish] = useToggle();
+
+  // to validate reject message
+  const form = useForm({
+    initialValues: {
+      message: '',
+    },
+    validate: {
+      message: (value) =>
+        value.length === 0 ? 'Rejection message is required!' : null,
+    },
+  });
+
+  const onPublish = async (message?: string) => {
     try {
       await courseStatus.mutateAsync({
         identity: id as string,
-        status: CourseStatus.Published,
+        status: message ? CourseStatus.Rejected : CourseStatus.Published,
+        message: message ?? '',
       });
       showNotification({
-        message: t('publish_training_success'),
+        message: message
+          ? t('training_rejected_success')
+          : t('training_published_success'),
       });
     } catch (err) {
       const error = errorType(err);
@@ -134,6 +155,7 @@ const CourseDescription = () => {
         color: 'red',
       });
     }
+    togglePublished();
   };
 
   const course = useCourseDescription(id as string);
@@ -171,8 +193,50 @@ const CourseDescription = () => {
     ? firstLessonSlugs?.lessons[0].slug
     : '';
 
+  const togglePublished = () => {
+    togglePublish();
+    toggleRejected(false);
+    form.reset();
+  };
+
   return (
     <div>
+      <Modal
+        opened={confirmPublish}
+        onClose={togglePublished}
+        title={t('leave_message_reject')}
+      >
+        {!isRejected ? (
+          <Group mt={10}>
+            <Button
+              onClick={() => onPublish()}
+              loading={courseStatus.isLoading}
+            >
+              {t('publish')}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                toggleRejected();
+              }}
+            >
+              {t('reject')}
+            </Button>
+          </Group>
+        ) : (
+          <form onSubmit={form.onSubmit((value) => onPublish(value.message))}>
+            <Group>
+              <Textarea {...form.getInputProps('message')} w={'100%'} />
+              <Button loading={courseStatus.isLoading} type="submit">
+                {t('submit')}
+              </Button>
+              <Button variant="outline" onClick={() => toggleRejected()}>
+                {t('cancel')}
+              </Button>
+            </Group>
+          </form>
+        )}
+      </Modal>
       <Container fluid>
         <div className={classes.inner}>
           <div className={classes.content}>
@@ -272,7 +336,7 @@ const CourseDescription = () => {
                   auth?.auth?.role <= UserRole.Admin &&
                   course.data?.status === CourseStatus.Review && (
                     <Button
-                      onClick={() => onPublish()}
+                      onClick={() => togglePublished()}
                       radius="xl"
                       size="md"
                       className={classes.control}
@@ -280,6 +344,7 @@ const CourseDescription = () => {
                       {t('publish')}
                     </Button>
                   )}
+
                 {auth?.auth &&
                   auth?.auth?.role <= UserRole.Trainer &&
                   course.data?.status === CourseStatus.Draft && (
