@@ -15,6 +15,7 @@ import {
   Loader,
   TransferListItemComponent,
   TransferListItemComponentProps,
+  Anchor,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { usePools } from '@utils/services/poolService';
@@ -176,6 +177,14 @@ const Questions = () => {
       <Paper p={10} withBorder>
         <Grid mb={10}>
           <Grid.Col span={matches ? 3 : 6}>
+            <Text size={'sm'}>
+              Question pools should be created in advance and be located within
+              the{' '}
+              <Anchor href="https://vuriloapp.tawk.help/category/vurilo-lms">
+                &apos;Question Pools&apos;
+              </Anchor>{' '}
+              section
+            </Text>
             <Select
               size="md"
               placeholder={t('pick_one') as string}

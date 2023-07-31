@@ -47,7 +47,8 @@ export const api = {
     postLevelSetting: `api/level`,
     updateLevelSetting: (id: string) => `api/level/${id}`,
     updateDepartmentSetting: (id: string) => `api/department/${id}`,
-    getTrainer: (search: string) => `/api/user/trainer?${search}`,
+    getTrainer: (search: string, lessonType?: number, id?: string) =>
+      `/api/user/trainer?${search}&LessonType=${lessonType}&Identity=${id}`,
     getLogs: (query: string) => `/api/ServerLog/logs?${query}`,
     getSingleLog: (id: string) => `/api/ServerLog/${id}`,
   },

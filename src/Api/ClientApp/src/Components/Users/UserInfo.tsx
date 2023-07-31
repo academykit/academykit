@@ -12,7 +12,10 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import TextEditor from '@components/Ui/TextEditor';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import CustomTextFieldWithAutoFocus, {
+  DynamicAutoFocusTextField,
+} from '@components/Ui/CustomTextFieldWithAutoFocus';
 import TextViewer from '@components/Ui/RichTextViewer';
 
 export interface FormValues {
@@ -146,7 +149,8 @@ const UserInfo = () => {
 
           <Grid>
             <Grid.Col xs={6} lg={4}>
-              <CustomTextFieldWithAutoFocus
+              <DynamicAutoFocusTextField
+                isViewMode={viewMode}
                 readOnly={viewMode}
                 withAsterisk
                 label={t('firstname') as string}
@@ -157,6 +161,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4} mt={7}>
               <TextInput
+                styles={{ input: { border: viewMode ? 'none' : '' } }}
                 readOnly={viewMode}
                 label={t('middlename') as string}
                 name="middleName"
@@ -166,6 +171,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
+                styles={{ input: { border: viewMode ? 'none' : '' } }}
                 readOnly={viewMode}
                 withAsterisk
                 label={t('lastname')}
@@ -176,6 +182,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
+                styles={{ input: { border: viewMode ? 'none' : '' } }}
                 withAsterisk
                 disabled
                 label={t('email')}
@@ -187,6 +194,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4} mt={7}>
               <TextInput
+                styles={{ input: { border: viewMode ? 'none' : '' } }}
                 readOnly={viewMode}
                 name="mobileNumber"
                 label={t('mobilenumber')}
@@ -196,6 +204,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4} mt={7}>
               <TextInput
+                styles={{ input: { border: viewMode ? 'none' : '' } }}
                 readOnly={viewMode}
                 label={t('profession')}
                 name="profession"
@@ -205,6 +214,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
+                styles={{ input: { border: viewMode ? 'none' : '' } }}
                 readOnly={viewMode}
                 label={t('address')}
                 placeholder={t('your_address') as string}
