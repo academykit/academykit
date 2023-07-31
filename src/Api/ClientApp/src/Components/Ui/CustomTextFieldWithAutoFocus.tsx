@@ -61,6 +61,7 @@ export const DynamicAutoFocusTextField: FC<ICustomTextFieldWithAutoFocus> = (
     <>
       <TextInput
         {...props}
+        styles={{ input: { border: isViewMode ? 'none' : '' } }}
         autoComplete={isFocused ? 'on' : 'off'}
         onClick={handleClick}
         onBlur={handleBlur}

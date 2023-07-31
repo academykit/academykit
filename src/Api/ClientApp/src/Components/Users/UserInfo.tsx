@@ -161,6 +161,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4} mt={7}>
               <TextInput
+                styles={{ input: { border: viewMode ? 'none' : '' } }}
                 readOnly={viewMode}
                 label={t('middlename') as string}
                 name="middleName"
@@ -170,6 +171,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
+                styles={{ input: { border: viewMode ? 'none' : '' } }}
                 readOnly={viewMode}
                 withAsterisk
                 label={t('lastname')}
@@ -180,6 +182,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
+                styles={{ input: { border: viewMode ? 'none' : '' } }}
                 withAsterisk
                 disabled
                 label={t('email')}
@@ -191,6 +194,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4} mt={7}>
               <TextInput
+                styles={{ input: { border: viewMode ? 'none' : '' } }}
                 readOnly={viewMode}
                 name="mobileNumber"
                 label={t('mobilenumber')}
@@ -200,6 +204,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4} mt={7}>
               <TextInput
+                styles={{ input: { border: viewMode ? 'none' : '' } }}
                 readOnly={viewMode}
                 label={t('profession')}
                 name="profession"
@@ -209,6 +214,7 @@ const UserInfo = () => {
             </Grid.Col>
             <Grid.Col xs={6} lg={4}>
               <TextInput
+                styles={{ input: { border: viewMode ? 'none' : '' } }}
                 readOnly={viewMode}
                 label={t('address')}
                 placeholder={t('your_address') as string}
