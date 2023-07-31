@@ -273,11 +273,13 @@ const Create = () => {
                         // {...form.getInputProps(`answers.${i}.isCorrect`)}
                       ></Radio>
                     )}
-                    <TextEditor
-                      label={`answers.${i}.option`}
-                      placeholder={t('option_placeholder') as string}
-                      formContext={useFormContext}
-                    ></TextEditor>
+                    <div style={{ width: '80%' }}>
+                      <TextEditor
+                        label={`answers.${i}.option`}
+                        placeholder={t('option_placeholder') as string}
+                        formContext={useFormContext}
+                      ></TextEditor>
+                    </div>
                     <UnstyledButton
                       onClick={() => {
                         form.insertListItem(

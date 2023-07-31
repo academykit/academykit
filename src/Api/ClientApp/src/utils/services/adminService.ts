@@ -606,12 +606,22 @@ interface ITrainerGet {
   email: string;
 }
 
-const getTrainers = async (search: string) =>
-  await httpClient.get<ITrainerGet[]>(api.adminUser.getTrainer(search));
-export const useGetTrainers = (search: string) =>
-  useQuery([api.adminUser.getTrainer(search)], () => getTrainers(search), {
-    select: (data) => data.data,
-  });
+const getTrainers = async (search: string, lessonType?: number, id?: string) =>
+  await httpClient.get<ITrainerGet[]>(
+    api.adminUser.getTrainer(search, lessonType, id)
+  );
+export const useGetTrainers = (
+  search: string,
+  lessonType?: number,
+  id?: string
+) =>
+  useQuery(
+    [api.adminUser.getTrainer(search, lessonType, id)],
+    () => getTrainers(search, lessonType, id),
+    {
+      select: (data) => data.data,
+    }
+  );
 
 //----------------------Get server logs-------------------
 

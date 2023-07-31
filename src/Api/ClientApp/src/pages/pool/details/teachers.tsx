@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 import { useGetTrainers } from '@utils/services/adminService';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import { useState } from 'react';
+import { TrainingTypeEnum } from '@utils/enums';
 
 const MCQTeacher = () => {
   const { t } = useTranslation();
@@ -38,8 +39,11 @@ const MCQTeacher = () => {
   const [search, setSearch] = useState('');
   const getPoolsTeacher = usePoolsTeacher(slug.id as string);
   const createPoolTeacher = useCreateTeacherPool(slug.id as string);
+  const lessonType = TrainingTypeEnum.QuestionPool;
   const { data: trainers, isLoading } = useGetTrainers(
-    queryStringGenerator({ search })
+    queryStringGenerator({ search }),
+    lessonType,
+    slug.id
   );
   const [showAddForm, toggleAddForm] = useToggle();
 
