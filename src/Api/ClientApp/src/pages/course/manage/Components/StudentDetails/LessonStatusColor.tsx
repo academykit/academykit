@@ -56,10 +56,12 @@ const LessonStatusColor = ({
       <Group position="center">
         {type !== LessonType.Assignment &&
           // Logic for other lesson types
-          (isPassed ? (
+          (isPassed === true ? (
             <Badge color={'green'}>{t(getType(type).true)}</Badge>
-          ) : (
+          ) : isPassed === false ? (
             <Badge color={'red'}>{t(getType(type).false)}</Badge>
+          ) : (
+            <Badge color={'red'}>{t('not_attempted')}</Badge>
           ))}
 
         {/* show isPassed badge only when assignment is reviewed */}

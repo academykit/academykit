@@ -926,6 +926,7 @@
   "attended": "सहभागी भएको",
   "not_attended": "सहभागी नभएको",
   "submitted": "पेश गरियो",
+  "not_attempted": "प्रयास नगरिएको",
   "not_submitted": "पेश नगरिएको",
   "resubmit": "पुनः सबमिशन सम्पादन गर्नुहोस्",
   "viewed": "हेरियो",

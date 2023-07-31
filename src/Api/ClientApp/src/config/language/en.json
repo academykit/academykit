@@ -925,6 +925,7 @@
   "not_watched": "Not Watched",
   "attended": "Attended",
   "not_attended": "Not Attended",
+  "not_attempted": "Not Attempted",
   "submitted": "Submitted",
   "not_submitted": "Not Submitted",
   "resubmit": "Edit Submission",
