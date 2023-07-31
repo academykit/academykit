@@ -10,7 +10,6 @@
         public AssignmentReviewValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
             RuleFor(x => x.UserId).NotEmpty().NotNull().WithMessage(context => stringLocalizer.GetString("UserIDrequired"));
-            RuleFor(x => x.Marks).InclusiveBetween(1, 100).WithMessage(context => stringLocalizer.GetString("InvalidAssignmentMarks"));
             RuleFor(x => x.Review).MaximumLength(500).WithMessage(context => stringLocalizer.GetString("InvalidReviewLength"));
         }
     }

@@ -965,8 +965,17 @@ namespace Lingtren.Infrastructure.Services
             var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                 predicate: p => p.CourseId == course.Id && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),include: src => src.Include(x=>x.CourseEnrollments).
                 ThenInclude(x=>x.User)).ConfigureAwait(false);
-            var enrolledUserlist = lesson.CourseEnrollments.Select(x => x.User);
-
+            var enrolledUserlist = lesson.CourseEnrollments.Select(x => x.User).ToList();
+            List<(Guid userId, bool hasSubmitted)> examSubmissionStatus = new List<(Guid userId, bool hasSubmitted)>();
+            if(lesson.Type == LessonType.Exam)
+            {
+                var examsubmissions = await _unitOfWork.GetRepository<QuestionSetSubmission>().GetAllAsync(predicate : p=>enrolledUserlist.Select(x=>x.Id).Contains(p.UserId) &&
+                p.QuestionSet.Lesson.Id == lesson.Id).ConfigureAwait(false);
+                if(examsubmissions.Count != default)
+                {
+                    examSubmissionStatus = examsubmissions.Select(x => (x.UserId, true)).ToList();
+                }
+            }
             var userScore = new List<QuestionSetResultDetailModel>();
             List<(Guid UserId, bool UserResult)?> assignmentStatus = new List<(Guid, bool)?>();
             if (lesson.Type == LessonType.Assignment)
@@ -1010,7 +1019,7 @@ namespace Lingtren.Infrastructure.Services
                            LessonType = lesson.Type,
                            QuestionSetId = lesson.Type == LessonType.Exam ? lesson.QuestionSetId : null,
                            IsCompleted = m?.IsCompleted,
-                           IsPassed = m?.IsPassed,
+                           IsPassed = lesson.Type == LessonType.Exam && examSubmissionStatus.Any(es => es.userId == student.UserId) ? m?.IsPassed : null,
                            UpdatedOn = m?.UpdatedOn ?? m?.CreatedOn,
                            IsAssignmentReviewed = (bool?)(assignmentStatus.FirstOrDefault(ur => ur.Value.UserId == student.UserId)?.UserResult),
                        };
