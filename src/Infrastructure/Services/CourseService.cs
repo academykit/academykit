@@ -907,8 +907,9 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="identity">the training id or slug</param>
         /// <param name="currentUserId">the current user id or slug</param>
+        /// <param name="criteria"> the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns></returns>
-        public async Task<IList<LessonStatisticsResponseModel>> LessonStatistics(string identity, Guid currentUserId)
+        public async Task<SearchResult<LessonStatisticsResponseModel>> LessonStatistics(string identity, Guid currentUserId, BaseSearchCriteria criteria)
         {
             try
             {
@@ -917,32 +918,40 @@ namespace Lingtren.Infrastructure.Services
                     predicate: p => p.CourseId == course.Id && !p.IsDeleted && !p.Section.IsDeleted,
                     include: src => src.Include(x => x.Section)
                     ).ConfigureAwait(false);
-                var response = new List<LessonStatisticsResponseModel>();
+
                 var LessonIds = lessons.Select(x=>x.Id).ToList();
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(predicate: p => p.CourseId == course.Id && LessonIds.Contains(p.LessonId)).ConfigureAwait(false);
                 watchHistory = watchHistory
                               .GroupBy(x => x.LessonId)
                               .SelectMany(group => group.DistinctBy(x => x.UserId))
                               .ToList();
-                foreach (var lesson in lessons.OrderBy(o=>o.Section.Id).ThenBy(o=>o.Order))
+
+                var searchResult = lessons.ToIPagedList(criteria.Page, criteria.Size);
+
+                var response = new SearchResult<LessonStatisticsResponseModel>
                 {
-                    response.Add(new LessonStatisticsResponseModel
-                    {
-                        Id =lesson.Id,
-                        Slug = lesson.Slug,
-                        Name = lesson.Name,
-                        CourseId = course.Id,
-                        CourseSlug = course.Slug,
-                        CourseName = course.Name,
-                        LessonType = lesson.Type,
-                        SectionId = lesson.SectionId,
-                        SectionSlug = lesson.Section?.Slug,
-                        SectionName = lesson.Section?.Name,
-                        IsMandatory = lesson.IsMandatory,
-                        EnrolledStudent = course.CourseEnrollments.Count,
-                        LessonWatched = watchHistory.Where(x=>x.LessonId == lesson.Id && x.CourseId == course.Id).Count(),
-                    });
-                } 
+                    Items = new List<LessonStatisticsResponseModel>(),
+                    CurrentPage = searchResult.CurrentPage,
+                    PageSize = searchResult.PageSize,
+                    TotalCount = searchResult.TotalCount,
+                    TotalPage = searchResult.TotalPage,
+                };
+                searchResult.Items.ForEach(p => response.Items.Add(new LessonStatisticsResponseModel {
+                    Id = p.Id,
+                    Slug = p.Slug,
+                    Name = p.Name,
+                    CourseId = course.Id,
+                    CourseSlug = course.Slug,
+                    CourseName = course.Name,
+                    LessonType = p.Type,
+                    SectionId = p.SectionId,
+                    SectionSlug = p.Section?.Slug,
+                    SectionName = p.Section?.Name,
+                    IsMandatory = p.IsMandatory,
+                    EnrolledStudent = course.CourseEnrollments.Count,
+                    LessonWatched = watchHistory.Where(x => x.LessonId == p.Id && x.CourseId == course.Id).Count(),
+                }));
+
                 return response;
             }
             catch (Exception ex)
@@ -996,8 +1005,17 @@ namespace Lingtren.Infrastructure.Services
                     }
                 }
             }
+            var predicate = PredicateBuilder.New<CourseEnrollment>(true);
+            predicate = predicate.And(x => x.CourseId == course.Id);
+            if (!string.IsNullOrWhiteSpace(criteria.Search))
+            {
+                var search = criteria.Search.ToLower().Trim();
+                predicate = predicate.And(x => ((x.User.FirstName.ToLower().Trim() + " " + x.User.MiddleName.ToLower().Trim()).Trim() + " " + x.User.LastName.Trim()).Trim().Contains(search)
+                ||x.User.Email.ToLower().Trim().Contains(search)
+                ||x.User.MobileNumber.ToLower().Trim().Contains(search));    
+            }
             var students = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
-                predicate: p => p.CourseId == course.Id,
+                predicate:predicate,
                 include: src => src.Include(x => x.User)
                 ).ConfigureAwait(false);
 
@@ -1022,8 +1040,7 @@ namespace Lingtren.Infrastructure.Services
                            IsPassed = lesson.Type == LessonType.Exam && examSubmissionStatus.Any(es => es.userId == student.UserId) ? m?.IsPassed : null,
                            UpdatedOn = m?.UpdatedOn ?? m?.CreatedOn,
                            IsAssignmentReviewed = (bool?)(assignmentStatus.FirstOrDefault(ur => ur.Value.UserId == student.UserId)?.UserResult),
-                       };
-
+                       };    
             return data.ToList().ToIPagedList(criteria.Page, criteria.Size);
         }
 

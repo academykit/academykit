@@ -86,8 +86,9 @@ namespace Lingtren.Application.Common.Interfaces
         /// </summary>
         /// <param name="identity">the course id or slug</param>
         /// <param name="currentUserId">the current user id or slug</param>
+        /// <param name="criteria"> the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the list of <see cref="LessonStatisticsResponseModel"/></returns>
-        Task<IList<LessonStatisticsResponseModel>> LessonStatistics(string identity, Guid currentUserId);
+        Task<SearchResult<LessonStatisticsResponseModel>> LessonStatistics(string identity, Guid currentUserId, BaseSearchCriteria criteria);
 
         /// <summary>
         /// Handle to get course statistics 
