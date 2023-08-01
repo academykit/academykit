@@ -95,7 +95,7 @@ const AddExam = ({
       negativeMarking: item?.questionSet?.negativeMarking ?? 0,
       questionMarking: item?.questionSet?.questionMarking ?? 1,
       passingWeightage: item?.questionSet?.passingWeightage ?? 0,
-      allowedRetake: item?.questionSet?.allowedRetake ?? 0,
+      allowedRetake: item?.questionSet?.allowedRetake ?? 1,
       duration: item?.duration ? item?.duration / 60 : 1,
       endDate: endDateTime,
       endTime: moment(endDateTime).format('HH:mm'),
