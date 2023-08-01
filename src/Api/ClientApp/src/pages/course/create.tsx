@@ -237,12 +237,7 @@ const CreateCoursePage = () => {
             {!groups.isLoading ? (
               <Select
                 mt={20}
-                description={
-                  <Text size={'xs'}>
-                    Create a new group by entering name, trainers can choose
-                    existing groups.
-                  </Text>
-                }
+                description={<Text size={'xs'}>{t('group_create_info')}</Text>}
                 searchable
                 withAsterisk
                 sx={{ maxWidth: '500px' }}

@@ -858,6 +858,7 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "group_create_info": "名前を入力して新しいグループを作成し、トレーナーは既存のグループを選択できます。",
   "section_name_required": "セクション名が必要です",
   "in_review": "レビュー",
   "Rating": "評価",
