@@ -2,7 +2,7 @@ namespace Lingtren.Application.Common.Interfaces
 {
     using Lingtren.Domain.Entities;
     using Lingtren.Application.Common.Dtos;
-    public interface ITagService : IGenericService<Tag, BaseSearchCriteria>
+    public interface ITagService : IGenericService<Tag, TagBaseSearchCriteria>
     {
         /// <summary>
         /// Handle to delete the tag

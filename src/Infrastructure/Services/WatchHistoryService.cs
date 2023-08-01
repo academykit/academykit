@@ -200,25 +200,34 @@
                 }
                 if (course.CourseTeachers.Any(x => x.UserId != userId) || user == default)
                 {
+                   
                     var currentTimeStamp = DateTime.UtcNow;
                     var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
                         predicate: p => p.CourseId == course.Id && p.LessonId == lesson.Id && p.UserId == userId
                         ).ConfigureAwait(false);
                     if (watchHistory == null)
                     {
+                        var courseEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.UserId == userId && p.CourseId == course.Id).ConfigureAwait(false);
+                        var lessonCount = await _unitOfWork.GetRepository<Lesson>().CountAsync(predicate: p => p.Course.Id == course.Id && p.IsDeleted != true).ConfigureAwait(false);
+
                         watchHistory = new WatchHistory
                         {
                             Id = Guid.NewGuid(),
                             CourseId = course.Id,
                             LessonId = lesson.Id,
                             UserId = userId,
-                            IsCompleted = false,
-                            IsPassed = true,
+                            IsCompleted = true,
+                            IsPassed = false,
                             CreatedBy = currentUserId,
                             CreatedOn = currentTimeStamp,
                             UpdatedBy = currentUserId,
                             UpdatedOn = currentTimeStamp
                         };
+                        courseEnrollment.Percentage = courseEnrollment.Percentage + (100 / lessonCount);//for updating watch percentage when passed by admin
+                        courseEnrollment.UpdatedOn = DateTime.UtcNow;
+                        courseEnrollment.UpdatedBy = currentUserId;
+                        _unitOfWork.GetRepository<CourseEnrollment>().Update(courseEnrollment);
+                        
                         await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
                     }
                     else
@@ -229,7 +238,6 @@
                         watchHistory.UpdatedOn = DateTime.UtcNow;
                         _unitOfWork.GetRepository<WatchHistory>().Update(watchHistory);
                     }
-
                     await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 }
             }
