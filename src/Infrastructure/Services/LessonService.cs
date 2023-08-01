@@ -564,6 +564,7 @@ namespace Lingtren.Infrastructure.Services
                                            lesson.Id, lesson.Type, lesson.MeetingId);
                         throw new EntityNotFoundException(_localizer.GetString("MeetingNotFound"));
                     }
+                    _unitOfWork.GetRepository<Meeting>().Delete(meeting);
                 }
 
                 if (lesson.Type == LessonType.Assignment)

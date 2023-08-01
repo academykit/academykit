@@ -147,6 +147,12 @@
   <data name="CapacityRequired" xml:space="preserve">
     <value>Capacity is required.</value>
   </data>
+  <data name="CertificateEndTimeError" xml:space="preserve">
+    <value>Certificate end date must not be greater than current date.</value>
+  </data>
+  <data name="CertificateStartTimeError" xml:space="preserve">
+    <value>Certificate start date must not be greater than current date.</value>
+  </data>
   <data name="CompanyAddressLengthError" xml:space="preserve">
     <value>Company address length must be less than or equal to 250 characters.</value>
   </data>

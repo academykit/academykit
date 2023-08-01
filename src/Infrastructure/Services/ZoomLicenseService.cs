@@ -129,9 +129,7 @@
                 }
 
                 var hasOverlappingMeetings = meetingsWithStartDate.Where(m =>
-                (m.StartDate.HasValue && m.StartDate.Value >= zoomLicenseIdRequestModel.StartDateTime && m.StartDate.Value < endTime) ||
-                (m.StartDate.HasValue && m.StartDate.Value.AddMinutes(m.Duration) > zoomLicenseIdRequestModel.StartDateTime && m.StartDate.Value.AddMinutes(m.Duration) <= endTime)
-                );
+                (m.StartDate.HasValue && m.StartDate.Value <= endTime && m.StartDate.Value.AddMinutes(m.Duration/60) >= zoomLicenseIdRequestModel.StartDateTime));
                 if (hasOverlappingMeetings.ToList().Count == 0)
                 {
                     zoomLicenses.ForEach(x => response.Add(new ZoomLicenseResponseModel
