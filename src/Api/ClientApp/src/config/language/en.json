@@ -856,6 +856,10 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "question_pool_created": "Question pools should be created in advance and be located within the ",
+  "question_pool_href": "'Question Pools'",
+  "section": "section. ",
+  "learn_more": "Learn more",
   "group_create_info": "Create a new group by entering name, trainers can choose existing groups.",
   "section_name_required": "Section name required",
   "in_review": "Review",

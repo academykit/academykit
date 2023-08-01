@@ -183,13 +183,15 @@ const Questions = () => {
               label={
                 <>
                   <Text>{t('mcq_pools')}</Text>
-                  <Text size={'0.865rem'} color="#909296">
-                    Question pools should be created in advance and be located
-                    within the{' '}
-                    <Anchor href="https://vuriloapp.tawk.help/category/vurilo-lms">
-                      &apos;Question Pools&apos;
+                  <Text size={'0.810rem'} color="#909296">
+                    {t('question_pool_created')}
+                    <Anchor href="/pools">
+                      {t('question_pool_href')}
                     </Anchor>{' '}
-                    section
+                    {t('section')}
+                    <Anchor href="https://vuriloapp.tawk.help/category/vurilo-lms">
+                      {t('learn_more')}
+                    </Anchor>
                   </Text>
                 </>
               }
