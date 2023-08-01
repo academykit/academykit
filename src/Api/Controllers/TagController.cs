@@ -1,6 +1,6 @@
 namespace Lingtren.Api.Controllers
 {
-    using Lingtren.Application.Common.Dtos;
+    using Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
@@ -20,10 +20,10 @@ namespace Lingtren.Api.Controllers
         /// <summary>
         /// get tag api
         /// </summary>
-        /// <param name="searchCriteria"> the instance of <see cref="BaseSearchCriteria" /> .</param>
+        /// <param name="searchCriteria"> the instance of <see cref=" TagBaseSearchCriteria" /> .</param>
         /// <returns> the list of <see cref="TagResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<SearchResult<TagResponseModel>> SearchAsync([FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<TagResponseModel>> SearchAsync([FromQuery] TagBaseSearchCriteria searchCriteria)
         {
             var searchResult = await _tagService.SearchAsync(searchCriteria, includeAllProperties: false).ConfigureAwait(false);
 
