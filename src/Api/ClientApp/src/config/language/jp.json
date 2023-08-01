@@ -925,6 +925,7 @@
   "not_watched": "未視聴",
   "attended": "参加済み",
   "not_attended": "未参加",
+  "not_attempted": "未試行",
   "submitted": "提出済み",
   "not_submitted": "未提出",
   "resubmit": "提出を編集",

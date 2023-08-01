@@ -545,7 +545,7 @@ export const useGetCourseLesson = (
       enabled,
       retry: 0,
       onError: () => {},
-      refetchOnMount: false,
+      refetchOnMount: true, // to reflect the changes made after submission of various assignments
       refetchOnWindowFocus: false,
     }
   );

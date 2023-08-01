@@ -129,11 +129,17 @@ const Create = () => {
     try {
       await addQuestion.mutateAsync({ poolId: id as string, data });
       const tags = form.values.tags;
+      const questionPreference = form.values.type;
       form.reset();
+      
       if (!isReset) {
         navigate(-1);
       }
+
+      // setting user's previous choices
       form.setFieldValue('tags', tags);
+      form.setFieldValue('type', questionPreference); 
+
       showNotification({
         title: t('successful'),
         message: t('question_created_success'),
