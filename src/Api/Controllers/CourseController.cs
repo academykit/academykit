@@ -204,7 +204,7 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="identity"> the course id or slug.</param>
         [HttpGet("{identity}/lessonStatistics")]
-        public async Task<IList<LessonStatisticsResponseModel>> LessonStatistics(string identity) => await _courseService.LessonStatistics(identity, CurrentUser.Id).ConfigureAwait(false);
+        public async Task<SearchResult<LessonStatisticsResponseModel>> LessonStatistics(string identity,[FromQuery] BaseSearchCriteria criteria) => await _courseService.LessonStatistics(identity, CurrentUser.Id,criteria).ConfigureAwait(false);
 
         /// <summary>
         /// get course statistics api
