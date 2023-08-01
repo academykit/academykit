@@ -204,7 +204,11 @@ const CourseDescription = () => {
       <Modal
         opened={confirmPublish}
         onClose={togglePublished}
-        title={t('leave_message_reject')}
+        title={
+          isRejected
+            ? t('leave_message_reject')
+            : `${t('publish_confirmation')} "${course.data.name}"${t('?')}`
+        }
       >
         {!isRejected ? (
           <Group mt={10}>
