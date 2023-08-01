@@ -986,4 +986,7 @@
   <data name="CannotAddSignatureWithoutCertificate" xml:space="preserve">
     <value>署名を追加する前に証明書を追加してください。</value>
   </data>
+  <data name="AddingDuratrionError" xml:space="preserve">
+    <value>期間を追加すると終了日を超えます。</value>
+  </data>
 </root>
