@@ -23,15 +23,18 @@ export interface ILessonStats {
   isMandatory: boolean;
 }
 
-const getLessonStatistics = async (courseIdentity: string) => {
-  return await httpClient.get<ILessonStats[]>(
-    api.course.lessonStat(courseIdentity)
+const getLessonStatistics = async (courseIdentity: string, query: string) => {
+  return await httpClient.get<IPaginated<ILessonStats>>(
+    api.course.lessonStat(courseIdentity) + `?${query}`
   );
 };
-export const useGetLessonStatistics = (courseIdentity: string) => {
+export const useGetLessonStatistics = (
+  courseIdentity: string,
+  query: string
+) => {
   return useQuery(
-    [api.course.lessonStat(courseIdentity)],
-    () => getLessonStatistics(courseIdentity),
+    [api.course.lessonStat(courseIdentity), query],
+    () => getLessonStatistics(courseIdentity, query),
     {
       select: (data) => {
         return data.data;

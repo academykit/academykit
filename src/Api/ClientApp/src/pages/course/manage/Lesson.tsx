@@ -1,4 +1,7 @@
 import ProgressBar from '@components/Ui/ProgressBar';
+import withSearchPagination, {
+  IWithSearchPagination,
+} from '@hoc/useSearchPagination';
 import {
   Table,
   ScrollArea,
@@ -10,6 +13,7 @@ import {
   Anchor,
   Loader,
   Box,
+  // Box,
 } from '@mantine/core';
 import { IconEye } from '@tabler/icons';
 import { LessonType } from '@utils/enums';
@@ -60,17 +64,7 @@ const Rows = ({
           )}
         </Center>
       </td>
-      <td
-        style={
-          {
-            // backgroundColor: "red",
-            // height: "100%",
-            // display: "flex",
-            // alignItems: "center",
-            // justifyContent: "center",
-          }
-        }
-      >
+      <td>
         <Center>
           <Tooltip
             style={{
@@ -90,18 +84,24 @@ const Rows = ({
   );
 };
 
-function TableReviews() {
+function TableReviews({ searchParams, pagination }: IWithSearchPagination) {
   const slug = useParams();
   const course_id = slug.id as string;
 
-  const getLessonStatistics = useGetLessonStatistics(course_id);
+  const getLessonStatistics = useGetLessonStatistics(course_id, searchParams);
 
   const { t } = useTranslation();
 
   if (getLessonStatistics.isLoading) return <Loader />;
 
-  if (getLessonStatistics.data?.length === 0)
+  if (
+    getLessonStatistics.data &&
+    getLessonStatistics.data.items &&
+    getLessonStatistics.data?.items?.length === 0
+  )
     return <Box>{t('no_lessons')}</Box>;
+
+  console.log(getLessonStatistics.data);
   return (
     <ScrollArea>
       <Paper>
@@ -129,13 +129,20 @@ function TableReviews() {
             </tr>
           </thead>
           <tbody>
-            {getLessonStatistics.data?.map((item: ILessonStats) => (
+            {getLessonStatistics.data?.items?.map((item: ILessonStats) => (
               <Rows item={item} key={item.id} course_id={course_id} />
             ))}
           </tbody>
         </Table>
       </Paper>
+
+      {getLessonStatistics.data &&
+        getLessonStatistics.data.items &&
+        pagination(
+          getLessonStatistics.data?.totalPage,
+          getLessonStatistics.data.items.length
+        )}
     </ScrollArea>
   );
 }
-export default TableReviews;
+export default withSearchPagination(TableReviews);
