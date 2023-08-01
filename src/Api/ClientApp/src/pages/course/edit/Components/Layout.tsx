@@ -45,6 +45,13 @@ function CourseEditNav() {
       label: t('lesson_stats'),
       to: RoutePath.manageCourse.lessonsStat(params.id).route,
       role: UserRole.Trainer,
+      // additional active path for lesson stats
+      isActive: (pathName: string) =>
+        pathName.includes(
+          RoutePath.manageCourse.lessonsStat(params.id).route ||
+            RoutePath.manageCourse.lessonsStat(params.id).route +
+              `${params.lessonId}`
+        ),
     },
     {
       label: t('trainee'),
