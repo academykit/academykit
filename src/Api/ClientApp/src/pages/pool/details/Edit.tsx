@@ -301,11 +301,13 @@ const EditQuestion = () => {
                         // {...form.getInputProps(`answers.${i}.isCorrect`)}
                       ></Radio>
                     )}
-                    <TextEditor
-                      placeholder={t('option_placeholder') as string}
-                      label={`answers.${i}.option`}
-                      formContext={useFormContext}
-                    ></TextEditor>
+                    <div style={{ width: '80%' }}>
+                      <TextEditor
+                        placeholder={t('option_placeholder') as string}
+                        label={`answers.${i}.option`}
+                        formContext={useFormContext}
+                      ></TextEditor>
+                    </div>
                     <UnstyledButton
                       onClick={() => {
                         form.insertListItem(

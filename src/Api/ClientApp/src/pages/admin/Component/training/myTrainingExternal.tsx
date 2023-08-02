@@ -120,6 +120,7 @@ const MyTrainingExternal = () => {
       });
       form.reset();
     } catch (error) {
+      form.reset();
       const err = errorType(error);
       showNotification({
         color: 'red',

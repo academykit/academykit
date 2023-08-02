@@ -125,6 +125,9 @@ const RoutePath = {
     department: function () {
       return this.base + '/department';
     },
+    hangfire: function () {
+      return 'https://standalone.apps.vurilo.com/hangfire';
+    },
     log: function () {
       return this.base + '/log';
     },

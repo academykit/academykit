@@ -27,6 +27,7 @@ const NavOutlet = ({
     to: string;
     separator?: boolean;
     role: UserRole;
+    isActive?: (pathName: string) => boolean;
   }[];
   hideBreadCrumb?: number;
 }) => {
@@ -95,7 +96,11 @@ const NavOutlet = ({
                         component={Link}
                         to={x.to}
                         replace
-                        active={router.pathname === x.to}
+                        active={
+                          x.isActive
+                            ? x.isActive(router.pathname)
+                            : x.to === decodeURI(router.pathname) // decodeURI for multi-language support
+                        }
                         label={x.label}
                         sx={(theme) => ({
                           padding: theme.spacing.xs,

@@ -564,6 +564,7 @@ namespace Lingtren.Infrastructure.Services
                                            lesson.Id, lesson.Type, lesson.MeetingId);
                         throw new EntityNotFoundException(_localizer.GetString("MeetingNotFound"));
                     }
+                    _unitOfWork.GetRepository<Meeting>().Delete(meeting);
                 }
 
                 if (lesson.Type == LessonType.Assignment)
@@ -991,7 +992,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 if (Math.Abs(timedifference) > 60)
                 {
-                    throw new InvalidDataException(_localizer.GetString("InvalidTimeIssue"));
+                    throw new InvalidDataException(_localizer.GetString("InvalidMeetingTimeIssue"));
                 }
 
             }
@@ -1030,7 +1031,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     if (Math.Abs(timedifference) > 60)
                     {
-                        throw new InvalidDataException(_localizer.GetString("InvalidTimeIssue"));
+                        throw new InvalidDataException(_localizer.GetString("InvalidMeetingTimeIssue"));
                     }
 
                 }

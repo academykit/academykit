@@ -16,7 +16,7 @@ import queryStringGenerator from '@utils/queryStringGenerator';
 import RoutePath from '@utils/routeConstants';
 import errorType from '@utils/services/axiosError';
 import { useCreateCourse } from '@utils/services/courseService';
-import { useGroups } from '@utils/services/groupService';
+import { useAddGroup, useGroups } from '@utils/services/groupService';
 import { useLevels } from '@utils/services/levelService';
 import { useAddTag, useTags } from '@utils/services/tagService';
 import { useEffect, useState } from 'react';
@@ -26,6 +26,8 @@ import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import useCustomForm from '@hooks/useCustomForm';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import useAuth from '@hooks/useAuth';
+import { UserRole } from '@utils/enums';
 
 interface FormValues {
   thumbnail: string;
@@ -56,6 +58,8 @@ const CreateCoursePage = () => {
   const cForm = useCustomForm();
   const [searchParamGroup] = useState('');
   const { t } = useTranslation();
+  const groupAdd = useAddGroup();
+  const auth = useAuth();
 
   const groups = useGroups(
     queryStringGenerator({
@@ -232,6 +236,7 @@ const CreateCoursePage = () => {
             {!groups.isLoading ? (
               <Select
                 mt={20}
+                description={<Text size={'xs'}>{t('group_create_info')}</Text>}
                 searchable
                 withAsterisk
                 sx={{ maxWidth: '500px' }}
@@ -251,6 +256,18 @@ const CreateCoursePage = () => {
                 size={'lg'}
                 label={t('group')}
                 placeholder={t('group_placeholder') as string}
+                creatable={
+                  // allow for admin and superadmin only
+                  auth?.auth?.role == UserRole.SuperAdmin ||
+                  auth?.auth?.role == UserRole.Admin
+                }
+                getCreateLabel={(query) => `+ Create ${query}`}
+                onCreate={(value) => {
+                  groupAdd
+                    .mutateAsync(value)
+                    .then((res) => form.setFieldValue('groups', res.data.id)); // setting value after fetch
+                  return value;
+                }}
               />
             ) : (
               <Loader />

@@ -15,6 +15,7 @@ import {
   Loader,
   TransferListItemComponent,
   TransferListItemComponentProps,
+  Anchor,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { usePools } from '@utils/services/poolService';
@@ -86,20 +87,27 @@ const Questions = () => {
 
   const [data, setData] = useState<TransferListData>([firstList, secondList]);
   const [poolValue, setPoolValue] = useState<string | null>(null);
+  const [tagValue, setTagValue] = useState<string | null>(null);
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.sm}px)`);
   const questionPools = usePools('');
-  const questionPoolTags = useTags('');
-  const questions = useQuestion(poolValue ?? '', `page=${activePage}&size=12`);
+  const questionPoolTags = useTags('', poolValue ?? '', 1);
+  const questions = useQuestion(
+    poolValue ?? '',
+    `page=${activePage}&size=12&${tagValue ? `tags=${[tagValue]}` : ''}`
+  );
+
   const addQuestions = useAddQuestionQuestionSet(lessonSlug as string);
   const navigate = useNavigate();
 
   const poolData: ISelectList[] = [];
   const questionTag: ISelectList[] = [];
+
   questionPools.data?.items.map((e) => {
     poolData.push({ value: e.slug, label: e.name });
   });
+
   questionPoolTags.data?.items.map((e) => {
-    questionTag.push({ value: e.slug, label: e.name });
+    questionTag.push({ value: e.id, label: e.name });
   });
 
   useEffect(() => {
@@ -124,7 +132,7 @@ const Questions = () => {
       setPage(1);
       setData([[], data[1]]);
     }
-  }, [questions.isSuccess, poolValue, activePage]);
+  }, [questions.isSuccess, poolValue, activePage, tagValue]);
 
   useEffect(() => {
     const i: any = questionList.data?.map((e) => {
@@ -179,7 +187,21 @@ const Questions = () => {
             <Select
               size="md"
               placeholder={t('pick_one') as string}
-              label={t('mcq_pools')}
+              label={
+                <>
+                  <Text>{t('mcq_pools')}</Text>
+                  <Text size={'0.810rem'} color="#909296">
+                    {t('question_pool_created')}
+                    <Anchor href="/pools">
+                      {t('question_pool_href')}
+                    </Anchor>{' '}
+                    {t('section')}
+                    <Anchor href="https://vuriloapp.tawk.help/article/question-pools">
+                      {t('learn_more')}
+                    </Anchor>
+                  </Text>
+                </>
+              }
               searchable
               clearable
               allowDeselect
@@ -192,6 +214,23 @@ const Questions = () => {
               }}
             />
           </Grid.Col>
+
+          {poolValue && (
+            <Grid.Col mt={21} span={matches ? 3 : 6}>
+              <Select
+                size="md"
+                label="Tags"
+                placeholder="Pick one tag"
+                searchable
+                clearable
+                allowDeselect
+                nothingFound="No Tags found!"
+                maxDropdownHeight={280}
+                data={questionTag}
+                onChange={setTagValue}
+              />
+            </Grid.Col>
+          )}
         </Grid>
 
         {questions.fetchStatus !== 'idle' && questions.isLoading ? (

@@ -30,6 +30,7 @@ import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import { useGetTrainers } from '@utils/services/adminService';
+import { TrainingTypeEnum } from '@utils/enums';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -125,8 +126,11 @@ const Teacher = () => {
     }
   };
   const [search, setSearch] = useState('');
+  const lessonType = TrainingTypeEnum.Course;
   const { data: trainers, isLoading } = useGetTrainers(
-    queryStringGenerator({ search })
+    queryStringGenerator({ search }),
+    lessonType,
+    slug.id
   );
   return (
     <Container fluid>

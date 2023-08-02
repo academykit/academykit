@@ -35,18 +35,18 @@ const schema = () => {
 
   return Yup.object().shape({
     name: Yup.string().required(t('assignment_title_required') as string),
-    // startTime: Yup.date()
-    //   .required(t("start_time_required") as string)
-    //   .typeError(t("start_time_required") as string),
+    startTime: Yup.string()
+      .required(t('start_time_required') as string)
+      .typeError(t('start_time_required') as string),
     eventStartDate: Yup.date()
       .required(t('start_date_required') as string)
       .typeError(t('start_date_required') as string),
     eventEndDate: Yup.date()
       .required(t('end_date_required') as string)
       .typeError(t('end_date_required') as string),
-    //   endTime: Yup.date()
-    //     .required(t("end_time_required") as string)
-    //     .typeError(t("end_time_required") as string),
+    endTime: Yup.string()
+      .required(t('end_time_required') as string)
+      .typeError(t('end_time_required') as string),
   });
 };
 

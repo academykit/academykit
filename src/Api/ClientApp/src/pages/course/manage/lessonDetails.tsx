@@ -35,10 +35,6 @@ const LessonDetails = ({
   );
   const [loading, setLoading] = useState(false);
 
-  if (lessonDetails.data && lessonDetails.data?.totalCount < 1) {
-    return <Box>{t('no_enrolled_student_found')}</Box>;
-  }
-
   if (lessonDetails.isLoading) return <Loader />;
 
   if (lessonDetails.error) throw lessonDetails.error;
@@ -72,7 +68,7 @@ const LessonDetails = ({
 
   return (
     <>
-      {lessonDetails.data?.items[0].lessonType === LessonType.Feedback && (
+      {lessonDetails.data?.items[0]?.lessonType === LessonType.Feedback && (
         <Group position="right" my="md">
           <Button onClick={handleExport} loading={loading}>
             {t('export')}
@@ -81,27 +77,31 @@ const LessonDetails = ({
       )}
       <Paper>
         <Box mb={'sm'}>{searchComponent('Search Student')}</Box>
-        <Table striped withBorder>
-          <thead>
-            <tr>
-              <th>{t('trainees')}</th>
-              <th>
-                <Center>{t('status')}</Center>
-              </th>
+        {lessonDetails.data && lessonDetails.data?.items.length > 0 ? (
+          <Table striped withBorder>
+            <thead>
+              <tr>
+                <th>{t('trainees')}</th>
+                <th>
+                  <Center>{t('status')}</Center>
+                </th>
 
-              <th>{t('actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {lessonDetails.data?.items.map((x) => (
-              <CourseLessonDetails
-                element={x}
-                key={x.lessonId}
-                courseId={id as string}
-              />
-            ))}
-          </tbody>
-        </Table>
+                <th>{t('actions')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {lessonDetails.data?.items.map((x) => (
+                <CourseLessonDetails
+                  element={x}
+                  key={x.lessonId}
+                  courseId={id as string}
+                />
+              ))}
+            </tbody>
+          </Table>
+        ) : (
+          <Box>{t('no_enrolled_student_found')}</Box>
+        )}
         {lessonDetails.data &&
           pagination(
             lessonDetails.data.totalPage,

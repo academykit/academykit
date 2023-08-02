@@ -163,16 +163,7 @@
         [HttpGet("{lessonIdentity}/export")]
         public async Task<IActionResult> Export(string lessonIdentity)
         {
-            var feedBackReport = await _feedbackService.GetFeedBackReportAsync(lessonIdentity,CurrentUser.Id).ConfigureAwait(false);
-            byte[] report = null;
-            using (var memory = new MemoryStream())
-            using (var writer = new StreamWriter(memory))
-            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-            {
-                csv.WriteRecords(feedBackReport);
-                csv.Flush();
-                report = memory.ToArray();
-            }
+            var report = await _feedbackService.GetFeedBackReportAsync(lessonIdentity,CurrentUser.Id).ConfigureAwait(false);
             return File(report, "text/csv", $"{lessonIdentity}.csv");
         }
     }

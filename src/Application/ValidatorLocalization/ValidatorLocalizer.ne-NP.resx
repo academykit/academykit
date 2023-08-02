@@ -147,6 +147,12 @@
   <data name="CapacityRequired" xml:space="preserve">
     <value>क्षमता चाहिन्छ।</value>
   </data>
+  <data name="CertificateEndTimeError" xml:space="preserve">
+    <value>प्रमाणपत्रको अन्तिम मिति हालको मिति भन्दा ठूलो हुनुहुँदैन।</value>
+  </data>
+  <data name="CertificateStartTimeError" xml:space="preserve">
+    <value>प्रमाणपत्र सुरु हुने समय हालको मिति भन्दा बढी हुनु हुँदैन</value>
+  </data>
   <data name="CompanyAddressLengthError" xml:space="preserve">
     <value>कम्पनी ठेगाना लम्बाइ 250 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
