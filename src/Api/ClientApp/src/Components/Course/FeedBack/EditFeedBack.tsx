@@ -189,11 +189,13 @@ const EditFeedback = ({
                       style={{ marginBottom: '30px', width: '100%' }}
                     >
                       <Flex>
-                        <TextEditor
-                          placeholder={t('option_placeholder') as string}
-                          label={`answers.${i}.option`}
-                          formContext={useFormContext}
-                        ></TextEditor>
+                        <div style={{ width: '90%' }}>
+                          <TextEditor
+                            placeholder={t('option_placeholder') as string}
+                            label={`answers.${i}.option`}
+                            formContext={useFormContext}
+                          ></TextEditor>
+                        </div>
                         <UnstyledButton
                           mx={10}
                           onClick={() => {

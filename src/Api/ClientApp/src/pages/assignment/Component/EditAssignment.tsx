@@ -269,13 +269,14 @@ const EditAssignment = ({
                             // {...form.getInputProps(`answers.${i}.isCorrect`)}
                           ></Radio>
                         )}
-
-                        <TextEditor
-                          // sx={{width:100}}
-                          placeholder={t('option_placeholder') as string}
-                          label={`answers.${i}.option`}
-                          formContext={useFormContext}
-                        ></TextEditor>
+                        <div style={{ width: '80%' }}>
+                          <TextEditor
+                            // sx={{width:100}}
+                            placeholder={t('option_placeholder') as string}
+                            label={`answers.${i}.option`}
+                            formContext={useFormContext}
+                          ></TextEditor>
+                        </div>
                         <UnstyledButton
                           ml={10}
                           onClick={() => {
