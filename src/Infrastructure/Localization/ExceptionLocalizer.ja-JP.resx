@@ -989,4 +989,7 @@
   <data name="AddingDuratrionError" xml:space="preserve">
     <value>期間を追加すると終了日を超えます。</value>
   </data>
+  <data name="EmptyFile" xml:space="preserve">
+    <value>ファイルは空です。</value>
+  </data>
 </root>

@@ -191,6 +191,7 @@ namespace Lingtren.Api.Controllers
             var currentTimeStamp = DateTime.UtcNow;
             var oldEmail = string.Empty;
             var emailchange = false;
+            var oldRole = existing.Role;
             if (model.Email.ToLower().Trim() != existing.Email.ToLower().Trim())
             {
                 emailchange = true;
@@ -224,14 +225,17 @@ namespace Lingtren.Api.Controllers
             {
                 existing.Status = model.Status;
             }
-            string password = null;
+            string? password = null;
             if(emailchange == true)
             {
                 password = await _userService.GenerateRandomPassword(8).ConfigureAwait(false);
                 existing.HashPassword = _userService.HashPassword(password);  
             }
+            if (oldRole != model.Role)
+            {
+                await _userService.RemoveRefreshTokenAsync(existing.Id);
+            }
             var savedEntity = await _userService.UpdateAsync(existing).ConfigureAwait(false);
-         
             if (imageKey != model.ImageUrl && !string.IsNullOrWhiteSpace(imageKey))
             {
                 if (imageKey.ToLower().Trim().Contains("/public/") && imageKey.IndexOf("/standalone/") != -1)
@@ -243,7 +247,7 @@ namespace Lingtren.Api.Controllers
             var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             if (password != null)
             {
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.AccountUpdatedMailAsync(existing.FullName,model.Email,oldEmail,null));
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.AccountUpdatedMailAsync(existing.FullName, model.Email, oldEmail, null));
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(existing.Email, existing.FullName, password,company.CompanyName,company.CompanyContactNumber, null));
             }
 

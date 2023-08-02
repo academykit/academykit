@@ -426,7 +426,7 @@ namespace Lingtren.Infrastructure.Services
                 }
                 else
                 {
-                    message.AppendLine(_localizer.GetString("NoUserImported"));
+                    message.AppendLine(_localizer.GetString("EmptyFile"));
                 }
                 return message.ToString();
             }
@@ -1007,7 +1007,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="userName"></param>
         /// <param name="allowedMinutes"></param>
         /// <returns></returns>
-        private async Task<string> BuildResetPasswordJWTToken(string email, double allowedMinutes = 60)
+        private async Task<string> BuildResetPasswordJWTToken(string email, double allowedMinutes = 5)
         {
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
@@ -1023,6 +1023,17 @@ namespace Lingtren.Infrastructure.Services
               signingCredentials: signingCredentials);
 
             return await Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="currentUserId"></param>
+        /// <returns></returns>
+        public async Task RemoveRefreshTokenAsync(Guid currentUserId)
+        {
+            var userToken = await _unitOfWork.GetRepository<RefreshToken>().GetAllAsync(predicate: p => p.UserId == currentUserId && p.IsActive == true).ConfigureAwait(false);
+            _unitOfWork.GetRepository<RefreshToken>().Delete(userToken);
         }
 
         /// <summary>

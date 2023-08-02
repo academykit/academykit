@@ -158,7 +158,7 @@
                 include: s => s.Include(x => x.CourseTeachers)
                                 .Include(x => x.User)
                                 .Include(x => x.CourseEnrollments)
-                                .Include(x=>x.CourseTags)
+                                .Include(x => x.CourseTags)
                                 ).ConfigureAwait(false);
 
             CommonHelper.CheckFoundEntity(course);
@@ -273,6 +273,34 @@
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
                 predicate: p => p.Id == currentUserId && p.Status == UserStatus.Active && p.Role == UserRole.Trainer).ConfigureAwait(false);
             return user != null;
+        }
+
+
+        /// <summary>
+        /// to get valid user for course and questionpool authority
+        /// </summary>
+        /// <param name="currentuserId">Current userId</param>
+        /// <param name="identity">Training Identity</param>
+        /// <param name="trainingType">the instance of<see cref="TrainingTypeEnum"/></param>
+        /// <returns>bool</returns>
+        protected async Task<bool> IsSuperAdminOrAdminOrTrainerOfTraining(Guid currentuserId, string identity, TrainingTypeEnum trainingType)
+        {
+            bool isValidUser = false;
+            var IsAdimOrSuperAdmin = await IsSuperAdminOrAdmin(currentuserId);
+            switch (trainingType)
+            {
+                case TrainingTypeEnum.Course:
+                    var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate: p=>p.Id.ToString() == identity || p.Slug == identity,
+                        include:src=>src.Include(x=>x.CourseTeachers)).ConfigureAwait(false);
+                   isValidUser = course.CourseTeachers.Any(x=>x.UserId == currentuserId) || course.CreatedBy == currentuserId;
+                    break;
+                case TrainingTypeEnum.QuestionPool:
+                    var questionpool = await _unitOfWork.GetRepository<QuestionPool>().GetFirstOrDefaultAsync(predicate: p=>p.Id.ToString() == identity || p.Slug == identity,
+                        include: src=>src.Include(x=>x.QuestionPoolTeachers)).ConfigureAwait (false);
+                    isValidUser = questionpool.QuestionPoolTeachers.Any(x=>x.UserId == currentuserId) || questionpool.CreatedBy == currentuserId;
+                    break;
+            }
+            return isValidUser || IsAdimOrSuperAdmin;
         }
 
         /// <summary>
