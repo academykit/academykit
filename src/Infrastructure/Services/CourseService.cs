@@ -1037,7 +1037,7 @@ namespace Lingtren.Infrastructure.Services
                            LessonType = lesson.Type,
                            QuestionSetId = lesson.Type == LessonType.Exam ? lesson.QuestionSetId : null,
                            IsCompleted = m?.IsCompleted,
-                           IsPassed = lesson.Type == LessonType.Exam && examSubmissionStatus.Any(es => es.userId == student.UserId) ? m?.IsPassed : null,
+                           IsPassed = (m?.IsPassed == true ? true : (examSubmissionStatus.Any(es => es.userId == student.UserId) ? false : (bool?)null)),
                            UpdatedOn = m?.UpdatedOn ?? m?.CreatedOn,
                            IsAssignmentReviewed = (bool?)(assignmentStatus.FirstOrDefault(ur => ur.Value.UserId == student.UserId)?.UserResult),
                        };    

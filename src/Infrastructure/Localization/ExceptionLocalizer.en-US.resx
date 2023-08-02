@@ -989,4 +989,7 @@ recorded cannot be deleted.</value>
   <data name="AddingDuratrionError" xml:space="preserve">
     <value>Adding duration exceeds the end date.</value>
   </data>
+  <data name="EmptyFile" xml:space="preserve">
+    <value>The file is empty.</value>
+  </data>
 </root>

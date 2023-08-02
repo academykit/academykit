@@ -986,4 +986,7 @@
   <data name="AddingDuratrionError" xml:space="preserve">
     <value>अवधि थप्दा अन्तिम मिति नाघ्यो।</value>
   </data>
+  <data name="EmptyFile" xml:space="preserve">
+    <value>फाइल खाली छ।</value>
+  </data>
 </root>
