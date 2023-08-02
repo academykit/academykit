@@ -64,6 +64,11 @@ const AdminNav = () => {
       role: UserRole.Admin,
     },
     {
+      label: t('hangfire'),
+      to: RoutePath.settings.hangfire(),
+      role: UserRole.Admin,
+    },
+    {
       label: t('departments'),
       to: RoutePath.settings.department(),
       role: UserRole.Admin,

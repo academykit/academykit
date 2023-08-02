@@ -18,7 +18,7 @@ import {
   useCourseDescription,
   useUpdateCourse,
 } from '@utils/services/courseService';
-import { useGroups } from '@utils/services/groupService';
+import { useAddGroup, useGroups } from '@utils/services/groupService';
 import { useLevels } from '@utils/services/levelService';
 import { useAddTag, useTags } from '@utils/services/tagService';
 import { useEffect, useState } from 'react';
@@ -28,6 +28,8 @@ import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import useCustomForm from '@hooks/useCustomForm';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import useAuth from '@hooks/useAuth';
+import { UserRole } from '@utils/enums';
 
 interface FormValues {
   thumbnail: string;
@@ -69,6 +71,8 @@ const EditCourse = () => {
 
   const [searchParams] = useState('');
   const [searchParamsGroup] = useState('');
+  const groupAdd = useAddGroup();
+  const auth = useAuth();
 
   const label = useLevels();
   const { mutate, data: addTagData, isSuccess } = useAddTag();
@@ -232,6 +236,7 @@ const EditCourse = () => {
                 mt={20}
                 searchable
                 withAsterisk
+                description={<Text size={'xs'}>{t('group_create_info')}</Text>}
                 sx={{ maxWidth: '500px' }}
                 data={
                   groups?.data?.data?.items?.map((x) => ({
@@ -243,6 +248,18 @@ const EditCourse = () => {
                 size={'lg'}
                 label={t('group')}
                 placeholder={t('group_placeholder') as string}
+                creatable={
+                  // allow for admin and superadmin only
+                  auth?.auth?.role == UserRole.SuperAdmin ||
+                  auth?.auth?.role == UserRole.Admin
+                }
+                getCreateLabel={(query) => `+ Create ${query}`}
+                onCreate={(value) => {
+                  groupAdd
+                    .mutateAsync(value)
+                    .then((res) => form.setFieldValue('groups', res.data.id)); // setting value after fetch
+                  return value;
+                }}
               />
             ) : (
               <Loader />

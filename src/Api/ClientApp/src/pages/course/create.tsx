@@ -60,7 +60,6 @@ const CreateCoursePage = () => {
   const { t } = useTranslation();
   const groupAdd = useAddGroup();
   const auth = useAuth();
-  console.log(auth?.auth?.role == UserRole.SuperAdmin);
 
   const groups = useGroups(
     queryStringGenerator({

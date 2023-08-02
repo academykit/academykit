@@ -6,22 +6,27 @@ import { useTranslation } from 'react-i18next';
 const videoType = {
   true: 'Watched',
   false: 'not_watched',
+  empty: 'not_watched',
 };
 const examType = {
   true: 'passed',
   false: 'failed',
+  empty: 'not_attempted',
 };
 const liveSessionType = {
   true: 'attended',
   false: 'not_attended',
+  empty: 'not_attended',
 };
 const documentType = {
   true: 'viewed',
   false: 'not_viewed',
+  empty: 'not_completed',
 };
 const feedBackType = {
   true: 'submitted',
-  false: 'not-submitted',
+  false: 'not_submitted',
+  empty: 'not_submitted',
 };
 
 export const getType = (type: LessonType) => {
@@ -61,7 +66,7 @@ const LessonStatusColor = ({
           ) : isPassed === false ? (
             <Badge color={'red'}>{t(getType(type).false)}</Badge>
           ) : (
-            <Badge color={'red'}>{t('not_attempted')}</Badge>
+            <Badge color={'red'}>{t(getType(type).empty)}</Badge>
           ))}
 
         {/* show isPassed badge only when assignment is reviewed */}
