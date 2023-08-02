@@ -80,13 +80,11 @@ app.UseCors(x => x
               .SetIsOriginAllowed(_ => true) // allow any origin
               .AllowCredentials());
 
-app.UseHangfireDashboard("/jobs", new DashboardOptions
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
 {
-    Authorization = new[] { new HangfireCustomBasicAuthenticationFilter
-       {
-           User = builder.Configuration.GetSection("Hangfire").GetSection("User").Value,
-           Pass = builder.Configuration.GetSection("Hangfire").GetSection("Password").Value
-       }}
+    Authorization = new[]{
+        new HangfireAuthorizationFilter()
+    }
 });
 app.UseRequestLocalization();
 app.UseAuthentication();
