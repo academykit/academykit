@@ -12,14 +12,31 @@ export interface ITag {
   tagName?: string;
 }
 
-const getTags = async (search: string) =>
-  await httpClient.get<IPaginated<ITag>>(api.tags.list + `?${search}`);
+const getTags = async (
+  search: string,
+  trainingType?: number,
+  identity?: string
+) =>
+  await httpClient.get<IPaginated<ITag>>(
+    api.tags.list +
+      `?${search}${identity ? `Idenitiy=${identity}` : ''}${
+        trainingType ? `&TrainingType=${trainingType}` : ''
+      }`
+  );
 
-export const useTags = (search: string) =>
-  useQuery([api.tags.list, search], () => getTags(search), {
-    select: (data) => data.data,
-    keepPreviousData: true,
-  });
+export const useTags = (
+  search: string,
+  identity?: string,
+  trainingType?: number
+) =>
+  useQuery(
+    [api.tags.list, search],
+    () => getTags(search, trainingType, identity),
+    {
+      select: (data) => data.data,
+      // keepPreviousData: true,
+    }
+  );
 
 const addTag = async (tagName: string) =>
   await httpClient.post<ITag>(api.tags.list, { name: tagName });
