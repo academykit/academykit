@@ -21,7 +21,7 @@ const liveSessionType = {
 const documentType = {
   true: 'viewed',
   false: 'not_viewed',
-  empty: 'not_completed',
+  empty: 'not_viewed',
 };
 const feedBackType = {
   true: 'submitted',
