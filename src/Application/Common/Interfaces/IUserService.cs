@@ -150,5 +150,12 @@
         /// <param name="CourseID">the current course id </param>
         /// <returns> the instance of <see cref="UserResponseModel" /> .</returns>
         Task<List<UserResponseModel>>GetUserForCourseEnrollment(Guid userId,string courseId);
+
+        /// <summary>
+        /// Handle to remove the users active refresh token
+        /// </summary>
+        /// <param name="currentUserId">Current userId</param>
+        /// <returns>Task completed</returns>
+        Task RemoveRefreshTokenAsync(Guid currentUserId);
     }
 }
