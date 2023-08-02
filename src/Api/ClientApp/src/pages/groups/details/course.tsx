@@ -3,7 +3,15 @@ import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import useAuth from '@hooks/useAuth';
-import { Box, Button, Container, Flex, Group, Loader } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Group,
+  Loader,
+  Title,
+} from '@mantine/core';
 import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import { useGroupCourse } from '@utils/services/groupService';
@@ -24,13 +32,27 @@ const GroupCourse = ({
   }
   return (
     <Container fluid>
-      {auth?.auth && auth.auth?.role < UserRole.Trainee && (
-        <Group position="right" mb={10}>
-          <Link to={RoutePath.courses.create + `?group=${id}`}>
-            <Button>{t('add_new_training')}</Button>
-          </Link>
-        </Group>
-      )}
+      <Flex
+        my={10}
+        wrap={'wrap'}
+        sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+      >
+        <Title sx={{ flexGrow: 2 }}>{t('trainings')}</Title>
+        <Flex
+          sx={{
+            justifyContent: 'end',
+            alignItems: 'center',
+          }}
+        >
+          {auth?.auth && auth.auth?.role < UserRole.Trainee && (
+            <Group position="right" mb={10}>
+              <Link to={RoutePath.courses.create + `?group=${id}`}>
+                <Button>{t('add_new_training')}</Button>
+              </Link>
+            </Group>
+          )}
+        </Flex>
+      </Flex>
 
       {searchComponent(t('search_group_trainings') as string)}
       <Flex wrap="wrap" mt={15}>
