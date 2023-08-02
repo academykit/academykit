@@ -422,8 +422,6 @@
                 StringBuilder builder = new StringBuilder();
                 var i = 1;
                 builder.AppendLine("S.N,Name,Email," + feedbackQuestions);
-                builder.AppendLine();
-
                 foreach (var user in users)
                 {
                     builder.Append(i);
