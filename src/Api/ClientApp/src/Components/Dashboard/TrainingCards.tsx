@@ -139,21 +139,21 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
           <UserShortProfile user={data.user} size="xs" />
           {role !== UserRole.Trainee && (
             <Avatar.Group spacing={'sm'}>
-              {data.students.length > 0 ? (
+              {data.students?.length > 0 ? (
                 data.students.slice(0, 3).map((x) => {
                   return <StudentAvatar data={x} key={x.id} />;
                 })
               ) : (
                 <Text size="xs">{t('no_user_enrolled')}</Text>
               )}
-              {data.students.length > 3 && (
+              {data.students?.length > 3 && (
                 <Avatar
                   color="cyan"
                   radius="xl"
                   component={Link}
                   to={RoutePath.manageCourse.student(data.slug).route}
                 >
-                  +{data.students.length - 3}
+                  +{data.students?.length - 3}
                 </Avatar>
               )}
             </Avatar.Group>
