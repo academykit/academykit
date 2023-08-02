@@ -6,6 +6,11 @@ const getCourseOgImageUrl = (
   thumbnailUrl: string,
   theme = 'light'
 ) => {
+  console.log(
+    `?title=${encodeURIComponent(title)}&author=${encodeURIComponent(
+      author.fullName ?? ''
+    )}&image=${encodeURIComponent(author.imageUrl ?? '')}&theme=${theme}`
+  );
   return thumbnailUrl && thumbnailUrl !== ''
     ? thumbnailUrl
     : `https://imager.apps.vurilo.com?title=${encodeURIComponent(
