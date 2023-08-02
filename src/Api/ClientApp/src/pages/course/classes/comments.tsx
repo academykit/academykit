@@ -54,6 +54,7 @@ const Comments = () => {
           type="submit"
           mt={10}
           disabled={!form.values.content.trim()}
+          sx={{ '&[data-disabled]': { pointerEvents: 'all' } }}
         >
           {t('post')}
         </Button>
