@@ -462,7 +462,7 @@
 
             var predicate = PredicateBuilder.New<Assignment>(true);
             predicate = predicate.And(x => x.LessonId == lesson.Id);
-            var showAnswer = await IsSuperAdminOrAdminOrTrainerOfTraining(searchCriteria.CurrentUserId,lesson.CourseId.ToString(),TrainingTypeEnum.Course);
+            var IsValidUser = await IsSuperAdminOrAdminOrTrainerOfTraining(searchCriteria.CurrentUserId,lesson.CourseId.ToString(),TrainingTypeEnum.Course);
             var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
                 predicate: predicate,
                 include: src => src.Include(x => x.AssignmentAttachments).Include(x => x.AssignmentQuestionOptions),
@@ -482,7 +482,7 @@
 
             foreach (var item in assignments)
             {
-                MapAssignment(showAnswer, userAssignments, item, response);
+                MapAssignment(IsValidUser, userAssignments, item, response);
             }
             return response;
         }
