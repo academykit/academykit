@@ -196,7 +196,7 @@ const Questions = () => {
                       {t('question_pool_href')}
                     </Anchor>{' '}
                     {t('section')}
-                    <Anchor href="https://vuriloapp.tawk.help/category/vurilo-lms">
+                    <Anchor href="https://vuriloapp.tawk.help/article/question-pools">
                       {t('learn_more')}
                     </Anchor>
                   </Text>
