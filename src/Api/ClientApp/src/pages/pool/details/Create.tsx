@@ -131,14 +131,14 @@ const Create = () => {
       const tags = form.values.tags;
       const questionPreference = form.values.type;
       form.reset();
-      
+
       if (!isReset) {
         navigate(-1);
       }
 
       // setting user's previous choices
       form.setFieldValue('tags', tags);
-      form.setFieldValue('type', questionPreference); 
+      form.setFieldValue('type', questionPreference);
 
       showNotification({
         title: t('successful'),
@@ -269,6 +269,7 @@ const Create = () => {
                     {QuestionType.MultipleChoice.toString() ===
                     form.values.type ? (
                       <Checkbox
+                        checked={form.values.answers[i].isCorrect}
                         {...form.getInputProps(`answers.${i}.isCorrect`)}
                         name=""
                       ></Checkbox>
