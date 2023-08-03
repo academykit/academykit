@@ -117,9 +117,12 @@ const Questions = () => {
           }`
       );
       setQuestionPoolTags(response.data);
-      console.log(response.data);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      showNotification({
+        title: t('error'),
+        message: 'Something went wrong',
+        color: 'red',
+      });
     }
   };
 
