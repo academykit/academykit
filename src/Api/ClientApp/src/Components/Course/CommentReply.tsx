@@ -151,6 +151,7 @@ const CommentReply = ({
                 size="sm"
                 type="submit"
                 disabled={!form.values.content.trim()}
+                sx={{ '&[data-disabled]': { pointerEvents: 'all' } }}
               >
                 {t('edit')}
               </Button>
