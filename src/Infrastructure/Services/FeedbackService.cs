@@ -421,10 +421,13 @@
                 var feedbackQuestions = string.Join(",", feedback.OrderBy(x => x.Order).Select(x => x.Name));
                 StringBuilder builder = new StringBuilder();
                 var i = 1;
-                builder.AppendLine("S.N,Name,Email," + feedbackQuestions);
+                builder.AppendLine("S.N,Date,Name,Email," + feedbackQuestions);
                 foreach (var user in users)
                 {
                     builder.Append(i);
+                    builder.Append(",");
+                    var submissionDate = feedbackSubmissions.FirstOrDefault(x => x.UserId == user.Id);
+                    builder.Append(submissionDate?.CreatedOn.ToString("MM/dd/yyyy"));
                     builder.Append(",");
                     builder.Append($"{user.FullName}");
                     builder.Append(",");
