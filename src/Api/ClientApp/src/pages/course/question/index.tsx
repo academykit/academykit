@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Breadcrumb from '@components/Ui/BreadCrumb';
 import { useEffect, useState } from 'react';
 import {
@@ -18,8 +19,8 @@ import {
   Anchor,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { usePools } from '@utils/services/poolService';
-import { useTags } from '@utils/services/tagService';
+import { IPool, usePools } from '@utils/services/poolService';
+import { ITag, useTags } from '@utils/services/tagService';
 import {
   useAddQuestionQuestionSet,
   useQuestion,
@@ -30,6 +31,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import errorType from '@utils/services/axiosError';
 import { useTranslation } from 'react-i18next';
 import TextViewer from '@components/Ui/RichTextViewer';
+import { httpClient } from '@utils/services/service-axios';
+import { api } from '@utils/services/service-api';
+import { IPaginated } from '@utils/services/types';
+import { UseQueryResult } from '@tanstack/react-query';
 
 interface ISelectList {
   label: string;
@@ -90,11 +95,38 @@ const Questions = () => {
   const [tagValue, setTagValue] = useState<string | null>(null);
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.sm}px)`);
   const questionPools = usePools('');
-  const questionPoolTags = useTags('', poolValue ?? '', 1);
+  // const questionPoolTags = useTags('', poolValue ?? '', 1);
+  const [questionPoolTags, setQuestionPoolTags] = useState<IPaginated<ITag>>(
+    {} as IPaginated<ITag>
+  );
   const questions = useQuestion(
     poolValue ?? '',
     `page=${activePage}&size=12&${tagValue ? `tags=${[tagValue]}` : ''}`
   );
+
+  const callAPI = async (
+    search: string,
+    identity: string,
+    trainingType: number
+  ) => {
+    try {
+      const response = await httpClient.get<IPaginated<ITag>>(
+        api.tags.list +
+          `?${search}${identity ? `Idenitiy=${identity}` : ''}${
+            trainingType ? `&TrainingType=${trainingType}` : ''
+          }`
+      );
+      setQuestionPoolTags(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  // get tags on every pool value change
+  useEffect(() => {
+    callAPI('', poolValue ?? '', 1);
+  }, [poolValue]);
 
   const addQuestions = useAddQuestionQuestionSet(lessonSlug as string);
   const navigate = useNavigate();
@@ -106,7 +138,7 @@ const Questions = () => {
     poolData.push({ value: e.slug, label: e.name });
   });
 
-  questionPoolTags.data?.items.map((e) => {
+  questionPoolTags?.items?.map((e) => {
     questionTag.push({ value: e.id, label: e.name });
   });
 
