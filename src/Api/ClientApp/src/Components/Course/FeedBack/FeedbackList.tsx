@@ -141,10 +141,12 @@ const FeedbackItem = ({
               <Text>{t('options')}</Text>
               {data.feedbackQuestionOptions?.map((x) => (
                 <Group my={10} key={x.id} id="hehe">
-                  <TextViewer
-                    content={x.option}
-                    styles={{ root: { flexGrow: 1 } }}
-                  ></TextViewer>
+                  <div style={{ width: '100%' }}>
+                    <TextViewer
+                      content={x.option}
+                      styles={{ root: { flexGrow: 1 } }}
+                    ></TextViewer>
+                  </div>
                 </Group>
               ))}
             </>

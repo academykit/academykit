@@ -28,6 +28,7 @@ import { IUser } from '@utils/services/types';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import UserShortProfile from '@components/UserShortProfile';
+import { useGeneralSetting } from '@utils/services/adminService';
 
 const useStyle = createStyles((theme) => ({
   card: {
@@ -60,6 +61,10 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
   const role = auth?.auth?.role;
   const { t } = useTranslation();
   const { classes } = useStyle();
+  const generalSettings = useGeneralSetting();
+  const companyName = generalSettings.data?.data.companyName;
+  const companyLogo = generalSettings.data?.data.logoUrl;
+
   return (
     <Card
       withBorder
@@ -72,7 +77,14 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
       <Flex sx={{ justifyContent: 'space-between' }}>
         <Box w="100">
           <Image
-            src={getCourseOgImageUrl(data.user, data.name, data.thumbnailUrl)}
+            // src={getCourseOgImageUrl(data.user, data.name, data.thumbnailUrl)}
+            src={getCourseOgImageUrl({
+              author: data.user,
+              title: data.name,
+              thumbnailUrl: data.thumbnailUrl,
+              companyName: companyName,
+              companyLogo: companyLogo,
+            })}
             radius="sm"
             height={100}
             width={'100%'}

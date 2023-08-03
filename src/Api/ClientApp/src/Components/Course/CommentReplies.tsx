@@ -67,6 +67,7 @@ const CommentReplies = ({
             type="submit"
             loading={addCommentReply.isLoading}
             disabled={!form.values.content.trim()}
+            sx={{ '&[data-disabled]': { pointerEvents: 'all' } }}
           >
             {t('reply')}
           </Button>

@@ -37,6 +37,7 @@ import { color } from '@utils/constants';
 import TextViewer from '@components/Ui/RichTextViewer';
 import { useToggle } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
+import { useGeneralSetting } from '@utils/services/adminService';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -157,6 +158,9 @@ const CourseDescription = () => {
     }
     togglePublished();
   };
+  const generalSettings = useGeneralSetting();
+  const companyName = generalSettings.data?.data.companyName;
+  const companyLogo = generalSettings.data?.data.logoUrl;
 
   const course = useCourseDescription(id as string);
   const { t } = useTranslation();
@@ -268,11 +272,13 @@ const CourseDescription = () => {
           <div className={classes.aside}>
             <AspectRatio ratio={16 / 9} mx="auto">
               <Image
-                src={getCourseOgImageUrl(
-                  course?.data?.user,
-                  course?.data?.name,
-                  course?.data.thumbnailUrl
-                )}
+                src={getCourseOgImageUrl({
+                  author: course?.data?.user,
+                  title: course?.data?.name,
+                  thumbnailUrl: course?.data.thumbnailUrl,
+                  companyName: companyName,
+                  companyLogo: companyLogo,
+                })}
               />
             </AspectRatio>
             <Center>
