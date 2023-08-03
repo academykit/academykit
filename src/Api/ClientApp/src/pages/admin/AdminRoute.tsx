@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 
 const AdminCourseList = lazyWithRetry(() => import('./course'));
 const Department = lazyWithRetry(() => import('./department'));
+const Hangfire = lazyWithRetry(() => import('./hangfire'));
 const FileStorage = lazyWithRetry(() => import('./filestorage'));
 const GeneralSettings = lazyWithRetry(() => import('./generalSettings'));
 const Level = lazyWithRetry(() => import('./level'));
@@ -56,6 +57,7 @@ const AdminRoutesChild = () => {
           <Route path={'/smtp'} element={<SMTP />} />
           <Route path={'/level'} element={<Level />} />
           <Route path={'/department'} element={<Department />} />
+          <Route path={'/hangfire'} element={<Hangfire />} />
           <Route path={'/log'} element={<Log />} />
           <Route path={'/courses'} element={<AdminCourseList />} />
           <Route path={'/certificate'} element={<CertificateList />} />
