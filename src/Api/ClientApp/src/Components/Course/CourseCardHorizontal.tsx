@@ -37,6 +37,7 @@ import {
 } from '@utils/enums';
 import getCourseOgImageUrl from '@utils/getCourseOGImage';
 import RoutePath from '@utils/routeConstants';
+import { useGeneralSetting } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import { ICourse, useDeleteCourse } from '@utils/services/courseService';
 import moment from 'moment';
@@ -74,6 +75,10 @@ const CourseCardHorizontal = ({
   const matchesSmall = useMediaQuery(`(min-width: ${theme.breakpoints.xs}px)`);
   const { t } = useTranslation();
   const auth = useAuth();
+
+  const generalSettings = useGeneralSetting();
+  const companyName = generalSettings.data?.data.companyName;
+  const companyLogo = generalSettings.data?.data.logoUrl;
 
   return (
     <Box
@@ -134,11 +139,18 @@ const CourseCardHorizontal = ({
               <AspectRatio ratio={16 / 9}>
                 <Center>
                   <Image
-                    src={getCourseOgImageUrl(
-                      course.user,
-                      course.name,
-                      course.thumbnailUrl
-                    )}
+                    // src={getCourseOgImageUrl(
+                    //   course.user,
+                    //   course.name,
+                    //   course.thumbnailUrl
+                    // )}
+                    src={getCourseOgImageUrl({
+                      author: course.user,
+                      title: course.name,
+                      thumbnailUrl: course.thumbnailUrl,
+                      companyName: companyName,
+                      companyLogo: companyLogo,
+                    })}
                     radius="md"
                     fit="cover"
                   />
