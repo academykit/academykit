@@ -204,6 +204,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
                 size="sm"
                 type="submit"
                 disabled={!form.values.content.trim()}
+                sx={{ '&[data-disabled]': { pointerEvents: 'all' } }}
               >
                 {t('save')}
               </Button>
