@@ -17,7 +17,7 @@ const getCourseOgImageUrl = ({
 }) => {
   return thumbnailUrl && thumbnailUrl !== ''
     ? thumbnailUrl
-    : `https://imager.apps.vurilo.com?title=${encodeURIComponent(
+    : `https://knox-certificate.apps.vurilo.com/og?title=${encodeURIComponent(
         title
       )}&author=${encodeURIComponent(
         author.fullName ?? ''
