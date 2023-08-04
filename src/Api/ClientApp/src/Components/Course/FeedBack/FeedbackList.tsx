@@ -98,7 +98,7 @@ const FeedbackItem = ({
 
       <Paper shadow={'lg'} sx={{ width: '100%' }} my={20} withBorder p={20}>
         <Flex justify={'space-between'}>
-          <Title>{data.name}</Title>
+          <Title truncate>{data.name}</Title>
           <Group>
             <Button variant="subtle" onClick={() => setEdit()}>
               <IconEdit />
