@@ -457,7 +457,10 @@
                                     lesson.Id, searchCriteria.CurrentUserId);
                 throw new ForbiddenException(_localizer.GetString("InvalidLessonAssignmentType"));
             }
-
+            if (lesson.StartDate > DateTime.UtcNow)
+            {
+                throw new ForbiddenException(_localizer.GetString("AssignmentStartTimeException"));
+            }
             var course = await ValidateAndGetCourse(searchCriteria.CurrentUserId, lesson.CourseId.ToString(), validateForModify: false).ConfigureAwait(false);
 
             var predicate = PredicateBuilder.New<Assignment>(true);

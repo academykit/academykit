@@ -989,4 +989,7 @@
   <data name="EmptyFile" xml:space="preserve">
     <value>फाइल खाली छ।</value>
   </data>
+  <data name="AssignmentStartTimeException" xml:space="preserve">
+    <value>कार्यभार अझै सुरु भएको छैन।</value>
+  </data>
 </root>

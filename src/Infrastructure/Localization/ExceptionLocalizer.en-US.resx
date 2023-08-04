@@ -992,4 +992,7 @@ recorded cannot be deleted.</value>
   <data name="EmptyFile" xml:space="preserve">
     <value>The file is empty.</value>
   </data>
+  <data name="AssignmentStartTimeException" xml:space="preserve">
+    <value>The assignment has not started yet.</value>
+  </data>
 </root>
