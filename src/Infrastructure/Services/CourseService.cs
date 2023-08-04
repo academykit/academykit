@@ -918,14 +918,13 @@ namespace Lingtren.Infrastructure.Services
                     predicate: p => p.CourseId == course.Id && !p.IsDeleted && !p.Section.IsDeleted,
                     include: src => src.Include(x => x.Section)
                     ).ConfigureAwait(false);
-
+                lessons =  lessons.OrderBy(x => x.Order).ToList();
                 var LessonIds = lessons.Select(x=>x.Id).ToList();
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(predicate: p => p.CourseId == course.Id && LessonIds.Contains(p.LessonId)).ConfigureAwait(false);
                 watchHistory = watchHistory
                               .GroupBy(x => x.LessonId)
                               .SelectMany(group => group.DistinctBy(x => x.UserId))
                               .ToList();
-
                 var searchResult = lessons.ToIPagedList(criteria.Page, criteria.Size);
 
                 var response = new SearchResult<LessonStatisticsResponseModel>
@@ -1124,7 +1123,7 @@ namespace Lingtren.Infrastructure.Services
             var response = new List<LessonStudentResponseModel>();
             var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p=>p.Type ==LessonType.Assignment && p.CourseId == course.Id).ConfigureAwait(false);
 
-            List<(Guid LessonId, bool UserResult)?> assignmentStatus = new List<(Guid, bool)?>();
+            List<(Guid LessonId, bool? UserResult)?> assignmentStatus = new List<(Guid, bool?)?>();
             if (lessons.Count != default)
             {
                 var lessonIds = lessons.Select(x => x.Id).ToList();
@@ -1134,7 +1133,11 @@ namespace Lingtren.Infrastructure.Services
                 {
                     foreach (var lessonId in lessonIds)
                     {
-                        bool hasSubmitted = false;
+                        bool? hasSubmitted = null;
+                        if (assignmentSubmission.Any(x => x.LessonId == lessonId && x.UserId == userId) && !assignmentReview.Any(x => x.LessonId == lessonId && x.UserId == userId))
+                        {
+                            hasSubmitted = false;
+                        }
                         if (assignmentSubmission.Any(x => x.LessonId == lessonId && x.UserId == userId) && assignmentReview.Any(x => x.LessonId == lessonId && x.UserId == userId))
                         {
                             hasSubmitted = true;
