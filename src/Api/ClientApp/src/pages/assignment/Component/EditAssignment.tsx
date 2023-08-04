@@ -146,17 +146,17 @@ const EditAssignment = ({
   const addAssignmentQuestion = useAddAssignmentQuestion(lessonId, search);
   const editAssignment = useEditAssignmentQuestion(lessonId, search);
 
-  useEffect(() => {
-    if (
-      form.values.type &&
-      !addAssignmentQuestion.isSuccess &&
-      form?.values.answers
-    ) {
-      form.values.answers.forEach((x, i) => {
-        return form.setFieldValue(`answers.${i}.isCorrect`, false);
-      });
-    }
-  }, [form.values.type]);
+  // useEffect(() => {
+  //   if (
+  //     form.values.type &&
+  //     !addAssignmentQuestion.isSuccess &&
+  //     form?.values.answers
+  //   ) {
+  //     form.values.answers.forEach((x, i) => {
+  //       return form.setFieldValue(`answers.${i}.isCorrect`, false);
+  //     });
+  //   }
+  // }, [form.values.type]);
 
   const onChangeRadioType = (index: number) => {
     form?.values.answers &&
@@ -254,6 +254,10 @@ const EditAssignment = ({
                         {QuestionType.MultipleChoice.toString() ===
                         form.values.type ? (
                           <Checkbox
+                            checked={
+                              form?.values?.answers &&
+                              form?.values?.answers[i].isCorrect
+                            }
                             mr={10}
                             {...form.getInputProps(`answers.${i}.isCorrect`)}
                             name=""
