@@ -74,13 +74,14 @@ const CertificateCard = ({
           </Text>
           <Text mt={5}>
             {t('from')} {moment(item.startDate).format(DATE_FORMAT)} {t('to')}{' '}
-            {moment(item.endDate).format(DATE_FORMAT)}
-            {t('completed_in_about')} {item.duration} {t('hrs')}
+            {moment(item.endDate).format(DATE_FORMAT)} {t('completed_in_about')}{' '}
+            {item.duration} {t('hrs')}
           </Text>
           <Text>
             {item.institute}
             {item.location && `, ${item.location}`}
           </Text>
+          <Text>{item.cost !== 0 && `Cost: Rs.${item.cost ?? 0}`}</Text>
           <UserShortProfile size={'sm'} user={item.user} />
         </Box>
         <Box style={{ width: 150, marginTop: 'auto', marginBottom: 'auto' }}>
