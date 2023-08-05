@@ -129,8 +129,9 @@ const RoutePath = {
     },
     hangfire: function () {
       return (
-        (isDevelopment ? 'https://localhost:7042' : window.location.host) +
-        '/hangfire'
+        (isDevelopment
+          ? 'https://localhost:7042'
+          : location.protocol + '//' + window.location.host) + '/hangfire'
       );
     },
     log: function () {
