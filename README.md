@@ -60,3 +60,9 @@ Run docker container
 docker run -d -p 8080:80 --name vurilo-standalone standalone
 ```
 
+## Known issues
+1. If during debub, port 7042 is already in use kill the port as 
+```bash
+# mac
+sudo lsof -t -i tcp:7042 | xargs kill -9
+```

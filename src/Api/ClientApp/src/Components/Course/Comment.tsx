@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import useAuth from '@hooks/useAuth';
 import {
   createStyles,
@@ -29,14 +28,6 @@ import DeleteModal from '@components/Ui/DeleteModal';
 import { useTranslation } from 'react-i18next';
 
 const useStyles = createStyles((theme) => ({
-  comment: {
-    padding: `${theme.spacing.lg}px ${theme.spacing.xl}px`,
-    // backgroundColor:
-    //   theme.colorScheme === "dark"
-    //     ? theme.colors.dark[1]
-    //     : theme.colors.gray[2],
-  },
-
   body: {
     paddingLeft: 54,
     paddingTop: theme.spacing.sm,
@@ -91,7 +82,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
 
   const deleteComment = useDeleteComment(id as string);
   const editComment = useEditComment(id as string, comment.id);
-  const { classes, cx } = useStyles();
+  const { classes } = useStyles();
   const onDelete = async () => {
     try {
       await deleteComment.mutateAsync({
@@ -156,13 +147,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
   });
 
   return (
-    <Paper
-      withBorder
-      my={5}
-      radius="md"
-      className={classes.comment}
-      shadow="md"
-    >
+    <Paper withBorder p={10} my={'xs'} radius="md" shadow="md">
       <DeleteModal
         title={t('delete_comment_confirmation')}
         open={deleteConfirmation}
@@ -186,40 +171,36 @@ const Comment = ({ comment }: { comment: IComment }) => {
       {edit ? (
         <form onSubmit={form.onSubmit(onEdit)}>
           <Textarea
-            className={cx({ [classes.editor]: !edit })}
             mt={20}
-            mb={10}
             {...form.getInputProps('content')}
             sx={{ minHeight: edit && '5rem' }}
-            readOnly={edit ? false : true}
             styles={{
               root: {
                 border: 'none',
               },
             }}
           />
-          {edit && (
-            <Group>
-              <Button
-                size="sm"
-                type="submit"
-                disabled={!form.values.content.trim()}
-                sx={{ '&[data-disabled]': { pointerEvents: 'all' } }}
-              >
-                {t('save')}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setEdit();
-                  form.reset();
-                }}
-              >
-                {t('cancel')}
-              </Button>
-            </Group>
-          )}
+
+          <Group>
+            <Button
+              size="sm"
+              type="submit"
+              disabled={!form.values.content.trim()}
+              sx={{ '&[data-disabled]': { pointerEvents: 'all' } }}
+            >
+              {t('save')}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setEdit();
+                form.reset();
+              }}
+            >
+              {t('cancel')}
+            </Button>
+          </Group>
         </form>
       ) : (
         <Text className={classes.body} size="sm">
@@ -256,13 +237,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
         timingFunction="ease"
       >
         {(styles) => (
-          <Box
-            style={{ ...styles }}
-            mx={10}
-            className={classes.replies}
-            p="lg"
-            mt={10}
-          >
+          <Box style={{ ...styles }} p="sm" mt={1}>
             {toggle ? (
               <CommentReplies commentId={comment.id} courseId={id as string} />
             ) : (

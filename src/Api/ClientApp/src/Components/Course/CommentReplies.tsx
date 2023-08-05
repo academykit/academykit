@@ -46,15 +46,6 @@ const CommentReplies = ({
   }
   return (
     <>
-      {commentReplies.data?.items.map((x) => (
-        <CommentReply
-          key={x.id}
-          reply={x}
-          commentId={commentId}
-          courseId={courseId}
-        />
-      ))}
-
       <form onSubmit={form.onSubmit(submitHandler)}>
         <Group mx={14}>
           <Textarea
@@ -73,6 +64,14 @@ const CommentReplies = ({
           </Button>
         </Group>
       </form>
+      {commentReplies.data?.items.map((x) => (
+        <CommentReply
+          key={x.id}
+          reply={x}
+          commentId={commentId}
+          courseId={courseId}
+        />
+      ))}
     </>
   );
 };

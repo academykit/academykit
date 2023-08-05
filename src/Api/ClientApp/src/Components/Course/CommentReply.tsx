@@ -113,7 +113,7 @@ const CommentReply = ({
   };
 
   return (
-    <Box m={10} p={10} className={classes.wrapper}>
+    <Box m={10} p={10}>
       <DeleteModal
         title={t('delete_reply_confirmation')}
         open={deleteConfirmation}
