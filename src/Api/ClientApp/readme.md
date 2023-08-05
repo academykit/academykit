@@ -6,24 +6,20 @@ node version >16+
 
 react version > 18
 
-package manager pnpm latest
-
-`npm add -G pnpm`
-
 Debug application
 
 ```
-pnpm dev
+npm dev
 ```
 
 Production Build
 
 ```
-pnpm build
+npm build
 ```
 
 Preview application
 
 ```
-pnpm preview
+npm preview
 ```
