@@ -1,4 +1,4 @@
-import { BASE_URL } from './env';
+import { isDevelopment } from './env';
 
 const RoutePath = {
   login: '/login',
@@ -128,7 +128,10 @@ const RoutePath = {
       return this.base + '/department';
     },
     hangfire: function () {
-      return BASE_URL + '/hangfire';
+      return (
+        (isDevelopment ? 'https://localhost:7042' : window.location.host) +
+        '/hangfire'
+      );
     },
     log: function () {
       return this.base + '/log';
