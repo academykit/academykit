@@ -1576,6 +1576,7 @@ namespace Lingtren.Infrastructure.Services
         /// <returns>the meeting id and passcode and the instance of <see cref="ZoomLicense"/></returns>
         private async Task<string> GetImageFile(CourseCertificate? certificate, string fullName, IList<Signature> signatures)
         {
+            var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
             var client = new RestClient($"{imageApi}");
             var authors = new ArrayList();
             foreach (var item in signatures)
@@ -1594,6 +1595,8 @@ namespace Lingtren.Infrastructure.Services
                         training = certificate?.Title,
                         startDate = certificate?.EventStartDate.ToString("dd MMMM yyyy"),
                         endDate = certificate?.EventEndDate.ToString("dd MMMM yyyy"),
+                        companyName = company.CompanyName,
+                        companyLogo = company.LogoUrl,
                         authors,
                     });
 
