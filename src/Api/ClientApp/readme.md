@@ -1,25 +1,32 @@
-**Project Setup**
+## frontend Code
 
-prerequisite
+## prerequisite
 
-node version >16+
+1. node version >16+
 
-react version > 18
-
+## Development
 Debug application
 
 ```
-npm dev
+npm run dev
 ```
 
 Production Build
 
 ```
-npm build
+npm run build
 ```
 
 Preview application
 
 ```
-npm preview
+npm run preview
+```
+
+## Lint & Format
+
+Run
+```bash
+npm run format
+npm run lint
 ```

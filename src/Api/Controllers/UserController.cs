@@ -122,7 +122,7 @@ namespace Lingtren.Api.Controllers
 
             var response = await _userService.CreateAsync(entity).ConfigureAwait(false);
             var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
-            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(entity.Email, entity.FirstName, password, company.CompanyName,company.CompanyContactNumber,null));
+            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(entity.Email, entity.FirstName, password, company.CompanyName, company.CompanyContactNumber, null));
             return new UserResponseModel(response);
         }
 
@@ -155,8 +155,8 @@ namespace Lingtren.Api.Controllers
         /// <param name="criteria"></param>
         /// <returns>List of trainer</returns>
         [HttpGet("trainer")]
-        public async Task<IList<TrainerResponseModel>> Trainer([FromQuery]TeacherSearchCriteria criteria) => await _userService.GetTrainerAsync(CurrentUser.Id,criteria).ConfigureAwait(false);
-      
+        public async Task<IList<TrainerResponseModel>> Trainer([FromQuery] TeacherSearchCriteria criteria) => await _userService.GetTrainerAsync(CurrentUser.Id, criteria).ConfigureAwait(false);
+
 
         /// <summary>
         /// import bulk user api
@@ -221,15 +221,15 @@ namespace Lingtren.Api.Controllers
                 }
                 existing.Role = model.Role;
             }
-            if(model.Status == UserStatus.Active || model.Status == UserStatus.InActive)
+            if (model.Status == UserStatus.Active || model.Status == UserStatus.InActive)
             {
                 existing.Status = model.Status;
             }
             string? password = null;
-            if(emailchange == true)
+            if (emailchange == true)
             {
                 password = await _userService.GenerateRandomPassword(8).ConfigureAwait(false);
-                existing.HashPassword = _userService.HashPassword(password);  
+                existing.HashPassword = _userService.HashPassword(password);
             }
             if (oldRole != model.Role)
             {
@@ -248,7 +248,7 @@ namespace Lingtren.Api.Controllers
             if (password != null)
             {
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.AccountUpdatedMailAsync(existing.FullName, model.Email, oldEmail, null));
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(existing.Email, existing.FullName, password,company.CompanyName,company.CompanyContactNumber, null));
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(existing.Email, existing.FullName, password, company.CompanyName, company.CompanyContactNumber, null));
             }
 
             return new UserResponseModel(savedEntity);

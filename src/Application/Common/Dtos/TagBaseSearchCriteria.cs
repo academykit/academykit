@@ -2,7 +2,7 @@
 
 namespace Lingtren.Application.Common.Dtos
 {
-    public class TagBaseSearchCriteria:BaseSearchCriteria
+    public class TagBaseSearchCriteria : BaseSearchCriteria
     {
         /// <summary>
         /// identity of training

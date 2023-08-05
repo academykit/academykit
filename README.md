@@ -24,7 +24,7 @@ Then run the backend in another terminal, the build and restart will be faster
 dotnet watch run --project=src/Api/Api.csproj
 ```
 
-The Hangfire Dashboard is available at https://localhost:7042/jobs 
+The Hangfire Dashboard is available at https://localhost:7042/hangfire 
 
 ## Database Migrations
 

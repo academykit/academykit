@@ -8,7 +8,7 @@ namespace Lingtren.Application.Common.Models.RequestModels
 
         [Required]
         public DateTime StartDate { get; set; }
-        
+
         [Required]
         public DateTime EndDate { get; set; }
         public string ImageUrl { get; set; }

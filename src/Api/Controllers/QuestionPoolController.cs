@@ -21,7 +21,7 @@
         public QuestionPoolController(
             IQuestionPoolService questionPoolService,
             IValidator<QuestionPoolRequestModel> validator,
-            IStringLocalizer<ExceptionLocalizer> localizer )
+            IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _questionPoolService = questionPoolService;
             _validator = validator;

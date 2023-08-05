@@ -18,7 +18,7 @@ namespace Lingtren.Infrastructure.Services
     public class SectionService : BaseGenericService<Section, SectionBaseSearchCriteria>, ISectionService
     {
         public SectionService(IUnitOfWork unitOfWork, ILogger<SectionService> logger,
-        IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+        IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
 
@@ -114,7 +114,7 @@ namespace Lingtren.Infrastructure.Services
                 var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
                     predicate: x => !x.IsDeleted && x.CourseId == course.Id && (x.Id.ToString() == sectionIdentity || x.Slug.Equals(sectionIdentity)),
                     include: s => s.Include(x => x.Lessons).Include(x => x.Course)).ConfigureAwait(false);
-                if(course.Status == CourseStatus.Completed)
+                if (course.Status == CourseStatus.Completed)
                 {
                     throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
                 }

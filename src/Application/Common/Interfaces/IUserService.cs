@@ -132,7 +132,7 @@
         /// <param name="currentUserId"> the current user id </param>
         /// <param name="critera"> the instance of <see cref="TeacherSearchCriteria"></see></param>
         /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
-        Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId,TeacherSearchCriteria criteria);
+        Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId, TeacherSearchCriteria criteria);
 
 
         /// <summary>
@@ -149,7 +149,7 @@
         /// <param name="userId"> the user id </param>
         /// <param name="CourseID">the current course id </param>
         /// <returns> the instance of <see cref="UserResponseModel" /> .</returns>
-        Task<List<UserResponseModel>>GetUserForCourseEnrollment(Guid userId,string courseId);
+        Task<List<UserResponseModel>> GetUserForCourseEnrollment(Guid userId, string courseId);
 
         /// <summary>
         /// Handle to remove the users active refresh token

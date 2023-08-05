@@ -20,7 +20,7 @@
     {
         public QuestionPoolTeacherService(IUnitOfWork unitOfWork,
             ILogger<QuestionPoolTeacherService> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
 

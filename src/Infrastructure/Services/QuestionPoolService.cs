@@ -23,7 +23,7 @@
             IUnitOfWork unitOfWork,
             ILogger<QuestionPoolService> logger,
             IStringLocalizer<ExceptionLocalizer> localizer
-            ) : base(unitOfWork, logger,localizer)
+            ) : base(unitOfWork, logger, localizer)
         {
         }
         #region Protected Methods
@@ -122,14 +122,14 @@
                 var questionsetsubmission = await _unitOfWork.GetRepository<QuestionSetSubmission>().GetAllAsync(predicate: p => p.QuestionSet.QuestionSetQuestions.Any(x => x.QuestionPoolQuestionId.
                 Equals(questionPoolQuestions.Select(x => x.QuestionId)))).ConfigureAwait(false);
 
-                if (questionPoolQuestions.Count() != 0 && questionsetsubmission.Count() != 0 && questionsetsubmission.Any(x=>x.QuestionSetResults.Count != 0))
+                if (questionPoolQuestions.Count() != 0 && questionsetsubmission.Count() != 0 && questionsetsubmission.Any(x => x.QuestionSetResults.Count != 0))
                 {
                     _logger.LogWarning("Question pool with id: {poolId} contains questions. So, it cannot be deleted.", identity);
                     throw new ForbiddenException(_localizer.GetString("QuestionPoolContainQuestion"));
                 }
 
-                var ids = questionPoolQuestions.Select(x => x.Id).ToList();  
-                var questionsetquestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(predicate:p=> ids.Contains(p.QuestionPoolQuestionId.Value)).ConfigureAwait(false);
+                var ids = questionPoolQuestions.Select(x => x.Id).ToList();
+                var questionsetquestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(predicate: p => ids.Contains(p.QuestionPoolQuestionId.Value)).ConfigureAwait(false);
 
 
                 foreach (var questionsetquestion in questionsetquestions)
@@ -142,7 +142,7 @@
                     _unitOfWork.GetRepository<QuestionPoolQuestion>().Delete(questionPoolQuestion);
                 }
 
-                
+
                 foreach (var submission in questionsetsubmission)
                 {
                     _unitOfWork.GetRepository<QuestionSetSubmission>().Delete(submission);

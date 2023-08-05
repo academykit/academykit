@@ -32,8 +32,8 @@
         /// </summary>
         /// <returns> the list of <see cref="DepartmentResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<SearchResult<DepartmentResponseModel>> SearchAsync([FromQuery] DepartmentBaseSearchCriteria searchCriteria )
-        { 
+        public async Task<SearchResult<DepartmentResponseModel>> SearchAsync([FromQuery] DepartmentBaseSearchCriteria searchCriteria)
+        {
             var searchResult = await _departmentService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             var response = new SearchResult<DepartmentResponseModel>

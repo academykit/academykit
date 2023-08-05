@@ -19,7 +19,7 @@
         public QuestionService(
             IUnitOfWork unitOfWork,
             ILogger<QuestionService> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
 

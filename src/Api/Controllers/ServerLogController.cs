@@ -29,7 +29,7 @@ namespace Lingtren.Api.Controllers
         /// <param name="logId"> the log id </param>
         /// <returns> the instance of <see cref="ServerLogsResponseModel"/></returns>
         [HttpGet("{logId}")]
-        public async Task<ServerLogsResponseModel> Log(Guid logId) => await _logService.GetLogDetailAsync(logId,CurrentUser.Id).ConfigureAwait(false);
+        public async Task<ServerLogsResponseModel> Log(Guid logId) => await _logService.GetLogDetailAsync(logId, CurrentUser.Id).ConfigureAwait(false);
 
     }
 }

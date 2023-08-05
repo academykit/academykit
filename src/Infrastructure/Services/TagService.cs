@@ -153,24 +153,24 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="predicate">The predicate.</param>
         /// <param name="criteria">The search criteria.</param>
         /// <returns>The updated predicate with applied filters.</returns>
-        protected override Expression<Func<Tag, bool>> ConstructQueryConditions(Expression<Func<Tag, bool>> predicate,TagBaseSearchCriteria criteria)
+        protected override Expression<Func<Tag, bool>> ConstructQueryConditions(Expression<Func<Tag, bool>> predicate, TagBaseSearchCriteria criteria)
         {
-            
+
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search)
                  || x.User.FirstName.ToLower().Trim().Contains(search));
             }
-            if(!string.IsNullOrWhiteSpace(criteria.Idenitiy))
+            if (!string.IsNullOrWhiteSpace(criteria.Idenitiy))
             {
-                switch(criteria.TrainingType)
+                switch (criteria.TrainingType)
                 {
                     case TrainingTypeEnum.Course:
                         predicate = predicate.And(x => x.CourseTags.Any(x => x.Course.Id.ToString() == criteria.Idenitiy.Trim() || x.Course.Slug.ToLower() == criteria.Idenitiy.ToLower().Trim()));
                         break;
                     case TrainingTypeEnum.QuestionPool:
-                        var questionTags =_unitOfWork.GetRepository<QuestionTag>().GetAll(predicate : p=>p.Question.QuestionPoolQuestions.Any(x=>x.QuestionPool.Slug.ToLower() == criteria.Idenitiy.ToLower().Trim() || 
+                        var questionTags = _unitOfWork.GetRepository<QuestionTag>().GetAll(predicate: p => p.Question.QuestionPoolQuestions.Any(x => x.QuestionPool.Slug.ToLower() == criteria.Idenitiy.ToLower().Trim() ||
                         x.QuestionPool.Id.ToString() == criteria.Idenitiy.ToString().Trim())).ToList();
                         predicate = predicate.And(x => questionTags.Select(x => x.TagId).Contains(x.Id));
                         break;

@@ -22,7 +22,7 @@
         public DepartmentService(
             IUnitOfWork unitOfWork,
             ILogger<DepartmentService> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
         #region Protected Methods
@@ -66,7 +66,7 @@
             }
             if (criteria.IsActive != null)
             {
-              predicate =  predicate.And(p => p.IsActive == criteria.IsActive);
+                predicate = predicate.And(p => p.IsActive == criteria.IsActive);
             }
             return predicate;
         }
@@ -196,9 +196,9 @@
                 if (user.Role == UserRole.SuperAdmin || user.Role == UserRole.Admin || user.Role == UserRole.Trainer)
                 {
                     var department = await _unitOfWork.GetRepository<Department>().GetAllAsync(predicate: p => p.Name == departmentName,
-                        include: src=>src.Include(x =>x.Users)).ConfigureAwait(false);
+                        include: src => src.Include(x => x.Users)).ConfigureAwait(false);
                     var resopnse = new List<UserResponseModel>();
-                    foreach(var departmentUser in department.SelectMany(x=>x.Users.Where(x=>x.Role != UserRole.Admin && x.Role !=UserRole.SuperAdmin)))
+                    foreach (var departmentUser in department.SelectMany(x => x.Users.Where(x => x.Role != UserRole.Admin && x.Role != UserRole.SuperAdmin)))
                     {
                         resopnse.Add(new UserResponseModel
                         {

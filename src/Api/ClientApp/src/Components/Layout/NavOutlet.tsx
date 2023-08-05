@@ -28,6 +28,7 @@ const NavOutlet = ({
     separator?: boolean;
     role: UserRole;
     isActive?: (pathName: string) => boolean;
+    target?: string;
   }[];
   hideBreadCrumb?: number;
 }) => {
@@ -106,6 +107,7 @@ const NavOutlet = ({
                           padding: theme.spacing.xs,
                           borderRadius: theme.radius.sm,
                         })}
+                        target={x.target ?? '_self'}
                       ></NavLink>
                     );
                   }

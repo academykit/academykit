@@ -63,7 +63,7 @@ namespace Lingtren.Api.Controllers
             };
 
             searchResult.Items.ForEach(p =>
-                 response.Items.Add(new CourseResponseModel(p, searchCriteria.EnrollmentStatus == null ? _courseService.GetUserCourseEnrollmentStatus(p,searchCriteria.CurrentUserId) : searchCriteria.EnrollmentStatus.FirstOrDefault()))
+                 response.Items.Add(new CourseResponseModel(p, searchCriteria.EnrollmentStatus == null ? _courseService.GetUserCourseEnrollmentStatus(p, searchCriteria.CurrentUserId) : searchCriteria.EnrollmentStatus.FirstOrDefault()))
              );
             return response;
         }
@@ -183,7 +183,7 @@ namespace Lingtren.Api.Controllers
         [HttpPatch("status")]
         public async Task<IActionResult> ChangeStatus(CourseStatusRequestModel model)
         {
-            await _courseStatusValidator.ValidateAsync(model,options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await _courseStatusValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             await _courseService.ChangeStatusAsync(model, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("TrainingStatus") });
         }
@@ -204,7 +204,7 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="identity"> the course id or slug.</param>
         [HttpGet("{identity}/lessonStatistics")]
-        public async Task<SearchResult<LessonStatisticsResponseModel>> LessonStatistics(string identity,[FromQuery] BaseSearchCriteria criteria) => await _courseService.LessonStatistics(identity, CurrentUser.Id,criteria).ConfigureAwait(false);
+        public async Task<SearchResult<LessonStatisticsResponseModel>> LessonStatistics(string identity, [FromQuery] BaseSearchCriteria criteria) => await _courseService.LessonStatistics(identity, CurrentUser.Id, criteria).ConfigureAwait(false);
 
         /// <summary>
         /// get course statistics api
@@ -220,10 +220,10 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="identity"> the course id or slug.</param>
         [HttpGet("{identity}/lessonStatistics/{lessonIdentity}")]
-        public async Task<SearchResult<LessonStudentResponseModel>> LessonDetailStatistics(string identity, string lessonIdentity,[FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<LessonStudentResponseModel>> LessonDetailStatistics(string identity, string lessonIdentity, [FromQuery] BaseSearchCriteria searchCriteria)
         {
             searchCriteria.CurrentUserId = CurrentUser.Id;
-            return await _courseService.LessonStudentsReport(identity,lessonIdentity, searchCriteria).ConfigureAwait(false);
+            return await _courseService.LessonStudentsReport(identity, lessonIdentity, searchCriteria).ConfigureAwait(false);
         }
 
         /// <summary>

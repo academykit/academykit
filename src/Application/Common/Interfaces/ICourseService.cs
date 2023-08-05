@@ -19,7 +19,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="currentUserId">the current id</param>
         /// <returns></returns>
         Task ChangeStatusAsync(CourseStatusRequestModel model, Guid currentUserId);
-        
+
         /// <summary>
         /// Course Enrollment
         /// </summary>

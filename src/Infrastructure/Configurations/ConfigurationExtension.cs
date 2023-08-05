@@ -32,7 +32,7 @@
                         ClockSkew = TimeSpan.Zero,
                         ValidIssuer = configuration.GetValue<string>("JWT:Issuer"),
                         ValidAudience = configuration.GetValue<string>("JWT:Audience"),
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("JWT:Key")))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("JWT:Key") ?? ""))
                     };
                     o.Events = new JwtBearerEvents
                     {

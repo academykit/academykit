@@ -9,7 +9,7 @@
     {
         public CourseTeacherValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.CourseIdentity).NotNull().NotEmpty().WithMessage(context =>stringLocalizer.GetString("TrainingIdRequired"));
+            RuleFor(x => x.CourseIdentity).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("TrainingIdRequired"));
             RuleFor(x => x.Email).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("EmailRequired"));
         }
     }

@@ -148,7 +148,7 @@
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await _assignmentService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message =_localizer.GetString("AssignmentRemoved") });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("AssignmentRemoved") });
         }
 
         /// <summary>
@@ -198,7 +198,7 @@
         {
             await _reviewValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             await _assignmentService.UpdateAssignmentReviewAsync(lessonIdentity, id, model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("AssignmentReviewUpdate")});
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("AssignmentReviewUpdate") });
         }
 
         /// <summary>
@@ -211,7 +211,7 @@
         public async Task<IActionResult> DeleteReviewAsync(string lessonIdentity, Guid id)
         {
             await _assignmentService.DeleteReviewAsync(lessonIdentity, id, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("AssignmentReviewDeleted")});
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("AssignmentReviewDeleted") });
         }
     }
 }

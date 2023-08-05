@@ -28,7 +28,7 @@ namespace Lingtren.Api.Controllers
         [HttpPost("external")]
         public async Task<CertificateResponseModel> External(CertificateRequestModel model)
         {
-            await _validator.ValidateAsync(model,options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var response = await _certificateService.SaveExternalCertificateAsync(model, CurrentUser.Id).ConfigureAwait(false);
             return response;
         }
