@@ -208,14 +208,14 @@ const Comment = ({ comment }: { comment: IComment }) => {
         </Text>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-        <Button variant="subtle" mx={4} onClick={() => setToggle()}>
+        <Button variant="subtle" compact mx={4} onClick={() => setToggle()}>
           {toggle
             ? t('hide_reply')
             : `${t('show_reply')}(${comment.repliesCount}) `}
         </Button>
 
         {!edit && showEdit(comment.user, true) && (
-          <Button variant="subtle" mx={4} onClick={() => setEdit()}>
+          <Button variant="subtle" mx={4} compact onClick={() => setEdit()}>
             {t('edit')}
           </Button>
         )}
@@ -224,6 +224,8 @@ const Comment = ({ comment }: { comment: IComment }) => {
             loading={deleteComment.isLoading}
             variant="subtle"
             mx={4}
+            compact
+            color="red"
             onClick={() => setDeleteConfirmation()}
           >
             {t('delete')}
