@@ -82,6 +82,7 @@
             services.AddTransient<ICertificateService, CertificateService>();
             services.AddTransient<IVideoService, VideoService>();
             services.AddTransient<ILogsService, LogsService>();
+            services.AddTransient<IDynamicImageGenerator, DynamicImageGenerator>();
 
             #endregion Service DI
 
