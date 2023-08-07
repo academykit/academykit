@@ -640,7 +640,8 @@ namespace Lingtren.Infrastructure.Services
                     Status = course.Status,
                     UserStatus = GetUserCourseEnrollmentStatus(course, currentUserId),
                     Sections = new List<SectionResponseModel>(),
-                    Tags = new List<CourseTagResponseModel>()
+                    Tags = new List<CourseTagResponseModel>(),
+                    CreatedOn = course.CreatedOn,
                 };
                 course.CourseTags.ToList().ForEach(item => response.Tags.Add(new CourseTagResponseModel(item)));
 

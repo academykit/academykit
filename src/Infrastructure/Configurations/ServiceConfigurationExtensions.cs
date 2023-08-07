@@ -82,6 +82,7 @@
             services.AddTransient<ICertificateService, CertificateService>();
             services.AddTransient<IVideoService, VideoService>();
             services.AddTransient<ILogsService, LogsService>();
+            services.AddTransient<IPhysicalLessonServices, PhysicalLessonService>();
 
             #endregion Service DI
 
@@ -119,6 +120,7 @@
             services.AddSingleton<IValidator<IList<FeedbackSubmissionRequestModel>>, FeedbackSubmissionValidator>();
             services.AddSingleton<IValidator<SignatureRequestModel>, SignatureValidator>();
             services.AddSingleton<IValidator<CourseCertificateRequestModel>, CourseCertificateValidator>();
+            services.AddSingleton<IValidator<PhysicalLessonReviewRequestModel>, PhysicalLessonReviewRequestModelValidator>();
 
             #endregion Validator DI
 

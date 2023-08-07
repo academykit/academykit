@@ -333,6 +333,9 @@
   <data name="MeetingIdDUrationLength" xml:space="preserve">
     <value>Meeting duration cannot be greater than or equal to 1439 minutes.</value>
   </data>
+  <data name="MessageCannotBeEmpty" xml:space="preserve">
+    <value>Review message cannot be empty.</value>
+  </data>
   <data name="MiddleNameLength100" xml:space="preserve">
     <value>Middle name length must be less than or equal to 100 characters.</value>
   </data>
