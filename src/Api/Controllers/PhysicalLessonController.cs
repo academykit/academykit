@@ -43,7 +43,7 @@ namespace Api.Controllers
         [HttpPost("Review")]
         public async Task<IActionResult> Review(PhysicalLessonReviewRequestModel model)
         {
-            await _validator.ValidateAsync(model,option => option.ThrowOnFailures()).ConfigureAwait(false);
+            await  _validator.ValidateAsync(model,option => option.ThrowOnFailures()).ConfigureAwait(false);
             await _physicsLessonServices.PhysicalLessonReviewAsync(model, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("SuccessfullyReviewed") });
         }
