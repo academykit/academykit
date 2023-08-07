@@ -31,20 +31,21 @@ namespace Lingtren.Infrastructure.Services
 
     public class CourseService : BaseGenericService<Course, CourseBaseSearchCriteria>, ICourseService
     {
-        private readonly string imageApi;
         private readonly IMediaService _mediaService;
         private readonly IFileServerService _fileServerService;
+        private readonly IDynamicImageGenerator _dynamicImageGenerator;
         public CourseService(
             IUnitOfWork unitOfWork,
             ILogger<CourseService> logger,
             IConfiguration configuration,
             IMediaService mediaService,
             IFileServerService fileServerService,
+            IDynamicImageGenerator dynamicImageGenerator,
             IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
-            imageApi = configuration.GetSection("AppUrls:ImageApi").Value;
             _mediaService = mediaService;
             _fileServerService = fileServerService;
+            _dynamicImageGenerator = dynamicImageGenerator;
         }
 
         #region Protected Methods
@@ -1579,36 +1580,11 @@ namespace Lingtren.Infrastructure.Services
         private async Task<string> GetImageFile(CourseCertificate? certificate, string fullName, IList<Signature> signatures)
         {
             var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
-            var client = new RestClient($"{imageApi}");
-            var authors = new ArrayList();
-            foreach (var item in signatures)
-            {
-                authors.Add(new
-                {
-                    name = item.FullName,
-                    position = item.Designation,
-                    signatureUrl = item.FileUrl
-                });
-            }
-            var request = new RestRequest().AddHeader("Accept", "application/json")
-                    .AddJsonBody(new
-                    {
-                        name = fullName,
-                        training = certificate?.Title,
-                        startDate = certificate?.EventStartDate.ToString("dd MMMM yyyy"),
-                        endDate = certificate?.EventEndDate.ToString("dd MMMM yyyy"),
-                        companyName = company.CompanyName,
-                        companyLogo = company.LogoUrl,
-                        authors,
-                    });
-
-            var response = await client.PostAsync(request).ConfigureAwait(false);
-            var fileName = certificate?.Title ?? "certificate";
-            MemoryStream stream = new(response.RawBytes);
-            var formFile = new FormFile(stream, 0, stream.Length, null, fileName)
+            var stream = await _dynamicImageGenerator.GenerateCertificateImage(certificate, fullName, signatures, company);
+            var formFile = new FormFile(stream, 0, stream.Length, null, certificate?.Title ?? "certificate")
             {
                 Headers = new HeaderDictionary(),
-                ContentType = response.ContentType
+                ContentType = "image/png"
             };
             var fileResponse = await _mediaService.UploadFileAsync(new MediaRequestModel { File = formFile, Type = MediaType.Public }).ConfigureAwait(false);
             return fileResponse;

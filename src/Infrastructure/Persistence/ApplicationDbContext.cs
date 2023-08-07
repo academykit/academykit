@@ -100,10 +100,11 @@
                 new ZoomSetting
                 {
                     Id = new Guid("f41a902f-fabd-4749-ac28-91137f685cb8"),
-                    ApiKey = "api_key value",
-                    ApiSecret = "api_secret value",
                     SdkKey = "sdk key value",
                     SdkSecret = "sdk secret value",
+                    OAuthAccountId="OAuth account id",
+                    OAuthClientId="OAuth client id",
+                    OAuthClientSecret = "OAuth client secret",
                     IsRecordingEnabled = false,
                     CreatedBy = userId,
                     CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
