@@ -35,6 +35,7 @@ import FeedbackDetails from '@components/Course/Classes/FeedbackDetails';
 import lazyWithRetry from '@utils/lazyImportWithReload';
 import { useTranslation } from 'react-i18next';
 import { AxiosError } from 'axios';
+import PhysicalTrainingDetail from '@components/Course/Classes/PhysicalTrainingDetail';
 
 const PdfViewer = lazyWithRetry(
   () => import('@components/Course/Classes/PdfViewer')
@@ -248,6 +249,17 @@ const Classes = () => {
                   onEnded={() =>
                     onCourseEnded(courseLesson.data?.nextLessonSlug as string)
                   }
+                />
+              </Box>
+            )}
+            {courseLesson.data?.type === LessonType.Physical && (
+              <Box
+                className={cx(classes.videoSection, classes.assignmentSection)}
+              >
+                <PhysicalTrainingDetail
+                  name={courseLesson.data.name}
+                  id={courseLesson.data.id}
+                  hasFeedbackSubmitted={courseLesson.data.hasFeedbackSubmitted}
                 />
               </Box>
             )}

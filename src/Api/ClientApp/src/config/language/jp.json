@@ -858,6 +858,7 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "mark_as_attended": "参加済みとしてマーク",
   "physical_name": "身体トレーニング",
   "physical_name_required": "トレーニング名は必須です。",
   "physical_name_description": "身体トレーニングの説明",

@@ -856,6 +856,7 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "mark_as_attended": "Mark as Attended",
   "physical_name": "Physical Training",
   "physical_name_required": "Training name is required.",
   "physical_name_description": "Description for physical training",

@@ -858,6 +858,7 @@
       "AWS_VideoBucket": "भिडियो संग्रह"
     }
   },
+  "mark_as_attended": "सहभागी भएको मान गर्नुहोस्",
   "physical_name": "भौतिक प्रशिक्षण",
   "physical_name_required": "प्रशिक्षणको नाम आवश्यक छ।",
   "physical_name_description": "भौतिक प्रशिक्षणको लागि विवरण",
