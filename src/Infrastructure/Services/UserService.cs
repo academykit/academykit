@@ -357,8 +357,7 @@ namespace Lingtren.Infrastructure.Services
                     while (csv.Read())
                     {
                         var user = csv.GetRecord<UserImportDto>();
-                        bool allMembersNull = string.IsNullOrEmpty(user.FirstName) && string.IsNullOrEmpty(user.LastName) && string.IsNullOrEmpty(user.Email) && string.IsNullOrEmpty(user.Role);
-                        if (allMembersNull)
+                        if(user == default)
                         {
                             continue;
                         }

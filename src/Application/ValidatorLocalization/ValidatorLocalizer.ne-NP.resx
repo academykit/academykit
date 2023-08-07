@@ -405,6 +405,9 @@
     <value>बैठक अवधि 1439 मिनेट भन्दा बढी वा बराबर हुन सक्दैन।</value>
     <comment/>
   </data>
+  <data name="MessageCannotBeEmpty" xml:space="preserve">
+    <value>समीक्षा सन्देश खाली हुन सक्दैन।</value>
+  </data>
   <data name="MiddleNameLength100" xml:space="preserve">
     <value>बीचको नामको लम्बाइ १०० वर्णभन्दा कम वा बराबर हुनुपर्छ।</value>
     <comment/>

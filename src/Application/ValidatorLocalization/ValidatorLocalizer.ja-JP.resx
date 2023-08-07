@@ -405,6 +405,9 @@
     <value>会議の継続時間は 1439 分以上にすることはできません。</value>
     <comment/>
   </data>
+  <data name="MessageCannotBeEmpty" xml:space="preserve">
+    <value>レビューメッセージを空にすることはできません。</value>
+  </data>
   <data name="MiddleNameLength100" xml:space="preserve">
     <value>ミドルネームの長さは 100 文字以下である必要があります。</value>
     <comment/>

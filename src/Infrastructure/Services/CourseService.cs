@@ -341,8 +341,11 @@ namespace Lingtren.Infrastructure.Services
                 sections = sections.Where(x => x.Status != CourseStatus.Published).ToList();
                 lessons = lessons.Where(x => x.Status != CourseStatus.Published).ToList();
             }
-
-            course.Status = model.Status;
+            if (isSuperAdminOrAdminAccess)
+            {
+                course.Status = CourseStatus.Published;
+            }
+            else { course.Status = model.Status;}
             course.UpdatedBy = currentUserId;
             course.UpdatedOn = currentTimeStamp;
 
@@ -641,7 +644,8 @@ namespace Lingtren.Infrastructure.Services
                     Status = course.Status,
                     UserStatus = GetUserCourseEnrollmentStatus(course, currentUserId),
                     Sections = new List<SectionResponseModel>(),
-                    Tags = new List<CourseTagResponseModel>()
+                    Tags = new List<CourseTagResponseModel>(),
+                    CreatedOn = course.CreatedOn,
                 };
                 course.CourseTags.ToList().ForEach(item => response.Tags.Add(new CourseTagResponseModel(item)));
 
@@ -920,7 +924,7 @@ namespace Lingtren.Infrastructure.Services
                     predicate: p => p.CourseId == course.Id && !p.IsDeleted && !p.Section.IsDeleted,
                     include: src => src.Include(x => x.Section)
                     ).ConfigureAwait(false);
-                lessons = lessons.OrderBy(x => x.Order).ToList();
+                lessons = lessons.OrderBy(x => x.Section.Order).ThenBy(x=>x.Order).ToList();
                 var LessonIds = lessons.Select(x => x.Id).ToList();
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(predicate: p => p.CourseId == course.Id && LessonIds.Contains(p.LessonId)).ConfigureAwait(false);
                 watchHistory = watchHistory
@@ -1249,7 +1253,7 @@ namespace Lingtren.Infrastructure.Services
 
             if (currentUserRole == UserRole.SuperAdmin || currentUserRole == UserRole.Admin || currentUserRole == UserRole.Trainer)
             {
-                predicate = predicate.And(p => p.CourseTeachers.Any(x => x.CourseId == p.Id && x.UserId == currentUserId));
+                predicate = predicate.And(p => p.CourseTeachers.Any(x => x.CourseId == p.Id || x.UserId == currentUserId));
             }
 
             if (currentUserRole == UserRole.Trainee)

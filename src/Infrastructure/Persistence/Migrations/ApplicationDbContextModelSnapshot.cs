@@ -1749,6 +1749,70 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("MeetingReports");
                 });
 
+            modelBuilder.Entity("Lingtren.Domain.Entities.PhysicalLessonReview", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<bool>("HasAttended")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("hasAttended");
+
+                    b.Property<bool>("IsReviewed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_reviewed");
+
+                    b.Property<string>("LessonId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("lesson_id");
+
+                    b.Property<string>("ReviewMessage")
+                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnName("review_message");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PhysicalLessonReviews");
+                });
+
             modelBuilder.Entity("Lingtren.Domain.Entities.Question", b =>
                 {
                     b.Property<string>("Id")
@@ -3756,6 +3820,25 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Lingtren.Domain.Entities.PhysicalLessonReview", b =>
+                {
+                    b.HasOne("Lingtren.Domain.Entities.Lesson", "Lesson")
+                        .WithMany("physicalLessonReviews")
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Lingtren.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Lingtren.Domain.Entities.Question", b =>
                 {
                     b.HasOne("Lingtren.Domain.Entities.User", "User")
@@ -4199,6 +4282,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("CourseEnrollments");
 
                     b.Navigation("WatchHistories");
+
+                    b.Navigation("physicalLessonReviews");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Level", b =>

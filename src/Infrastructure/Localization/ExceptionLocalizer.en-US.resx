@@ -995,4 +995,10 @@ recorded cannot be deleted.</value>
   <data name="AssignmentStartTimeException" xml:space="preserve">
     <value>The assignment has not started yet.</value>
   </data>
+  <data name="SuccessfulAttendance" xml:space="preserve">
+    <value>Successfully attended the lesson.</value>
+  </data>
+  <data name="SuccessfullyReviewed" xml:space="preserve">
+    <value>successfully reviewed.</value>
+  </data>
 </root>
