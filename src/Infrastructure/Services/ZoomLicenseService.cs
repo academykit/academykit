@@ -29,6 +29,7 @@
     public class ZoomLicenseService : BaseGenericService<ZoomLicense, ZoomLicenseBaseSearchCriteria>, IZoomLicenseService
     {
         private const string zoomAPIPath = "https://api.zoom.us/v2";
+        private const string zoomOAuthTokenApi = "https://zoom.us/oauth/token";
         public ZoomLicenseService(
             IUnitOfWork unitOfWork,
             ILogger<ZoomLicenseService> logger,
@@ -257,7 +258,7 @@
         /// <returns>the meeting id and passcode and the instance of <see cref="ZoomLicense"/></returns>
         public async Task<(string, string)> CreateMeetingAsync(string meetingName, int duration, DateTime startDate, string hostEmail)
         {
-            var tokenString = await GetZoomJWTAccessToken().ConfigureAwait(false);
+            var tokenString = await GetOAuthAccessToken().ConfigureAwait(false);
             var client = new RestClient($"{zoomAPIPath}/users/{hostEmail}/meetings");
             var request = new RestRequest().AddHeader("Authorization", String.Format("Bearer {0}", tokenString))
                     .AddJsonBody(new
@@ -284,7 +285,7 @@
         /// <returns></returns>
         public async Task DeleteZoomMeeting(string meetingId)
         {
-            var tokenString = await GetZoomJWTAccessToken().ConfigureAwait(false);
+            var tokenString = await GetOAuthAccessToken().ConfigureAwait(false);
             var id = (long)Convert.ToInt64(meetingId);
             var client = new RestClient($"{zoomAPIPath}/meetings/{id}");
             var request = new RestRequest().AddHeader("Authorization", String.Format("Bearer {0}", tokenString));
@@ -307,7 +308,7 @@
                 {
                     throw new ArgumentException(_localizer.GetString("ContextNotFound"));
                 }
-                var tokenString = await GetZoomJWTAccessToken().ConfigureAwait(false);
+                var tokenString = await GetOAuthAccessToken().ConfigureAwait(false);
                 var client = new RestClient($"{zoomAPIPath}/meetings/{meetingId}/recordings?action=delete");
                 var request = new RestRequest().AddHeader("Authorization", String.Format("Bearer {0}", tokenString));
                 await client.DeleteAsync(request).ConfigureAwait(false);
@@ -319,30 +320,56 @@
             }
         }
 
-        private async Task<string> GetZoomJWTAccessToken()
+        // private async Task<string> GetZoomJWTAccessToken()
+        // {
+        //     var zoomSetting = await _unitOfWork.GetRepository<ZoomSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
+        //     if (zoomSetting == null)
+        //     {
+        //         throw new EntityNotFoundException(_localizer.GetString("ZoomSettingNotFound"));
+        //     }
+        //     var tokenHandler = new JwtSecurityTokenHandler();
+        //     var currentTimeStamp = DateTime.UtcNow;
+        //     // Zoom api secret
+        //     byte[] symmetricKey = Encoding.ASCII.GetBytes(zoomSetting.ApiSecret);
+
+        //     var tokenDescriptor = new SecurityTokenDescriptor
+        //     {
+        //         // Zoom api key
+        //         Issuer = zoomSetting.ApiKey,
+        //         // Token expires after 3 min
+        //         Expires = currentTimeStamp.AddYears(3),
+        //         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256),
+        //     };
+
+        //     var token = tokenHandler.CreateToken(tokenDescriptor);
+        //     var tokenString = tokenHandler.WriteToken(token);
+        //     return tokenString;
+        // }
+
+         /// <summary>
+        /// Handle to get OAuth access token
+        /// </summary>
+        /// <returns> the access token </returns>
+        private async Task<string> GetOAuthAccessToken()
         {
-            var zoomSetting = await _unitOfWork.GetRepository<ZoomSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
+             var zoomSetting = await _unitOfWork.GetRepository<ZoomSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
             if (zoomSetting == null)
             {
                 throw new EntityNotFoundException(_localizer.GetString("ZoomSettingNotFound"));
             }
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var currentTimeStamp = DateTime.UtcNow;
-            // Zoom api secret
-            byte[] symmetricKey = Encoding.ASCII.GetBytes(zoomSetting.ApiSecret);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                // Zoom api key
-                Issuer = zoomSetting.ApiKey,
-                // Token expires after 3 min
-                Expires = currentTimeStamp.AddYears(3),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256),
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-            return tokenString;
+            var client = new RestClient($"{zoomOAuthTokenApi}");
+            var credential = $"{zoomSetting.OAuthClientId}:{zoomSetting.OAuthClientSecret}";
+            byte[] credentailByte = Encoding.UTF8.GetBytes(credential);
+            var token = Convert.ToBase64String(credentailByte);
+            var request = new RestRequest();
+            request.AddQueryParameter("grant_type", "account_credentials");
+            request.AddQueryParameter("account_id", $"{zoomSetting.OAuthAccountId}");
+            request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            request.AddHeader("Authorization", string.Format("Basic {0}", token));
+            var response = await client.PostAsync(request).ConfigureAwait(false);
+            var jObject = JObject.Parse(response.Content);
+            var accessToken = (string)jObject["access_token"];
+            return accessToken;
         }
 
         /// <summary>
@@ -415,7 +442,7 @@
 
             try
             {
-                var tokenString = await GetZoomJWTAccessToken().ConfigureAwait(false);
+                var tokenString = await GetOAuthAccessToken().ConfigureAwait(false);
                 var request = new RestRequest().AddHeader("Authorization", string.Format("Bearer {0}", tokenString));
                 request.AddHeader("Content-Type", "application/json");
                 var response = await client.GetAsync(request).ConfigureAwait(false);
