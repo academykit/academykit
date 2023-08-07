@@ -291,7 +291,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="currentUserId"> the current user id </param>
         /// <param name="critera"> the instance of <see cref="TeacherSearchCriteria"></see></param>
         /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
-        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId,TeacherSearchCriteria critera)
+        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId, TeacherSearchCriteria critera)
         {
             return await ExecuteWithResultAsync(async () =>
             {
@@ -369,7 +369,7 @@ namespace Lingtren.Infrastructure.Services
                         }
                     }
                 }
-                await CheckBulkImport(checkForValidRows,currentUserId);
+                await CheckBulkImport(checkForValidRows, currentUserId);
                 var message = new StringBuilder();
                 users = checkForValidRows.userList.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && !string.IsNullOrWhiteSpace(x.LastName) && !string.IsNullOrWhiteSpace(x.Email)).ToList();
                 var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
@@ -629,7 +629,7 @@ namespace Lingtren.Infrastructure.Services
                 _unitOfWork.GetRepository<User>().Update(user);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(user.Email, user.FullName,password,company.CompanyName,company.CompanyContactNumber, null));
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(user.Email, user.FullName, password, company.CompanyName, company.CompanyContactNumber, null));
 
             }
             catch (Exception ex)
@@ -1174,11 +1174,11 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="checkForValidRows">instance of <see cref=""></param>
         /// <returns></returns>
         /// <exception cref="ForbiddenException"></exception>
-        private async Task CheckBulkImport((List<UserImportDto> userList, List<int> SN) checkForValidRows,Guid currentUserId)
+        private async Task CheckBulkImport((List<UserImportDto> userList, List<int> SN) checkForValidRows, Guid currentUserId)
         {
             try
             {
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate : p=>p.Id == currentUserId).ConfigureAwait(false);
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == currentUserId).ConfigureAwait(false);
 
                 if (checkForValidRows.userList.Count == default)
                 {
@@ -1265,7 +1265,7 @@ namespace Lingtren.Infrastructure.Services
                     .Select((user, index) => new { User = user, Index = index + 2 })
                     .Where(x => !Enum.GetNames(typeof(UserRole))
                     .Any(enumvalue => string.Equals(enumvalue, x.User.Role, StringComparison.OrdinalIgnoreCase)))
-                    .Join(checkForValidRows.SN.Select((sn, index) => new { SN = sn, Index = index }),x => x.Index,sn => sn.Index,(x, sn) => sn.SN).ToList();
+                    .Join(checkForValidRows.SN.Select((sn, index) => new { SN = sn, Index = index }), x => x.Index, sn => sn.Index, (x, sn) => sn.SN).ToList();
 
                     if (selectedSNs.Any())
                     {
@@ -1274,8 +1274,8 @@ namespace Lingtren.Infrastructure.Services
 
                     var selectedIndices = Enum.GetValues(typeof(UserRole))
                      .Cast<UserRole>()
-                     .Select((role, index) => new { Role = role, Index = index +2})
-                       .Where(x => string.Equals(x.Role.ToString(),UserRole.Admin.ToString(),StringComparison.OrdinalIgnoreCase))
+                     .Select((role, index) => new { Role = role, Index = index + 2 })
+                       .Where(x => string.Equals(x.Role.ToString(), UserRole.Admin.ToString(), StringComparison.OrdinalIgnoreCase))
                       .Select(x => x.Index)
                        .ToList();
                     if (selectedIndices.Any() && user.Role != UserRole.SuperAdmin)

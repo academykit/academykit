@@ -10,9 +10,6 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Persistence;
-    using Lingtren.Infrastructure.Services;
-    using lingtrin.Application.Common.Validators;
-    using Lingtring.Application.Common.Validators;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;

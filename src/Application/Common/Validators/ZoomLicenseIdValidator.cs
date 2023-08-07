@@ -26,5 +26,5 @@ namespace Lingtren.Application.Common.Validators
             string formattedDateTime = startDateTime.ToString(format);
             return startDateTime.ToString(format) == formattedDateTime;
         }
-    }  
+    }
 }

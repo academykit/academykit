@@ -18,7 +18,7 @@
         public GroupMemberService(
             IUnitOfWork unitOfWork,
             ILogger<GroupMemberService> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
 
@@ -34,7 +34,7 @@
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(x => ((x.User.FirstName.Trim() + " " + x.User.MiddleName.Trim()).Trim() + " " + x.User.LastName.Trim()).Trim().Contains(search) || 
+                predicate = predicate.And(x => ((x.User.FirstName.Trim() + " " + x.User.MiddleName.Trim()).Trim() + " " + x.User.LastName.Trim()).Trim().Contains(search) ||
                 x.User.Email.ToLower().Trim().Contains(search));
             }
             return predicate;

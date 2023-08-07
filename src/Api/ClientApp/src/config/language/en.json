@@ -856,7 +856,7 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
-  "hangfire": "Hangfire",
+  "hangfire": "Background Jobs",
   "question_pool_created": "Question pools should be created in advance and be located within the ",
   "question_pool_href": "'Question Pools'",
   "section": "section. ",

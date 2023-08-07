@@ -2,7 +2,7 @@
 {
     public class Logs
     {
-        public  int Id { get; set; }
+        public int Id { get; set; }
         public string MachineName { get; set; }
         public string Level { get; set; }
         public DateTime Logged { get; set; }

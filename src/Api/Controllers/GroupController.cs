@@ -29,7 +29,7 @@
             IUnitOfWork unitOfWork,
             ICourseService courseService,
             IStringLocalizer<ExceptionLocalizer> localizer)
-        
+
         {
             _groupService = groupService;
             _groupMemberService = groupMemberService;

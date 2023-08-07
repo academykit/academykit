@@ -15,7 +15,7 @@
         public SMTPSettingService(
             IUnitOfWork unitOfWork,
             ILogger<SMTPSettingService> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
         /// <summary>

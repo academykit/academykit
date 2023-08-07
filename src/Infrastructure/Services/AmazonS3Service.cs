@@ -16,8 +16,8 @@ namespace Lingtren.Infrastructure.Services
 
     public class AmazonS3Service : BaseService, IAmazonS3Service
     {
-        public AmazonS3Service(IUnitOfWork unitOfWork, ILogger<AmazonS3Service> 
-        logger,IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+        public AmazonS3Service(IUnitOfWork unitOfWork, ILogger<AmazonS3Service>
+        logger, IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
 
         }

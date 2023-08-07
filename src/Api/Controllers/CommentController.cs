@@ -17,7 +17,7 @@
         private readonly IValidator<CommentRequestModel> _validator;
         private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
         public CommentController(
-            ICommentService commentService,    
+            ICommentService commentService,
             IValidator<CommentRequestModel> validator,
             IStringLocalizer<ExceptionLocalizer> localizer)
         {

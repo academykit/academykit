@@ -165,7 +165,7 @@
         /// <returns>the instance of <see cref="ZoomLicenseResponseModel"/></returns>
         /// <exception cref="ForbiddenException"></exception>
         [HttpGet("Active")]
-        public async Task<List<ZoomLicenseResponseModel>> Active([FromQuery]LiveClassLicenseRequestModel model)
+        public async Task<List<ZoomLicenseResponseModel>> Active([FromQuery] LiveClassLicenseRequestModel model)
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await _validator1.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);

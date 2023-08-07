@@ -12,7 +12,7 @@
     {
         public RefreshTokenService(IUnitOfWork unitOfWork,
             ILogger<RefreshTokenService> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
 

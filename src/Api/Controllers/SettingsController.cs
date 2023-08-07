@@ -67,7 +67,8 @@ namespace Lingtren.Api.Controllers
         public async Task<CompanyResponseModel> Company()
         {
             var response = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
-            return new CompanyResponseModel{
+            return new CompanyResponseModel
+            {
                 Name = response.CompanyName,
                 ImageUrl = response.LogoUrl
             };

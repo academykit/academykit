@@ -87,7 +87,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="context"> the instance of <see cref="PerformContext" /> .</param>
         /// <returns> the task complete </returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task CourseRejectedMailAsync(Guid courseId,string message,PerformContext context = null)
+        public async Task CourseRejectedMailAsync(Guid courseId, string message, PerformContext context = null)
         {
             try
             {
@@ -143,7 +143,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="companyName"> the company name </param>
         /// <returns></returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password,string companyName,string companyNumber, PerformContext context = null)
+        public async Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password, string companyName, string companyNumber, PerformContext context = null)
         {
             try
             {
@@ -231,7 +231,7 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p => p.Id == lessonId).ConfigureAwait(false);
-                if(lesson.Type != LessonType.Video || lesson.Type != LessonType.RecordedVideo)
+                if (lesson.Type != LessonType.Video || lesson.Type != LessonType.RecordedVideo)
                 {
                     if (string.IsNullOrEmpty(lesson.VideoUrl))
                     {
@@ -420,8 +420,8 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var fullName = user.UserName;
                     var html = $"Dear {fullName},<br><br>";
-                    html += $"We are happy to inform you that your Certificate of Achievement for {courseName} has been issued and is now available in your profile on the application. " 
-                        +"Please log in to your account and navigate to your profile to view and download your certificate.<br><br>";
+                    html += $"We are happy to inform you that your Certificate of Achievement for {courseName} has been issued and is now available in your profile on the application. "
+                        + "Please log in to your account and navigate to your profile to view and download your certificate.<br><br>";
                     html += $"we hope you find the training helpful.<br><br>";
                     html += $"Best regards, <br> {settings.CompanyName}";
 
@@ -502,7 +502,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="context"></param>
         /// <returns></returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task AccountUpdatedMailAsync(string fullName, string Newemail,string oldEmail, PerformContext context = null)
+        public async Task AccountUpdatedMailAsync(string fullName, string Newemail, string oldEmail, PerformContext context = null)
         {
             try
             {
@@ -538,8 +538,8 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="fullName">users full name</param>
         /// <param name="context"></param>
         /// <returns></returns>
-         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task SendEmailChangedMailAsync(string newEmail, string oldEmail,string fullName, PerformContext context = null)
+        [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
+        public async Task SendEmailChangedMailAsync(string newEmail, string oldEmail, string fullName, PerformContext context = null)
         {
             try
             {

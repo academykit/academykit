@@ -23,6 +23,6 @@ namespace Lingtren.Application.Common.Dtos
         public string Role { get; set; }
 
         [Name("Profession")]
-        public  string Profession { get; set; }
+        public string Profession { get; set; }
     }
 }

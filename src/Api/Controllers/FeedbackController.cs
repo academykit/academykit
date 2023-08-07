@@ -27,7 +27,7 @@
             IValidator<FeedbackRequestModel> validator,
             IValidator<IList<FeedbackSubmissionRequestModel>> submissionValidator,
             IStringLocalizer<ExceptionLocalizer> localizer)
-            
+
         {
             _feedbackService = feedbackService;
             _validator = validator;
@@ -130,7 +130,7 @@
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await _feedbackService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("FeedbackRemoved")  });
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("FeedbackRemoved") });
         }
 
         /// <summary>
@@ -163,7 +163,7 @@
         [HttpGet("{lessonIdentity}/export")]
         public async Task<IActionResult> Export(string lessonIdentity)
         {
-            var report = await _feedbackService.GetFeedBackReportAsync(lessonIdentity,CurrentUser.Id).ConfigureAwait(false);
+            var report = await _feedbackService.GetFeedBackReportAsync(lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
             return File(report, "text/csv", $"{lessonIdentity}.csv");
         }
     }

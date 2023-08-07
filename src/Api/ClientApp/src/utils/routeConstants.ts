@@ -1,3 +1,5 @@
+import { isDevelopment } from './env';
+
 const RoutePath = {
   login: '/login',
   forgotPassword: '/forgot-password',
@@ -126,7 +128,11 @@ const RoutePath = {
       return this.base + '/department';
     },
     hangfire: function () {
-      return this.base + '/hangfire';
+      return (
+        (isDevelopment
+          ? 'https://localhost:7042'
+          : location.protocol + '//' + window.location.host) + '/hangfire'
+      );
     },
     log: function () {
       return this.base + '/log';

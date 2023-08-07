@@ -48,6 +48,6 @@
         /// <param name="lessonIdentity"> the lesson id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the list of byte </returns>
-        Task<byte[]> GetFeedBackReportAsync(string lessonIdentity,Guid currentUserId);
+        Task<byte[]> GetFeedBackReportAsync(string lessonIdentity, Guid currentUserId);
     }
 }

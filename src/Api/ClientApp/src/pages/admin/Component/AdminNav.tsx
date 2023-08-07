@@ -1,4 +1,5 @@
 import NavOutlet from '@components/Layout/NavOutlet';
+import { TOKEN_STORAGE } from '@utils/constants';
 import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import { useTranslation } from 'react-i18next';
@@ -63,11 +64,7 @@ const AdminNav = () => {
       to: RoutePath.level,
       role: UserRole.Admin,
     },
-    {
-      label: t('hangfire'),
-      to: RoutePath.settings.hangfire(),
-      role: UserRole.Admin,
-    },
+
     {
       label: t('departments'),
       to: RoutePath.settings.department(),
@@ -95,6 +92,21 @@ const AdminNav = () => {
       role: UserRole.Admin,
     },
     // { label: "Payment System", to: "/paymentmethods" },
+    {
+      label: t('System Monitoring'),
+      to: RoutePath.settings.hangfire(),
+      separator: true,
+      role: UserRole.Admin,
+    },
+    {
+      label: t('hangfire'),
+      to:
+        RoutePath.settings.hangfire() +
+        '?access_token=' +
+        localStorage.getItem(TOKEN_STORAGE),
+      role: UserRole.Admin,
+      target: '_blank',
+    },
   ];
   return <NavOutlet data={adminNavLink} />;
 };

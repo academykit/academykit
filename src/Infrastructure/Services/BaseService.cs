@@ -290,14 +290,14 @@
             switch (trainingType)
             {
                 case TrainingTypeEnum.Course:
-                    var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate: p=>p.Id.ToString() == identity || p.Slug == identity,
-                        include:src=>src.Include(x=>x.CourseTeachers)).ConfigureAwait(false);
-                   isValidUser = course.CourseTeachers.Any(x=>x.UserId == currentuserId) || course.CreatedBy == currentuserId;
+                    var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == identity || p.Slug == identity,
+                        include: src => src.Include(x => x.CourseTeachers)).ConfigureAwait(false);
+                    isValidUser = course.CourseTeachers.Any(x => x.UserId == currentuserId) || course.CreatedBy == currentuserId;
                     break;
                 case TrainingTypeEnum.QuestionPool:
-                    var questionpool = await _unitOfWork.GetRepository<QuestionPool>().GetFirstOrDefaultAsync(predicate: p=>p.Id.ToString() == identity || p.Slug == identity,
-                        include: src=>src.Include(x=>x.QuestionPoolTeachers)).ConfigureAwait (false);
-                    isValidUser = questionpool.QuestionPoolTeachers.Any(x=>x.UserId == currentuserId) || questionpool.CreatedBy == currentuserId;
+                    var questionpool = await _unitOfWork.GetRepository<QuestionPool>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == identity || p.Slug == identity,
+                        include: src => src.Include(x => x.QuestionPoolTeachers)).ConfigureAwait(false);
+                    isValidUser = questionpool.QuestionPoolTeachers.Any(x => x.UserId == currentuserId) || questionpool.CreatedBy == currentuserId;
                     break;
             }
             return isValidUser || IsAdimOrSuperAdmin;

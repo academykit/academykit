@@ -44,7 +44,7 @@
         [AllowAnonymous]
         public async Task<SearchResult<QuestionResponseModel>> SearchAsync(string identity, [FromQuery] QuestionBaseSearchCriteria searchCriteria)
         {
-           
+
             CommonHelper.ValidateArgumentNotNullOrEmpty(identity, nameof(identity));
             searchCriteria.CurrentUserId = CurrentUser.Id;
             searchCriteria.PoolIdentity = identity;

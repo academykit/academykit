@@ -17,7 +17,7 @@ namespace Lingtren.Infrastructure.Services
     public class LevelService : BaseGenericService<Level, BaseSearchCriteria>, ILevelService
     {
         public LevelService(IUnitOfWork unitOfWork, ILogger<LevelService> logger,
-        IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+        IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
 

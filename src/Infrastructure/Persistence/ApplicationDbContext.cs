@@ -173,13 +173,15 @@
                     Key = "Server_SecretKey",
                 },
                  new Setting
+                 {
+                     Key = "Server_PresignedExpiryTime",
+                 },
+                new Setting
                 {
-                    Key = "Server_PresignedExpiryTime",
-                },
-                new Setting{
                     Key = "Server_EndPoint",
                 },
-                new Setting{
+                new Setting
+                {
                     Key = "Server_PresignedUrl",
                 }
             );

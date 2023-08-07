@@ -11,7 +11,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
 
         public TrainerResponseModel()
         {
-            
+
         }
 
         public TrainerResponseModel(User user)

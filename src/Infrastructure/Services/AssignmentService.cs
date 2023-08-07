@@ -24,7 +24,7 @@
             IUnitOfWork unitOfWork,
             ILogger<AssignmentService> logger,
             ICourseService courseService,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
             _courseService = courseService;
         }
@@ -465,7 +465,7 @@
 
             var predicate = PredicateBuilder.New<Assignment>(true);
             predicate = predicate.And(x => x.LessonId == lesson.Id);
-            var IsValidUser = await IsSuperAdminOrAdminOrTrainerOfTraining(searchCriteria.CurrentUserId,lesson.CourseId.ToString(),TrainingTypeEnum.Course);
+            var IsValidUser = await IsSuperAdminOrAdminOrTrainerOfTraining(searchCriteria.CurrentUserId, lesson.CourseId.ToString(), TrainingTypeEnum.Course);
             var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
                 predicate: predicate,
                 include: src => src.Include(x => x.AssignmentAttachments).Include(x => x.AssignmentQuestionOptions),

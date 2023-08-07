@@ -125,7 +125,7 @@
             if (!statusExists)
             {
                 _logger.LogWarning("Invalid question pool teacher role : {role} requested for role change by the user with id : {userId}", role, CurrentUser.Id);
-                throw new ForbiddenException( _localizer.GetString("InvalidQuestionPoolTeacherRole"));
+                throw new ForbiddenException(_localizer.GetString("InvalidQuestionPoolTeacherRole"));
             }
             var existing = await _questionPoolTeacherService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
 

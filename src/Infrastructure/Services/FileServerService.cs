@@ -18,7 +18,7 @@ namespace Lingtren.Infrastructure.Services
 
         public FileServerService(IUnitOfWork unitOfWork,
         ILogger<FileServerService> logger,
-        IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+        IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
 
         }
@@ -65,17 +65,17 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
-         /// <summary>
+        /// <summary>
         /// Handle to upload the file path
         /// </summary>
         /// <param name="filePath"> the file path </param>
         /// 
         /// <returns> the new file path </returns>
-        public async Task<string> UploadRecordingFileAsync(string filePath,int fileSize)
+        public async Task<string> UploadRecordingFileAsync(string filePath, int fileSize)
         {
             try
             {
-                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
+                var credentails = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient().WithEndpoint(credentails.EndPoint).
                             WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
                 var fileName = $"private/{Guid.NewGuid()}.mp4";
@@ -119,7 +119,7 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="key"> the file key </param>
         /// <returns> the local file path </returns>
-        public async  Task<string> GetFileLocalPathAsync(string key)
+        public async Task<string> GetFileLocalPathAsync(string key)
         {
             var credentails = await GetCredentialAsync().ConfigureAwait(false);
             var minio = new Minio.MinioClient().WithEndpoint(credentails.EndPoint).
@@ -127,7 +127,7 @@ namespace Lingtren.Infrastructure.Services
             var objectArgs = new Minio.PresignedGetObjectArgs().WithObject(key).WithBucket(credentails.Bucket).WithExpiry(credentails.ExpiryTime);
             var fileUrl = await minio.PresignedGetObjectAsync(objectArgs).ConfigureAwait(false);
 
-            if(string.IsNullOrEmpty(fileUrl))
+            if (string.IsNullOrEmpty(fileUrl))
             {
                 throw new ArgumentException(_localizer.GetString("FileNotFound"));
             }

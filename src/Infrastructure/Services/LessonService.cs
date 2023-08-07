@@ -31,7 +31,7 @@ namespace Lingtren.Infrastructure.Services
             IZoomLicenseService zoomLicenseService,
             IFileServerService fileServerService,
             IZoomSettingService zoomSettingService,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
             _zoomLicenseService = zoomLicenseService;
             _zoomSettingService = zoomSettingService;
@@ -165,7 +165,7 @@ namespace Lingtren.Infrastructure.Services
 
                 remainingAttempt = lesson.QuestionSet.AllowedRetake > 0 ? lesson.QuestionSet.AllowedRetake - submissionCount : submissionCount > 0 ? 0 : 1;
 
-                 hasResult = containResults;
+                hasResult = containResults;
             }
 
             bool? hasSubmitAssignment = null;
@@ -176,8 +176,8 @@ namespace Lingtren.Infrastructure.Services
             {
                 lesson.Assignments = new List<Assignment>();
                 lesson.Assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(predicate: p => p.LessonId == lesson.Id).ConfigureAwait(false);
-                var assignmentSubmission = await _unitOfWork.GetRepository<AssignmentSubmission>().ExistsAsync(predicate:p=>p.UserId == currentUserId && p.LessonId == lesson.Id).ConfigureAwait(false);
-                if(assignmentSubmission)
+                var assignmentSubmission = await _unitOfWork.GetRepository<AssignmentSubmission>().ExistsAsync(predicate: p => p.UserId == currentUserId && p.LessonId == lesson.Id).ConfigureAwait(false);
+                if (assignmentSubmission)
                 {
                     hasSubmitAssignment = true;
                 }
@@ -305,7 +305,7 @@ namespace Lingtren.Infrastructure.Services
                     CreatedOn = currentTimeStamp,
                     UpdatedBy = currentUserId,
                     UpdatedOn = currentTimeStamp,
-                };               
+                };
 
                 if (lesson.Type == LessonType.Exam)
                 {
@@ -342,12 +342,12 @@ namespace Lingtren.Infrastructure.Services
                     await _unitOfWork.GetRepository<VideoQueue>().InsertAsync(videoQueue).ConfigureAwait(false);
                     BackgroundJob.Enqueue<IHangfireJobService>(job => job.LessonVideoUploadedAsync(lesson.Id, null));
                 }
-                var courseenrollments = await  _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(predicate: p=> p.CourseId == course.Id).ConfigureAwait(false);
+                var courseenrollments = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
                 if (courseenrollments != null)
                 {
-                    var lessonCount = await _unitOfWork.GetRepository<Lesson>().CountAsync( predicate: p=> p.CourseId == course.Id).ConfigureAwait(false);
+                    var lessonCount = await _unitOfWork.GetRepository<Lesson>().CountAsync(predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
                     var UpdateCourseEnrollments = new List<CourseEnrollment>();
-                    foreach(var courseenrollment in courseenrollments)
+                    foreach (var courseenrollment in courseenrollments)
                     {
                         courseenrollment.Percentage = (courseenrollment.Percentage * lessonCount) / (lessonCount + 1);
                         UpdateCourseEnrollments.Add(courseenrollment);
@@ -516,7 +516,7 @@ namespace Lingtren.Infrastructure.Services
                     _logger.LogWarning("DeleteLessonAsync(): Lesson with identity : {lessonIdentity} was not found for user with id : {userId} and having training with id : {courseId}.", lessonIdentity, currentUserId, course.Id);
                     throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
-                if(course.Status == CourseStatus.Completed)
+                if (course.Status == CourseStatus.Completed)
                 {
                     throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
                 }
@@ -547,7 +547,7 @@ namespace Lingtren.Infrastructure.Services
                     if (hasAnyAttempt)
                     {
                         _logger.LogWarning("DeleteLessonAsync(): Lesson with id: {lessonId} and question set with id: {questionSetId} having type: {type} contains exam submission.", lesson.Id, lesson.QuestionSetId, lesson.Type);
-                        throw new ForbiddenException(_localizer.GetString("LessonWithType") +" "+ lesson.Type +" "+ _localizer.GetString("ExamCannotBeDeleted"));
+                        throw new ForbiddenException(_localizer.GetString("LessonWithType") + " " + lesson.Type + " " + _localizer.GetString("ExamCannotBeDeleted"));
                     }
 
                     _unitOfWork.GetRepository<QuestionSetQuestion>().Delete(questionSet.QuestionSetQuestions);
@@ -579,7 +579,7 @@ namespace Lingtren.Infrastructure.Services
                     {
                         _logger.LogWarning("DeleteLessonAsync(): Lesson with id:{lessonId} and type: {type} contains assignmentSubmissions.",
                                            lesson.Id, lesson.Type);
-                        throw new EntityNotFoundException(_localizer.GetString("AssignmentContainsSubmission")+ " " + lesson.Type +".");
+                        throw new EntityNotFoundException(_localizer.GetString("AssignmentContainsSubmission") + " " + lesson.Type + ".");
                     }
 
                     var assignmentAttachments = await _unitOfWork.GetRepository<AssignmentAttachment>().GetAllAsync(
@@ -693,17 +693,17 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var isModerator = await IsLiveClassModerator(currentUserId, course).ConfigureAwait(false);
-                    if(!isModerator)
+                if (!isModerator)
+                {
+                    var isMember = course.CourseEnrollments.Any(x => x.UserId == currentUserId && !x.IsDeleted
+                                && (x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled));
+                    if (!isMember)
                     {
-                        var isMember = course.CourseEnrollments.Any(x => x.UserId == currentUserId && !x.IsDeleted
-                                    && (x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled));
-                        if (!isMember)
-                        {
-                            _logger.LogWarning("User with id : {currentUserId} is invalid user to attend this meeting having lesson with id :{id}.", currentUserId, lesson.Id);
-                            throw new ForbiddenException(_localizer.GetString("MeetingNotAccessed"));
-                        }
+                        _logger.LogWarning("User with id : {currentUserId} is invalid user to attend this meeting having lesson with id :{id}.", currentUserId, lesson.Id);
+                        throw new ForbiddenException(_localizer.GetString("MeetingNotAccessed"));
                     }
-               
+                }
+
 
                 var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
                 if (zoomSetting == null)
@@ -758,8 +758,8 @@ namespace Lingtren.Infrastructure.Services
                 throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
             }
 
-            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate : x => x.Id.ToString().Equals(userId)).ConfigureAwait(false);
-            if(user == default)
+            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: x => x.Id.ToString().Equals(userId)).ConfigureAwait(false);
+            if (user == default)
             {
                 throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
             }
@@ -957,7 +957,7 @@ namespace Lingtren.Infrastructure.Services
 
                 }
             }
-        
+
             existingLesson.QuestionSet.Name = existingLesson.Name;
             existingLesson.QuestionSet.ThumbnailUrl = existingLesson.ThumbnailUrl;
             existingLesson.QuestionSet.Description = model.QuestionSet.Description;
@@ -1006,7 +1006,7 @@ namespace Lingtren.Infrastructure.Services
                 CreatedOn = lesson.CreatedOn,
                 UpdatedBy = lesson.UpdatedBy,
                 UpdatedOn = lesson.UpdatedOn
-                
+
             };
             lesson.MeetingId = lesson.Meeting.Id;
 

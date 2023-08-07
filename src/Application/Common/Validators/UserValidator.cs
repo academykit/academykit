@@ -46,13 +46,13 @@
         /// <returns>string</returns>
         private string RemoveHtmlTags(string bio)
         {
-            if(string.IsNullOrEmpty(bio))
+            if (string.IsNullOrEmpty(bio))
             {
                 return string.Empty;
             }
-             string textonly = Regex.Replace(bio, "<.*?>", "");
-             return textonly;
-            
+            string textonly = Regex.Replace(bio, "<.*?>", "");
+            return textonly;
+
         }
         public static bool ValidEmail(string email)
         {

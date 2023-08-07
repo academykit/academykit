@@ -32,7 +32,7 @@
         public ZoomLicenseService(
             IUnitOfWork unitOfWork,
             ILogger<ZoomLicenseService> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
 
@@ -109,27 +109,28 @@
                 var meetingsWithStartDate = await _unitOfWork.GetRepository<Meeting>().GetAllAsync(predicate: p => p.StartDate.Value.Date == startDate).ConfigureAwait(false);
                 if (meetingsWithStartDate.Count == 0)
                 {
-                     zoomLicenses.ForEach(x=> response.Add(new ZoomLicenseResponseModel {
-                         Id = x.Id,
-                         HostId = x.HostId,
-                         Capacity = x.Capacity,
-                         LicenseEmail = x.LicenseEmail,
-                         IsActive = x.IsActive,
-                     }));
+                    zoomLicenses.ForEach(x => response.Add(new ZoomLicenseResponseModel
+                    {
+                        Id = x.Id,
+                        HostId = x.HostId,
+                        Capacity = x.Capacity,
+                        LicenseEmail = x.LicenseEmail,
+                        IsActive = x.IsActive,
+                    }));
                     return response;
                 }
                 if (!string.IsNullOrEmpty(zoomLicenseIdRequestModel.LessonIdentity))
                 {
                     var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.Lesson.Id.ToString() == zoomLicenseIdRequestModel.LessonIdentity
-                    || p.Lesson.Slug == zoomLicenseIdRequestModel.LessonIdentity,include : src=>src.Include(x=>x.Lesson)).ConfigureAwait(false);
+                    || p.Lesson.Slug == zoomLicenseIdRequestModel.LessonIdentity, include: src => src.Include(x => x.Lesson)).ConfigureAwait(false);
                     if (meetingsWithStartDate.Any(x => x.Id == meeting.Id) == true)
                     {
-                         meetingsWithStartDate.Add(meeting);
+                        meetingsWithStartDate.Add(meeting);
                     }
                 }
 
                 var hasOverlappingMeetings = meetingsWithStartDate.Where(m =>
-                (m.StartDate.HasValue && m.StartDate.Value <= endTime && m.StartDate.Value.AddMinutes(m.Duration/60) >= zoomLicenseIdRequestModel.StartDateTime));
+                (m.StartDate.HasValue && m.StartDate.Value <= endTime && m.StartDate.Value.AddMinutes(m.Duration / 60) >= zoomLicenseIdRequestModel.StartDateTime));
                 if (hasOverlappingMeetings.ToList().Count == 0)
                 {
                     zoomLicenses.ForEach(x => response.Add(new ZoomLicenseResponseModel
@@ -143,8 +144,8 @@
                     return response;
                 }
 
-                var filteredZoomLicenses = zoomLicenses.Where(z =>!hasOverlappingMeetings.Any(m => m.ZoomLicenseId == z.Id));
-                filteredZoomLicenses.ForEach(x => response.Add( new ZoomLicenseResponseModel
+                var filteredZoomLicenses = zoomLicenses.Where(z => !hasOverlappingMeetings.Any(m => m.ZoomLicenseId == z.Id));
+                filteredZoomLicenses.ForEach(x => response.Add(new ZoomLicenseResponseModel
                 {
                     Id = x.Id,
                     HostId = x.HostId,

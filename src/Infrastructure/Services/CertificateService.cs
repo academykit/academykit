@@ -15,9 +15,9 @@ namespace Lingtren.Infrastructure.Services
 
     public class CertificateService : BaseService, ICertificateService
     {
-        public CertificateService(IUnitOfWork unitOfWork, 
+        public CertificateService(IUnitOfWork unitOfWork,
         ILogger<CertificateService> logger,
-        IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+        IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
 
@@ -40,17 +40,17 @@ namespace Lingtren.Infrastructure.Services
                     ImageUrl = model.ImageUrl,
                     Institute = model.Institute,
                     Duration = model.Duration,
-                    Status =CertificateStatus.Draft,
+                    Status = CertificateStatus.Draft,
                     Location = model.Location,
                     CreatedBy = currentUserId,
                     CreatedOn = DateTime.UtcNow
-                };;
-                var isAdmin =await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
-                if(isAdmin)
+                }; ;
+                var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+                if (isAdmin)
                 {
                     certificate.Status = CertificateStatus.Approved;
                 }
-                if(model.StartDate.AddHours(model.Duration).Date > model.EndDate)
+                if (model.StartDate.AddHours(model.Duration).Date > model.EndDate)
                 {
                     throw new ForbiddenException(_localizer.GetString("AddingDuratrionError"));
                 }
@@ -293,7 +293,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="status"> the certificate status </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
-        public async Task VerifyCertificateAsync(Guid identity,CertificateStatus status, Guid currentUserId)
+        public async Task VerifyCertificateAsync(Guid identity, CertificateStatus status, Guid currentUserId)
         {
             try
             {
@@ -321,7 +321,7 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
-        
+
         /// <summary>
         /// Handle to get internal certificate
         /// </summary>
@@ -331,17 +331,17 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                 var userCertificates = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
-                predicate: p => p.UserId == userId && p.HasCertificateIssued.HasValue && p.HasCertificateIssued.Value,
-                include: src => src.Include(x => x.Course)
-                ).ConfigureAwait(false);
+                var userCertificates = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
+               predicate: p => p.UserId == userId && p.HasCertificateIssued.HasValue && p.HasCertificateIssued.Value,
+               include: src => src.Include(x => x.Course)
+               ).ConfigureAwait(false);
 
-                var response =  userCertificates.Select(item => new CourseCertificateIssuedResponseModel
+                var response = userCertificates.Select(item => new CourseCertificateIssuedResponseModel
                 {
                     CourseId = item.CourseId,
                     CourseName = item.Course.Name,
                     CourseSlug = item.Course.Slug,
-                    Percentage= item.Percentage,
+                    Percentage = item.Percentage,
                     HasCertificateIssued = item.HasCertificateIssued,
                     CertificateIssuedDate = item.CertificateIssuedDate,
                     CertificateUrl = item.CertificateUrl,
@@ -350,7 +350,7 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-               _logger.LogError(ex.Message);
+                _logger.LogError(ex.Message);
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message); throw;
             }
         }

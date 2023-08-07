@@ -76,7 +76,7 @@ namespace Lingtren.Api.Controllers
         [HttpPost]
         public async Task<SectionResponseModel> Create(string identity, SectionRequestModel model)
         {
-            if(string.IsNullOrWhiteSpace(model.Name))
+            if (string.IsNullOrWhiteSpace(model.Name))
             {
                 throw new ForbiddenException(_localizer.GetString("SectionNameCannotBeNull"));
             }

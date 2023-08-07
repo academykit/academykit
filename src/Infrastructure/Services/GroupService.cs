@@ -28,7 +28,7 @@
             ILogger<GroupService> logger,
             IMediaService mediaService,
             IFileServerService fileServerService,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
             _mediaService = mediaService;
             _fileServerService = fileServerService;
@@ -61,7 +61,7 @@
             {
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search)
-                 || x.User.FirstName.ToLower().Trim().Contains(search) 
+                 || x.User.FirstName.ToLower().Trim().Contains(search)
                  || x.User.Email.ToLower().Trim().Contains(search));
             }
             if (criteria.Role != UserRole.SuperAdmin && criteria.Role != UserRole.Admin)
@@ -232,9 +232,9 @@
                 }
                 await _unitOfWork.GetRepository<GroupMember>().InsertAsync(groupMembers).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                if(usersToBeAdded.ToList().Count != default)
+                if (usersToBeAdded.ToList().Count != default)
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendMailNewGroupMember(group.Name,group.Slug,usersToBeAdded.ToList(),null));
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendMailNewGroupMember(group.Name, group.Slug, usersToBeAdded.ToList(), null));
                 }
 
                 var result = new GroupAddMemberResponseModel();

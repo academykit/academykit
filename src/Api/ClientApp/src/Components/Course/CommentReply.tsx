@@ -113,7 +113,7 @@ const CommentReply = ({
   };
 
   return (
-    <Box m={10} p={10} className={classes.wrapper}>
+    <Box m={10} p={10}>
       <DeleteModal
         title={t('delete_reply_confirmation')}
         open={deleteConfirmation}
@@ -175,7 +175,7 @@ const CommentReply = ({
       )}
       <Box sx={{ display: 'flex', justifyContent: 'end' }}>
         {!edit && showEdit(reply.user, true) && (
-          <Button variant="subtle" mx={4} onClick={() => setEdit()}>
+          <Button variant="subtle" compact mx={4} onClick={() => setEdit()}>
             {t('edit')}
           </Button>
         )}
@@ -183,6 +183,8 @@ const CommentReply = ({
           <Button
             onClick={() => setDeleteConfirmation()}
             variant="subtle"
+            compact
+            color="red"
             mx={4}
           >
             {t('delete')}

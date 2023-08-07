@@ -11,7 +11,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string Message { get; set; }
         public ServerLogsResponseModel()
         {
-            
+
         }
 
         public ServerLogsResponseModel(Logs log)

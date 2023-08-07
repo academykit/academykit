@@ -165,6 +165,7 @@ const CreateSignature = ({
                 onClick={() => setConfirmDelete()}
                 type="reset"
                 variant="outline"
+                color="red"
               >
                 {t('delete')}
               </Button>

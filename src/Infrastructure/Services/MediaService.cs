@@ -227,7 +227,7 @@ namespace Lingtren.Infrastructure.Services
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{downloadToken}");
                     await client.DownloadFileTaskAsync(new Uri(fileUrl), filePath).ConfigureAwait(true);
                 }
-                var duration =await _videoService.GetVideoDuration(filePath).ConfigureAwait(false);
+                var duration = await _videoService.GetVideoDuration(filePath).ConfigureAwait(false);
                 string videoPath = "";
                 if (Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
                 {

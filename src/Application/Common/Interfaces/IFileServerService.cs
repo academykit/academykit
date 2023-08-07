@@ -18,7 +18,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// </summary>
         /// <param name="filePath"> the file path </param>
         /// <returns> the new file path </returns>
-        Task<string> UploadRecordingFileAsync(string filePath,int fileSize);
+        Task<string> UploadRecordingFileAsync(string filePath, int fileSize);
 
         /// <summary>
         /// Handle to get file presigned url
@@ -26,14 +26,14 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="key"> the file key </param>
         /// <returns> the pre signed url </returns>
         Task<string> GetFilePresignedUrl(string key);
-        
+
         /// <summary>
         /// Handle to remove file
         /// </summary>
         /// <param name="key"> the file key </param>
         /// <returns> the task complete </returns>
         Task RemoveFileAsync(string key);
-        
+
         /// <summary>
         /// Handle to get file local path async
         /// </summary>
