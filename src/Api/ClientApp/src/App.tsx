@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ColorScheme,
   ColorSchemeProvider,
@@ -29,6 +30,48 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
     setColorScheme(nextColorScheme);
     localStorage.setItem(COLOR_SCHEME_KEY, nextColorScheme);
   };
+  type BrandingThemeType = [
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+  ];
+
+  const defaultBranding: BrandingThemeType = [
+    '#7AD1DD',
+    '#5FCCDB',
+    '#44CADC',
+    '#2AC9DE',
+    '#1AC2D9',
+    '#11B7CD',
+    '#09ADC3',
+    '#0E99AC',
+    '#128797',
+    '#147885',
+  ];
+
+  const [brandingTheme, setBrandingTheme] = useState('#0E99AC');
+  const [brandingThemeValue, setBrandingThemeValue] =
+    useState<BrandingThemeType>(defaultBranding);
+
+  const toggleBrandingTheme = (value: string) => {
+    // set new color if chosen by user
+    const brandingColors: BrandingThemeType =
+      value == '#0E99AC'
+        ? defaultBranding
+        : (new Array(10).fill(value) as BrandingThemeType);
+
+    setBrandingThemeValue(brandingColors);
+    setBrandingTheme(value);
+    localStorage.setItem('branding', brandingTheme);
+  };
+
   const { i18n } = useTranslation();
 
   const lang = localStorage.getItem('lang');
@@ -137,18 +180,7 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
             loader: 'dots',
 
             colors: {
-              brand: [
-                '#7AD1DD',
-                '#5FCCDB',
-                '#44CADC',
-                '#2AC9DE',
-                '#1AC2D9',
-                '#11B7CD',
-                '#09ADC3',
-                '#0E99AC',
-                '#128797',
-                '#147885',
-              ],
+              brand: brandingThemeValue,
             },
             primaryColor: 'brand',
           }}

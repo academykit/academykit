@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect } from 'react';
 import { createFormContext, yupResolver } from '@mantine/form';
-import { TextInput, Button, Textarea, Container, Text } from '@mantine/core';
+import { TextInput, Button, Textarea, Container, Text, ColorInput } from '@mantine/core';
 import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
 import {
   useGeneralSetting,
@@ -136,6 +136,7 @@ const GeneralSettings = () => {
             placeholder={t('enter_company_contact') as string}
             {...form.getInputProps('companyContactNumber')}
           />
+          <ColorInput placeholder="Pick color" label="Branding color" defaultValue='#0E99AC'/>
           <Textarea
             mt={10}
             label={t('mail_signature')}
