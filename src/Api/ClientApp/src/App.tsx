@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import AppRoutes from '@routes/AppRoutes';
 import { Notifications } from '@mantine/notifications';
 import { AuthProvider } from '@context/AuthProvider';
-import { COLOR_SCHEME_KEY } from '@utils/constants';
+import { BRANDING_SCHEME_KEY, COLOR_SCHEME_KEY } from '@utils/constants';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { LayoutProvider } from '@context/LayoutProvider';
 import ErrorBoundary from '@components/ErrorBoundry';
@@ -19,6 +19,7 @@ import ScrollToTop from '@components/ScrollToTop';
 import './App.css';
 import { useTranslation } from 'react-i18next';
 import FormProvider from '@context/FormContext';
+import BrandingProvider from '@context/BrandingThemeContext';
 
 const App = ({ queryClient }: { queryClient: QueryClient }) => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>(
@@ -56,21 +57,30 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
     '#147885',
   ];
 
-  const [brandingTheme, setBrandingTheme] = useState('#0E99AC');
-  const [brandingThemeValue, setBrandingThemeValue] =
-    useState<BrandingThemeType>(defaultBranding);
-
-  const toggleBrandingTheme = (value: string) => {
-    // set new color if chosen by user
-    const brandingColors: BrandingThemeType =
-      value == '#0E99AC'
-        ? defaultBranding
-        : (new Array(10).fill(value) as BrandingThemeType);
-
-    setBrandingThemeValue(brandingColors);
-    setBrandingTheme(value);
-    localStorage.setItem('branding', brandingTheme);
+  const getBrandingTheme = () => {
+    const storedValue = localStorage.getItem(BRANDING_SCHEME_KEY);
+    return storedValue
+      ? (new Array(10).fill(storedValue) as BrandingThemeType)
+      : defaultBranding;
   };
+
+  const [brandingTheme, setBrandingTheme] = useState(
+    localStorage.getItem(BRANDING_SCHEME_KEY) ?? '#0E99AC'
+  );
+  const [brandingThemeValue, setBrandingThemeValue] =
+    useState<BrandingThemeType>(getBrandingTheme());
+
+  // const toggleBrandingTheme = (value: string) => {
+  //   // set new color if chosen by user
+  //   const brandingColors: BrandingThemeType =
+  //     value == '#0E99AC'
+  //       ? defaultBranding
+  //       : (new Array(10).fill(value) as BrandingThemeType);
+
+  //   setBrandingThemeValue(brandingColors);
+  //   setBrandingTheme(value);
+  //   localStorage.setItem(BRANDING_SCHEME_KEY, brandingTheme);
+  // };
 
   const { i18n } = useTranslation();
 
@@ -190,7 +200,14 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
               <ErrorBoundary>
                 <AuthProvider>
                   <LayoutProvider>
-                    <AppRoutes />
+                    <BrandingProvider
+                      brandingTheme={brandingTheme}
+                      brandingThemeValue={brandingThemeValue}
+                      setBrandingTheme={setBrandingTheme}
+                      setBrandingThemeValue={setBrandingThemeValue}
+                    >
+                      <AppRoutes />
+                    </BrandingProvider>
                   </LayoutProvider>
                 </AuthProvider>
                 <ReactQueryDevtools initialIsOpen={false} />

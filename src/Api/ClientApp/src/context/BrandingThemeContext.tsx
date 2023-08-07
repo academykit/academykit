@@ -1,4 +1,5 @@
-import { FC, createContext, useState } from 'react';
+import { BRANDING_SCHEME_KEY } from '@utils/constants';
+import { Dispatch, FC, SetStateAction, createContext } from 'react';
 
 type BrandingThemeType = [
   string,
@@ -21,7 +22,21 @@ export interface IBrandingContext {
 
 export const BrandingContext = createContext<IBrandingContext | null>(null);
 
-const FormProvider: FC<React.PropsWithChildren> = ({ children }) => {
+type Props = {
+  children: React.ReactNode;
+  brandingTheme: string;
+  brandingThemeValue: BrandingThemeType;
+  setBrandingTheme: Dispatch<SetStateAction<string>>;
+  setBrandingThemeValue: Dispatch<SetStateAction<BrandingThemeType>>;
+};
+
+const BrandingProvider: FC<Props> = ({
+  children,
+  brandingTheme,
+  brandingThemeValue,
+  setBrandingTheme,
+  setBrandingThemeValue,
+}) => {
   const defaultBranding: BrandingThemeType = [
     '#7AD1DD',
     '#5FCCDB',
@@ -35,9 +50,9 @@ const FormProvider: FC<React.PropsWithChildren> = ({ children }) => {
     '#147885',
   ];
 
-  const [brandingTheme, setBrandingTheme] = useState('#0E99AC');
-  const [brandingThemeValue, setBrandingThemeValue] =
-    useState<BrandingThemeType>(defaultBranding);
+  // const [brandingTheme, setBrandingTheme] = useState('#0E99AC');
+  // const [brandingThemeValue, setBrandingThemeValue] =
+  //   useState<BrandingThemeType>(defaultBranding);
 
   const toggleBrandingTheme = (value: string) => {
     // set new color if chosen by user
@@ -48,7 +63,8 @@ const FormProvider: FC<React.PropsWithChildren> = ({ children }) => {
 
     setBrandingThemeValue(brandingColors);
     setBrandingTheme(value);
-    localStorage.setItem('branding', brandingTheme);
+    console.log('this ran', brandingTheme);
+    localStorage.setItem(BRANDING_SCHEME_KEY, value);
   };
 
   return (
@@ -60,4 +76,4 @@ const FormProvider: FC<React.PropsWithChildren> = ({ children }) => {
   );
 };
 
-export default FormProvider;
+export default BrandingProvider;
