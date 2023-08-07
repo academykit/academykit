@@ -22,7 +22,7 @@ import { getDateTime } from '@utils/getDateTime';
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t('meeting_name_required') as string),
+    name: Yup.string().required(t('physical_name_required') as string),
     meetingStartDate: Yup.string()
       .required(t('start_date_required') as string)
       .typeError(t('start_date_required') as string),
@@ -165,8 +165,8 @@ const AddPhysical = ({
       <Grid align="center">
         <Grid.Col span={12} lg={6}>
           <CustomTextFieldWithAutoFocus
-            label={t('meeting_name')}
-            placeholder={t('meeting_name') as string}
+            label={t('physical_name')}
+            placeholder={t('physical_name') as string}
             {...form.getInputProps('name')}
             withAsterisk
           />
@@ -189,7 +189,7 @@ const AddPhysical = ({
 
       <Textarea
         label={t('description')}
-        placeholder={t('description_live_class') as string}
+        placeholder={t('physical_name_description') as string}
         {...form.getInputProps('description')}
       />
       <Group position="left" mt="md">

@@ -858,6 +858,9 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "physical_name": "身体トレーニング",
+  "physical_name_required": "トレーニング名は必須です。",
+  "physical_name_description": "身体トレーニングの説明",
   "question_pool_created": "質問プールは事前に作成され、セクション内に配置する必要があります",
   "question_pool_href": "'質問プール'",
   "section": "セクション。",
