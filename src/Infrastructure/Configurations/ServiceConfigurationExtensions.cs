@@ -83,6 +83,7 @@
             services.AddTransient<IVideoService, VideoService>();
             services.AddTransient<ILogsService, LogsService>();
             services.AddTransient<IPhysicalLessonServices, PhysicalLessonService>();
+            services.AddTransient<IDynamicImageGenerator, DynamicImageGenerator>();
 
             #endregion Service DI
 
