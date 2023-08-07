@@ -159,8 +159,6 @@ namespace Lingtren.Api.Controllers
             var currentTimeStamp = DateTime.UtcNow;
 
             existing.Id = existing.Id;
-            existing.ApiKey = model.ApiKey;
-            existing.ApiSecret = model.ApiSecret;
             existing.SdkKey = model.SdkKey;
             existing.SdkSecret = model.SdkSecret;
             existing.WebHookSecret = model.WebhookSecret;
@@ -168,6 +166,9 @@ namespace Lingtren.Api.Controllers
             existing.IsRecordingEnabled = model.IsRecordingEnabled;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
+            existing.OAuthAccountId = model.OAuthAccountId;
+            existing.OAuthClientId = model.OAuthClientId;
+            existing.OAuthClientSecret = model.OAuthClientSecret;
 
             var savedEntity = await _zoomSettingService.UpdateAsync(existing).ConfigureAwait(false);
             return new ZoomSettingResponseModel(savedEntity);
