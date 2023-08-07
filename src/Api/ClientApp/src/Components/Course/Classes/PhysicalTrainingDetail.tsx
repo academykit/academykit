@@ -1,4 +1,4 @@
-import { Button, Group, Title } from '@mantine/core';
+import { Button, Group, Title, Text } from '@mantine/core';
 import RoutePath from '@utils/routeConstants';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -16,10 +16,10 @@ const PhysicalTrainingDetail = ({
   return (
     <Group sx={{ flexDirection: 'column' }}>
       <Title>{name}</Title>
+      <Text>{t('start_date')}: </Text>
+      <Text>{t('start_time')}: </Text>
       {!hasFeedbackSubmitted ? (
-        <Button component={Link} to={RoutePath.feedback.details(id).route}>
-          {t('mark_as_attended')}
-        </Button>
+        <Button>{t('mark_as_attended')}</Button>
       ) : (
         <Button component={Link} to={RoutePath.feedback.myDetails(id).route}>
           {t('view_feedback')}
