@@ -24,10 +24,10 @@ namespace Api.Controllers
         }
 
         /// <summary>
-        /// Reviews physical lesson attendance
+        /// physical lesson attendance
         /// </summary>
-        /// <param name="Idenity"></param>
-        /// <returns></returns>
+        /// <param name="Idenity">lesson identity</param>
+        /// <returns>Task completed</returns>
         [HttpPost("Attendance")]
         public async Task<IActionResult> Attendance(string Idenity)
         {
@@ -35,6 +35,11 @@ namespace Api.Controllers
             return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("SuccessfulAttendance") });
         }
 
+        /// <summary>
+        /// physical lesson attendance review
+        /// </summary>
+        /// <param name="model">instance of <see cref="PhysicalLessonReviewRequestModel"/></param>
+        /// <returns>Task completed</returns>
         [HttpPost("Review")]
         public async Task<IActionResult> Review(PhysicalLessonReviewRequestModel model)
         {

@@ -33,43 +33,45 @@ namespace Lingtren.Infrastructure.Services
         /// <exception cref="ForbiddenException"></exception>
         public async Task PhysicalLessonAttendanceAsync(string lessonIdentity, string currentUserId)
         {
-            var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == lessonIdentity || p.Slug.ToLower().Trim() == lessonIdentity.ToLower().Trim(),
-                include: src => src.Include(x => x.Course).ThenInclude(x => x.CourseEnrollments)).ConfigureAwait(false);
-            var physicalReview = new PhysicalLessonReview();
-            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == currentUserId).ConfigureAwait(false);
-            if (user == default)
+            await ExecuteAsync(async () =>
             {
-                throw new ForbiddenException("UnauthorizedUser");
-            }
-            var Review = await _unitOfWork.GetRepository<PhysicalLessonReview>().GetFirstOrDefaultAsync(predicate: p => p.UserId.ToString() == currentUserId && p.LessonId == lesson.Id).ConfigureAwait(false);
-            if (!lesson.Course.CourseEnrollments.Any(x => x.UserId.ToString() == currentUserId))
-            {
-                throw new ForbiddenException("UnauthorizedUser");
-            }
-            if (Review == default)
-            {
-                physicalReview.UserId = user.Id;
-                physicalReview.CreatedOn = DateTime.UtcNow;
-                physicalReview.UpdatedOn = DateTime.UtcNow;
-                physicalReview.LessonId = lesson.Id;
-                physicalReview.UpdatedBy = user.Id;
-                physicalReview.CreatedBy = user.Id;
-                physicalReview.HasAttended = true;
-                physicalReview.Id = Guid.NewGuid();
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == lessonIdentity || p.Slug.ToLower().Trim() == lessonIdentity.ToLower().Trim(),
+                    include: src => src.Include(x => x.Course).ThenInclude(x => x.CourseEnrollments)).ConfigureAwait(false);
+                var physicalReview = new PhysicalLessonReview();
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == currentUserId).ConfigureAwait(false);
+                if (user == default)
+                {
+                    throw new ForbiddenException("UnauthorizedUser");
+                }
+                var Review = await _unitOfWork.GetRepository<PhysicalLessonReview>().GetFirstOrDefaultAsync(predicate: p => p.UserId.ToString() == currentUserId && p.LessonId == lesson.Id).ConfigureAwait(false);
+                if (!lesson.Course.CourseEnrollments.Any(x => x.UserId.ToString() == currentUserId))
+                {
+                    throw new ForbiddenException("UnauthorizedUser");
+                }
+                if (Review == default)
+                {
+                    physicalReview.UserId = user.Id;
+                    physicalReview.CreatedOn = DateTime.UtcNow;
+                    physicalReview.UpdatedOn = DateTime.UtcNow;
+                    physicalReview.LessonId = lesson.Id;
+                    physicalReview.UpdatedBy = user.Id;
+                    physicalReview.CreatedBy = user.Id;
+                    physicalReview.HasAttended = true;
+                    physicalReview.Id = Guid.NewGuid();
 
-                var courseEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == lesson.CourseId).ConfigureAwait(false);
-                await ManageStudentCourseComplete(lesson.CourseId, lesson.Id, user.Id, DateTime.UtcNow).ConfigureAwait(false);
-                _unitOfWork.GetRepository<PhysicalLessonReview>().Insert(physicalReview);
-            }
-            if (Review != default)
-            {
-                physicalReview = Review;
-                physicalReview.UpdatedOn = DateTime.UtcNow;
-                physicalReview.UpdatedBy = user.Id;
-                _unitOfWork.GetRepository<PhysicalLessonReview>().Update(physicalReview);
-            }
-
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                    var courseEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == lesson.CourseId).ConfigureAwait(false);
+                    await ManageStudentCourseComplete(lesson.CourseId, lesson.Id, user.Id, DateTime.UtcNow).ConfigureAwait(false);
+                    _unitOfWork.GetRepository<PhysicalLessonReview>().Insert(physicalReview);
+                }
+                if (Review != default)
+                {
+                    physicalReview = Review;
+                    physicalReview.UpdatedOn = DateTime.UtcNow;
+                    physicalReview.UpdatedBy = user.Id;
+                    _unitOfWork.GetRepository<PhysicalLessonReview>().Update(physicalReview);
+                }
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            });
         }
 
         /// <summary>
