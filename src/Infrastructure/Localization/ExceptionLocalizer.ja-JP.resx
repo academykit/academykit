@@ -995,4 +995,19 @@
   <data name="AssignmentStartTimeException" xml:space="preserve">
     <value>課題はまだ始まっていません。</value>
   </data>
+  <data name="SuccessfulAttendance" xml:space="preserve">
+    <value>無事にレッスンに参加できました。</value>
+  </data>
+  <data name="SuccessfullyReviewed" xml:space="preserve">
+    <value>無事にレビューされました。</value>
+  </data>
+  <data name="QuestionPoolQuestionNotFound" xml:space="preserve">
+    <value>質問プールの質問が見つかりませんでした。</value>
+  </data>
+  <data name="QuestionpoolUpdatedSuccesfully" xml:space="preserve">
+    <value>質問プールの質問が正常に更新されました。</value>
+  </data>
+  <data name="AssignmentUpdatedSuccessfully" xml:space="preserve">
+    <value>割り当てが正常に更新されました。</value>
+  </data>
 </root>

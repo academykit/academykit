@@ -1,6 +1,5 @@
 namespace Lingtren.Infrastructure.Services
 {
-    using Amazon.S3.Model;
     using AngleSharp.Text;
     using Application.Common.Dtos;
     using Application.Common.Models.ResponseModels;
@@ -20,31 +19,29 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using RestSharp;
     using System;
-    using System.Collections;
     using System.Collections.Immutable;
     using System.Data;
-    using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
 
     public class CourseService : BaseGenericService<Course, CourseBaseSearchCriteria>, ICourseService
     {
-        private readonly string imageApi;
         private readonly IMediaService _mediaService;
         private readonly IFileServerService _fileServerService;
+        private readonly IDynamicImageGenerator _dynamicImageGenerator;
         public CourseService(
             IUnitOfWork unitOfWork,
             ILogger<CourseService> logger,
             IConfiguration configuration,
             IMediaService mediaService,
             IFileServerService fileServerService,
+            IDynamicImageGenerator dynamicImageGenerator,
             IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
-            imageApi = configuration.GetSection("AppUrls:ImageApi").Value;
             _mediaService = mediaService;
             _fileServerService = fileServerService;
+            _dynamicImageGenerator = dynamicImageGenerator;
         }
 
         #region Protected Methods
@@ -340,20 +337,19 @@ namespace Lingtren.Infrastructure.Services
                 sections = sections.Where(x => x.Status != CourseStatus.Published).ToList();
                 lessons = lessons.Where(x => x.Status != CourseStatus.Published).ToList();
             }
-
-            course.Status = model.Status;
+            course.Status = isSuperAdminOrAdminAccess ? CourseStatus.Published : model.Status;
             course.UpdatedBy = currentUserId;
             course.UpdatedOn = currentTimeStamp;
 
             sections.ForEach(x =>
             {
-                x.Status = model.Status;
+                x.Status = isSuperAdminOrAdminAccess ? CourseStatus.Published : model.Status;
                 x.UpdatedBy = currentUserId;
                 x.UpdatedOn = currentTimeStamp;
             });
             lessons.ForEach(x =>
             {
-                x.Status = model.Status;
+                x.Status = isSuperAdminOrAdminAccess ? CourseStatus.Published : model.Status;
                 x.UpdatedBy = currentUserId;
                 x.UpdatedOn = currentTimeStamp;
             });
@@ -640,7 +636,8 @@ namespace Lingtren.Infrastructure.Services
                     Status = course.Status,
                     UserStatus = GetUserCourseEnrollmentStatus(course, currentUserId),
                     Sections = new List<SectionResponseModel>(),
-                    Tags = new List<CourseTagResponseModel>()
+                    Tags = new List<CourseTagResponseModel>(),
+                    CreatedOn = course.CreatedOn,
                 };
                 course.CourseTags.ToList().ForEach(item => response.Tags.Add(new CourseTagResponseModel(item)));
 
@@ -919,7 +916,7 @@ namespace Lingtren.Infrastructure.Services
                     predicate: p => p.CourseId == course.Id && !p.IsDeleted && !p.Section.IsDeleted,
                     include: src => src.Include(x => x.Section)
                     ).ConfigureAwait(false);
-                lessons = lessons.OrderBy(x => x.Order).ToList();
+                lessons = lessons.OrderBy(x => x.Section.Order).ThenBy(x=>x.Order).ToList();
                 var LessonIds = lessons.Select(x => x.Id).ToList();
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(predicate: p => p.CourseId == course.Id && LessonIds.Contains(p.LessonId)).ConfigureAwait(false);
                 watchHistory = watchHistory
@@ -1248,7 +1245,7 @@ namespace Lingtren.Infrastructure.Services
 
             if (currentUserRole == UserRole.SuperAdmin || currentUserRole == UserRole.Admin || currentUserRole == UserRole.Trainer)
             {
-                predicate = predicate.And(p => p.CourseTeachers.Any(x => x.CourseId == p.Id && x.UserId == currentUserId));
+                predicate = predicate.And(p => p.CourseTeachers.Any(x => x.CourseId == p.Id || x.UserId == currentUserId));
             }
 
             if (currentUserRole == UserRole.Trainee)
@@ -1579,36 +1576,11 @@ namespace Lingtren.Infrastructure.Services
         private async Task<string> GetImageFile(CourseCertificate? certificate, string fullName, IList<Signature> signatures)
         {
             var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
-            var client = new RestClient($"{imageApi}");
-            var authors = new ArrayList();
-            foreach (var item in signatures)
-            {
-                authors.Add(new
-                {
-                    name = item.FullName,
-                    position = item.Designation,
-                    signatureUrl = item.FileUrl
-                });
-            }
-            var request = new RestRequest().AddHeader("Accept", "application/json")
-                    .AddJsonBody(new
-                    {
-                        name = fullName,
-                        training = certificate?.Title,
-                        startDate = certificate?.EventStartDate.ToString("dd MMMM yyyy"),
-                        endDate = certificate?.EventEndDate.ToString("dd MMMM yyyy"),
-                        companyName = company.CompanyName,
-                        companyLogo = company.LogoUrl,
-                        authors,
-                    });
-
-            var response = await client.PostAsync(request).ConfigureAwait(false);
-            var fileName = certificate?.Title ?? "certificate";
-            MemoryStream stream = new(response.RawBytes);
-            var formFile = new FormFile(stream, 0, stream.Length, null, fileName)
+            var stream = await _dynamicImageGenerator.GenerateCertificateImage(certificate, fullName, signatures, company);
+            var formFile = new FormFile(stream, 0, stream.Length, null, certificate?.Title ?? "certificate")
             {
                 Headers = new HeaderDictionary(),
-                ContentType = response.ContentType
+                ContentType = "image/png"
             };
             var fileResponse = await _mediaService.UploadFileAsync(new MediaRequestModel { File = formFile, Type = MediaType.Public }).ConfigureAwait(false);
             return fileResponse;

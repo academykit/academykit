@@ -992,4 +992,19 @@
   <data name="AssignmentStartTimeException" xml:space="preserve">
     <value>कार्यभार अझै सुरु भएको छैन।</value>
   </data>
+  <data name="SuccessfulAttendance" xml:space="preserve">
+    <value>पाठमा सफलतापूर्वक उपस्थित हुनुभयो।</value>
+  </data>
+  <data name="SuccessfullyReviewed" xml:space="preserve">
+    <value>सफलतापूर्वक समीक्षा गरियो।</value>
+  </data>
+  <data name="QuestionPoolQuestionNotFound" xml:space="preserve">
+    <value>प्रश्न पूल प्रश्न फेला परेन।</value>
+  </data>
+  <data name="QuestionpoolUpdatedSuccesfully" xml:space="preserve">
+    <value>प्रश्न पूल प्रश्नहरू सफलतापूर्वक अपडेट गरियो।</value>
+  </data>
+  <data name="AssignmentUpdatedSuccessfully" xml:space="preserve">
+    <value>असाइनमेन्ट सफलतापूर्वक अद्यावधिक गरियो।</value>
+  </data>
 </root>

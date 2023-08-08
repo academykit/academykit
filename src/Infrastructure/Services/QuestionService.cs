@@ -131,6 +131,7 @@
                         UpdatedOn = currentTimeStamp
                     });
                 }
+                var questionPoolQuestionCount = await _unitOfWork.GetRepository<QuestionPoolQuestion>().CountAsync(predicate : p=>p.QuestionPoolId == questionPool.Id).ConfigureAwait(false);
                 foreach (var item in question.Answers.Select((answer, i) => new { i, answer }))
                 {
                     entity.QuestionOptions.Add(new QuestionOption
@@ -155,6 +156,7 @@
                     CreatedOn = currentTimeStamp,
                     UpdatedBy = currentUserId,
                     UpdatedOn = currentTimeStamp,
+                    Order = questionPoolQuestionCount 
                 };
                 await _unitOfWork.GetRepository<QuestionPoolQuestion>().InsertAsync(questionPoolQuestion).ConfigureAwait(false);
                 await _unitOfWork.GetRepository<QuestionTag>().InsertAsync(entity.QuestionTags).ConfigureAwait(false);

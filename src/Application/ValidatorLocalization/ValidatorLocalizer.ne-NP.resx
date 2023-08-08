@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
+  <!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,79 +26,79 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -119,383 +119,521 @@
   </resheader>
   <data name="AddressLength200" xml:space="preserve">
     <value>ठेगाना लम्बाइ 200 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
-  <data name="ApiKeyLength100" xml:space="preserve">
-    <value>Api कुञ्जी लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+  <data name="OAuthAccountIdLength100" xml:space="preserve">
+    <value>OAuth खाता आईडी लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
-  <data name="APIKeyRequired" xml:space="preserve">
-    <value>Api कुञ्जी आवश्यक छ।</value>
+  <data name="OAuthAccountIdRequired" xml:space="preserve">
+    <value> OAuth खाता आईडी आवश्यक छ।</value>
+    <comment/>
   </data>
-  <data name="ApiSecretKeyLength100" xml:space="preserve">
-    <value>Api गोप्य लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+  <data name="OAuthClientIdLength100" xml:space="preserve">
+    <value> OAuth ग्राहक आईडी लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
-  <data name="ApiSecretRequired" xml:space="preserve">
-    <value>Api गोप्य आवश्यक छ।</value>
+  <data name="OAuthClientIdRequired" xml:space="preserve">
+    <value> OAuth ग्राहक आईडी आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="AssignementQuestionisRequired" xml:space="preserve">
     <value>असाइनमेन्ट प्रश्न विकल्प आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="AssignmentRequired" xml:space="preserve">
     <value>असाइनमेन्ट नाम आवश्यक छ</value>
+    <comment/>
   </data>
   <data name="Assignmenttypeid" xml:space="preserve">
     <value>असाइनमेन्ट प्रकार आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="BioLength200" xml:space="preserve">
     <value>बायो लम्बाइ 200 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="CapacityRequired" xml:space="preserve">
     <value>क्षमता चाहिन्छ।</value>
+    <comment/>
   </data>
   <data name="CertificateEndTimeError" xml:space="preserve">
     <value>प्रमाणपत्रको अन्तिम मिति हालको मिति भन्दा ठूलो हुनुहुँदैन।</value>
+    <comment/>
   </data>
   <data name="CertificateStartTimeError" xml:space="preserve">
     <value>प्रमाणपत्र सुरु हुने समय हालको मिति भन्दा बढी हुनु हुँदैन</value>
+    <comment/>
   </data>
   <data name="CompanyAddressLengthError" xml:space="preserve">
     <value>कम्पनी ठेगाना लम्बाइ 250 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="CompanyAddressRequired" xml:space="preserve">
     <value>कम्पनी ठेगाना आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="CompanyContactNumberLengthError" xml:space="preserve">
     <value>कम्पनीको सम्पर्क ३० वर्णभन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="CompanyContactNumberRequired" xml:space="preserve">
     <value>कम्पनी सम्पर्क नम्बर आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="CompanyNameLengthError" xml:space="preserve">
     <value>कम्पनीको नाम लम्बाइ 250 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="CompanyNameRequired" xml:space="preserve">
     <value>कम्पनीको नाम आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="Confirm email is required." xml:space="preserve">
     <value>इमेल आवश्यक छ भनेर पुष्टि गर्नुहोस्।</value>
+    <comment/>
   </data>
   <data name="ConfirmPasswordRequired" xml:space="preserve">
     <value>पासवर्ड आवश्यक छ पुष्टि गर्नुहोस्।</value>
+    <comment/>
   </data>
   <data name="ConformPassword" xml:space="preserve">
     <value>पासवर्ड आवश्यक छ पुष्टि गर्नुहोस्।</value>
+    <comment/>
   </data>
   <data name="ContentRequired" xml:space="preserve">
     <value>सामग्री आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="CourseIdRequired" xml:space="preserve">
     <value>आवश्यक पाठ्यक्रम पहिचान।</value>
+    <comment/>
   </data>
   <data name="CourseStatusRequired" xml:space="preserve">
     <value>आवश्यक पाठ्यक्रम स्थिति।</value>
+    <comment/>
   </data>
   <data name="DepartmentIdRequired" xml:space="preserve">
     <value>विभागको नाम आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="DescriptionLenght500" xml:space="preserve">
     <value>वर्णन लम्बाइ 5000 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="DesignationLength50" xml:space="preserve">
     <value>पदनाम लम्बाइ 50 भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="DocumentTypeRequired" xml:space="preserve">
     <value>अवैध पाठको लागि कागजात आवश्यक छ पाठको प्रकार कागजात प्रकार हो।</value>
+    <comment/>
   </data>
   <data name="DurationRequired" xml:space="preserve">
     <value>अवधि आवश्यक छ</value>
+    <comment/>
   </data>
   <data name="EmailLength100" xml:space="preserve">
     <value>इमेल लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="EmailRequired" xml:space="preserve">
     <value>इमेल आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="EmailSignatureLengthError" xml:space="preserve">
     <value>इमेल हस्ताक्षर लम्बाइ 1000 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="EnddateMustBeGreater" xml:space="preserve">
     <value>अन्त्य मिति सुरु मिति भन्दा ठूलो हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="EndTimeEmptyError" xml:space="preserve">
     <value>अन्तिम मिति खाली हुन सक्दैन</value>
+    <comment/>
   </data>
   <data name="EventEndDate" xml:space="preserve">
     <value>घटना समाप्त मिति आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="EventStartDateRequired" xml:space="preserve">
     <value>घटना सुरु मिति आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="FeedbackNameRequired" xml:space="preserve">
     <value>प्रतिक्रिया नाम आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="FeedbackRequired" xml:space="preserve">
     <value>कृपया सबै प्रश्नहरूको लागि प्रतिक्रिया प्रदान गर्नुहोस्।</value>
+    <comment/>
   </data>
   <data name="FeedbackTypeRequired" xml:space="preserve">
     <value>प्रतिक्रिया प्रकार आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="FileUrlLength200" xml:space="preserve">
     <value>फाइल url लम्बाइ 200 भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="FileUrlRequired" xml:space="preserve">
     <value>फाइल url आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="FirstNameLength100" xml:space="preserve">
     <value>पहिलो नाम लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="FirstNameRequired" xml:space="preserve">
     <value>पहिलो नाम शून्य हुन सक्दैन</value>
+    <comment/>
   </data>
   <data name="FullNameRequired" xml:space="preserve">
     <value>पूरा नाम आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="HintLength500" xml:space="preserve">
     <value>संकेत लम्बाइ 5000 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="HostIDLength" xml:space="preserve">
     <value>होस्ट आईडी लम्बाइ 50 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="HostIdRequired" xml:space="preserve">
     <value>होस्ट आईडी आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="InvalidAssignmentMarks" xml:space="preserve">
     <value>अंकहरू 1 देखि 100 बीचमा हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="InvalidEmailError" xml:space="preserve">
     <value>अवैध इमेल ढाँचा।</value>
+    <comment/>
   </data>
   <data name="InvalidFeedBackType" xml:space="preserve">
     <value>अमान्य प्रतिक्रिया प्रकार।</value>
+    <comment/>
   </data>
   <data name="InvalidFileType" xml:space="preserve">
     <value>अवैध असाइनमेन्ट प्रकार।</value>
+    <comment/>
   </data>
   <data name="InvalidLessionType" xml:space="preserve">
     <value>अमान्य पाठ प्रकार।</value>
+    <comment/>
   </data>
   <data name="InvalidMediaType" xml:space="preserve">
     <value>अमान्य मिडिया प्रकार।</value>
+    <comment/>
   </data>
   <data name="InvalidPasswordFormat" xml:space="preserve">
     <value>पासवर्डमा कम्तिमा एउटा सानो अक्षर, एउटा ठूलो अक्षर, एउटा अंक र एउटा चिन्ह हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="InvalidQuestionType" xml:space="preserve">
     <value>अवैध प्रश्न प्रकार।</value>
+    <comment/>
   </data>
   <data name="InvalidReviewLength" xml:space="preserve">
     <value>समीक्षाको लम्बाइ ५०० वर्णभन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="IsRecordingTrue" xml:space="preserve">
     <value>रेकर्डिङ सक्षम छ आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="KeyCannotBeNull" xml:space="preserve">
     <value>कुञ्जी शून्य हुन सक्दैन</value>
+    <comment/>
   </data>
   <data name="LastNameLength100" xml:space="preserve">
     <value>अन्तिम नाम लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="LastNAmeRequired" xml:space="preserve">
     <value>अन्तिम नाम आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="LessionNameRequired" xml:space="preserve">
     <value>पाठ नाम आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="LessonIdRequired" xml:space="preserve">
     <value>LessonId आवश्यक छ</value>
+    <comment/>
   </data>
   <data name="LevelRequired" xml:space="preserve">
     <value>स्तर आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="LicenseEmailLength" xml:space="preserve">
     <value>लाइसेन्स इमेल लम्बाइ 50 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="LogoRequired" xml:space="preserve">
     <value>लोगो आवश्यक छ</value>
+    <comment/>
   </data>
   <data name="LogoUrlRequired" xml:space="preserve">
     <value>लोगो url लम्बाइ 500 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="MailPortRequired" xml:space="preserve">
     <value>मेल पोर्ट आवश्यक छ</value>
+    <comment/>
   </data>
   <data name="MailServerLength200" xml:space="preserve">
     <value>मेल सर्भर लम्बाइ 200 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="MailServerRequired" xml:space="preserve">
     <value>मेल सर्भर आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="MediaTypeRequired" xml:space="preserve">
     <value>मिडिया प्रकार आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="MeedingDurationRequired" xml:space="preserve">
     <value>बैठक अवधि आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="MeetingIdDUrationLength" xml:space="preserve">
     <value>बैठक अवधि 1439 मिनेट भन्दा बढी वा बराबर हुन सक्दैन।</value>
+    <comment/>
+  </data>
+  <data name="MessageCannotBeEmpty" xml:space="preserve">
+    <value>समीक्षा सन्देश खाली हुन सक्दैन।</value>
   </data>
   <data name="MiddleNameLength100" xml:space="preserve">
     <value>बीचको नामको लम्बाइ १०० वर्णभन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="MobileNumberLength50" xml:space="preserve">
     <value>मोबाइल नम्बरको लम्बाइ ५० वर्णभन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="NameLength250" xml:space="preserve">
     <value>नाम लम्बाइ 250 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="NameLength500" xml:space="preserve">
     <value>नाम लम्बाइ 500 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="NameLengthError" xml:space="preserve">
     <value>नाम लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="NameRequired" xml:space="preserve">
     <value>नाम आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="NewEmailConformedRequired" xml:space="preserve">
     <value>नयाँ इमेल र पुष्टि इमेल मेल खाँदैन।</value>
+    <comment/>
   </data>
   <data name="NewPasswordRequired" xml:space="preserve">
     <value>नयाँ पासवर्ड आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="OldAndNewPasswordDoesnotMatch" xml:space="preserve">
     <value>नयाँ पासवर्ड र पुष्टि पासवर्ड मिलेन।</value>
+    <comment/>
   </data>
   <data name="OldEmailRequired" xml:space="preserve">
     <value>पुरानो इमेल आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="OneOptionShouldBeCreated" xml:space="preserve">
     <value>कम्तिमा एक विकल्प सही रूपमा प्रदान गर्नुपर्छ।</value>
+    <comment/>
   </data>
   <data name="OptionIsRequired" xml:space="preserve">
     <value>विकल्प आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="OptionLengthMustBe5000" xml:space="preserve">
     <value>विकल्प लम्बाइ 5000 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="OptionMoreThanOne" xml:space="preserve">
     <value>विकल्प एक भन्दा बढी हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="PasswordChangeTokenIsRequired" xml:space="preserve">
     <value>पासवर्ड परिवर्तन टोकन आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="PasswordLength100" xml:space="preserve">
     <value>पासवर्ड लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="PasswordRequired" xml:space="preserve">
     <value>पासवर्ड आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="PreofessionLength200" xml:space="preserve">
     <value>पेशाको लम्बाइ 200 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="PublicUrlLength2000" xml:space="preserve">
     <value>सार्वजनिक url लम्बाइ 2000 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="QuestionHint5000Length" xml:space="preserve">
     <value>प्रश्न संकेत लम्बाइ 5000 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="QuestionMarkingRequired" xml:space="preserve">
     <value>प्रश्न मूल्याङ्कन आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="QuestionpoolIdRequired" xml:space="preserve">
     <value>प्रश्न पोखरी पहिचान आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="QuestionPoolNameRequired" xml:space="preserve">
     <value>प्रश्न पोखरी नाम आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="RejectMessageRequired" xml:space="preserve">
     <value>अस्वीकृत सन्देश आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="ReplyToLength200" xml:space="preserve">
     <value>लम्बाइको जवाफ 200 वर्णहरू भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="ReplyToRequired" xml:space="preserve">
     <value>जवाफ आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="RetakeMustBeGreaterThan0" xml:space="preserve">
     <value>पुन: प्राप्त गर्न अनुमति दिइएको ० भन्दा बढी हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="RoleRequired" xml:space="preserve">
     <value>भूमिका आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="SdkKeyLength100" xml:space="preserve">
     <value>Sdk कुञ्जीको लम्बाइ १०० वर्णभन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="SDKKeyRequired" xml:space="preserve">
     <value>Sdk कुञ्जी आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="SdkLength100" xml:space="preserve">
     <value>Sdk गोप्य नाम लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="SdkSecretRequired" xml:space="preserve">
     <value>Sdk गोप्य आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="SectionIdRequired" xml:space="preserve">
     <value>खण्ड पहिचान आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="SectionNameLength" xml:space="preserve">
     <value>खण्ड नाम लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="SectionNameRequired" xml:space="preserve">
     <value>खण्डको नाम आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="SelectFileType" xml:space="preserve">
     <value>कृपया फाइल चयन गर्नुहोस्।</value>
+    <comment/>
   </data>
   <data name="SelectGroup" xml:space="preserve">
     <value>कृपया समूह चयन गर्नुहोस्।</value>
+    <comment/>
   </data>
   <data name="SelectOneCorrectAnswer" xml:space="preserve">
     <value>एकल विकल्प सहितको प्रश्न प्रकारमा एउटा मात्र विकल्प सही हुन सक्छ।</value>
+    <comment/>
   </data>
   <data name="SenderEmailLength200" xml:space="preserve">
     <value>प्रेषक इमेल लम्बाइ 200 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="SenderEmailRequired" xml:space="preserve">
     <value>प्रेषक इमेल आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="SenderName200" xml:space="preserve">
     <value>प्रेषकको नाम लम्बाइ 200 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="SenderNameRequired" xml:space="preserve">
     <value>मेल पोर्ट आवश्यक छ</value>
+    <comment/>
   </data>
   <data name="StartdateEmptyError" xml:space="preserve">
     <value>सुरु मिति खाली हुन सक्दैन</value>
+    <comment/>
   </data>
   <data name="StartDateFormat" xml:space="preserve">
     <value>शुरुवात मिति YYYY-MM-DD ढाँचामा हुनुपर्छ</value>
+    <comment/>
   </data>
   <data name="timeSpanIssue" xml:space="preserve">
     <value>घटनाको अन्त्य मिति घटना सुरु मिति भन्दा ठूलो वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="TitleLenghtIssue" xml:space="preserve">
     <value>शीर्षक लम्बाइ 100 भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="TrainingIdRequired" xml:space="preserve">
     <value>प्रशिक्षण पहिचान आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="UserIDrequired" xml:space="preserve">
     <value>प्रयोगकर्ता आईडी आवश्यक छ</value>
+    <comment/>
   </data>
   <data name="UserNameLength100" xml:space="preserve">
     <value>प्रयोगकर्ता नाम लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="UserNameRequired" xml:space="preserve">
     <value>प्रयोगकर्ता नाम आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="ValidPercentageRange" xml:space="preserve">
     <value>प्रतिशत 0 देखि 100 बीचमा हुनुपर्छ।</value>
+    <comment/>
   </data>
   <data name="ValueCannotBeNullOrEmpty" xml:space="preserve">
     <value>मान शून्य वा खाली हुन सक्दैन</value>
+    <comment/>
   </data>
   <data name="VideoIsRequired" xml:space="preserve">
     <value>पाठको लागि भिडियो आवश्यक छ भिडियो वा रेकर्ड गरिएको भिडियो हो।</value>
+    <comment/>
   </data>
   <data name="ZoomLicenseEmailRequired" xml:space="preserve">
     <value>जुम लाइसेन्स इमेल आवश्यक छ।</value>
+    <comment/>
   </data>
   <data name="ZoomLicenseRequired" xml:space="preserve">
     <value>कृपया जुम इजाजतपत्र चयन गर्नुहोस्।</value>
+    <comment/>
+  </data>
+  <data name="OAuthClientSecretRequired" xml:space="preserve">
+    <value> OAuth ग्राहक गोप्य आवश्यक छ।</value>
+    <comment/>
+  </data>
+  <data name="OAuthClientSecretLength100" xml:space="preserve">
+    <value>OAuth ग्राहक गोप्य लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <comment/>
   </data>
 </root>

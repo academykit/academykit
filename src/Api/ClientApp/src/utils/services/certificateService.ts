@@ -13,6 +13,7 @@ export interface ExternalCertificatePost {
   institute: string;
   duration: number;
   status: CertificateStatus;
+  cost: number;
 }
 
 export enum CertificateStatus {
@@ -75,6 +76,26 @@ export const useUpdateCertificate = () => {
   return useMutation(
     ['update' + api.externalCertificate.add],
     updateCertificate,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([
+          'certificate',
+          api.externalCertificate.add,
+        ]);
+      },
+    }
+  );
+};
+
+const deleteCertificate = ({ id }: { id: string }) => {
+  return httpClient.delete(api.externalCertificate.update(id));
+};
+
+export const useDeleteCertificate = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ['delete' + api.externalCertificate.add],
+    deleteCertificate,
     {
       onSuccess: () => {
         queryClient.invalidateQueries([

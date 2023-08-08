@@ -79,7 +79,7 @@ namespace Lingtren.Infrastructure.Configurations
             catch (Exception e)
             {
                 logger.Error(e, "Error during dashboard hangfire jwt validation process");
-                 httpContext?.Response?.Redirect(_appUrl);
+                httpContext?.Response?.Redirect(_appUrl);
             }
 
             if (setCookie && httpContext != null)
