@@ -864,6 +864,7 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "certificate_delete_success": "証明書は正常に削除されました。",
   "mark_as_attended": "参加済みとしてマーク",
   "physical_name": "身体トレーニング",
   "physical_name_required": "トレーニング名は必須です。",

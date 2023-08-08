@@ -141,9 +141,7 @@ const MyTrainingExternal = () => {
     try {
       await certificateDelete.mutateAsync({ id: deleteCertificateId });
       showNotification({
-        message: updates
-          ? t('training_certificate_edited')
-          : t('training_certificate_added'),
+        message: t('certificate_delete_success'),
       });
       setDeleteCertificate(false);
       setDeleteCertificateId('');

@@ -862,6 +862,7 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "certificate_delete_success": "Certificate deleted successfully.",
   "mark_as_attended": "Mark as Attended",
   "physical_name": "Physical Training",
   "physical_name_required": "Training name is required.",
