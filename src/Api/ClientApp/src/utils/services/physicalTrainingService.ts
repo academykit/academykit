@@ -31,13 +31,20 @@ const reviewAttendance = async ({ data }: { data: IPhysicalReview }) => {
   await httpClient.post(api.physicalTraining.review, data);
 };
 
-export const useReviewAttendance = (courseId: string, lessonId: string) => {
+export const useReviewAttendance = (
+  courseId: string,
+  lessonId: string,
+  userId: string
+) => {
   const queryClient = useQueryClient();
 
   return useMutation(['review'], reviewAttendance, {
     onSuccess: () => {
       queryClient.invalidateQueries([
         api.course.lessonStatDetails(courseId, lessonId, 'page=1&size=12'),
+      ]);
+      queryClient.invalidateQueries([
+        api.course.studentStatDetails(courseId, userId),
       ]);
     },
   });

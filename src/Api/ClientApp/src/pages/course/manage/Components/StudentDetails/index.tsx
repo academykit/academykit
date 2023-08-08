@@ -88,7 +88,8 @@ const StudentLessonDetails = ({
 
   const attendanceReview = useReviewAttendance(
     courseId,
-    slug?.lessonId as string
+    slug?.lessonId as string,
+    studentId
   );
 
   const meetingReport = useGetMeetingReport(
