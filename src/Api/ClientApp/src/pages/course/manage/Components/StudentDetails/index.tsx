@@ -226,7 +226,15 @@ const StudentLessonDetails = ({
       </Modal>
 
       {/* attendance pop-up */}
-      <Modal opened={confirmReview} onClose={toggleReviewed} title={`boii`}>
+      <Modal
+        opened={confirmReview}
+        onClose={toggleReviewed}
+        title={
+          isRejected
+            ? t('leave_message_reject')
+            : `${t('mark_as_attended')}${t('?')}`
+        }
+      >
         {!isRejected ? (
           <Group mt={10}>
             <Button

@@ -29,9 +29,9 @@ const feedBackType = {
   empty: 'not_submitted',
 };
 const physicalType = {
-  true: 'submitted',
-  false: 'not_submitted',
-  empty: 'not_submitted',
+  true: 'attended',
+  false: 'not_attended',
+  empty: 'not_attended',
 };
 
 export const getType = (type: LessonType) => {
