@@ -726,8 +726,8 @@
                 {
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
-                var assignmentquestions = lesson.Assignments.ToList();
-                if(assignmentquestions.Count == default)
+                var assignmentQuestions = lesson.Assignments.ToList();
+                if(assignmentQuestions.Count == default)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("InvalidLessonAssignmentType"));
                 }
@@ -735,13 +735,13 @@
                 var order = 0;
                 foreach(var id in ids)
                 {
-                    var assignmentquestion = assignmentquestions.FirstOrDefault(x => x.Id == id);
-                    if(assignmentquestion != default)
+                    var assignmentQuestion = assignmentQuestions.FirstOrDefault(x => x.Id == id);
+                    if(assignmentQuestion != default)
                     {
-                        assignmentquestion.Order = order;
-                        assignmentquestion.UpdatedBy = currentUserId;
-                        assignmentquestion.UpdatedOn = DateTime.UtcNow;
-                        reorderedAssignment.Add(assignmentquestion);
+                        assignmentQuestion.Order = order;
+                        assignmentQuestion.UpdatedBy = currentUserId;
+                        assignmentQuestion.UpdatedOn = DateTime.UtcNow;
+                        reorderedAssignment.Add(assignmentQuestion);
                         order ++;
                     }
                 }
