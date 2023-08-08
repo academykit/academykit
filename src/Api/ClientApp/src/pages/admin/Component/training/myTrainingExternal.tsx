@@ -12,6 +12,7 @@ import {
   Modal,
   Text,
   TextInput,
+  NumberInput,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { createFormContext, yupResolver } from '@mantine/form';
@@ -83,6 +84,7 @@ const MyTrainingExternal = () => {
       institute: '',
       imageUrl: '',
       range: [],
+      optionalCost: 0,
     },
     validate: yupResolver(schema()),
   });
@@ -98,6 +100,7 @@ const MyTrainingExternal = () => {
         institute: idd?.institute,
         imageUrl: idd?.imageUrl,
         range: [new Date(range[0]), new Date(range[1])],
+        optionalCost: idd?.optionalCost,
       });
     }
   }, [idd]);
@@ -210,6 +213,13 @@ const MyTrainingExternal = () => {
                 placeholder={t('date_range') as string}
                 type="range"
                 {...form.getInputProps('range')}
+              />
+              <NumberInput
+                label={t('cost')}
+                placeholder={t('Optional cost') as string}
+                name="optionalCost"
+                {...form.getInputProps('optionalCost')}
+                min={0}
               />
               <TextInput
                 label={t('location')}
