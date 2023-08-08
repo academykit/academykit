@@ -287,7 +287,7 @@ const MyTrainingExternal = () => {
                           setDeleteCertificate(true);
                         }}
                       >
-                        <IconTrash />
+                        <IconTrash color="red" />
                       </ActionIcon>
                     </>
                   )}
