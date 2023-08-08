@@ -1226,7 +1226,7 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(500)")
                         .HasColumnName("logo_url");
 
-                    b.Property<string>("OrganiationCustomConfiguration")
+                    b.Property<string>("CustomConfiguration")
                         .HasColumnType("VARCHAR(5000)")
                         .HasColumnName("custom_configuration");
 
