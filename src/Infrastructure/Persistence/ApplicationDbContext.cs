@@ -54,7 +54,7 @@
         public DbSet<FeedbackSubmission> FeedbackSubmissions { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Logs> Logs { get; set; }
-       public DbSet<PhysicalLessonReview> PhysicalLessonReviews { get; set; }
+        public DbSet<PhysicalLessonReview> PhysicalLessonReviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -103,8 +103,8 @@
                     Id = new Guid("f41a902f-fabd-4749-ac28-91137f685cb8"),
                     SdkKey = "sdk key value",
                     SdkSecret = "sdk secret value",
-                    OAuthAccountId="OAuth account id",
-                    OAuthClientId="OAuth client id",
+                    OAuthAccountId = "OAuth account id",
+                    OAuthClientId = "OAuth client id",
                     OAuthClientSecret = "OAuth client secret",
                     IsRecordingEnabled = false,
                     CreatedBy = userId,
@@ -128,6 +128,32 @@
                     UpdatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
                 }
             );
+            builder.Entity<Level>().HasData(new Level
+            {
+                Id = new Guid("7e6ff101-cfa2-4aec-bd25-42780be476c3"),
+                Name = "Beginner",
+                Slug = "beginner",
+                IsActive = false,
+                CreatedBy = userId,
+                CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004)
+            },
+            new Level
+            { 
+                Id = new Guid("7df8d749-6172-482b-b5a1-016fbe478795"),
+                Name = "Intermediate",
+                Slug = "intermediate",
+                IsActive = false,
+                CreatedBy = userId,
+                CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004)
+            },
+            new Level{
+                  Id = new Guid("9be84cd8-1566-4af5-8442-61cb1796dc46"),
+                Name = "Advanced",
+                Slug = "advanced",
+                IsActive = false,
+                CreatedBy = userId,
+                CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004)
+            });
             builder.Entity<Setting>().HasData(
                 new Setting
                 {
