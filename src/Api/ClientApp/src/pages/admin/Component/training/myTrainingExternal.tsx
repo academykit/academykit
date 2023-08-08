@@ -17,13 +17,14 @@ import { DatePickerInput } from '@mantine/dates';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconDownload, IconEdit, IconEye } from '@tabler/icons';
+import { IconDownload, IconEdit, IconEye, IconTrash } from '@tabler/icons';
 import downloadImage from '@utils/downloadImage';
 import { UserRole } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import {
   CertificateStatus,
   useAddCertificate,
+  useDeleteCertificate,
   useGetExternalCertificate,
   useUpdateCertificate,
 } from '@utils/services/certificateService';
@@ -35,6 +36,7 @@ import * as Yup from 'yup';
 import useCustomForm from '@hooks/useCustomForm';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import moment from 'moment';
+import DeleteModal from '@components/Ui/DeleteModal';
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
 
@@ -66,8 +68,11 @@ const MyTrainingExternal = () => {
   const addCertificate = useAddCertificate();
   const certificateList = useGetExternalCertificate(id ? false : true);
   const update = useUpdateCertificate();
+  const certificateDelete = useDeleteCertificate();
   const [idd, setIdd] = useState<any>();
   const [updates, setUpdates] = useState(false);
+  const [deleteCertificate, setDeleteCertificate] = useState(false);
+  const [deleteCertificateId, setDeleteCertificateId] = useState('');
   const { t } = useTranslation();
 
   const form = useForm({
@@ -132,10 +137,38 @@ const MyTrainingExternal = () => {
     setUpdates(() => false);
   };
 
+  const handleDelete = async () => {
+    try {
+      await certificateDelete.mutateAsync({ id: deleteCertificateId });
+      showNotification({
+        message: updates
+          ? t('training_certificate_edited')
+          : t('training_certificate_added'),
+      });
+      setDeleteCertificate(false);
+      setDeleteCertificateId('');
+    } catch (error) {
+      form.reset();
+      const err = errorType(error);
+      showNotification({
+        color: 'red',
+        message: err,
+      });
+      setDeleteCertificate(false);
+      setDeleteCertificateId('');
+    }
+  };
+
   const auth = useAuth();
 
   return (
     <div>
+      <DeleteModal
+        title={`Delete this certificate?`}
+        open={deleteCertificate}
+        onClose={() => setDeleteCertificate(false)}
+        onConfirm={handleDelete}
+      />
       <Modal
         title={t('add_certificate')}
         opened={showConfirmation}
@@ -237,15 +270,26 @@ const MyTrainingExternal = () => {
                     </Badge>
                   </Text>
                   {x.status !== CertificateStatus.Approved && (
-                    <ActionIcon
-                      ml={5}
-                      onClick={() => {
-                        setIdd(x);
-                        setUpdates(true);
-                      }}
-                    >
-                      <IconEdit />
-                    </ActionIcon>
+                    <>
+                      <ActionIcon
+                        ml={5}
+                        onClick={() => {
+                          setIdd(x);
+                          setUpdates(true);
+                        }}
+                      >
+                        <IconEdit />
+                      </ActionIcon>
+                      <ActionIcon
+                        ml={5}
+                        onClick={() => {
+                          setDeleteCertificateId(x.id);
+                          setDeleteCertificate(true);
+                        }}
+                      >
+                        <IconTrash />
+                      </ActionIcon>
+                    </>
                   )}
                 </Flex>
                 {/* <Text mt={5}>

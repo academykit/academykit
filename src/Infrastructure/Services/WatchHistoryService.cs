@@ -223,6 +223,15 @@
                             UpdatedBy = currentUserId,
                             UpdatedOn = currentTimeStamp
                         };
+
+                        if (lesson.Type == LessonType.Physical)
+                        {
+                            var physicalLessonReview = await _unitOfWork.GetRepository<PhysicalLessonReview>().GetFirstOrDefaultAsync(predicate: p => p.UserId == userId && p.LessonId == lesson.Id).ConfigureAwait(false);
+                            physicalLessonReview.IsReviewed = true;
+                            physicalLessonReview.HasAttended = true;
+                            _unitOfWork.GetRepository<PhysicalLessonReview>().Update(physicalLessonReview);
+                        }
+
                         courseEnrollment.Percentage = courseEnrollment.Percentage + (100 / lessonCount);//for updating watch percentage when passed by admin
                         courseEnrollment.UpdatedOn = DateTime.UtcNow;
                         courseEnrollment.UpdatedBy = currentUserId;
