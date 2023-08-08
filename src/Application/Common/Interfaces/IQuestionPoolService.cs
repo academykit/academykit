@@ -2,7 +2,6 @@
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Domain.Entities;
-    using Org.BouncyCastle.Crypto;
 
     public interface IQuestionPoolService : IGenericService<QuestionPool, BaseSearchCriteria>
     {
