@@ -864,6 +864,11 @@
       "AWS_VideoBucket": "भिडियो संग्रह"
     }
   },
+  "certificate_delete_success": "प्रमाणपत्र सफलतापूर्वक मेटिएको छ।",
+  "mark_as_attended": "सहभागी भएको मान गर्नुहोस्",
+  "physical_name": "भौतिक प्रशिक्षण",
+  "physical_name_required": "प्रशिक्षणको नाम आवश्यक छ।",
+  "physical_name_description": "भौतिक प्रशिक्षणको लागि विवरण",
   "question_pool_created": "प्रश्नको ठूलो समूहहरू पहिले बनाइएको हुनुपर्छ र ती अवधिमा विद्यामान हुनुपर्छ ",
   "question_pool_href": "'प्रश्नको समूहहरू'",
   "section": "खण्डको भित्र। ",

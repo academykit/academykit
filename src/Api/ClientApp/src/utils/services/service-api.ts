@@ -125,6 +125,11 @@ export const api = {
         ? `/api/course/${courseId}/lesson/detail?lessonIdentity=${lessonId}`
         : `/api/course/${courseId}/lesson/detail`,
   },
+  physicalTraining: {
+    attendance: (identity: string) =>
+      `/api/PhysicalLesson/Attendance?Idenity=${identity}`,
+    review: '/api/PhysicalLesson/Review',
+  },
   tags: {
     list: '/api/tag',
   },

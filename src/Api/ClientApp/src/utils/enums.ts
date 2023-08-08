@@ -54,6 +54,7 @@ export enum LessonType {
   LiveClass = 5,
   RecordedVideo = 6,
   Feedback = 7,
+  Physical = 8,
 }
 
 export enum CourseStatus {

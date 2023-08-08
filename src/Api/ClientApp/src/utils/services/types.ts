@@ -101,3 +101,8 @@ export interface ILessonMeeting extends ILessons {
   };
   description?: string;
 }
+
+export interface IPhysicalTraining extends ILessons {
+  name: string;
+  description: string;
+}

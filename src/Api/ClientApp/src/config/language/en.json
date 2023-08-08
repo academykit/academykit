@@ -862,6 +862,11 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "certificate_delete_success": "Certificate deleted successfully.",
+  "mark_as_attended": "Mark as Attended",
+  "physical_name": "Physical Training",
+  "physical_name_required": "Training name is required.",
+  "physical_name_description": "Description for physical training",
   "hangfire": "Background Jobs",
   "question_pool_created": "Question pools should be created in advance and be located within the ",
   "question_pool_href": "'Question Pools'",

@@ -4,6 +4,7 @@ import AddExam from '@components/Course/Lesson/AddExam';
 import AddFeedback from '@components/Course/Lesson/AddFeedback';
 import AddLecture from '@components/Course/Lesson/AddLecture';
 import AddMeeting from '@components/Course/Lesson/AddMeeting';
+import AddPhysical from '@components/Course/Lesson/AddPhysical';
 import DeleteModal from '@components/Ui/DeleteModal';
 import { Button, createStyles, Grid, Group, Text } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
@@ -18,6 +19,7 @@ import {
   ILessonFile,
   ILessonMCQ,
   ILessonMeeting,
+  IPhysicalTraining,
 } from '@utils/services/types';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -244,6 +246,17 @@ const LessonEditCase = ({
           isEditing={true}
           setAddLessonClick={setAddLessonClick}
           setAddState={setAddState}
+          setIsEditing={setIsEditing}
+        />
+      );
+    case LessonType.Physical:
+      return (
+        <AddPhysical
+          sectionId={sectionId}
+          item={item as IPhysicalTraining}
+          setAddState={setAddState}
+          isEditing={true}
+          setAddLessonClick={setAddLessonClick}
           setIsEditing={setIsEditing}
         />
       );
