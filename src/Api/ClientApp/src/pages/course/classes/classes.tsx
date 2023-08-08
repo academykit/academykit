@@ -259,7 +259,7 @@ const Classes = () => {
                 <PhysicalTrainingDetail
                   name={courseLesson.data.name}
                   id={courseLesson.data.id}
-                  hasFeedbackSubmitted={courseLesson.data.hasFeedbackSubmitted}
+                  hasAttended={courseLesson.data.hasFeedbackSubmitted} // need to change this
                   startDate={courseLesson.data.startDate}
                 />
               </Box>

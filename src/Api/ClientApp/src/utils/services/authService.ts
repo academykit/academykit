@@ -108,7 +108,7 @@ export const useForgotPassword = () => {
   );
 };
 
-interface ResponseData {
+export interface ResponseData {
   data: string;
   message: string;
 }
