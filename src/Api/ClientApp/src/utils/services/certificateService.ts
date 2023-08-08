@@ -86,6 +86,26 @@ export const useUpdateCertificate = () => {
   );
 };
 
+const deleteCertificate = ({ id }: { id: string }) => {
+  return httpClient.delete(api.externalCertificate.update(id));
+};
+
+export const useDeleteCertificate = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ['delete' + api.externalCertificate.add],
+    deleteCertificate,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([
+          'certificate',
+          api.externalCertificate.add,
+        ]);
+      },
+    }
+  );
+};
+
 const getUserCertificate = (id?: string) => {
   return httpClient.get<GetExternalCertificate[]>(
     api.externalCertificate.user(id)
