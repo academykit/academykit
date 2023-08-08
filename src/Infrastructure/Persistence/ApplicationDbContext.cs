@@ -54,7 +54,7 @@
         public DbSet<FeedbackSubmission> FeedbackSubmissions { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Logs> Logs { get; set; }
-        public DbSet<PhysicalLessonReview> PhysicalLessonReviews { get; set; }
+       public DbSet<PhysicalLessonReview> PhysicalLessonReviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
