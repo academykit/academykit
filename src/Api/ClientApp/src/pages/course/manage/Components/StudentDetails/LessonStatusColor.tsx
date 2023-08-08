@@ -28,6 +28,11 @@ const feedBackType = {
   false: 'not_submitted',
   empty: 'not_submitted',
 };
+const physicalType = {
+  true: 'submitted',
+  false: 'not_submitted',
+  empty: 'not_submitted',
+};
 
 export const getType = (type: LessonType) => {
   switch (type) {
@@ -45,6 +50,8 @@ export const getType = (type: LessonType) => {
       return liveSessionType;
     case LessonType.Feedback:
       return feedBackType;
+    case LessonType.Physical:
+      return physicalType;
     default:
       return examType;
   }

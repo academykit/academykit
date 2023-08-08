@@ -16,7 +16,7 @@ const PhysicalTrainingDetail = ({
 }: {
   name: string;
   id: string;
-  hasAttended: boolean;
+  hasAttended: boolean | null;
   startDate: string;
 }) => {
   const { id: slug } = useParams();

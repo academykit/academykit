@@ -19,3 +19,26 @@ export const usePostAttendance = (slug: string) => {
     },
   });
 };
+
+export interface IPhysicalReview {
+  identity: string;
+  isPassed: boolean;
+  message: string;
+  userId: string;
+}
+
+const reviewAttendance = async ({ data }: { data: IPhysicalReview }) => {
+  await httpClient.post(api.physicalTraining.review, data);
+};
+
+export const useReviewAttendance = (courseId: string, lessonId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation(['review'], reviewAttendance, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([
+        api.course.lessonStatDetails(courseId, lessonId, 'page=1&size=12'),
+      ]);
+    },
+  });
+};
