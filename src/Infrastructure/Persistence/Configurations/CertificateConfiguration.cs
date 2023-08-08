@@ -17,6 +17,7 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Location).HasColumnName("location").HasColumnType("VARCHAR(100)").IsRequired(false);
             builder.Property(x => x.Institute).HasColumnName("institute").HasColumnType("VARCHAR(100)").IsRequired(false);
             builder.Property(x => x.Duration).HasColumnName("duration").IsRequired(false);
+            builder.Property(x => x.OptionalCost).HasColumnName("optional_cost").HasColumnType("DECIMAL(10,2)").IsRequired().HasDefaultValue(0);
             builder.Property(x => x.Status).HasColumnName("status");
             builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
             builder.Property(x => x.CreatedOn).HasColumnName("created_on").IsRequired().HasColumnType("DATETIME");

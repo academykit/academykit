@@ -1,6 +1,5 @@
 namespace Lingtren.Infrastructure.Services
 {
-    using Amazon.S3.Model;
     using AngleSharp.Text;
     using Application.Common.Dtos;
     using Application.Common.Models.ResponseModels;
@@ -20,12 +19,9 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using RestSharp;
     using System;
-    using System.Collections;
     using System.Collections.Immutable;
     using System.Data;
-    using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -341,23 +337,19 @@ namespace Lingtren.Infrastructure.Services
                 sections = sections.Where(x => x.Status != CourseStatus.Published).ToList();
                 lessons = lessons.Where(x => x.Status != CourseStatus.Published).ToList();
             }
-            if (isSuperAdminOrAdminAccess)
-            {
-                course.Status = CourseStatus.Published;
-            }
-            else { course.Status = model.Status;}
+            course.Status = isSuperAdminOrAdminAccess ? CourseStatus.Published : model.Status;
             course.UpdatedBy = currentUserId;
             course.UpdatedOn = currentTimeStamp;
 
             sections.ForEach(x =>
             {
-                x.Status = model.Status;
+                x.Status = isSuperAdminOrAdminAccess ? CourseStatus.Published : model.Status;
                 x.UpdatedBy = currentUserId;
                 x.UpdatedOn = currentTimeStamp;
             });
             lessons.ForEach(x =>
             {
-                x.Status = model.Status;
+                x.Status = isSuperAdminOrAdminAccess ? CourseStatus.Published : model.Status;
                 x.UpdatedBy = currentUserId;
                 x.UpdatedOn = currentTimeStamp;
             });

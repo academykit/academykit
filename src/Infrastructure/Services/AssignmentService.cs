@@ -704,6 +704,55 @@
             }
         }
 
+        /// <summary>
+        /// reorder the assignemnt questions
+        /// </summary>
+        /// <param name="currentUserId">current user id</param>
+        /// <param name="lessonIdentity">lesson identity</param>
+        /// <param name="ids">list of assignment question id</param>
+        /// <returns>Task completed</returns>
+        public async Task ReorderAssignmentQuestionAsync(Guid currentUserId, string lessonIdentity, IList<Guid> ids)
+        {
+            await ExecuteAsync(async () =>
+            {
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == lessonIdentity || p.Slug.ToLower().Trim() == lessonIdentity.ToString().Trim(),
+                    include:src =>src.Include(x=>x.Assignments)).ConfigureAwait(false);
+                if(lesson == default)
+                {
+                    throw new EntityNotFoundException("LessonNotFound");
+                }
+                var hasAuthority = await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId,lesson.CourseId.ToString(),TrainingTypeEnum.Course).ConfigureAwait(false);
+                if (!hasAuthority)
+                {
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
+                }
+                var assignmentQuestions = lesson.Assignments.ToList();
+                if(assignmentQuestions.Count == default)
+                {
+                    throw new EntityNotFoundException(_localizer.GetString("InvalidLessonAssignmentType"));
+                }
+                var reorderedAssignment = new List<Assignment>();
+                var order = 0;
+                foreach(var id in ids)
+                {
+                    var assignmentQuestion = assignmentQuestions.FirstOrDefault(x => x.Id == id);
+                    if(assignmentQuestion != default)
+                    {
+                        assignmentQuestion.Order = order;
+                        assignmentQuestion.UpdatedBy = currentUserId;
+                        assignmentQuestion.UpdatedOn = DateTime.UtcNow;
+                        reorderedAssignment.Add(assignmentQuestion);
+                        order ++;
+                    }
+                }
+                if(reorderedAssignment.Count != default)
+                {
+                    _unitOfWork.GetRepository<Assignment>().Update(reorderedAssignment);
+                    await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);                
+                }
+            });
+        }
+
         #endregion Assignment Review
 
         #region Private Methods

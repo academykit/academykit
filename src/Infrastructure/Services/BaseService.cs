@@ -292,11 +292,19 @@
                 case TrainingTypeEnum.Course:
                     var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == identity || p.Slug == identity,
                         include: src => src.Include(x => x.CourseTeachers)).ConfigureAwait(false);
+                    if(course == default)
+                    {
+                        throw new EntityNotFoundException(_localizer.GetString("CourseNotFound"));
+                    }
                     isValidUser = course.CourseTeachers.Any(x => x.UserId == currentuserId) || course.CreatedBy == currentuserId;
                     break;
                 case TrainingTypeEnum.QuestionPool:
                     var questionpool = await _unitOfWork.GetRepository<QuestionPool>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == identity || p.Slug == identity,
                         include: src => src.Include(x => x.QuestionPoolTeachers)).ConfigureAwait(false);
+                    if(questionpool == default)
+                    {
+                        throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
+                    }
                     isValidUser = questionpool.QuestionPoolTeachers.Any(x => x.UserId == currentuserId) || questionpool.CreatedBy == currentuserId;
                     break;
             }

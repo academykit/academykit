@@ -3,6 +3,7 @@ using System;
 using Lingtren.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230808041855_additionalfields")]
+    partial class additionalfields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,7 +92,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("Assignments", (string)null);
+                    b.ToTable("Assignments");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.AssignmentAttachment", b =>
@@ -153,7 +156,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("AssignmentAttachments", (string)null);
+                    b.ToTable("AssignmentAttachments");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.AssignmentQuestionOption", b =>
@@ -211,7 +214,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("AssignmentQuestionOptions", (string)null);
+                    b.ToTable("AssignmentQuestionOptions");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.AssignmentReview", b =>
@@ -274,7 +277,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AssignmentReviews", (string)null);
+                    b.ToTable("AssignmentReviews");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.AssignmentSubmission", b =>
@@ -346,7 +349,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AssignmentSubmissions", (string)null);
+                    b.ToTable("AssignmentSubmissions");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.AssignmentSubmissionAttachment", b =>
@@ -404,7 +407,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("AssignmentSubmissionAttachments", (string)null);
+                    b.ToTable("AssignmentSubmissionAttachments");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Certificate", b =>
@@ -478,7 +481,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Certificates", (string)null);
+                    b.ToTable("Certificates");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Comment", b =>
@@ -532,7 +535,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.CommentReply", b =>
@@ -586,7 +589,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("CommentReplies", (string)null);
+                    b.ToTable("CommentReplies");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Course", b =>
@@ -674,7 +677,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("LevelId");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.CourseCertificate", b =>
@@ -735,7 +738,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("CourseCertificate", (string)null);
+                    b.ToTable("CourseCertificate");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.CourseEnrollment", b =>
@@ -841,7 +844,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CourseEnrollments", (string)null);
+                    b.ToTable("CourseEnrollments");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.CourseTag", b =>
@@ -891,7 +894,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("CourseTags", (string)null);
+                    b.ToTable("CourseTags");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.CourseTeacher", b =>
@@ -939,7 +942,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CourseTeachers", (string)null);
+                    b.ToTable("CourseTeachers");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Department", b =>
@@ -991,7 +994,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Departments", (string)null);
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Feedback", b =>
@@ -1054,7 +1057,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("Feedbacks", (string)null);
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.FeedbackQuestionOption", b =>
@@ -1106,7 +1109,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("FeedbackId");
 
-                    b.ToTable("FeedbackQuestionOptions", (string)null);
+                    b.ToTable("FeedbackQuestionOptions");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.FeedbackSubmission", b =>
@@ -1176,7 +1179,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FeedbackSubmissions", (string)null);
+                    b.ToTable("FeedbackSubmissions");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.GeneralSetting", b =>
@@ -1243,7 +1246,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("GeneralSettings", (string)null);
+                    b.ToTable("GeneralSettings");
 
                     b.HasData(
                         new
@@ -1310,7 +1313,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Groups", (string)null);
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.GroupFile", b =>
@@ -1371,7 +1374,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("GroupFiles", (string)null);
+                    b.ToTable("GroupFiles");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.GroupMember", b =>
@@ -1425,7 +1428,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("GroupMembers", (string)null);
+                    b.ToTable("GroupMembers");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Lesson", b =>
@@ -1560,7 +1563,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("SectionId");
 
-                    b.ToTable("Lessons", (string)null);
+                    b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Level", b =>
@@ -1612,7 +1615,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Levels", (string)null);
+                    b.ToTable("Levels");
 
                     b.HasData(
                         new
@@ -1674,7 +1677,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Logs", (string)null);
+                    b.ToTable("Logs");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Meeting", b =>
@@ -1732,7 +1735,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ZoomLicenseId");
 
-                    b.ToTable("Meetings", (string)null);
+                    b.ToTable("Meetings");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.MeetingReport", b =>
@@ -1785,7 +1788,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("MeetingReports", (string)null);
+                    b.ToTable("MeetingReports");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.PhysicalLessonReview", b =>
@@ -1849,7 +1852,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PhysicalLessonReviews", (string)null);
+                    b.ToTable("PhysicalLessonReviews");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Question", b =>
@@ -1886,6 +1889,10 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("varchar(500)")
                         .HasColumnName("name");
 
+                    b.Property<int>("Order")
+                        .HasColumnType("int")
+                        .HasColumnName("order");
+
                     b.Property<int>("Type")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -1905,7 +1912,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.QuestionOption", b =>
@@ -1963,7 +1970,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("QuestionOptions", (string)null);
+                    b.ToTable("QuestionOptions");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.QuestionPool", b =>
@@ -2015,7 +2022,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("QuestionPools", (string)null);
+                    b.ToTable("QuestionPools");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.QuestionPoolQuestion", b =>
@@ -2035,10 +2042,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("DATETIME")
                         .HasColumnName("created_on");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int")
-                        .HasColumnName("order");
 
                     b.Property<string>("QuestionId")
                         .IsRequired()
@@ -2069,7 +2072,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("QuestionPoolId");
 
-                    b.ToTable("QuestionPoolQuestions", (string)null);
+                    b.ToTable("QuestionPoolQuestions");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.QuestionPoolTeacher", b =>
@@ -2123,7 +2126,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("QuestionPoolTeachers", (string)null);
+                    b.ToTable("QuestionPoolTeachers");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.QuestionSet", b =>
@@ -2217,7 +2220,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("QuestionSets", (string)null);
+                    b.ToTable("QuestionSets");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.QuestionSetQuestion", b =>
@@ -2277,7 +2280,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("QuestionSetId");
 
-                    b.ToTable("QuestionSetQuestions", (string)null);
+                    b.ToTable("QuestionSetQuestions");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.QuestionSetResult", b =>
@@ -2341,7 +2344,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("QuestionSetResults", (string)null);
+                    b.ToTable("QuestionSetResults");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.QuestionSetSubmission", b =>
@@ -2408,7 +2411,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("QuestionSetSubmissions", (string)null);
+                    b.ToTable("QuestionSetSubmissions");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.QuestionSetSubmissionAnswer", b =>
@@ -2470,7 +2473,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("QuestionSetSubmissionId");
 
-                    b.ToTable("QuestionSetSubmissionAnswers", (string)null);
+                    b.ToTable("QuestionSetSubmissionAnswers");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.QuestionTag", b =>
@@ -2520,7 +2523,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("QuestionTags", (string)null);
+                    b.ToTable("QuestionTags");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.RefreshToken", b =>
@@ -2585,7 +2588,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.SMTPSetting", b =>
@@ -2662,7 +2665,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("SMTPSettings", (string)null);
+                    b.ToTable("SMTPSettings");
 
                     b.HasData(
                         new
@@ -2756,7 +2759,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Sections", (string)null);
+                    b.ToTable("Sections");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Setting", b =>
@@ -2773,7 +2776,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Key");
 
-                    b.ToTable("Settings", (string)null);
+                    b.ToTable("Settings");
 
                     b.HasData(
                         new
@@ -2892,7 +2895,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Signature", (string)null);
+                    b.ToTable("Signature");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Tag", b =>
@@ -2944,7 +2947,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Tags", (string)null);
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.User", b =>
@@ -3068,7 +3071,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
 
                     b.HasData(
                         new
@@ -3125,7 +3128,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("VideoQueue", (string)null);
+                    b.ToTable("VideoQueue");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.WatchHistory", b =>
@@ -3193,7 +3196,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("WatchHistories", (string)null);
+                    b.ToTable("WatchHistories");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.ZoomLicense", b =>
@@ -3249,7 +3252,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("ZoomLicenses", (string)null);
+                    b.ToTable("ZoomLicenses");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.ZoomSetting", b =>
@@ -3329,7 +3332,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("ZoomSettings", (string)null);
+                    b.ToTable("ZoomSettings");
 
                     b.HasData(
                         new
