@@ -10,7 +10,7 @@ import {
   useGetCourseLesson,
   useUpdateLesson,
 } from '@utils/services/courseService';
-import { ILessonMeeting } from '@utils/services/types';
+import { IPhysicalTraining } from '@utils/services/types';
 import moment from 'moment';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -23,10 +23,10 @@ const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
     name: Yup.string().required(t('physical_name_required') as string),
-    meetingStartDate: Yup.string()
+    physicalStartDate: Yup.string()
       .required(t('start_date_required') as string)
       .typeError(t('start_date_required') as string),
-    meetingStartTime: Yup.string()
+    physicalStartTime: Yup.string()
       .required(t('start_time_required') as string)
       .typeError(t('start_time_required') as string),
   });
@@ -41,7 +41,7 @@ const AddPhysical = ({
   setIsEditing,
 }: {
   setAddState: React.Dispatch<React.SetStateAction<string>>;
-  item?: ILessonMeeting;
+  item?: IPhysicalTraining;
   isEditing?: boolean;
   sectionId?: string;
   setAddLessonClick: React.Dispatch<React.SetStateAction<boolean>>;
@@ -60,8 +60,8 @@ const AddPhysical = ({
   const form = useForm({
     initialValues: {
       name: '',
-      meetingStartDate: new Date(),
-      meetingStartTime: moment(new Date()).format('HH:mm'), // adding current time as default
+      physicalStartDate: new Date(),
+      physicalStartTime: moment(new Date()).format('HH:mm'), // adding current time as default
       description: '',
     },
     validate: yupResolver(schema()),
@@ -77,71 +77,60 @@ const AddPhysical = ({
   useEffect(() => {
     if (lessonDetails.isSuccess && isEditing) {
       const data = lessonDetails.data;
-      const startDateTime = moment(data?.meeting?.startDate + 'Z')
+      const startDateTime = moment(data.startDate + 'Z')
         .local()
         .toDate();
 
       form.setValues({
         name: data?.name ?? '',
-        meetingStartDate: startDateTime,
-        // meetingStartTime: startDateTime.toTimeString(),
-        meetingStartTime: moment(startDateTime).format('HH:mm'),
+        physicalStartDate: startDateTime,
+        physicalStartTime: moment(startDateTime).format('HH:mm'),
         description: data?.description ?? '',
       });
     }
   }, [lessonDetails.isSuccess]);
 
   useEffect(() => {
-    const { meetingStartTime, meetingStartDate } = form.values;
+    const { physicalStartTime, physicalStartDate } = form.values;
 
-    if (meetingStartTime && meetingStartDate) {
-      const date = getDateTime(meetingStartDate, meetingStartTime);
+    if (physicalStartTime && physicalStartDate) {
+      const date = getDateTime(physicalStartDate, physicalStartTime);
 
       setDateTime(() => date.utcDateTime);
     }
   }, [form.values]);
 
   const handleSubmit = async (values: any) => {
-    // const time = new Date(values?.meetingStartTime).toLocaleTimeString();
-    // const date = new Date(values?.meetingStartDate).toLocaleDateString();
-    const time = moment(values?.meetingStartTime, 'HH:mm').format('HH:mm');
-    const date = moment(values?.meetingStartDate, 'MM/DD/YYYY').format(
+    const time = moment(values?.physicalStartTime, 'HH:mm').format('HH:mm');
+    const date = moment(values?.physicalStartDate, 'MM/DD/YYYY').format(
       'MM/DD/YYYY'
     );
 
-    const meeting = {
-      ...values,
-      meetingStartDate: isEditing
-        ? // ? new Date(date + " " + time)
-          moment(date + ' ' + time, 'MM/DD/YYYY HH:mm').toDate()
-        : new Date(dateTime).toISOString(),
-    };
-
-    delete meeting.meetingStartTime;
-
     try {
+      const startDate = isEditing
+        ? moment(date + ' ' + time, 'MM/DD/YYYY HH:mm').toDate()
+        : new Date(dateTime).toISOString();
+
       if (isEditing) {
         await updateLesson.mutateAsync({
-          meeting,
+          startDate: startDate,
           name: values.name,
           courseId: slug,
-          type: LessonType.LiveClass,
+          type: LessonType.Physical,
           lessonIdentity: item?.id,
           sectionIdentity: sectionId,
-          isMandatory: values.isMandatory,
           description: values.description,
-        } as ILessonMeeting);
+        } as IPhysicalTraining);
         setIsEditing(false);
       } else {
         await lesson.mutateAsync({
-          meeting,
+          startDate: startDate,
           name: values.name,
           courseId: slug,
-          type: LessonType.LiveClass,
+          type: LessonType.Physical,
           sectionIdentity: sectionId,
-          isMandatory: values.isMandatory,
           description: values.description,
-        } as ILessonMeeting);
+        } as IPhysicalTraining);
       }
       showNotification({
         message: `${t('capital_lesson')} ${
@@ -178,12 +167,12 @@ const AddPhysical = ({
           placeholder={t('pick_date') as string}
           label={t('start_date')}
           withAsterisk
-          {...form.getInputProps('meetingStartDate')}
+          {...form.getInputProps('physicalStartDate')}
         />
         <TimeInput
           label={t('start_time')}
           withAsterisk
-          {...form.getInputProps('meetingStartTime')}
+          {...form.getInputProps('physicalStartTime')}
         />
       </Group>
 
