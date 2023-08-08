@@ -6,7 +6,9 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
+    using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Localization;
+    using Lingtren.Infrastructure.Services;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
@@ -17,14 +19,23 @@ namespace Lingtren.Api.Controllers
         private readonly ILessonService _lessonService;
         private readonly IValidator<LessonRequestModel> _validator;
         private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
+        private readonly IAssignmentService _assignmentService;
+        private readonly IQuestionSetService _questionSetService;
+        private readonly IFeedbackService _feedbackService;
         public LessonController(
             ILessonService lessonService,
             IValidator<LessonRequestModel> validator,
-            IStringLocalizer<ExceptionLocalizer> localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer,
+            IAssignmentService assignmentService,
+            IQuestionSetService questionSetService,
+            IFeedbackService feedbackService)
         {
             _lessonService = lessonService;
             _validator = validator;
             _localizer = localizer;
+            _assignmentService = assignmentService;
+            _questionSetService = questionSetService;
+            _feedbackService = feedbackService;
         }
 
         /// <summary>
@@ -143,5 +154,30 @@ namespace Lingtren.Api.Controllers
             var report = await _lessonService.GetMeetingReportAsync(identity, lessonidentity, userId, CurrentUser.Id).ConfigureAwait(false);
             return report;
         }
+
+        /// <summary>
+        /// reorder assignment questions
+        /// </summary>
+        /// <param name="lessonIdentity">lesson id or slug</param>
+        /// <param name="ids">list of question ids in lesson</param>
+        /// <returns>task completed</returns>
+        [HttpPost("Reorder")]
+        public async Task<IActionResult> Reorder(string lessonIdentity,LessonType lessonType,List<Guid> ids)
+        {
+            switch(lessonType)
+            {
+                case LessonType.Assignment:
+                    await _assignmentService.ReorderAssignmentQuestionAsync(CurrentUser.Id, lessonIdentity, ids);
+                    break;
+                case LessonType.Exam:
+                    await _questionSetService.ReorderQuestionsetQuestionsAsync(CurrentUser.Id,lessonIdentity,ids).ConfigureAwait(false);
+                    break;
+                case LessonType.Feedback:
+                    await _feedbackService.ReorderFeedbackQuestionsAsync(CurrentUser.Id,lessonIdentity,ids).ConfigureAwait (false);
+                    break;
+            } 
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("AssignmentUpdatedSuccessfully") });
+        }
+
     }
 }

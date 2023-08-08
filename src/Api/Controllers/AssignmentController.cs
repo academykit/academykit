@@ -206,7 +206,7 @@
         /// </summary>
         /// <param name="lessonIdentity">the lesson id or slug</param>
         /// <param name="model"></param>
-        /// <returns></returns>
+        /// <returns>task completed</returns>
         [HttpDelete("{lessonIdentity}/review/{id}")]
         public async Task<IActionResult> DeleteReviewAsync(string lessonIdentity, Guid id)
         {

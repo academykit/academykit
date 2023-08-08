@@ -66,5 +66,15 @@
         /// <param name="currentUserId">the current user id</param>
         /// <returns>the instance of <see cref="QuestionSetUserResultResponseModel"</returns>
         Task<QuestionSetUserResultResponseModel> GetResultDetail(string identity, Guid questionSetSubmissionId, Guid currentUserId);
+
+        /// <summary>
+        /// Handel to reorder questionset question
+        /// </summary>
+        /// <param name="lessonIdentity">Lesson id or slug</param>
+        /// <param name="currentUserId">current user id</param>
+        /// <param name="ids">list of question set question id</param>
+        /// <returns>Task completed</returns>
+
+        Task ReorderQuestionsetQuestionsAsync(Guid currentUserId, string lessonIdentity, List<Guid> ids);
     }
 }

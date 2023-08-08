@@ -4,6 +4,7 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
+    using Org.BouncyCastle.Crypto;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -71,5 +72,14 @@
         /// <param name="currentUserId"></param>
         /// <returns></returns>
         Task DeleteReviewAsync(string lessonIdentity, Guid id, Guid currentUserId);
+
+        /// <summary>
+        /// reorder the assignemnt questions
+        /// </summary>
+        /// <param name="currentUserId">current user id</param>
+        /// <param name="lessonIdentity">lesson identity</param>
+        /// <param name="ids">list of assignment question id</param>
+        /// <returns>Task completed</returns>
+        Task ReorderAssignmentQuestionAsync(Guid currentUserId,string lessonIdentity,IList<Guid> ids);
     }
 }

@@ -115,7 +115,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 lesson = await GetCurrentLesson(currentUserId, course).ConfigureAwait(false);
             }
-
+            var responseModel = new LessonResponseModel(lesson);
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
             var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
 
@@ -146,6 +146,8 @@ namespace Lingtren.Infrastructure.Services
                 lesson.Meeting = new Meeting();
                 lesson.Meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == lesson.MeetingId).ConfigureAwait(false);
+                responseModel.ZoomId = lesson.Meeting.ZoomLicenseId.ToString();
+                responseModel.Password = lesson.Meeting.Passcode;
             }
 
             bool? hasResult = null;
@@ -228,7 +230,6 @@ namespace Lingtren.Infrastructure.Services
                 predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
                 ).ConfigureAwait(false);
 
-            var responseModel = new LessonResponseModel(lesson);
             if (!string.IsNullOrEmpty(responseModel.VideoUrl))
             {
                 responseModel.VideoUrl = await _fileServerService.GetFilePresignedUrl(responseModel.VideoUrl).ConfigureAwait(false);
@@ -251,7 +252,6 @@ namespace Lingtren.Infrastructure.Services
             {
                 responseModel.AssignmentExpired = lesson.EndDate <= DateTime.UtcNow;
             }
-
             responseModel.HasSubmittedAssigment = hasSubmitAssignment;
             responseModel.HasResult = hasResult;
             responseModel.HasReviewedAssignment = hasReviewedAssignment;

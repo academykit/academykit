@@ -2,6 +2,7 @@
 using FluentValidation;
 using Lingtren.Application.Common.Models.RequestModels;
 using Microsoft.Extensions.Localization;
+using System.Text.RegularExpressions;
 
 namespace Lingtren.Application.Common.Validators
 {
@@ -9,8 +10,15 @@ namespace Lingtren.Application.Common.Validators
     {
         public CertificateRequestModelValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.StartDate).NotNull().NotEmpty().WithMessage(contex => stringLocalizer.GetString("StartdateEmptyError")).Must(y => IsValidDate(y)).WithMessage(context => stringLocalizer.GetString("CertificateStartTimeError"));
-            RuleFor(x => x.EndDate).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("EndTimeEmptyError")).Must(y => IsValidDate(y)).WithMessage(context => stringLocalizer.GetString("CertificateEndTimeError"));
+            RuleFor(x => x.StartDate).NotNull().NotEmpty().WithMessage(contex => stringLocalizer.GetString("StartdateEmptyError")).Must(IsValidDate).WithMessage(context => stringLocalizer.GetString("CertificateStartTimeError"));
+            RuleFor(x => x.EndDate).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("EndTimeEmptyError")).Must(IsValidDate).WithMessage(context => stringLocalizer.GetString("CertificateEndTimeError"));
+            RuleFor(x => x.OptionalCost).NotNull().NotEmpty().Must(IsValidCost).WithMessage(context => stringLocalizer.GetString("CannotBeNegative"));
+        }
+
+        public static bool IsValidCost(decimal cost)
+        {
+            string pattern = "^(?!0)[1-9]\\d*$";
+           return Regex.IsMatch(cost.ToString(), pattern);
         }
         public static bool IsValidDate(DateTime y)
         {

@@ -10,5 +10,6 @@ namespace Lingtren.Domain.Entities
         public QuestionPool QuestionPool { get; set; }
         public User User { get; set; }
         public IList<QuestionSetQuestion> QuestionSetQuestions { get; set; }
+        public int Order { get; set; }
     }
 }

@@ -105,6 +105,7 @@ namespace Lingtren.Api.Controllers
             existing.EmailSignature = model.EmailSignature;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
+            existing.OrganiationCustomConfiguration = model.OrganiationCustomConfiguration;
 
             var savedEntity = await _generalSettingService.UpdateAsync(existing).ConfigureAwait(false);
 
