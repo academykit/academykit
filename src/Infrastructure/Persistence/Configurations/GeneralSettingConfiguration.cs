@@ -18,7 +18,7 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
             builder.Property(x => x.CreatedOn).HasColumnName("created_on").IsRequired().HasColumnType("DATETIME");
             builder.Property(x => x.UpdatedBy).HasColumnName("updated_by").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired(false);
             builder.Property(x => x.UpdatedOn).HasColumnName("updated_on").HasColumnType("DATETIME").IsRequired(false);
-            builder.Property(x=>x.OrganiationCustomConfiguration).HasColumnName("custom_configuration").HasColumnType("VARCHAR(5000)").IsRequired(false);
+            builder.Property(x=>x.CustomConfiguration).HasColumnName("custom_configuration").HasColumnType("VARCHAR(5000)").IsRequired(false);
         }
     }
 }

@@ -20,6 +20,6 @@
         /// <param name="identity">id or slug of questionpool</param>
         /// <param name="ids">list of question id in questionpool</param>
         /// <returns>task completed</returns>
-        Task Reorder(Guid currentUserId,string identity,IList<Guid> ids);
+        Task QuestionPoolQuestionReorderAsync(Guid currentUserId,string identity,IList<Guid> ids);
     }
 }

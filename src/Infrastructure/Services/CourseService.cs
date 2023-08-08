@@ -1,6 +1,5 @@
 namespace Lingtren.Infrastructure.Services
 {
-    using Amazon.S3.Model;
     using AngleSharp.Text;
     using Application.Common.Dtos;
     using Application.Common.Models.ResponseModels;
@@ -20,12 +19,9 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using RestSharp;
     using System;
-    using System.Collections;
     using System.Collections.Immutable;
     using System.Data;
-    using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
 

@@ -147,7 +147,7 @@
         [HttpPost("reorder")]
         public async Task<IActionResult> Reorder([FromQuery]string identity,IList<Guid> ids)
         {
-            await _questionPoolService.Reorder(CurrentUser.Id,identity,ids);
+            await _questionPoolService.QuestionPoolQuestionReorderAsync(CurrentUser.Id,identity,ids);
             return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("QuestionpoolUpdatedSuccesfully") });
         }
     }

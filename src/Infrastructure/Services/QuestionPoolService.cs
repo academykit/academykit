@@ -198,7 +198,7 @@
         /// <returns>task completed</returns>
         /// <exception cref="ForbiddenException"></exception>
         /// <exception cref="EntityNotFoundException"></exception>
-        public async Task Reorder(Guid currentUserId, string identity, IList<Guid> ids)
+        public async Task QuestionPoolQuestionReorderAsync(Guid currentUserId, string identity, IList<Guid> ids)
         {
             await ExecuteAsync(async () =>
             {
