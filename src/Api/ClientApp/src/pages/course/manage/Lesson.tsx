@@ -101,7 +101,6 @@ function TableReviews({ searchParams, pagination }: IWithSearchPagination) {
   )
     return <Box>{t('no_lessons')}</Box>;
 
-  console.log(getLessonStatistics.data);
   return (
     <ScrollArea>
       <Paper>
