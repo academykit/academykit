@@ -12,7 +12,6 @@
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
-    using System.Reactive.Concurrency;
 
     public class QuestionPoolController : BaseApiController
     {
