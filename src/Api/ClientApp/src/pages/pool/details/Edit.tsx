@@ -38,7 +38,9 @@ const [FormProvider, useFormContext, useForm] =
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t('question_title_required') as string),
+    name: Yup.string()
+      .trim()
+      .required(t('question_title_required') as string),
 
     answers: Yup.array()
 
