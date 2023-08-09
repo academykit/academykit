@@ -31,6 +31,9 @@ import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import { useGetTrainers } from '@utils/services/adminService';
 import { TrainingTypeEnum } from '@utils/enums';
+import withSearchPagination, {
+  IWithSearchPagination,
+} from '@hoc/useSearchPagination';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -92,7 +95,7 @@ const TeacherCards = ({
   );
 };
 
-const Teacher = () => {
+const Teacher = ({ pagination }: IWithSearchPagination) => {
   const { t } = useTranslation();
 
   const form = useForm({
@@ -160,12 +163,7 @@ const Teacher = () => {
                   searchValue={search}
                   {...form.getInputProps('email')}
                 />
-                {/* <CustomTextFieldWithAutoFocus
-                  placeholder={t("enter_the_email") as string}
-                  name="email"
-                  type={"email"}
-                  {...form.getInputProps("email")}
-                /> */}
+
                 <Button loading={createTeacher.isLoading} type="submit">
                   {t('add')}
                 </Button>
@@ -178,9 +176,11 @@ const Teacher = () => {
         {getTeacher.data?.items.map((item) => (
           <TeacherCards teacher={item} key={item.id} />
         ))}
+        {getTeacher.data &&
+          pagination(getTeacher.data?.totalPage, getTeacher.data.items.length)}
       </Box>
     </Container>
   );
 };
 
-export default Teacher;
+export default withSearchPagination(Teacher);
