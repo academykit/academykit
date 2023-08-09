@@ -66,7 +66,7 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> JoinMeeting()
         {
             var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync();
-            using (var stream = new StreamReader(Request.Body))
+            using(var stream = new StreamReader(Request.Body))
             {
                 var reader = await stream.ReadToEndAsync();
                 var model = JsonConvert.DeserializeObject<ZoomPayLoadDto>(reader);

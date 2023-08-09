@@ -19,22 +19,20 @@
         private readonly IValidator<ResetPasswordRequestModel> _resetPasswordValidator;
         private readonly IValidator<ChangePasswordRequestModel> _changePasswordValidator;
         private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
-        private readonly ILogger<AccountController> _logger;
 
         public AccountController(
             IUserService userService,
             IValidator<LoginRequestModel> validator,
             IValidator<ResetPasswordRequestModel> resetPasswordValidator,
             IValidator<ChangePasswordRequestModel> changePasswordValidator,
-            IStringLocalizer<ExceptionLocalizer> localizer,
-            ILogger<AccountController> logger)
+            IStringLocalizer<ExceptionLocalizer> localizer
+          )
         {
             _userService = userService;
             _validator = validator;
             _resetPasswordValidator = resetPasswordValidator;
             _changePasswordValidator = changePasswordValidator;
             _localizer = localizer;
-            _logger = logger;
         }
 
         [HttpGet]
