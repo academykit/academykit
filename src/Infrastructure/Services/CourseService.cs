@@ -304,7 +304,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="model">the instance of <see cref="CourseStatusRequestModel" /> .</param>
         /// <param name="currentUserId">the current id</param>
         /// <returns></returns>
-        public async Task ChangeStatusAsync(CourseStatusRequestModel model, Guid currentUserId)
+        public async Task<bool> ChangeStatusAsync(CourseStatusRequestModel model, Guid currentUserId)
         {
             var course = await ValidateAndGetCourse(currentUserId, model.Identity, validateForModify: true).ConfigureAwait(false);
 
@@ -381,6 +381,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.CourseRejectedMailAsync(course.Id, model.Message, null));
             }
+            return isSuperAdminOrAdminAccess;
         }
 
         /// <summary>

@@ -520,7 +520,7 @@
         /// <param name="identity">the group id or slug</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the search result of <see cref="UserModel"/></returns>
-        public async Task<SearchResult<UserModel>> GetNonGroupMembers(string identity, BaseSearchCriteria criteria)
+        public async Task<SearchResult<UserModel>> GetNonGroupMembers(string identity, GroupBaseSearchCriteria criteria)
         {
             var group = await GetByIdOrSlugAsync(identity, criteria.CurrentUserId).ConfigureAwait(false);
             if (group == null)
@@ -537,7 +537,11 @@
                  || x.Email.ToLower().Trim().Contains(search)
                  || x.MobileNumber.ToLower().Trim().Contains(search));
             }
-
+            if(!string.IsNullOrWhiteSpace(criteria.DepartmentIdentity))
+            {
+                var search = criteria.DepartmentIdentity.ToLower().Trim();
+                predicate = predicate.And(x => x.DepartmentId.ToString() == search || x.Department.Slug.ToLower().Trim() == search);
+            }
             predicate = predicate.And(p => !p.GroupMembers.Any(x => x.GroupId == group.Id && x.UserId == p.Id));
             predicate = predicate.And(p => p.Status == UserStatus.Active && (p.Role != UserRole.SuperAdmin && p.Role != UserRole.Admin));
 

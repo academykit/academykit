@@ -1010,4 +1010,7 @@
   <data name="AssignmentUpdatedSuccessfully" xml:space="preserve">
     <value>割り当てが正常に更新されました。</value>
   </data>
+  <data name="TrainingPusbishedSuccessfully" xml:space="preserve">
+    <value>トレーニングは正常に公開されました。</value>
+  </data>
 </root>
