@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using CsvHelper;
+using FluentValidation;
 using Hangfire;
 using Lingtren.Api.Common;
 using Lingtren.Application.Common.Dtos;
@@ -14,6 +15,7 @@ using LinqKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using System.Globalization;
 
 namespace Lingtren.Api.Controllers
 {
@@ -302,6 +304,35 @@ namespace Lingtren.Api.Controllers
             CommonHelper.ValidateArgumentNotNullOrEmpty(token, nameof(token));
             await _userService.VerifyChangeEmailAsync(token).ConfigureAwait(false);
             return Ok(new CommonResponseModel { Success = true, Message = _localizer.GetString("EmailChanged") });
+        }
+
+        /// <summary>
+        /// downlaod bulk sample file
+        /// </summary>
+        /// <returns> the csv file </returns>
+        [HttpGet("samplefile")]
+        public async Task<IActionResult> SampleFile()
+        {
+            var data = new List<BulkImportUserDto>();
+            var mobileNumber = "+9779801230314";
+            data.Add(new BulkImportUserDto 
+            {
+                FirstName = "Bijay",
+                MiddleName = string.Empty,
+                LastName = "Dhimal",
+                Email = "bijay@vurilo.com",
+                MobileNumber = mobileNumber,
+                Role = "Trainer",
+                Designation = "Programmer"
+            });
+            using var memroryStream = new MemoryStream();
+            using var steamWriter = new StreamWriter(memroryStream);
+            using (var csv = new CsvWriter(steamWriter, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(data);
+                csv.Flush();
+            }
+            return File(memroryStream.ToArray(), "text/csv", "bulkimportformat.csv");
         }
     }
 }
