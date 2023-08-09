@@ -1,4 +1,4 @@
-import { Button, Group, Title } from '@mantine/core';
+import { Button, Group, Title, Text } from '@mantine/core';
 import { ICourseLesson } from '@utils/services/courseService';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
@@ -76,6 +76,8 @@ const Meetings = ({ data }: { data: ICourseLesson }) => {
               ).fromNow()}`}
         </div>
       )}
+      <Text>Meeting Id: {data.zoomId}</Text>
+      <Text>Password: {data.password ?? 'N/A'}</Text>
     </Group>
   );
 };

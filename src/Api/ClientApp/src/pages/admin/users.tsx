@@ -29,6 +29,8 @@ import * as Yup from 'yup';
 import { useForm, yupResolver } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
+// import { isDevelopment } from '@utils/env';
+// import { TOKEN_STORAGE } from '@utils/constants';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -78,6 +80,12 @@ const UsersList = ({
     setCsvLoad(false);
   };
 
+  // const fileurl = () =>
+  //   (isDevelopment
+  //     ? 'https://localhost:7042'
+  //     : location.protocol + '//' + window.location.host) +
+  //   `/api/User/samplefile`;
+
   return (
     <>
       <Modal
@@ -122,6 +130,7 @@ const UsersList = ({
                   {t('csv_format')} {t('please')}
                   <Anchor
                     href="https://vurilo-desktop-app.s3.ap-south-1.amazonaws.com/bulkimportsample.csv"
+                    // href={fileurl()}
                     style={{
                       textDecoration: 'underline',
                     }}
