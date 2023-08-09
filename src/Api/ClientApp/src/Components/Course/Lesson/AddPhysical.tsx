@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Grid, Group, Textarea } from '@mantine/core';
+import { Box, Button, Grid, Group, Text } from '@mantine/core';
 import { DatePickerInput, TimeInput } from '@mantine/dates';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import { getDateTime } from '@utils/getDateTime';
+import TextEditor from '@components/Ui/TextEditor';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -176,11 +177,13 @@ const AddPhysical = ({
         />
       </Group>
 
-      <Textarea
-        label={t('description')}
-        placeholder={t('physical_name_description') as string}
-        {...form.getInputProps('description')}
-      />
+      <Box my={20}>
+        <Text size={'sm'}>{t('description')}</Text>
+        <TextEditor
+          placeholder={t('physical_name_description') as string}
+          {...form.getInputProps('description')}
+        />
+      </Box>
       <Group position="left" mt="md">
         <Button
           type="submit"
