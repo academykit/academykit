@@ -40,7 +40,7 @@ const schema = () => {
   const { t } = useTranslation();
 
   return Yup.object().shape({
-    name: Yup.string().required(t('question_title_required') as string),
+    name: Yup.string().trim().required(t('question_title_required') as string),
     type: Yup.string()
       .required(t('question_type_required') as string)
       .nullable(),

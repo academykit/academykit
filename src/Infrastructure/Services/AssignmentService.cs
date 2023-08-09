@@ -16,6 +16,7 @@
     using Microsoft.Extensions.Logging;
     using System.Linq;
     using System.Linq.Expressions;
+    using static System.Runtime.InteropServices.JavaScript.JSType;
 
     public class AssignmentService : BaseGenericService<Assignment, AssignmentBaseSearchCriteria>, IAssignmentService
     {
@@ -442,6 +443,7 @@
         /// <exception cref="ForbiddenException"></exception>
         public async Task<IList<AssignmentResponseModel>> SearchAsync(AssignmentBaseSearchCriteria searchCriteria)
         {
+            
             var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                predicate: p => p.Id.ToString() == searchCriteria.LessonIdentity || p.Slug == searchCriteria.LessonIdentity
                ).ConfigureAwait(false);
@@ -457,7 +459,10 @@
                                     lesson.Id, searchCriteria.CurrentUserId);
                 throw new ForbiddenException(_localizer.GetString("InvalidLessonAssignmentType"));
             }
-            if (lesson.StartDate > DateTime.UtcNow)
+            var startDateLocal = TimeZoneInfo.ConvertTime((DateTimeOffset)lesson.StartDate,TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time"));
+            var currentLocalDate = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time"));
+            
+            if (startDateLocal > currentLocalDate)
             {
                 throw new ForbiddenException(_localizer.GetString("AssignmentStartTimeException"));
             }

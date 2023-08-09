@@ -1010,4 +1010,7 @@ recorded cannot be deleted.</value>
   <data name="AssignmentUpdatedSuccessfully" xml:space="preserve">
     <value>Assignment Updated Successfully.</value>
   </data>
+  <data name="TrainingPusbishedSuccessfully" xml:space="preserve">
+    <value>Training published successfully.</value>
+  </data>
 </root>
