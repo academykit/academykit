@@ -56,7 +56,10 @@ const PhysicalTrainingDetail = ({
         {t('start_time')}: {updatedTime}
       </Text>
       {!hasAttended ? (
-        <Button onClick={() => handleAttendance()}>
+        <Button
+          onClick={() => handleAttendance()}
+          loading={attendance.isLoading || attendance.isSuccess}
+        >
           {t('mark_as_attended')}
         </Button>
       ) : (
