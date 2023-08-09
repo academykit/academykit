@@ -44,7 +44,6 @@ const PhysicalTrainingDetail = ({
       });
     }
   };
-  console.log(hasAttended);
 
   return (
     <Group sx={{ flexDirection: 'column' }}>
