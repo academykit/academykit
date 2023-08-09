@@ -864,6 +864,8 @@
       "AWS_VideoBucket": "भिडियो संग्रह"
     }
   },
+  "optional_cost": "वैकल्पिक मूल्य",
+  "enter_optional_cost": "वैकल्पिक मूल्य प्रविष्ट गर्नुहोस्",
   "certificate_delete_success": "प्रमाणपत्र सफलतापूर्वक मेटिएको छ।",
   "mark_as_attended": "सहभागी भएको मान गर्नुहोस्",
   "physical_name": "भौतिक प्रशिक्षण",

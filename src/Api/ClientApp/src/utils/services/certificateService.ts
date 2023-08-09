@@ -13,7 +13,7 @@ export interface ExternalCertificatePost {
   institute: string;
   duration: number;
   status: CertificateStatus;
-  cost: number;
+  optionalCost: number;
 }
 
 export enum CertificateStatus {
