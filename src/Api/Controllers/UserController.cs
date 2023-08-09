@@ -24,7 +24,6 @@ namespace Lingtren.Api.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IFileServerService _fileServerService;
         private readonly IUserService _userService;
-        private readonly IEmailService _emailService;
         private readonly IGeneralSettingService _generalSettingService;
         private readonly IValidator<UserRequestModel> _validator;
         private readonly IValidator<ChangeEmailRequestModel> _changeEmailValidator;
@@ -34,7 +33,6 @@ namespace Lingtren.Api.Controllers
                             ILogger<UserController> logger,
                             IFileServerService fileServerService,
                             IUserService userService,
-                            IEmailService emailService,
                             IValidator<UserRequestModel> validator,
                             IGeneralSettingService generalSettingService,
                             IValidator<ChangeEmailRequestModel> changeEmailValidator,
@@ -44,7 +42,6 @@ namespace Lingtren.Api.Controllers
             _fileServerService = fileServerService;
             _logger = logger;
             _userService = userService;
-            _emailService = emailService;
             _validator = validator;
             _changeEmailValidator = changeEmailValidator;
             _generalSettingService = generalSettingService;
@@ -311,7 +308,7 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <returns> the csv file </returns>
         [HttpGet("samplefile")]
-        public async Task<IActionResult> SampleFile()
+        public IActionResult SampleFile()
         {
             var data = new List<BulkImportUserDto>();
             var mobileNumber = "+9779801230314";
