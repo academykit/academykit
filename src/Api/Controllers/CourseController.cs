@@ -13,6 +13,7 @@ namespace Lingtren.Api.Controllers
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
+    using PuppeteerSharp;
 
     public class CourseController : BaseApiController
     {
@@ -184,8 +185,18 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> ChangeStatus(CourseStatusRequestModel model)
         {
             await _courseStatusValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            await _courseService.ChangeStatusAsync(model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("TrainingStatus") });
+            var result = await _courseService.ChangeStatusAsync(model, CurrentUser.Id).ConfigureAwait(false);
+            var messagestring = string.Empty;
+            if (result)
+            {
+                messagestring = _localizer.GetString("TrainingPusbishedSuccessfully");
+            }
+            if (!result)
+            {
+                messagestring = _localizer.GetString("TrainingStatus");
+              
+            }           
+            return Ok(new CommonResponseModel() { Success = true, Message = messagestring});
         }
 
         /// <summary>

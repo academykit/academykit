@@ -69,6 +69,6 @@
         /// <param name="identity">the group id or slug</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the search result of <see cref="UserModel"/></returns>
-        Task<SearchResult<UserModel>> GetNonGroupMembers(string identity, BaseSearchCriteria criteria);
+        Task<SearchResult<UserModel>> GetNonGroupMembers(string identity,GroupBaseSearchCriteria criteria);
     }
 }

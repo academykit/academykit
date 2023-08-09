@@ -195,7 +195,7 @@
         /// <returns></returns>
         /// <exception cref="EntityNotFoundException"></exception>
         [HttpGet("{identity}/notMembers")]
-        public async Task<SearchResult<UserModel>> SearchNotGroupMembers(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<UserModel>> SearchNotGroupMembers(string identity, [FromQuery] GroupBaseSearchCriteria searchCriteria)
         {
             searchCriteria.CurrentUserId = CurrentUser.Id;
             return await _groupService.GetNonGroupMembers(identity, searchCriteria).ConfigureAwait(false);
