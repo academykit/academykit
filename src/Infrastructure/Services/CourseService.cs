@@ -24,6 +24,7 @@ namespace Lingtren.Infrastructure.Services
     using System.Data;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Text;
 
     public class CourseService : BaseGenericService<Course, CourseBaseSearchCriteria>, ICourseService
     {
@@ -304,10 +305,10 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="model">the instance of <see cref="CourseStatusRequestModel" /> .</param>
         /// <param name="currentUserId">the current id</param>
         /// <returns></returns>
-        public async Task<bool> ChangeStatusAsync(CourseStatusRequestModel model, Guid currentUserId)
+        public async Task<string> ChangeStatusAsync(CourseStatusRequestModel model, Guid currentUserId)
         {
             var course = await ValidateAndGetCourse(currentUserId, model.Identity, validateForModify: true).ConfigureAwait(false);
-
+            var message = new StringBuilder();
             if ((course.Status == CourseStatus.Draft && (model.Status == CourseStatus.Published || model.Status == CourseStatus.Rejected))
                 || (course.Status == CourseStatus.Published && (model.Status == CourseStatus.Review || model.Status == CourseStatus.Rejected))
                 || (course.Status == CourseStatus.Rejected && model.Status == CourseStatus.Published)
@@ -376,12 +377,19 @@ namespace Lingtren.Infrastructure.Services
                 }
 
             }
-
+            if(isSuperAdminOrAdminAccess)
+            {
+                message.AppendLine(_localizer.GetString("TrainingPusbishedSuccessfully"));
+            }
+            else
+            {
+                message.AppendLine(_localizer.GetString("TrainingStatus"));
+            }
             if (model.Status == CourseStatus.Rejected)
             {
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.CourseRejectedMailAsync(course.Id, model.Message, null));
             }
-            return isSuperAdminOrAdminAccess;
+            return message.ToString();
         }
 
         /// <summary>
@@ -686,8 +694,8 @@ namespace Lingtren.Infrastructure.Services
                         IsMandatory = l.IsMandatory,
                         QuestionSet = l.Type == LessonType.Exam ? new QuestionSetResponseModel(_unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefault(predicate: x => x.Id == l.QuestionSetId)) : null,
                         Meeting = l.Meeting != null ? new MeetingResponseModel(l.Meeting) : null,
-                        IsCompleted = currentUserWatchHistories.Any(h => h.LessonId == h.LessonId && h.IsCompleted),
-                        IsPassed = currentUserWatchHistories.Any(h => h.LessonId == h.LessonId && h.IsPassed),
+                        IsCompleted = currentUserWatchHistories.Any(h => h.LessonId == l.Id && h.IsCompleted),
+                        IsPassed = currentUserWatchHistories.Any(h => h.LessonId == l.Id && h.IsPassed),
                     }).OrderBy(x => x.Order).ToList(),
                 }).OrderBy(x => x.Order).ToList();
                 return response;
@@ -993,14 +1001,32 @@ namespace Lingtren.Infrastructure.Services
                 if (assignmentSubmission.Count != default)
                 {
                     var userIds = assignmentSubmission.Select(x => x.UserId).ToList();
+                    bool hasSubmitted = false;
                     foreach (var userId in userIds)
                     {
-                        bool hasSubmitted = false;
                         if (assignmentSubmission.Any(x => x.UserId == userId) && assignmentReview.Any(x => x.UserId == userId))
                         {
                             hasSubmitted = true;
                         }
                         assignmentStatus.Add((userId, hasSubmitted));
+                    }
+                }
+            }
+            List<(Guid UserId, bool UserResult)?> physicalLessonStatus = new List<(Guid, bool)?>();
+            if(lesson.Type == LessonType.Physical)
+            {
+                var physicalLessonReviews = await _unitOfWork.GetRepository<PhysicalLessonReview>().GetAllAsync(predicate: p=>p.LessonId == lesson.Id).ConfigureAwait(false);
+                if(physicalLessonReviews.Count != default)
+                {
+                    var userIds = physicalLessonReviews.Select(x=>x.UserId).ToList();
+                    bool hasAttended = false;
+                    foreach (var userId in userIds)
+                    {
+                        if(physicalLessonReviews.Any(x=>x.UserId == userId && x.IsReviewed))
+                        {
+                            hasAttended = true;
+                        }
+                        physicalLessonStatus.Add((userId,hasAttended));
                     }
                 }
             }
@@ -1039,6 +1065,7 @@ namespace Lingtren.Infrastructure.Services
                            IsPassed = (m?.IsPassed == true ? true : (examSubmissionStatus.Any(es => es.userId == student.UserId) ? false : (bool?)null)),
                            UpdatedOn = m?.UpdatedOn ?? m?.CreatedOn,
                            IsAssignmentReviewed = (bool?)(assignmentStatus.FirstOrDefault(ur => ur.Value.UserId == student.UserId)?.UserResult),
+                           AttendenceReviewed = (bool?)(physicalLessonStatus.FirstOrDefault(ur=>ur.Value.UserId == student.UserId)?.UserResult),
                        };
             return data.ToList().ToIPagedList(criteria.Page, criteria.Size);
         }
@@ -1121,9 +1148,10 @@ namespace Lingtren.Infrastructure.Services
                 ).ConfigureAwait(false);
             watchHistories = watchHistories.OrderBy(x => x.Lesson.Section.Order).ThenBy(x => x.Lesson.Order).ToList();
             var response = new List<LessonStudentResponseModel>();
-            var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.Type == LessonType.Assignment && p.CourseId == course.Id).ConfigureAwait(false);
+            var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p =>(p.Type == LessonType.Assignment || p.Type == LessonType.Physical ) && p.CourseId == course.Id).ConfigureAwait(false);
 
-            List<(Guid LessonId, bool? UserResult)?> assignmentStatus = new List<(Guid, bool?)?>();
+            List<(Guid LessonId, bool? IsReviewed)?> assignmentStatus = new List<(Guid, bool?)?>();
+            List<(Guid LessonId, bool? IsReviewed)?> physicalLessonStatus = new List<(Guid, bool?)?>();
             if (lessons.Count != default)
             {
                 var lessonIds = lessons.Select(x => x.Id).ToList();
@@ -1145,10 +1173,30 @@ namespace Lingtren.Infrastructure.Services
                         assignmentStatus.Add((lessonId, hasSubmitted));
                     }
                 }
+                if(lessons.Any(x=>x.Type == LessonType.Physical))
+                {
+                    var physicalLessonReviews = await _unitOfWork.GetRepository<PhysicalLessonReview>().GetAllAsync(predicate: p=> lessonIds.Contains(p.LessonId) && p.UserId == userId).ConfigureAwait(false);
+                    if(physicalLessonReviews.Count != default) 
+                    {
+                        foreach(var lessonId in lessonIds)
+                        {
+                            bool? hasReviewed = null;
+                            if(physicalLessonReviews.Any(x=>x.LessonId == lessonId && !x.IsReviewed))
+                            {
+                                hasReviewed = false;
+                            }
+                            if(physicalLessonReviews.Any(x=>x.LessonId == lessonId && x.IsReviewed))
+                            {
+                                hasReviewed = true;
+                            }
+                            physicalLessonStatus.Add((lessonId,hasReviewed));
+                        }
+                    }
+                }
             }
             watchHistories.ForEach(x => response.Add(new LessonStudentResponseModel
             {
-                IsAssignmentReviewed = (bool?)(assignmentStatus.FirstOrDefault(ur => ur.Value.LessonId == x.LessonId)?.UserResult),
+                IsAssignmentReviewed = (bool?)(assignmentStatus.FirstOrDefault(ur => ur.Value.LessonId == x.LessonId)?.IsReviewed),
                 LessonId = x.LessonId,
                 LessonSlug = x.Lesson?.Slug,
                 LessonName = x.Lesson?.Name,
@@ -1157,7 +1205,8 @@ namespace Lingtren.Infrastructure.Services
                 IsCompleted = x.IsCompleted,
                 IsPassed = x.IsPassed,
                 UpdatedOn = x.UpdatedOn ?? x.CreatedOn,
-                User = new UserModel(x.User)
+                User = new UserModel(x.User),
+                AttendenceReviewed = (bool?)(physicalLessonStatus.FirstOrDefault(ur=>ur.Value.LessonId == x.LessonId)?.IsReviewed)
             }));
             return response;
         }
@@ -1332,9 +1381,9 @@ namespace Lingtren.Infrastructure.Services
                 if (user.Role == UserRole.SuperAdmin || user.Role == UserRole.Admin)
                 {
                     var course = await _unitOfWork.GetRepository<Course>().GetAllAsync(include: src => src.Include(x => x.Lessons).ThenInclude(x => x.Meeting)).ConfigureAwait(false);
-                    var currentDateTime = DateTime.Now;
+                    var currentDateTime = DateTime.UtcNow;
                     var response = new List<DashboardLessonResponseModel>();
-                    var upcommingLessons = course.SelectMany(x => x.Lessons).Where(x => x.Meeting.StartDate > currentDateTime).ToList();
+                    var upcommingLessons = course.SelectMany(x => x.Lessons).Where(x => x.Meeting.StartDate >= currentDateTime).ToList();
                     foreach (var lesson in upcommingLessons)
                     {
                         response.Add(new DashboardLessonResponseModel
@@ -1365,10 +1414,10 @@ namespace Lingtren.Infrastructure.Services
                         include: src => src.Include(x => x.CourseEnrollments).Include(x => x.Lessons).ThenInclude(x => x.Assignments)).ConfigureAwait(false);
 
 
-                    var currentDateTime = DateTime.Now;
-                    var upcommingLiveLessons = courseLiveLessons.SelectMany(x => x.Lessons).Where(x => x.Meeting.StartDate > currentDateTime).ToList();
-                    var upcommingLessonExams = courseExamLessons.SelectMany(x => x.Lessons).Where(x => x.QuestionSet.StartTime > currentDateTime).ToList();
-                    var upcommingAssignments = CourseAssignmentLesson.SelectMany(x => x.Lessons).Where(x => x.StartDate > currentDateTime).ToList();
+                    var currentDateTime = DateTime.UtcNow;
+                    var upcommingLiveLessons = courseLiveLessons.SelectMany(x => x.Lessons).Where(x => x.Meeting.StartDate >= currentDateTime).ToList();
+                    var upcommingLessonExams = courseExamLessons.SelectMany(x => x.Lessons).Where(x => x.QuestionSet.StartTime >= currentDateTime).ToList();
+                    var upcommingAssignments = CourseAssignmentLesson.SelectMany(x => x.Lessons).Where(x => x.StartDate >= currentDateTime).ToList();
 
                     var response = new List<DashboardLessonResponseModel>();
 
@@ -1421,7 +1470,7 @@ namespace Lingtren.Infrastructure.Services
                     var lessonAssignments = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.Course.CourseEnrollments.All(x => x.UserId == currentUserId),
                       include: src => src.Include(x => x.Assignments)).ConfigureAwait(false);
 
-                    var currentDateTime = DateTime.Now;
+                    var currentDateTime = DateTime.UtcNow;
 
                     var upcommingAssignments = lessonAssignments.Where(x => x.StartDate > currentDateTime).ToList();
                     var upcommingLiveLessons = lessonLiveClass.Where(x => x.Meeting.StartDate > currentDateTime).ToList();

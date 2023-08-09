@@ -185,18 +185,8 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> ChangeStatus(CourseStatusRequestModel model)
         {
             await _courseStatusValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var result = await _courseService.ChangeStatusAsync(model, CurrentUser.Id).ConfigureAwait(false);
-            var messagestring = string.Empty;
-            if (result)
-            {
-                messagestring = _localizer.GetString("TrainingPusbishedSuccessfully");
-            }
-            if (!result)
-            {
-                messagestring = _localizer.GetString("TrainingStatus");
-              
-            }           
-            return Ok(new CommonResponseModel() { Success = true, Message = messagestring});
+            var result = await _courseService.ChangeStatusAsync(model, CurrentUser.Id).ConfigureAwait(false);     
+            return Ok(new CommonResponseModel() { Success = true, Message = result});
         }
 
         /// <summary>
