@@ -274,6 +274,7 @@ export interface ILessons {
   questionMarking: number;
   passingWeightage: number;
   allowedRetake: number;
+  isCompleted: boolean;
 }
 
 const createSection = async (data: { courseIdentity: string; name: string }) =>
@@ -520,6 +521,9 @@ export interface ICourseLesson {
   assignmentReview?: ICourseLessonAssignmentReview;
   assignmentExpired: boolean;
   startDate: string;
+  zoomId: string;
+  password: string;
+  hasAttended: boolean;
 }
 
 const getCourseLesson = async (
