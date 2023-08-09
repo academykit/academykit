@@ -1,27 +1,28 @@
 import { Button, Group, Title, Text } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { DATE_FORMAT } from '@utils/constants';
-import RoutePath from '@utils/routeConstants';
 import errorType from '@utils/services/axiosError';
 import { usePostAttendance } from '@utils/services/physicalTrainingService';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const PhysicalTrainingDetail = ({
   name,
   id,
   hasAttended,
   startDate,
+  lessonSlug,
 }: {
   name: string;
   id: string;
   hasAttended: boolean | null;
   startDate: string;
+  lessonSlug: string;
 }) => {
   const { id: slug } = useParams();
   const { t } = useTranslation();
-  const attendance = usePostAttendance(slug as string);
+  const attendance = usePostAttendance(slug as string, lessonSlug);
   const startTime = moment(startDate).format('HH:mm A');
 
   const updatedTime = moment(startTime, 'hh:mm A')
@@ -43,6 +44,7 @@ const PhysicalTrainingDetail = ({
       });
     }
   };
+  console.log(hasAttended);
 
   return (
     <Group sx={{ flexDirection: 'column' }}>
@@ -58,9 +60,7 @@ const PhysicalTrainingDetail = ({
           {t('mark_as_attended')}
         </Button>
       ) : (
-        <Button component={Link} to={RoutePath.feedback.myDetails(id).route}>
-          {t('view_feedback')}
-        </Button>
+        <Text>{t('attended')}</Text>
       )}
     </Group>
   );

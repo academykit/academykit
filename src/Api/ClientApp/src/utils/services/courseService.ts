@@ -520,6 +520,7 @@ export interface ICourseLesson {
   assignmentReview?: ICourseLessonAssignmentReview;
   assignmentExpired: boolean;
   startDate: string;
+  hasAttended: boolean;
 }
 
 const getCourseLesson = async (
