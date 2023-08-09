@@ -20,20 +20,17 @@ namespace Lingtren.Api.Controllers
         private readonly ICourseService _courseService;
         private readonly IValidator<CourseRequestModel> _validator;
         private readonly IValidator<CourseStatusRequestModel> _courseStatusValidator;
-        private readonly ILogger<CourseController> _logger;
         private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
 
         public CourseController(
             ICourseService courseService,
             IValidator<CourseRequestModel> validator,
-            ILogger<CourseController> logger,
             IValidator<CourseStatusRequestModel> courseStatusValidator,
             IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _courseService = courseService;
             _validator = validator;
             _courseStatusValidator = courseStatusValidator;
-            _logger = logger;
             _localizer = localizer;
         }
 
