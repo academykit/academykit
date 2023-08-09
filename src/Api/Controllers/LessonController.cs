@@ -72,6 +72,10 @@ namespace Lingtren.Api.Controllers
         [HttpPost]
         public async Task<LessonResponseModel> CreateAsync(string identity, LessonRequestModel model)
         {
+            if (model.Type == LessonType.Exam && model.QuestionSet?.AllowedRetake < 1)
+            {
+                model.QuestionSet.AllowedRetake = 1;
+            }
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var response = await _lessonService.AddAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
             return new LessonResponseModel(response);
@@ -111,6 +115,10 @@ namespace Lingtren.Api.Controllers
         [HttpPut("{lessonIdentity}")]
         public async Task<LessonResponseModel> UpdateAsync(string identity, string lessonIdentity, LessonRequestModel model)
         {
+            if (model.Type == LessonType.Exam && model.QuestionSet?.AllowedRetake < 1)
+            {
+                model.QuestionSet.AllowedRetake = 1;
+            }
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var response = await _lessonService.UpdateAsync(identity, lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
             return new LessonResponseModel(response);
@@ -162,20 +170,20 @@ namespace Lingtren.Api.Controllers
         /// <param name="ids">list of question ids in lesson</param>
         /// <returns>task completed</returns>
         [HttpPost("Reorder")]
-        public async Task<IActionResult> Reorder(string lessonIdentity,LessonType lessonType,List<Guid> ids)
+        public async Task<IActionResult> Reorder(string lessonIdentity, LessonType lessonType, List<Guid> ids)
         {
-            switch(lessonType)
+            switch (lessonType)
             {
                 case LessonType.Assignment:
                     await _assignmentService.ReorderAssignmentQuestionAsync(CurrentUser.Id, lessonIdentity, ids);
                     break;
                 case LessonType.Exam:
-                    await _questionSetService.ReorderQuestionsetQuestionsAsync(CurrentUser.Id,lessonIdentity,ids).ConfigureAwait(false);
+                    await _questionSetService.ReorderQuestionsetQuestionsAsync(CurrentUser.Id, lessonIdentity, ids).ConfigureAwait(false);
                     break;
                 case LessonType.Feedback:
-                    await _feedbackService.ReorderFeedbackQuestionsAsync(CurrentUser.Id,lessonIdentity,ids).ConfigureAwait (false);
+                    await _feedbackService.ReorderFeedbackQuestionsAsync(CurrentUser.Id, lessonIdentity, ids).ConfigureAwait(false);
                     break;
-            } 
+            }
             return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("AssignmentUpdatedSuccessfully") });
         }
 
