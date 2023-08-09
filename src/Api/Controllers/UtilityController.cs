@@ -26,6 +26,7 @@ namespace Lingtren.Api.Controllers
         }
 
         [HttpGet("certificate")]
+        [AllowAnonymous]
         public IActionResult GenerateCertificate()
         {
             var companyLogo = "https://i.ibb.co/0jZzQYH/Group-1.png";

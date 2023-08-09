@@ -226,7 +226,7 @@ namespace Lingtren.Infrastructure.Services
 
             html.AppendLine("        <div style=\"position: absolute; margin-left: auto; margin-right: auto; width: 750.4px; height: 592.33px; top: 75px; left: 80px;\">");
             html.AppendLine("            <div style=\"display: flex; gap: 1.25rem; justify-content: center; \">");
-            html.AppendLine($"               <img style=\"width: 40.96px; height: 40.78px;\" src=\"{companyLogo}\" />");
+            html.AppendLine($"               <img style=\"width: auto; height: auto; max-width: 50.96px; max-height: 40.78px;\" src=\"{companyLogo}\" />");
             html.AppendLine("                <div style=\"display: flex; flex-direction: column; justify-content: center; align-items: center; \">");
             html.AppendLine("                    <h1 style=\"font-size: 1.875rem; line-height: 2.25rem; font-weight: 800; color: #000000; text-transform: uppercase; \">");
             html.AppendLine("                        Certificate Of Training");

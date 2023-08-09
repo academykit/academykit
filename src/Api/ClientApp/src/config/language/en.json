@@ -399,6 +399,7 @@
   "add_level_success": "Level Added Successfully!",
   "level_name": "Level Name",
   "level_name_placeholder": "Enter Level Name.",
+  "choose_department": "Choose Department",
   "search_department": "Search Department",
   "department_enabled": "Department Enabled",
   "department_name": "Department Name",
