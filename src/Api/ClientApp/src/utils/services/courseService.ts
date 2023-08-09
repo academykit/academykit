@@ -520,6 +520,9 @@ export interface ICourseLesson {
   assignmentReview?: ICourseLessonAssignmentReview;
   assignmentExpired: boolean;
   startDate: string;
+  zoomId: string;
+  password: string;
+  hasAttended: boolean;
 }
 
 const getCourseLesson = async (
