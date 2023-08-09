@@ -162,6 +162,7 @@ const GroupAttachment = ({
                 striped
                 highlightOnHover
                 withBorder
+                withColumnBorders
               >
                 <thead>
                   <tr>

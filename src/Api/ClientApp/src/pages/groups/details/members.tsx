@@ -97,7 +97,7 @@ const GroupMember = ({
       )}
       {groupMember.isSuccess && groupMember.data.totalCount !== 0 && (
         <Paper mt={10}>
-          <Table striped>
+          <Table striped withBorder withColumnBorders highlightOnHover>
             <thead>
               <tr>
                 <th>{t('user_name')}</th>

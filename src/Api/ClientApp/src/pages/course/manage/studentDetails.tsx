@@ -23,7 +23,7 @@ const StudentDetails = () => {
 
   return (
     <Paper>
-      <Table striped withBorder>
+      <Table striped withBorder withColumnBorders highlightOnHover>
         <thead>
           <tr>
             <th>{t('Lesson')}</th>

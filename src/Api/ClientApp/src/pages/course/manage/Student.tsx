@@ -282,6 +282,8 @@ const ManageStudents = ({
             verticalSpacing="xs"
             striped
             highlightOnHover
+            withBorder
+            withColumnBorders
           >
             <thead>
               <tr>

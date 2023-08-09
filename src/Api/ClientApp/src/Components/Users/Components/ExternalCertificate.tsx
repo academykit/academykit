@@ -116,6 +116,7 @@ const ExternalCertificate = () => {
                 striped
                 highlightOnHover
                 withBorder
+                withColumnBorders
               >
                 <thead>
                   <tr>

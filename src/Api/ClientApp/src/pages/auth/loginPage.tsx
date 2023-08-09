@@ -135,7 +135,7 @@ const LoginPage = () => {
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <CustomTextFieldWithAutoFocus
             {...form.getInputProps('email')}
-            autoComplete={'email'}
+            autoComplete={'username'}
             label={t('email')}
             type={'email'}
             placeholder={t('your_email') as string}
