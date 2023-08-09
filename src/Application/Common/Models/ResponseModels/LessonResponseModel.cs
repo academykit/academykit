@@ -40,6 +40,7 @@
         public AssignmentReviewResponseModel? AssignmentReview { get; set; }
         public string ZoomId { get; set; }
         public string Password { get; set; }
+        public bool? HasAttended { get; set; }
 
         public LessonResponseModel(Lesson model)
         {
@@ -67,6 +68,8 @@
             User = model.User != null ? new UserModel(model.User) : new UserModel();
             Meeting = model.Meeting == null ? null : new MeetingResponseModel(model.Meeting);
             QuestionSet = model.QuestionSet == null ? null : new QuestionSetResponseModel(model.QuestionSet);
+            ZoomId = model.Meeting != null ? model.Meeting.ZoomLicenseId.ToString() : null;
+            Password = model.Meeting != null ? model.Meeting.Passcode : null;
         }
         public LessonResponseModel()
         {
