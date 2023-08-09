@@ -211,6 +211,8 @@ const UserMemberTable = ({
         verticalSpacing="sm"
         striped
         highlightOnHover
+        withBorder
+        withColumnBorders
       >
         <thead>
           <tr>

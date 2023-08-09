@@ -11,6 +11,7 @@ import {
   Flex,
   Loader,
   Paper,
+  ScrollArea,
   Table,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
@@ -45,42 +46,43 @@ const MCQQuestions = ({
           {t('add_question')}
         </Button>
       </Flex>
+      <ScrollArea>
+        {data && data.items && data.totalCount > 0 && (
+          <Paper mt={10}>
+            <Table striped withBorder withColumnBorders highlightOnHover>
+              <thead>
+                <tr>
+                  <th>{t('name')}</th>
+                  <th>{t('tags')}</th>
+                  <th>{t('type')}</th>
+                  <th>
+                    <Center>{t('actions')}</Center>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {data?.items?.map((x) => (
+                  <QuestionRow
+                    data={x}
+                    search={searchParams}
+                    poolId={id as string}
+                    key={x.id}
+                    navigate={navigate}
+                    t={t}
+                  />
+                ))}
+              </tbody>
+            </Table>
+          </Paper>
+        )}
+        {isLoading && <Loader />}
 
-      {data && data.items && data.totalCount > 0 && (
-        <Paper mt={10}>
-          <Table striped>
-            <thead>
-              <tr>
-                <th>{t('name')}</th>
-                <th>{t('tags')}</th>
-                <th>{t('type')}</th>
-                <th>
-                  <Center>{t('actions')}</Center>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data?.items?.map((x) => (
-                <QuestionRow
-                  data={x}
-                  search={searchParams}
-                  poolId={id as string}
-                  key={x.id}
-                  navigate={navigate}
-                  t={t}
-                />
-              ))}
-            </tbody>
-          </Table>
-        </Paper>
-      )}
-      {isLoading && <Loader />}
-
-      {data && pagination(data.totalPage, data.items.length)}
-      {isError && <Box>{t('something_wrong')}</Box>}
-      {data && data?.totalCount < 1 && (
-        <Box mt={10}>{t('no_question_found')}</Box>
-      )}
+        {data && pagination(data.totalPage, data.items.length)}
+        {isError && <Box>{t('something_wrong')}</Box>}
+        {data && data?.totalCount < 1 && (
+          <Box mt={10}>{t('no_question_found')}</Box>
+        )}
+      </ScrollArea>
     </Container>
   );
 };
@@ -129,7 +131,7 @@ const QuestionRow = ({
       />
 
       <td>{data.name}</td>
-      <td style={{ width: '400px' }}>
+      <td>
         {data.tags.map((x) => (
           <Badge key={x.id} color={'green'} mx={2}>
             {' '}

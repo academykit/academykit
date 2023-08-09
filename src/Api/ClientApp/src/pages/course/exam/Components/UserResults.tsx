@@ -47,6 +47,9 @@ const UserResults = ({
         })}
         w={'100%'}
         striped
+        withBorder
+        withColumnBorders
+        highlightOnHover
       >
         <thead>
           <tr>

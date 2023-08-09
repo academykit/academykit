@@ -31,7 +31,7 @@ const AdminCourseList = ({
         {data &&
           (data.totalCount > 0 ? (
             <Paper mt={10}>
-              <Table striped highlightOnHover withBorder>
+              <Table striped highlightOnHover withBorder withColumnBorders>
                 <thead>
                   <tr>
                     <th>{t('training_name')}</th>

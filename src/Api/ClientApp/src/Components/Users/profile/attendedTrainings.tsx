@@ -25,7 +25,7 @@ const AttendedTrainings = ({
         {t('attended_trainings')}{' '}
       </Title>
       <Paper>
-        <Table>
+        <Table striped withBorder withColumnBorders highlightOnHover>
           <thead>
             <tr>
               <th>{t('title')}</th>
