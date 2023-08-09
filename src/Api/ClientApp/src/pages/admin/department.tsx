@@ -316,7 +316,13 @@ const Department = ({
 
       {getDepartment.data && getDepartment.data.totalCount > 0 ? (
         <Paper>
-          <Table striped highlightOnHover withBorder sx={{ marginTop: '10px' }}>
+          <Table
+            striped
+            highlightOnHover
+            withBorder
+            withColumnBorders
+            sx={{ marginTop: '10px' }}
+          >
             <thead>
               <tr>
                 <th>{t('name')}</th>

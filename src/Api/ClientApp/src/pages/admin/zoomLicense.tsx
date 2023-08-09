@@ -251,6 +251,7 @@ export default function ZoomLicense() {
           striped
           highlightOnHover
           withBorder
+          withColumnBorders
         >
           <thead>
             <tr>

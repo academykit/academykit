@@ -12,6 +12,7 @@ import {
   Image,
   Flex,
   Box,
+  Anchor,
 } from '@mantine/core';
 import {
   IconChevronRight,
@@ -66,18 +67,10 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
   const companyLogo = generalSettings.data?.data.logoUrl;
 
   return (
-    <Card
-      withBorder
-      radius={'md'}
-      p={'sm'}
-      component={Link}
-      to={RoutePath.courses.description(data.slug).route}
-      className={classes.card}
-    >
+    <Card withBorder radius={'md'} p={'sm'} className={classes.card}>
       <Flex sx={{ justifyContent: 'space-between' }}>
         <Box w="100">
           <Image
-            // src={getCourseOgImageUrl(data.user, data.name, data.thumbnailUrl)}
             src={getCourseOgImageUrl({
               author: data.user,
               title: data.name,
@@ -129,9 +122,16 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
           )}
         </div>
       </Flex>
-      <Text lineClamp={1} size="lg" mt="md" weight="bold">
+      <Anchor
+        component={Link}
+        to={RoutePath.courses.description(data.slug).route}
+        lineClamp={1}
+        size="lg"
+        mt="md"
+        weight="bold"
+      >
         {data.name}
-      </Text>
+      </Anchor>
       {role === UserRole.Trainee && (
         <div>
           <Text c="dimmed" fz="sm" mt="md">

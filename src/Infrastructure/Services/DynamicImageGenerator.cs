@@ -260,8 +260,8 @@ namespace Lingtren.Infrastructure.Services
             html.AppendLine("                </div>");
             html.AppendLine("            </div>");
             html.AppendLine("            <div style=\"display: flex; margin-top: 0.25rem; margin-left: auto; margin-right: auto; justify-content: center; width: 150.44px; height: 80.44px;\">");
-            html.AppendLine("                <div style=\" aspect-w-16 aspect-h-9\">");
-            html.AppendLine($"                    <img style=\"object-fit: cover; width: 100%; height: 100%;\" src=\"{companyLogo}\" />");
+            html.AppendLine("                <div style=\" margin-top: 0.5rem\">");
+            html.AppendLine($"                    <img style=\"object-fit: cover; width: auto; height: auto; max-width: 200px; max-height: 80px;\" src=\"{companyLogo}\" />");
             html.AppendLine("                </div>");
             html.AppendLine("            </div>");
             html.AppendLine("            <div style=\"height: 50.53px; \">");

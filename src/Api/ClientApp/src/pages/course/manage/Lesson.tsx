@@ -111,6 +111,8 @@ function TableReviews({ searchParams, pagination }: IWithSearchPagination) {
           styles={{}}
           striped
           highlightOnHover
+          withBorder
+          withColumnBorders
         >
           <thead>
             <tr>

@@ -119,6 +119,7 @@ const InternalCertificate = () => {
               striped
               highlightOnHover
               withBorder
+              withColumnBorders
             >
               <thead>
                 <tr>

@@ -302,7 +302,7 @@ const StudentLessonDetails = ({
           ) : (
             <>
               {!meetingReport.isError && (
-                <Table>
+                <Table striped withBorder withColumnBorders highlightOnHover>
                   <thead>
                     <tr>
                       <th>{t('start_date')}</th>
