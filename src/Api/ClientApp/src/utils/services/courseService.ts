@@ -274,6 +274,7 @@ export interface ILessons {
   questionMarking: number;
   passingWeightage: number;
   allowedRetake: number;
+  isCompleted: boolean;
 }
 
 const createSection = async (data: { courseIdentity: string; name: string }) =>
