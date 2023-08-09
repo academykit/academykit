@@ -19,7 +19,7 @@ import {
   useCourseStatus,
   useCourseUpdateStatus,
 } from '@utils/services/courseService';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 
@@ -53,7 +53,7 @@ const Dashboard = () => {
   const course = useCourseDescription(id as string);
   const courseStatus = useCourseStatus(id as string, '');
   const courseUpdateStatus = useCourseUpdateStatus(id as string);
-  const [courseButton] = useState(
+  const [courseButton, setCourseButton] = useState(
     course.data?.status === CourseStatus.Published
   );
   const { t } = useTranslation();
@@ -76,6 +76,12 @@ const Dashboard = () => {
       });
     }
   };
+
+  // disable after publishing
+  useEffect(() => {
+    setCourseButton(true);
+  }, [courseStatus.isSuccess]);
+
   const onUpdatePublish = async () => {
     try {
       await courseUpdateStatus.mutateAsync({
