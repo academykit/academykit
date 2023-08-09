@@ -125,7 +125,7 @@ const LessonAddList = ({
             variant="outline"
             onClick={() => setAddState('physical')}
           >
-            + {t('physical')}
+            + {t('physical_name')}
           </Badge>{' '}
           <Badge
             style={{ cursor: 'pointer' }}

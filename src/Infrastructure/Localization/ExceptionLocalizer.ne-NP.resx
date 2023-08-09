@@ -1007,4 +1007,7 @@
   <data name="AssignmentUpdatedSuccessfully" xml:space="preserve">
     <value>असाइनमेन्ट सफलतापूर्वक अद्यावधिक गरियो।</value>
   </data>
+  <data name="TrainingPusbishedSuccessfully" xml:space="preserve">
+    <value>प्रशिक्षण सफलतापूर्वक प्रकाशित।</value>
+  </data>
 </root>
