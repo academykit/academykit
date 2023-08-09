@@ -308,7 +308,6 @@ namespace Lingtren.Infrastructure.Services
         public async Task<string> ChangeStatusAsync(CourseStatusRequestModel model, Guid currentUserId)
         {
             var course = await ValidateAndGetCourse(currentUserId, model.Identity, validateForModify: true).ConfigureAwait(false);
-            var message = new StringBuilder();
             if ((course.Status == CourseStatus.Draft && (model.Status == CourseStatus.Published || model.Status == CourseStatus.Rejected))
                 || (course.Status == CourseStatus.Published && (model.Status == CourseStatus.Review || model.Status == CourseStatus.Rejected))
                 || (course.Status == CourseStatus.Rejected && model.Status == CourseStatus.Published)
@@ -377,19 +376,18 @@ namespace Lingtren.Infrastructure.Services
                 }
 
             }
-            if(isSuperAdminOrAdminAccess)
-            {
-                message.AppendLine(_localizer.GetString("TrainingPusbishedSuccessfully"));
-            }
-            else
-            {
-                message.AppendLine(_localizer.GetString("TrainingStatus"));
-            }
             if (model.Status == CourseStatus.Rejected)
             {
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.CourseRejectedMailAsync(course.Id, model.Message, null));
             }
-            return message.ToString();
+            if (isSuperAdminOrAdminAccess)
+            {
+               return _localizer.GetString("TrainingPusbishedSuccessfully");
+            }
+            else
+            {
+              return  _localizer.GetString("TrainingStatus");
+            }      
         }
 
         /// <summary>
