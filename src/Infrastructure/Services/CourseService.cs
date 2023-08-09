@@ -308,7 +308,6 @@ namespace Lingtren.Infrastructure.Services
         public async Task<string> ChangeStatusAsync(CourseStatusRequestModel model, Guid currentUserId)
         {
             var course = await ValidateAndGetCourse(currentUserId, model.Identity, validateForModify: true).ConfigureAwait(false);
-
             if ((course.Status == CourseStatus.Draft && (model.Status == CourseStatus.Published || model.Status == CourseStatus.Rejected))
                 || (course.Status == CourseStatus.Published && (model.Status == CourseStatus.Review || model.Status == CourseStatus.Rejected))
                 || (course.Status == CourseStatus.Rejected && model.Status == CourseStatus.Published)
