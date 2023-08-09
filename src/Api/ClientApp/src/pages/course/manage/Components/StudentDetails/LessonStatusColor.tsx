@@ -30,7 +30,7 @@ const feedBackType = {
 };
 const physicalType = {
   true: 'attended',
-  false: 'not_attended',
+  false: 'review',
   empty: 'not_attended',
 };
 
@@ -57,7 +57,13 @@ export const getType = (type: LessonType) => {
   }
 };
 const LessonStatusColor = ({
-  status: { isPassed, isAssignmentReviewed, isCompleted, lessonType: type },
+  status: {
+    isPassed,
+    isAssignmentReviewed,
+    isCompleted,
+    lessonType: type,
+    attendenceReviewed,
+  },
 }: {
   status: IStudentInfoLesson;
 }) => {
@@ -67,6 +73,7 @@ const LessonStatusColor = ({
     <>
       <Group position="center">
         {type !== LessonType.Assignment &&
+          type !== LessonType.Physical &&
           // Logic for other lesson types
           (isPassed === true ? (
             <Badge color={'green'}>{t(getType(type).true)}</Badge>
@@ -85,6 +92,16 @@ const LessonStatusColor = ({
             : isAssignmentReviewed && (
                 <Badge color={'red'}>{t(getType(type).false)}</Badge>
               ))}
+
+        {/* Physical training review/attended/not-attended badges */}
+        {type == LessonType.Physical &&
+          (attendenceReviewed == true ? (
+            <Badge color={'green'}>{t(getType(type).true)}</Badge>
+          ) : attendenceReviewed == false ? (
+            <Badge color={'orange'}>{t(getType(type).false)}</Badge>
+          ) : (
+            <Badge color={'red'}>{t(getType(type).empty)}</Badge>
+          ))}
 
         {/* show review status badge until it is not reviewed i.e. isAssignmentReviewed=true */}
         {/* null is not submitted
