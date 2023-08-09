@@ -179,14 +179,14 @@ const AddMember = ({
           <Select
             data={departments}
             withAsterisk
-            label="Choose Department"
+            label={t('choose_department')}
             clearable
             searchable
             onSearchChange={(d) => {
               setDepSearch(d);
             }}
             searchValue={depSearch}
-            placeholder="Choose Department"
+            placeholder={t('choose_department') as string}
             onChange={(d) => {
               if (d) {
                 setData([]);
