@@ -278,12 +278,7 @@ const CourseCardHorizontal = ({
                   style={{ maxWidth: '230px', cursor: 'pointer' }}
                   leftSection={<IconUsers size={14} />}
                 >
-                  {course.groupName}safdadfadf adfadsfdsf asdfasdfadfasdadfadf
-                  adfadsfdsf asdfasdfadfasdadfadf adfadsfdsf
-                  asdfasdfadfasdadfadf adfadsfdsf asdfasdfadfasdadfadf
-                  adfadsfdsf asdfasdfadfasdadfadf adfadsfdsf
-                  asdfasdfadfasdadfadf adfadsfdsf asdfasdfadfasdadfadf
-                  adfadsfdsf asdfasdfadfas
+                  {course.groupName}
                 </Badge>
               </Group>
             </Group>
