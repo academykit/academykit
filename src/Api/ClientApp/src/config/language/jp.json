@@ -864,6 +864,8 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "optional_cost": "オプショナルなコスト",
+  "enter_optional_cost": "オプショナルなコストを入力してください",
   "certificate_delete_success": "証明書は正常に削除されました。",
   "mark_as_attended": "参加済みとしてマーク",
   "physical_name": "身体トレーニング",

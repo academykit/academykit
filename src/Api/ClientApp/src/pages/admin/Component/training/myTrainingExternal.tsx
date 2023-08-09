@@ -84,7 +84,7 @@ const MyTrainingExternal = () => {
       institute: '',
       imageUrl: '',
       range: [],
-      optionalCost: 0,
+      optionalCost: 0.0,
     },
     validate: yupResolver(schema()),
   });
@@ -213,9 +213,10 @@ const MyTrainingExternal = () => {
                 {...form.getInputProps('range')}
               />
               <NumberInput
-                label={t('cost')}
-                placeholder={t('Optional cost') as string}
+                label={t('optional_cost')}
+                placeholder={t('enter_optional_cost') as string}
                 name="optionalCost"
+                precision={2}
                 {...form.getInputProps('optionalCost')}
                 min={0}
               />

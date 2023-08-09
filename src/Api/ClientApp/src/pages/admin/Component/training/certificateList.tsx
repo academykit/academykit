@@ -81,7 +81,9 @@ const CertificateCard = ({
             {item.institute}
             {item.location && `, ${item.location}`}
           </Text>
-          <Text>{item.cost !== 0 && `Cost: Rs.${item.cost ?? 0}`}</Text>
+          <Text>
+            {item.optionalCost !== 0 && `Cost: Rs.${item.optionalCost ?? 0}`}
+          </Text>
           <UserShortProfile size={'sm'} user={item.user} />
         </Box>
         <Box style={{ width: 150, marginTop: 'auto', marginBottom: 'auto' }}>
