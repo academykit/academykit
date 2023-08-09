@@ -69,16 +69,17 @@ export const useMyCourse = (userId: string, search: string) =>
     }
   );
 
-const getCourseTeacher = async (course_id: string) =>
+const getCourseTeacher = async (course_id: string, searchParams: string) =>
   await httpClient.get<IPaginated<ICreateCourseTeacher>>(
-    api.courseTeacher.list + `?CourseIdentity=${course_id}`
+    api.courseTeacher.list + `?CourseIdentity=${course_id}&${searchParams}`
   );
 
-export const useCourseTeacher = (course_id: string) =>
+export const useCourseTeacher = (course_id: string, searchParams: string) =>
   useQuery(
-    ['get' + api.courseTeacher.list],
-    () => getCourseTeacher(course_id),
+    ['get_course_teachers' + api.courseTeacher.list + searchParams],
+    () => getCourseTeacher(course_id, searchParams),
     {
+      enabled: true,
       select: (data) => data.data,
     }
   );

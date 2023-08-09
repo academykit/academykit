@@ -11,6 +11,9 @@ import {
   Card,
   Text,
   Select,
+  Flex,
+  Loader,
+  ScrollArea,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
@@ -28,12 +31,12 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import queryStringGenerator from '@utils/queryStringGenerator';
 import { useGetTrainers } from '@utils/services/adminService';
 import { TrainingTypeEnum } from '@utils/enums';
 import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
+import queryStringGenerator from '@utils/queryStringGenerator';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -95,7 +98,11 @@ const TeacherCards = ({
   );
 };
 
-const Teacher = ({ pagination }: IWithSearchPagination) => {
+const Teacher = ({
+  searchParams,
+  pagination,
+  searchComponent,
+}: IWithSearchPagination) => {
   const { t } = useTranslation();
 
   const form = useForm({
@@ -106,7 +113,11 @@ const Teacher = ({ pagination }: IWithSearchPagination) => {
   });
   useFormErrorHooks(form);
   const slug = useParams();
-  const getTeacher = useCourseTeacher(slug.id as string);
+  const {
+    data,
+    isLoading: loading,
+    isError: error,
+  } = useCourseTeacher(slug.id as string, searchParams);
   const createTeacher = useCreateTeacherCourse();
 
   const [showAddForm, toggleAddForm] = useToggle();
@@ -172,13 +183,24 @@ const Teacher = ({ pagination }: IWithSearchPagination) => {
           </Box>
         )}
       </Transition>
-      <Box mt={20}>
-        {getTeacher.data?.items.map((item) => (
-          <TeacherCards teacher={item} key={item.id} />
-        ))}
-        {getTeacher.data &&
-          pagination(getTeacher.data?.totalPage, getTeacher.data.items.length)}
-      </Box>
+      <Flex my={'lg'} hidden>
+        {searchComponent(t('search_users') as string)}
+      </Flex>
+      {loading && <Loader />}
+      {error && <Box>{errorType(error)}</Box>}
+
+      <ScrollArea>
+        {data &&
+          data?.items &&
+          (data.items.length < 1 ? (
+            <Box>{t('no_users')}</Box>
+          ) : (
+            data.items.map((item) => (
+              <TeacherCards teacher={item} key={item.id} />
+            ))
+          ))}
+      </ScrollArea>
+      {data && pagination(data.totalPage, data.items.length)}
     </Container>
   );
 };

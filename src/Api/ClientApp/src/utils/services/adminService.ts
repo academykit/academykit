@@ -621,6 +621,7 @@ export const useGetTrainers = (
     [api.adminUser.getTrainer(search, lessonType, id)],
     () => getTrainers(search, lessonType, id),
     {
+      enabled: true,
       select: (data) => data.data,
     }
   );
