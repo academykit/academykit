@@ -78,12 +78,7 @@
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
-            var questionPool = await _questionPoolService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
-            if (questionPool == null)
-            {
-                throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
-            }
-
+            var questionPool = await _questionPoolService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false) ?? throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var response = await _questionService.AddAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
             return new QuestionResponseModel(response);
@@ -97,11 +92,7 @@
         [HttpGet("{id}")]
         public async Task<QuestionResponseModel> Get(string identity, Guid id)
         {
-            var questionPool = await _questionPoolService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
-            if (questionPool == null)
-            {
-                throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
-            }
+            var questionPool = await _questionPoolService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false) ?? throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
             var showCorrectAndHints = false;
             if (questionPool.CreatedBy == CurrentUser.Id || questionPool.QuestionPoolTeachers.Any(x => x.UserId == CurrentUser.Id))
             {
@@ -136,11 +127,7 @@
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
-            var questionPool = await _questionPoolService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
-            if (questionPool == null)
-            {
-                throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
-            }
+            var questionPool = await _questionPoolService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false) ?? throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
             await _questionService.DeleteQuestionAsync(poolIdentity: identity, questionId: id, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("QuestionRemovedSuccessfully") });
         }

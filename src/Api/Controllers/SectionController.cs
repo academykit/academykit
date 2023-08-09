@@ -42,12 +42,7 @@ namespace Lingtren.Api.Controllers
         public async Task<SearchResult<SectionResponseModel>> SearchAsync(string identity, [FromQuery] SectionBaseSearchCriteria searchCriteria)
         {
             CommonHelper.ValidateArgumentNotNullOrEmpty(identity, nameof(identity));
-            var course = await _courseService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
-            if (course == null)
-            {
-                throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
-            }
-
+            var course = await _courseService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false) ?? throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             searchCriteria.CurrentUserId = CurrentUser.Id;
             searchCriteria.CourseId = course.Id;
 
@@ -81,12 +76,7 @@ namespace Lingtren.Api.Controllers
                 throw new ForbiddenException(_localizer.GetString("SectionNameCannotBeNull"));
             }
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var course = await _courseService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false);
-            if (course == null)
-            {
-                throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
-            }
-
+            var course = await _courseService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false) ?? throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             if (course.Status == CourseStatus.Completed)
             {
                 throw new ArgumentException(_localizer.GetString("CourseCompleted"));
@@ -115,11 +105,7 @@ namespace Lingtren.Api.Controllers
         [HttpGet("{sectionIdentity}")]
         public async Task<SectionResponseModel> Get(string identity, string sectionIdentity)
         {
-            var course = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            if (course == null)
-            {
-                throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
-            }
+            var course = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false) ?? throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             var model = await _sectionService.GetByIdOrSlugAsync(sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
             return new SectionResponseModel(model, fetchLesson: true);
         }
@@ -134,18 +120,8 @@ namespace Lingtren.Api.Controllers
         {
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
 
-            var course = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            if (course == null)
-            {
-                throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
-            }
-            var entity = await _sectionService.GetByIdOrSlugAsync(sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
-
-            if (entity == null)
-            {
-                throw new EntityNotFoundException(_localizer.GetString("SectionNotFound"));
-            }
-
+            var course = await _courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false) ?? throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
+            var entity = await _sectionService.GetByIdOrSlugAsync(sectionIdentity, CurrentUser.Id).ConfigureAwait(false) ?? throw new EntityNotFoundException(_localizer.GetString("SectionNotFound"));
             entity.Name = model.Name;
             entity.CourseId = course.Id;
             entity.UpdatedBy = CurrentUser.Id;
