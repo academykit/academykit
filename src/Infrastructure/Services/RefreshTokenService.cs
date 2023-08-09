@@ -43,7 +43,7 @@
         {
             try
             {
-                return await _unitOfWork.GetRepository<RefreshToken>().GetFirstOrDefaultAsync(predicate: p => p.Token == token && p.IsActive).ConfigureAwait(false);
+                return await _unitOfWork.GetRepository<RefreshToken>().GetFirstOrDefaultAsync(predicate: p => p.Token == token).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Box,
   Button,
   Grid,
   Group,
@@ -7,7 +8,7 @@ import {
   Paper,
   ScrollArea,
   Switch,
-  Textarea,
+  Text,
   Tooltip,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
@@ -25,6 +26,7 @@ import CreateFeedback from '../FeedBack/CreateFeedBack';
 import { useTranslation } from 'react-i18next';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import TextEditor from '@components/Ui/TextEditor';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -167,12 +169,13 @@ const AddFeedback = ({
               </Grid.Col>
             </Tooltip>
           </Grid>
-          <Textarea
-            placeholder={t('feedback_description') as string}
-            label={t('feedback_description')}
-            mb={10}
-            {...form.getInputProps('description')}
-          />
+          <Box my={20}>
+            <Text size={'sm'}>{t('feedback_description')}</Text>
+            <TextEditor
+              placeholder={t('feedback_description') as string}
+              {...form.getInputProps('description')}
+            />
+          </Box>
           <Group position="left" mt="md">
             <Button
               type="submit"

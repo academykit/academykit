@@ -1,11 +1,12 @@
 import {
+  Box,
   Button,
   Grid,
   Group,
   NumberInput,
   Paper,
   Switch,
-  Textarea,
+  Text,
   Tooltip,
 } from '@mantine/core';
 import { DatePickerInput, TimeInput } from '@mantine/dates';
@@ -26,6 +27,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import TextEditor from '@components/Ui/TextEditor';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -285,11 +287,13 @@ const AddExam = ({
           </Tooltip>
 
           <Grid.Col>
-            <Textarea
-              label={t('description')}
-              placeholder={t('exam_description') as string}
-              {...form.getInputProps('description')}
-            />
+            <Box my={20}>
+              <Text size={'sm'}>{t('description')}</Text>
+              <TextEditor
+                placeholder={t('exam_description') as string}
+                {...form.getInputProps('description')}
+              />
+            </Box>
           </Grid.Col>
         </Grid>
 

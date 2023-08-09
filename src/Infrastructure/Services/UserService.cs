@@ -143,23 +143,25 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         public async Task<bool> Logout(string token, Guid currentUserId)
         {
-            var user = await GetUserFromRefreshToken(token);
+            var userRefreshToken = await GetUserRefreshToken(token).ConfigureAwait(false);
+            if (userRefreshToken == null)
+            {
+                return false;
+            }
+            var user = await GetAsync(userRefreshToken.UserId, includeProperties: false);
+
             // return false if no user found with token
             if (user == null)
             {
                 return false;
             }
+
             if (user.Id != currentUserId)
             {
                 return false;
             }
-            var refreshToken = await GetUserRefreshToken(token);
-            // return false if token is not active
-            if (!refreshToken.IsActive)
-            {
-                return false;
-            }
-            await _refreshTokenService.DeleteAsync(refreshToken);
+
+            await _refreshTokenService.DeleteAsync(userRefreshToken).ConfigureAwait(false);
             return true;
         }
 
@@ -171,32 +173,31 @@ namespace Lingtren.Infrastructure.Services
         public async Task<AuthenticationModel> RefreshTokenAsync(string token)
         {
             var authenticationModel = new AuthenticationModel();
-
-            var user = await GetUserFromRefreshToken(token);
-            if (user == null)
-            {
-                authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = _localizer.GetString("TokenNotMatched");
-                return authenticationModel;
-            }
             var refreshToken = await GetUserRefreshToken(token);
             if (refreshToken == null)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = _localizer.GetString("TokenNotFound");
+                authenticationModel.Message = "REFRESH_TOKEN_INVALID";
+                return authenticationModel;
+            }
+            var user = await GetAsync(refreshToken.UserId, includeProperties: false);
+
+            if (user == null)
+            {
+                authenticationModel.IsAuthenticated = false;
+                authenticationModel.Message = "REFRESH_TOKEN_INVALID";
                 return authenticationModel;
             }
 
             if (!refreshToken.IsActive)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = _localizer.GetString("TokenNotActive");
+                authenticationModel.Message = "REFRESH_TOKEN_INVALID";
                 return authenticationModel;
             }
-            refreshToken.IsActive = false;
 
             //Revoke Current Refresh Token
-            await _refreshTokenService.UpdateAsync(refreshToken);
+            await _refreshTokenService.DeleteAsync(refreshToken);
 
             //Generate new Refresh Token and save to Database
             var newRefreshToken = new RefreshToken
@@ -357,7 +358,7 @@ namespace Lingtren.Infrastructure.Services
                     while (csv.Read())
                     {
                         var user = csv.GetRecord<UserImportDto>();
-                        if(user == default)
+                        if (user == default)
                         {
                             continue;
                         }
@@ -977,17 +978,6 @@ namespace Lingtren.Infrastructure.Services
         {
             return await _refreshTokenService.GetByValue(token).ConfigureAwait(false);
         }
-        private async Task<User?> GetUserFromRefreshToken(string token)
-        {
-            var userRefreshToken = await GetUserRefreshToken(token).ConfigureAwait(false);
-            if (userRefreshToken != null)
-            {
-                var user = await GetAsync(userRefreshToken.UserId, includeProperties: false);
-                return user;
-            }
-
-            return null;
-        }
 
         private async Task<string> GetUniqueRefreshToken()
         {
@@ -1032,7 +1022,8 @@ namespace Lingtren.Infrastructure.Services
         public async Task RemoveRefreshTokenAsync(Guid currentUserId)
         {
             var userToken = await _unitOfWork.GetRepository<RefreshToken>().GetAllAsync(predicate: p => p.UserId == currentUserId && p.IsActive == true).ConfigureAwait(false);
-            _unitOfWork.GetRepository<RefreshToken>().Delete(userToken);
+            userToken.ToList().ForEach(x => x.IsActive = false);
+            _unitOfWork.GetRepository<RefreshToken>().Update(userToken);
         }
 
         /// <summary>
