@@ -20,20 +20,17 @@ namespace Lingtren.Api.Controllers
         private readonly ICourseService _courseService;
         private readonly IValidator<CourseRequestModel> _validator;
         private readonly IValidator<CourseStatusRequestModel> _courseStatusValidator;
-        private readonly ILogger<CourseController> _logger;
         private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
 
         public CourseController(
             ICourseService courseService,
             IValidator<CourseRequestModel> validator,
-            ILogger<CourseController> logger,
             IValidator<CourseStatusRequestModel> courseStatusValidator,
             IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _courseService = courseService;
             _validator = validator;
             _courseStatusValidator = courseStatusValidator;
-            _logger = logger;
             _localizer = localizer;
         }
 
@@ -185,18 +182,8 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> ChangeStatus(CourseStatusRequestModel model)
         {
             await _courseStatusValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var result = await _courseService.ChangeStatusAsync(model, CurrentUser.Id).ConfigureAwait(false);
-            var messagestring = string.Empty;
-            if (result)
-            {
-                messagestring = _localizer.GetString("TrainingPusbishedSuccessfully");
-            }
-            if (!result)
-            {
-                messagestring = _localizer.GetString("TrainingStatus");
-              
-            }           
-            return Ok(new CommonResponseModel() { Success = true, Message = messagestring});
+            var result = await _courseService.ChangeStatusAsync(model, CurrentUser.Id).ConfigureAwait(false);     
+            return Ok(new CommonResponseModel() { Success = true, Message = result});
         }
 
         /// <summary>
