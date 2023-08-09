@@ -8,12 +8,9 @@ namespace Lingtren.Api.Controllers
     public class UtilityController : BaseApiController
     {
         private readonly IDynamicImageGenerator _dynamicImageGenerator;
-        private readonly ILogger<UtilityController> _logger;
-        public UtilityController(IDynamicImageGenerator dynamicImageGenerator,
-        ILogger<UtilityController> logger)
+        public UtilityController(IDynamicImageGenerator dynamicImageGenerator)
         {
             _dynamicImageGenerator = dynamicImageGenerator;
-            _logger = logger;
         }
 
         [HttpGet("ogimage")]

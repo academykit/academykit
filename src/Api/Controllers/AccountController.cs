@@ -12,6 +12,9 @@
     using Microsoft.Extensions.Localization;
     using System.IdentityModel.Tokens.Jwt;
 
+    /// <summary>
+    /// Conntroller for managing account actions
+    /// </summary>
     public class AccountController : BaseApiController
     {
         private readonly IUserService _userService;
@@ -19,24 +22,34 @@
         private readonly IValidator<ResetPasswordRequestModel> _resetPasswordValidator;
         private readonly IValidator<ChangePasswordRequestModel> _changePasswordValidator;
         private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
-        private readonly ILogger<AccountController> _logger;
 
+        /// <summary>
+        /// Initializes the new instance of <see cref="AccountController" /> 
+        /// </summary>
+        /// <param name="userService"> the instance of <see cref="IUserService" /> .</param>
+        /// <param name="validator"> the instance of <se cref="IValidator" />  for the instance of <see cref="LoginRequestModel" /> </param>
+        /// <param name="resetPasswordValidator"> the instance of <se cref="IValidator" />  for the instance of <see cref="ResetPasswordRequestModel" /> </param>
+        /// <param name="changePasswordValidator"> the instance of <se cref="IValidator" />  for the instance of <see cref="ChangePasswordRequestModel" /> </param>
+        /// <param name="localizer">the instance of <se cref="IStringLocalizer" />  for the instance of <see cref="ExceptionLocalizer" /> </param>
         public AccountController(
             IUserService userService,
             IValidator<LoginRequestModel> validator,
             IValidator<ResetPasswordRequestModel> resetPasswordValidator,
             IValidator<ChangePasswordRequestModel> changePasswordValidator,
-            IStringLocalizer<ExceptionLocalizer> localizer,
-            ILogger<AccountController> logger)
+            IStringLocalizer<ExceptionLocalizer> localizer
+          )
         {
             _userService = userService;
             _validator = validator;
             _resetPasswordValidator = resetPasswordValidator;
             _changePasswordValidator = changePasswordValidator;
             _localizer = localizer;
-            _logger = logger;
         }
 
+        /// <summary>
+        /// get users
+        /// </summary>
+        /// <returns> the list of <see cref="UserResponseModel" />. </returns>
         [HttpGet]
         public async Task<UserResponseModel> GetUser()
         {
@@ -44,6 +57,11 @@
             return new UserResponseModel(user);
         }
 
+        /// <summary>
+        /// login the account
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="LoginRequestModel"/> </param>
+        /// <returns> the task complete </returns>
         [HttpPost("Login")]
         [AllowAnonymous]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel model)
@@ -57,6 +75,11 @@
             return Ok(result);
         }
 
+        /// <summary>
+        /// account logout
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="RefreshTokenRequestModel"/></param>
+        /// <returns> the instance of <see cref="CommonResponseModel"/></returns>
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout([FromBody] RefreshTokenRequestModel model)
         {
@@ -69,9 +92,14 @@
             {
                 return NotFound(new CommonResponseModel { Message = _localizer.GetString("TokenNotMatched") });
             }
-            return Ok(new { Message = _localizer.GetString("LogoutSuccess"), Success = true });
+            return Ok(new CommonResponseModel { Message = _localizer.GetString("LogoutSuccess"), Success = true });
         }
 
+        /// <summary>
+        /// forgot password of account
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="ForgotPasswordRequestModel"/></param>
+        /// <returns> the instance of <see cref="CommonResponseModel"/></returns>
         [HttpPost("ForgotPassword")]
         [AllowAnonymous]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequestModel model)
@@ -82,17 +110,27 @@
                 return BadRequest(new CommonResponseModel { Message = _localizer.GetString("UserNotFound") });
             }
             await _userService.ResetPasswordAsync(user).ConfigureAwait(false);
-            return Ok(new { message = _localizer.GetString("ForgetPasswordExecuted"), success = true });
+            return Ok(new CommonResponseModel { Message = _localizer.GetString("ForgetPasswordExecuted"), Success = true });
         }
 
+        /// <summary>
+        /// verify reset token of account
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="VerifyResetTokenModel"/></param>
+        /// <returns> the instance of <see cref="CommonResponseModel"/></returns>
         [HttpPost("VerifyResetToken")]
         [AllowAnonymous]
         public async Task<IActionResult> VerifyResetToken([FromBody] VerifyResetTokenModel model)
         {
-            var passwordResetToken = await _userService.VerifyPasswordResetTokenAsync(model).ConfigureAwait(false);
-            return Ok(new { message = _localizer.GetString("PasswordResetTokenMatched"), data = passwordResetToken });
+            await _userService.VerifyPasswordResetTokenAsync(model).ConfigureAwait(false);
+            return Ok(new CommonResponseModel { Message = _localizer.GetString("PasswordResetTokenMatched"), Success = true });
         }
 
+        /// <summary>
+        /// reset password of account
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="ResetPasswordRequestModel"/></param>
+        /// <returns> the instance of <see cref="CommonResponseModel"/></returns>
         [HttpPost("ResetPassword")]
         [AllowAnonymous]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestModel model)
@@ -116,9 +154,14 @@
             }
             user.HashPassword = _userService.HashPassword(model.NewPassword);
             await _userService.UpdateAsync(user, includeProperties: false);
-            return Ok(new { message = _localizer.GetString("PasswordResetSuccess"), success = true });
+            return Ok(new CommonResponseModel { Message = _localizer.GetString("PasswordResetSuccess"), Success = true });
         }
 
+        /// <summary>
+        /// refresh token of account
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="RefreshTokenRequestModel"/></param>
+        /// <returns> the instance of <see cref="CommonResponseModel"/></returns>
         [HttpPost("RefreshToken")]
         [AllowAnonymous]
         public async Task<IActionResult> RefreshToken(RefreshTokenRequestModel model)
@@ -134,12 +177,17 @@
             }
         }
 
+        /// <summary>
+        /// change password of account
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="ChangePasswordRequestModel"/></param>
+        /// <returns> the instance of <see cref="CommonResponseModel"/></returns>
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestModel model)
         {
             await _changePasswordValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             await _userService.ChangePasswordAsync(model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new { message = _localizer.GetString("PasswordChanged"), success = true });
+            return Ok(new CommonResponseModel { Message = _localizer.GetString("PasswordChanged"), Success = true });
         }
     }
 }
