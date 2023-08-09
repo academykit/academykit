@@ -206,7 +206,7 @@ const AddExam = ({
               valueFormat="MMM DD, YYYY"
               placeholder={t('pick_date') as string}
               withAsterisk
-              label={t('Start date')}
+              label={t('start_date')}
               minDate={moment(new Date()).toDate()}
               {...form.getInputProps('startDate')}
             />
@@ -235,7 +235,7 @@ const AddExam = ({
             <DatePickerInput
               valueFormat="MMM DD, YYYY"
               placeholder={t('pick_date') as string}
-              label={t('End date')}
+              label={t('end_date')}
               withAsterisk
               minDate={form.values?.startDate}
               {...form.getInputProps('endDate')}
@@ -286,7 +286,7 @@ const AddExam = ({
 
           <Grid.Col>
             <Textarea
-              label={t('Description')}
+              label={t('description')}
               placeholder={t('exam_description') as string}
               {...form.getInputProps('description')}
             />
