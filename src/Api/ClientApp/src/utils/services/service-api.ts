@@ -64,8 +64,17 @@ export const api = {
     addAttachment: `/api/group/file`,
     removeAttachment: (identity: string, fileId: string) =>
       `/api/group/${identity}/files/${fileId}`,
-    notMembers: (identity: string, query: string) =>
-      `/api/group/${identity}/notMembers?${query}`,
+    notMembers: (
+      identity: string,
+      query: string,
+      departmentId: string | undefined
+    ) => {
+      const url = `/api/group/${identity}/notMembers?${query}`;
+      if (departmentId) {
+        return url + `&departmentIdentity=${departmentId}`;
+      }
+      return url;
+    },
   },
 
   course: {

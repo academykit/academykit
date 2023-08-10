@@ -257,9 +257,10 @@ const Classes = () => {
                 className={cx(classes.videoSection, classes.assignmentSection)}
               >
                 <PhysicalTrainingDetail
+                  lessonSlug={courseLesson.data.slug}
                   name={courseLesson.data.name}
                   id={courseLesson.data.id}
-                  hasAttended={courseLesson.data.hasFeedbackSubmitted} // need to change this
+                  hasAttended={courseLesson.data.hasAttended}
                   startDate={courseLesson.data.startDate}
                 />
               </Box>

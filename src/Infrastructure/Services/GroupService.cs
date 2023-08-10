@@ -537,15 +537,15 @@
                  || x.Email.ToLower().Trim().Contains(search)
                  || x.MobileNumber.ToLower().Trim().Contains(search));
             }
-            if(!string.IsNullOrWhiteSpace(criteria.DepartmentIdentity))
+            if (!string.IsNullOrWhiteSpace(criteria.DepartmentIdentity))
             {
-                var search = criteria.DepartmentIdentity.ToLower().Trim();
-                predicate = predicate.And(x => x.DepartmentId.ToString() == search || x.Department.Slug.ToLower().Trim() == search);
+                var departmentId = criteria.DepartmentIdentity.ToLower().Trim();
+                predicate = predicate.And(x => x.DepartmentId.ToString() == departmentId || x.Department.Slug.ToLower().Trim() == departmentId);
             }
             predicate = predicate.And(p => !p.GroupMembers.Any(x => x.GroupId == group.Id && x.UserId == p.Id));
             predicate = predicate.And(p => p.Status == UserStatus.Active && (p.Role != UserRole.SuperAdmin && p.Role != UserRole.Admin));
 
-            var users = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate).ConfigureAwait(false);
+            var users = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate, include: (x) => x.Include(p => p.Department)).ConfigureAwait(false);
             var result = users.ToIPagedList(criteria.Page, criteria.Size);
             var response = new SearchResult<UserModel>
             {
@@ -557,6 +557,11 @@
             };
             result.Items.ForEach(x => response.Items.Add(new UserModel(x)));
             return response;
+        }
+
+        public Task<GroupAddMemberResponseModel> AddMembersByDepartment(string identity, string departmentId, Guid currentUserId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

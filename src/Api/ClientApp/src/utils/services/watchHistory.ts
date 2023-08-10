@@ -22,10 +22,12 @@ export const useWatchHistory = (
 ) => {
   const queryClient = useQueryClient();
   return useMutation([api.watchHistory.create], watchHistory, {
-    onSuccess: () =>
+    onSuccess: () => {
       queryClient.invalidateQueries([
         api.lesson.courseLesson(courseIdentity, lessonIdentity),
-      ]),
+      ]);
+      queryClient.invalidateQueries([api.course.detail(courseIdentity)]);
+    },
   });
 };
 

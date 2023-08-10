@@ -10,12 +10,14 @@ const postAttendance = async ({ identity }: { identity: string }) =>
     {}
   );
 
-export const usePostAttendance = (slug: string) => {
+export const usePostAttendance = (courseId: string, lessonId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation(['attend'], postAttendance, {
     onSuccess: () => {
-      queryClient.invalidateQueries([api.course.detail(slug)]);
+      queryClient.invalidateQueries([
+        api.lesson.courseLesson(courseId, lessonId),
+      ]);
     },
   });
 };

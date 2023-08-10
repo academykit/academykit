@@ -127,6 +127,7 @@ export interface IStudentInfoLesson {
   user: IUser;
   questionSetId: string;
   isAssignmentReviewed: boolean | null;
+  attendenceReviewed: boolean;
 }
 
 const getStudentStatisticsDetails = async (
