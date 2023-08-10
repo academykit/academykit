@@ -61,12 +61,13 @@ const Dashboard = () => {
 
   const onPublish = async () => {
     try {
-      await courseStatus.mutateAsync({
+      const res = await courseStatus.mutateAsync({
         identity: id as string,
         status: CourseStatus.Review,
       });
+
       showNotification({
-        message: t('training_sent_to_review'),
+        message: res.data.message,
       });
     } catch (err) {
       const error = errorType(err);
