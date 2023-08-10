@@ -865,6 +865,8 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "physical_approve": "出席が承認されました。",
+  "physical_deny": "出席が拒否されました。",
   "optional_cost": "オプショナルなコスト",
   "enter_optional_cost": "オプショナルなコストを入力してください",
   "certificate_delete_success": "証明書は正常に削除されました。",
