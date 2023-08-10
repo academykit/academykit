@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Badge,
-  Box,
   createStyles,
   Flex,
   Group,

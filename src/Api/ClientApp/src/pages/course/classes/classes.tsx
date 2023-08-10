@@ -260,7 +260,7 @@ const Classes = () => {
                   lessonSlug={courseLesson.data.slug}
                   name={courseLesson.data.name}
                   id={courseLesson.data.id}
-                  hasAttended={courseLesson.data.hasAttended} // need to change this
+                  hasAttended={courseLesson.data.hasAttended}
                   startDate={courseLesson.data.startDate}
                 />
               </Box>
