@@ -459,9 +459,11 @@
                                     lesson.Id, searchCriteria.CurrentUserId);
                 throw new ForbiddenException(_localizer.GetString("InvalidLessonAssignmentType"));
             }
-            var startDateLocal = TimeZoneInfo.ConvertTime((DateTimeOffset)lesson.StartDate,TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time"));
-            var currentLocalDate = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time"));
-            
+            DateTime currentDateTime = DateTime.UtcNow;
+            TimeZoneInfo nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
+            DateTime startDateLocal = TimeZoneInfo.ConvertTime(lesson.StartDate.Value.ToLocalTime(), nepalTimeZone);
+            DateTime currentLocalDate = TimeZoneInfo.ConvertTime(currentDateTime, nepalTimeZone);
+
             if (startDateLocal > currentLocalDate)
             {
                 throw new ForbiddenException(_localizer.GetString("AssignmentStartTimeException"));
