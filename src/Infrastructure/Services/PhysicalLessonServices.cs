@@ -79,7 +79,6 @@ namespace Lingtren.Infrastructure.Services
                             CourseId = lesson.CourseId,
                             UserId = user.Id,
                             IsCompleted = true,
-                            IsPassed = true,
                             CreatedBy = user.Id,
                             CreatedOn = DateTime.UtcNow,
                             UpdatedBy = user.Id,
