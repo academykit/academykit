@@ -54,6 +54,7 @@ const StudentLessonDetails = ({
     lessonName,
     questionSetId,
     isPassed,
+    attendenceReviewed,
   },
   courseId,
   studentId,
@@ -328,15 +329,30 @@ const StudentLessonDetails = ({
       <Group>
         {getViewButton()}
         {/* show button when student is failed or has not completed exam */}
-        {(!isCompleted || !isPassed) && (
+        {/* button for other lesson types */}
+        {(!isCompleted || !isPassed) && type !== LessonType.Physical && (
           <Tooltip label={`${t('mark_as')} ${getType(type).true}`}>
             <ActionIcon
               // open different pop up for physical lesson type
-              onClick={
-                type == LessonType.Physical
-                  ? () => toggleReview()
-                  : () => setConfirmComplete()
-              }
+              onClick={() => setConfirmComplete()}
+              variant="subtle"
+              color={'primary'}
+            >
+              {watchHistory.isLoading ? (
+                <Loader variant="oval" />
+              ) : (
+                <IconCheck />
+              )}
+            </ActionIcon>
+          </Tooltip>
+        )}
+
+        {/* button for other physical type */}
+        {!attendenceReviewed && type == LessonType.Physical && (
+          <Tooltip label={`${t('mark_as')} ${getType(type).true}`}>
+            <ActionIcon
+              // open different pop up for physical lesson type
+              onClick={() => toggleReview()}
               variant="subtle"
               color={'primary'}
             >
