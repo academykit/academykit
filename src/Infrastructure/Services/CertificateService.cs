@@ -44,7 +44,7 @@ namespace Lingtren.Infrastructure.Services
                     Location = model.Location,
                     CreatedBy = currentUserId,
                     CreatedOn = DateTime.UtcNow,
-                    OptionalCost = model.OptionalCost,
+                    OptionalCost = model.OptionalCost.Value,
                 }; ;
                 var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (isAdmin)

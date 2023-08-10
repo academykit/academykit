@@ -310,9 +310,9 @@ namespace Lingtren.Api.Controllers
         [HttpGet("samplefile")]
         public IActionResult SampleFile()
         {
-            var data = new List<BulkImportUserDto>();
+            var data = new List<UserImportDto> ();
             var mobileNumber = "+9779801230314";
-            data.Add(new BulkImportUserDto 
+            data.Add(new UserImportDto
             {
                 FirstName = "Bijay",
                 MiddleName = string.Empty,

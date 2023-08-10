@@ -15,6 +15,6 @@ namespace Lingtren.Application.Common.Models.RequestModels
         public string Location { get; set; }
         public string Institute { get; set; }
         public int Duration { get; set; }
-        public decimal OptionalCost { get; set; }
+        public decimal? OptionalCost { get; set; }
     }
 }

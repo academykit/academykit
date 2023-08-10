@@ -390,6 +390,7 @@ namespace Lingtren.Infrastructure.Services
                     {
                         foreach (var user in newUsersList)
                         {
+                            
                             var userEntity = new User()
                             {
                                 Id = Guid.NewGuid(),
@@ -398,9 +399,9 @@ namespace Lingtren.Infrastructure.Services
                                 LastName = user.LastName,
                                 Email = user.Email,
                                 Status = UserStatus.Pending,
-                                Profession = user.Profession,
+                                Profession = user.Designation,
                                 MobileNumber = user.MobileNumber,
-                                Role = Enum.Parse<UserRole>(user.Role),
+                                Role = (UserRole)Enum.Parse(typeof(UserRole), user.Role, true),
                                 CreatedBy = currentUserId,
                                 CreatedOn = DateTime.UtcNow
                             };
@@ -1272,7 +1273,6 @@ namespace Lingtren.Infrastructure.Services
                     {
                         throw new ForbiddenException(_localizer.GetString("AdminCannotAddAdmin"));
                     }
-
                 }
             }
             catch (ForbiddenException ex)
