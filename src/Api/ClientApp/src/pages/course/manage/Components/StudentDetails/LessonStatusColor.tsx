@@ -95,9 +95,11 @@ const LessonStatusColor = ({
 
         {/* Physical training review/attended/not-attended badges */}
         {type == LessonType.Physical &&
-          (attendenceReviewed == true ? (
+          (attendenceReviewed == true && isPassed == true ? (
             <Badge color={'green'}>{t(getType(type).true)}</Badge>
-          ) : attendenceReviewed == false ? (
+          ) : attendenceReviewed == true && isPassed == null ? (
+            <Badge color={'red'}>{t(getType(type).empty)}</Badge>
+          ) : attendenceReviewed == false && isPassed == null ? (
             <Badge color={'orange'}>{t(getType(type).false)}</Badge>
           ) : (
             <Badge color={'red'}>{t(getType(type).empty)}</Badge>
