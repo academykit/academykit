@@ -15,7 +15,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string Duration { get; set; }
         public CertificateStatus Status { get; set; }
         public UserModel User { get; set; }
-        public decimal OptionalCost { get; set; }
+        public decimal? OptionalCost { get; set; }
         public CertificateResponseModel()
         {
 

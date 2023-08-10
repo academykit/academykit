@@ -1010,7 +1010,22 @@
   <data name="AssignmentUpdatedSuccessfully" xml:space="preserve">
     <value>割り当てが正常に更新されました。</value>
   </data>
+  <data name="AlreadyEnrolledUser" xml:space="preserve">
+    <value>すでに登録されているメールアドレスまたは携帯電話番号:</value>
+  </data>
+  <data name="InvalidEmailFormat" xml:space="preserve">
+    <value>無効なメールアドレス:</value>
+  </data>
   <data name="TrainingPusbishedSuccessfully" xml:space="preserve">
     <value>トレーニングは正常に公開されました。</value>
+  </data>
+  <data name="NewGroupMember" xml:space="preserve">
+    <value>新しいグループメンバー:</value>
+  </data>
+  <data name="UpdatedDeletedUser" xml:space="preserve">
+    <value>削除されたユーザーを更新しました:</value>
+  </data>
+  <data name="UpdatedUser" xml:space="preserve">
+    <value>更新されたユーザー:</value>
   </data>
 </root>

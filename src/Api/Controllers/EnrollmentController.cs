@@ -1,0 +1,25 @@
+﻿using Lingtren.Api.Common;
+using Lingtren.Api.Controllers;
+using Lingtren.Application.Common.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Api.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class EnrollmentController : BaseApiController
+    {
+        private readonly IEnrollmentService _enrollmentService;
+        public EnrollmentController(IEnrollmentService enrollmentService)
+        {
+            _enrollmentService = enrollmentService;
+        }
+
+        [HttpPost("Enrollnment")]
+        public async Task<IActionResult> Enrolluser(IList<string> emailOrMobileNumber,string courseIdentity)
+        {
+            var message = await _enrollmentService.EnrollUserAsync(emailOrMobileNumber, CurrentUser.Id, courseIdentity).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = message});
+        }
+    }
+}

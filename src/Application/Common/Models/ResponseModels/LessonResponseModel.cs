@@ -68,7 +68,7 @@
             User = model.User != null ? new UserModel(model.User) : new UserModel();
             Meeting = model.Meeting == null ? null : new MeetingResponseModel(model.Meeting);
             QuestionSet = model.QuestionSet == null ? null : new QuestionSetResponseModel(model.QuestionSet);
-            ZoomId = model.Meeting != null ? model.Meeting.ZoomLicenseId.ToString() : null;
+            ZoomId = model.Meeting != null ? model.Meeting.MeetingNumber.ToString() : null;
             Password = model.Meeting != null ? model.Meeting.Passcode : null;
         }
         public LessonResponseModel()

@@ -9,11 +9,9 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Localization;
-    using Lingtren.Infrastructure.Services;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
-    using PuppeteerSharp;
 
     public class CourseController : BaseApiController
     {

@@ -12,12 +12,12 @@ namespace Lingtren.Application.Common.Validators
         {
             RuleFor(x => x.StartDate).NotNull().NotEmpty().WithMessage(contex => stringLocalizer.GetString("StartdateEmptyError")).Must(IsValidDate).WithMessage(context => stringLocalizer.GetString("CertificateStartTimeError"));
             RuleFor(x => x.EndDate).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("EndTimeEmptyError")).Must(IsValidDate).WithMessage(context => stringLocalizer.GetString("CertificateEndTimeError"));
-            RuleFor(x => x.OptionalCost).NotNull().NotEmpty().Must(IsValidCost).WithMessage(context => stringLocalizer.GetString("CannotBeNegative"));
+            RuleFor(x => x.OptionalCost).Must(cost =>IsValidCost(cost.Value)).WithMessage(context => stringLocalizer.GetString("CannotBeNegative"));
         }
 
         public static bool IsValidCost(decimal cost)
         {
-            string pattern = "^(?!0)[1-9]\\d*$";
+            string pattern = "^(0(\\.\\d+)?|[1-9]\\d*(\\.\\d+)?)$";
            return Regex.IsMatch(cost.ToString(), pattern);
         }
         public static bool IsValidDate(DateTime y)
