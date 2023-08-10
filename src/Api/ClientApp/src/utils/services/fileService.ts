@@ -50,3 +50,23 @@ export const uploadUserCsv = (file: File | null) => {
     }
   );
 };
+
+export const downloadCSVFile = async (path: string) => {
+  try {
+    const response = await httpClient.get(path);
+    const link = document.createElement('a');
+
+    if (response.statusText == 'OK') {
+      const objRef = window.URL.createObjectURL(
+        new Blob([response.data as Blob], { type: 'text/csv;charset=utf-8' })
+      );
+      link.href = objRef;
+      link.setAttribute('download', 'sample.csv');
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(objRef);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
