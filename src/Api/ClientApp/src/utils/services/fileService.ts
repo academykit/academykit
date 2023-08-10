@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { httpClient } from './service-axios';
+import errorType from './axiosError';
+import { showNotification } from '@mantine/notifications';
 
 export enum FileAccess {
   Private = 1,
@@ -67,6 +69,11 @@ export const downloadCSVFile = async (path: string) => {
       window.URL.revokeObjectURL(objRef);
     }
   } catch (error) {
-    console.log(error);
+    const err = errorType(error);
+    showNotification({
+      message: err,
+      color: 'red',
+      title: 'Error',
+    });
   }
 };
