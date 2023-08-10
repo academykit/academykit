@@ -15,6 +15,12 @@ namespace Api.Controllers
             _enrollmentService = enrollmentService;
         }
 
+        /// <summary>
+        /// enroll user in course
+        /// </summary>
+        /// <param name="emailOrMobileNumber">email of user</param>
+        /// <param name="courseIdentity">Course id or slug</param>
+        /// <returns>Task completed</returns>
         [HttpPost("Enrollnment")]
         public async Task<IActionResult> Enrolluser(IList<string> emailOrMobileNumber,string courseIdentity)
         {

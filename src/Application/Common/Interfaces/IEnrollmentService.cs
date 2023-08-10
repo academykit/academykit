@@ -9,9 +9,9 @@ namespace Lingtren.Application.Common.Interfaces
         /// enroll user in training
         /// </summary>
         /// <param name="email">user email or mobile number</param>
-        /// <param name="currentUserId"></param>
-        /// <param name="courseIdentity"></param>
-        /// <returns></returns>
+        /// <param name="currentUserId">current user id</param>
+        /// <param name="courseIdentity">course id or slug</param>
+        /// <returns>Task completed</returns>
         /// <exception cref="EntityNotFoundException"></exception>
         Task<string> EnrollUserAsync(IList<string> emailOrMobileNumber, Guid currentUserId, string courseIdentity);
     }

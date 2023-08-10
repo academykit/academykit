@@ -4,6 +4,7 @@ using Lingtren.Application.Common.Interfaces;
 using Lingtren.Domain.Entities;
 using Lingtren.Domain.Enums;
 using Lingtren.Infrastructure.Common;
+using Lingtren.Infrastructure.Helpers;
 using Lingtren.Infrastructure.Localization;
 using LinqKit;
 using Microsoft.Extensions.Localization;
@@ -24,9 +25,9 @@ namespace Lingtren.Infrastructure.Services
         /// enroll user in training
         /// </summary>
         /// <param name="email">user email or mobile number</param>
-        /// <param name="currentUserId"></param>
-        /// <param name="courseIdentity"></param>
-        /// <returns></returns>
+        /// <param name="currentUserId">current user id</param>
+        /// <param name="courseIdentity">course id or slug</param>
+        /// <returns>Task completed</returns>
         /// <exception cref="EntityNotFoundException"></exception>
         public async Task<string> EnrollUserAsync(IList<string> emails, Guid currentUserId, string courseIdentity)
         {
@@ -35,16 +36,14 @@ namespace Lingtren.Infrastructure.Services
                 var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == courseIdentity || p.Slug == courseIdentity).ConfigureAwait(false);
                 if (course == default)
                 {
-                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
+                    throw new EntityNotFoundException(_localizer.GetString("CourseNotFound"));
                 }
                 foreach (var email in emails)
                 {
-                    string emailPattern = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
-                           @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
-                              @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
-                    if(!Regex.IsMatch(email,emailPattern))
+                    var isMatch = await CommonHelper.ValidateEmailFormat(email.Trim());
+                    if (!isMatch)
                     {
-                        throw new ForbiddenException($"{_localizer.GetString("InvalidEmailFormat")}"+ "," + email);
+                        throw new ForbiddenException($"{_localizer.GetString("InvalidEmailFormat")}" +" "+ email);
                     }
                 }
                 var hasAUthority = await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId, course.Id.ToString(), TrainingTypeEnum.Course);
@@ -60,7 +59,7 @@ namespace Lingtren.Infrastructure.Services
                 var invalidusers = emails.Except(validEmail).ToList();
                 if (invalidusers.Count != default)
                 {
-                    message.AppendLine($"{_localizer.GetString("InvalidEmailFormat")}" + " " + string.Join(",", invalidusers));
+                    message.AppendLine($"{_localizer.GetString("UserNotFoundWithEmail")}" + " :" + string.Join(",", invalidusers));
                 }
                 var groupMemberDto = new List<GroupMember>();
                 var courseMembers = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(predicate: p => validUserIds.Contains(p.UserId) && p.CourseId == course.Id).ConfigureAwait(false);
