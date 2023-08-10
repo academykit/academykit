@@ -1010,7 +1010,22 @@ recorded cannot be deleted.</value>
   <data name="AssignmentUpdatedSuccessfully" xml:space="preserve">
     <value>Assignment Updated Successfully.</value>
   </data>
+  <data name="AlreadyEnrolledUser" xml:space="preserve">
+    <value>Already enrolled email or mobile number :</value>
+  </data>
+  <data name="InvalidEmailFormat" xml:space="preserve">
+    <value>Invalid email adderss :</value>
+  </data>
   <data name="TrainingPusbishedSuccessfully" xml:space="preserve">
     <value>Training published successfully.</value>
+  </data>
+  <data name="NewGroupMember" xml:space="preserve">
+    <value>New group member :</value>
+  </data>
+  <data name="UpdatedDeletedUser" xml:space="preserve">
+    <value>Updated deleted user :</value>
+  </data>
+  <data name="UpdatedUser" xml:space="preserve">
+    <value>Updated user :</value>
   </data>
 </root>

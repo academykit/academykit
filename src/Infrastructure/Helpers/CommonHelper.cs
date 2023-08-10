@@ -8,6 +8,7 @@
     using System.Data;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// This class is the helper class for this project.
@@ -369,6 +370,19 @@
                 dataTable.Rows.Add(values);
             }
             return dataTable;
+        }
+
+        /// <summary>
+        /// check email format
+        /// </summary>
+        /// <param name="email">email</param>
+        /// <returns>bool</returns>
+        public static async Task<bool> ValidateEmailFormat(string email)
+        {
+            string emailPattern = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+                          @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
+                             @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+            return Regex.IsMatch(email,emailPattern);
         }
     }
 }

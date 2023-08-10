@@ -84,6 +84,7 @@
             services.AddTransient<ILogsService, LogsService>();
             services.AddTransient<IPhysicalLessonServices, PhysicalLessonService>();
             services.AddTransient<IDynamicImageGenerator, DynamicImageGenerator>();
+            services.AddTransient<IEnrollmentService, EnrollmentService>();
 
             #endregion Service DI
 
