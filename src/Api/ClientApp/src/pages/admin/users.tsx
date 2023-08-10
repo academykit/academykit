@@ -8,7 +8,6 @@ import {
   Box,
   Title,
   Text,
-  Anchor,
   Tabs,
   FileInput,
   Flex,
@@ -20,7 +19,7 @@ import withSearchPagination, {
 } from '@hoc/useSearchPagination';
 import errorType from '@utils/services/axiosError';
 import lazyWithRetry from '@utils/lazyImportWithReload';
-import { uploadUserCsv } from '@utils/services/fileService';
+import { downloadCSVFile, uploadUserCsv } from '@utils/services/fileService';
 import { showNotification } from '@mantine/notifications';
 const AddUpdateUserForm = lazyWithRetry(
   () => import('../../Components/Users/AddUpdateUserForm')
@@ -29,8 +28,6 @@ import * as Yup from 'yup';
 import { useForm, yupResolver } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
-// import { isDevelopment } from '@utils/env';
-// import { TOKEN_STORAGE } from '@utils/constants';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -80,11 +77,7 @@ const UsersList = ({
     setCsvLoad(false);
   };
 
-  // const fileurl = () =>
-  //   (isDevelopment
-  //     ? 'https://localhost:7042'
-  //     : location.protocol + '//' + window.location.host) +
-  //   `/api/User/samplefile`;
+  const sampleFileURL = '/api/User/samplefile';
 
   return (
     <>
@@ -127,17 +120,17 @@ const UsersList = ({
               </Tabs.Panel>
               <Tabs.Panel value="import">
                 <Text my={10} size="sm">
-                  {t('csv_format')} {t('please')}
-                  <Anchor
-                    href="https://vurilo-desktop-app.s3.ap-south-1.amazonaws.com/bulkimportsample.csv"
-                    // href={fileurl()}
+                  {t('csv_format')} {t('please')}{' '}
+                  <span
                     style={{
                       textDecoration: 'underline',
+                      cursor: 'pointer',
+                      color: '#128797',
                     }}
-                    mx={5}
+                    onClick={() => downloadCSVFile(sampleFileURL)}
                   >
                     {t('click_here')}
-                  </Anchor>
+                  </span>{' '}
                   {t('to_download_csv')}
                 </Text>
                 <form onSubmit={form.onSubmit(onSubmit)}>
