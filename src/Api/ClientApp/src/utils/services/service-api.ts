@@ -246,6 +246,8 @@ export const api = {
   enrollment: {
     enrollTrainee: (courseIdentity: string) =>
       `/api/Enrollment/Enrollnment?courseIdentity=${courseIdentity}`,
+    trainee: (courseIdentity: string, query: string) =>
+      `/api/Enrollment/User?CourseIdentity=${courseIdentity}&${query}`,
   },
   externalCertificate: {
     add: '/api/certificate/external',

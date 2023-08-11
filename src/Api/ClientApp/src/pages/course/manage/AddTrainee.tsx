@@ -11,9 +11,8 @@ import {
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { useUsers } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
-import { useAddTrainee } from '@utils/services/courseService';
+import { useAddTrainee, useGetTrainee } from '@utils/services/courseService';
 import { INotMember } from '@utils/services/groupService';
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,19 +24,19 @@ interface IAddTrainee {
 }
 
 interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
-  fullName: string;
+  firstName: string;
   imageUrl: string;
   email: string;
 }
 
 // eslint-disable-next-line react/display-name
 const SelectUserItem = forwardRef<HTMLDivElement, ItemProps>(
-  ({ fullName, imageUrl, email, ...others }: ItemProps, ref) => (
+  ({ firstName, imageUrl, email, ...others }: ItemProps, ref) => (
     <div ref={ref} {...others}>
       <Group noWrap>
         <Avatar src={imageUrl} />
         <div>
-          <Text>{fullName}</Text>
+          <Text>{firstName}</Text>
           <Text size="xs" color="dimmed">
             {email}
           </Text>
@@ -62,15 +61,17 @@ const AddTrainee = ({
   searchParams: string;
 }) => {
   const { t } = useTranslation();
-  const { courseId } = useParams();
+  const { id } = useParams();
   const [search, setSearch] = useState('');
-  //   const [data, setData] = useState<INotMember[]>([]);
+  const [data, setData] = useState<INotMember[]>([]);
 
-  const addTrainee = useAddTrainee(courseId as string);
-  const nonTrainee = useUsers(`search=${search}`);
+  const addTrainee = useAddTrainee(id as string);
+  const nonTrainee = useGetTrainee(
+    id as string,
+    `Page=1&Size=10&EnrollmentStatus=3${search && `&search=${search}`}`
+  );
+  console.log(nonTrainee?.data);
   const ref = useRef<HTMLInputElement>(null);
-
-  console.log(nonTrainee?.data?.items);
 
   const form = useForm<IAddTrainee>({
     initialValues: {
@@ -80,27 +81,27 @@ const AddTrainee = ({
   });
   useFormErrorHooks(form);
 
-  //   useEffect(() => {
-  //     if (nonTrainee.isSuccess) {
-  //       const t = nonTrainee.data?.items?.map((x) => {
-  //         return {
-  //           ...x,
-  //           label: `${x.fullName}(${x.email})`,
-  //           value: x.email,
-  //         };
-  //       });
-  //       const mergedData = [...data, ...t];
-  //       setData([
-  //         ...new Map(mergedData.map((item) => [item['email'], item])).values(),
-  //       ]);
-  //     }
-  //   }, [nonTrainee.isSuccess]);
+  useEffect(() => {
+    if (nonTrainee.isSuccess) {
+      const t = nonTrainee.data?.items?.map((x) => {
+        return {
+          ...x,
+          label: `${x.fullName}(${x.email})`,
+          value: x.email,
+        };
+      });
+      const mergedData = [...data, ...t];
+      setData([
+        ...new Map(mergedData.map((item) => [item['email'], item])).values(),
+      ]);
+    }
+  }, [nonTrainee.isSuccess]);
 
   const onSubmitForm = async (email: string[]) => {
     try {
       const response: any = await addTrainee.mutateAsync({
-        courseId: courseId as string,
-        data: { emails: email },
+        courseId: id as string,
+        data: email,
       });
       if (response?.data?.httpStatusCode === 206) {
         return showNotification({
@@ -129,7 +130,7 @@ const AddTrainee = ({
           placeholder={t('email_address') as string}
           ref={ref}
           searchable
-          data={[]}
+          data={data}
           mb={10}
           label={t('email_address')}
           itemComponent={SelectUserItem}
