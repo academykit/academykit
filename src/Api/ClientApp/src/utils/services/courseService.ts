@@ -103,12 +103,14 @@ const createTeacherCourse = async (data: {
     courseIdentity: data.courseIdentity,
   });
 };
-export const useCreateTeacherCourse = () => {
+export const useCreateTeacherCourse = (searchParams: string) => {
   const queryClient = useQueryClient();
 
   return useMutation(['post' + api.courseTeacher.list], createTeacherCourse, {
     onSuccess: () => {
-      queryClient.invalidateQueries(['get' + api.courseTeacher.list]);
+      queryClient.invalidateQueries([
+        'get_course_teachers' + api.courseTeacher.list + searchParams,
+      ]);
     },
   });
 };
@@ -117,14 +119,16 @@ export const useCreateTeacherCourse = () => {
 const deleteCourseTeacher = async (id: string) => {
   return await httpClient.delete(api.courseTeacher.detail(id));
 };
-export const useDeleteCourseTeacher = () => {
+export const useDeleteCourseTeacher = (searchParams: string) => {
   const queryClient = useQueryClient();
   return useMutation(
     ['delete' + api.courseTeacher.detail],
     deleteCourseTeacher,
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(['get' + api.courseTeacher.list]);
+        queryClient.invalidateQueries([
+          'get_course_teachers' + api.courseTeacher.list + searchParams,
+        ]);
       },
     }
   );
