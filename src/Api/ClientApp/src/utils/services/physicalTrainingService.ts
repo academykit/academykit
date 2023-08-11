@@ -18,6 +18,7 @@ export const usePostAttendance = (courseId: string, lessonId: string) => {
       queryClient.invalidateQueries([
         api.lesson.courseLesson(courseId, lessonId),
       ]);
+      queryClient.invalidateQueries([api.course.detail(courseId)]);
     },
   });
 };
