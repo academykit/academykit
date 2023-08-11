@@ -671,7 +671,8 @@
                     },
                     QuestionSetSubmissions = new List<QuestionSetResultDetailModel>()
                 };
-
+                response.HasExceededAttempt = response.AttemptCount >= questionSet.AllowedRetake;
+                response.EndDate = questionSet.EndTime.Value;
                 questionSetSubmissions.ForEach(res => response.QuestionSetSubmissions.Add(new QuestionSetResultDetailModel
                 {
                     QuestionSetSubmissionId = res.Id,
