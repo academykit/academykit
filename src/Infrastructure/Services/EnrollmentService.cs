@@ -167,11 +167,18 @@ namespace Lingtren.Infrastructure.Services
                 var course = await ValidateAndGetCourse(critera.CurrentUserId, critera.CourseIdentity).ConfigureAwait(false);
                 var predicate = PredicateBuilder.New<User>(true);
                 predicate = predicate.And(p => p.Role == UserRole.Trainee || p.Role == UserRole.Trainer);
-                if (!string.IsNullOrEmpty(critera.CourseIdentity))
+
+                if (!string.IsNullOrEmpty(critera.CourseIdentity) && critera.EnrollmentStatus == EnrollmentMemberStatusEnum.Unenrolled)
                 {
-                    var enrolledUserIds = course.CourseEnrollments.Where(x => x.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled).Select(x => x.UserId)
+                    var enrolledUserIds = course.CourseEnrollments.Where(x => x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled).Select(x => x.UserId)
                         .Concat(course.CourseTeachers.Select(x => x.UserId)).ToList();
                     predicate = predicate.And(p => !enrolledUserIds.Contains(p.Id));
+                }
+                if(!string.IsNullOrEmpty(critera.CourseIdentity) && critera.EnrollmentStatus != EnrollmentMemberStatusEnum.Unenrolled)
+                {
+                    var enrolledUserIds = course.CourseEnrollments.Where(x => x.EnrollmentMemberStatus == critera.EnrollmentStatus).Select(x => x.UserId)
+                        .Concat(course.CourseTeachers.Select(x => x.UserId)).ToList();
+                    predicate = predicate.And(p => enrolledUserIds.Contains(p.Id));
                 }
                 if (!string.IsNullOrEmpty(critera.Search))
                 {
