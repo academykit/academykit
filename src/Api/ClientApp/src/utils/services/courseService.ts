@@ -671,3 +671,16 @@ export const useGetCertificateDetails = (id: string) => {
     getSingleCertificate(id)
   );
 };
+
+const addTrainee = ({ courseId, data }: { data: any; courseId: string }) => {
+  return httpClient.post(api.enrollment.enrollTrainee(courseId), data);
+};
+
+export const useAddTrainee = (courseId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation([api.enrollment.enrollTrainee(courseId)], addTrainee, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([]);
+    },
+  });
+};

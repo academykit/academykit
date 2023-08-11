@@ -243,6 +243,10 @@ export const api = {
     repliesDetails: (courseId: string, commentId: string, replyId: string) =>
       `/api/course/${courseId}/comments/${commentId}/commentReply/${replyId}`,
   },
+  enrollment: {
+    enrollTrainee: (courseIdentity: string) =>
+      `/api/Enrollment/Enrollnment?courseIdentity=${courseIdentity}`,
+  },
   externalCertificate: {
     add: '/api/certificate/external',
     user: (id?: string) => `/api/certificate/external/${id}`,
