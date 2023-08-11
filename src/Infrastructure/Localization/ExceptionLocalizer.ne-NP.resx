@@ -1025,4 +1025,7 @@
   <data name="UpdatedUser" xml:space="preserve">
     <value>अपडेट गरिएको प्रयोगकर्ता:</value>
   </data>
+  <data name="LessonContainsAttendance" xml:space="preserve">
+    <value>शारीरिक पाठमा उपस्थिति समावेश छ।</value>
+  </data>
 </root>

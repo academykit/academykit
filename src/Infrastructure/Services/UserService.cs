@@ -390,7 +390,6 @@ namespace Lingtren.Infrastructure.Services
                     {
                         foreach (var user in newUsersList)
                         {
-                            
                             var userEntity = new User()
                             {
                                 Id = Guid.NewGuid(),
