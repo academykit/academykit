@@ -310,8 +310,9 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         public async Task<string> ChangeStatusAsync(CourseStatusRequestModel model, Guid currentUserId)
         {
-            return await ExecuteWithResultAsync(async () => {
-               
+            return await ExecuteWithResultAsync(async () =>
+            {
+
                 var course = await ValidateAndGetCourse(currentUserId, model.Identity, validateForModify: true).ConfigureAwait(false);
                 if ((course.Status == CourseStatus.Draft && (model.Status == CourseStatus.Published || model.Status == CourseStatus.Rejected))
                     || (course.Status == CourseStatus.Published && (model.Status == CourseStatus.Review || model.Status == CourseStatus.Rejected))
@@ -333,8 +334,8 @@ namespace Lingtren.Infrastructure.Services
                 var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
                     predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
                 var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(
-                   predicate: p => p.CourseId == course.Id, include: source => source.Include(x => x.Meeting)).ConfigureAwait(false);
-                var liveClasses = lessons.Where(x => x.Type == LessonType.LiveClass).ToList();
+                   predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
+
                 var currentTimeStamp = DateTime.UtcNow;
 
                 if (course.IsUpdate)
@@ -359,13 +360,10 @@ namespace Lingtren.Infrastructure.Services
                     x.UpdatedOn = currentTimeStamp;
                 });
 
-                if (model.Status == CourseStatus.Review)
-                {
-                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseReviewMailAsync(course.Name, null));
-                }
-
                 if (model.Status == CourseStatus.Published)
                 {
+                    var liveClasses = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(
+                 predicate: p => p.CourseId == course.Id && p.Type == LessonType.LiveClass, include: source => source.Include(x => x.Meeting).ThenInclude(x => x.ZoomLicense)).ConfigureAwait(false);
                     var meetings = new List<Meeting>();
                     if (liveClasses.Count > 0)
                     {
@@ -374,13 +372,29 @@ namespace Lingtren.Infrastructure.Services
                             if (liveClass.Meeting.StartDate >= DateTime.UtcNow.Date)
                             {
                                 var (meetingId, passcode) = await _zoomLicenseService.CreateMeetingAsync(liveClass.Name, liveClass.Meeting.Duration, liveClass.Meeting.StartDate.Value, liveClass.Meeting.ZoomLicense.LicenseEmail).ConfigureAwait(false);
-                                liveClass.Meeting.MeetingNumber = long.Parse(meetingId);
-                                liveClass.Meeting.Passcode = passcode;
-                                meetings.Add(liveClass.Meeting);
+                                var meeting = liveClass.Meeting;
+                                meeting.MeetingNumber = long.Parse(meetingId);
+                                meeting.Passcode = passcode;
+                                meeting.ZoomLicense = null;
+                                meetings.Add(meeting);
                             }
                         }
                         _unitOfWork.GetRepository<Meeting>().Update(meetings);
                     }
+                }
+                _unitOfWork.GetRepository<Section>().Update(sections);
+                _unitOfWork.GetRepository<Lesson>().Update(lessons);
+                _unitOfWork.GetRepository<Course>().Update(course);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+                if (model.Status == CourseStatus.Review)
+                {
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseReviewMailAsync(course.Name, null));
+                }
+
+                if (model.Status == CourseStatus.Published)
+                {
+
 
                     if (course.CourseEnrollments.Count == default)
                     {
@@ -396,10 +410,9 @@ namespace Lingtren.Infrastructure.Services
                 {
                     BackgroundJob.Enqueue<IHangfireJobService>(job => job.CourseRejectedMailAsync(course.Id, model.Message, null));
                 }
-                _unitOfWork.GetRepository<Section>().Update(sections);
-                _unitOfWork.GetRepository<Lesson>().Update(lessons);
-                _unitOfWork.GetRepository<Course>().Update(course);
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+
+
                 if (isSuperAdminOrAdminAccess)
                 {
                     return _localizer.GetString("TrainingPusbishedSuccessfully");
