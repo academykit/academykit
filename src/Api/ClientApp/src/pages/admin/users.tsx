@@ -11,6 +11,7 @@ import {
   Tabs,
   FileInput,
   Flex,
+  Anchor,
 } from '@mantine/core';
 import UserMemberTable from '@components/Users/UserMemberTable';
 import { useAddUser, useUsers } from '@utils/services/adminService';
@@ -119,7 +120,20 @@ const UsersList = ({
                 </Box>
               </Tabs.Panel>
               <Tabs.Panel value="import">
-                <Text my={10} size="sm">
+              <Text my={10} size="sm">
+                CSV file format should be similar to sample CSV. Please
+                <Anchor
+                  href="https://vurilo-desktop-app.s3.ap-south-1.amazonaws.com/bulkimportsample.csv"
+                  style={{
+                    textDecoration: "underline",
+                  }}
+                  mx={5}
+                >
+                  click here
+                </Anchor>
+                to download sample CSV.
+              </Text>
+                {/* <Text my={10} size="sm">
                   {t('csv_format')} {t('please')}{' '}
                   <span
                     style={{
@@ -132,7 +146,7 @@ const UsersList = ({
                     {t('click_here')}
                   </span>{' '}
                   {t('to_download_csv')}
-                </Text>
+                </Text> */}
                 <form onSubmit={form.onSubmit(onSubmit)}>
                   <FileInput
                     label={t('upload_csv')}
