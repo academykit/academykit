@@ -20,6 +20,11 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
   const theme = useMantineTheme();
   const user = useAuth();
   const { t } = useTranslation();
+  const lesson_start_date = moment.utc(
+    lesson.startDate,
+    'YYYY-MM-DD[T]HH:mm[Z]'
+  );
+  const current_time = moment.utc(moment().toDate(), 'YYYY-MM-DD[T]HH:mm[Z]');
 
   return (
     <Group sx={{ flexDirection: 'column' }}>
@@ -34,7 +39,7 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
         </Button>
       ) : lesson.assignmentExpired ? (
         <Text>{t('assignment_expired')}</Text>
-      ) : !lesson.startDate || moment().isAfter(lesson.startDate) ? (
+      ) : !lesson.startDate || current_time.isAfter(lesson_start_date) ? (
         <Button
           component={Link}
           to={RoutePath.assignment.details(lesson.id).route}
@@ -44,7 +49,10 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
       ) : (
         <Text>
           {t('assignment_yet_start')}{' '}
-          {moment(lesson.startDate).format('MMM DD, YYYY hh:mm A')}
+          {moment(lesson.startDate)
+            .add(5, 'hours')
+            .add(45, 'minutes')
+            .format('MMM DD, YYYY hh:mm A')}
         </Text>
       )}
       {lesson.assignmentReview && (
