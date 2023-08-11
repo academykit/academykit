@@ -176,12 +176,23 @@ const SubmittedResultDetails = ({
                         content={x.value}
                       />
                     </Grid.Col>
+                    {/* showing icon if correct answer was selected */}
                     {x.isCorrect && x.isSelected && (
                       <IconCircleCheck
                         size={36}
                         color={theme.colors.green[6]}
                       />
                     )}
+
+                    {/* showing icon if right answer was not selected */}
+                    {x.isCorrect && !x.isSelected && (
+                      <IconCircleCheck
+                        size={36}
+                        color={theme.colors.green[6]}
+                      />
+                    )}
+
+                    {/* shoing icon if wrong answer was selected */}
                     {!x.isCorrect && x.isSelected && (
                       <IconSquareRoundedX
                         size={36}
