@@ -489,13 +489,11 @@
             var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetFirstOrDefaultAsync(
                 predicate: p => p.LessonId == lesson.Id && searchCriteria.UserId.HasValue && p.UserId == searchCriteria.UserId.Value
                 ).ConfigureAwait(false);
-            var AssignmentSubmission = await _unitOfWork.GetRepository<AssignmentSubmission>().GetFirstOrDefaultAsync(predicate:p => p.LessonId == lesson.Id 
-            && assignments.Select(x=>x.Id).Contains(p.AssignmentId) && p.UserId == searchCriteria.CurrentUserId).ConfigureAwait(false);
             var response = new List<AssignmentResponseModel>();
 
             foreach (var item in assignments)
             {
-                MapAssignment(IsValidUser, userAssignments, item, response,AssignmentSubmission);
+                MapAssignment(IsValidUser, userAssignments, item, response);
             }
             return response;
         }
@@ -896,7 +894,7 @@
         /// <param name="userAssignments">the list of <see cref="AssignmentSubmission"/></param>
         /// <param name="item">the instance of <see cref="Assignment"/></param>
         /// <param name="response">the list of <see cref="AssignmentResponseModel"/></param>
-        private static async void MapAssignment(bool showCorrectAndHints, IList<AssignmentSubmission> userAssignments, Assignment item, IList<AssignmentResponseModel> response, AssignmentSubmission  submission = null)
+        private static async void MapAssignment(bool showCorrectAndHints, IList<AssignmentSubmission> userAssignments, Assignment item, IList<AssignmentResponseModel> response)
         {
             var userAssignment = userAssignments.FirstOrDefault(x => x.AssignmentId == item.Id);
             var data = new AssignmentResponseModel
