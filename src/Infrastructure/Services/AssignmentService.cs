@@ -16,7 +16,6 @@
     using Microsoft.Extensions.Logging;
     using System.Linq;
     using System.Linq.Expressions;
-    using static System.Runtime.InteropServices.JavaScript.JSType;
 
     public class AssignmentService : BaseGenericService<Assignment, AssignmentBaseSearchCriteria>, IAssignmentService
     {
@@ -478,7 +477,10 @@
                 include: src => src.Include(x => x.AssignmentAttachments).Include(x => x.AssignmentQuestionOptions),
                 orderBy: x => x.OrderBy(a => a.Order)
                 ).ConfigureAwait(false);
-
+            if(searchCriteria.UserId == default)
+            {
+                searchCriteria.UserId = searchCriteria.CurrentUserId;
+            }
             var userAssignments = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(
                 predicate: p => p.LessonId == lesson.Id && searchCriteria.UserId.HasValue && p.UserId == searchCriteria.UserId.Value,
                 include: src => src.Include(x => x.AssignmentSubmissionAttachments).Include(x => x.User)
@@ -487,12 +489,13 @@
             var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetFirstOrDefaultAsync(
                 predicate: p => p.LessonId == lesson.Id && searchCriteria.UserId.HasValue && p.UserId == searchCriteria.UserId.Value
                 ).ConfigureAwait(false);
-
+            var AssignmentSubmission = await _unitOfWork.GetRepository<AssignmentSubmission>().GetFirstOrDefaultAsync(predicate:p => p.LessonId == lesson.Id 
+            && assignments.Select(x=>x.Id).Contains(p.AssignmentId) && p.UserId == searchCriteria.CurrentUserId).ConfigureAwait(false);
             var response = new List<AssignmentResponseModel>();
 
             foreach (var item in assignments)
             {
-                MapAssignment(IsValidUser, userAssignments, item, response);
+                MapAssignment(IsValidUser, userAssignments, item, response,AssignmentSubmission);
             }
             return response;
         }
@@ -809,7 +812,6 @@
             {
                 assignmentSubmission.Answer = item.Answer;
                 assignmentSubmission.AssignmentSubmissionAttachments = new List<AssignmentSubmissionAttachment>();
-
                 if (item.Id != default)
                 {
                     var existingAssignmentSubmissionAttachments = await _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().GetAllAsync(
@@ -831,8 +833,8 @@
 
                 await _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().InsertAsync(assignmentSubmission.AssignmentSubmissionAttachments).ConfigureAwait(false);
             }
-            await _unitOfWork.GetRepository<AssignmentSubmission>().InsertAsync(assignmentSubmission).ConfigureAwait(false);
-        }
+                await _unitOfWork.GetRepository<AssignmentSubmission>().InsertAsync(assignmentSubmission).ConfigureAwait(false);
+            }
 
         /// <summary>
         /// Handle to update assignment submission
@@ -894,7 +896,7 @@
         /// <param name="userAssignments">the list of <see cref="AssignmentSubmission"/></param>
         /// <param name="item">the instance of <see cref="Assignment"/></param>
         /// <param name="response">the list of <see cref="AssignmentResponseModel"/></param>
-        private static void MapAssignment(bool showCorrectAndHints, IList<AssignmentSubmission> userAssignments, Assignment item, IList<AssignmentResponseModel> response)
+        private static async void MapAssignment(bool showCorrectAndHints, IList<AssignmentSubmission> userAssignments, Assignment item, IList<AssignmentResponseModel> response, AssignmentSubmission  submission = null)
         {
             var userAssignment = userAssignments.FirstOrDefault(x => x.AssignmentId == item.Id);
             var data = new AssignmentResponseModel
@@ -919,7 +921,6 @@
             {
                 item.AssignmentAttachments?.ToList().ForEach(x => data.AssignmentAttachments.Add(new AssignmentAttachmentResponseModel(x)));
             }
-
             if (item.Type == QuestionTypeEnum.SingleChoice || item.Type == QuestionTypeEnum.MultipleChoice)
             {
                 var selectedAnsIds = !string.IsNullOrWhiteSpace(userAssignment?.SelectedOption) ?
@@ -936,7 +937,6 @@
                                     Order = x.Order,
                                 }));
             }
-
             if (userAssignment?.AssignmentSubmissionAttachments.Count > 0)
             {
                 userAssignment.AssignmentSubmissionAttachments.ForEach(x =>
