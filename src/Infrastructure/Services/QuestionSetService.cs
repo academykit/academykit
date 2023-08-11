@@ -101,7 +101,6 @@
                 var newQuestionIds = model.QuestionPoolQuestionIds.Except(oldQuestionIds).ToList();
                 var currentTimeStamp = DateTime.UtcNow;
                 var removeData = existingQuestionSetQuestions.Where(x => removeQuestionIds.Any(y => y == x.Id)).ToList();
-
                 var questionSetQuestions = new List<QuestionSetQuestion>();
                 if (removeData.Count != default)
                 {

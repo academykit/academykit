@@ -359,7 +359,7 @@ namespace Lingtren.Infrastructure.Services
             _unitOfWork.GetRepository<Course>().Update(course);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
-            if (model.Status == CourseStatus.Review)
+            if (model.Status == CourseStatus.Review && !isSuperAdminOrAdminAccess)
             {
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseReviewMailAsync(course.Name, null));
             }
