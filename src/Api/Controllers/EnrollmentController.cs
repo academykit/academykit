@@ -35,8 +35,8 @@ namespace Api.Controllers
         /// </summary>
         /// <param name="searchCritera"></param>
         /// <returns>List of user</returns>
-        [HttpGet("Notenrolled")]
-        public async Task<SearchResult<UserResponseModel>> NotEnrolledUser([FromQuery]EnrollmentBaseSearchCritera searchCritera)
+        [HttpGet("User")]
+        public async Task<SearchResult<UserResponseModel>> User([FromQuery]EnrollmentBaseSearchCritera searchCritera)
         {
             searchCritera.CurrentUserId = CurrentUser.Id;
             var result = await _enrollmentService.CourseUserSearchAsync(searchCritera).ConfigureAwait(false);
