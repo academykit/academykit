@@ -58,6 +58,7 @@ const TeacherCards = ({
     try {
       await deleteTeacher.mutateAsync(id);
       showNotification({ message: t('trainer_deleted') });
+      setDeletePopUP(false);
     } catch (err) {
       const error = errorType(err);
       showNotification({ message: error, color: 'red' });
