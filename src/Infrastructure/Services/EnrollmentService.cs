@@ -160,7 +160,7 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="critera">enrolled user search critera</param>
         /// <returns>Task completed</returns>
-        public async Task<SearchResult<UserResponseModel>> GetUnenrolledUser(EnrollmentBaseSearchCritera critera)
+        public async Task<SearchResult<UserResponseModel>> GetNotEnrolledUser(EnrollmentBaseSearchCritera critera)
         {
             return await ExecuteWithResultAsync(async () =>
             {

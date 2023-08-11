@@ -21,6 +21,6 @@ namespace Lingtren.Application.Common.Interfaces
         /// </summary>
         /// <param name="critera">enrolled user search critera</param>
         /// <returns>Task completed</returns>
-        Task<SearchResult<UserResponseModel>> GetUnenrolledUser(EnrollmentBaseSearchCritera critera);
+        Task<SearchResult<UserResponseModel>> GetNotEnrolledUser(EnrollmentBaseSearchCritera critera);
     }
 }

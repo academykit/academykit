@@ -39,7 +39,7 @@ namespace Api.Controllers
         public async Task<SearchResult<UserResponseModel>> NotEnrolledUser([FromQuery]EnrollmentBaseSearchCritera searchCritera)
         {
             searchCritera.CurrentUserId = CurrentUser.Id;
-            var result = await _enrollmentService.GetUnenrolledUser(searchCritera).ConfigureAwait(false);
+            var result = await _enrollmentService.GetNotEnrolledUser(searchCritera).ConfigureAwait(false);
             return result;
         }
     }
