@@ -111,9 +111,7 @@ const StudentLessonDetails = ({
     try {
       await attendanceReview.mutateAsync({ data });
       showNotification({
-        message: message
-          ? t('training_rejected_success')
-          : t('training_published_success'),
+        message: message ? t('physical_deny') : t('physical_approve'),
       });
     } catch (err) {
       const error = errorType(err);

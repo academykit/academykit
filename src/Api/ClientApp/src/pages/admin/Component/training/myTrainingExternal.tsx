@@ -100,7 +100,7 @@ const MyTrainingExternal = () => {
         institute: idd?.institute,
         imageUrl: idd?.imageUrl,
         range: [new Date(range[0]), new Date(range[1])],
-        optionalCost: idd?.optionalCost,
+        optionalCost: idd?.optionalCost ?? 0,
       });
     }
   }, [idd]);

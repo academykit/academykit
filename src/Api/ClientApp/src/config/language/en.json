@@ -862,6 +862,9 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "optional_cost_required": "Optional cost is required",
+  "physical_approve": "Attendance approved successfully.",
+  "physical_deny": "Attendance rejected successfully.",
   "optional_cost": "Optional Cost",
   "enter_optional_cost": "Enter Optional Cost",
   "certificate_delete_success": "Certificate deleted successfully.",

@@ -1,6 +1,8 @@
+import useAuth from '@hooks/useAuth';
 import { Button, Group, Title, Text } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { DATE_FORMAT } from '@utils/constants';
+import { UserRole } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import { usePostAttendance } from '@utils/services/physicalTrainingService';
 import moment from 'moment';
@@ -24,6 +26,7 @@ const PhysicalTrainingDetail = ({
   const { t } = useTranslation();
   const attendance = usePostAttendance(slug as string, lessonSlug);
   const startTime = moment(startDate).format('HH:mm A');
+  const user = useAuth();
 
   const updatedTime = moment(startTime, 'hh:mm A')
     .add(5, 'hours')
@@ -54,16 +57,21 @@ const PhysicalTrainingDetail = ({
       <Text>
         {t('start_time')}: {updatedTime}
       </Text>
-      {!hasAttended ? (
-        <Button
-          onClick={() => handleAttendance()}
-          loading={attendance.isLoading || attendance.isSuccess}
-        >
-          {t('mark_as_attended')}
-        </Button>
-      ) : (
-        <Text>{t('attended')}</Text>
-      )}
+      {/* Super admin and admin cannot mark as attend */}
+      {!hasAttended
+        ? user?.auth?.role !== UserRole.Admin &&
+          user?.auth?.role !== UserRole.SuperAdmin && (
+            <Button
+              onClick={() => handleAttendance()}
+              loading={attendance.isLoading || attendance.isSuccess}
+            >
+              {t('mark_as_attended')}
+            </Button>
+          )
+        : user?.auth?.role !== UserRole.Admin &&
+          user?.auth?.role !== UserRole.SuperAdmin && (
+            <Text>{t('attended')}</Text>
+          )}
     </Group>
   );
 };
