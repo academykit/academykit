@@ -22,6 +22,7 @@ import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import { useDepartmentSetting } from '@utils/services/adminService';
+import { IconX } from '@tabler/icons';
 
 interface IAddMember {
   email: string[];
@@ -150,6 +151,40 @@ const AddMember = ({
     <>
       <Box>
         <form onSubmit={form.onSubmit(({ email }) => onSubmitForm(email))}>
+          <Select
+            data={departments}
+            label={t('choose_department')}
+            searchable
+            onSearchChange={(d) => {
+              setDepSearch(d);
+            }}
+            searchValue={depSearch}
+            placeholder={t('choose_department') as string}
+            onChange={(d) => {
+              if (d) {
+                setData([]);
+                form.reset();
+                setDepartmentId(d);
+              }
+            }}
+            value={departmentId}
+            rightSection={
+              // controlled the clearable event
+              departmentId ? (
+                <IconX
+                  size={18}
+                  style={{
+                    display: 'block',
+                    opacity: 0.5,
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => {
+                    setDepartmentId('');
+                  }}
+                />
+              ) : null
+            }
+          ></Select>
           <MultiSelect
             tabIndex={0}
             autoComplete="off"
@@ -176,25 +211,6 @@ const AddMember = ({
             }}
             {...form.getInputProps('email')}
           />
-          <Select
-            data={departments}
-            withAsterisk
-            label={t('choose_department')}
-            clearable
-            searchable
-            onSearchChange={(d) => {
-              setDepSearch(d);
-            }}
-            searchValue={depSearch}
-            placeholder={t('choose_department') as string}
-            onChange={(d) => {
-              if (d) {
-                setData([]);
-                form.reset();
-                setDepartmentId(d);
-              }
-            }}
-          ></Select>
           <Group mt={'lg'} position="right">
             <Button loading={isLoading} mr={10} type="submit" size="md">
               {t('submit')}

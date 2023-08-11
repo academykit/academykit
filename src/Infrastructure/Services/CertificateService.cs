@@ -98,6 +98,7 @@ namespace Lingtren.Infrastructure.Services
                 ceritificate.Status = CertificateStatus.Draft;
                 ceritificate.UpdatedBy = currentUserId;
                 ceritificate.UpdatedOn = DateTime.UtcNow;
+                ceritificate.OptionalCost = model.OptionalCost;
                 _unitOfWork.GetRepository<Certificate>().Update(ceritificate);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return new CertificateResponseModel(ceritificate);

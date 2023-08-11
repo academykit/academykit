@@ -31,6 +31,7 @@ namespace Lingtren.Infrastructure.Services
         private readonly IMediaService _mediaService;
         private readonly IFileServerService _fileServerService;
         private readonly IDynamicImageGenerator _dynamicImageGenerator;
+        private readonly IZoomLicenseService _zoomLicenseService;
         public CourseService(
             IUnitOfWork unitOfWork,
             ILogger<CourseService> logger,
@@ -38,11 +39,13 @@ namespace Lingtren.Infrastructure.Services
             IMediaService mediaService,
             IFileServerService fileServerService,
             IDynamicImageGenerator dynamicImageGenerator,
+            IZoomLicenseService zoomLicenseService,
             IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
             _mediaService = mediaService;
             _fileServerService = fileServerService;
             _dynamicImageGenerator = dynamicImageGenerator;
+            _zoomLicenseService = zoomLicenseService;
         }
 
         #region Protected Methods
@@ -307,87 +310,118 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         public async Task<string> ChangeStatusAsync(CourseStatusRequestModel model, Guid currentUserId)
         {
-            var course = await ValidateAndGetCourse(currentUserId, model.Identity, validateForModify: true).ConfigureAwait(false);
-            if ((course.Status == CourseStatus.Draft && (model.Status == CourseStatus.Published || model.Status == CourseStatus.Rejected))
-                || (course.Status == CourseStatus.Published && (model.Status == CourseStatus.Review || model.Status == CourseStatus.Rejected))
-                || (course.Status == CourseStatus.Rejected && model.Status == CourseStatus.Published)
-                || (course.Status != CourseStatus.Published && model.Status == CourseStatus.Completed))
+            return await ExecuteWithResultAsync(async () =>
             {
-                _logger.LogWarning("Training with id: {id} cannot be changed from {status} status to {changeStatus} status.", course.Id, course.Status, model.Status);
-                throw new ForbiddenException(_localizer.GetString("TrainingStatusCannotChanged"));
-            }
 
-            var isSuperAdminOrAdminAccess = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
-            if (!isSuperAdminOrAdminAccess && (model.Status == CourseStatus.Published || model.Status == CourseStatus.Rejected))
-            {
-                _logger.LogWarning("User with id: {userId} is unauthorized user to change training with id: {id} status from {status} to {changeStatus}.",
-                    currentUserId, course.Id, course.Status, model.Status);
-                throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
-            }
+                var course = await ValidateAndGetCourse(currentUserId, model.Identity, validateForModify: true).ConfigureAwait(false);
+                if ((course.Status == CourseStatus.Draft && (model.Status == CourseStatus.Published || model.Status == CourseStatus.Rejected))
+                    || (course.Status == CourseStatus.Published && (model.Status == CourseStatus.Review || model.Status == CourseStatus.Rejected))
+                    || (course.Status == CourseStatus.Rejected && model.Status == CourseStatus.Published)
+                    || (course.Status != CourseStatus.Published && model.Status == CourseStatus.Completed))
+                {
+                    _logger.LogWarning("Training with id: {id} cannot be changed from {status} status to {changeStatus} status.", course.Id, course.Status, model.Status);
+                    throw new ForbiddenException(_localizer.GetString("TrainingStatusCannotChanged"));
+                }
 
-            var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
-                predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
-            var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(
-               predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
+                var isSuperAdminOrAdminAccess = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+                if (!isSuperAdminOrAdminAccess && (model.Status == CourseStatus.Published || model.Status == CourseStatus.Rejected))
+                {
+                    _logger.LogWarning("User with id: {userId} is unauthorized user to change training with id: {id} status from {status} to {changeStatus}.",
+                        currentUserId, course.Id, course.Status, model.Status);
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
+                }
 
-            var currentTimeStamp = DateTime.UtcNow;
+                var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
+                    predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
+                var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(
+                   predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
 
-            if (course.IsUpdate)
-            {
-                sections = sections.Where(x => x.Status != CourseStatus.Published).ToList();
-                lessons = lessons.Where(x => x.Status != CourseStatus.Published).ToList();
-            }
-            course.Status = isSuperAdminOrAdminAccess ? CourseStatus.Published : model.Status;
-            course.UpdatedBy = currentUserId;
-            course.UpdatedOn = currentTimeStamp;
+                var currentTimeStamp = DateTime.UtcNow;
 
-            sections.ForEach(x =>
-            {
-                x.Status = isSuperAdminOrAdminAccess ? CourseStatus.Published : model.Status;
-                x.UpdatedBy = currentUserId;
-                x.UpdatedOn = currentTimeStamp;
-            });
-            lessons.ForEach(x =>
-            {
-                x.Status = isSuperAdminOrAdminAccess ? CourseStatus.Published : model.Status;
-                x.UpdatedBy = currentUserId;
-                x.UpdatedOn = currentTimeStamp;
-            });
+                if (course.IsUpdate)
+                {
+                    sections = sections.Where(x => x.Status != CourseStatus.Published).ToList();
+                    lessons = lessons.Where(x => x.Status != CourseStatus.Published).ToList();
+                }
+                course.Status = isSuperAdminOrAdminAccess ? CourseStatus.Published : model.Status;
+                course.UpdatedBy = currentUserId;
+                course.UpdatedOn = currentTimeStamp;
 
-            _unitOfWork.GetRepository<Section>().Update(sections);
-            _unitOfWork.GetRepository<Lesson>().Update(lessons);
-            _unitOfWork.GetRepository<Course>().Update(course);
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                sections.ForEach(x =>
+                {
+                    x.Status = isSuperAdminOrAdminAccess ? CourseStatus.Published : model.Status;
+                    x.UpdatedBy = currentUserId;
+                    x.UpdatedOn = currentTimeStamp;
+                });
+                lessons.ForEach(x =>
+                {
+                    x.Status = isSuperAdminOrAdminAccess ? CourseStatus.Published : model.Status;
+                    x.UpdatedBy = currentUserId;
+                    x.UpdatedOn = currentTimeStamp;
+                });
 
-            if (model.Status == CourseStatus.Review)
+                if (model.Status == CourseStatus.Published)
+                {
+                    var liveClasses = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(
+                 predicate: p => p.CourseId == course.Id && p.Type == LessonType.LiveClass, include: source => source.Include(x => x.Meeting).ThenInclude(x => x.ZoomLicense)).ConfigureAwait(false);
+                    var meetings = new List<Meeting>();
+                    if (liveClasses.Count > 0)
+                    {
+                        foreach (var liveClass in liveClasses)
+                        {
+                            if (liveClass.Meeting.StartDate >= DateTime.UtcNow.Date)
+                            {
+                                var (meetingId, passcode) = await _zoomLicenseService.CreateMeetingAsync(liveClass.Name, liveClass.Meeting.Duration, liveClass.Meeting.StartDate.Value, liveClass.Meeting.ZoomLicense.LicenseEmail).ConfigureAwait(false);
+                                var meeting = liveClass.Meeting;
+                                meeting.MeetingNumber = long.Parse(meetingId);
+                                meeting.Passcode = passcode;
+                                meeting.ZoomLicense = null;
+                                meetings.Add(meeting);
+                            }
+                        }
+                        _unitOfWork.GetRepository<Meeting>().Update(meetings);
+                    }
+                }
+                _unitOfWork.GetRepository<Section>().Update(sections);
+                _unitOfWork.GetRepository<Lesson>().Update(lessons);
+                _unitOfWork.GetRepository<Course>().Update(course);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+            if (model.Status == CourseStatus.Review && !isSuperAdminOrAdminAccess)
             {
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseReviewMailAsync(course.Name, null));
             }
 
-            if (model.Status == CourseStatus.Published)
-            {
-                if (course.CourseEnrollments.Count == default)
+                if (model.Status == CourseStatus.Published)
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.GroupCoursePublishedMailAsync(course.GroupId.Value, course.Name, course.Slug, null));
+
+
+                    if (course.CourseEnrollments.Count == default)
+                    {
+                        BackgroundJob.Enqueue<IHangfireJobService>(job => job.GroupCoursePublishedMailAsync(course.GroupId.Value, course.Name, course.Slug, null));
+                    }
+                    else
+                    {
+                        BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendLessonAddedMailAsync(course.Name, course.Slug, null));
+                    }
+
+                }
+                if (model.Status == CourseStatus.Rejected)
+                {
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.CourseRejectedMailAsync(course.Id, model.Message, null));
+                }
+
+
+
+                if (isSuperAdminOrAdminAccess)
+                {
+                    return _localizer.GetString("TrainingPusbishedSuccessfully");
                 }
                 else
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendLessonAddedMailAsync(course.Name, course.Slug, null));
+                    return _localizer.GetString("TrainingStatus");
                 }
-
-            }
-            if (model.Status == CourseStatus.Rejected)
-            {
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.CourseRejectedMailAsync(course.Id, model.Message, null));
-            }
-            if (isSuperAdminOrAdminAccess)
-            {
-               return _localizer.GetString("TrainingPusbishedSuccessfully");
-            }
-            else
-            {
-              return  _localizer.GetString("TrainingStatus");
-            }      
+            });
         }
 
         /// <summary>
@@ -923,7 +957,7 @@ namespace Lingtren.Infrastructure.Services
                     predicate: p => p.CourseId == course.Id && !p.IsDeleted && !p.Section.IsDeleted,
                     include: src => src.Include(x => x.Section)
                     ).ConfigureAwait(false);
-                lessons = lessons.OrderBy(x => x.Section.Order).ThenBy(x=>x.Order).ToList();
+                lessons = lessons.OrderBy(x => x.Section.Order).ThenBy(x => x.Order).ToList();
                 var LessonIds = lessons.Select(x => x.Id).ToList();
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetAllAsync(predicate: p => p.CourseId == course.Id && LessonIds.Contains(p.LessonId)).ConfigureAwait(false);
                 watchHistory = watchHistory
@@ -1011,20 +1045,20 @@ namespace Lingtren.Infrastructure.Services
                 }
             }
             List<(Guid UserId, bool UserResult)?> physicalLessonStatus = new List<(Guid, bool)?>();
-            if(lesson.Type == LessonType.Physical)
+            if (lesson.Type == LessonType.Physical)
             {
-                var physicalLessonReviews = await _unitOfWork.GetRepository<PhysicalLessonReview>().GetAllAsync(predicate: p=>p.LessonId == lesson.Id).ConfigureAwait(false);
-                if(physicalLessonReviews.Count != default)
+                var physicalLessonReviews = await _unitOfWork.GetRepository<PhysicalLessonReview>().GetAllAsync(predicate: p => p.LessonId == lesson.Id).ConfigureAwait(false);
+                if (physicalLessonReviews.Count != default)
                 {
-                    var userIds = physicalLessonReviews.Select(x=>x.UserId).ToList();
+                    var userIds = physicalLessonReviews.Select(x => x.UserId).ToList();
                     bool hasAttended = false;
                     foreach (var userId in userIds)
                     {
-                        if(physicalLessonReviews.Any(x=>x.UserId == userId && x.IsReviewed))
+                        if (physicalLessonReviews.Any(x => x.UserId == userId && x.IsReviewed))
                         {
                             hasAttended = true;
                         }
-                        physicalLessonStatus.Add((userId,hasAttended));
+                        physicalLessonStatus.Add((userId, hasAttended));
                     }
                 }
             }
@@ -1063,7 +1097,7 @@ namespace Lingtren.Infrastructure.Services
                            IsPassed = (m?.IsPassed == true ? true : (examSubmissionStatus.Any(es => es.userId == student.UserId) ? false : (bool?)null)),
                            UpdatedOn = m?.UpdatedOn ?? m?.CreatedOn,
                            IsAssignmentReviewed = (bool?)(assignmentStatus.FirstOrDefault(ur => ur.Value.UserId == student.UserId)?.UserResult),
-                           AttendenceReviewed = (bool?)(physicalLessonStatus.FirstOrDefault(ur=>ur.Value.UserId == student.UserId)?.UserResult),
+                           AttendenceReviewed = (bool?)(physicalLessonStatus.FirstOrDefault(ur => ur.Value.UserId == student.UserId)?.UserResult),
                        };
             return data.ToList().ToIPagedList(criteria.Page, criteria.Size);
         }
@@ -1146,7 +1180,7 @@ namespace Lingtren.Infrastructure.Services
                 ).ConfigureAwait(false);
             watchHistories = watchHistories.OrderBy(x => x.Lesson.Section.Order).ThenBy(x => x.Lesson.Order).ToList();
             var response = new List<LessonStudentResponseModel>();
-            var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p =>(p.Type == LessonType.Assignment || p.Type == LessonType.Physical ) && p.CourseId == course.Id).ConfigureAwait(false);
+            var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => (p.Type == LessonType.Assignment || p.Type == LessonType.Physical) && p.CourseId == course.Id).ConfigureAwait(false);
 
             List<(Guid LessonId, bool? IsReviewed)?> assignmentStatus = new List<(Guid, bool?)?>();
             List<(Guid LessonId, bool? IsReviewed)?> physicalLessonStatus = new List<(Guid, bool?)?>();
@@ -1171,23 +1205,23 @@ namespace Lingtren.Infrastructure.Services
                         assignmentStatus.Add((lessonId, hasSubmitted));
                     }
                 }
-                if(lessons.Any(x=>x.Type == LessonType.Physical))
+                if (lessons.Any(x => x.Type == LessonType.Physical))
                 {
-                    var physicalLessonReviews = await _unitOfWork.GetRepository<PhysicalLessonReview>().GetAllAsync(predicate: p=> lessonIds.Contains(p.LessonId) && p.UserId == userId).ConfigureAwait(false);
-                    if(physicalLessonReviews.Count != default) 
+                    var physicalLessonReviews = await _unitOfWork.GetRepository<PhysicalLessonReview>().GetAllAsync(predicate: p => lessonIds.Contains(p.LessonId) && p.UserId == userId).ConfigureAwait(false);
+                    if (physicalLessonReviews.Count != default)
                     {
-                        foreach(var lessonId in lessonIds)
+                        foreach (var lessonId in lessonIds)
                         {
                             bool? hasReviewed = null;
-                            if(physicalLessonReviews.Any(x=>x.LessonId == lessonId && !x.IsReviewed))
+                            if (physicalLessonReviews.Any(x => x.LessonId == lessonId && !x.IsReviewed))
                             {
                                 hasReviewed = false;
                             }
-                            if(physicalLessonReviews.Any(x=>x.LessonId == lessonId && x.IsReviewed))
+                            if (physicalLessonReviews.Any(x => x.LessonId == lessonId && x.IsReviewed))
                             {
                                 hasReviewed = true;
                             }
-                            physicalLessonStatus.Add((lessonId,hasReviewed));
+                            physicalLessonStatus.Add((lessonId, hasReviewed));
                         }
                     }
                 }
@@ -1204,7 +1238,7 @@ namespace Lingtren.Infrastructure.Services
                 IsPassed = x.IsPassed,
                 UpdatedOn = x.UpdatedOn ?? x.CreatedOn,
                 User = new UserModel(x.User),
-                AttendenceReviewed = (bool?)(physicalLessonStatus.FirstOrDefault(ur=>ur.Value.LessonId == x.LessonId)?.IsReviewed)
+                AttendenceReviewed = (bool?)(physicalLessonStatus.FirstOrDefault(ur => ur.Value.LessonId == x.LessonId)?.IsReviewed)
             }));
             return response;
         }

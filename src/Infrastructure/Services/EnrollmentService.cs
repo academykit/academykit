@@ -1,23 +1,23 @@
 ﻿using Lingtren.Application.Common.Dtos;
 using Lingtren.Application.Common.Exceptions;
 using Lingtren.Application.Common.Interfaces;
+using Lingtren.Application.Common.Models.ResponseModels;
 using Lingtren.Domain.Entities;
 using Lingtren.Domain.Enums;
 using Lingtren.Infrastructure.Common;
 using Lingtren.Infrastructure.Helpers;
 using Lingtren.Infrastructure.Localization;
 using LinqKit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Lingtren.Infrastructure.Services
 {
-    public class EnrollmentService:BaseGenericService<User,BaseSearchCriteria>,IEnrollmentService
+    public class EnrollmentService : BaseGenericService<User, EnrollmentBaseSearchCritera>, IEnrollmentService
     {
-        public EnrollmentService(IUnitOfWork unitOfWork,ILogger<EnrollmentService> logger, IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
+        public EnrollmentService(IUnitOfWork unitOfWork, ILogger<EnrollmentService> logger, IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
 
@@ -43,7 +43,7 @@ namespace Lingtren.Infrastructure.Services
                     var isMatch = await CommonHelper.ValidateEmailFormat(email.Trim());
                     if (!isMatch)
                     {
-                        throw new ForbiddenException($"{_localizer.GetString("InvalidEmailFormat")}" +" "+ email);
+                        throw new ForbiddenException($"{_localizer.GetString("InvalidEmailFormat")}" + " " + email);
                     }
                 }
                 var hasAUthority = await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId, course.Id.ToString(), TrainingTypeEnum.Course);
@@ -152,6 +152,63 @@ namespace Lingtren.Infrastructure.Services
                 }
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return message.ToString();
+            });
+        }
+
+        /// <summary>
+        /// get filtered user list for course
+        /// </summary>
+        /// <param name="critera">enrolled user search critera</param>
+        /// <returns>Task completed</returns>
+        public async Task<SearchResult<UserResponseModel>> CourseUserSearchAsync(EnrollmentBaseSearchCritera critera)
+        {
+            return await ExecuteWithResultAsync(async () =>
+            {
+                var course = await ValidateAndGetCourse(critera.CurrentUserId, critera.CourseIdentity).ConfigureAwait(false);
+                var predicate = PredicateBuilder.New<User>(true);
+                predicate = predicate.And(p => p.Role == UserRole.Trainee || p.Role == UserRole.Trainer);
+
+                if (!string.IsNullOrEmpty(critera.CourseIdentity) && critera.EnrollmentStatus == EnrollmentMemberStatusEnum.Unenrolled)
+                {
+                    var enrolledUserIds = course.CourseEnrollments.Where(x => x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled).Select(x => x.UserId)
+                        .Concat(course.CourseTeachers.Select(x => x.UserId)).ToList();
+                    predicate = predicate.And(p => !enrolledUserIds.Contains(p.Id));
+                }
+                if(!string.IsNullOrEmpty(critera.CourseIdentity) && critera.EnrollmentStatus != EnrollmentMemberStatusEnum.Unenrolled)
+                {
+                    var enrolledUserIds = course.CourseEnrollments.Where(x => x.EnrollmentMemberStatus == critera.EnrollmentStatus).Select(x => x.UserId)
+                        .Concat(course.CourseTeachers.Select(x => x.UserId)).ToList();
+                    predicate = predicate.And(p => enrolledUserIds.Contains(p.Id));
+                }
+                if (!string.IsNullOrEmpty(critera.Search))
+                {
+                    var search = critera.Search.ToLower().Trim();
+                    predicate = predicate.And(x =>
+                        ((x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim() + " " + x.LastName.Trim()).Trim().Contains(search)
+                     || x.Email.ToLower().Trim().Contains(search)
+                     || x.MobileNumber.ToLower().Trim().Contains(search));
+                }
+                var user = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: predicate).ConfigureAwait(false);
+                var searchResult = user.ToIPagedList(critera.Page, critera.Size);
+                var response = new SearchResult<UserResponseModel>
+                {
+                    Items = new List<UserResponseModel>(),
+                    CurrentPage = searchResult.CurrentPage,
+                    PageSize = searchResult.PageSize,
+                    TotalCount = searchResult.TotalCount,
+                    TotalPage = searchResult.TotalPage
+                };
+                searchResult.Items.ForEach(p => response.Items.Add(new UserResponseModel
+                {
+                    Id = p.Id,
+                    FirstName = p.FirstName,
+                    MiddleName = p.MiddleName,
+                    LastName = p.LastName,
+                    Email = p.Email,
+                    MobileNumber = p.MobileNumber,
+                    ImageUrl = p.ImageUrl,
+                }));
+                return response;
             });
         }
     }
