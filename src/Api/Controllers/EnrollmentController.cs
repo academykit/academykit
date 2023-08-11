@@ -1,6 +1,8 @@
 ﻿using Lingtren.Api.Common;
 using Lingtren.Api.Controllers;
+using Lingtren.Application.Common.Dtos;
 using Lingtren.Application.Common.Interfaces;
+using Lingtren.Application.Common.Models.ResponseModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -26,6 +28,19 @@ namespace Api.Controllers
         {
             var message = await _enrollmentService.EnrollUserAsync(emailOrMobileNumber, CurrentUser.Id, courseIdentity).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = message});
+        }
+
+        /// <summary>
+        /// search operation for course user
+        /// </summary>
+        /// <param name="searchCritera"></param>
+        /// <returns>List of user</returns>
+        [HttpGet("User")]
+        public async Task<SearchResult<UserResponseModel>> User([FromQuery]EnrollmentBaseSearchCritera searchCritera)
+        {
+            searchCritera.CurrentUserId = CurrentUser.Id;
+            var result = await _enrollmentService.CourseUserSearchAsync(searchCritera).ConfigureAwait(false);
+            return result;
         }
     }
 }

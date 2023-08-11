@@ -463,8 +463,8 @@
             TimeZoneInfo nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
             DateTime startDateLocal = TimeZoneInfo.ConvertTime(lesson.StartDate.Value.ToLocalTime(), nepalTimeZone);
             DateTime currentLocalDate = TimeZoneInfo.ConvertTime(currentDateTime, nepalTimeZone);
-
-            if (startDateLocal > currentLocalDate)
+            var hasAuthority = await IsSuperAdminOrAdminOrTrainerOfTraining(searchCriteria.CurrentUserId,lesson.CourseId.ToString(),TrainingTypeEnum.Course).ConfigureAwait(false);
+            if (startDateLocal > currentLocalDate && !hasAuthority)
             {
                 throw new ForbiddenException(_localizer.GetString("AssignmentStartTimeException"));
             }

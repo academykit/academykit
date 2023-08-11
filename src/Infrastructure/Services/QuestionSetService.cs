@@ -101,7 +101,6 @@
                 var newQuestionIds = model.QuestionPoolQuestionIds.Except(oldQuestionIds).ToList();
                 var currentTimeStamp = DateTime.UtcNow;
                 var removeData = existingQuestionSetQuestions.Where(x => removeQuestionIds.Any(y => y == x.Id)).ToList();
-
                 var questionSetQuestions = new List<QuestionSetQuestion>();
                 if (removeData.Count != default)
                 {
@@ -672,7 +671,8 @@
                     },
                     QuestionSetSubmissions = new List<QuestionSetResultDetailModel>()
                 };
-
+                response.HasExceededAttempt = response.AttemptCount >= questionSet.AllowedRetake;
+                response.EndDate = questionSet.EndTime.Value;
                 questionSetSubmissions.ForEach(res => response.QuestionSetSubmissions.Add(new QuestionSetResultDetailModel
                 {
                     QuestionSetSubmissionId = res.Id,

@@ -5,6 +5,8 @@
         public int AttemptCount { get; set; }
         public UserModel User { get; set; }
         public IList<QuestionSetResultDetailModel> QuestionSetSubmissions { get; set; }
+        public bool HasExceededAttempt { get; set; }
+        public DateTime EndDate { get; set; }
     }
     public class QuestionSetResultDetailModel
     {
