@@ -1028,4 +1028,7 @@ recorded cannot be deleted.</value>
   <data name="UpdatedUser" xml:space="preserve">
     <value>Updated user :</value>
   </data>
+  <data name="LessonContainsAttendance" xml:space="preserve">
+    <value>Physical lesson contains attendance.</value>
+  </data>
 </root>

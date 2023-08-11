@@ -613,7 +613,14 @@ namespace Lingtren.Infrastructure.Services
                     _unitOfWork.GetRepository<FeedbackQuestionOption>().Delete(feedbackOptions);
                     _unitOfWork.GetRepository<Feedback>().Delete(feedbacks);
                 }
-
+                if(lesson.Type == LessonType.Physical)
+                {
+                    var hasSubmission = await   _unitOfWork.GetRepository<PhysicalLessonReview>().ExistsAsync(predicate : p=>p.LessonId == lesson.Id).ConfigureAwait(false);
+                    if(hasSubmission)
+                    {
+                        throw new ForbiddenException(_localizer.GetString("LessonContainsAttendance"));
+                    }
+                }
                 _unitOfWork.GetRepository<Lesson>().Delete(lesson);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 

@@ -1028,4 +1028,7 @@
   <data name="UpdatedUser" xml:space="preserve">
     <value>更新されたユーザー:</value>
   </data>
+  <data name="LessonContainsAttendance" xml:space="preserve">
+    <value>体育の授業には出席が含まれます。</value>
+  </data>
 </root>
