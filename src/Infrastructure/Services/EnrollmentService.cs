@@ -156,11 +156,11 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
-        /// to get unenrolled user Id in course
+        /// get filtered user list for course
         /// </summary>
         /// <param name="critera">enrolled user search critera</param>
         /// <returns>Task completed</returns>
-        public async Task<SearchResult<UserResponseModel>> GetNotEnrolledUser(EnrollmentBaseSearchCritera critera)
+        public async Task<SearchResult<UserResponseModel>> CourseUserSearchAsync(EnrollmentBaseSearchCritera critera)
         {
             return await ExecuteWithResultAsync(async () =>
             {

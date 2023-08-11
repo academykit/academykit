@@ -31,7 +31,7 @@ namespace Api.Controllers
         }
 
         /// <summary>
-        /// get not enrolled user list
+        /// search operation for course user
         /// </summary>
         /// <param name="searchCritera"></param>
         /// <returns>List of user</returns>
@@ -39,7 +39,7 @@ namespace Api.Controllers
         public async Task<SearchResult<UserResponseModel>> NotEnrolledUser([FromQuery]EnrollmentBaseSearchCritera searchCritera)
         {
             searchCritera.CurrentUserId = CurrentUser.Id;
-            var result = await _enrollmentService.GetNotEnrolledUser(searchCritera).ConfigureAwait(false);
+            var result = await _enrollmentService.CourseUserSearchAsync(searchCritera).ConfigureAwait(false);
             return result;
         }
     }

@@ -17,10 +17,10 @@ namespace Lingtren.Application.Common.Interfaces
         Task<string> EnrollUserAsync(IList<string> emailOrMobileNumber, Guid currentUserId, string courseIdentity);
 
         /// <summary>
-        /// to get unenrolled user Id in course
+        /// get filtered user list for course
         /// </summary>
         /// <param name="critera">enrolled user search critera</param>
         /// <returns>Task completed</returns>
-        Task<SearchResult<UserResponseModel>> GetNotEnrolledUser(EnrollmentBaseSearchCritera critera);
+        Task<SearchResult<UserResponseModel>> CourseUserSearchAsync(EnrollmentBaseSearchCritera critera);
     }
 }
