@@ -17,6 +17,7 @@ import {
   IPaginated,
   IUser,
 } from './types';
+import { ResponseData } from './authService';
 
 interface ICourseTag {
   id: string;
@@ -415,7 +416,7 @@ const courseStatus = async (data: {
   status: CourseStatus;
   message?: string;
 }) => {
-  return await httpClient.patch(api.course.status, data);
+  return await httpClient.patch<ResponseData>(api.course.status, data);
 };
 export const useCourseStatus = (id: string, search: string) => {
   const queryClient = useQueryClient();

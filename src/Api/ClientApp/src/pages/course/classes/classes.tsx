@@ -114,7 +114,7 @@ const Classes = () => {
   );
 
   const goToNextLesson = (nextLesson: string) =>
-    navigate(`${RoutePath.classes}/${params.id}/${nextLesson}`);
+    navigate(`${RoutePath.classes}/${params.id}/${nextLesson}/description`);
   const onCourseEnded = async (nextLesson: string) => {
     try {
       await watchHistory.mutateAsync({
