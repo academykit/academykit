@@ -134,6 +134,7 @@ const Department = ({
                 mb={10}
               />
               <Switch
+                mt={'lg'}
                 sx={{ input: { cursor: 'pointer' } }}
                 checked={form.values.isDepartmentActive}
                 label={t('department_enabled')}
@@ -146,7 +147,7 @@ const Department = ({
                 }}
               />
 
-              <Group mt={20}>
+              <Group mt={40}>
                 <Button type="submit">{t('submit')}</Button>
 
                 <Button
@@ -206,7 +207,7 @@ const Department = ({
   };
 
   const form = useForm({
-    initialValues: { name: '', isActive: false },
+    initialValues: { name: '', isActive: true },
     validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
@@ -272,16 +273,8 @@ const Department = ({
                   {...form.getInputProps('name')}
                   mb={10}
                 />
-                <Switch
-                  sx={{ input: { cursor: 'pointer' } }}
-                  label={t('department_enabled')}
-                  labelPosition="left"
-                  onChange={(e) => {
-                    form.setFieldValue('isActive', e.currentTarget.checked);
-                  }}
-                />
 
-                <Group mt={20} ml={10}>
+                <Group mt={20}>
                   <Button type="submit">{t('submit')}</Button>
                   {showAddForm && (
                     <Button
@@ -316,7 +309,13 @@ const Department = ({
 
       {getDepartment.data && getDepartment.data.totalCount > 0 ? (
         <Paper>
-          <Table striped highlightOnHover withBorder sx={{ marginTop: '10px' }}>
+          <Table
+            striped
+            highlightOnHover
+            withBorder
+            withColumnBorders
+            sx={{ marginTop: '10px' }}
+          >
             <thead>
               <tr>
                 <th>{t('name')}</th>

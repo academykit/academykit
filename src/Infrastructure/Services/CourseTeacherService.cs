@@ -27,7 +27,7 @@
             IUnitOfWork unitOfWork,
             ILogger<CourseTeacherService> logger,
             IStringLocalizer<ExceptionLocalizer> localizer)
-            : base(unitOfWork, logger,localizer)
+            : base(unitOfWork, logger, localizer)
         {
         }
 
@@ -70,7 +70,7 @@
                 _logger.LogWarning("Training with id {courseId} creator User Id {userId} can't be training trainer.", course.Id, entity.UserId);
                 throw new ForbiddenException(_localizer.GetString("TrainingAuthorAdded"));
             }
-            if(course.CourseEnrollments.Any(x=>x.UserId == entity.UserId))
+            if (course.CourseEnrollments.Any(x => x.UserId == entity.UserId))
             {
                 _logger.LogWarning("Training with id {courseId} User with UserID{userId} cant be training trainer.", course.Id, entity.UserId);
                 throw new ForbiddenException(_localizer.GetString("EnrolledUserCan'tBeTrainer"));

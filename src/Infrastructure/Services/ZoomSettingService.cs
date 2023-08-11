@@ -15,7 +15,7 @@
         public ZoomSettingService(
             IUnitOfWork unitOfWork,
             ILogger<ZoomSettingService> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
         /// <summary>

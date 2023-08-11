@@ -14,7 +14,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="userIds"> the list of <see cref="Guid" /> .</param>
         /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
         /// <returns> the task complete </returns>
-        Task SendMailNewGroupMember(string gropName,string groupSlug, IList<Guid> userIds, PerformContext context = null);
+        Task SendMailNewGroupMember(string gropName, string groupSlug, IList<Guid> userIds, PerformContext context = null);
 
         /// <summary>
         /// Handle to send group course published mail
@@ -24,7 +24,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="courseSlug"> the course slug </param>
         /// <param name="context"> the instance of <see cref="PerformContext"/></param>
         /// <returns> the task complete </returns>
-        Task GroupCoursePublishedMailAsync(Guid groupId, string courseName,string courseSlug ,PerformContext context = null);
+        Task GroupCoursePublishedMailAsync(Guid groupId, string courseName, string courseSlug, PerformContext context = null);
 
         /// <summary>
         /// Handle to send course rejected mail
@@ -58,7 +58,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="password">the login password of the receiver</param>
         /// <param name="companyName"> the company name </param>
         /// <returns> the task complete </returns>
-        Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password,string companyName,string companyNumber, PerformContext context = null);
+        Task SendUserCreatedPasswordEmail(string emailAddress, string firstName, string password, string companyName, string companyNumber, PerformContext context = null);
 
         /// <summary>
         /// Handle to update information of lesson video
@@ -74,7 +74,7 @@ namespace Lingtren.Application.Common.Interfaces
         ///<param name="coursename"> the course name</param>
         /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
         ///<returns>the tasl complete </returns>
-        Task SendCourseEnrollmentMailAsync(string userName,string userEmail,Guid courseId, string courseName, PerformContext context =null);
+        Task SendCourseEnrollmentMailAsync(string userName, string userEmail, Guid courseId, string courseName, PerformContext context = null);
 
         ///<summary>
         ///Handle to send cretificate issued mail
@@ -83,7 +83,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
         /// <param name="StudentName">the lis of student whose certificate has been issued</param>
         ///<returns>the tasl complete </returns>
-        Task SendCertificateIssueMailAsync(string courseName,IList<CertificateUserIssuedDto> certificateUserIssuedDtos, PerformContext context = null);
+        Task SendCertificateIssueMailAsync(string courseName, IList<CertificateUserIssuedDto> certificateUserIssuedDtos, PerformContext context = null);
 
         /// <summary>
         /// Handle to send lesson added mail
@@ -92,7 +92,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="courseSlug"> the course slug </param>
         /// <param name="context"> the instance of <see cref="PerformContext" /> .</param>
         /// <returns> the task complete </returns>
-        Task SendLessonAddedMailAsync(string courseName,string courseSlug,PerformContext context = null);
+        Task SendLessonAddedMailAsync(string courseName, string courseSlug, PerformContext context = null);
 
         /// <summary>
         /// 
@@ -102,7 +102,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="companyName"></param>
         /// <param name=""></param>
         /// <returns></returns>
-        Task AccountUpdatedMailAsync(string fullName, string email,string oldEmail, PerformContext context = null);
+        Task AccountUpdatedMailAsync(string fullName, string email, string oldEmail, PerformContext context = null);
 
         /// <summary>
         /// 

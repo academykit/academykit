@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using NLog.Web;
 using NLog;
+using Hangfire.Dashboard;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,8 +84,8 @@ app.UseCors(x => x
 
 app.UseHangfireDashboard("/hangfire", new DashboardOptions
 {
-    Authorization = new[]{
-        new HangfireAuthorizationFilter()
+    Authorization = new IDashboardAuthorizationFilter[]{
+        new HangfireAuthorizationFilter(app.Configuration)
     }
 });
 app.UseRequestLocalization();

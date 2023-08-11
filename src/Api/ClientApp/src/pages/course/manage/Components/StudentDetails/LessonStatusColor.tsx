@@ -28,6 +28,11 @@ const feedBackType = {
   false: 'not_submitted',
   empty: 'not_submitted',
 };
+const physicalType = {
+  true: 'attended',
+  false: 'review',
+  empty: 'not_attended',
+};
 
 export const getType = (type: LessonType) => {
   switch (type) {
@@ -45,12 +50,20 @@ export const getType = (type: LessonType) => {
       return liveSessionType;
     case LessonType.Feedback:
       return feedBackType;
+    case LessonType.Physical:
+      return physicalType;
     default:
       return examType;
   }
 };
 const LessonStatusColor = ({
-  status: { isPassed, isAssignmentReviewed, isCompleted, lessonType: type },
+  status: {
+    isPassed,
+    isAssignmentReviewed,
+    isCompleted,
+    lessonType: type,
+    attendenceReviewed,
+  },
 }: {
   status: IStudentInfoLesson;
 }) => {
@@ -60,6 +73,7 @@ const LessonStatusColor = ({
     <>
       <Group position="center">
         {type !== LessonType.Assignment &&
+          type !== LessonType.Physical &&
           // Logic for other lesson types
           (isPassed === true ? (
             <Badge color={'green'}>{t(getType(type).true)}</Badge>
@@ -78,6 +92,18 @@ const LessonStatusColor = ({
             : isAssignmentReviewed && (
                 <Badge color={'red'}>{t(getType(type).false)}</Badge>
               ))}
+
+        {/* Physical training review/attended/not-attended badges */}
+        {type == LessonType.Physical &&
+          (attendenceReviewed == true && isPassed == true ? (
+            <Badge color={'green'}>{t(getType(type).true)}</Badge>
+          ) : attendenceReviewed == true && isPassed == null ? (
+            <Badge color={'red'}>{t(getType(type).empty)}</Badge>
+          ) : attendenceReviewed == false && isPassed == null ? (
+            <Badge color={'orange'}>{t(getType(type).false)}</Badge>
+          ) : (
+            <Badge color={'red'}>{t(getType(type).empty)}</Badge>
+          ))}
 
         {/* show review status badge until it is not reviewed i.e. isAssignmentReviewed=true */}
         {/* null is not submitted

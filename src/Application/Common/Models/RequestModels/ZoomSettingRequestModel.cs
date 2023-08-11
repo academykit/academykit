@@ -2,8 +2,9 @@
 {
     public class ZoomSettingRequestModel
     {
-        public string ApiKey { get; set; }
-        public string ApiSecret { get; set; }
+        public string OAuthAccountId { get; set; }
+        public string OAuthClientId { get; set; }
+        public string OAuthClientSecret { get; set; }
         public string SdkKey { get; set; }
         public string SdkSecret { get; set; }
         public string WebhookSecret { get; set; }

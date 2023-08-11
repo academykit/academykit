@@ -9,7 +9,6 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Localization;
-    using Lingtren.Infrastructure.Services;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
@@ -19,20 +18,17 @@ namespace Lingtren.Api.Controllers
         private readonly ICourseService _courseService;
         private readonly IValidator<CourseRequestModel> _validator;
         private readonly IValidator<CourseStatusRequestModel> _courseStatusValidator;
-        private readonly ILogger<CourseController> _logger;
         private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
 
         public CourseController(
             ICourseService courseService,
             IValidator<CourseRequestModel> validator,
-            ILogger<CourseController> logger,
             IValidator<CourseStatusRequestModel> courseStatusValidator,
             IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _courseService = courseService;
             _validator = validator;
             _courseStatusValidator = courseStatusValidator;
-            _logger = logger;
             _localizer = localizer;
         }
 
@@ -63,7 +59,7 @@ namespace Lingtren.Api.Controllers
             };
 
             searchResult.Items.ForEach(p =>
-                 response.Items.Add(new CourseResponseModel(p, searchCriteria.EnrollmentStatus == null ? _courseService.GetUserCourseEnrollmentStatus(p,searchCriteria.CurrentUserId) : searchCriteria.EnrollmentStatus.FirstOrDefault()))
+                 response.Items.Add(new CourseResponseModel(p, searchCriteria.EnrollmentStatus == null ? _courseService.GetUserCourseEnrollmentStatus(p, searchCriteria.CurrentUserId) : searchCriteria.EnrollmentStatus.FirstOrDefault()))
              );
             return response;
         }
@@ -183,9 +179,9 @@ namespace Lingtren.Api.Controllers
         [HttpPatch("status")]
         public async Task<IActionResult> ChangeStatus(CourseStatusRequestModel model)
         {
-            await _courseStatusValidator.ValidateAsync(model,options => options.ThrowOnFailures()).ConfigureAwait(false);
-            await _courseService.ChangeStatusAsync(model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("TrainingStatus") });
+            await _courseStatusValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            var result = await _courseService.ChangeStatusAsync(model, CurrentUser.Id).ConfigureAwait(false);     
+            return Ok(new CommonResponseModel() { Success = true, Message = result});
         }
 
         /// <summary>
@@ -204,7 +200,7 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="identity"> the course id or slug.</param>
         [HttpGet("{identity}/lessonStatistics")]
-        public async Task<SearchResult<LessonStatisticsResponseModel>> LessonStatistics(string identity,[FromQuery] BaseSearchCriteria criteria) => await _courseService.LessonStatistics(identity, CurrentUser.Id,criteria).ConfigureAwait(false);
+        public async Task<SearchResult<LessonStatisticsResponseModel>> LessonStatistics(string identity, [FromQuery] BaseSearchCriteria criteria) => await _courseService.LessonStatistics(identity, CurrentUser.Id, criteria).ConfigureAwait(false);
 
         /// <summary>
         /// get course statistics api
@@ -220,10 +216,10 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="identity"> the course id or slug.</param>
         [HttpGet("{identity}/lessonStatistics/{lessonIdentity}")]
-        public async Task<SearchResult<LessonStudentResponseModel>> LessonDetailStatistics(string identity, string lessonIdentity,[FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<LessonStudentResponseModel>> LessonDetailStatistics(string identity, string lessonIdentity, [FromQuery] BaseSearchCriteria searchCriteria)
         {
             searchCriteria.CurrentUserId = CurrentUser.Id;
-            return await _courseService.LessonStudentsReport(identity,lessonIdentity, searchCriteria).ConfigureAwait(false);
+            return await _courseService.LessonStudentsReport(identity, lessonIdentity, searchCriteria).ConfigureAwait(false);
         }
 
         /// <summary>

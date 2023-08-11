@@ -98,7 +98,7 @@ const FeedbackItem = ({
 
       <Paper shadow={'lg'} sx={{ width: '100%' }} my={20} withBorder p={20}>
         <Flex justify={'space-between'}>
-          <Title>{data.name}</Title>
+          <Title truncate>{data.name}</Title>
           <Group>
             <Button variant="subtle" onClick={() => setEdit()}>
               <IconEdit />
@@ -141,10 +141,12 @@ const FeedbackItem = ({
               <Text>{t('options')}</Text>
               {data.feedbackQuestionOptions?.map((x) => (
                 <Group my={10} key={x.id} id="hehe">
-                  <TextViewer
-                    content={x.option}
-                    styles={{ root: { flexGrow: 1 } }}
-                  ></TextViewer>
+                  <div style={{ width: '100%' }}>
+                    <TextViewer
+                      content={x.option}
+                      styles={{ root: { flexGrow: 1 } }}
+                    ></TextViewer>
+                  </div>
                 </Group>
               ))}
             </>

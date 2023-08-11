@@ -40,8 +40,7 @@ const Comments = () => {
   }
 
   return (
-    <Box>
-      {data?.items.map((x) => <Comment comment={x} key={x.id} />)}
+    <Box mb={'lg'}>
       <form onSubmit={form.onSubmit(onSubmit)}>
         <Textarea
           placeholder={t('your_comment_here') as string}
@@ -52,13 +51,14 @@ const Comments = () => {
         <Button
           loading={postComment.isLoading}
           type="submit"
-          mt={10}
+          mb={'xs'}
           disabled={!form.values.content.trim()}
           sx={{ '&[data-disabled]': { pointerEvents: 'all' } }}
         >
           {t('post')}
         </Button>
       </form>
+      {data?.items.map((x) => <Comment comment={x} key={x.id} />)}
     </Box>
   );
 };

@@ -11,6 +11,10 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string MobileNumber { get; set; }
         public UserRole Role { get; set; }
 
+        public string DepartmentId { get; set; }
+
+        public string DepartmentName { get; set; }
+
         public UserModel(User user)
         {
             Id = user.Id;
@@ -19,6 +23,8 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             Email = user.Email;
             MobileNumber = user.MobileNumber;
             Role = user.Role;
+            DepartmentName = user.Department?.Name;
+            DepartmentId = user.Department?.Id.ToString();
         }
 
         public UserModel()

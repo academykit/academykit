@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using CsvHelper;
+using FluentValidation;
 using Hangfire;
 using Lingtren.Api.Common;
 using Lingtren.Application.Common.Dtos;
@@ -14,6 +15,7 @@ using LinqKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using System.Globalization;
 
 namespace Lingtren.Api.Controllers
 {
@@ -22,7 +24,6 @@ namespace Lingtren.Api.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IFileServerService _fileServerService;
         private readonly IUserService _userService;
-        private readonly IEmailService _emailService;
         private readonly IGeneralSettingService _generalSettingService;
         private readonly IValidator<UserRequestModel> _validator;
         private readonly IValidator<ChangeEmailRequestModel> _changeEmailValidator;
@@ -32,7 +33,6 @@ namespace Lingtren.Api.Controllers
                             ILogger<UserController> logger,
                             IFileServerService fileServerService,
                             IUserService userService,
-                            IEmailService emailService,
                             IValidator<UserRequestModel> validator,
                             IGeneralSettingService generalSettingService,
                             IValidator<ChangeEmailRequestModel> changeEmailValidator,
@@ -42,7 +42,6 @@ namespace Lingtren.Api.Controllers
             _fileServerService = fileServerService;
             _logger = logger;
             _userService = userService;
-            _emailService = emailService;
             _validator = validator;
             _changeEmailValidator = changeEmailValidator;
             _generalSettingService = generalSettingService;
@@ -122,7 +121,7 @@ namespace Lingtren.Api.Controllers
 
             var response = await _userService.CreateAsync(entity).ConfigureAwait(false);
             var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
-            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(entity.Email, entity.FirstName, password, company.CompanyName,company.CompanyContactNumber,null));
+            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(entity.Email, entity.FirstName, password, company.CompanyName, company.CompanyContactNumber, null));
             return new UserResponseModel(response);
         }
 
@@ -155,8 +154,8 @@ namespace Lingtren.Api.Controllers
         /// <param name="criteria"></param>
         /// <returns>List of trainer</returns>
         [HttpGet("trainer")]
-        public async Task<IList<TrainerResponseModel>> Trainer([FromQuery]TeacherSearchCriteria criteria) => await _userService.GetTrainerAsync(CurrentUser.Id,criteria).ConfigureAwait(false);
-      
+        public async Task<IList<TrainerResponseModel>> Trainer([FromQuery] TeacherSearchCriteria criteria) => await _userService.GetTrainerAsync(CurrentUser.Id, criteria).ConfigureAwait(false);
+
 
         /// <summary>
         /// import bulk user api
@@ -221,15 +220,15 @@ namespace Lingtren.Api.Controllers
                 }
                 existing.Role = model.Role;
             }
-            if(model.Status == UserStatus.Active || model.Status == UserStatus.InActive)
+            if (model.Status == UserStatus.Active || model.Status == UserStatus.InActive)
             {
                 existing.Status = model.Status;
             }
             string? password = null;
-            if(emailchange == true)
+            if (emailchange == true)
             {
                 password = await _userService.GenerateRandomPassword(8).ConfigureAwait(false);
-                existing.HashPassword = _userService.HashPassword(password);  
+                existing.HashPassword = _userService.HashPassword(password);
             }
             if (oldRole != model.Role)
             {
@@ -248,7 +247,7 @@ namespace Lingtren.Api.Controllers
             if (password != null)
             {
                 BackgroundJob.Enqueue<IHangfireJobService>(job => job.AccountUpdatedMailAsync(existing.FullName, model.Email, oldEmail, null));
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(existing.Email, existing.FullName, password,company.CompanyName,company.CompanyContactNumber, null));
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(existing.Email, existing.FullName, password, company.CompanyName, company.CompanyContactNumber, null));
             }
 
             return new UserResponseModel(savedEntity);
@@ -302,6 +301,35 @@ namespace Lingtren.Api.Controllers
             CommonHelper.ValidateArgumentNotNullOrEmpty(token, nameof(token));
             await _userService.VerifyChangeEmailAsync(token).ConfigureAwait(false);
             return Ok(new CommonResponseModel { Success = true, Message = _localizer.GetString("EmailChanged") });
+        }
+
+        /// <summary>
+        /// downlaod bulk sample file
+        /// </summary>
+        /// <returns> the csv file </returns>
+        [HttpGet("samplefile")]
+        public IActionResult SampleFile()
+        {
+            var data = new List<UserImportDto> ();
+            var mobileNumber = "+9779801230314";
+            data.Add(new UserImportDto
+            {
+                FirstName = "Bijay",
+                MiddleName = string.Empty,
+                LastName = "Dhimal",
+                Email = "bijay@vurilo.com",
+                MobileNumber = mobileNumber,
+                Role = "Trainer",
+                Designation = "Programmer"
+            });
+            using var memroryStream = new MemoryStream();
+            using var steamWriter = new StreamWriter(memroryStream);
+            using (var csv = new CsvWriter(steamWriter, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(data);
+                csv.Flush();
+            }
+            return File(memroryStream.ToArray(), "text/csv", "bulkimportformat.csv");
         }
     }
 }

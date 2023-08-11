@@ -17,6 +17,8 @@ import {
   IPaginated,
   IUser,
 } from './types';
+import { ResponseData } from './authService';
+import { INotMember } from './groupService';
 
 interface ICourseTag {
   id: string;
@@ -69,16 +71,17 @@ export const useMyCourse = (userId: string, search: string) =>
     }
   );
 
-const getCourseTeacher = async (course_id: string) =>
+const getCourseTeacher = async (course_id: string, searchParams: string) =>
   await httpClient.get<IPaginated<ICreateCourseTeacher>>(
-    api.courseTeacher.list + `?CourseIdentity=${course_id}`
+    api.courseTeacher.list + `?CourseIdentity=${course_id}&${searchParams}`
   );
 
-export const useCourseTeacher = (course_id: string) =>
+export const useCourseTeacher = (course_id: string, searchParams: string) =>
   useQuery(
-    ['get' + api.courseTeacher.list],
-    () => getCourseTeacher(course_id),
+    ['get_course_teachers' + api.courseTeacher.list + searchParams],
+    () => getCourseTeacher(course_id, searchParams),
     {
+      enabled: true,
       select: (data) => data.data,
     }
   );
@@ -101,12 +104,14 @@ const createTeacherCourse = async (data: {
     courseIdentity: data.courseIdentity,
   });
 };
-export const useCreateTeacherCourse = () => {
+export const useCreateTeacherCourse = (searchParams: string) => {
   const queryClient = useQueryClient();
 
   return useMutation(['post' + api.courseTeacher.list], createTeacherCourse, {
     onSuccess: () => {
-      queryClient.invalidateQueries(['get' + api.courseTeacher.list]);
+      queryClient.invalidateQueries([
+        'get_course_teachers' + api.courseTeacher.list + searchParams,
+      ]);
     },
   });
 };
@@ -115,14 +120,16 @@ export const useCreateTeacherCourse = () => {
 const deleteCourseTeacher = async (id: string) => {
   return await httpClient.delete(api.courseTeacher.detail(id));
 };
-export const useDeleteCourseTeacher = () => {
+export const useDeleteCourseTeacher = (searchParams: string) => {
   const queryClient = useQueryClient();
   return useMutation(
     ['delete' + api.courseTeacher.detail],
     deleteCourseTeacher,
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(['get' + api.courseTeacher.list]);
+        queryClient.invalidateQueries([
+          'get_course_teachers' + api.courseTeacher.list + searchParams,
+        ]);
       },
     }
   );
@@ -274,6 +281,7 @@ export interface ILessons {
   questionMarking: number;
   passingWeightage: number;
   allowedRetake: number;
+  isCompleted: boolean;
 }
 
 const createSection = async (data: { courseIdentity: string; name: string }) =>
@@ -413,7 +421,7 @@ const courseStatus = async (data: {
   status: CourseStatus;
   message?: string;
 }) => {
-  return await httpClient.patch(api.course.status, data);
+  return await httpClient.patch<ResponseData>(api.course.status, data);
 };
 export const useCourseStatus = (id: string, search: string) => {
   const queryClient = useQueryClient();
@@ -520,6 +528,9 @@ export interface ICourseLesson {
   assignmentReview?: ICourseLessonAssignmentReview;
   assignmentExpired: boolean;
   startDate: string;
+  zoomId: string;
+  password: string;
+  hasAttended: boolean;
 }
 
 const getCourseLesson = async (
@@ -663,5 +674,34 @@ const getSingleCertificate = (id: string) => {
 export const useGetCertificateDetails = (id: string) => {
   return useQuery([api.course.getCertificateDetails(id)], () =>
     getSingleCertificate(id)
+  );
+};
+
+const addTrainee = ({ courseId, data }: { data: any; courseId: string }) => {
+  return httpClient.post(api.enrollment.enrollTrainee(courseId), data);
+};
+
+export const useAddTrainee = (courseId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation([api.enrollment.enrollTrainee(courseId)], addTrainee, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([]);
+    },
+  });
+};
+
+const getTrainee = (courseId: string, query: string) => {
+  return httpClient.get<IPaginated<INotMember>>(
+    api.enrollment.trainee(courseId, query)
+  );
+};
+
+export const useGetTrainee = (courseId: string, query: string) => {
+  return useQuery(
+    [api.enrollment.trainee(courseId, query)],
+    () => getTrainee(courseId, query),
+    {
+      select: (data) => data.data,
+    }
   );
 };

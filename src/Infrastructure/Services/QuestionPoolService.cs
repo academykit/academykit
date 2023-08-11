@@ -14,6 +14,7 @@
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -23,7 +24,7 @@
             IUnitOfWork unitOfWork,
             ILogger<QuestionPoolService> logger,
             IStringLocalizer<ExceptionLocalizer> localizer
-            ) : base(unitOfWork, logger,localizer)
+            ) : base(unitOfWork, logger, localizer)
         {
         }
         #region Protected Methods
@@ -122,14 +123,14 @@
                 var questionsetsubmission = await _unitOfWork.GetRepository<QuestionSetSubmission>().GetAllAsync(predicate: p => p.QuestionSet.QuestionSetQuestions.Any(x => x.QuestionPoolQuestionId.
                 Equals(questionPoolQuestions.Select(x => x.QuestionId)))).ConfigureAwait(false);
 
-                if (questionPoolQuestions.Count() != 0 && questionsetsubmission.Count() != 0 && questionsetsubmission.Any(x=>x.QuestionSetResults.Count != 0))
+                if (questionPoolQuestions.Count() != 0 && questionsetsubmission.Count() != 0 && questionsetsubmission.Any(x => x.QuestionSetResults.Count != 0))
                 {
                     _logger.LogWarning("Question pool with id: {poolId} contains questions. So, it cannot be deleted.", identity);
                     throw new ForbiddenException(_localizer.GetString("QuestionPoolContainQuestion"));
                 }
 
-                var ids = questionPoolQuestions.Select(x => x.Id).ToList();  
-                var questionsetquestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(predicate:p=> ids.Contains(p.QuestionPoolQuestionId.Value)).ConfigureAwait(false);
+                var ids = questionPoolQuestions.Select(x => x.Id).ToList();
+                var questionsetquestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(predicate: p => ids.Contains(p.QuestionPoolQuestionId.Value)).ConfigureAwait(false);
 
 
                 foreach (var questionsetquestion in questionsetquestions)
@@ -142,7 +143,7 @@
                     _unitOfWork.GetRepository<QuestionPoolQuestion>().Delete(questionPoolQuestion);
                 }
 
-                
+
                 foreach (var submission in questionsetsubmission)
                 {
                     _unitOfWork.GetRepository<QuestionSetSubmission>().Delete(submission);
@@ -186,6 +187,52 @@
                 predicate: p => p.Id.ToString() == poolIdentity || p.Slug == poolIdentity).ConfigureAwait(false);
             return await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetFirstOrDefaultAsync(
                 predicate: p => p.QuestionPoolId == questionPool.Id && p.QuestionId == questionId).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// reorder questions in questionpool
+        /// </summary>
+        /// <param name="currentUserId">current user id</param>
+        /// <param name="identity">id or slug of questionpool</param>
+        /// <param name="ids">list of question id in questionpool</param>
+        /// <returns>task completed</returns>
+        /// <exception cref="ForbiddenException"></exception>
+        /// <exception cref="EntityNotFoundException"></exception>
+        public async Task QuestionPoolQuestionReorderAsync(Guid currentUserId, string identity, IList<Guid> ids)
+        {
+            await ExecuteAsync(async () =>
+            {
+                var hasAccess = await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId, identity, TrainingTypeEnum.QuestionPool);
+                if (!hasAccess)
+                {
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
+                }
+                var questionPoolQuestions = await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetAllAsync(predicate: p => p.QuestionPool.Id.ToString() == identity
+                || p.QuestionPool.Slug.ToLower().Trim() == identity.ToLower().Trim()).ConfigureAwait(false);
+                if (questionPoolQuestions == null)
+                {
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionPoolQuestionNotFound"));
+                }
+                var order = 0;
+                var questionToUpdate = new List<QuestionPoolQuestion>();
+                foreach (var id in ids)
+                {
+                    var questionPoolQuestion = questionPoolQuestions.FirstOrDefault(x => x.QuestionId == id);
+                    if (questionPoolQuestion != default)
+                    {
+                        questionPoolQuestion.Order = order;
+                        questionPoolQuestion.UpdatedOn = DateTime.UtcNow;
+                        questionPoolQuestion.UpdatedBy = currentUserId;
+                        questionToUpdate.Add(questionPoolQuestion);
+                        order++;
+                    }
+                }
+                if (questionToUpdate.Count != default)
+                {
+                    _unitOfWork.GetRepository<QuestionPoolQuestion>().Update(questionToUpdate);
+                    await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                }
+            });
         }
     }
 }

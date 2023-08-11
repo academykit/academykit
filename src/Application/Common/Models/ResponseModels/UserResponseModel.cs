@@ -18,7 +18,7 @@
         public string PublicUrls { get; set; }
         public Guid? DepartmentId { get; set; }
         public string DepartmentName { get; set; }
-        public UserStatus Status{ get; set; }
+        public UserStatus Status { get; set; }
         public DateTime CreatedOn { get; set; }
         public string FullName { get; set; }
         public IList<CourseCertificateIssuedResponseModel> Certificates { get; set; } = new List<CourseCertificateIssuedResponseModel>();

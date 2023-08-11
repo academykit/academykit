@@ -164,7 +164,7 @@
                     WatchedDate = Convert.ToDateTime(response.UpdatedOn)
                 };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to pass the student.");
                 throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorUpdateWatchHistory"));
@@ -200,7 +200,7 @@
                 }
                 if (course.CourseTeachers.Any(x => x.UserId != userId) || user == default)
                 {
-                   
+
                     var currentTimeStamp = DateTime.UtcNow;
                     var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
                         predicate: p => p.CourseId == course.Id && p.LessonId == lesson.Id && p.UserId == userId
@@ -223,11 +223,20 @@
                             UpdatedBy = currentUserId,
                             UpdatedOn = currentTimeStamp
                         };
+
+                        if (lesson.Type == LessonType.Physical)
+                        {
+                            var physicalLessonReview = await _unitOfWork.GetRepository<PhysicalLessonReview>().GetFirstOrDefaultAsync(predicate: p => p.UserId == userId && p.LessonId == lesson.Id).ConfigureAwait(false);
+                            physicalLessonReview.IsReviewed = true;
+                            physicalLessonReview.HasAttended = true;
+                            _unitOfWork.GetRepository<PhysicalLessonReview>().Update(physicalLessonReview);
+                        }
+
                         courseEnrollment.Percentage = courseEnrollment.Percentage + (100 / lessonCount);//for updating watch percentage when passed by admin
                         courseEnrollment.UpdatedOn = DateTime.UtcNow;
                         courseEnrollment.UpdatedBy = currentUserId;
                         _unitOfWork.GetRepository<CourseEnrollment>().Update(courseEnrollment);
-                        
+
                         await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
                     }
                     else

@@ -11,6 +11,9 @@ import {
   Card,
   Text,
   Select,
+  Flex,
+  Loader,
+  ScrollArea,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
@@ -28,9 +31,12 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import queryStringGenerator from '@utils/queryStringGenerator';
 import { useGetTrainers } from '@utils/services/adminService';
 import { TrainingTypeEnum } from '@utils/enums';
+import withSearchPagination, {
+  IWithSearchPagination,
+} from '@hoc/useSearchPagination';
+import queryStringGenerator from '@utils/queryStringGenerator';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -43,15 +49,18 @@ const schema = () => {
 
 const TeacherCards = ({
   teacher: { id, user, courseCreatedBy },
+  searchParams,
 }: {
   teacher: ICreateCourseTeacher;
+  searchParams: string;
 }) => {
-  const deleteTeacher = useDeleteCourseTeacher();
+  const deleteTeacher = useDeleteCourseTeacher(searchParams);
   const { t } = useTranslation();
   const handleDelete = async () => {
     try {
       await deleteTeacher.mutateAsync(id);
       showNotification({ message: t('trainer_deleted') });
+      setDeletePopUP(false);
     } catch (err) {
       const error = errorType(err);
       showNotification({ message: error, color: 'red' });
@@ -92,7 +101,11 @@ const TeacherCards = ({
   );
 };
 
-const Teacher = () => {
+const Teacher = ({
+  searchParams,
+  pagination,
+  searchComponent,
+}: IWithSearchPagination) => {
   const { t } = useTranslation();
 
   const form = useForm({
@@ -103,8 +116,12 @@ const Teacher = () => {
   });
   useFormErrorHooks(form);
   const slug = useParams();
-  const getTeacher = useCourseTeacher(slug.id as string);
-  const createTeacher = useCreateTeacherCourse();
+  const {
+    data,
+    isLoading: loading,
+    isError: error,
+  } = useCourseTeacher(slug.id as string, searchParams);
+  const createTeacher = useCreateTeacherCourse(searchParams);
 
   const [showAddForm, toggleAddForm] = useToggle();
 
@@ -160,12 +177,7 @@ const Teacher = () => {
                   searchValue={search}
                   {...form.getInputProps('email')}
                 />
-                {/* <CustomTextFieldWithAutoFocus
-                  placeholder={t("enter_the_email") as string}
-                  name="email"
-                  type={"email"}
-                  {...form.getInputProps("email")}
-                /> */}
+
                 <Button loading={createTeacher.isLoading} type="submit">
                   {t('add')}
                 </Button>
@@ -174,13 +186,30 @@ const Teacher = () => {
           </Box>
         )}
       </Transition>
-      <Box mt={20}>
-        {getTeacher.data?.items.map((item) => (
-          <TeacherCards teacher={item} key={item.id} />
-        ))}
-      </Box>
+      <Flex my={'lg'} hidden>
+        {searchComponent(t('search_users') as string)}
+      </Flex>
+      {loading && <Loader />}
+      {error && <Box>{errorType(error)}</Box>}
+
+      <ScrollArea>
+        {data &&
+          data?.items &&
+          (data.items.length < 1 ? (
+            <Box>{t('no_users')}</Box>
+          ) : (
+            data.items.map((item) => (
+              <TeacherCards
+                teacher={item}
+                key={item.id}
+                searchParams={searchParams}
+              />
+            ))
+          ))}
+      </ScrollArea>
+      {data && pagination(data.totalPage, data.items.length)}
     </Container>
   );
 };
 
-export default Teacher;
+export default withSearchPagination(Teacher);

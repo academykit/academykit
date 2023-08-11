@@ -143,23 +143,25 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         public async Task<bool> Logout(string token, Guid currentUserId)
         {
-            var user = await GetUserFromRefreshToken(token);
+            var userRefreshToken = await GetUserRefreshToken(token).ConfigureAwait(false);
+            if (userRefreshToken == null)
+            {
+                return false;
+            }
+            var user = await GetAsync(userRefreshToken.UserId, includeProperties: false);
+
             // return false if no user found with token
             if (user == null)
             {
                 return false;
             }
+
             if (user.Id != currentUserId)
             {
                 return false;
             }
-            var refreshToken = await GetUserRefreshToken(token);
-            // return false if token is not active
-            if (!refreshToken.IsActive)
-            {
-                return false;
-            }
-            await _refreshTokenService.DeleteAsync(refreshToken);
+
+            await _refreshTokenService.DeleteAsync(userRefreshToken).ConfigureAwait(false);
             return true;
         }
 
@@ -171,32 +173,31 @@ namespace Lingtren.Infrastructure.Services
         public async Task<AuthenticationModel> RefreshTokenAsync(string token)
         {
             var authenticationModel = new AuthenticationModel();
-
-            var user = await GetUserFromRefreshToken(token);
-            if (user == null)
-            {
-                authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = _localizer.GetString("TokenNotMatched");
-                return authenticationModel;
-            }
             var refreshToken = await GetUserRefreshToken(token);
             if (refreshToken == null)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = _localizer.GetString("TokenNotFound");
+                authenticationModel.Message = "REFRESH_TOKEN_INVALID";
+                return authenticationModel;
+            }
+            var user = await GetAsync(refreshToken.UserId, includeProperties: false);
+
+            if (user == null)
+            {
+                authenticationModel.IsAuthenticated = false;
+                authenticationModel.Message = "REFRESH_TOKEN_INVALID";
                 return authenticationModel;
             }
 
             if (!refreshToken.IsActive)
             {
                 authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = _localizer.GetString("TokenNotActive");
+                authenticationModel.Message = "REFRESH_TOKEN_INVALID";
                 return authenticationModel;
             }
-            refreshToken.IsActive = false;
 
             //Revoke Current Refresh Token
-            await _refreshTokenService.UpdateAsync(refreshToken);
+            await _refreshTokenService.DeleteAsync(refreshToken);
 
             //Generate new Refresh Token and save to Database
             var newRefreshToken = new RefreshToken
@@ -291,7 +292,7 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="currentUserId"> the current user id </param>
         /// <param name="critera"> the instance of <see cref="TeacherSearchCriteria"></see></param>
         /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
-        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId,TeacherSearchCriteria critera)
+        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId, TeacherSearchCriteria critera)
         {
             return await ExecuteWithResultAsync(async () =>
             {
@@ -357,8 +358,7 @@ namespace Lingtren.Infrastructure.Services
                     while (csv.Read())
                     {
                         var user = csv.GetRecord<UserImportDto>();
-                        bool allMembersNull = string.IsNullOrEmpty(user.FirstName) && string.IsNullOrEmpty(user.LastName) && string.IsNullOrEmpty(user.Email) && string.IsNullOrEmpty(user.Role);
-                        if (allMembersNull)
+                        if (user == default)
                         {
                             continue;
                         }
@@ -369,7 +369,7 @@ namespace Lingtren.Infrastructure.Services
                         }
                     }
                 }
-                await CheckBulkImport(checkForValidRows,currentUserId);
+                await CheckBulkImport(checkForValidRows, currentUserId);
                 var message = new StringBuilder();
                 users = checkForValidRows.userList.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && !string.IsNullOrWhiteSpace(x.LastName) && !string.IsNullOrWhiteSpace(x.Email)).ToList();
                 var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
@@ -398,9 +398,9 @@ namespace Lingtren.Infrastructure.Services
                                 LastName = user.LastName,
                                 Email = user.Email,
                                 Status = UserStatus.Pending,
-                                Profession = user.Profession,
+                                Profession = user.Designation,
                                 MobileNumber = user.MobileNumber,
-                                Role = Enum.Parse<UserRole>(user.Role),
+                                Role = (UserRole)Enum.Parse(typeof(UserRole), user.Role, true),
                                 CreatedBy = currentUserId,
                                 CreatedOn = DateTime.UtcNow
                             };
@@ -629,7 +629,7 @@ namespace Lingtren.Infrastructure.Services
                 _unitOfWork.GetRepository<User>().Update(user);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(user.Email, user.FullName,password,company.CompanyName,company.CompanyContactNumber, null));
+                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(user.Email, user.FullName, password, company.CompanyName, company.CompanyContactNumber, null));
 
             }
             catch (Exception ex)
@@ -978,17 +978,6 @@ namespace Lingtren.Infrastructure.Services
         {
             return await _refreshTokenService.GetByValue(token).ConfigureAwait(false);
         }
-        private async Task<User?> GetUserFromRefreshToken(string token)
-        {
-            var userRefreshToken = await GetUserRefreshToken(token).ConfigureAwait(false);
-            if (userRefreshToken != null)
-            {
-                var user = await GetAsync(userRefreshToken.UserId, includeProperties: false);
-                return user;
-            }
-
-            return null;
-        }
 
         private async Task<string> GetUniqueRefreshToken()
         {
@@ -1033,7 +1022,8 @@ namespace Lingtren.Infrastructure.Services
         public async Task RemoveRefreshTokenAsync(Guid currentUserId)
         {
             var userToken = await _unitOfWork.GetRepository<RefreshToken>().GetAllAsync(predicate: p => p.UserId == currentUserId && p.IsActive == true).ConfigureAwait(false);
-            _unitOfWork.GetRepository<RefreshToken>().Delete(userToken);
+            userToken.ToList().ForEach(x => x.IsActive = false);
+            _unitOfWork.GetRepository<RefreshToken>().Update(userToken);
         }
 
         /// <summary>
@@ -1174,11 +1164,11 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="checkForValidRows">instance of <see cref=""></param>
         /// <returns></returns>
         /// <exception cref="ForbiddenException"></exception>
-        private async Task CheckBulkImport((List<UserImportDto> userList, List<int> SN) checkForValidRows,Guid currentUserId)
+        private async Task CheckBulkImport((List<UserImportDto> userList, List<int> SN) checkForValidRows, Guid currentUserId)
         {
             try
             {
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate : p=>p.Id == currentUserId).ConfigureAwait(false);
+                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == currentUserId).ConfigureAwait(false);
 
                 if (checkForValidRows.userList.Count == default)
                 {
@@ -1265,7 +1255,7 @@ namespace Lingtren.Infrastructure.Services
                     .Select((user, index) => new { User = user, Index = index + 2 })
                     .Where(x => !Enum.GetNames(typeof(UserRole))
                     .Any(enumvalue => string.Equals(enumvalue, x.User.Role, StringComparison.OrdinalIgnoreCase)))
-                    .Join(checkForValidRows.SN.Select((sn, index) => new { SN = sn, Index = index }),x => x.Index,sn => sn.Index,(x, sn) => sn.SN).ToList();
+                    .Join(checkForValidRows.SN.Select((sn, index) => new { SN = sn, Index = index }), x => x.Index, sn => sn.Index, (x, sn) => sn.SN).ToList();
 
                     if (selectedSNs.Any())
                     {
@@ -1274,15 +1264,14 @@ namespace Lingtren.Infrastructure.Services
 
                     var selectedIndices = Enum.GetValues(typeof(UserRole))
                      .Cast<UserRole>()
-                     .Select((role, index) => new { Role = role, Index = index +2})
-                       .Where(x => string.Equals(x.Role.ToString(),UserRole.Admin.ToString(),StringComparison.OrdinalIgnoreCase))
+                     .Select((role, index) => new { Role = role, Index = index + 2 })
+                       .Where(x => string.Equals(x.Role.ToString(), UserRole.Admin.ToString(), StringComparison.OrdinalIgnoreCase))
                       .Select(x => x.Index)
                        .ToList();
                     if (selectedIndices.Any() && user.Role != UserRole.SuperAdmin)
                     {
                         throw new ForbiddenException(_localizer.GetString("AdminCannotAddAdmin"));
                     }
-
                 }
             }
             catch (ForbiddenException ex)

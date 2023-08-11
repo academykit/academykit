@@ -21,7 +21,7 @@
     {
         public CommentService(IUnitOfWork unitOfWork,
             ILogger<CommentService> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
 

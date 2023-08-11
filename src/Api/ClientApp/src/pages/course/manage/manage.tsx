@@ -42,8 +42,8 @@ const ManageCourse = () => {
       key: 'totalLectures',
       label: t('total_videos'),
       icon: 'video',
-      pluLabel: t('Lectures'),
-      signLabel: t('Lecture'),
+      pluLabel: t('Videos'),
+      signLabel: t('Video'),
     },
     {
       key: 'totalExams',

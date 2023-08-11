@@ -11,6 +11,7 @@ import {
 import { CourseLanguage } from '@utils/enums';
 import getCourseOgImageUrl from '@utils/getCourseOGImage';
 import RoutePath from '@utils/routeConstants';
+import { useGeneralSetting } from '@utils/services/adminService';
 import { ICourse } from '@utils/services/courseService';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -33,6 +34,9 @@ const useStyles = createStyles((theme) => ({
 const CourseCard = ({ course }: { course: ICourse }) => {
   const { classes } = useStyles();
   const { t } = useTranslation();
+  const generalSettings = useGeneralSetting();
+  const companyName = generalSettings.data?.data.companyName;
+  const companyLogo = generalSettings.data?.data.logoUrl;
   return (
     <Card
       className={classes.card}
@@ -49,11 +53,18 @@ const CourseCard = ({ course }: { course: ICourse }) => {
         to={RoutePath.courses.description(course.slug).route}
       >
         <Image
-          src={getCourseOgImageUrl(
-            course?.user,
-            course?.name,
-            course?.thumbnailUrl
-          )}
+          // src={getCourseOgImageUrl(
+          //   course?.user,
+          //   course?.name,
+          //   course?.thumbnailUrl
+          // )}
+          src={getCourseOgImageUrl({
+            author: course?.user,
+            title: course?.name,
+            thumbnailUrl: course?.thumbnailUrl,
+            companyName: companyName,
+            companyLogo: companyLogo,
+          })}
           height={160}
           alt={course.name}
         />

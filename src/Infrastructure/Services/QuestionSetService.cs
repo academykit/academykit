@@ -11,6 +11,7 @@
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Localization;
     using LinqKit;
+    using Microsoft.AspNetCore.Mvc.Routing;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
@@ -18,14 +19,15 @@
     using Microsoft.VisualBasic;
     using Org.BouncyCastle.Math.EC.Rfc7748;
     using System.Linq.Expressions;
+    using System.Web;
 
     public class QuestionSetService : BaseGenericService<QuestionSet, BaseSearchCriteria>, IQuestionSetService
     {
-        private readonly ICourseService _courseService;  
+        private readonly ICourseService _courseService;
         public QuestionSetService(ICourseService courseService,
             IUnitOfWork unitOfWork,
             ILogger<QuestionSetService> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
             _courseService = courseService;
         }
@@ -99,7 +101,6 @@
                 var newQuestionIds = model.QuestionPoolQuestionIds.Except(oldQuestionIds).ToList();
                 var currentTimeStamp = DateTime.UtcNow;
                 var removeData = existingQuestionSetQuestions.Where(x => removeQuestionIds.Any(y => y == x.Id)).ToList();
-
                 var questionSetQuestions = new List<QuestionSetQuestion>();
                 if (removeData.Count != default)
                 {
@@ -175,6 +176,57 @@
             return responseModels;
         }
 
+        /// <summary>
+        /// Handel to reorder questionset question
+        /// </summary>
+        /// <param name="lessonIdentity">Lesson id or slug</param>
+        /// <param name="currentUserId">current user id</param>
+        /// <param name="ids">list of question set question id</param>
+        /// <returns>Task completed</returns>
+        /// <exception cref="EntityNotFoundException"></exception>
+        /// <exception cref="ForbiddenException"></exception>
+        public async Task ReorderQuestionsetQuestionsAsync(Guid currentUserId, string lessonIdentity, List<Guid> ids)
+        {
+            await ExecuteAsync(async () =>
+            {
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == lessonIdentity || p.Slug.ToLower() == lessonIdentity.ToLower(),
+                    include: src => src.Include(x => x.QuestionSet)).ConfigureAwait(false);
+                if (lesson == default)
+                {
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
+                }
+                var hasAuthority = await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId, lesson.CourseId.ToString(), TrainingTypeEnum.Course).ConfigureAwait(false);
+                if (!hasAuthority)
+                {
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUserAddQuestionSet"));
+                }
+                if (lesson.QuestionSet == default)
+                {
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
+                }
+                var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(predicate: p => p.QuestionSetId == lesson.QuestionSet.Id).ConfigureAwait(false);
+                var updateQuestion = new List<QuestionSetQuestion>();
+                var order = 0;
+                foreach (var id in ids)
+                {
+                    var question = questionSetQuestions.FirstOrDefault(x => x.Id == id);
+                    if (question != default)
+                    {
+                        question.Order = order;
+                        question.UpdatedOn = DateTime.UtcNow;
+                        question.UpdatedBy = currentUserId;
+                        updateQuestion.Add(question);
+                        order++;
+                    }
+                }
+                if (updateQuestion.Count != default)
+                {
+                    _unitOfWork.GetRepository<QuestionSetQuestion>().Update(updateQuestion);
+                    await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                }
+            });
+        }
+
         #region Start Exam and Submission
 
         /// <summary>
@@ -187,14 +239,14 @@
             try
             {
                 var currentTimeStamp = DateTime.UtcNow;
-               
+
                 var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
-                    predicate: x => x.Id.ToString() == identity || x.Slug == identity,include: src=>src.Include(x=>x.Lesson)).ConfigureAwait(false);
+                    predicate: x => x.Id.ToString() == identity || x.Slug == identity, include: src => src.Include(x => x.Lesson)).ConfigureAwait(false);
 
-                var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate : p => p.Id.Equals(questionSet.Lesson.CourseId),
-                    include:src=>src.Include(x=>x.CourseTeachers).Include(x=>x.CourseEnrollments)).ConfigureAwait(false);
+                var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate: p => p.Id.Equals(questionSet.Lesson.CourseId),
+                    include: src => src.Include(x => x.CourseTeachers).Include(x => x.CourseEnrollments)).ConfigureAwait(false);
 
-                
+
 
                 if (questionSet == null)
                 {
@@ -216,7 +268,7 @@
 
                 var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id,
-                    include: src => src.Include(x => x.Course).Include(x=>x.CourseEnrollments)).ConfigureAwait(false);
+                    include: src => src.Include(x => x.Course).Include(x => x.CourseEnrollments)).ConfigureAwait(false);
 
                 if (lesson.Course.Status == CourseStatus.Completed)
                 {
@@ -227,7 +279,7 @@
 
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
 
-                var isValidUser = await ValdiateUserAsync(currentUserId, questionSet,course,lesson).ConfigureAwait(false);
+                var isValidUser = await ValdiateUserAsync(currentUserId, questionSet, course, lesson).ConfigureAwait(false);
 
                 if (!isValidUser)
                 {
@@ -278,12 +330,12 @@
                     StartDateTime = Convert.ToDateTime(questionSetSubmission.StartTime),
                     Duration = duration,
                     Name = questionSet.Name,
-                    Role =  _courseService.GetUserCourseEnrollmentStatus(course, currentUserId),
+                    Role = _courseService.GetUserCourseEnrollmentStatus(course, currentUserId),
                     Description = questionSet.Description,
                     Questions = new List<QuestionResponseModel>()
                 };
                 questionSetQuestions.ForEach(x => response.Questions.Add(new QuestionResponseModel(x.QuestionPoolQuestion.Question, questionSetQuestionId: x.Id, showHints: false)));
-                if (!course.CourseTeachers.Any(x=>x.UserId == currentUserId)  && !isSuperAdminOrAdmin)
+                if (!course.CourseTeachers.Any(x => x.UserId == currentUserId) && !isSuperAdminOrAdmin)
                 {
                     await _unitOfWork.GetRepository<QuestionSetSubmission>().InsertAsync(questionSetSubmission).ConfigureAwait(false);
                 }
@@ -329,7 +381,7 @@
                 if (questionSetSubmission == null)
                 {
                     _logger.LogWarning("Question set submission not found with id: {questionSetSubmissionId} for user with id : {currentUserId}.", questionSetSubmissionId, currentUserId);
-                    throw new EntityNotFoundException(_localizer.GetString("QuestionSetSubmissionNotFound")) ;
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionSetSubmissionNotFound"));
                 }
 
                 var questionSetSubmissionAnswerCount = await _unitOfWork.GetRepository<QuestionSetSubmissionAnswer>().CountAsync(
@@ -443,25 +495,25 @@
         /// <param name="questionSet"> the instance of <see cref="QuestionSet"/> </param>
         /// <param name="course"></param>
         /// <returns></returns>
-        private async Task<bool> ValdiateUserAsync(Guid currentUserId , QuestionSet questionSet,Course course,Lesson lesson)
+        private async Task<bool> ValdiateUserAsync(Guid currentUserId, QuestionSet questionSet, Course course, Lesson lesson)
         {
             var isAdmin = await IsSuperAdminOrAdmin(currentUserId);
-            if(isAdmin)
+            if (isAdmin)
             {
                 return true;
             }
 
-            if(questionSet.CreatedBy == currentUserId)
+            if (questionSet.CreatedBy == currentUserId)
             {
                 return true;
             }
 
-            if(course.CreatedBy == currentUserId)
+            if (course.CreatedBy == currentUserId)
             {
                 return true;
             }
 
-            if(course.CourseTeachers.Any(x=>x.UserId == currentUserId))
+            if (course.CourseTeachers.Any(x => x.UserId == currentUserId))
             {
                 return true;
             }
@@ -470,7 +522,7 @@
                     predicate: p => p.CourseId == lesson.CourseId && p.UserId == currentUserId && !p.IsDeleted
                             && (p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)
                             ).ConfigureAwait(false);
-            if(isEnrolled == true)
+            if (isEnrolled == true)
             {
                 return true;
             }
@@ -619,7 +671,8 @@
                     },
                     QuestionSetSubmissions = new List<QuestionSetResultDetailModel>()
                 };
-
+                response.HasExceededAttempt = response.AttemptCount >= questionSet.AllowedRetake;
+                response.EndDate = questionSet.EndTime.Value;
                 questionSetSubmissions.ForEach(res => response.QuestionSetSubmissions.Add(new QuestionSetResultDetailModel
                 {
                     QuestionSetSubmissionId = res.Id,
@@ -793,7 +846,7 @@
                     IsCompleted = true,
                     IsPassed = (questionSet.PassingWeightage <= 0) ? true : ((result.TotalMark - result.NegativeMark) * 100 / totalQuestionMarks >= questionSet.PassingWeightage) ? true : false,
 
-            };
+                };
                 await ManageStudentCourseComplete(questionSet.Lesson.CourseId, questionSet.Lesson.Id, currentUserId, currentTimeStamp).ConfigureAwait(false);
 
                 await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);

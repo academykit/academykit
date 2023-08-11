@@ -15,6 +15,8 @@ import {
   Text,
   Tooltip,
   Loader,
+  Drawer,
+  rem,
 } from '@mantine/core';
 import { Link, useParams } from 'react-router-dom';
 import ProgressBar from '@components/Ui/ProgressBar';
@@ -33,10 +35,12 @@ import { showNotification } from '@mantine/notifications';
 import errorType from '@utils/services/axiosError';
 import moment from 'moment';
 import { getInitials } from '@utils/getInitialName';
-import { IconDownload, IconEye } from '@tabler/icons';
+import { IconDownload, IconEye, IconPlus } from '@tabler/icons';
 import downloadImage from '@utils/downloadImage';
 import { useTranslation } from 'react-i18next';
 import { DATE_FORMAT } from '@utils/constants';
+import { useDisclosure } from '@mantine/hooks';
+import AddTrainee from './AddTrainee';
 
 const Rows = ({
   item,
@@ -184,11 +188,12 @@ const ManageStudents = ({
   const course_id = id as string;
 
   const getStudentStat = useGetStudentStatistics(course_id, searchParams);
-  const [opened, setOpened] = useState(false);
+  const [openMoal, setOpenModal] = useState(false);
   const postUserData = usePostStatisticsCertificate(course_id, searchParams);
   const [selected, setSelected] = useState<string[]>([]);
   const [submitModal, setSubmitModal] = useState(false);
   const { t } = useTranslation();
+  const [opened, { open, close }] = useDisclosure(false);
 
   const handleIssueAll = async () => {
     try {
@@ -234,8 +239,8 @@ const ManageStudents = ({
     <ScrollArea>
       <ConfirmationModal
         title={t('sure_to_issue_certificate_everyone')}
-        open={opened}
-        onClose={() => setOpened(false)}
+        open={openMoal}
+        onClose={() => setOpenModal(false)}
         onConfirm={handleIssueAll}
       />
       <ConfirmationModal
@@ -247,6 +252,18 @@ const ManageStudents = ({
       <Group position="apart" mb={'lg'}>
         <Title>{t('trainee')}</Title>
         <Flex>
+          <Button mr={20} leftIcon={<IconPlus size={rem(14)} />} onClick={open}>
+            {t('add_trainee')}
+          </Button>
+          <Drawer
+            opened={opened}
+            onClose={close}
+            title={t('add_trainee')}
+            overlayProps={{ opacity: 0.5, blur: 4 }}
+          >
+            <AddTrainee onCancel={close} searchParams={searchParams} />
+          </Drawer>
+
           {getStudentStat.data && getStudentStat.data?.items.length >= 1 && (
             <Button
               onClick={() => setSubmitModal(true)}
@@ -262,7 +279,7 @@ const ManageStudents = ({
             <Button
               loading={selected.length === 0 && postUserData.isLoading}
               disabled={selected.length > 0}
-              onClick={() => setOpened(true)}
+              onClick={() => setOpenModal(true)}
             >
               {t('issue_certificates_to_all')}
             </Button>
@@ -282,6 +299,8 @@ const ManageStudents = ({
             verticalSpacing="xs"
             striped
             highlightOnHover
+            withBorder
+            withColumnBorders
           >
             <thead>
               <tr>

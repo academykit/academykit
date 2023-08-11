@@ -3,12 +3,12 @@ using Lingtren.Domain.Enums;
 
 namespace Lingtren.Application.Common.Dtos
 {
-    public class TeacherSearchCriteria:BaseSearchCriteria
+    public class TeacherSearchCriteria : BaseSearchCriteria
     {
         /// <summary>
         /// course id or slug of specific course
         /// </summary>
-        public string? Identity {get; set; }
+        public string? Identity { get; set; }
 
         /// <summary>
         ///specify type of enum 

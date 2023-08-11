@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Grid,
   Group,
@@ -6,7 +7,7 @@ import {
   Paper,
   ScrollArea,
   Switch,
-  Textarea,
+  Text,
   Tooltip,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
@@ -29,6 +30,7 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import TextEditor from '@components/Ui/TextEditor';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -262,12 +264,13 @@ const AddAssignment = ({
               />
             </Grid.Col>
             <Grid.Col>
-              <Textarea
-                placeholder={t('assignment_description') as string}
-                label={t('assignment_description')}
-                mb={10}
-                {...form.getInputProps('description')}
-              />
+              <Box my={10}>
+                <Text size={'sm'}>{t('assignment_description')}</Text>
+                <TextEditor
+                  placeholder={t('assignment_description') as string}
+                  {...form.getInputProps('description')}
+                />
+              </Box>
             </Grid.Col>
           </Grid>
           <Group position="left" mt="md">

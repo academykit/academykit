@@ -909,7 +909,7 @@
     <value>पङ्क्ति नम्बरको इमेल अनिवार्य फिल्डमा डाटा प्रविष्ट गर्नुहोस्</value>
   </data>
   <data name="IncorrectEmailFormat" xml:space="preserve">
-    <value>पङ्क्ति नम्बरको स्तम्भ इमेल सही गर्नुहोस्</value>
+    <value>अवैध इमेल एडरहरू:</value>
   </data>
   <data name="IncorrectFirstName" xml:space="preserve">
     <value>अनिवार्य फिल्डमा डेटा प्रविष्ट गर्नुहोस् पङ्क्ति नम्बरको पहिलो नाम</value>
@@ -988,5 +988,44 @@
   </data>
   <data name="EmptyFile" xml:space="preserve">
     <value>फाइल खाली छ।</value>
+  </data>
+  <data name="AssignmentStartTimeException" xml:space="preserve">
+    <value>कार्यभार अझै सुरु भएको छैन।</value>
+  </data>
+  <data name="SuccessfulAttendance" xml:space="preserve">
+    <value>पाठमा सफलतापूर्वक उपस्थित हुनुभयो।</value>
+  </data>
+  <data name="SuccessfullyReviewed" xml:space="preserve">
+    <value>सफलतापूर्वक समीक्षा गरियो।</value>
+  </data>
+  <data name="QuestionPoolQuestionNotFound" xml:space="preserve">
+    <value>प्रश्न पूल प्रश्न फेला परेन।</value>
+  </data>
+  <data name="QuestionpoolUpdatedSuccesfully" xml:space="preserve">
+    <value>प्रश्न पूल प्रश्नहरू सफलतापूर्वक अपडेट गरियो।</value>
+  </data>
+  <data name="AssignmentUpdatedSuccessfully" xml:space="preserve">
+    <value>असाइनमेन्ट सफलतापूर्वक अद्यावधिक गरियो।</value>
+  </data>
+  <data name="AlreadyEnrolledUser" xml:space="preserve">
+    <value>पहिले नै नामांकन गरिएको इमेल वा मोबाइल नम्बर:</value>
+  </data>
+  <data name="InvalidEmailFormat" xml:space="preserve">
+    <value>अवैध इमेल एडर र मोबाइल नम्बर:</value>
+  </data>
+  <data name="TrainingPusbishedSuccessfully" xml:space="preserve">
+    <value>प्रशिक्षण सफलतापूर्वक प्रकाशित।</value>
+  </data>
+  <data name="NewGroupMember" xml:space="preserve">
+    <value>नयाँ समूह सदस्य:</value>
+  </data>
+  <data name="UpdatedDeletedUser" xml:space="preserve">
+    <value>अपडेट गरिएको मेटाइएको प्रयोगकर्ता:</value>
+  </data>
+  <data name="UpdatedUser" xml:space="preserve">
+    <value>अपडेट गरिएको प्रयोगकर्ता:</value>
+  </data>
+  <data name="LessonContainsAttendance" xml:space="preserve">
+    <value>शारीरिक पाठमा उपस्थिति समावेश छ।</value>
   </data>
 </root>

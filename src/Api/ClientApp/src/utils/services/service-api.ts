@@ -64,8 +64,17 @@ export const api = {
     addAttachment: `/api/group/file`,
     removeAttachment: (identity: string, fileId: string) =>
       `/api/group/${identity}/files/${fileId}`,
-    notMembers: (identity: string, query: string) =>
-      `/api/group/${identity}/notMembers?${query}`,
+    notMembers: (
+      identity: string,
+      query: string,
+      departmentId: string | undefined
+    ) => {
+      const url = `/api/group/${identity}/notMembers?${query}`;
+      if (departmentId) {
+        return url + `&departmentIdentity=${departmentId}`;
+      }
+      return url;
+    },
   },
 
   course: {
@@ -124,6 +133,11 @@ export const api = {
       lessonId
         ? `/api/course/${courseId}/lesson/detail?lessonIdentity=${lessonId}`
         : `/api/course/${courseId}/lesson/detail`,
+  },
+  physicalTraining: {
+    attendance: (identity: string) =>
+      `/api/PhysicalLesson/Attendance?Idenity=${identity}`,
+    review: '/api/PhysicalLesson/Review',
   },
   tags: {
     list: '/api/tag',
@@ -228,6 +242,12 @@ export const api = {
       `/api/course/${courseId}/comments/${commentId}/commentReply`,
     repliesDetails: (courseId: string, commentId: string, replyId: string) =>
       `/api/course/${courseId}/comments/${commentId}/commentReply/${replyId}`,
+  },
+  enrollment: {
+    enrollTrainee: (courseIdentity: string) =>
+      `/api/Enrollment/Enrollnment?courseIdentity=${courseIdentity}`,
+    trainee: (courseIdentity: string, query: string) =>
+      `/api/Enrollment/User?CourseIdentity=${courseIdentity}&${query}`,
   },
   externalCertificate: {
     add: '/api/certificate/external',

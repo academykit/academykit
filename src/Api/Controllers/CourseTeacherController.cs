@@ -48,7 +48,7 @@
             CommonHelper.ValidateArgumentNotNullOrEmpty(criteria.CourseIdentity, nameof(criteria.CourseIdentity));
             criteria.CurrentUserId = CurrentUser.Id;
             var searchResult = await _courseTeacherService.SearchAsync(criteria).ConfigureAwait(false);
-            
+
             var response = new SearchResult<CourseTeacherResponseModel>
             {
                 Items = new List<CourseTeacherResponseModel>(),
@@ -57,11 +57,11 @@
                 TotalCount = searchResult.TotalCount,
                 TotalPage = searchResult.TotalPage,
             };
-            
+
             searchResult.Items.ForEach(p =>
                 response.Items.Add(new CourseTeacherResponseModel(p))
             );
-            
+
             return response;
         }
 
@@ -79,11 +79,7 @@
             {
                 throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
             }
-            var user = await _userService.GetUserByEmailAsync(model.Email).ConfigureAwait(false);
-            if (user == null)
-            {
-                throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
-            }
+            var user = await _userService.GetUserByEmailAsync(model.Email).ConfigureAwait(false) ?? throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
             if (user.Role == UserRole.Trainee)
             {
                 throw new InvalidOperationException(_localizer.GetString("TraineeCannotBeTrainer"));
@@ -99,8 +95,6 @@
                 UpdatedBy = CurrentUser.Id,
                 UpdatedOn = currentTimeStamp
             };
-
-
             var response = await _courseTeacherService.CreateAsync(courseTeacher).ConfigureAwait(false);
             return new CourseTeacherResponseModel(response);
 

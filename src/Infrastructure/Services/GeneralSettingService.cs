@@ -15,7 +15,7 @@
         public GeneralSettingService(
             IUnitOfWork unitOfWork,
             ILogger<GeneralSettingService> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
         /// <summary>

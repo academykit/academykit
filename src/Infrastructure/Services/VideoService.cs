@@ -28,7 +28,7 @@ namespace Lingtren.Infrastructure.Services
             get
             {
                 //return @"C:\ffmpeg\ffmpeg.exe";
-                 return RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "/opt/homebrew/bin/ffmpeg" : "/usr/bin/ffmpeg";
+                return RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "/opt/homebrew/bin/ffmpeg" : "/usr/bin/ffmpeg";
             }
         }
 

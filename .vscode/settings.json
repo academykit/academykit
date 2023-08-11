@@ -24,5 +24,6 @@
         "v'VVV",
         "Vurilo",
         "Weightage"
-    ]
+    ],
+    "dotnet.defaultSolution": "lingtren.sln"
 }

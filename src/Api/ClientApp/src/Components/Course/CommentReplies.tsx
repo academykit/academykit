@@ -46,15 +46,6 @@ const CommentReplies = ({
   }
   return (
     <>
-      {commentReplies.data?.items.map((x) => (
-        <CommentReply
-          key={x.id}
-          reply={x}
-          commentId={commentId}
-          courseId={courseId}
-        />
-      ))}
-
       <form onSubmit={form.onSubmit(submitHandler)}>
         <Group mx={14}>
           <Textarea
@@ -67,11 +58,20 @@ const CommentReplies = ({
             type="submit"
             loading={addCommentReply.isLoading}
             disabled={!form.values.content.trim()}
+            sx={{ '&[data-disabled]': { pointerEvents: 'all' } }}
           >
             {t('reply')}
           </Button>
         </Group>
       </form>
+      {commentReplies.data?.items.map((x) => (
+        <CommentReply
+          key={x.id}
+          reply={x}
+          commentId={commentId}
+          courseId={courseId}
+        />
+      ))}
     </>
   );
 };

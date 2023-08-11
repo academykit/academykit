@@ -22,7 +22,7 @@ namespace Lingtren.Infrastructure.Services
         public WebhookService(IUnitOfWork unitOfWork,
         ILogger<WebhookService> logger, IMediaService mediaService,
         IStringLocalizer<ExceptionLocalizer> localizer)
-         : base(unitOfWork, logger,localizer)
+         : base(unitOfWork, logger, localizer)
         {
             _mediaService = mediaService;
         }
@@ -76,7 +76,7 @@ namespace Lingtren.Infrastructure.Services
                 int order = 1;
                 foreach (var file in recordingFile)
                 {
-                    var videoModel = await _mediaService.UploadRecordingFileAsync(file.Download_url, dto.Download_token,file.File_size).ConfigureAwait(true);
+                    var videoModel = await _mediaService.UploadRecordingFileAsync(file.Download_url, dto.Download_token, file.File_size).ConfigureAwait(true);
                     var recording = new RecordingFileDto
                     {
                         Name = $"{meeting.Lesson.Name} Part {order}",
@@ -147,14 +147,14 @@ namespace Lingtren.Infrastructure.Services
                 }
                 else
                 {
-                    var video= recordingFileDtos.FirstOrDefault();
+                    var video = recordingFileDtos.FirstOrDefault();
                     meeting.Lesson.Type = LessonType.RecordedVideo;
                     meeting.Lesson.VideoUrl = video.VideoUrl;
                     meeting.Lesson.Duration = video.Duration;
                     _unitOfWork.GetRepository<Lesson>().Update(meeting.Lesson);
                 }
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                BackgroundJob.Schedule<IZoomLicenseService>(x => x.DeleteZoomMeetingRecordingAsync(dto.Payload.Object.Id,null),TimeSpan.FromMinutes(2880));
+                BackgroundJob.Schedule<IZoomLicenseService>(x => x.DeleteZoomMeetingRecordingAsync(dto.Payload.Object.Id, null), TimeSpan.FromMinutes(2880));
             }
             catch (Exception ex)
             {
@@ -192,7 +192,7 @@ namespace Lingtren.Infrastructure.Services
 
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == meeting.Lesson.CourseId &&
                 p.LessonId == meeting.Lesson.Id && p.UserId == user.Id).ConfigureAwait(false);
-                if(watchHistory == null)
+                if (watchHistory == null)
                 {
                     var entity = new WatchHistory
                     {

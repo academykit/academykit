@@ -12,7 +12,7 @@
     {
         public RefreshTokenService(IUnitOfWork unitOfWork,
             ILogger<RefreshTokenService> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
 
@@ -43,7 +43,7 @@
         {
             try
             {
-                return await _unitOfWork.GetRepository<RefreshToken>().GetFirstOrDefaultAsync(predicate: p => p.Token == token && p.IsActive).ConfigureAwait(false);
+                return await _unitOfWork.GetRepository<RefreshToken>().GetFirstOrDefaultAsync(predicate: p => p.Token == token).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

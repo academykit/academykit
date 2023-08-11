@@ -21,7 +21,7 @@
         public QuestionPoolController(
             IQuestionPoolService questionPoolService,
             IValidator<QuestionPoolRequestModel> validator,
-            IStringLocalizer<ExceptionLocalizer> localizer )
+            IStringLocalizer<ExceptionLocalizer> localizer)
         {
             _questionPoolService = questionPoolService;
             _validator = validator;
@@ -137,6 +137,18 @@
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await _questionPoolService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("QuestionpoolRemoved") });
+        }
+
+        /// <summary>
+        /// reorder questionpool question 
+        /// </summary>
+        /// <param name="ids">Question ids</param>
+        /// <returns>task completed</returns>
+        [HttpPost("reorder")]
+        public async Task<IActionResult> Reorder([FromQuery]string identity,IList<Guid> ids)
+        {
+            await _questionPoolService.QuestionPoolQuestionReorderAsync(CurrentUser.Id,identity,ids);
+            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("QuestionpoolUpdatedSuccesfully") });
         }
     }
 }

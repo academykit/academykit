@@ -10,11 +10,10 @@ import {
   Flex,
   Group,
   Image,
-  TypographyStylesProvider,
   Text,
-  Title,
   useMantineTheme,
   Menu,
+  Anchor,
 } from '@mantine/core';
 import { useMediaQuery, useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
@@ -37,6 +36,7 @@ import {
 } from '@utils/enums';
 import getCourseOgImageUrl from '@utils/getCourseOGImage';
 import RoutePath from '@utils/routeConstants';
+import { useGeneralSetting } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import { ICourse, useDeleteCourse } from '@utils/services/courseService';
 import moment from 'moment';
@@ -75,6 +75,10 @@ const CourseCardHorizontal = ({
   const { t } = useTranslation();
   const auth = useAuth();
 
+  const generalSettings = useGeneralSetting();
+  const companyName = generalSettings.data?.data.companyName;
+  const companyLogo = generalSettings.data?.data.logoUrl;
+
   return (
     <Box
       sx={{
@@ -85,7 +89,7 @@ const CourseCardHorizontal = ({
         },
       }}
     >
-      <Link
+      {/* <Link
         to={RoutePath.courses.description(course.slug).route}
         style={{
           textDecoration: 'none',
@@ -94,7 +98,7 @@ const CourseCardHorizontal = ({
           height: '100%',
           width: '100%',
         }}
-      ></Link>
+      ></Link> */}
 
       <Card
         my={10}
@@ -134,11 +138,13 @@ const CourseCardHorizontal = ({
               <AspectRatio ratio={16 / 9}>
                 <Center>
                   <Image
-                    src={getCourseOgImageUrl(
-                      course.user,
-                      course.name,
-                      course.thumbnailUrl
-                    )}
+                    src={getCourseOgImageUrl({
+                      author: course.user,
+                      title: course.name,
+                      thumbnailUrl: course.thumbnailUrl,
+                      companyName: companyName,
+                      companyLogo: companyLogo,
+                    })}
                     radius="md"
                     fit="cover"
                   />
@@ -230,9 +236,14 @@ const CourseCardHorizontal = ({
                 </Menu>
               )}
             </Group>
-            <Title size="xs" sx={{ textTransform: 'uppercase' }} weight={700}>
+            <Anchor
+              component={Link}
+              to={RoutePath.courses.description(course.slug).route}
+              size="lg"
+              weight="bold"
+            >
               {course.name}
-            </Title>
+            </Anchor>
 
             <Group spacing={70}>
               {/* <Group>
@@ -252,23 +263,23 @@ const CourseCardHorizontal = ({
               </Group> */}
               <Group sx={{ justifyContent: 'center', alignItems: 'center' }}>
                 {!matches ? (
-                  <Box>
-                    <IconCalendar />
-                  </Box>
+                  <IconCalendar />
                 ) : (
                   <Text color="dimmed">{t('created_on')}</Text>
                 )}
                 <Text color={'dimmed'}>
                   {moment(course.createdOn).format(DATE_FORMAT)}
-                </Text>
-                <Text ml="sm" color={'dimmed'}>
-                  {t('group')}
-                </Text>
-                <TypographyStylesProvider>
-                  <Text lineClamp={1} color="dimmed">
-                    {course.groupName}
-                  </Text>
-                </TypographyStylesProvider>
+                </Text>{' '}
+                <Badge
+                  h={34}
+                  title={t('group')}
+                  component={Link}
+                  to={'/groups/' + course.groupId}
+                  style={{ maxWidth: '230px', cursor: 'pointer' }}
+                  leftSection={<IconUsers size={14} />}
+                >
+                  {course.groupName}
+                </Badge>
               </Group>
             </Group>
           </Group>

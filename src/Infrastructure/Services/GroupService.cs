@@ -28,7 +28,7 @@
             ILogger<GroupService> logger,
             IMediaService mediaService,
             IFileServerService fileServerService,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger,localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
             _mediaService = mediaService;
             _fileServerService = fileServerService;
@@ -61,7 +61,7 @@
             {
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search)
-                 || x.User.FirstName.ToLower().Trim().Contains(search) 
+                 || x.User.FirstName.ToLower().Trim().Contains(search)
                  || x.User.Email.ToLower().Trim().Contains(search));
             }
             if (criteria.Role != UserRole.SuperAdmin && criteria.Role != UserRole.Admin)
@@ -232,9 +232,9 @@
                 }
                 await _unitOfWork.GetRepository<GroupMember>().InsertAsync(groupMembers).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                if(usersToBeAdded.ToList().Count != default)
+                if (usersToBeAdded.ToList().Count != default)
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendMailNewGroupMember(group.Name,group.Slug,usersToBeAdded.ToList(),null));
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendMailNewGroupMember(group.Name, group.Slug, usersToBeAdded.ToList(), null));
                 }
 
                 var result = new GroupAddMemberResponseModel();
@@ -520,7 +520,7 @@
         /// <param name="identity">the group id or slug</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the search result of <see cref="UserModel"/></returns>
-        public async Task<SearchResult<UserModel>> GetNonGroupMembers(string identity, BaseSearchCriteria criteria)
+        public async Task<SearchResult<UserModel>> GetNonGroupMembers(string identity, GroupBaseSearchCriteria criteria)
         {
             var group = await GetByIdOrSlugAsync(identity, criteria.CurrentUserId).ConfigureAwait(false);
             if (group == null)
@@ -537,11 +537,15 @@
                  || x.Email.ToLower().Trim().Contains(search)
                  || x.MobileNumber.ToLower().Trim().Contains(search));
             }
-
+            if (!string.IsNullOrWhiteSpace(criteria.DepartmentIdentity))
+            {
+                var departmentId = criteria.DepartmentIdentity.ToLower().Trim();
+                predicate = predicate.And(x => x.DepartmentId.ToString() == departmentId || x.Department.Slug.ToLower().Trim() == departmentId);
+            }
             predicate = predicate.And(p => !p.GroupMembers.Any(x => x.GroupId == group.Id && x.UserId == p.Id));
             predicate = predicate.And(p => p.Status == UserStatus.Active && (p.Role != UserRole.SuperAdmin && p.Role != UserRole.Admin));
 
-            var users = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate).ConfigureAwait(false);
+            var users = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate, include: (x) => x.Include(p => p.Department)).ConfigureAwait(false);
             var result = users.ToIPagedList(criteria.Page, criteria.Size);
             var response = new SearchResult<UserModel>
             {
@@ -553,6 +557,11 @@
             };
             result.Items.ForEach(x => response.Items.Add(new UserModel(x)));
             return response;
+        }
+
+        public Task<GroupAddMemberResponseModel> AddMembersByDepartment(string identity, string departmentId, Guid currentUserId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

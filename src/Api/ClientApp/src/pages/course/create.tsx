@@ -268,6 +268,7 @@ const CreateCoursePage = () => {
                     .then((res) => form.setFieldValue('groups', res.data.id)); // setting value after fetch
                   return value;
                 }}
+                nothingFound="No options"
               />
             ) : (
               <Loader />

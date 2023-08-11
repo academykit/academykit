@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { httpClient } from './service-axios';
+import errorType from './axiosError';
+import { showNotification } from '@mantine/notifications';
 
 export enum FileAccess {
   Private = 1,
@@ -49,4 +51,29 @@ export const uploadUserCsv = (file: File | null) => {
       },
     }
   );
+};
+
+export const downloadCSVFile = async (path: string) => {
+  try {
+    const response = await httpClient.get(path);
+    const link = document.createElement('a');
+
+    if (response.statusText == 'OK') {
+      const objRef = window.URL.createObjectURL(
+        new Blob([response.data as Blob], { type: 'text/csv;charset=utf-8' })
+      );
+      link.href = objRef;
+      link.setAttribute('download', 'sample.csv');
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(objRef);
+    }
+  } catch (error) {
+    const err = errorType(error);
+    showNotification({
+      message: err,
+      color: 'red',
+      title: 'Error',
+    });
+  }
 };

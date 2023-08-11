@@ -992,4 +992,43 @@ recorded cannot be deleted.</value>
   <data name="EmptyFile" xml:space="preserve">
     <value>The file is empty.</value>
   </data>
+  <data name="AssignmentStartTimeException" xml:space="preserve">
+    <value>The assignment has not started yet.</value>
+  </data>
+  <data name="SuccessfulAttendance" xml:space="preserve">
+    <value>Successfully attended the lesson.</value>
+  </data>
+  <data name="SuccessfullyReviewed" xml:space="preserve">
+    <value>successfully reviewed.</value>
+  </data>
+  <data name="QuestionPoolQuestionNotFound" xml:space="preserve">
+    <value>Question Pool question was not found.</value>
+  </data>
+  <data name="QuestionpoolUpdatedSuccesfully" xml:space="preserve">
+    <value>Question pool questions updated successfully.</value>
+  </data>
+  <data name="AssignmentUpdatedSuccessfully" xml:space="preserve">
+    <value>Assignment Updated Successfully.</value>
+  </data>
+  <data name="AlreadyEnrolledUser" xml:space="preserve">
+    <value>Already enrolled email or mobile number :</value>
+  </data>
+  <data name="InvalidEmailFormat" xml:space="preserve">
+    <value>Invalid email adderss :</value>
+  </data>
+  <data name="TrainingPusbishedSuccessfully" xml:space="preserve">
+    <value>Training published successfully.</value>
+  </data>
+  <data name="NewGroupMember" xml:space="preserve">
+    <value>New group member :</value>
+  </data>
+  <data name="UpdatedDeletedUser" xml:space="preserve">
+    <value>Updated deleted user :</value>
+  </data>
+  <data name="UpdatedUser" xml:space="preserve">
+    <value>Updated user :</value>
+  </data>
+  <data name="LessonContainsAttendance" xml:space="preserve">
+    <value>Physical lesson contains attendance.</value>
+  </data>
 </root>

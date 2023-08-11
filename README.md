@@ -2,11 +2,8 @@
 
 ## Technologies
 
-* [ASP.NET Core 6](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core)
-* [Entity Framework Core 6](https://docs.microsoft.com/en-us/ef/core/)
+* [ASP.NET Core 7](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core)
 * [NodeJS 18.x](https://nodejs.org)
-* [FluentValidation](https://fluentvalidation.net/)
-* [NUnit](https://nunit.org/), [FluentAssertions](https://fluentassertions.com/), [Moq](https://github.com/moq)
 
 ## Run In Development
 
@@ -27,7 +24,7 @@ Then run the backend in another terminal, the build and restart will be faster
 dotnet watch run --project=src/Api/Api.csproj
 ```
 
-The Hangfire Dashboard is available at https://localhost:7042/jobs 
+The Hangfire Dashboard is available at https://localhost:7042/hangfire 
 
 ## Database Migrations
 
@@ -63,3 +60,9 @@ Run docker container
 docker run -d -p 8080:80 --name vurilo-standalone standalone
 ```
 
+## Known issues
+1. If during debub, port 7042 is already in use kill the port as 
+```bash
+# mac
+sudo lsof -t -i tcp:7042 | xargs kill -9
+```

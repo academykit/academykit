@@ -120,17 +120,17 @@
   <data name="AddressLength200" xml:space="preserve">
     <value>ठेगाना लम्बाइ 200 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
-  <data name="ApiKeyLength100" xml:space="preserve">
-    <value>Api कुञ्जी लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+  <data name="OAuthAccountIdLength100" xml:space="preserve">
+    <value>OAuth खाता आईडी लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
-  <data name="APIKeyRequired" xml:space="preserve">
-    <value>Api कुञ्जी आवश्यक छ।</value>
+  <data name="OAuthAccountIdRequired" xml:space="preserve">
+    <value> OAuth खाता आईडी आवश्यक छ।</value>
   </data>
-  <data name="ApiSecretKeyLength100" xml:space="preserve">
-    <value>Api गोप्य लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+  <data name="OAuthClientIdLength100" xml:space="preserve">
+    <value> OAuth ग्राहक आईडी लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
-  <data name="ApiSecretRequired" xml:space="preserve">
-    <value>Api गोप्य आवश्यक छ।</value>
+  <data name="OAuthClientIdRequired" xml:space="preserve">
+    <value> OAuth ग्राहक आईडी आवश्यक छ।</value>
   </data>
   <data name="AssignementQuestionisRequired" xml:space="preserve">
     <value>असाइनमेन्ट प्रश्न विकल्प आवश्यक छ।</value>
@@ -333,6 +333,9 @@
   <data name="MeetingIdDUrationLength" xml:space="preserve">
     <value>बैठक अवधि 1439 मिनेट भन्दा बढी वा बराबर हुन सक्दैन।</value>
   </data>
+  <data name="MessageCannotBeEmpty" xml:space="preserve">
+    <value>समीक्षा सन्देश खाली हुन सक्दैन।</value>
+  </data>
   <data name="MiddleNameLength100" xml:space="preserve">
     <value>बीचको नामको लम्बाइ १०० वर्णभन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
@@ -497,5 +500,14 @@
   </data>
   <data name="ZoomLicenseRequired" xml:space="preserve">
     <value>कृपया जुम इजाजतपत्र चयन गर्नुहोस्।</value>
+  </data>
+  <data name="OAuthClientSecretRequired" xml:space="preserve">
+    <value> OAuth ग्राहक गोप्य आवश्यक छ।</value>
+  </data>
+  <data name="OAuthClientSecretLength100" xml:space="preserve">
+    <value>OAuth ग्राहक गोप्य लम्बाइ 100 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+  </data>
+  <data name="OptionalCostCannotBeNull" xml:space="preserve">
+    <value>वैकल्पिक लागत शून्य हुन सक्दैन।</value>
   </data>
 </root>

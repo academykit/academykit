@@ -25,18 +25,17 @@ const AttendedTrainings = ({
         {t('attended_trainings')}{' '}
       </Title>
       <Paper>
-        <Table>
-          <thead>
-            <tr>
-              <th>{t('title')}</th>
-              <th>{t('enrolled_date')}</th>
-              <th>{t('progress')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data &&
-              data.totalCount > 0 &&
-              data.items.map((x) => (
+        {data && data.totalCount > 0 && (
+          <Table striped withBorder withColumnBorders highlightOnHover>
+            <thead>
+              <tr>
+                <th>{t('title')}</th>
+                <th>{t('enrolled_date')}</th>
+                <th>{t('progress')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.items.map((x) => (
                 <tr key={x.id}>
                   <td>
                     <Anchor
@@ -53,9 +52,10 @@ const AttendedTrainings = ({
                   </td>
                 </tr>
               ))}
-            {isLoading && <Loader />}
-          </tbody>
-        </Table>
+              {isLoading && <Loader />}
+            </tbody>
+          </Table>
+        )}
       </Paper>
       {data &&
         data.totalPage > 1 &&

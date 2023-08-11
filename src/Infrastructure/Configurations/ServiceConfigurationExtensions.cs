@@ -10,9 +10,6 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Persistence;
-    using Lingtren.Infrastructure.Services;
-    using lingtrin.Application.Common.Validators;
-    using Lingtring.Application.Common.Validators;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -85,6 +82,9 @@
             services.AddTransient<ICertificateService, CertificateService>();
             services.AddTransient<IVideoService, VideoService>();
             services.AddTransient<ILogsService, LogsService>();
+            services.AddTransient<IPhysicalLessonServices, PhysicalLessonService>();
+            services.AddTransient<IDynamicImageGenerator, DynamicImageGenerator>();
+            services.AddTransient<IEnrollmentService, EnrollmentService>();
 
             #endregion Service DI
 
@@ -122,6 +122,7 @@
             services.AddSingleton<IValidator<IList<FeedbackSubmissionRequestModel>>, FeedbackSubmissionValidator>();
             services.AddSingleton<IValidator<SignatureRequestModel>, SignatureValidator>();
             services.AddSingleton<IValidator<CourseCertificateRequestModel>, CourseCertificateValidator>();
+            services.AddSingleton<IValidator<PhysicalLessonReviewRequestModel>, PhysicalLessonReviewRequestModelValidator>();
 
             #endregion Validator DI
 

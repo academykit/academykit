@@ -13,6 +13,7 @@ namespace Lingtren.Domain.Enums
         /// and status is changed to RecordedVideo from LiveClass
         /// </summary>
         RecordedVideo = 6,
-        Feedback = 7
+        Feedback = 7,
+        Physical = 8
     }
 }

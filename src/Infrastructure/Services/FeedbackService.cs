@@ -421,10 +421,13 @@
                 var feedbackQuestions = string.Join(",", feedback.OrderBy(x => x.Order).Select(x => x.Name));
                 StringBuilder builder = new StringBuilder();
                 var i = 1;
-                builder.AppendLine("S.N,Name,Email," + feedbackQuestions);
+                builder.AppendLine("S.N,Date,Name,Email," + feedbackQuestions);
                 foreach (var user in users)
                 {
                     builder.Append(i);
+                    builder.Append(",");
+                    var submissionDate = feedbackSubmissions.FirstOrDefault(x => x.UserId == user.Id);
+                    builder.Append(submissionDate?.CreatedOn.ToString("MM/dd/yyyy"));
                     builder.Append(",");
                     builder.Append($"{user.FullName}");
                     builder.Append(",");
@@ -441,13 +444,19 @@
                             {
                                 if (feedBack.Type == FeedbackTypeEnum.Subjective)
                                 {
-                                    var answer = Regex.Replace(feedbackanswer.Answer, "<[a-zA-Z/].*?>", string.Empty);
-                                    builder.Append(answer);
+                                    if (!string.IsNullOrEmpty(feedbackanswer.Answer))
+                                    {
+                                        var answer = Regex.Replace(feedbackanswer.Answer, "<[a-zA-Z/].*?>", string.Empty);
+                                        builder.Append(answer);
+                                    }
                                 }
 
                                 if (feedBack.Type == FeedbackTypeEnum.Rating)
                                 {
-                                    builder.Append(feedbackanswer.Rating);
+                                    if (feedbackanswer.Rating > 0)
+                                    {
+                                        builder.Append(feedbackanswer.Rating);
+                                    }
                                 }
 
                                 if (feedBack.Type == FeedbackTypeEnum.SingleChoice)
@@ -455,8 +464,11 @@
                                     var singleAnswer = feedBack.FeedbackQuestionOptions.FirstOrDefault(x => x.Id.ToString() == feedbackanswer.SelectedOption.ToString());
                                     if (singleAnswer != null)
                                     {
-                                        singleAnswer.Option = Regex.Replace(singleAnswer.Option, "<[a-zA-Z/].*?>", string.Empty);
-                                        builder.Append(singleAnswer.Option);
+                                        if (!string.IsNullOrEmpty(singleAnswer.Option))
+                                        {
+                                            singleAnswer.Option = Regex.Replace(singleAnswer.Option, "<[a-zA-Z/].*?>", string.Empty);
+                                            builder.Append(singleAnswer.Option);
+                                        }
                                     }
                                 }
 
@@ -467,11 +479,18 @@
                                     foreach (var opt in options)
                                     {
                                         var optAnswer = feedBack.FeedbackQuestionOptions.FirstOrDefault(x => x.Id.ToString() == opt)?.Option;
-                                        var removeHtml = Regex.Replace(optAnswer, "<[a-zA-Z/].*?>", string.Empty);
-                                        choices.Add(removeHtml);
+                                        if (!string.IsNullOrEmpty(optAnswer))
+                                        {
+                                            var removeHtml = Regex.Replace(optAnswer, "<[a-zA-Z/].*?>", string.Empty);
+                                            choices.Add(removeHtml);
+                                        }
+
                                     }
-                                    var choiceAnswer = string.Join(" | ", choices);
-                                    builder.Append(choiceAnswer);
+                                    if (choices.Count > 0)
+                                    {
+                                        var choiceAnswer = string.Join(" | ", choices);
+                                        builder.Append(choiceAnswer);
+                                    }
                                 }
                             }
                         }
@@ -618,6 +637,53 @@
                                 }));
             }
             response.Add(data);
+        }
+        
+        /// <summary>
+        /// reorder feedback questions
+        /// </summary>
+        /// <param name="currentUserId">current user id</param>
+        /// <param name="lessonIdentiy">lesson id or slug</param>
+        /// <param name="ids">list of feedback id</param>
+        /// <returns>Task completed</returns>
+        /// <exception cref="EntityNotFoundException"></exception>
+        /// <exception cref="ForbiddenException"></exception>
+        public async Task ReorderFeedbackQuestionsAsync(Guid currentUserId, string lessonIdentiy,List<Guid> ids)
+        {
+            await ExecuteAsync(async() =>
+            {
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p=>p.Id.ToString() == lessonIdentiy || p.Slug.ToLower() == lessonIdentiy.ToLower()).ConfigureAwait(false);
+                if (lesson == default)
+                {
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
+                }
+                var hasAuthority = await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId,lesson.CourseId.ToString(),TrainingTypeEnum.Course).ConfigureAwait(false);
+                if (!hasAuthority)
+                {
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUserAddQuestionSet"));
+                }
+                var feedbacks = await _unitOfWork.GetRepository<Feedback>().GetAllAsync(predicate: p=>p.LessonId == lesson.Id).ConfigureAwait(false);
+                if(feedbacks.Count == default)
+                {
+                    throw new ForbiddenException(_localizer.GetString("InvalidLessonFeedbackType"));
+                }
+                var updateFeedback = new List<Feedback>();
+                var order = 0;
+                foreach(var id in ids)
+                {
+                    var feedback = feedbacks.FirstOrDefault(x => x.Id == id);
+                    if(feedback != default)
+                    {
+                        feedback.Order = order;
+                        feedback.UpdatedOn = DateTime.UtcNow;
+                        feedback.UpdatedBy = currentUserId;
+                        updateFeedback.Add(feedback);
+                        order++;
+                    }
+                }
+                _unitOfWork.GetRepository<Feedback>().Update(updateFeedback);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            });
         }
     }
 }
