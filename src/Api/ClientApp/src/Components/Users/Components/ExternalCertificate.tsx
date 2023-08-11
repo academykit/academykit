@@ -45,6 +45,7 @@ const RowsExternal = ({
       <td>
         {item?.duration} {t('hour_s')}
       </td>
+      <td>Rs.{item?.optionalCost}</td>
       <td>{item?.institute}</td>
       <td style={{ wordBreak: 'break-all' }}>{item.location}</td>
       <td>
@@ -125,6 +126,7 @@ const ExternalCertificate = () => {
                     <th>{t('start_date')}</th>
                     <th>{t('end_date')}</th>
                     <th>{t('duration')}</th>
+                    <th>{t('optional_cost')}</th>
                     <th>{t('issued_by')}</th>
                     <th>{t('issuer_location')}</th>
                     <th>{t('external_certificate')}</th>

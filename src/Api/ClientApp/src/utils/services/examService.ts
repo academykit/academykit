@@ -62,6 +62,8 @@ export const useSubmitExam = () =>
 
 export interface QuestionSetSubmissionResult {
   attemptCount: 0;
+  hasExceededAttempt: boolean;
+  endDate: string;
   user: IUser;
   questionSetSubmissions: {
     questionSetSubmissionId: string;

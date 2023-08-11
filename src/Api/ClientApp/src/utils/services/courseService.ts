@@ -18,6 +18,7 @@ import {
   IUser,
 } from './types';
 import { ResponseData } from './authService';
+import { INotMember } from './groupService';
 
 interface ICourseTag {
   id: string;
@@ -673,5 +674,34 @@ const getSingleCertificate = (id: string) => {
 export const useGetCertificateDetails = (id: string) => {
   return useQuery([api.course.getCertificateDetails(id)], () =>
     getSingleCertificate(id)
+  );
+};
+
+const addTrainee = ({ courseId, data }: { data: any; courseId: string }) => {
+  return httpClient.post(api.enrollment.enrollTrainee(courseId), data);
+};
+
+export const useAddTrainee = (courseId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation([api.enrollment.enrollTrainee(courseId)], addTrainee, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([]);
+    },
+  });
+};
+
+const getTrainee = (courseId: string, query: string) => {
+  return httpClient.get<IPaginated<INotMember>>(
+    api.enrollment.trainee(courseId, query)
+  );
+};
+
+export const useGetTrainee = (courseId: string, query: string) => {
+  return useQuery(
+    [api.enrollment.trainee(courseId, query)],
+    () => getTrainee(courseId, query),
+    {
+      select: (data) => data.data,
+    }
   );
 };

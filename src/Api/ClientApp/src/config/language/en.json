@@ -862,6 +862,8 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "add_trainee_success": "Trainee Added Successfully.",
+  "add_trainee": "Add Trainee",
   "optional_cost_required": "Optional cost is required",
   "physical_approve": "Attendance approved successfully.",
   "physical_deny": "Attendance rejected successfully.",
