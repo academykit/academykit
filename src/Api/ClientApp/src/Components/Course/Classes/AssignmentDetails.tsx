@@ -9,7 +9,7 @@ import {
   Title,
   useMantineTheme,
 } from '@mantine/core';
-import { DATE_FORMAT } from '@utils/constants';
+// import { DATE_FORMAT } from '@utils/constants';
 import RoutePath from '@utils/routeConstants';
 import { ICourseLesson } from '@utils/services/courseService';
 import moment from 'moment';
@@ -44,7 +44,7 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
       ) : (
         <Text>
           {t('assignment_yet_start')}{' '}
-          {moment(lesson.startDate).format(DATE_FORMAT)}
+          {moment(lesson.startDate).format('MMM DD, YYYY hh:mm A')}
         </Text>
       )}
       {lesson.assignmentReview && (
