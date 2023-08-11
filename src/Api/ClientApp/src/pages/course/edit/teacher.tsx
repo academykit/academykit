@@ -49,15 +49,18 @@ const schema = () => {
 
 const TeacherCards = ({
   teacher: { id, user, courseCreatedBy },
+  searchParams,
 }: {
   teacher: ICreateCourseTeacher;
+  searchParams: string;
 }) => {
-  const deleteTeacher = useDeleteCourseTeacher();
+  const deleteTeacher = useDeleteCourseTeacher(searchParams);
   const { t } = useTranslation();
   const handleDelete = async () => {
     try {
       await deleteTeacher.mutateAsync(id);
       showNotification({ message: t('trainer_deleted') });
+      setDeletePopUP(false);
     } catch (err) {
       const error = errorType(err);
       showNotification({ message: error, color: 'red' });
@@ -118,7 +121,7 @@ const Teacher = ({
     isLoading: loading,
     isError: error,
   } = useCourseTeacher(slug.id as string, searchParams);
-  const createTeacher = useCreateTeacherCourse();
+  const createTeacher = useCreateTeacherCourse(searchParams);
 
   const [showAddForm, toggleAddForm] = useToggle();
 
@@ -196,7 +199,11 @@ const Teacher = ({
             <Box>{t('no_users')}</Box>
           ) : (
             data.items.map((item) => (
-              <TeacherCards teacher={item} key={item.id} />
+              <TeacherCards
+                teacher={item}
+                key={item.id}
+                searchParams={searchParams}
+              />
             ))
           ))}
       </ScrollArea>
