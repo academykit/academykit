@@ -17,17 +17,18 @@ import {
 import { useForm, yupResolver } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconTrash } from '@tabler/icons';
+import { IconEdit, IconTrash } from '@tabler/icons';
 import {
   IZoomLicense,
   updateZoomLicenseStatus,
   useAddZoomLicense,
   useDeleteZoomLicense,
+  useUpdateZoomLicense,
   useZoomLicense,
 } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import { IUser } from '@utils/services/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
@@ -41,8 +42,11 @@ interface IZoomLicensePost {
 export default function ZoomLicense() {
   const theme = useMantineTheme();
   const getZoomLicense = useZoomLicense();
+  const updateZoomLicense = useUpdateZoomLicense();
   const addZoomLicense = useAddZoomLicense();
   const [showAddForm, toggleAddForm] = useToggle();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editItem, setEditItem] = useState<IZoomLicense<IUser>>();
   const { t } = useTranslation();
 
   const schema = () => {
@@ -67,6 +71,16 @@ export default function ZoomLicense() {
     validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
+
+  useEffect(() => {
+    if (isEditing) {
+      form.setValues({
+        licenseEmail: editItem?.licenseEmail,
+        hostId: editItem?.hostId,
+        capacity: editItem?.capacity,
+      });
+    }
+  }, [isEditing]);
 
   const Rows = ({ item }: { item: IZoomLicense<IUser> }) => {
     const [isChecked, setIsChecked] = useState<boolean>(item?.isActive);
@@ -150,6 +164,16 @@ export default function ZoomLicense() {
             <ActionIcon
               color="red"
               onClick={() => {
+                toggleAddForm();
+                setIsEditing(true);
+                setEditItem(item);
+              }}
+            >
+              <IconEdit size={16} stroke={1.5} />
+            </ActionIcon>
+            <ActionIcon
+              color="red"
+              onClick={() => {
                 setOpened(true);
               }}
             >
@@ -163,14 +187,28 @@ export default function ZoomLicense() {
 
   const handleSubmit = async (values: IZoomLicensePost) => {
     try {
-      await addZoomLicense.mutateAsync(values);
-      showNotification({
-        title: t('successful'),
+      console.log(values);
+      if (isEditing) {
+        await updateZoomLicense.mutateAsync({
+          id: (editItem?.id as string) ?? '',
+          data: values,
+        });
+        showNotification({
+          title: t('successful'),
+          message: t('zoom_license_update_success'),
+        });
+        setIsEditing(false);
+        toggleAddForm();
+      } else {
+        await addZoomLicense.mutateAsync(values);
+        showNotification({
+          title: t('successful'),
 
-        message: t('zoom_license_added'),
-      });
-      form.reset();
-      toggleAddForm();
+          message: t('zoom_license_added'),
+        });
+        form.reset();
+        toggleAddForm();
+      }
     } catch (error) {
       const err = errorType(error);
       showNotification({
@@ -232,6 +270,7 @@ export default function ZoomLicense() {
                     onClick={() => {
                       form.reset();
                       toggleAddForm();
+                      setIsEditing(false);
                     }}
                     variant="outline"
                   >

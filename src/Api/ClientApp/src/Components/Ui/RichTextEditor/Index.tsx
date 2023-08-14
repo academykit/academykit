@@ -16,7 +16,7 @@ import Mathematics from '@tiptap-pro/extension-mathematics';
 import 'katex/dist/katex.min.css';
 import Color from '@tiptap/extension-color';
 import TextStyle from '@tiptap/extension-text-style';
-import { YoutubeVideoControl } from './Controls/YoutubeVideoControl';
+// import { YoutubeVideoControl } from './Controls/YoutubeVideoControl';
 
 type IProps = {
   formContext?: () => UseFormReturnType<any, (values: any) => any>;
@@ -145,7 +145,7 @@ const TextEditor = ({
               '#fd7e14',
             ]}
           />
-          <YoutubeVideoControl></YoutubeVideoControl>
+          {/* <YoutubeVideoControl></YoutubeVideoControl> */}
         </RichTextEditor.Toolbar>
         <RichTextEditor.Content />
       </RichTextEditor>
