@@ -1028,4 +1028,7 @@
   <data name="LessonContainsAttendance" xml:space="preserve">
     <value>शारीरिक पाठमा उपस्थिति समावेश छ।</value>
   </data>
+  <data name="DuplicateMemberIdFound" xml:space="preserve">
+    <value>डुप्लिकेट सदस्य आईडी फेला पर्यो।</value>
+  </data>
 </root>

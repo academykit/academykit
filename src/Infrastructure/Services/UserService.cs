@@ -28,6 +28,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using AngleSharp.Dom;
 
 namespace Lingtren.Infrastructure.Services
 {
@@ -778,6 +779,10 @@ namespace Lingtren.Infrastructure.Services
         protected override async Task CreatePreHookAsync(User entity)
         {
             await CheckDuplicateEmailAsync(entity).ConfigureAwait(false);
+            if (entity.MemberId != default)
+            {
+                await CheckForDuplicateMemberId(entity).ConfigureAwait(false);
+            }
             await Task.FromResult(0);
         }
 
@@ -1043,6 +1048,16 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
+        private async Task CheckForDuplicateMemberId(User entity)
+        {
+            var checkDuplicateMemberId = await _unitOfWork.GetRepository<User>().ExistsAsync(
+                predicate: p=>p.Id != entity.Id && p.MemberId.ToLower().Equals(entity.MemberId.ToLower())).ConfigureAwait(false);
+            if(checkDuplicateMemberId)
+            {
+                _logger.LogWarning("Duplicate MemberId : {UserId} is found.", entity.Id);
+                throw new ServiceException(_localizer.GetString("DuplicateMemberIdFound"));
+            }
+        }
         #endregion Private Methods
 
         /// <summary>

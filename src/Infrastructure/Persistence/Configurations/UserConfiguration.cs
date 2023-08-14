@@ -10,6 +10,7 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasColumnName("id").HasColumnType("VARCHAR(50)").HasMaxLength(50).IsRequired();
+            builder.Property(x=>x.MemberId).HasColumnName("member_id").HasColumnType("VARCHAR(50)").IsRequired(false);
             builder.Property(x => x.FirstName).HasColumnName("first_name").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
             builder.Property(x => x.MiddleName).HasColumnName("middle_name").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired(false);
             builder.Property(x => x.LastName).HasColumnName("last_name").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
