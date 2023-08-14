@@ -251,6 +251,7 @@ namespace Lingtren.Infrastructure.Services
             {
                 responseModel.AssignmentExpired = lesson.EndDate <= DateTime.UtcNow;
             }
+            responseModel.IsTrainee = !await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId,lesson.CourseId.ToString(),TrainingTypeEnum.Course).ConfigureAwait(false);
             responseModel.HasAttended = HasAttended;
             responseModel.HasSubmittedAssigment = hasSubmitAssignment;
             responseModel.HasResult = hasResult;
