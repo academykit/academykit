@@ -38,6 +38,7 @@ export interface IAssignmentQuestion {
   answer?: string;
   assignmentAttachments?: IAssignmentAttachment[];
   assignmentQuestionOptions?: IAssignmentOptions[];
+  isTrainee: boolean;
 }
 
 const getAssignmentQuestion = (lessonId: string, search: string) => {
