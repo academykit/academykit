@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import { getDateTime } from '@utils/getDateTime';
-import TextEditor from '@components/Ui/TextEditor';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -179,7 +179,7 @@ const AddPhysical = ({
 
       <Box my={20}>
         <Text size={'sm'}>{t('description')}</Text>
-        <TextEditor
+        <RichTextEditor
           placeholder={t('physical_name_description') as string}
           {...form.getInputProps('description')}
         />

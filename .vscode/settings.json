@@ -25,5 +25,8 @@
         "Vurilo",
         "Weightage"
     ],
-    "dotnet.defaultSolution": "lingtren.sln"
+    "dotnet.defaultSolution": "lingtren.sln",
+    "search.exclude": {
+        "**/src/Api/ClientApp/node_modules": true
+    }
 }
