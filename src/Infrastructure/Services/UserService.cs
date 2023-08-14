@@ -1048,6 +1048,12 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
+        /// <summary>
+        /// Check dulpicate member id
+        /// </summary>
+        /// <param name="entity">User</param>
+        /// <returns>Task completed</returns>
+        /// <exception cref="ServiceException"></exception>
         private async Task CheckForDuplicateMemberId(User entity)
         {
             var checkDuplicateMemberId = await _unitOfWork.GetRepository<User>().ExistsAsync(
