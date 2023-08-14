@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import TextEditor from '@components/Ui/TextEditor';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import {
   Box,
   Checkbox,
@@ -75,7 +75,7 @@ const CreateForm: FC<Props> = ({ form, useFormContext }) => {
       ></TextInput>
       <Box mt={20}>
         <Text size={'sm'}>{t('description')}</Text>
-        <TextEditor formContext={useFormContext} />
+        <RichTextEditor formContext={useFormContext} />
       </Box>
 
       {tags.isSuccess ? (
@@ -100,7 +100,7 @@ const CreateForm: FC<Props> = ({ form, useFormContext }) => {
       )}
 
       <Box mt={20}>
-        <TextEditor label="hints" formContext={useFormContext} />
+        <RichTextEditor label="hints" formContext={useFormContext} />
       </Box>
       <Select
         mt={20}
@@ -128,11 +128,11 @@ const CreateForm: FC<Props> = ({ form, useFormContext }) => {
                 name=""
               ></Checkbox>
 
-              <TextEditor
+              <RichTextEditor
                 placeholder={t('option_placeholder') as string}
                 label={`answers.${i}.option`}
                 formContext={useFormContext}
-              ></TextEditor>
+              ></RichTextEditor>
               <UnstyledButton
                 onClick={() => {
                   form.insertListItem(

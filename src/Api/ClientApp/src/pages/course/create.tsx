@@ -1,5 +1,5 @@
 import Breadcrumb from '@components/Ui/BreadCrumb';
-import TextEditor from '@components/Ui/TextEditor';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
 import {
   Box,
@@ -276,7 +276,7 @@ const CreateCoursePage = () => {
 
             <Box mt={20}>
               <Text>{t('description')}</Text>
-              <TextEditor
+              <RichTextEditor
                 placeholder={t('course_description') as string}
                 formContext={useFormContext}
               />

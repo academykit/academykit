@@ -25,7 +25,7 @@ import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import TextEditor from '@components/Ui/TextEditor';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -177,7 +177,7 @@ const AddLecture = ({
                 ? t('recording_description')
                 : t('video_description')}
             </Text>
-            <TextEditor
+            <RichTextEditor
               placeholder={
                 isRecordedVideo
                   ? (t('recording_description') as string)

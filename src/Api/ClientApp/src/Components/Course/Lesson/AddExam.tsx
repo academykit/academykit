@@ -27,7 +27,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import TextEditor from '@components/Ui/TextEditor';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -289,7 +289,7 @@ const AddExam = ({
           <Grid.Col>
             <Box my={20}>
               <Text size={'sm'}>{t('description')}</Text>
-              <TextEditor
+              <RichTextEditor
                 placeholder={t('exam_description') as string}
                 {...form.getInputProps('description')}
               />
