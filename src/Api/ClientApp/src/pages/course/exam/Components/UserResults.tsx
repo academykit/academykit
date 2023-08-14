@@ -1,6 +1,8 @@
+import useAuth from '@hooks/useAuth';
 import { ActionIcon, Box, Loader, Table, Title } from '@mantine/core';
 import { IconEye } from '@tabler/icons';
 import { DATE_FORMAT } from '@utils/constants';
+import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import { useMyResult } from '@utils/services/examService';
 import axios from 'axios';
@@ -15,8 +17,15 @@ const UserResults = ({
   lessonId: string;
   studentId: string;
 }) => {
+  const user = useAuth();
   const { t } = useTranslation();
   const result = useMyResult(lessonId, studentId);
+
+  const hasExceededAttempt = result.data?.hasExceededAttempt;
+  const endDate = result.data?.endDate;
+  const exam_endDate = moment.utc(endDate, 'YYYY-MM-DD[T]HH:mm[Z]');
+  const current_time = moment.utc(moment().toDate(), 'YYYY-MM-DD[T]HH:mm[Z]');
+
   if (result.isLoading) {
     return <Loader />;
   }
@@ -66,17 +75,23 @@ const UserResults = ({
               <td>{moment(r.submissionDate).format(DATE_FORMAT)}</td>
               <td>{r.completeDuration}</td>
               <td>
-                <ActionIcon
-                  component={Link}
-                  to={
-                    RoutePath.exam.resultOne(
-                      lessonId,
-                      r.questionSetSubmissionId
-                    ).route
-                  }
-                >
-                  <IconEye />
-                </ActionIcon>
+                {(hasExceededAttempt ||
+                  current_time.isAfter(exam_endDate) ||
+                  user?.auth?.role == UserRole.Admin ||
+                  user?.auth?.role == UserRole.SuperAdmin ||
+                  user?.auth?.role == UserRole.Trainer) && (
+                  <ActionIcon
+                    component={Link}
+                    to={
+                      RoutePath.exam.resultOne(
+                        lessonId,
+                        r.questionSetSubmissionId
+                      ).route
+                    }
+                  >
+                    <IconEye />
+                  </ActionIcon>
+                )}
               </td>
             </tr>
           ))}

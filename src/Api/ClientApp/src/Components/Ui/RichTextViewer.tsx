@@ -12,6 +12,9 @@ import TextAlign from '@tiptap/extension-text-align';
 import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
 import { Styles, Sx } from '@mantine/core';
+import Mathematics from '@tiptap-pro/extension-mathematics';
+
+import 'katex/dist/katex.min.css';
 
 type IProps = {
   content: string;
@@ -30,6 +33,7 @@ const TextViewer = ({ content, styles, sx }: IProps) => {
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       StarterKit,
       Placeholder.configure({ placeholder: 'This is placeholder' }),
+      Mathematics,
     ],
     content,
   });

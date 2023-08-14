@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import TextEditor from '@components/Ui/TextEditor';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import CustomTextFieldWithAutoFocus, {
   DynamicAutoFocusTextField,
@@ -224,7 +224,7 @@ const UserInfo = () => {
             <Grid.Col xs={12} lg={12}>
               <Text size="sm">{t('bio')}</Text>
               {!viewMode && (
-                <TextEditor
+                <RichTextEditor
                   error={formData.errors?.bio}
                   placeholder={t('your_short_description') as string}
                   {...formData.getInputProps('bio')}
