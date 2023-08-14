@@ -517,6 +517,22 @@ export const useDeleteZoomLicense = () => {
   );
 };
 
+const updateZoomLicense = ({ id, data }: { id: string; data: any }) =>
+  httpClient.put(api.adminUser.deleteZoomLicense(id), data);
+
+export const useUpdateZoomLicense = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ['update' + api.adminUser.getZoomLicense],
+    updateZoomLicense,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([api.adminUser.getZoomLicense]);
+      },
+    }
+  );
+};
+
 const addZoomLicense = (data: {
   licenseEmail: string;
   hostId: string;
