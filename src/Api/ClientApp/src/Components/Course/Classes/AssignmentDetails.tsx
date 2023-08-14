@@ -62,6 +62,7 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
             <UserShortProfile
               user={lesson.assignmentReview.teacher}
               size={'sm'}
+              color="#C1C2C5"
             />
             <Paper
               sx={{

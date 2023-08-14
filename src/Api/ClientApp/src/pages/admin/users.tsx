@@ -11,7 +11,7 @@ import {
   Tabs,
   FileInput,
   Flex,
-  Anchor,
+  // Anchor,
 } from '@mantine/core';
 import UserMemberTable from '@components/Users/UserMemberTable';
 import { useAddUser, useUsers } from '@utils/services/adminService';
@@ -20,7 +20,7 @@ import withSearchPagination, {
 } from '@hoc/useSearchPagination';
 import errorType from '@utils/services/axiosError';
 import lazyWithRetry from '@utils/lazyImportWithReload';
-import { uploadUserCsv } from '@utils/services/fileService';
+import { downloadCSVFile, uploadUserCsv } from '@utils/services/fileService';
 import { showNotification } from '@mantine/notifications';
 const AddUpdateUserForm = lazyWithRetry(
   () => import('../../Components/Users/AddUpdateUserForm')
@@ -78,7 +78,7 @@ const UsersList = ({
     setCsvLoad(false);
   };
 
-  // const sampleFileURL = '/api/User/samplefile';
+  const sampleFileURL = '/api/User/samplefile';
 
   return (
     <>
@@ -120,7 +120,7 @@ const UsersList = ({
                 </Box>
               </Tabs.Panel>
               <Tabs.Panel value="import">
-                <Text my={10} size="sm">
+                {/* <Text my={10} size="sm">
                   CSV file format should be similar to sample CSV. Please
                   <Anchor
                     href="https://vurilo-desktop-app.s3.ap-south-1.amazonaws.com/bulkimportsample.csv"
@@ -132,8 +132,8 @@ const UsersList = ({
                     click here
                   </Anchor>
                   to download sample CSV.
-                </Text>
-                {/* <Text my={10} size="sm">
+                </Text> */}
+                <Text my={10} size="sm">
                   {t('csv_format')} {t('please')}{' '}
                   <span
                     style={{
@@ -146,7 +146,7 @@ const UsersList = ({
                     {t('click_here')}
                   </span>{' '}
                   {t('to_download_csv')}
-                </Text> */}
+                </Text>
                 <form onSubmit={form.onSubmit(onSubmit)}>
                   <FileInput
                     label={t('upload_csv')}
