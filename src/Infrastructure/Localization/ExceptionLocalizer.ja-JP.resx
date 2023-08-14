@@ -1031,4 +1031,7 @@
   <data name="LessonContainsAttendance" xml:space="preserve">
     <value>体育の授業には出席が含まれます。</value>
   </data>
+  <data name="DuplicateMemberIdFound" xml:space="preserve">
+    <value>重複するメンバー ID が見つかりました。</value>
+  </data>
 </root>

@@ -207,6 +207,7 @@ namespace Lingtren.Infrastructure.Services
                     Email = p.Email,
                     MobileNumber = p.MobileNumber,
                     ImageUrl = p.ImageUrl,
+                    FullName = p.FullName,
                 }));
                 return response;
             });

@@ -578,7 +578,7 @@
             {
                 searchCriteria.UserId = searchCriteria.CurrentUserId;
             }
-
+            var isTrainee = !(isTeacher || isSuperAdminOrAdmin);
             var predicate = PredicateBuilder.New<Feedback>(true);
             predicate = predicate.And(x => x.LessonId == lesson.Id);
 
@@ -597,12 +597,12 @@
 
             foreach (var item in feedbacks)
             {
-                MapFeedback(userFeedbacks, item, response);
+                MapFeedback(userFeedbacks, item, response,isTrainee);
             }
             return response;
         }
 
-        private static void MapFeedback(IList<FeedbackSubmission> userFeedbacks, Feedback item, IList<FeedbackResponseModel> response)
+        private static void MapFeedback(IList<FeedbackSubmission> userFeedbacks, Feedback item, IList<FeedbackResponseModel> response,bool isTrainee)
         {
             var userFeedback = userFeedbacks.FirstOrDefault(x => x.FeedbackId == item.Id);
             var data = new FeedbackResponseModel
@@ -616,6 +616,7 @@
                 IsActive = item.IsActive,
                 User = item.User == null ? new UserModel() : new UserModel(item.User),
                 Student = userFeedback == null ? null : new UserModel(userFeedback.User),
+                IsTrainee = isTrainee,
                 Answer = userFeedback?.Answer,
                 Rating = userFeedback?.Rating,
                 FeedbackQuestionOptions = new List<FeedbackQuestionOptionResponseModel>(),
