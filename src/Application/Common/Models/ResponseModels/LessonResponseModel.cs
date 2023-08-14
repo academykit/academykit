@@ -41,6 +41,7 @@
         public string ZoomId { get; set; }
         public string Password { get; set; }
         public bool? HasAttended { get; set; }
+        public bool IsTrainee { get; set; }
 
         public LessonResponseModel(Lesson model)
         {

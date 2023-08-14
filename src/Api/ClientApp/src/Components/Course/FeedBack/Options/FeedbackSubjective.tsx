@@ -1,4 +1,4 @@
-import TextEditor from '@components/Ui/TextEditor';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import { UseFormReturnType } from '@mantine/form';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IFeedbackQuestions } from '@utils/services/feedbackService';
@@ -18,7 +18,7 @@ const FeedbackSubjective = ({ form, currentIndex }: Props) => {
   useEffect(() => {
     form.setFieldValue(`${currentIndex}.answer`, debounced);
   }, [debounced]);
-  return <TextEditor value={value} onChange={setValue} />;
+  return <RichTextEditor value={value} onChange={setValue} />;
 };
 
 export default FeedbackSubjective;

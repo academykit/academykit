@@ -18,6 +18,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public int? Rating { get; set; }
         public UserModel? Student { get; set; }
         public IList<FeedbackQuestionOptionResponseModel> FeedbackQuestionOptions { get; set; }
+        public bool IsTrainee { get; set; }
 
         public FeedbackResponseModel()
         {

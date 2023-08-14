@@ -114,6 +114,7 @@ namespace Lingtren.Api.Controllers
                 CreatedOn = currentTimeStamp,
                 UpdatedBy = CurrentUser.Id,
                 UpdatedOn = currentTimeStamp,
+                MemberId = model.MemberId,
             };
 
             var password = await _userService.GenerateRandomPassword(8).ConfigureAwait(false);

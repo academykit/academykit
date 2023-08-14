@@ -1031,4 +1031,7 @@ recorded cannot be deleted.</value>
   <data name="LessonContainsAttendance" xml:space="preserve">
     <value>Physical lesson contains attendance.</value>
   </data>
+  <data name="DuplicateMemberIdFound" xml:space="preserve">
+    <value>Duplicate member Id Found.</value>
+  </data>
 </root>

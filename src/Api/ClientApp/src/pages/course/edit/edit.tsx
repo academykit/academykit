@@ -1,4 +1,4 @@
-import TextEditor from '@components/Ui/TextEditor';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
 import {
   Box,
@@ -38,6 +38,7 @@ interface FormValues {
   groups: string;
   description: string;
   tags: string[];
+  language: string;
 }
 
 const schema = () => {
@@ -64,6 +65,7 @@ const EditCourse = () => {
       groups: '',
       description: '',
       tags: [],
+      language: '1',
     },
     validate: yupResolver(schema()),
   });
@@ -76,6 +78,10 @@ const EditCourse = () => {
 
   const label = useLevels();
   const { mutate, data: addTagData, isSuccess } = useAddTag();
+  const [language] = useState([
+    { value: '1', label: 'English' },
+    { value: '2', label: 'Nepali' },
+  ]);
 
   const tags = useTags(
     queryStringGenerator({
@@ -140,6 +146,7 @@ const EditCourse = () => {
         thumbnail: courseSingleData.thumbnailUrl,
         title: courseSingleData.name,
         description: courseSingleData.description,
+        language: courseSingleData.language.toString(),
       });
     }
   }, [courseIsSuccess]);
@@ -154,7 +161,7 @@ const EditCourse = () => {
         thumbnailUrl: values.thumbnail,
         description: values.description,
         groupId: values.groups,
-        language: 1,
+        language: parseInt(values.language),
         duration: 0,
         levelId: values.level,
         tagIds: values.tags,
@@ -231,43 +238,55 @@ const EditCourse = () => {
                 </div>
               )}
             </Group>
-            {!groups.isLoading ? (
+            <Group grow>
+              {!groups.isLoading ? (
+                <Select
+                  mt={20}
+                  searchable
+                  withAsterisk
+                  description={
+                    <Text size={'xs'}>{t('group_create_info')}</Text>
+                  }
+                  sx={{ maxWidth: '500px' }}
+                  data={
+                    groups?.data?.data?.items?.map((x) => ({
+                      label: x.name,
+                      value: x.id,
+                    })) ?? []
+                  }
+                  {...form.getInputProps('groups')}
+                  size={'lg'}
+                  label={t('group')}
+                  placeholder={t('group_placeholder') as string}
+                  creatable={
+                    // allow for admin and superadmin only
+                    auth?.auth?.role == UserRole.SuperAdmin ||
+                    auth?.auth?.role == UserRole.Admin
+                  }
+                  getCreateLabel={(query) => `+ Create ${query}`}
+                  onCreate={(value) => {
+                    groupAdd
+                      .mutateAsync(value)
+                      .then((res) => form.setFieldValue('groups', res.data.id)); // setting value after fetch
+                    return value;
+                  }}
+                  nothingFound="No options"
+                />
+              ) : (
+                <Loader style={{ flexGrow: '0' }} />
+              )}
+
               <Select
-                mt={20}
-                searchable
-                withAsterisk
-                description={<Text size={'xs'}>{t('group_create_info')}</Text>}
-                sx={{ maxWidth: '500px' }}
-                data={
-                  groups?.data?.data?.items?.map((x) => ({
-                    label: x.name,
-                    value: x.id,
-                  })) ?? []
-                }
-                {...form.getInputProps('groups')}
+                mt={48}
+                label={t('Language')}
                 size={'lg'}
-                label={t('group')}
-                placeholder={t('group_placeholder') as string}
-                creatable={
-                  // allow for admin and superadmin only
-                  auth?.auth?.role == UserRole.SuperAdmin ||
-                  auth?.auth?.role == UserRole.Admin
-                }
-                getCreateLabel={(query) => `+ Create ${query}`}
-                onCreate={(value) => {
-                  groupAdd
-                    .mutateAsync(value)
-                    .then((res) => form.setFieldValue('groups', res.data.id)); // setting value after fetch
-                  return value;
-                }}
-                nothingFound="No options"
+                data={language}
+                {...form.getInputProps('language')}
               />
-            ) : (
-              <Loader />
-            )}
+            </Group>
             <Box mt={20}>
               <Text>{t('description')}</Text>
-              <TextEditor
+              <RichTextEditor
                 placeholder={t('course_description') as string}
                 formContext={useFormContext}
               />

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import TextEditor from '@components/Ui/TextEditor';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import { UseFormReturnType } from '@mantine/form';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IAssignmentQuestion } from '@utils/services/assignmentService';
@@ -19,7 +19,7 @@ const SubjectiveType = ({ form, currentIndex }: Props) => {
   useEffect(() => {
     form.setFieldValue(`${currentIndex}.answer`, debounced);
   }, [debounced, currentIndex]);
-  return <TextEditor value={value} onChange={setValue} />;
+  return <RichTextEditor value={value} onChange={setValue} />;
 };
 
 export default SubjectiveType;
