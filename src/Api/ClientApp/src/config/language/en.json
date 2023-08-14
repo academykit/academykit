@@ -862,6 +862,9 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "ID": "ID",
+  "user_id": "User's ID",
+  "zoom_license_update_success": "Zoom License updated successfully",
   "add_trainee_success": "Trainee Added Successfully.",
   "add_trainee": "Add Trainee",
   "optional_cost_required": "Optional cost is required",
