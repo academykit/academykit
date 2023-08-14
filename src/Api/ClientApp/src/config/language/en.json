@@ -862,6 +862,7 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "view_exam": "View exam",
   "view_assignment": "View assignment",
   "ID": "ID",
   "user_id": "User's ID",
