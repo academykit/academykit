@@ -117,6 +117,7 @@
             existing.HostId = model.HostId;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
+            existing.Capacity = model.Capacity;
 
             var savedEntity = await _zoomLicenseService.UpdateAsync(existing).ConfigureAwait(false);
             return new ZoomLicenseResponseModel(savedEntity);
