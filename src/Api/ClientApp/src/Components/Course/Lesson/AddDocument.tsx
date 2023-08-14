@@ -24,7 +24,7 @@ import FileUploadLesson from '@components/Ui/FileUploadLesson';
 import { useTranslation } from 'react-i18next';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import TextEditor from '@components/Ui/TextEditor';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -155,7 +155,7 @@ const AddDocument = ({
           />
           <Box my={form.errors['documentUrl'] ? 20 : 10}>
             <Text size={'sm'}>{t('file_description')}</Text>
-            <TextEditor
+            <RichTextEditor
               placeholder={t('file_description') as string}
               {...form.getInputProps('description')}
             />

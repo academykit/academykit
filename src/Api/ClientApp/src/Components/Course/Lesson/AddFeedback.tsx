@@ -26,7 +26,7 @@ import CreateFeedback from '../FeedBack/CreateFeedBack';
 import { useTranslation } from 'react-i18next';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import TextEditor from '@components/Ui/TextEditor';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -171,7 +171,7 @@ const AddFeedback = ({
           </Grid>
           <Box my={20}>
             <Text size={'sm'}>{t('feedback_description')}</Text>
-            <TextEditor
+            <RichTextEditor
               placeholder={t('feedback_description') as string}
               {...form.getInputProps('description')}
             />
