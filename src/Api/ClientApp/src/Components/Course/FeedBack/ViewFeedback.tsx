@@ -109,6 +109,13 @@ const FeedbackForm = ({
           </Button>
         </Group>
       )}
+      {!item[0].isTrainee && (
+        <Group mt={20}>
+          <Button type="reset" variant="outline" onClick={() => navigation(-1)}>
+            {t('close')}
+          </Button>
+        </Group>
+      )}
     </form>
   );
 };

@@ -236,8 +236,12 @@ export const api = {
     list: (courseId: string) => `/api/course/${courseId}/comments`,
     details: (courseId: string, commentId: string) =>
       `/api/course/${courseId}/comments/${commentId}`,
-    getRepliesList: (courseId: string, commentId: string) =>
-      `/api/course/${courseId}/comments/${commentId}`,
+    getRepliesList: (
+      courseId: string,
+      commentId: string,
+      replyCount?: number
+    ) =>
+      `/api/course/${courseId}/comments/${commentId}?page=1&size=${replyCount}`,
     repliesList: (courseId: string, commentId: string) =>
       `/api/course/${courseId}/comments/${commentId}/commentReply`,
     repliesDetails: (courseId: string, commentId: string, replyId: string) =>

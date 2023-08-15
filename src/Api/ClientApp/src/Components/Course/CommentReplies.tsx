@@ -13,9 +13,11 @@ import { useState } from 'react';
 const CommentReplies = ({
   commentId,
   courseId,
+  replyCount,
 }: {
   commentId: string;
   courseId: string;
+  replyCount: number;
 }) => {
   const form = useForm({
     initialValues: {
@@ -23,7 +25,7 @@ const CommentReplies = ({
     },
   });
   const addCommentReply = usePostCommentReply(courseId, commentId);
-  const commentReplies = useGetCommentReplies(courseId, commentId);
+  const commentReplies = useGetCommentReplies(courseId, commentId, replyCount);
   const { t } = useTranslation();
 
   const initialVisibleReplies = 3;
