@@ -1189,7 +1189,7 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == currentUserId).ConfigureAwait(false);
+                var checkUser = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == currentUserId).ConfigureAwait(false);
 
                 if (checkForValidRows.userList.Count == default)
                 {
@@ -1198,9 +1198,9 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.FirstName)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                    .Select((user, index) => new { User = user, Index = index + 2 })
+                    .Select((user, index) => new { User = user, Index = index})
                     .Where(x => string.IsNullOrWhiteSpace(x.User.FirstName))
-                     .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
+                     .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) +1)
                      .ToList();
                     if (selectedSNs.Any())
                     {
@@ -1210,9 +1210,9 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.LastName)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                    .Select((user, index) => new { User = user, Index = index + 2 })
+                    .Select((user, index) => new { User = user, Index = index})
                     .Where(x => string.IsNullOrWhiteSpace(x.User.LastName))
-                     .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
+                     .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) +1)
                      .ToList();
 
                     if (selectedSNs.Any())
@@ -1224,9 +1224,9 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Email)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                     .Select((user, index) => new { User = user, Index = index + 2 })
+                     .Select((user, index) => new { User = user, Index = index})
                      .Where(x => string.IsNullOrWhiteSpace(x.User.Email))
-                      .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
+                      .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) + 1)
                       .ToList();
                     throw new ForbiddenException(_localizer.GetString("IncorrectEmail") + " " + string.Join(", ", selectedSNs) + " " + _localizer.GetString("TryAgain"));
                 }
@@ -1236,9 +1236,9 @@ namespace Lingtren.Infrastructure.Services
                            @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                               @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
                     var invalidEmailRows = checkForValidRows.userList
-                       .Select((user, index) => (user.Email, index + 2))
+                       .Select((user, index) => (user.Email, index))
                          .Where(entry => !Regex.IsMatch(entry.Email, emailPattern))
-                       .Select(entry => entry.Item2)
+                       .Select(entry => entry.Item2 +2)
                        .ToList();
                     if (invalidEmailRows.Any())
                     {
@@ -1250,9 +1250,9 @@ namespace Lingtren.Infrastructure.Services
                     string moblieNumberPattern = @"^[+\d]+$";
 
                     var invalidMoblieNumberRows = checkForValidRows.userList
-                       .Select((user, index) => (user.MobileNumber, index + 2))
+                       .Select((user, index) => (user.MobileNumber, index))
                          .Where(entry => !Regex.IsMatch(entry.MobileNumber, moblieNumberPattern))
-                       .Select(entry => entry.Item2)
+                       .Select(entry => entry.Item2 +2)
                        .ToList();
                     if (invalidMoblieNumberRows.Any())
                     {
@@ -1262,9 +1262,9 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Role) || !Enum.TryParse<UserRole>(x.Role, out _)))
                 {
                     var selectedSN = checkForValidRows.userList
-                      .Select((user, index) => new { User = user, Index = index + 2 })
+                      .Select((user, index) => new { User = user, Index = index })
                       .Where(x => string.IsNullOrWhiteSpace(x.User.Role))
-                       .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
+                       .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) +1)
                        .ToList();
 
                     if (selectedSN.Any())
@@ -1273,10 +1273,10 @@ namespace Lingtren.Infrastructure.Services
                     }
 
                     var selectedSNs = checkForValidRows.userList
-                    .Select((user, index) => new { User = user, Index = index + 2 })
+                    .Select((user, index) => new { User = user, Index = index })
                     .Where(x => !Enum.GetNames(typeof(UserRole))
                     .Any(enumvalue => string.Equals(enumvalue, x.User.Role, StringComparison.OrdinalIgnoreCase)))
-                    .Join(checkForValidRows.SN.Select((sn, index) => new { SN = sn, Index = index }), x => x.Index, sn => sn.Index, (x, sn) => sn.SN).ToList();
+                    .Join(checkForValidRows.SN.Select((sn, index) => new { SN = sn, Index = index }), x => x.Index, sn => sn.Index, (x, sn) => sn.SN +1).ToList();
 
                     if (selectedSNs.Any())
                     {
@@ -1285,11 +1285,11 @@ namespace Lingtren.Infrastructure.Services
 
                     var selectedIndices = Enum.GetValues(typeof(UserRole))
                      .Cast<UserRole>()
-                     .Select((role, index) => new { Role = role, Index = index + 2 })
+                     .Select((role, index) => new { Role = role, Index = index})
                        .Where(x => string.Equals(x.Role.ToString(), UserRole.Admin.ToString(), StringComparison.OrdinalIgnoreCase))
-                      .Select(x => x.Index)
+                      .Select(x => x.Index + 1)
                        .ToList();
-                    if (selectedIndices.Any() && user.Role != UserRole.SuperAdmin)
+                    if (selectedIndices.Any() && checkUser.Role != UserRole.SuperAdmin)
                     {
                         throw new ForbiddenException(_localizer.GetString("AdminCannotAddAdmin"));
                     }

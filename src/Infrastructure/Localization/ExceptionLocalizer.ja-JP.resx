@@ -1037,4 +1037,13 @@
   <data name="NewEnrolledUser" xml:space="preserve">
     <value>新規登録ユーザー:</value>
   </data>
+  <data name="EnrollmentFor" xml:space="preserve">
+    <value>登録対象者</value>
+  </data>
+  <data name="HasBeenSuccessful" xml:space="preserve">
+    <value>無事に完了しました。</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>ユーザー</value>
+  </data>
 </root>
