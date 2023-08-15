@@ -1023,12 +1023,24 @@
     <value>अपडेट गरिएको मेटाइएको प्रयोगकर्ता:</value>
   </data>
   <data name="UpdatedUser" xml:space="preserve">
-    <value>अपडेट गरिएको प्रयोगकर्ता:</value>
+    <value>नामांकन गरिएको समूह सदस्य:</value>
   </data>
   <data name="LessonContainsAttendance" xml:space="preserve">
     <value>शारीरिक पाठमा उपस्थिति समावेश छ।</value>
   </data>
   <data name="DuplicateMemberIdFound" xml:space="preserve">
     <value>डुप्लिकेट सदस्य आईडी फेला पर्यो।</value>
+  </data>
+  <data name="NewEnrolledUser" xml:space="preserve">
+    <value>नयाँ भर्ना भएका प्रयोगकर्ता:</value>
+  </data>
+  <data name="EnrollmentFor" xml:space="preserve">
+    <value>नामांकनका लागि</value>
+  </data>
+  <data name="HasBeenSuccessful" xml:space="preserve">
+    <value>सफलतापूर्वक सम्पन्न भएको छ।</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>प्रयोगकर्ताहरू</value>
   </data>
 </root>

@@ -1026,12 +1026,24 @@ recorded cannot be deleted.</value>
     <value>Updated deleted user :</value>
   </data>
   <data name="UpdatedUser" xml:space="preserve">
-    <value>Updated user :</value>
+    <value>Enrolled group member:</value>
   </data>
   <data name="LessonContainsAttendance" xml:space="preserve">
     <value>Physical lesson contains attendance.</value>
   </data>
   <data name="DuplicateMemberIdFound" xml:space="preserve">
     <value>Duplicate member Id Found.</value>
+  </data>
+  <data name="NewEnrolledUser" xml:space="preserve">
+    <value>new enrolled user:</value>
+  </data>
+  <data name="EnrollmentFor" xml:space="preserve">
+    <value>Enrollment for</value>
+  </data>
+  <data name="HasBeenSuccessful" xml:space="preserve">
+    <value>has been successfully completed.</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>users</value>
   </data>
 </root>

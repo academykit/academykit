@@ -23,6 +23,7 @@
         public string FullName { get; set; }
         public IList<CourseCertificateIssuedResponseModel> Certificates { get; set; } = new List<CourseCertificateIssuedResponseModel>();
         public IList<ExternalCertificateResponseModel> ExternalCertificates { get; set; } = new List<ExternalCertificateResponseModel>();
+        public string MemberId { get; set; }
         public UserResponseModel(User user)
         {
             Id = user.Id;
@@ -42,6 +43,7 @@
             FullName = user.FullName;
             DepartmentId = user.DepartmentId;
             DepartmentName = user.Department?.Name;
+            MemberId = user.MemberId;
         }
 
         public UserResponseModel()

@@ -510,4 +510,7 @@
   <data name="OptionalCostCannotBeNull" xml:space="preserve">
     <value>Optional cost cannot be null.</value>
   </data>
+  <data name="InvalidMoblieNumber" xml:space="preserve">
+    <value>Invalid mobile number format.</value>
+  </data>
 </root>
