@@ -10,8 +10,8 @@ namespace Lingtren.Infrastructure.Services
     {
         public async Task<byte[]> GenerateOgImage(string title, string author, string image, string logo, string company)
         {
-            // using var browserFetcher = new BrowserFetcher();
-            // await browserFetcher.DownloadAsync();
+            using var browserFetcher = new BrowserFetcher();
+            await browserFetcher.DownloadAsync();
             var options = new LaunchOptions
             {
                 Headless = true,
@@ -36,8 +36,8 @@ namespace Lingtren.Infrastructure.Services
 
         public async Task<Stream> GenerateCertificateImage(CourseCertificate? certificate, string fullName, IList<Signature> signatures, GeneralSetting company)
         {
-            // using var browserFetcher = new BrowserFetcher();
-            // await browserFetcher.DownloadAsync();
+            using var browserFetcher = new BrowserFetcher();
+            await browserFetcher.DownloadAsync();
             var options = new LaunchOptions
             {
                 Headless = true,
