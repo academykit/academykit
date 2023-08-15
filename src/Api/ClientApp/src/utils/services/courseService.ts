@@ -215,7 +215,7 @@ const assignmentReorder = async ({
     data
   );
 
-export const useAssignmentReorder = (id: string) => {
+export const useQuestionReorder = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation([], assignmentReorder, {
     onSuccess: () => queryClient.invalidateQueries([api.course.detail(id)]),

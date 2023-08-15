@@ -12,14 +12,15 @@ import {
 import AssignmentItem from './Component/AssignmentItem';
 import EditAssignment from './Component/EditAssignment';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Draggable,
   Droppable,
   DragDropContext,
   DropResult,
 } from 'react-beautiful-dnd';
-import { useAssignmentReorder } from '@utils/services/courseService';
+import { useQuestionReorder } from '@utils/services/courseService';
+import { LessonType } from '@utils/enums';
 
 interface Props {
   lessonId?: string;
@@ -31,10 +32,11 @@ const CreateAssignment = ({
 }: Props & IWithSearchPagination) => {
   const [addQuestion, setAddQuestion] = useToggle();
   const { id, lessonId: lId } = useParams();
-  const assignmentReorder = useAssignmentReorder(lId as string);
+  const assignmentReorder = useQuestionReorder(lId as string);
   const questionList = useAssignmentQuestion(lId as string, searchParams);
   const { t } = useTranslation();
   const [lessonData, setLessonData] = useState<IAssignmentQuestion[]>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLessonData(questionList.data as IAssignmentQuestion[]);
@@ -58,7 +60,7 @@ const CreateAssignment = ({
       )}
     </Draggable>
   ));
-  console.log(lessonData);
+
   const onDragEnd = (result: DropResult) => {
     const { destination, source } = result;
     if (!destination) return;
@@ -71,7 +73,7 @@ const CreateAssignment = ({
     assignmentReorder.mutate({
       id: id as string,
       lessonIdentity: lId as string,
-      lessonType: 4,
+      lessonType: LessonType.Assignment,
       data: newList.map((x) => x.id),
     });
     setLessonData(newList);
@@ -108,9 +110,19 @@ const CreateAssignment = ({
           )}
 
           {!addQuestion && (
-            <Button mt={10} onClick={() => setAddQuestion()}>
-              {t('add_question')}
-            </Button>
+            <>
+              <Button mt={10} onClick={() => setAddQuestion()}>
+                {t('add_question')}
+              </Button>
+              <Button
+                ml={10}
+                variant="outline"
+                onClick={() => navigate(-1)}
+                mt={10}
+              >
+                {t('go_back_button')}
+              </Button>
+            </>
           )}
         </>
       )}

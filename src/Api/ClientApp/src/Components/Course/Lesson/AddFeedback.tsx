@@ -19,7 +19,7 @@ import {
   useUpdateLesson,
 } from '@utils/services/courseService';
 import { ILessonFeedback } from '@utils/services/types';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import errorType from '@utils/services/axiosError';
 import * as Yup from 'yup';
 import CreateFeedback from '../FeedBack/CreateFeedBack';
@@ -195,10 +195,12 @@ const AddFeedback = ({
             )}
             {isEditing && (
               <Button
-                onClick={() => {
-                  setLessonId(item?.id ?? '');
-                  setOpened(true);
-                }}
+                component={Link}
+                // onClick={() => {
+                //   setLessonId(item?.id ?? '');
+                //   setOpened(true);
+                // }}
+                to={`${item?.id}/feedback`}
               >
                 {t('add_more_feedback')}
               </Button>

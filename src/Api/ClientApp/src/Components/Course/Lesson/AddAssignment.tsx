@@ -297,7 +297,7 @@ const AddAssignment = ({
                 //   setLessonId(item?.id || '');
                 //   setOpened(true);
                 // }}
-                to={`${item?.id}`}
+                to={`${item?.id}/assignment`}
               >
                 {t('add_more_questions')}
               </Button>
