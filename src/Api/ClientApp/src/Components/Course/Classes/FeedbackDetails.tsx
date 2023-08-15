@@ -7,10 +7,12 @@ const FeedbackDetails = ({
   name,
   id,
   hasFeedbackSubmitted,
+  isTrainee,
 }: {
   name: string;
   id: string;
   hasFeedbackSubmitted: boolean;
+  isTrainee: boolean;
 }) => {
   const { t } = useTranslation();
   return (
@@ -18,7 +20,8 @@ const FeedbackDetails = ({
       <Title>{name}</Title>
       {!hasFeedbackSubmitted ? (
         <Button component={Link} to={RoutePath.feedback.details(id).route}>
-          {t('give_feedback')}
+          {/* mock view without any answers present */}
+          {isTrainee ? t('give_feedback') : t('view_feedback')}
         </Button>
       ) : (
         <Button component={Link} to={RoutePath.feedback.myDetails(id).route}>

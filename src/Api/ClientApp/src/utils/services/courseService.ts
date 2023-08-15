@@ -531,6 +531,7 @@ export interface ICourseLesson {
   zoomId: string;
   password: string;
   hasAttended: boolean;
+  isTrainee: boolean;
 }
 
 const getCourseLesson = async (

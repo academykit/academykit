@@ -236,6 +236,7 @@ const Classes = () => {
                 className={cx(classes.videoSection, classes.assignmentSection)}
               >
                 <FeedbackDetails
+                  isTrainee={courseLesson.data.isTrainee}
                   name={courseLesson.data.name}
                   id={courseLesson.data.id}
                   hasFeedbackSubmitted={courseLesson.data.hasFeedbackSubmitted}

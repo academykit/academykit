@@ -865,6 +865,10 @@
       "AWS_VideoBucket": "भिडियो संग्रह"
     }
   },
+  "view_exam": "परीक्षा हेर्नुहोस्",
+  "view_assignment": "असाइनमेन्ट हेर्नुहोस्",
+  "ID": "आईडी",
+  "user_id": "प्रयोगकर्ताको आईडी",
   "zoom_license_update_success": "Zoom लाइसेन्स सफलतापूर्वक अपडेट गरियो",
   "add_trainee_success": "प्रशिक्षु सफलतापूर्वक थपियो।",
   "add_trainee": "प्रशिक्षु थप्नुहोस्",
