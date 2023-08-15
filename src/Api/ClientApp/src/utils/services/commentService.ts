@@ -83,16 +83,24 @@ export interface ICommentReply {
   createdOn: string;
 }
 
-const getCommentReplies = (courseId: string, commentId: string) => {
+const getCommentReplies = (
+  courseId: string,
+  commentId: string,
+  replyCount: number
+) => {
   return httpClient.get<IPaginated<ICommentReply>>(
-    api.comments.getRepliesList(courseId, commentId)
+    api.comments.getRepliesList(courseId, commentId, replyCount)
   );
 };
 
-export const useGetCommentReplies = (courseId: string, commentId: string) => {
+export const useGetCommentReplies = (
+  courseId: string,
+  commentId: string,
+  replyCount: number
+) => {
   return useQuery(
-    [api.comments.getRepliesList(courseId, commentId)],
-    () => getCommentReplies(courseId, commentId),
+    [api.comments.getRepliesList(courseId, commentId, replyCount)],
+    () => getCommentReplies(courseId, commentId, replyCount),
     {
       select: (data) => data.data,
     }
