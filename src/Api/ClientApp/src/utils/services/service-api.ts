@@ -237,7 +237,7 @@ export const api = {
     details: (courseId: string, commentId: string) =>
       `/api/course/${courseId}/comments/${commentId}`,
     getRepliesList: (courseId: string, commentId: string) =>
-      `/api/course/${courseId}/comments/${commentId}`,
+      `/api/course/${courseId}/comments/${commentId}?page=1&size=1000`,
     repliesList: (courseId: string, commentId: string) =>
       `/api/course/${courseId}/comments/${commentId}/commentReply`,
     repliesDetails: (courseId: string, commentId: string, replyId: string) =>
