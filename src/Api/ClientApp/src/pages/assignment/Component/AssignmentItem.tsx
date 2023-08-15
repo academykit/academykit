@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconEdit, IconTrash } from '@tabler/icons';
+import { IconEdit, IconTrash, IconDragDrop } from '@tabler/icons';
 import { QuestionType } from '@utils/enums';
 import {
   IAssignmentQuestion,
@@ -87,6 +87,8 @@ const AssignmentItem = ({
         <Flex justify={'space-between'}>
           <Title truncate>{data.name}</Title>
           <Group>
+            <IconDragDrop />
+
             <Button
               variant="subtle"
               onClick={() => {
