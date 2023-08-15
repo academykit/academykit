@@ -30,6 +30,7 @@ export interface DashboardStatsData {
   icon: string;
   signLabel: string;
   pluLabel: string;
+  color: string;
 }
 
 export interface DashboardCourses {

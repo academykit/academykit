@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Breadcrumb from '@components/Ui/BreadCrumb';
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
@@ -28,7 +27,7 @@ import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import useCustomForm from '@hooks/useCustomForm';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import useAuth from '@hooks/useAuth';
-import { CourseLanguage, UserRole } from '@utils/enums';
+import { UserRole } from '@utils/enums';
 
 interface FormValues {
   thumbnail: string;
@@ -62,7 +61,7 @@ const CreateCoursePage = () => {
   const { t } = useTranslation();
   const groupAdd = useAddGroup();
   const auth = useAuth();
-  const [language, setLanguage] = useState([
+  const [language] = useState([
     { value: '1', label: 'English' },
     { value: '2', label: 'Nepali' },
   ]);
