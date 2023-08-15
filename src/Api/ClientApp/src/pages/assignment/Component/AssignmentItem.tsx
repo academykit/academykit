@@ -27,10 +27,12 @@ const AssignmentItem = ({
   data,
   search,
   lessonId,
+  onEditChange,
 }: {
   data: IAssignmentQuestion;
   search: string;
   lessonId: string;
+  onEditChange: () => void;
 }) => {
   const [edit, setEdit] = useToggle();
   const { t } = useTranslation();
@@ -66,6 +68,7 @@ const AssignmentItem = ({
         search={search}
         onCancel={() => {
           setEdit();
+          onEditChange();
         }}
         assignmentQuestion={data}
       />
@@ -84,7 +87,13 @@ const AssignmentItem = ({
         <Flex justify={'space-between'}>
           <Title truncate>{data.name}</Title>
           <Group>
-            <Button variant="subtle" onClick={() => setEdit()}>
+            <Button
+              variant="subtle"
+              onClick={() => {
+                setEdit();
+                onEditChange();
+              }}
+            >
               <IconEdit />
             </Button>
             <Button

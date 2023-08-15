@@ -30,6 +30,7 @@ const CreateAssignment = ({
   searchParams,
   lessonId,
 }: Props & IWithSearchPagination) => {
+  const [isEditing, setIsEditing] = useState(false);
   const [addQuestion, setAddQuestion] = useToggle();
   const { id, lessonId: lId } = useParams();
   const assignmentReorder = useQuestionReorder(lId as string);
@@ -42,8 +43,17 @@ const CreateAssignment = ({
     setLessonData(questionList.data as IAssignmentQuestion[]);
   }, [questionList.isSuccess]);
 
+  const handleEditStateChange = () => {
+    setIsEditing((prev) => !prev);
+  };
+
   const items = lessonData?.map((x, index) => (
-    <Draggable key={x.id} draggableId={x.id} index={index}>
+    <Draggable
+      key={x.id}
+      draggableId={x.id}
+      index={index}
+      isDragDisabled={isEditing}
+    >
       {(provided) => (
         <div
           ref={provided.innerRef}
@@ -55,6 +65,7 @@ const CreateAssignment = ({
             data={x}
             search={searchParams}
             lessonId={lId as string}
+            onEditChange={handleEditStateChange}
           />
         </div>
       )}
