@@ -41,10 +41,12 @@ const FeedbackItem = ({
   data,
   search,
   lessonId,
+  onEditChange,
 }: {
   data: IFeedbackQuestions;
   search: string;
   lessonId: string;
+  onEditChange: () => void;
 }) => {
   const { classes } = useStyle();
   const [edit, setEdit] = useToggle();
@@ -82,6 +84,7 @@ const FeedbackItem = ({
         search={search}
         onCancel={() => {
           setEdit();
+          onEditChange();
         }}
         feedbackQuestion={data}
       />
@@ -100,7 +103,13 @@ const FeedbackItem = ({
         <Flex justify={'space-between'}>
           <Title truncate>{data.name}</Title>
           <Group>
-            <Button variant="subtle" onClick={() => setEdit()}>
+            <Button
+              variant="subtle"
+              onClick={() => {
+                setEdit();
+                onEditChange();
+              }}
+            >
               <IconEdit />
             </Button>
             <Button

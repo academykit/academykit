@@ -25,6 +25,7 @@ interface Props {
 
 const CreateFeedback = ({ lessonId }: Props) => {
   const { id, lessonId: lId } = useParams();
+  const [isEditing, setIsEditing] = useState(false);
   const [feedbackData, setFeedbackData] = useState<IFeedbackQuestions[]>();
   const feedbackReorder = useQuestionReorder(lId as string);
   const [addQuestion, setAddQuestion] = useToggle();
@@ -36,8 +37,17 @@ const CreateFeedback = ({ lessonId }: Props) => {
     setFeedbackData(feedbackList.data as IFeedbackQuestions[]);
   }, [feedbackList.isSuccess]);
 
+  const handleEditStateChange = () => {
+    setIsEditing((prev) => !prev);
+  };
+
   const items = feedbackData?.map((x, index) => (
-    <Draggable key={x.id} draggableId={x.id} index={index}>
+    <Draggable
+      key={x.id}
+      draggableId={x.id}
+      index={index}
+      isDragDisabled={isEditing}
+    >
       {(provided) => (
         <div
           ref={provided.innerRef}
@@ -49,6 +59,7 @@ const CreateFeedback = ({ lessonId }: Props) => {
             data={x}
             search={''}
             lessonId={lId as string}
+            onEditChange={handleEditStateChange}
           />
         </div>
       )}
