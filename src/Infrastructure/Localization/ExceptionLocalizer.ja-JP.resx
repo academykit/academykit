@@ -1026,12 +1026,15 @@
     <value>削除されたユーザーを更新しました:</value>
   </data>
   <data name="UpdatedUser" xml:space="preserve">
-    <value>更新されたユーザー:</value>
+    <value>登録されているグループメンバー:</value>
   </data>
   <data name="LessonContainsAttendance" xml:space="preserve">
     <value>体育の授業には出席が含まれます。</value>
   </data>
   <data name="DuplicateMemberIdFound" xml:space="preserve">
     <value>重複するメンバー ID が見つかりました。</value>
+  </data>
+  <data name="NewEnrolledUser" xml:space="preserve">
+    <value>新規登録ユーザー:</value>
   </data>
 </root>

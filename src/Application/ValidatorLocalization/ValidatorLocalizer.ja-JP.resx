@@ -510,4 +510,7 @@
   <data name="OptionalCostCannotBeNull" xml:space="preserve">
     <value>オプションのコストを空にすることはできません。</value>
   </data>
+  <data name="InvalidMoblieNumber" xml:space="preserve">
+    <value>携帯電話番号の形式が無効です。</value>
+  </data>
 </root>
