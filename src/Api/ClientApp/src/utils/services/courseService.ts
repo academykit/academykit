@@ -198,6 +198,30 @@ export const useSectionReorder = (id: string) => {
   });
 };
 
+const assignmentReorder = async ({
+  id,
+  data,
+  lessonIdentity,
+  lessonType,
+}: {
+  id: string;
+  lessonIdentity: string;
+  lessonType: number;
+  data: string[];
+}) =>
+  await httpClient.post(
+    api.course.reorder(id) +
+      `?lessonIdentity=${lessonIdentity}&lessonType=${lessonType}`,
+    data
+  );
+
+export const useAssignmentReorder = (id: string) => {
+  const queryClient = useQueryClient();
+  return useMutation([], assignmentReorder, {
+    onSuccess: () => queryClient.invalidateQueries([api.course.detail(id)]),
+  });
+};
+
 export const useUpdateCourse = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation(

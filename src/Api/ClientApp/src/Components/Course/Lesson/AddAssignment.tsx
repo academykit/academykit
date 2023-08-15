@@ -19,7 +19,7 @@ import {
 } from '@utils/services/courseService';
 import { ILessonAssignment } from '@utils/services/types';
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import CreateAssignment from '@pages/assignment/create';
 import errorType from '@utils/services/axiosError';
 import * as Yup from 'yup';
@@ -292,10 +292,12 @@ const AddAssignment = ({
             )}
             {isEditing && (
               <Button
-                onClick={() => {
-                  setLessonId(item?.id || '');
-                  setOpened(true);
-                }}
+                component={Link}
+                // onClick={() => {
+                //   setLessonId(item?.id || '');
+                //   setOpened(true);
+                // }}
+                to={`${item?.id}`}
               >
                 {t('add_more_questions')}
               </Button>
