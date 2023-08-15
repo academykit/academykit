@@ -147,6 +147,13 @@ const AddUpdateUserForm = ({
   return (
     <form onSubmit={form.onSubmit(onSubmitForm)}>
       <Grid align={'center'}>
+        <Grid.Col xs={6} lg={4} mt={5}>
+          <TextInput
+            label={t('ID')}
+            placeholder={t('user_id') as string}
+            {...form.getInputProps('memberId')}
+          />
+        </Grid.Col>
         <Grid.Col xs={6} lg={4}>
           <CustomTextFieldWithAutoFocus
             styles={{ error: { position: 'absolute' } }}
@@ -198,14 +205,7 @@ const AddUpdateUserForm = ({
             {...form.getInputProps('profession')}
           />
         </Grid.Col>
-        {isEditing && item?.status !== UserStatus.Pending && (
-          <Grid.Col xs={6} lg={4}>
-            <Switch
-              label={t('user_status')}
-              {...form.getInputProps('isActive', { type: 'checkbox' })}
-            />
-          </Grid.Col>
-        )}
+
         <Grid.Col xs={6} lg={4}>
           <Select
             withAsterisk
@@ -249,6 +249,15 @@ const AddUpdateUserForm = ({
             </span>
           )}
         </Grid.Col>
+
+        {isEditing && item?.status !== UserStatus.Pending && (
+          <Grid.Col xs={6} lg={4}>
+            <Switch
+              label={t('user_status')}
+              {...form.getInputProps('isActive', { type: 'checkbox' })}
+            />
+          </Grid.Col>
+        )}
       </Grid>
 
       <Group position="right" mt="md">
