@@ -43,6 +43,14 @@ export interface DashboardCourses {
   students: IUser[];
 }
 
+export interface UpcomingEvents {
+  lessonSlug: string;
+  lessonType: number;
+  lessonName: string;
+  startDate: string;
+  courseEnrollmentBool: boolean;
+}
+
 export const useDashboard = () => {
   return useQuery(
     [api.course.dashboard],
@@ -58,6 +66,16 @@ export const useDashboardCourse = () => {
     [api.course.dashboardCourse],
     () =>
       httpClient.get<IPaginated<DashboardCourses>>(api.course.dashboardCourse),
+    {
+      select: (data) => data.data,
+    }
+  );
+};
+
+export const useUpcomingDashboardDetail = () => {
+  return useQuery(
+    [api.course.dashboardUpcoming],
+    () => httpClient.get<UpcomingEvents[]>(api.course.dashboardUpcoming),
     {
       select: (data) => data.data,
     }
