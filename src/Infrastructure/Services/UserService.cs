@@ -852,6 +852,10 @@ namespace Lingtren.Infrastructure.Services
         protected override async Task ResolveChildEntitiesAsync(User user)
         {
             var oldUser = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == user.Id).ConfigureAwait(false);
+            if (user.MemberId != default)
+            {
+                await CheckForDuplicateMemberId(user).ConfigureAwait(false);
+            }
             if (oldUser != null)
             {
                 var allowed = userRecordModificationValidity(user, oldUser);

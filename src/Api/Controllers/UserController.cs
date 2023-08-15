@@ -212,6 +212,7 @@ namespace Lingtren.Api.Controllers
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
             existing.Email = model.Email;
+            existing.MemberId = model.MemberId;
 
             if (CurrentUser.Role == UserRole.SuperAdmin || CurrentUser.Role == UserRole.Admin)
             {
