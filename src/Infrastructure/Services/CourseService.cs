@@ -361,7 +361,7 @@ namespace Lingtren.Infrastructure.Services
                     x.UpdatedOn = currentTimeStamp;
                 });
                 var meetings = new List<Meeting>();
-                if (model.Status == CourseStatus.Published)
+                if (course.Status == CourseStatus.Published)
                 {
                     if (liveClasses.Count > 0)
                     {
