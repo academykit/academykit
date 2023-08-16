@@ -317,7 +317,7 @@ const AddExam = ({
           {isEditing && (
             <Button
               onClick={() => {
-                navigate('questions/' + item?.slug);
+                navigate('questions/preview/' + item?.slug);
               }}
             >
               {t('add_more_questions')}

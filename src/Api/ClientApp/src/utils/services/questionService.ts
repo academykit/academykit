@@ -157,7 +157,7 @@ export const useEditQuestion = (poolId: string, quesitonId: string) => {
   return useMutation([api.questions.put(poolId, quesitonId)], editQuestion, {});
 };
 
-interface QuestionSetQuestions {
+export interface QuestionSetQuestions {
   id: string;
   questionSetQuestionId: string;
   questionPoolQuestionId: string;
