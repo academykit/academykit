@@ -120,11 +120,8 @@
         /// <returns> the instance of <see cref="CommonResponseModel"/></returns>
         [HttpPost("VerifyResetToken")]
         [AllowAnonymous]
-        public async Task<IActionResult> VerifyResetToken([FromBody] VerifyResetTokenModel model)
-        {
-            await _userService.VerifyPasswordResetTokenAsync(model).ConfigureAwait(false);
-            return Ok(new CommonResponseModel { Message = _localizer.GetString("PasswordResetTokenMatched"), Success = true });
-        }
+        public async Task<string> VerifyResetToken([FromBody] VerifyResetTokenModel model) => await _userService.VerifyPasswordResetTokenAsync(model).ConfigureAwait(false);
+       
 
         /// <summary>
         /// reset password of account

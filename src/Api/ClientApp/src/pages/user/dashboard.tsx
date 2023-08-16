@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Admin from '@components/Dashboard/Admin';
+import EventCard from '@components/Dashboard/EventCard';
 import Trainers from '@components/Dashboard/Trainers';
 import { User } from '@components/Dashboard/User';
 import useAuth from '@hooks/useAuth';
@@ -10,12 +12,14 @@ import {
   Group,
   Indicator,
   Paper,
+  ScrollArea,
   Text,
 } from '@mantine/core';
 import { LessonType, UserRole } from '@utils/enums';
 import {
   useDashboard,
   useDashboardCourse,
+  useUpcomingDashboardDetail,
 } from '@utils/services/dashboardService';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -23,6 +27,9 @@ import { Link } from 'react-router-dom';
 const Dashboard = () => {
   const dashboard = useDashboard();
   const dashboardCourses = useDashboardCourse();
+  const upcomingEvents = useUpcomingDashboardDetail();
+  const hasUpcomingEvents = ((upcomingEvents.data?.length as number) ?? 0) > 0;
+  console.log(hasUpcomingEvents);
   const { t } = useTranslation();
 
   const auth = useAuth();
@@ -35,65 +42,55 @@ const Dashboard = () => {
       </Text>
       <Grid>
         <Grid.Col sm={4} orderSm={2}>
-          <Card>
+          <Card padding={10}>
             <Text size="lg" weight="bolder" mb={'sm'}>
               Upcoming Events
             </Text>
-
-            <Text size="sm">No upcoming events</Text>
-
-            <Indicator size={15} processing color="green" position="top-start">
-              <Paper
-                mt={10}
-                p={10}
-                radius={'md'}
-                component={Link}
-                to={'/'}
-                bg={'#E9FAC8'}
+            <ScrollArea.Autosize mah={570} offsetScrollbars>
+              {!hasUpcomingEvents ? (
+                <Text size="sm">No upcoming events</Text>
+              ) : (
+                <>
+                  {upcomingEvents.data?.map((event) => (
+                    <EventCard
+                      key={event.lessonSlug}
+                      lessonName={event.lessonName}
+                      trainingName="Training Name"
+                      lessonType={event.lessonType}
+                      date={event.startDate}
+                    ></EventCard>
+                  ))}
+                </>
+              )}
+              {/* <Indicator
+                size={15}
+                processing
+                color="green"
+                position="top-start"
               >
-                <Text size="lg" weight="bolder" lineClamp={2}>
-                  Lesson Name
-                </Text>
-                <Text size="sm" lineClamp={2}>
-                  Training Name
-                </Text>
-                <Group mt={'sm'}>
-                  <Badge color="blue" variant="outline">
-                    {t(`${LessonType[LessonType.Video]}`)}
-                  </Badge>
-                  <Text size="sm">5 Aug 2023</Text>
-                </Group>
-              </Paper>
-            </Indicator>
-            <Indicator
-              size={15}
-              processing
-              disabled
-              color="green"
-              position="top-start"
-            >
-              <Paper
-                mt={10}
-                p={10}
-                radius={'md'}
-                component={Link}
-                to={'/'}
-                bg={'#C5F6FA'}
-              >
-                <Text size="lg" weight="bolder" lineClamp={2}>
-                  Assignement Name
-                </Text>
-                <Text size="sm" lineClamp={2}>
-                  Training Name
-                </Text>
-                <Group mt={'sm'}>
-                  <Badge color="red" variant="outline">
-                    {t(`${LessonType[LessonType.Assignment]}`)}
-                  </Badge>
-                  <Text size="sm">6 Aug 2023</Text>
-                </Group>
-              </Paper>
-            </Indicator>
+                <Paper
+                  mt={10}
+                  p={10}
+                  radius={'md'}
+                  component={Link}
+                  to={'/'}
+                  bg={'#C5F6FA'}
+                >
+                  <Text size="lg" weight="bolder" lineClamp={2}>
+                    Lesson Name
+                  </Text>
+                  <Text size="sm" lineClamp={2}>
+                    Training Name
+                  </Text>
+                  <Group mt={'sm'}>
+                    <Badge color="blue" variant="outline">
+                      {t(`${LessonType[LessonType.Video]}`)}
+                    </Badge>
+                    <Text size="sm">5 Aug 2023</Text>
+                  </Group>
+                </Paper>
+              </Indicator> */}
+            </ScrollArea.Autosize>
           </Card>
         </Grid.Col>
         <Grid.Col sm={8} xs={12}>

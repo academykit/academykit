@@ -335,7 +335,8 @@ namespace Lingtren.Infrastructure.Services
                     predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
                 var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(
                    predicate: p => p.CourseId == course.Id).ConfigureAwait(false);
-
+                var liveClasses = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(
+                predicate: p => p.CourseId == course.Id && p.Type == LessonType.LiveClass, include: source => source.Include(x => x.Meeting).ThenInclude(x => x.ZoomLicense)).ConfigureAwait(false);
                 var currentTimeStamp = DateTime.UtcNow;
 
                 if (course.IsUpdate)
@@ -359,12 +360,9 @@ namespace Lingtren.Infrastructure.Services
                     x.UpdatedBy = currentUserId;
                     x.UpdatedOn = currentTimeStamp;
                 });
-
-                if (model.Status == CourseStatus.Published)
+                var meetings = new List<Meeting>();
+                if (course.Status == CourseStatus.Published)
                 {
-                    var liveClasses = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(
-                 predicate: p => p.CourseId == course.Id && p.Type == LessonType.LiveClass, include: source => source.Include(x => x.Meeting).ThenInclude(x => x.ZoomLicense)).ConfigureAwait(false);
-                    var meetings = new List<Meeting>();
                     if (liveClasses.Count > 0)
                     {
                         foreach (var liveClass in liveClasses)
@@ -376,21 +374,23 @@ namespace Lingtren.Infrastructure.Services
                                 meeting.MeetingNumber = long.Parse(meetingId);
                                 meeting.Passcode = passcode;
                                 meeting.ZoomLicense = null;
+                                meeting.Lesson = null;
                                 meetings.Add(meeting);
                             }
                         }
-                        _unitOfWork.GetRepository<Meeting>().Update(meetings);
+
                     }
                 }
                 _unitOfWork.GetRepository<Section>().Update(sections);
                 _unitOfWork.GetRepository<Lesson>().Update(lessons);
                 _unitOfWork.GetRepository<Course>().Update(course);
+                _unitOfWork.GetRepository<Meeting>().Update(meetings);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
-            if (model.Status == CourseStatus.Review && !isSuperAdminOrAdminAccess)
-            {
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseReviewMailAsync(course.Name, null));
-            }
+                if (model.Status == CourseStatus.Review && !isSuperAdminOrAdminAccess)
+                {
+                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendCourseReviewMailAsync(course.Name, null));
+                }
 
                 if (model.Status == CourseStatus.Published)
                 {
