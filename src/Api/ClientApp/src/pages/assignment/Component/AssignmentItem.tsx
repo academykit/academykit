@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconEdit, IconTrash } from '@tabler/icons';
+import { IconEdit, IconTrash, IconDragDrop } from '@tabler/icons';
 import { QuestionType } from '@utils/enums';
 import {
   IAssignmentQuestion,
@@ -27,10 +27,12 @@ const AssignmentItem = ({
   data,
   search,
   lessonId,
+  onEditChange,
 }: {
   data: IAssignmentQuestion;
   search: string;
   lessonId: string;
+  onEditChange: () => void;
 }) => {
   const [edit, setEdit] = useToggle();
   const { t } = useTranslation();
@@ -66,6 +68,7 @@ const AssignmentItem = ({
         search={search}
         onCancel={() => {
           setEdit();
+          onEditChange();
         }}
         assignmentQuestion={data}
       />
@@ -84,7 +87,15 @@ const AssignmentItem = ({
         <Flex justify={'space-between'}>
           <Title truncate>{data.name}</Title>
           <Group>
-            <Button variant="subtle" onClick={() => setEdit()}>
+            <IconDragDrop />
+
+            <Button
+              variant="subtle"
+              onClick={() => {
+                setEdit();
+                onEditChange();
+              }}
+            >
               <IconEdit />
             </Button>
             <Button
@@ -99,13 +110,16 @@ const AssignmentItem = ({
         {data.description && (
           <Box my={10}>
             <Text>{t('description')}</Text>
-            <TextViewer content={data.description} />
+            <TextViewer
+              key={data.id + data.description}
+              content={data.description}
+            />
           </Box>
         )}
         {data?.hints && (
           <Box my={10}>
             <Text size={'sm'}>{t('hint')}</Text>
-            <TextViewer content={data?.hints} />
+            <TextViewer key={data.id + data.hints} content={data?.hints} />
           </Box>
         )}
         <Select

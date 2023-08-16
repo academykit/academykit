@@ -33,7 +33,6 @@ const CourseContent = ({
       <Text size={10} color={'dimmed'}>
         {formatDuration(duration, false, t)} {sections.length} {t('section/s')}{' '}
       </Text>
-
       <Box m={4} mx={10}>
         {sections.map((x) => (
           <Sessions

@@ -20,6 +20,12 @@ const Teacher = lazyWithRetry(() => import('./teacher'));
 
 const ManageLessons = lazyWithRetry(() => import('../manage/Lesson'));
 const ManageStudents = lazyWithRetry(() => import('../manage/Student'));
+const CreateAssignment = lazyWithRetry(
+  () => import('@pages/assignment/create')
+);
+const CreateFeedback = lazyWithRetry(
+  () => import('@components/Course/FeedBack/CreateFeedBack')
+);
 
 const CourseRoute = () => {
   const params = useParams();
@@ -76,6 +82,14 @@ const CourseRoute = () => {
           <Route path="/edit" element={<EditCourse />} />
           <Route path="/teachers" element={<Teacher />} />
           <Route path="/lessons" element={<CourseLessons />} />
+          <Route
+            path="/lessons/:lessonId/assignment"
+            element={<CreateAssignment />}
+          />
+          <Route
+            path="/lessons/:lessonId/feedback"
+            element={<CreateFeedback />}
+          />
           <Route path="/certificate" element={<Certificate />} />
         </Route>
         <Route path="/lessons/questions/:lessonSlug" element={<Questions />} />
