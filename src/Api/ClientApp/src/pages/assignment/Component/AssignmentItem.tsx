@@ -110,13 +110,16 @@ const AssignmentItem = ({
         {data.description && (
           <Box my={10}>
             <Text>{t('description')}</Text>
-            <TextViewer content={data.description} />
+            <TextViewer
+              key={data.id + data.description}
+              content={data.description}
+            />
           </Box>
         )}
         {data?.hints && (
           <Box my={10}>
             <Text size={'sm'}>{t('hint')}</Text>
-            <TextViewer content={data?.hints} />
+            <TextViewer key={data.id + data.hints} content={data?.hints} />
           </Box>
         )}
         <Select

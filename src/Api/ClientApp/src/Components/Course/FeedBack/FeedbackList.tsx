@@ -126,13 +126,13 @@ const FeedbackItem = ({
         {data.description && (
           <Box my={10}>
             <Text>{t('description')}</Text>
-            <TextViewer content={data.description} />
+            <TextViewer key={data.id} content={data.description} />
           </Box>
         )}
         {data.hint && (
           <Box my={10}>
             <Text size={'sm'}>{t('hint')}</Text>
-            <TextViewer content={data.hint} />
+            <TextViewer key={data.id} content={data.hint} />
           </Box>
         )}
         <Select
