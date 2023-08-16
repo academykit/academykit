@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from 'react';
 import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
-import { Box, Button, Container } from '@mantine/core';
+import { Box, Button } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import {
   IAssignmentQuestion,
@@ -22,14 +21,7 @@ import {
 import { useQuestionReorder } from '@utils/services/courseService';
 import { LessonType } from '@utils/enums';
 
-interface Props {
-  lessonId?: string;
-}
-
-const CreateAssignment = ({
-  searchParams,
-  lessonId,
-}: Props & IWithSearchPagination) => {
+const CreateAssignment = ({ searchParams }: IWithSearchPagination) => {
   const [isEditing, setIsEditing] = useState(false);
   const [addQuestion, setAddQuestion] = useToggle();
   const { id, lessonId: lId } = useParams();
@@ -142,14 +134,3 @@ const CreateAssignment = ({
 };
 
 export default withSearchPagination(CreateAssignment);
-
-// <Box>
-//   {questionList.data.map((x) => (
-//     <AssignmentItem
-//       key={x.id}
-//       data={x}
-//       search={searchParams}
-//       lessonId={id as string}
-//     />
-//   ))}
-// </Box>

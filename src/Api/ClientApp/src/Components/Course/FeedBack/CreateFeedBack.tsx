@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from 'react';
-import { Box, Button, Container } from '@mantine/core';
+import { Box, Button } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import {
   IFeedbackQuestions,
@@ -19,11 +18,7 @@ import {
 } from 'react-beautiful-dnd';
 import { LessonType } from '@utils/enums';
 
-interface Props {
-  lessonId?: string;
-}
-
-const CreateFeedback = ({ lessonId }: Props) => {
+const CreateFeedback = () => {
   const { id, lessonId: lId } = useParams();
   const [isEditing, setIsEditing] = useState(false);
   const [feedbackData, setFeedbackData] = useState<IFeedbackQuestions[]>();
