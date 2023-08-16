@@ -1,28 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Admin from '@components/Dashboard/Admin';
 import EventCard from '@components/Dashboard/EventCard';
 import Trainers from '@components/Dashboard/Trainers';
 import { User } from '@components/Dashboard/User';
 import useAuth from '@hooks/useAuth';
-import {
-  Badge,
-  Card,
-  Container,
-  Grid,
-  Group,
-  Indicator,
-  Paper,
-  ScrollArea,
-  Text,
-} from '@mantine/core';
-import { LessonType, UserRole } from '@utils/enums';
+import { Card, Container, Grid, ScrollArea, Text } from '@mantine/core';
+import { UserRole } from '@utils/enums';
 import {
   useDashboard,
   useDashboardCourse,
   useUpcomingDashboardDetail,
 } from '@utils/services/dashboardService';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const dashboard = useDashboard();
@@ -54,42 +42,11 @@ const Dashboard = () => {
                   {upcomingEvents.data?.map((event) => (
                     <EventCard
                       key={event.lessonSlug}
-                      lessonName={event.lessonName}
-                      trainingName="Training Name"
-                      lessonType={event.lessonType}
-                      date={event.startDate}
+                      detail={event}
                     ></EventCard>
                   ))}
                 </>
               )}
-              {/* <Indicator
-                size={15}
-                processing
-                color="green"
-                position="top-start"
-              >
-                <Paper
-                  mt={10}
-                  p={10}
-                  radius={'md'}
-                  component={Link}
-                  to={'/'}
-                  bg={'#C5F6FA'}
-                >
-                  <Text size="lg" weight="bolder" lineClamp={2}>
-                    Lesson Name
-                  </Text>
-                  <Text size="sm" lineClamp={2}>
-                    Training Name
-                  </Text>
-                  <Group mt={'sm'}>
-                    <Badge color="blue" variant="outline">
-                      {t(`${LessonType[LessonType.Video]}`)}
-                    </Badge>
-                    <Text size="sm">5 Aug 2023</Text>
-                  </Group>
-                </Paper>
-              </Indicator> */}
             </ScrollArea.Autosize>
           </Card>
         </Grid.Col>
