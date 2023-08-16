@@ -146,7 +146,7 @@ const ExamDetails = ({
                     colorScheme: 'dark',
                   }}
                 >
-                  <UserResults lessonId={exam?.slug} studentId={userId} />
+                  <UserResults lessonId={exam?.slug} studentId={userId} isTrainee={data.isTrainee}/>
                 </MantineProvider>
               )}
             </Box>
