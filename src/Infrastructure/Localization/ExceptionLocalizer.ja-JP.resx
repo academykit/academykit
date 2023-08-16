@@ -1046,4 +1046,7 @@
   <data name="Users" xml:space="preserve">
     <value>ユーザー</value>
   </data>
+  <data name="TokenVerifiedSuccessfully" xml:space="preserve">
+    <value>トークンが正常に検証されました。</value>
+  </data>
 </root>

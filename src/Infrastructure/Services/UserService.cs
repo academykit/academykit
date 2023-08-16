@@ -490,8 +490,8 @@ namespace Lingtren.Infrastructure.Services
         /// Handle to verify reset token
         /// </summary>
         /// <param name="model">the instance of <see cref="VerifyResetTokenModel"/></param>
-        /// <returns>the password change token</returns>
-        public async Task<string> VerifyPasswordResetTokenAsync(VerifyResetTokenModel model)
+        /// <returns> the instance of <see cref="VerificationTokenResponseModel"/></returns>
+        public async Task<VerificationTokenResponseModel> VerifyPasswordResetTokenAsync(VerifyResetTokenModel model)
         {
             try
             {
@@ -515,7 +515,11 @@ namespace Lingtren.Infrastructure.Services
                 user.PasswordChangeToken = await BuildResetPasswordJWTToken(user.Email).ConfigureAwait(false);
                 _unitOfWork.GetRepository<User>().Update(user);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                return user.PasswordChangeToken;
+                return new VerificationTokenResponseModel
+                {
+                    Token = user.PasswordChangeToken,
+                    Message = _localizer.GetString("TokenVerifiedSuccessfully")
+                };
             }
             catch (Exception ex)
             {

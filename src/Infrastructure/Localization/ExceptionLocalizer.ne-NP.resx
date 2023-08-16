@@ -1043,4 +1043,7 @@
   <data name="Users" xml:space="preserve">
     <value>प्रयोगकर्ताहरू</value>
   </data>
+  <data name="TokenVerifiedSuccessfully" xml:space="preserve">
+    <value>टोकन सफलतापूर्वक प्रमाणित भयो।</value>
+  </data>
 </root>
