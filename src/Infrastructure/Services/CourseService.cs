@@ -1426,6 +1426,7 @@ namespace Lingtren.Infrastructure.Services
                             StartDate = lesson.Meeting.StartDate,
                             CourseSlug = course.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug,
                             IsLive = lesson.Meeting.StartDate <= currentDateTime,
+                            CourseName = course.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Name,
                         });
                     }
                     response = response.OrderByDescending(x => x.StartDate).Reverse().ToList();
@@ -1478,6 +1479,7 @@ namespace Lingtren.Infrastructure.Services
                             CourseEnrollmentBool = courseLiveLessons.Any(x => x.CourseEnrollments.Any(x => x.CourseId == lesson.CourseId && x.UserId == currentUserId)),
                             CourseSlug = courseLiveLessons.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug,
                             IsLive = lesson.Meeting.StartDate <= currentDateTime,
+                            CourseName = courseLiveLessons.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Name,
                         });
                     }
 
@@ -1490,7 +1492,8 @@ namespace Lingtren.Infrastructure.Services
                             LessonName = lesson.Name,
                             StartDate = lesson.StartDate,
                             CourseEnrollmentBool = CourseAssignmentLesson.Any(x => x.CourseEnrollments.Any(x => x.CourseId == lesson.CourseId && x.UserId == currentUserId)),
-                            CourseSlug = CourseAssignmentLesson.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug
+                            CourseSlug = CourseAssignmentLesson.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug,
+                            CourseName = CourseAssignmentLesson.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Name,
                         });
                     }
 
@@ -1503,7 +1506,8 @@ namespace Lingtren.Infrastructure.Services
                             LessonName = lesson.Name,
                             StartDate = lesson.QuestionSet.StartTime,
                             CourseEnrollmentBool = courseExamLessons.Any(x => x.CourseEnrollments.Any(x => x.CourseId == lesson.CourseId && x.UserId == currentUserId)),
-                            CourseSlug = courseExamLessons.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug
+                            CourseSlug = courseExamLessons.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug,
+                            CourseName = courseExamLessons.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Name,
                         });
                     }
                     response = response.OrderByDescending(x => x.StartDate).Reverse().ToList();
@@ -1535,6 +1539,7 @@ namespace Lingtren.Infrastructure.Services
                             StartDate = lesson.Meeting.StartDate,
                             CourseSlug = lessonLiveClass.Select(x=>x.Course).Where(x=>x.Id == lesson.CourseId).FirstOrDefault().Slug,
                             IsLive =lesson.Meeting.StartDate <= currentDateTime,
+                            CourseName = lessonLiveClass.Select(x => x.Course).Where(x => x.Id == lesson.CourseId).FirstOrDefault().Name,
                         });
                     }
 
@@ -1547,6 +1552,7 @@ namespace Lingtren.Infrastructure.Services
                             LessonName = lesson.Name,
                             StartDate = lesson.StartDate,
                             CourseSlug = lessonAssignments.Select(x => x.Course).Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug,
+                            CourseName = lessonAssignments.Select(x => x.Course).Where(x => x.Id == lesson.CourseId).FirstOrDefault().Name,
                         });
                     }
 
@@ -1559,6 +1565,7 @@ namespace Lingtren.Infrastructure.Services
                             LessonName = lesson.Name,
                             StartDate = lesson.QuestionSet.StartTime,
                             CourseSlug = lessonExam.Select(x => x.Course).Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug,
+                            CourseName = lessonExam.Select(x => x.Course).Where(x => x.Id == lesson.CourseId).FirstOrDefault().Name,
                         });
                     }
                     response = response.OrderByDescending(x => x.StartDate).Reverse().ToList();
