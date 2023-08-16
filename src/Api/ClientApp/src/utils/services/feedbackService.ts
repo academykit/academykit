@@ -68,7 +68,7 @@ export const useFeedbackQuestion = (lessonId: string, search: string) => {
     () => getFeedbackQuestion(lessonId, search),
     {
       select: (data) => data.data,
-      // enabled: lessonId ? true : false,
+      enabled: lessonId ? true : false,
     }
   );
 };
