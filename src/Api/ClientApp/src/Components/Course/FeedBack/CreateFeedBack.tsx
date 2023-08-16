@@ -35,7 +35,7 @@ const CreateFeedback = ({ lessonId }: Props) => {
 
   useEffect(() => {
     setFeedbackData(feedbackList.data as IFeedbackQuestions[]);
-  }, [feedbackList.isSuccess]);
+  }, [feedbackList.isSuccess, feedbackList.isRefetching]);
 
   const handleEditStateChange = () => {
     setIsEditing((prev) => !prev);

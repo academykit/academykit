@@ -41,7 +41,7 @@ const CreateAssignment = ({
 
   useEffect(() => {
     setLessonData(questionList.data as IAssignmentQuestion[]);
-  }, [questionList.isSuccess]);
+  }, [questionList.isSuccess, questionList.isRefetching]);
 
   const handleEditStateChange = () => {
     setIsEditing((prev) => !prev);
