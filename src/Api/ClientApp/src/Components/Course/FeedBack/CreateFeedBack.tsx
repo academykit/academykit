@@ -19,13 +19,13 @@ import {
 import { LessonType } from '@utils/enums';
 
 const CreateFeedback = () => {
-  const { id, lessonId: lId } = useParams();
+  const { id, lessonId } = useParams();
   const [isEditing, setIsEditing] = useState(false);
   const [feedbackData, setFeedbackData] = useState<IFeedbackQuestions[]>();
-  const feedbackReorder = useQuestionReorder(lId as string);
+  const feedbackReorder = useQuestionReorder(lessonId as string);
   const [addQuestion, setAddQuestion] = useToggle();
   const { t } = useTranslation();
-  const feedbackList = useFeedbackQuestion(lId as string, '');
+  const feedbackList = useFeedbackQuestion(lessonId as string, '');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const CreateFeedback = () => {
             key={x.id}
             data={x}
             search={''}
-            lessonId={lId as string}
+            lessonId={lessonId as string}
             onEditChange={handleEditStateChange}
           />
         </div>
@@ -72,7 +72,7 @@ const CreateFeedback = () => {
     newList.splice(destination.index, 0, temp);
     feedbackReorder.mutate({
       id: id as string,
-      lessonIdentity: lId as string,
+      lessonIdentity: lessonId as string,
       lessonType: LessonType.Feedback,
       data: newList.map((x) => x.id),
     });
@@ -86,7 +86,7 @@ const CreateFeedback = () => {
           {feedbackList.data.length > 0 ? (
             <DragDropContext onDragEnd={onDragEnd}>
               <Droppable
-                droppableId={lId as string}
+                droppableId={lessonId as string}
                 direction="vertical"
                 type="feedback"
               >
@@ -106,7 +106,7 @@ const CreateFeedback = () => {
       {addQuestion && (
         <EditFeedback
           onCancel={() => setAddQuestion()}
-          lessonId={lId as string}
+          lessonId={lessonId as string}
           search={''}
         />
       )}
