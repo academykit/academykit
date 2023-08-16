@@ -76,7 +76,6 @@ const AddAssignment = ({
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
   const { t } = useTranslation();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
 
   const [isMandatory, setIsMandatory] = useState<boolean>(

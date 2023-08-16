@@ -380,12 +380,8 @@ const createLesson = async (
     | ILessonAssignment
     | ILessonMeeting
     | ILessonFeedback
-) => {
-  return await httpClient.post<ILessons>(
-    api.lesson.addLesson(data.courseId),
-    data
-  );
-};
+) => await httpClient.post<ILessons>(api.lesson.addLesson(data.courseId), data);
+
 export const useCreateLesson = (slug: string) => {
   const queryClient = useQueryClient();
 
