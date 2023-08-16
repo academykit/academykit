@@ -93,6 +93,10 @@ const CourseRoute = () => {
           <Route path="/certificate" element={<Certificate />} />
         </Route>
         <Route path="/lessons/questions/:lessonSlug" element={<Questions />} />
+        <Route
+          path="/lessons/questions/preview/:lessonSlug"
+          element={<Questions />}
+        />
       </Routes>
     </>
   ) : (
