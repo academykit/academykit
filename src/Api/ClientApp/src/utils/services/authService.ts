@@ -117,7 +117,7 @@ export const useResetPasswordToken = () => {
   return useMutation(
     [api.auth.resetToken],
     (data: { email?: string | null; token: string }) => {
-      return httpClient.post<ResponseData>(api.auth.resetToken, data);
+      return httpClient.post(api.auth.resetToken, data);
     }
   );
 };

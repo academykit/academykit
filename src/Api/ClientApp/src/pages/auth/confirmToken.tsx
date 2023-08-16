@@ -61,7 +61,7 @@ const ConfirmToken = () => {
     values = { ...values, email: params.get('email') };
     try {
       const response = await mutateAsync(values);
-      setPasswordReset(response.data.data);
+      setPasswordReset(response.data as string);
 
       setTimeout(() => setToggle(), 700);
     } catch (error) {
