@@ -117,10 +117,10 @@
         /// verify reset token of account
         /// </summary>
         /// <param name="model"> the instance of <see cref="VerifyResetTokenModel"/></param>
-        /// <returns> the instance of <see cref="CommonResponseModel"/></returns>
+        /// <returns> the instance of <see cref="VerificationTokenResponseModel"/></returns>
         [HttpPost("VerifyResetToken")]
         [AllowAnonymous]
-        public async Task<string> VerifyResetToken([FromBody] VerifyResetTokenModel model) => await _userService.VerifyPasswordResetTokenAsync(model).ConfigureAwait(false);
+        public async Task<VerificationTokenResponseModel> VerifyResetToken([FromBody] VerifyResetTokenModel model) => await _userService.VerifyPasswordResetTokenAsync(model).ConfigureAwait(false);
        
 
         /// <summary>

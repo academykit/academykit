@@ -112,12 +112,16 @@ export interface ResponseData {
   data: string;
   message: string;
 }
+export interface ResponseDataToken {
+  token: string;
+  message: string;
+}
 
 export const useResetPasswordToken = () => {
   return useMutation(
     [api.auth.resetToken],
     (data: { email?: string | null; token: string }) => {
-      return httpClient.post<ResponseData>(api.auth.resetToken, data);
+      return httpClient.post<ResponseDataToken>(api.auth.resetToken, data);
     }
   );
 };

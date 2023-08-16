@@ -1046,4 +1046,7 @@ recorded cannot be deleted.</value>
   <data name="Users" xml:space="preserve">
     <value>users</value>
   </data>
+  <data name="TokenVerifiedSuccessfully" xml:space="preserve">
+    <value>Token verified successfully.</value>
+  </data>
 </root>

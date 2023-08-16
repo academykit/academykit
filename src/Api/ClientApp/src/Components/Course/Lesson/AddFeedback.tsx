@@ -4,9 +4,7 @@ import {
   Button,
   Grid,
   Group,
-  Modal,
   Paper,
-  ScrollArea,
   Switch,
   Text,
   Tooltip,
@@ -19,10 +17,9 @@ import {
   useUpdateLesson,
 } from '@utils/services/courseService';
 import { ILessonFeedback } from '@utils/services/types';
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import errorType from '@utils/services/axiosError';
 import * as Yup from 'yup';
-import CreateFeedback from '../FeedBack/CreateFeedBack';
 import { useTranslation } from 'react-i18next';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
@@ -57,13 +54,11 @@ const AddFeedback = ({
     slug as string
   );
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const [isMandatory, setIsMandatory] = useState<boolean>(
     item?.isMandatory ?? false
   );
-
-  const [opened, setOpened] = useState(false);
-  const [lessonId, setLessonId] = useState('');
 
   const form = useForm({
     initialValues: {
@@ -85,12 +80,11 @@ const AddFeedback = ({
         isMandatory,
       };
       if (!isEditing) {
-        const response: any = await lesson.mutateAsync(
+        const response = await lesson.mutateAsync(
           assignmentData as ILessonFeedback
         );
-        setLessonId(response?.data?.id);
         form.reset();
-        setOpened(true);
+        navigate(`${response.data.id}/feedback`);
       } else {
         await updateLesson.mutateAsync({
           ...assignmentData,
@@ -116,34 +110,6 @@ const AddFeedback = ({
   };
   return (
     <React.Fragment>
-      <Modal
-        scrollAreaComponent={ScrollArea.Autosize}
-        opened={opened}
-        // exitTransitionDuration={100}
-        transitionProps={{
-          transition: 'slide-up',
-        }}
-        onClose={() => {
-          setOpened(false);
-          setAddState('');
-        }}
-        size="100%"
-        style={{
-          height: '100%',
-        }}
-        styles={{
-          inner: {
-            paddingLeft: 0,
-            paddingRight: 0,
-            paddingBottom: 0,
-            paddingTop: '100px',
-            height: '100%',
-          },
-        }}
-      >
-        {opened && <CreateFeedback lessonId={lessonId ?? item?.id} />}
-      </Modal>
-
       <form onSubmit={form.onSubmit(submitForm)}>
         <Paper withBorder p="md">
           <Grid align={'center'} justify="space-around">
@@ -194,12 +160,7 @@ const AddFeedback = ({
               </Button>
             )}
             {isEditing && (
-              <Button
-                onClick={() => {
-                  setLessonId(item?.id ?? '');
-                  setOpened(true);
-                }}
-              >
+              <Button component={Link} to={`${item?.id}/feedback`}>
                 {t('add_more_feedback')}
               </Button>
             )}
