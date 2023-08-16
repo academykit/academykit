@@ -49,6 +49,9 @@ export interface UpcomingEvents {
   lessonName: string;
   startDate: string;
   courseEnrollmentBool: boolean;
+  courseSlug: string;
+  isLive: true;
+  courseName: string;
 }
 
 export const useDashboard = () => {

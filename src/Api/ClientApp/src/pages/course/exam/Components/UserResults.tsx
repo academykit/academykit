@@ -13,9 +13,11 @@ import { Link } from 'react-router-dom';
 const UserResults = ({
   lessonId,
   studentId,
+  isTrainee,
 }: {
   lessonId: string;
   studentId: string;
+  isTrainee: boolean;
 }) => {
   const user = useAuth();
   const { t } = useTranslation();
@@ -79,7 +81,8 @@ const UserResults = ({
                   current_time.isAfter(exam_endDate) ||
                   user?.auth?.role == UserRole.Admin ||
                   user?.auth?.role == UserRole.SuperAdmin ||
-                  user?.auth?.role == UserRole.Trainer) && (
+                  // trainer who is not trainee
+                  (user?.auth?.role == UserRole.Trainer && !isTrainee)) && (
                   <ActionIcon
                     component={Link}
                     to={
