@@ -17,7 +17,7 @@ import {
   useUpdateLesson,
 } from '@utils/services/courseService';
 import { ILessonFeedback } from '@utils/services/types';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import errorType from '@utils/services/axiosError';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
@@ -54,6 +54,7 @@ const AddFeedback = ({
     slug as string
   );
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const [isMandatory, setIsMandatory] = useState<boolean>(
     item?.isMandatory ?? false
@@ -79,8 +80,11 @@ const AddFeedback = ({
         isMandatory,
       };
       if (!isEditing) {
-        await lesson.mutateAsync(assignmentData as ILessonFeedback);
+        const response = await lesson.mutateAsync(
+          assignmentData as ILessonFeedback
+        );
         form.reset();
+        navigate(`${response.data.id}/feedback`);
       } else {
         await updateLesson.mutateAsync({
           ...assignmentData,

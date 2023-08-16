@@ -17,7 +17,7 @@ import {
 } from '@utils/services/courseService';
 import { ILessonAssignment } from '@utils/services/types';
 import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import errorType from '@utils/services/axiosError';
 import * as Yup from 'yup';
 import { DatePickerInput, TimeInput } from '@mantine/dates';
@@ -76,6 +76,8 @@ const AddAssignment = ({
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
   const { t } = useTranslation();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const navigate = useNavigate();
 
   const [isMandatory, setIsMandatory] = useState<boolean>(
     item?.isMandatory ?? false
@@ -133,8 +135,12 @@ const AddAssignment = ({
       };
 
       if (!isEditing) {
-        await lesson.mutateAsync(assignmentData as ILessonAssignment);
+        const response = await lesson.mutateAsync(
+          assignmentData as ILessonAssignment
+        );
         form.reset();
+        console.log(response.data.id);
+        navigate(`${response.data.id}/assignment`);
       } else {
         await updateLesson.mutateAsync({
           ...assignmentData,
