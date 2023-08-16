@@ -24,9 +24,9 @@ import { LessonType } from '@utils/enums';
 const CreateAssignment = ({ searchParams }: IWithSearchPagination) => {
   const [isEditing, setIsEditing] = useState(false);
   const [addQuestion, setAddQuestion] = useToggle();
-  const { id, lessonId: lId } = useParams();
-  const assignmentReorder = useQuestionReorder(lId as string);
-  const questionList = useAssignmentQuestion(lId as string, searchParams);
+  const { id, lessonId } = useParams();
+  const assignmentReorder = useQuestionReorder(lessonId as string);
+  const questionList = useAssignmentQuestion(lessonId as string, searchParams);
   const { t } = useTranslation();
   const [lessonData, setLessonData] = useState<IAssignmentQuestion[]>();
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ const CreateAssignment = ({ searchParams }: IWithSearchPagination) => {
             key={x.id}
             data={x}
             search={searchParams}
-            lessonId={lId as string}
+            lessonId={lessonId as string}
             onEditChange={handleEditStateChange}
           />
         </div>
@@ -75,7 +75,7 @@ const CreateAssignment = ({ searchParams }: IWithSearchPagination) => {
     newList.splice(destination.index, 0, temp);
     assignmentReorder.mutate({
       id: id as string,
-      lessonIdentity: lId as string,
+      lessonIdentity: lessonId as string,
       lessonType: LessonType.Assignment,
       data: newList.map((x) => x.id),
     });
@@ -89,7 +89,7 @@ const CreateAssignment = ({ searchParams }: IWithSearchPagination) => {
           {questionList.data.length > 0 ? (
             <DragDropContext onDragEnd={onDragEnd}>
               <Droppable
-                droppableId={lId as string}
+                droppableId={lessonId as string}
                 direction="vertical"
                 type="assignment"
               >
@@ -107,7 +107,7 @@ const CreateAssignment = ({ searchParams }: IWithSearchPagination) => {
           {addQuestion && (
             <EditAssignment
               onCancel={() => setAddQuestion()}
-              lessonId={lId as string}
+              lessonId={lessonId as string}
               search={searchParams}
             />
           )}

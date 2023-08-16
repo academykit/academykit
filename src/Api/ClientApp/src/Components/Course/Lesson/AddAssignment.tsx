@@ -138,7 +138,6 @@ const AddAssignment = ({
           assignmentData as ILessonAssignment
         );
         form.reset();
-        console.log(response.data.id);
         navigate(`${response.data.id}/assignment`);
       } else {
         await updateLesson.mutateAsync({
