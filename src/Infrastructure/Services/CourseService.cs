@@ -1415,7 +1415,7 @@ namespace Lingtren.Infrastructure.Services
                     var course = await _unitOfWork.GetRepository<Course>().GetAllAsync(include: src => src.Include(x => x.Lessons).ThenInclude(x => x.Meeting)).ConfigureAwait(false);
                     var currentDateTime = DateTime.UtcNow;
                     var response = new List<DashboardLessonResponseModel>();
-                    var upcommingLessons = course.SelectMany(x => x.Lessons).Where(x => x.Meeting.StartDate.Value.AddMinutes(x.Meeting.Duration)>= currentDateTime).ToList();
+                    var upcommingLessons = course.SelectMany(x => x.Lessons).Where(x => x.Meeting.StartDate.Value.AddSeconds(x.Meeting.Duration)>= currentDateTime).ToList();
                     foreach (var lesson in upcommingLessons)
                     {
                         response.Add(new DashboardLessonResponseModel
@@ -1437,7 +1437,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var currentDateTime = DateTime.UtcNow;
                     var courseLiveLessons = await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p => (p.CourseTeachers.All(x => x.UserId == currentUserId) ||
-                    p.CourseEnrollments.All(x => x.UserId == currentUserId)) && p.Lessons.All(x=>x.Meeting.StartDate.Value.AddMinutes(x.Meeting.Duration) > currentDateTime),
+                    p.CourseEnrollments.All(x => x.UserId == currentUserId)) && p.Lessons.All(x=>x.Meeting.StartDate.Value.AddSeconds(x.Meeting.Duration) > currentDateTime),
                     include: src => src.Include(x => x.CourseEnrollments).Include(x => x.Lessons).ThenInclude(x => x.Meeting)).ConfigureAwait(false);
 
                     var courseExamLessons = await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p => (p.CourseTeachers.All(x => x.UserId == currentUserId) ||
@@ -1456,7 +1456,7 @@ namespace Lingtren.Infrastructure.Services
                     {
                         if (lesson.Meeting.StartDate.HasValue)
                         {
-                            DateTime endTime = lesson.Meeting.StartDate.Value.AddMinutes(lesson.Meeting.Duration);
+                            DateTime endTime = lesson.Meeting.StartDate.Value.AddSeconds(lesson.Meeting.Duration);
                             if (endTime > currentDateTime)
                             {
                                 upcommingLiveLessons.Add(lesson);
@@ -1519,7 +1519,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var currentDateTime = DateTime.UtcNow;
                     var lessonLiveClass = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.Course.CourseEnrollments.All(x => x.UserId == currentUserId) && 
-                    p.Meeting.StartDate.Value.AddMinutes(p.Meeting.Duration) > currentDateTime,
+                    p.Meeting.StartDate.Value.AddSeconds(p.Meeting.Duration) > currentDateTime,
                     include: src => src.Include(x => x.Meeting).Include(x=>x.Course)).ConfigureAwait(false);
                     var lessonExam = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.Course.CourseEnrollments.All(x => x.UserId == currentUserId) && 
                     p.QuestionSet.EndTime > currentDateTime,
