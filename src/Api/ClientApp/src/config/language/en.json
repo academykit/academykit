@@ -862,6 +862,7 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "edit_questions": "Edit Questions",
   "view_exam": "View exam",
   "view_assignment": "View assignment",
   "ID": "ID",
