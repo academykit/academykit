@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Breadcrumb from '@components/Ui/BreadCrumb';
-import { Title, Text, Box, Loader } from '@mantine/core';
+import { Title, Text, Box, Loader, Button } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import {
   QuestionSetQuestions,
   useQuestionSetQuestions,
 } from '@utils/services/questionService';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import PreviewQuestionCard from './PreviewQuestionCard';
 import {
   Draggable,
@@ -19,6 +19,7 @@ import { LessonType } from '@utils/enums';
 import { useEffect, useState } from 'react';
 
 const PreviewQuestion = () => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const params = useParams();
   const [questionData, setQuestionData] = useState<QuestionSetQuestions[]>();
@@ -67,6 +68,13 @@ const PreviewQuestion = () => {
       <Title truncate mt={20} mb={20}>
         {'Preview Questions'}
       </Title>
+      <Button
+        variant="subtle"
+        mx={4}
+        onClick={() => navigate('../lessons/questions/' + params?.lessonSlug)}
+      >
+        Edit Questions
+      </Button>
 
       {questions.isSuccess ? (
         <Box p={20}>
