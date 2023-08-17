@@ -865,6 +865,7 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "edit_questions": "質問を編集する",
   "view_exam": "試験を表示する",
   "view_assignment": "課題を表示する",
   "ID": "ID",

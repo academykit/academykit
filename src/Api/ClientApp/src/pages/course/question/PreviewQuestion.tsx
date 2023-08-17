@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Breadcrumb from '@components/Ui/BreadCrumb';
 import { Title, Text, Box, Loader, Button, Flex } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
@@ -73,7 +72,7 @@ const PreviewQuestion = () => {
         onClick={() => navigate(-1)}
         mt={15}
       >
-        Go Back
+        {t('go_back_button')}
       </Button>
       <Flex mt={10} align={'center'} justify={'space-between'}>
         <Title truncate mb={20} ml={15}>
@@ -84,7 +83,7 @@ const PreviewQuestion = () => {
           mx={4}
           onClick={() => navigate('../lessons/questions/' + params?.lessonSlug)}
         >
-          Edit Questions
+          {t('edit_questions')}
         </Button>
       </Flex>
 
@@ -106,7 +105,7 @@ const PreviewQuestion = () => {
               </Droppable>
             </DragDropContext>
           ) : (
-            <Text>No questions</Text>
+            <Text>{t('no_question_found')}</Text>
           )}
         </Box>
       ) : (
