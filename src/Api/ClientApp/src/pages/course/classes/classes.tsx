@@ -266,6 +266,7 @@ const Classes = () => {
                   id={courseLesson.data.id}
                   hasAttended={courseLesson.data.hasAttended}
                   startDate={courseLesson.data.startDate}
+                  isTrainee={courseLesson.data.isTrainee}
                 />
               </Box>
             )}
