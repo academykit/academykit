@@ -249,7 +249,6 @@ const Questions = () => {
               }}
             />
           </Grid.Col>
-
           {poolValue && (
             <Grid.Col mt={21} span={matches ? 3 : 6}>
               <Select
