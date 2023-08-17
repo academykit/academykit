@@ -19,6 +19,7 @@ type Props = {
   size?: MantineNumberSize | undefined;
   direction?: SystemProp<CSSProperties['flexDirection']>;
   page?: string;
+  color?: string;
 };
 
 const UserShortProfile: FC<Props> = ({
@@ -26,6 +27,7 @@ const UserShortProfile: FC<Props> = ({
   size = 'xl',
   direction = undefined,
   page = 'Pool',
+  color = '',
 }) => {
   const { t } = useTranslation();
   return (
@@ -39,7 +41,7 @@ const UserShortProfile: FC<Props> = ({
           {!imageUrl && getInitials(fullName ?? '')}
         </Avatar>
         <Box>
-          <Text size={size} weight="bolder">
+          <Text size={size} weight="bolder" color={color}>
             {fullName}
           </Text>
           <Text size={'sm'} color={'dimmed'}>

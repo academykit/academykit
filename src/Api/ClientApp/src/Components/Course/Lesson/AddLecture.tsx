@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import LessonVideoUpload from '@components/Ui/LessonVideoUpload';
 import {
+  Box,
   Button,
   Grid,
   Group,
   Paper,
   Switch,
   Text,
-  Textarea,
   Tooltip,
 } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
@@ -25,6 +25,7 @@ import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -170,20 +171,21 @@ const AddLecture = ({
             currentVideo={videoUrl}
             marginy={1}
           />
-          <Textarea
-            placeholder={
-              isRecordedVideo
-                ? (t('recording_description') as string)
-                : (t('video_description') as string)
-            }
-            label={
-              isRecordedVideo
+          <Box my={form.errors['videoUrl'] ? 20 : 10}>
+            <Text size={'sm'}>
+              {isRecordedVideo
                 ? t('recording_description')
-                : t('video_description')
-            }
-            my={form.errors['videoUrl'] ? 20 : 10}
-            {...form.getInputProps('description')}
-          />
+                : t('video_description')}
+            </Text>
+            <RichTextEditor
+              placeholder={
+                isRecordedVideo
+                  ? (t('recording_description') as string)
+                  : (t('video_description') as string)
+              }
+              formContext={useFormContext}
+            />
+          </Box>
 
           <Group position="left" mt="md">
             <Button

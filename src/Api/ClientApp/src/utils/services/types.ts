@@ -11,6 +11,7 @@ export interface IUser {
   role: UserRole;
 }
 export interface IUserProfile extends IUser {
+  memberId?: string;
   firstName: string;
   middleName: string;
   lastName: string;
@@ -100,4 +101,9 @@ export interface ILessonMeeting extends ILessons {
     zoomLicenseId: string;
   };
   description?: string;
+}
+
+export interface IPhysicalTraining extends ILessons {
+  name: string;
+  description: string;
 }

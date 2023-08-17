@@ -5,8 +5,8 @@ import {
   Text,
   Paper,
   Switch,
-  Textarea,
   Tooltip,
+  Box,
 } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
@@ -24,6 +24,7 @@ import FileUploadLesson from '@components/Ui/FileUploadLesson';
 import { useTranslation } from 'react-i18next';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -152,12 +153,13 @@ const AddDocument = ({
             currentFile={item?.documentUrl}
             formContext={useFormContext}
           />
-          <Textarea
-            placeholder={t('file_description') as string}
-            label={t('file_description')}
-            my={form.errors['documentUrl'] ? 20 : 10}
-            {...form.getInputProps('description')}
-          />
+          <Box my={form.errors['documentUrl'] ? 20 : 10}>
+            <Text size={'sm'}>{t('file_description')}</Text>
+            <RichTextEditor
+              placeholder={t('file_description') as string}
+              {...form.getInputProps('description')}
+            />
+          </Box>
           <Group position="left" mt="md">
             <Button
               type="submit"

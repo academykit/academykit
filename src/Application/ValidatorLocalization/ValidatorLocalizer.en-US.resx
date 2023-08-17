@@ -120,17 +120,17 @@
   <data name="AddressLength200" xml:space="preserve">
     <value>Address length must be less than or equal to 200 characters.</value>
   </data>
-  <data name="ApiKeyLength100" xml:space="preserve">
-    <value>Api key length must be less than or equal to 100 characters.</value>
+  <data name="OAuthAccountIdLength100" xml:space="preserve">
+    <value>OAuth Account Id  length must be less than or equal to 100 characters.</value>
   </data>
-  <data name="APIKeyRequired" xml:space="preserve">
-    <value>Api key is required.</value>
+  <data name="OAuthAccountIdRequired" xml:space="preserve">
+    <value>OAuth Account Id is required.</value>
   </data>
-  <data name="ApiSecretKeyLength100" xml:space="preserve">
-    <value>Api secret length must be less than or equal to 100 characters.</value>
+  <data name="OAuthClientIdLength100" xml:space="preserve">
+    <value>OAuth Client Id  length must be less than or equal to 100 characters.</value>
   </data>
-  <data name="ApiSecretRequired" xml:space="preserve">
-    <value>Api secret is required.</value>
+  <data name="OAuthClientIdRequired" xml:space="preserve">
+    <value>OAuth Client Id  is required.</value>
   </data>
   <data name="AssignementQuestionisRequired" xml:space="preserve">
     <value>Assignment Question option is required.</value>
@@ -333,6 +333,9 @@
   <data name="MeetingIdDUrationLength" xml:space="preserve">
     <value>Meeting duration cannot be greater than or equal to 1439 minutes.</value>
   </data>
+  <data name="MessageCannotBeEmpty" xml:space="preserve">
+    <value>Review message cannot be empty.</value>
+  </data>
   <data name="MiddleNameLength100" xml:space="preserve">
     <value>Middle name length must be less than or equal to 100 characters.</value>
   </data>
@@ -497,5 +500,17 @@
   </data>
   <data name="ZoomLicenseRequired" xml:space="preserve">
     <value>Please select zoom license.</value>
+  </data>
+  <data name="OAuthClientSecretRequired" xml:space="preserve">
+    <value>OAuth Client Secret  is required.</value>
+  </data>
+  <data name="OAuthClientSecretLength100" xml:space="preserve">
+    <value>OAuth Client Secret  length must be less than or equal to 100 characters.</value>
+  </data>
+  <data name="OptionalCostCannotBeNull" xml:space="preserve">
+    <value>Optional cost cannot be null.</value>
+  </data>
+  <data name="InvalidMoblieNumber" xml:space="preserve">
+    <value>Invalid mobile number format.</value>
   </data>
 </root>

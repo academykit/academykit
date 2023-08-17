@@ -14,5 +14,6 @@ namespace Lingtren.Domain.Entities
         public int? Duration { get; set; }
         public User User { get; set; }
         public CertificateStatus Status { get; set; }
+        public decimal OptionalCost { get; set; }
     }
 }

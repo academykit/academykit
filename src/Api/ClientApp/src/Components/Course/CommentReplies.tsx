@@ -8,13 +8,16 @@ import {
 } from '@utils/services/commentService';
 import CommentReply from './CommentReply';
 import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
 
 const CommentReplies = ({
   commentId,
   courseId,
+  replyCount,
 }: {
   commentId: string;
   courseId: string;
+  replyCount: number;
 }) => {
   const form = useForm({
     initialValues: {
@@ -22,8 +25,13 @@ const CommentReplies = ({
     },
   });
   const addCommentReply = usePostCommentReply(courseId, commentId);
-  const commentReplies = useGetCommentReplies(courseId, commentId);
+  const commentReplies = useGetCommentReplies(courseId, commentId, replyCount);
   const { t } = useTranslation();
+
+  const initialVisibleReplies = 3;
+  const [visibleReplies, setVisibleReplies] = useState(initialVisibleReplies);
+  const hasMoreReplies =
+    (commentReplies.data?.items.length as number) > initialVisibleReplies;
 
   const submitHandler = async ({ content }: { content: string }) => {
     try {
@@ -41,9 +49,30 @@ const CommentReplies = ({
       });
     }
   };
+
+  useEffect(() => {
+    setVisibleReplies(initialVisibleReplies);
+  }, [addCommentReply.isSuccess]);
+
   if (commentReplies.isLoading) {
     return <Loader />;
   }
+
+  const showMoreReplies = () => {
+    setVisibleReplies(
+      commentReplies.data?.items.length ?? initialVisibleReplies
+    );
+  };
+
+  const showLessReplies = () => {
+    setVisibleReplies(initialVisibleReplies);
+  };
+
+  const visibleRepliesData = commentReplies.data?.items.slice(
+    0,
+    visibleReplies
+  );
+
   return (
     <>
       <form onSubmit={form.onSubmit(submitHandler)}>
@@ -64,7 +93,7 @@ const CommentReplies = ({
           </Button>
         </Group>
       </form>
-      {commentReplies.data?.items.map((x) => (
+      {visibleRepliesData?.map((x) => (
         <CommentReply
           key={x.id}
           reply={x}
@@ -72,6 +101,19 @@ const CommentReplies = ({
           courseId={courseId}
         />
       ))}
+
+      {/* show button when replies are more than 3 */}
+      {hasMoreReplies && visibleReplies > initialVisibleReplies ? (
+        <Button variant="subtle" mx={4} onClick={showLessReplies}>
+          See Less
+        </Button>
+      ) : (
+        hasMoreReplies && (
+          <Button variant="subtle" mx={4} onClick={showMoreReplies}>
+            See More
+          </Button>
+        )
+      )}
     </>
   );
 };

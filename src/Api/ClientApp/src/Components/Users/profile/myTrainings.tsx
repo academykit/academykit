@@ -41,7 +41,7 @@ const MyTrainings = () => {
 
           <ScrollArea>
             <Paper>
-              <Table striped>
+              <Table striped withBorder withColumnBorders highlightOnHover>
                 <thead>
                   <tr>
                     <th>{t('title')}</th>

@@ -9,6 +9,7 @@ import AddFeedback from '@components/Course/Lesson/AddFeedback';
 import AddDocument from '@components/Course/Lesson/AddDocument';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
+import AddPhysical from '@components/Course/Lesson/AddPhysical';
 
 const LessonAddList = ({
   sectionId,
@@ -81,6 +82,16 @@ const LessonAddList = ({
         />
       );
       break;
+    case 'physical':
+      returnDiv = (
+        <AddPhysical
+          setIsEditing={() => {}}
+          setAddState={setAddState}
+          sectionId={sectionId}
+          setAddLessonClick={setAddLessonClick}
+        />
+      );
+      break;
     default:
       break;
   }
@@ -108,6 +119,13 @@ const LessonAddList = ({
             onClick={() => setAddState('assignment')}
           >
             + {t('assignment')}
+          </Badge>{' '}
+          <Badge
+            style={{ cursor: 'pointer' }}
+            variant="outline"
+            onClick={() => setAddState('physical')}
+          >
+            + {t('physical_name')}
           </Badge>{' '}
           <Badge
             style={{ cursor: 'pointer' }}

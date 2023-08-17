@@ -295,44 +295,46 @@
                     ).ConfigureAwait(false);
 
                 var currentTimeStamp = DateTime.UtcNow;
-
-                foreach (var item in models)
+                if(!await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId, lesson.CourseId.ToString(), TrainingTypeEnum.Course).ConfigureAwait(false))
                 {
-                    var assignment = assignments.FirstOrDefault(x => x.Id == item.AssignmentId);
-                    if (assignment != null)
+                    foreach (var item in models)
                     {
-                        if (item.Id != default)
+                        var assignment = assignments.FirstOrDefault(x => x.Id == item.AssignmentId);
+                        if (assignment != null)
                         {
-                            await UpdateSubmissionAsync(currentUserId, currentTimeStamp, item, assignment).ConfigureAwait(false);
-                        }
-                        else
-                        {
-                            await InsertSubmissionAsync(currentUserId, lesson.Id, currentTimeStamp, item, assignment).ConfigureAwait(false);
+                            if (item.Id != default)
+                            {
+                                await UpdateSubmissionAsync(currentUserId, currentTimeStamp, item, assignment).ConfigureAwait(false);
+                            }
+                            else
+                            {
+                                await InsertSubmissionAsync(currentUserId, lesson.Id, currentTimeStamp, item, assignment).ConfigureAwait(false);
+                            }
                         }
                     }
-                }
 
-                if (watchHistory == null)
-                {
-                    watchHistory = new WatchHistory
+                    if (watchHistory == null)
                     {
-                        Id = Guid.NewGuid(),
-                        LessonId = lesson.Id,
-                        CourseId = lesson.CourseId,
-                        UserId = currentUserId,
-                        IsCompleted = true,
-                        IsPassed = false,
-                        CreatedBy = currentUserId,
-                        CreatedOn = currentTimeStamp,
-                        UpdatedBy = currentUserId,
-                        UpdatedOn = currentTimeStamp,
-                    };
-                    await ManageStudentCourseComplete(course.Id, lesson.Id, currentUserId, currentTimeStamp).ConfigureAwait(false);
+                        watchHistory = new WatchHistory
+                        {
+                            Id = Guid.NewGuid(),
+                            LessonId = lesson.Id,
+                            CourseId = lesson.CourseId,
+                            UserId = currentUserId,
+                            IsCompleted = true,
+                            IsPassed = false,
+                            CreatedBy = currentUserId,
+                            CreatedOn = currentTimeStamp,
+                            UpdatedBy = currentUserId,
+                            UpdatedOn = currentTimeStamp,
+                        };
+                        await ManageStudentCourseComplete(course.Id, lesson.Id, currentUserId, currentTimeStamp).ConfigureAwait(false);
 
-                    await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
+                        await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
+                    }
+
+                    await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 }
-
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -442,6 +444,7 @@
         /// <exception cref="ForbiddenException"></exception>
         public async Task<IList<AssignmentResponseModel>> SearchAsync(AssignmentBaseSearchCriteria searchCriteria)
         {
+            
             var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                predicate: p => p.Id.ToString() == searchCriteria.LessonIdentity || p.Slug == searchCriteria.LessonIdentity
                ).ConfigureAwait(false);
@@ -457,7 +460,12 @@
                                     lesson.Id, searchCriteria.CurrentUserId);
                 throw new ForbiddenException(_localizer.GetString("InvalidLessonAssignmentType"));
             }
-            if (lesson.StartDate > DateTime.UtcNow)
+            DateTime currentDateTime = DateTime.UtcNow;
+            TimeZoneInfo nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
+            DateTime startDateLocal = TimeZoneInfo.ConvertTime(lesson.StartDate.Value.ToLocalTime(), nepalTimeZone);
+            DateTime currentLocalDate = TimeZoneInfo.ConvertTime(currentDateTime, nepalTimeZone);
+            var hasAuthority = await IsSuperAdminOrAdminOrTrainerOfTraining(searchCriteria.CurrentUserId,lesson.CourseId.ToString(),TrainingTypeEnum.Course).ConfigureAwait(false);
+            if (startDateLocal > currentLocalDate && !hasAuthority)
             {
                 throw new ForbiddenException(_localizer.GetString("AssignmentStartTimeException"));
             }
@@ -468,10 +476,13 @@
             var IsValidUser = await IsSuperAdminOrAdminOrTrainerOfTraining(searchCriteria.CurrentUserId, lesson.CourseId.ToString(), TrainingTypeEnum.Course);
             var assignments = await _unitOfWork.GetRepository<Assignment>().GetAllAsync(
                 predicate: predicate,
-                include: src => src.Include(x => x.AssignmentAttachments).Include(x => x.AssignmentQuestionOptions),
+                include: src => src.Include(x => x.AssignmentAttachments).Include(x => x.AssignmentQuestionOptions).Include(x=>x.User),
                 orderBy: x => x.OrderBy(a => a.Order)
                 ).ConfigureAwait(false);
-
+            if(searchCriteria.UserId == default)
+            {
+                searchCriteria.UserId = searchCriteria.CurrentUserId;
+            }
             var userAssignments = await _unitOfWork.GetRepository<AssignmentSubmission>().GetAllAsync(
                 predicate: p => p.LessonId == lesson.Id && searchCriteria.UserId.HasValue && p.UserId == searchCriteria.UserId.Value,
                 include: src => src.Include(x => x.AssignmentSubmissionAttachments).Include(x => x.User)
@@ -480,9 +491,7 @@
             var assignmentReview = await _unitOfWork.GetRepository<AssignmentReview>().GetFirstOrDefaultAsync(
                 predicate: p => p.LessonId == lesson.Id && searchCriteria.UserId.HasValue && p.UserId == searchCriteria.UserId.Value
                 ).ConfigureAwait(false);
-
             var response = new List<AssignmentResponseModel>();
-
             foreach (var item in assignments)
             {
                 MapAssignment(IsValidUser, userAssignments, item, response);
@@ -704,6 +713,55 @@
             }
         }
 
+        /// <summary>
+        /// reorder the assignemnt questions
+        /// </summary>
+        /// <param name="currentUserId">current user id</param>
+        /// <param name="lessonIdentity">lesson identity</param>
+        /// <param name="ids">list of assignment question id</param>
+        /// <returns>Task completed</returns>
+        public async Task ReorderAssignmentQuestionAsync(Guid currentUserId, string lessonIdentity, IList<Guid> ids)
+        {
+            await ExecuteAsync(async () =>
+            {
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == lessonIdentity || p.Slug.ToLower().Trim() == lessonIdentity.ToString().Trim(),
+                    include:src =>src.Include(x=>x.Assignments)).ConfigureAwait(false);
+                if(lesson == default)
+                {
+                    throw new EntityNotFoundException("LessonNotFound");
+                }
+                var hasAuthority = await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId,lesson.CourseId.ToString(),TrainingTypeEnum.Course).ConfigureAwait(false);
+                if (!hasAuthority)
+                {
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
+                }
+                var assignmentQuestions = lesson.Assignments.ToList();
+                if(assignmentQuestions.Count == default)
+                {
+                    throw new EntityNotFoundException(_localizer.GetString("InvalidLessonAssignmentType"));
+                }
+                var reorderedAssignment = new List<Assignment>();
+                var order = 0;
+                foreach(var id in ids)
+                {
+                    var assignmentQuestion = assignmentQuestions.FirstOrDefault(x => x.Id == id);
+                    if(assignmentQuestion != default)
+                    {
+                        assignmentQuestion.Order = order;
+                        assignmentQuestion.UpdatedBy = currentUserId;
+                        assignmentQuestion.UpdatedOn = DateTime.UtcNow;
+                        reorderedAssignment.Add(assignmentQuestion);
+                        order ++;
+                    }
+                }
+                if(reorderedAssignment.Count != default)
+                {
+                    _unitOfWork.GetRepository<Assignment>().Update(reorderedAssignment);
+                    await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);                
+                }
+            });
+        }
+
         #endregion Assignment Review
 
         #region Private Methods
@@ -753,7 +811,6 @@
             {
                 assignmentSubmission.Answer = item.Answer;
                 assignmentSubmission.AssignmentSubmissionAttachments = new List<AssignmentSubmissionAttachment>();
-
                 if (item.Id != default)
                 {
                     var existingAssignmentSubmissionAttachments = await _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().GetAllAsync(
@@ -775,8 +832,8 @@
 
                 await _unitOfWork.GetRepository<AssignmentSubmissionAttachment>().InsertAsync(assignmentSubmission.AssignmentSubmissionAttachments).ConfigureAwait(false);
             }
-            await _unitOfWork.GetRepository<AssignmentSubmission>().InsertAsync(assignmentSubmission).ConfigureAwait(false);
-        }
+                await _unitOfWork.GetRepository<AssignmentSubmission>().InsertAsync(assignmentSubmission).ConfigureAwait(false);
+            }
 
         /// <summary>
         /// Handle to update assignment submission
@@ -838,7 +895,7 @@
         /// <param name="userAssignments">the list of <see cref="AssignmentSubmission"/></param>
         /// <param name="item">the instance of <see cref="Assignment"/></param>
         /// <param name="response">the list of <see cref="AssignmentResponseModel"/></param>
-        private static void MapAssignment(bool showCorrectAndHints, IList<AssignmentSubmission> userAssignments, Assignment item, IList<AssignmentResponseModel> response)
+        private static async void MapAssignment(bool showCorrectAndHints, IList<AssignmentSubmission> userAssignments, Assignment item, IList<AssignmentResponseModel> response)
         {
             var userAssignment = userAssignments.FirstOrDefault(x => x.AssignmentId == item.Id);
             var data = new AssignmentResponseModel
@@ -855,6 +912,7 @@
                 Student = userAssignment == null ? null : new UserModel(userAssignment.User),
                 AssignmentSubmissionId = userAssignment?.Id,
                 Answer = userAssignment?.Answer,
+                IsTrainee = !showCorrectAndHints,
                 AssignmentAttachments = new List<AssignmentAttachmentResponseModel>(),
                 AssignmentQuestionOptions = new List<AssignmentQuestionOptionResponseModel>(),
                 AssignmentSubmissionAttachments = new List<AssignmentSubmissionAttachmentResponseModel>(),
@@ -863,7 +921,6 @@
             {
                 item.AssignmentAttachments?.ToList().ForEach(x => data.AssignmentAttachments.Add(new AssignmentAttachmentResponseModel(x)));
             }
-
             if (item.Type == QuestionTypeEnum.SingleChoice || item.Type == QuestionTypeEnum.MultipleChoice)
             {
                 var selectedAnsIds = !string.IsNullOrWhiteSpace(userAssignment?.SelectedOption) ?
@@ -880,7 +937,6 @@
                                     Order = x.Order,
                                 }));
             }
-
             if (userAssignment?.AssignmentSubmissionAttachments.Count > 0)
             {
                 userAssignment.AssignmentSubmissionAttachments.ForEach(x =>

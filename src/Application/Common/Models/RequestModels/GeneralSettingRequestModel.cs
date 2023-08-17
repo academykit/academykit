@@ -10,5 +10,6 @@ namespace Lingtren.Application.Common.Models.RequestModels
         public string CompanyAddress { get; set; }
         public string CompanyContactNumber { get; set; }
         public string EmailSignature { get; set; }
+        public string CustomConfiguration { get; set; }
     }
 }

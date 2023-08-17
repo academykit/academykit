@@ -9,7 +9,7 @@ import {
   Title,
   useMantineTheme,
 } from '@mantine/core';
-import { DATE_FORMAT } from '@utils/constants';
+// import { DATE_FORMAT } from '@utils/constants';
 import RoutePath from '@utils/routeConstants';
 import { ICourseLesson } from '@utils/services/courseService';
 import moment from 'moment';
@@ -20,6 +20,11 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
   const theme = useMantineTheme();
   const user = useAuth();
   const { t } = useTranslation();
+  const lesson_start_date = moment.utc(
+    lesson.startDate,
+    'YYYY-MM-DD[T]HH:mm[Z]'
+  );
+  const current_time = moment.utc(moment().toDate(), 'YYYY-MM-DD[T]HH:mm[Z]');
 
   return (
     <Group sx={{ flexDirection: 'column' }}>
@@ -34,17 +39,24 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
         </Button>
       ) : lesson.assignmentExpired ? (
         <Text>{t('assignment_expired')}</Text>
-      ) : !lesson.startDate || moment().isAfter(lesson.startDate) ? (
+      ) : !lesson.startDate || current_time.isAfter(lesson_start_date) ? (
         <Button
           component={Link}
           to={RoutePath.assignment.details(lesson.id).route}
         >
-          {lesson.isCompleted ? t('resubmit') : t('start_assignment')}
+          {lesson.isCompleted && lesson.isTrainee
+            ? t('resubmit')
+            : lesson.isTrainee && t('start_assignment')}
+
+          {!lesson.isTrainee && t('view_assignment')}
         </Button>
       ) : (
         <Text>
           {t('assignment_yet_start')}{' '}
-          {moment(lesson.startDate).format(DATE_FORMAT)}
+          {moment(lesson.startDate)
+            .add(5, 'hours')
+            .add(45, 'minutes')
+            .format('MMM DD, YYYY hh:mm A')}
         </Text>
       )}
       {lesson.assignmentReview && (
@@ -54,6 +66,7 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
             <UserShortProfile
               user={lesson.assignmentReview.teacher}
               size={'sm'}
+              color="#C1C2C5"
             />
             <Paper
               sx={{

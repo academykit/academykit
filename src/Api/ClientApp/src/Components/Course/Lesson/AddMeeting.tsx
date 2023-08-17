@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Box,
   Button,
   Grid,
   Group,
   NumberInput,
   Select,
   Switch,
-  Textarea,
   Tooltip,
+  Text,
 } from '@mantine/core';
 import { DatePickerInput, TimeInput } from '@mantine/dates';
 import { useForm, yupResolver } from '@mantine/form';
@@ -28,6 +29,7 @@ import { useTranslation } from 'react-i18next';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import { getDateTime } from '@utils/getDateTime';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -287,11 +289,13 @@ const AddMeeting = ({
           styles={{ error: { position: 'absolute' } }}
         />
       </Group>
-      <Textarea
-        label={t('description')}
-        placeholder={t('description_live_class') as string}
-        {...form.getInputProps('description')}
-      />
+      <Box my={form.errors['videoUrl'] ? 20 : 10}>
+        <Text size={'sm'}>{t('description')}</Text>
+        <RichTextEditor
+          placeholder={t('description_live_class') as string}
+          {...form.getInputProps('description')}
+        />
+      </Box>
       <Group position="left" mt="md">
         <Button
           type="submit"

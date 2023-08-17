@@ -16,7 +16,7 @@ import {
   ThemeIcon,
   rem,
 } from '@mantine/core';
-import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { useDisclosure } from '@mantine/hooks';
 import { useGeneralSetting } from '@utils/services/adminService';
 import { IUser } from '@utils/services/types';
 import { useEffect } from 'react';
@@ -154,7 +154,6 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
 
   const [opened, { toggle }] = useDisclosure(false);
   const { classes, theme } = useStyles();
-  const matches = useMediaQuery(`(min-width: ${theme.breakpoints.xs}px)`);
   const footerMenu = {
     icon: <IconInfoSquare size={16} />,
     color: 'blue',
@@ -222,12 +221,12 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
         layout.meetPage ? (
           <></>
         ) : layout.examPage ? (
-          <Header px={20} height={matches ? HEADER_HEIGHT : HEADER_HEIGHT * 2}>
+          <Header px={20} height={HEADER_HEIGHT}>
             <Group
               sx={{
                 justifyContent: 'space-between',
                 width: '100%',
-                height: HEADER_HEIGHT,
+                // height: HEADER_HEIGHT,
                 alignItems: 'center',
               }}
             >

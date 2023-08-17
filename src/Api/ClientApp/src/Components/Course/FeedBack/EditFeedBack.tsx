@@ -1,4 +1,4 @@
-import TextEditor from '@components/Ui/TextEditor';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import {
   Box,
   Button,
@@ -190,11 +190,11 @@ const EditFeedback = ({
                     >
                       <Flex>
                         <div style={{ width: '90%' }}>
-                          <TextEditor
+                          <RichTextEditor
                             placeholder={t('option_placeholder') as string}
                             label={`answers.${i}.option`}
                             formContext={useFormContext}
-                          ></TextEditor>
+                          ></RichTextEditor>
                         </div>
                         <UnstyledButton
                           mx={10}

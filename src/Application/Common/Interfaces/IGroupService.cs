@@ -69,6 +69,15 @@
         /// <param name="identity">the group id or slug</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the search result of <see cref="UserModel"/></returns>
-        Task<SearchResult<UserModel>> GetNonGroupMembers(string identity, BaseSearchCriteria criteria);
+        Task<SearchResult<UserModel>> GetNonGroupMembers(string identity,GroupBaseSearchCriteria criteria);
+
+        /// <summary>
+        /// Handle to get group members by deparment id
+        /// </summary>
+        /// <param name="identity">the groupd id or slug</param>
+        /// <param name="departmentId">the deparment id</param>
+        /// <param name="id">The current user id</param>
+        /// <returns></returns>
+        Task<GroupAddMemberResponseModel> AddMembersByDepartment(string identity, string departmentId, Guid currentUserId);
     }
 }

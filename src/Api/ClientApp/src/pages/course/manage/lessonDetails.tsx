@@ -78,7 +78,7 @@ const LessonDetails = ({
       <Paper>
         <Box mb={'sm'}>{searchComponent('Search Student')}</Box>
         {lessonDetails.data && lessonDetails.data?.items.length > 0 ? (
-          <Table striped withBorder>
+          <Table striped withBorder withColumnBorders highlightOnHover>
             <thead>
               <tr>
                 <th>{t('trainees')}</th>

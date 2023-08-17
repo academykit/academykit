@@ -43,7 +43,8 @@ namespace Lingtren.Infrastructure.Services
                     Status = CertificateStatus.Draft,
                     Location = model.Location,
                     CreatedBy = currentUserId,
-                    CreatedOn = DateTime.UtcNow
+                    CreatedOn = DateTime.UtcNow,
+                    OptionalCost = model.OptionalCost,
                 }; ;
                 var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (isAdmin)
@@ -97,6 +98,7 @@ namespace Lingtren.Infrastructure.Services
                 ceritificate.Status = CertificateStatus.Draft;
                 ceritificate.UpdatedBy = currentUserId;
                 ceritificate.UpdatedOn = DateTime.UtcNow;
+                ceritificate.OptionalCost = model.OptionalCost;
                 _unitOfWork.GetRepository<Certificate>().Update(ceritificate);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return new CertificateResponseModel(ceritificate);
@@ -158,7 +160,8 @@ namespace Lingtren.Infrastructure.Services
                     Duration = x.Duration != default ? x.Duration.ToString() : null,
                     Location = x.Location,
                     Status = x.Status,
-                    User = new UserModel(x.User)
+                    User = new UserModel(x.User),
+                    OptionalCost = x.OptionalCost,
                 }).ToList();
                 return response;
             }
@@ -207,7 +210,8 @@ namespace Lingtren.Infrastructure.Services
                     Duration = ceritifcate.Duration != default ? ceritifcate.Duration.ToString() : null,
                     Location = ceritifcate.Location,
                     Status = ceritifcate.Status,
-                    User = new UserModel(ceritifcate.User)
+                    User = new UserModel(ceritifcate.User),
+                    OptionalCost = ceritifcate.OptionalCost
                 };
             });
         }
@@ -235,7 +239,8 @@ namespace Lingtren.Infrastructure.Services
                     Duration = x.Duration != default ? x.Duration.ToString() : null,
                     Location = x.Location,
                     Status = x.Status,
-                    User = new UserModel(x.User)
+                    User = new UserModel(x.User),
+                    OptionalCost = x.OptionalCost
                 }).ToList();
                 return response;
             }
@@ -275,7 +280,8 @@ namespace Lingtren.Infrastructure.Services
                     Duration = x.Duration != default ? x.Duration.ToString() : null,
                     Location = x.Location,
                     Status = x.Status,
-                    User = new UserModel(x.User)
+                    User = new UserModel(x.User),
+                    OptionalCost = x.OptionalCost,
                 }).ToList();
                 return response.ToIPagedList(criteria.Page, criteria.Size);
             }

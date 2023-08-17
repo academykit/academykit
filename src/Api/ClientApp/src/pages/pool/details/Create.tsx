@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import TextEditor from '@components/Ui/TextEditor';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import {
   Box,
   Button,
@@ -40,7 +40,7 @@ const schema = () => {
   const { t } = useTranslation();
 
   return Yup.object().shape({
-    name: Yup.string().required(t('question_title_required') as string),
+    name: Yup.string().trim().required(t('question_title_required') as string),
     type: Yup.string()
       .required(t('question_type_required') as string)
       .nullable(),
@@ -214,7 +214,7 @@ const Create = () => {
             />
             <Box mt={20}>
               <Text size={'lg'}>{t('description')}</Text>
-              <TextEditor
+              <RichTextEditor
                 label={t('description') as string}
                 placeholder={t('question_description') as string}
                 formContext={useFormContext}
@@ -244,7 +244,7 @@ const Create = () => {
 
             <Box mt={20}>
               <Text size={'lg'}>{t('hint')}</Text>
-              <TextEditor
+              <RichTextEditor
                 label={t('hints') as string}
                 placeholder={t('question_hint') as string}
                 formContext={useFormContext}
@@ -281,11 +281,11 @@ const Create = () => {
                       ></Radio>
                     )}
                     <div style={{ width: '80%' }}>
-                      <TextEditor
+                      <RichTextEditor
                         label={`answers.${i}.option`}
                         placeholder={t('option_placeholder') as string}
                         formContext={useFormContext}
-                      ></TextEditor>
+                      ></RichTextEditor>
                     </div>
                     <UnstyledButton
                       onClick={() => {

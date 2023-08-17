@@ -20,12 +20,13 @@ export interface IZoomSetting {
   isRecordingEnabled: boolean;
   updatedOn: string;
   user: IUser;
-  apiKey: string;
-  apiSecret: string;
   sdkKey: string;
   sdkSecret: string;
   webhookSecret: string;
   webhookVerificationKey: string;
+  oAuthAccountId: string;
+  oAuthClientId: string;
+  oAuthClientSecret: string;
 }
 
 export interface ILevel {
@@ -361,8 +362,9 @@ export const useUpdateZoomSetting = (id: string | undefined) => {
   return useMutation(
     ['update' + api.adminUser.getZoomSettings],
     (data: {
-      apiKey: string;
-      apiSecret: string;
+      oAuthAccountId: string;
+      oAuthClientId: string;
+      oAuthClientSecret: string;
       sdkKey: string;
       sdkSecret: string;
       isRecordingEnabled: boolean;
@@ -515,6 +517,22 @@ export const useDeleteZoomLicense = () => {
   );
 };
 
+const updateZoomLicense = ({ id, data }: { id: string; data: any }) =>
+  httpClient.put(api.adminUser.deleteZoomLicense(id), data);
+
+export const useUpdateZoomLicense = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ['update' + api.adminUser.getZoomLicense],
+    updateZoomLicense,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([api.adminUser.getZoomLicense]);
+      },
+    }
+  );
+};
+
 const addZoomLicense = (data: {
   licenseEmail: string;
   hostId: string;
@@ -619,6 +637,7 @@ export const useGetTrainers = (
     [api.adminUser.getTrainer(search, lessonType, id)],
     () => getTrainers(search, lessonType, id),
     {
+      enabled: true,
       select: (data) => data.data,
     }
   );

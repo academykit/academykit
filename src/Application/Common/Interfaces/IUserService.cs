@@ -72,8 +72,8 @@
         /// Handle to verify reset token
         /// </summary>
         /// <param name="model">the instance of <see cref="VerifyResetTokenModel"/></param>
-        /// <returns>the password change token</returns>
-        Task<string> VerifyPasswordResetTokenAsync(VerifyResetTokenModel model);
+        /// <returns> the instance of <see cref="VerificationTokenResponseModel"/></returns>
+        Task<VerificationTokenResponseModel> VerifyPasswordResetTokenAsync(VerifyResetTokenModel model);
 
         /// <summary>
         /// Handle to generate random password

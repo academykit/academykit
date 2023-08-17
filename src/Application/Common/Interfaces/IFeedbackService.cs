@@ -49,5 +49,14 @@
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the list of byte </returns>
         Task<byte[]> GetFeedBackReportAsync(string lessonIdentity, Guid currentUserId);
+
+        /// <summary>
+        /// reorder feedback questions
+        /// </summary>
+        /// <param name="currentUserId">current user id</param>
+        /// <param name="lessonIdentiy">lesson id or slug</param>
+        /// <param name="ids">list of feedback id</param>
+        /// <returns>Task completed</returns>
+        Task ReorderFeedbackQuestionsAsync(Guid currentUserId, string lessonIdentiy, List<Guid> ids);
     }
 }

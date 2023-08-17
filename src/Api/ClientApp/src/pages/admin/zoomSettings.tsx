@@ -20,13 +20,14 @@ import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
 const mapData = {
-  apiKey: 'zoom_api_key',
-  apiSecret: 'zoom_api_secret',
   sdkKey: 'zoom_sdk_key',
   sdkSecret: 'zoom_sdk_secret',
   webhookSecret: 'zoom_webhook_secret',
   webhookVerification: 'zoom_webhook_verification',
   isRecordingEnabled: 'zoom_recording_enabled',
+  oAuthAccountId: 'oAuth_accountId',
+  oAuthClientId: 'oAuth_clientId',
+  oAuthClientSecret: 'oAuth_clientSecret',
 };
 
 const Row = ({
@@ -71,8 +72,9 @@ const ZoomSettings = () => {
 
   const form = useForm({
     initialValues: {
-      apiKey: zoom.data?.data?.apiKey || '',
-      apiSecret: zoom.data?.data?.apiSecret || '',
+      oAuthAccountId: zoom.data?.data?.oAuthAccountId || '',
+      oAuthClientId: zoom.data?.data?.oAuthClientId || '',
+      oAuthClientSecret: zoom.data?.data?.oAuthClientSecret || '',
       sdkKey: zoom.data?.data?.sdkKey || '',
       sdkSecret: zoom.data?.data?.sdkSecret || '',
       isRecordingEnabled: zoom.data?.data?.isRecordingEnabled || false,
@@ -83,8 +85,9 @@ const ZoomSettings = () => {
 
   useEffect(() => {
     form.setValues({
-      apiKey: zoom.data?.data?.apiKey || '',
-      apiSecret: zoom.data?.data?.apiSecret || '',
+      oAuthAccountId: zoom.data?.data?.oAuthAccountId || '',
+      oAuthClientId: zoom.data?.data?.oAuthClientId || '',
+      oAuthClientSecret: zoom.data?.data?.oAuthClientSecret || '',
       sdkKey: zoom.data?.data?.sdkKey || '',
       sdkSecret: zoom.data?.data?.sdkSecret || '',
       isRecordingEnabled: zoom.data?.data?.isRecordingEnabled || false,
@@ -122,18 +125,25 @@ const ZoomSettings = () => {
             }}
           >
             <TextInput
-              label={t('zoom_api_key')}
-              name="apiKey"
-              placeholder={t('enter_zoom_api_key') as string}
+              label={t('oAuth_accountId')}
+              name="oAuthAccountId"
+              placeholder={t('enter_oAuth_accountId') as string}
               mb={10}
-              {...form.getInputProps('apiKey')}
+              {...form.getInputProps('oAuthAccountId')}
             />
             <TextInput
-              label={t('zoom_api_secret')}
-              name="apiSecret"
-              placeholder={t('enter_zoom_api_secret') as string}
+              label={t('oAuth_clientId')}
+              name="oAuthClientId"
+              placeholder={t('enter_oAuth_clientId') as string}
               mb={10}
-              {...form.getInputProps('apiSecret')}
+              {...form.getInputProps('oAuthClientId')}
+            />
+            <TextInput
+              label={t('oAuth_clientSecret')}
+              name="oAuthClientSecret"
+              placeholder={t('enter_oAuth_clientSecret') as string}
+              mb={10}
+              {...form.getInputProps('oAuthClientSecret')}
             />
             <TextInput
               label={t('zoom_sdk_key')}

@@ -10,6 +10,7 @@ using NLog.Web;
 using NLog;
 using Hangfire.Dashboard;
 using Microsoft.IdentityModel.Tokens;
+using PuppeteerSharp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -96,4 +97,9 @@ app.MapControllers();
 app.MapFallbackToFile("index.html");
 // app.UseHttpLogging();
 // app.MigrateDatabase();
+
+// download the chrome browser earlier 
+var browserFetcher = new BrowserFetcher();
+await browserFetcher.DownloadAsync();
+
 app.Run();

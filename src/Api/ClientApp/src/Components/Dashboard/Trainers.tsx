@@ -53,6 +53,7 @@ const Trainers = ({
       icon: 'groups',
       signLabel: t('group'),
       pluLabel: t('groups'),
+      color: '#C5F6FA',
     },
     {
       key: 'totalEnrolledCourses',
@@ -60,6 +61,7 @@ const Trainers = ({
       icon: 'enrollment',
       signLabel: t('enrollment'),
       pluLabel: t('enrollments'),
+      color: '#E9FAC8',
     },
   ];
   return (

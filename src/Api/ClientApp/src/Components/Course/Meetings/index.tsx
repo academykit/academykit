@@ -1,4 +1,5 @@
-import { Button, Group, Title } from '@mantine/core';
+import { Button, Group, Title, Text } from '@mantine/core';
+import { CourseStatus } from '@utils/enums';
 import { ICourseLesson } from '@utils/services/courseService';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
@@ -75,6 +76,12 @@ const Meetings = ({ data }: { data: ICourseLesson }) => {
                 moment.utc(data.meeting.startDate).local()
               ).fromNow()}`}
         </div>
+      )}
+      {data.status == CourseStatus.Published && (
+        <>
+          <Text>Meeting Id: {data.zoomId ?? 'N/A'}</Text>
+          <Text>Password: {data.password ?? 'N/A'}</Text>
+        </>
       )}
     </Group>
   );

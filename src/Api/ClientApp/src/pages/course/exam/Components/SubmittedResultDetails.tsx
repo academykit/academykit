@@ -176,12 +176,23 @@ const SubmittedResultDetails = ({
                         content={x.value}
                       />
                     </Grid.Col>
+                    {/* showing icon if correct answer was selected */}
                     {x.isCorrect && x.isSelected && (
                       <IconCircleCheck
                         size={36}
                         color={theme.colors.green[6]}
                       />
                     )}
+
+                    {/* showing icon if right answer was not selected */}
+                    {x.isCorrect && !x.isSelected && (
+                      <IconCircleCheck
+                        size={36}
+                        color={theme.colors.green[6]}
+                      />
+                    )}
+
+                    {/* shoing icon if wrong answer was selected */}
                     {!x.isCorrect && x.isSelected && (
                       <IconSquareRoundedX
                         size={36}
@@ -193,6 +204,24 @@ const SubmittedResultDetails = ({
               ))}
             </Container>
           </Card>
+
+          {questions[currentIndex].hints && (
+            <Card p={10} my={10} shadow="lg" withBorder>
+              <Text size={'lg'} mb={10}>
+                Hints:
+              </Text>
+              <TextViewer
+                key={questions[currentIndex].id}
+                styles={{
+                  root: {
+                    border: 'none',
+                    background: 'transparent',
+                  },
+                }}
+                content={questions[currentIndex].hints}
+              />
+            </Card>
+          )}
         </ScrollArea>
         <Card p={4} px={20} className={classes.buttonNav}>
           {currentIndex !== 0 ? (

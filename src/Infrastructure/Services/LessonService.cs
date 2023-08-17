@@ -115,7 +115,6 @@ namespace Lingtren.Infrastructure.Services
             {
                 lesson = await GetCurrentLesson(currentUserId, course).ConfigureAwait(false);
             }
-
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
             var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
 
@@ -140,7 +139,6 @@ namespace Lingtren.Infrastructure.Services
                 _logger.LogWarning("User with id: {userId} needs to view other mandatory lesson before viewing current lesson with id: {lessonId}", currentUserId, lesson.Id);
                 throw new ForbiddenException(_localizer.GetString("CompleteMandatoryLesson"));
             }
-
             if (lesson.Type == LessonType.LiveClass)
             {
                 lesson.Meeting = new Meeting();
@@ -223,11 +221,9 @@ namespace Lingtren.Infrastructure.Services
                     hasFeedbackSubmitted = true;
                 }
             }
-
             var currentLessonWatchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(
                 predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
                 ).ConfigureAwait(false);
-
             var responseModel = new LessonResponseModel(lesson);
             if (!string.IsNullOrEmpty(responseModel.VideoUrl))
             {
@@ -240,7 +236,11 @@ namespace Lingtren.Infrastructure.Services
             {
                 responseModel.DocumentUrl = await _fileServerService.GetFilePresignedUrl(lesson.DocumentUrl).ConfigureAwait(false);
             }
-
+            bool? HasAttended = null;
+            if(lesson.Type == LessonType.Physical)
+            {
+                HasAttended = await _unitOfWork.GetRepository<PhysicalLessonReview>().ExistsAsync(predicate: p=>p.UserId == currentUserId && p.LessonId == lesson.Id).ConfigureAwait(false);
+            }
             var nextLessonIndex = currentIndex + 1;
             if ((nextLessonIndex + 1) <= lessons.Count)
             {
@@ -251,7 +251,8 @@ namespace Lingtren.Infrastructure.Services
             {
                 responseModel.AssignmentExpired = lesson.EndDate <= DateTime.UtcNow;
             }
-
+            responseModel.IsTrainee = !await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId,lesson.CourseId.ToString(),TrainingTypeEnum.Course).ConfigureAwait(false);
+            responseModel.HasAttended = HasAttended;
             responseModel.HasSubmittedAssigment = hasSubmitAssignment;
             responseModel.HasResult = hasResult;
             responseModel.HasReviewedAssignment = hasReviewedAssignment;
@@ -613,7 +614,14 @@ namespace Lingtren.Infrastructure.Services
                     _unitOfWork.GetRepository<FeedbackQuestionOption>().Delete(feedbackOptions);
                     _unitOfWork.GetRepository<Feedback>().Delete(feedbacks);
                 }
-
+                if(lesson.Type == LessonType.Physical)
+                {
+                    var hasSubmission = await   _unitOfWork.GetRepository<PhysicalLessonReview>().ExistsAsync(predicate : p=>p.LessonId == lesson.Id).ConfigureAwait(false);
+                    if(hasSubmission)
+                    {
+                        throw new ForbiddenException(_localizer.GetString("LessonContainsAttendance"));
+                    }
+                }
                 _unitOfWork.GetRepository<Lesson>().Delete(lesson);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 

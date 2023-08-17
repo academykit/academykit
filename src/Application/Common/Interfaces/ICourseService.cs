@@ -18,7 +18,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="model">the instance of <see cref="CourseStatusRequestModel" /> .</param>
         /// <param name="currentUserId">the current id</param>
         /// <returns></returns>
-        Task ChangeStatusAsync(CourseStatusRequestModel model, Guid currentUserId);
+        Task<string> ChangeStatusAsync(CourseStatusRequestModel model, Guid currentUserId);
 
         /// <summary>
         /// Course Enrollment

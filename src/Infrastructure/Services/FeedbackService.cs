@@ -578,7 +578,7 @@
             {
                 searchCriteria.UserId = searchCriteria.CurrentUserId;
             }
-
+            var isTrainee = !(isTeacher || isSuperAdminOrAdmin);
             var predicate = PredicateBuilder.New<Feedback>(true);
             predicate = predicate.And(x => x.LessonId == lesson.Id);
 
@@ -597,12 +597,12 @@
 
             foreach (var item in feedbacks)
             {
-                MapFeedback(userFeedbacks, item, response);
+                MapFeedback(userFeedbacks, item, response,isTrainee);
             }
             return response;
         }
 
-        private static void MapFeedback(IList<FeedbackSubmission> userFeedbacks, Feedback item, IList<FeedbackResponseModel> response)
+        private static void MapFeedback(IList<FeedbackSubmission> userFeedbacks, Feedback item, IList<FeedbackResponseModel> response,bool isTrainee)
         {
             var userFeedback = userFeedbacks.FirstOrDefault(x => x.FeedbackId == item.Id);
             var data = new FeedbackResponseModel
@@ -616,6 +616,7 @@
                 IsActive = item.IsActive,
                 User = item.User == null ? new UserModel() : new UserModel(item.User),
                 Student = userFeedback == null ? null : new UserModel(userFeedback.User),
+                IsTrainee = isTrainee,
                 Answer = userFeedback?.Answer,
                 Rating = userFeedback?.Rating,
                 FeedbackQuestionOptions = new List<FeedbackQuestionOptionResponseModel>(),
@@ -637,6 +638,53 @@
                                 }));
             }
             response.Add(data);
+        }
+        
+        /// <summary>
+        /// reorder feedback questions
+        /// </summary>
+        /// <param name="currentUserId">current user id</param>
+        /// <param name="lessonIdentiy">lesson id or slug</param>
+        /// <param name="ids">list of feedback id</param>
+        /// <returns>Task completed</returns>
+        /// <exception cref="EntityNotFoundException"></exception>
+        /// <exception cref="ForbiddenException"></exception>
+        public async Task ReorderFeedbackQuestionsAsync(Guid currentUserId, string lessonIdentiy,List<Guid> ids)
+        {
+            await ExecuteAsync(async() =>
+            {
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p=>p.Id.ToString() == lessonIdentiy || p.Slug.ToLower() == lessonIdentiy.ToLower()).ConfigureAwait(false);
+                if (lesson == default)
+                {
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
+                }
+                var hasAuthority = await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId,lesson.CourseId.ToString(),TrainingTypeEnum.Course).ConfigureAwait(false);
+                if (!hasAuthority)
+                {
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUserAddQuestionSet"));
+                }
+                var feedbacks = await _unitOfWork.GetRepository<Feedback>().GetAllAsync(predicate: p=>p.LessonId == lesson.Id).ConfigureAwait(false);
+                if(feedbacks.Count == default)
+                {
+                    throw new ForbiddenException(_localizer.GetString("InvalidLessonFeedbackType"));
+                }
+                var updateFeedback = new List<Feedback>();
+                var order = 0;
+                foreach(var id in ids)
+                {
+                    var feedback = feedbacks.FirstOrDefault(x => x.Id == id);
+                    if(feedback != default)
+                    {
+                        feedback.Order = order;
+                        feedback.UpdatedOn = DateTime.UtcNow;
+                        feedback.UpdatedBy = currentUserId;
+                        updateFeedback.Add(feedback);
+                        order++;
+                    }
+                }
+                _unitOfWork.GetRepository<Feedback>().Update(updateFeedback);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            });
         }
     }
 }

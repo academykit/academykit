@@ -265,14 +265,26 @@ export interface INotMember {
   imageUrl: string;
   email: string;
   mobileNumber: string;
+  label: string;
+  value: string;
 }
-const getGroupNotMember = (id: string, query: string) =>
-  httpClient.get<IPaginated<INotMember>>(api.groups.notMembers(id, query));
+const getGroupNotMember = (
+  id: string,
+  query: string,
+  departmentId: string | undefined
+) =>
+  httpClient.get<IPaginated<INotMember>>(
+    api.groups.notMembers(id, query, departmentId)
+  );
 
-export const useGroupNotMember = (id: string, query: string) =>
+export const useGroupNotMember = (
+  id: string,
+  query: string,
+  departmentId: string | undefined
+) =>
   useQuery(
-    [api.groups.notMembers(id, query)],
-    () => getGroupNotMember(id, query),
+    [api.groups.notMembers(id, query, departmentId)],
+    () => getGroupNotMember(id, query, departmentId),
     {
       select: (data) => data.data,
     }

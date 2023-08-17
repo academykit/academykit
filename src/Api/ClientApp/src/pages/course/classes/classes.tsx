@@ -35,6 +35,7 @@ import FeedbackDetails from '@components/Course/Classes/FeedbackDetails';
 import lazyWithRetry from '@utils/lazyImportWithReload';
 import { useTranslation } from 'react-i18next';
 import { AxiosError } from 'axios';
+import PhysicalTrainingDetail from '@components/Course/Classes/PhysicalTrainingDetail';
 
 const PdfViewer = lazyWithRetry(
   () => import('@components/Course/Classes/PdfViewer')
@@ -113,7 +114,7 @@ const Classes = () => {
   );
 
   const goToNextLesson = (nextLesson: string) =>
-    navigate(`${RoutePath.classes}/${params.id}/${nextLesson}`);
+    navigate(`${RoutePath.classes}/${params.id}/${nextLesson}/description`);
   const onCourseEnded = async (nextLesson: string) => {
     try {
       await watchHistory.mutateAsync({
@@ -148,6 +149,9 @@ const Classes = () => {
     );
   }
 
+  // finding the latest incomplete lesson i.e., current lesson
+  const currentLesson = data?.sections.map(section => section.lessons?.find(lesson => !lesson.isCompleted))
+
   return (
     <Box p={0}>
       <Grid className={classes.wrapper}>
@@ -178,7 +182,7 @@ const Classes = () => {
                     <Button
                       component={Link}
                       mt={20}
-                      to={`${RoutePath.classes}/${params.id}/1`}
+                      to={`${RoutePath.classes}/${params.id}/${currentLesson && currentLesson[0] && currentLesson[0].slug}/description`}
                     >
                       {t('view_previous_lesson')}
                     </Button>
@@ -235,6 +239,7 @@ const Classes = () => {
                 className={cx(classes.videoSection, classes.assignmentSection)}
               >
                 <FeedbackDetails
+                  isTrainee={courseLesson.data.isTrainee}
                   name={courseLesson.data.name}
                   id={courseLesson.data.id}
                   hasFeedbackSubmitted={courseLesson.data.hasFeedbackSubmitted}
@@ -248,6 +253,19 @@ const Classes = () => {
                   onEnded={() =>
                     onCourseEnded(courseLesson.data?.nextLessonSlug as string)
                   }
+                />
+              </Box>
+            )}
+            {courseLesson.data?.type === LessonType.Physical && (
+              <Box
+                className={cx(classes.videoSection, classes.assignmentSection)}
+              >
+                <PhysicalTrainingDetail
+                  lessonSlug={courseLesson.data.slug}
+                  name={courseLesson.data.name}
+                  id={courseLesson.data.id}
+                  hasAttended={courseLesson.data.hasAttended}
+                  startDate={courseLesson.data.startDate}
                 />
               </Box>
             )}

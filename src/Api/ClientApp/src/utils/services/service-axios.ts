@@ -132,11 +132,17 @@ function handleRefreshToken(refreshToken: string) {
       failedRequestQueue = [];
     })
     .catch((error) => {
+      const { message } = error.response.data;
+      if (message === 'REFRESH_TOKEN_INVALID') {
+        localStorage.removeItem(REFRESH_TOKEN_STORAGE);
+        localStorage.removeItem(TOKEN_STORAGE);
+      }
       failedRequestQueue.forEach((request) => request.onFailure(error));
       failedRequestQueue = [];
 
       localStorage.removeItem(REFRESH_TOKEN_STORAGE);
       localStorage.removeItem(TOKEN_STORAGE);
+      window.location.reload();
     })
     .finally(() => {
       isRefreshing = false;

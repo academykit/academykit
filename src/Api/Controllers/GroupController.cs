@@ -8,7 +8,6 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
-    using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
@@ -19,14 +18,12 @@
         private readonly IGroupService _groupService;
         private readonly IGroupMemberService _groupMemberService;
         private readonly IValidator<GroupRequestModel> _validator;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseService _courseService;
         private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
         public GroupController(
             IGroupService groupService,
             IGroupMemberService groupMemberService,
             IValidator<GroupRequestModel> validator,
-            IUnitOfWork unitOfWork,
             ICourseService courseService,
             IStringLocalizer<ExceptionLocalizer> localizer)
 
@@ -34,7 +31,6 @@
             _groupService = groupService;
             _groupMemberService = groupMemberService;
             _validator = validator;
-            _unitOfWork = unitOfWork;
             _courseService = courseService;
             _localizer = localizer;
         }
@@ -155,11 +151,7 @@
         [HttpGet("{identity}/members")]
         public async Task<SearchResult<GroupMemberResponseModel>> SearchGroupMembers(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
         {
-            var group = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            if (group == null)
-            {
-                throw new EntityNotFoundException("Group not found.");
-            }
+            var group = await _groupService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false) ?? throw new EntityNotFoundException("Group not found.");
             GroupMemberBaseSearchCriteria criteria = new()
             {
                 GroupId = group.Id,
@@ -195,7 +187,7 @@
         /// <returns></returns>
         /// <exception cref="EntityNotFoundException"></exception>
         [HttpGet("{identity}/notMembers")]
-        public async Task<SearchResult<UserModel>> SearchNotGroupMembers(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<UserModel>> SearchNotGroupMembers(string identity, [FromQuery] GroupBaseSearchCriteria searchCriteria)
         {
             searchCriteria.CurrentUserId = CurrentUser.Id;
             return await _groupService.GetNonGroupMembers(identity, searchCriteria).ConfigureAwait(false);

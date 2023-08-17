@@ -1,11 +1,12 @@
 import {
+  Box,
   Button,
   Grid,
   Group,
   NumberInput,
   Paper,
   Switch,
-  Textarea,
+  Text,
   Tooltip,
 } from '@mantine/core';
 import { DatePickerInput, TimeInput } from '@mantine/dates';
@@ -26,6 +27,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -206,7 +208,7 @@ const AddExam = ({
               valueFormat="MMM DD, YYYY"
               placeholder={t('pick_date') as string}
               withAsterisk
-              label={t('Start date')}
+              label={t('start_date')}
               minDate={moment(new Date()).toDate()}
               {...form.getInputProps('startDate')}
             />
@@ -235,7 +237,7 @@ const AddExam = ({
             <DatePickerInput
               valueFormat="MMM DD, YYYY"
               placeholder={t('pick_date') as string}
-              label={t('End date')}
+              label={t('end_date')}
               withAsterisk
               minDate={form.values?.startDate}
               {...form.getInputProps('endDate')}
@@ -285,11 +287,13 @@ const AddExam = ({
           </Tooltip>
 
           <Grid.Col>
-            <Textarea
-              label={t('Description')}
-              placeholder={t('exam_description') as string}
-              {...form.getInputProps('description')}
-            />
+            <Box my={20}>
+              <Text size={'sm'}>{t('description')}</Text>
+              <RichTextEditor
+                placeholder={t('exam_description') as string}
+                {...form.getInputProps('description')}
+              />
+            </Box>
           </Grid.Col>
         </Grid>
 

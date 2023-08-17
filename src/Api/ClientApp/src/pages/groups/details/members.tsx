@@ -9,17 +9,18 @@ import {
   Box,
   Button,
   Container,
+  Drawer,
   Group,
   Loader,
   Paper,
   Table,
   Text,
   Title,
-  Transition,
+  rem,
 } from '@mantine/core';
-import { useToggle } from '@mantine/hooks';
+import { useDisclosure, useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconTrash } from '@tabler/icons';
+import { IconPlus, IconTrash } from '@tabler/icons';
 import errorType from '@utils/services/axiosError';
 import {
   IGroupMember,
@@ -31,18 +32,12 @@ import AddMember from '../Components/AddMember';
 import { UserRole } from '@utils/enums';
 import { useTranslation } from 'react-i18next';
 
-const a = {
-  in: { opacity: 1 },
-  out: { opacity: 0 },
-  common: { transformOrigin: 'top' },
-  transitionProperty: 'transform, opacity',
-};
 const GroupMember = ({
   pagination,
   searchComponent,
   searchParams,
 }: IWithSearchPagination) => {
-  const [showAddMember, setShowAddMember] = useToggle();
+  const [opened, { open, close }] = useDisclosure(false);
   const { t } = useTranslation();
   const { id } = useParams();
   const groupMember = useGroupMember(id as string, searchParams);
@@ -62,32 +57,21 @@ const GroupMember = ({
           <Title>{t('group_members')}</Title>
           <Text>{t('group_members_description')}</Text>
         </Box>
+
         {auth?.auth && auth?.auth?.role <= UserRole.Trainer && (
-          <Transition mounted={!showAddMember} transition={a} duration={400}>
-            {() => (
-              <>
-                <Button onClick={() => setShowAddMember()}>
-                  {t('add_group_member')}
-                </Button>
-              </>
-            )}
-          </Transition>
+          <Button leftIcon={<IconPlus size={rem(14)} />} onClick={open}>
+            {t('add_group_member')}
+          </Button>
         )}
       </Group>
-      <Box my={10}>
-        <Transition mounted={showAddMember} transition={a} duration={400}>
-          {() => (
-            <>
-              <Box pb={20}>
-                <AddMember
-                  onCancel={setShowAddMember}
-                  searchParams={searchParams}
-                />
-              </Box>
-            </>
-          )}
-        </Transition>
-      </Box>
+      <Drawer
+        opened={opened}
+        onClose={close}
+        title={t('add_group_member')}
+        overlayProps={{ opacity: 0.5, blur: 4 }}
+      >
+        <AddMember onCancel={close} searchParams={searchParams} />
+      </Drawer>
       <Box mt={10}>{searchComponent(t('search_group_members') as string)}</Box>
       {groupMember.isError && <>{t('unable_to_fetch')}</>}
 
@@ -97,7 +81,7 @@ const GroupMember = ({
       )}
       {groupMember.isSuccess && groupMember.data.totalCount !== 0 && (
         <Paper mt={10}>
-          <Table striped>
+          <Table striped withBorder withColumnBorders highlightOnHover>
             <thead>
               <tr>
                 <th>{t('user_name')}</th>

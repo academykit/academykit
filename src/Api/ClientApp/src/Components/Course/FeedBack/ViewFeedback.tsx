@@ -99,14 +99,23 @@ const FeedbackForm = ({
           )}
         </Card>
       ))}
-      <Group mt={20}>
-        <Button loading={submitFeedback.isLoading} type="submit">
-          {t('submit')}
-        </Button>
-        <Button type="reset" variant="outline" onClick={() => navigation(-1)}>
-          {t('cancel')}
-        </Button>
-      </Group>
+      {item[0].isTrainee && (
+        <Group mt={20}>
+          <Button loading={submitFeedback.isLoading} type="submit">
+            {t('submit')}
+          </Button>
+          <Button type="reset" variant="outline" onClick={() => navigation(-1)}>
+            {t('cancel')}
+          </Button>
+        </Group>
+      )}
+      {!item[0].isTrainee && (
+        <Group mt={20}>
+          <Button type="reset" variant="outline" onClick={() => navigation(-1)}>
+            {t('close')}
+          </Button>
+        </Group>
+      )}
     </form>
   );
 };

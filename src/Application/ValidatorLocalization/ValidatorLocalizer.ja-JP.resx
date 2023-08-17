@@ -120,17 +120,17 @@
   <data name="AddressLength200" xml:space="preserve">
     <value>アドレスの長さは 200 文字以下である必要があります。</value>
   </data>
-  <data name="ApiKeyLength100" xml:space="preserve">
-    <value>API キーの長さは 100 文字以下である必要があります。</value>
+  <data name="OAuthAccountIdLength100" xml:space="preserve">
+    <value> OAuth アカウント ID の長さは 100 文字以下である必要があります。</value>
   </data>
-  <data name="APIKeyRequired" xml:space="preserve">
-    <value>APIキーが必要です。</value>
+  <data name="OAuthAccountIdRequired" xml:space="preserve">
+    <value> OAuth アカウント ID は必須です。</value>
   </data>
-  <data name="ApiSecretKeyLength100" xml:space="preserve">
-    <value>API シークレットの長さは 100 文字以下である必要があります。</value>
+  <data name="OAuthClientIdLength100" xml:space="preserve">
+    <value> OAuth クライアント ID の長さは 100 文字以下である必要があります。</value>
   </data>
-  <data name="ApiSecretRequired" xml:space="preserve">
-    <value>API シークレットが必要です。</value>
+  <data name="OAuthClientIdRequired" xml:space="preserve">
+    <value> OAuth クライアント ID は必須です。</value>
   </data>
   <data name="AssignementQuestionisRequired" xml:space="preserve">
     <value>割り当ての質問オプションは必須です。</value>
@@ -333,6 +333,9 @@
   <data name="MeetingIdDUrationLength" xml:space="preserve">
     <value>会議の継続時間は 1439 分以上にすることはできません。</value>
   </data>
+  <data name="MessageCannotBeEmpty" xml:space="preserve">
+    <value>レビューメッセージを空にすることはできません。</value>
+  </data>
   <data name="MiddleNameLength100" xml:space="preserve">
     <value>ミドルネームの長さは 100 文字以下である必要があります。</value>
   </data>
@@ -497,5 +500,17 @@
   </data>
   <data name="ZoomLicenseRequired" xml:space="preserve">
     <value>Zoomライセンスを選択してください。</value>
+  </data>
+  <data name="OAuthClientSecretRequired" xml:space="preserve">
+    <value>OAuth クライアント シークレットは必須です。</value>
+  </data>
+  <data name="OAuthClientSecretLength100" xml:space="preserve">
+    <value>OAuth クライアント シークレットの長さは 100 文字以下である必要があります。</value>
+  </data>
+  <data name="OptionalCostCannotBeNull" xml:space="preserve">
+    <value>オプションのコストを空にすることはできません。</value>
+  </data>
+  <data name="InvalidMoblieNumber" xml:space="preserve">
+    <value>携帯電話番号の形式が無効です。</value>
   </data>
 </root>

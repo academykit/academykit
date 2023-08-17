@@ -11,6 +11,7 @@
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Localization;
     using LinqKit;
+    using Microsoft.AspNetCore.Mvc.Routing;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
@@ -18,6 +19,7 @@
     using Microsoft.VisualBasic;
     using Org.BouncyCastle.Math.EC.Rfc7748;
     using System.Linq.Expressions;
+    using System.Web;
 
     public class QuestionSetService : BaseGenericService<QuestionSet, BaseSearchCriteria>, IQuestionSetService
     {
@@ -99,7 +101,6 @@
                 var newQuestionIds = model.QuestionPoolQuestionIds.Except(oldQuestionIds).ToList();
                 var currentTimeStamp = DateTime.UtcNow;
                 var removeData = existingQuestionSetQuestions.Where(x => removeQuestionIds.Any(y => y == x.Id)).ToList();
-
                 var questionSetQuestions = new List<QuestionSetQuestion>();
                 if (removeData.Count != default)
                 {
@@ -173,6 +174,57 @@
                                                                              questionSetQuestionId: questionSetQuestion.Id));
             }
             return responseModels;
+        }
+
+        /// <summary>
+        /// Handel to reorder questionset question
+        /// </summary>
+        /// <param name="lessonIdentity">Lesson id or slug</param>
+        /// <param name="currentUserId">current user id</param>
+        /// <param name="ids">list of question set question id</param>
+        /// <returns>Task completed</returns>
+        /// <exception cref="EntityNotFoundException"></exception>
+        /// <exception cref="ForbiddenException"></exception>
+        public async Task ReorderQuestionsetQuestionsAsync(Guid currentUserId, string lessonIdentity, List<Guid> ids)
+        {
+            await ExecuteAsync(async () =>
+            {
+                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == lessonIdentity || p.Slug.ToLower() == lessonIdentity.ToLower(),
+                    include: src => src.Include(x => x.QuestionSet)).ConfigureAwait(false);
+                if (lesson == default)
+                {
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
+                }
+                var hasAuthority = await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId, lesson.CourseId.ToString(), TrainingTypeEnum.Course).ConfigureAwait(false);
+                if (!hasAuthority)
+                {
+                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUserAddQuestionSet"));
+                }
+                if (lesson.QuestionSet == default)
+                {
+                    throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
+                }
+                var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(predicate: p => p.QuestionSetId == lesson.QuestionSet.Id).ConfigureAwait(false);
+                var updateQuestion = new List<QuestionSetQuestion>();
+                var order = 0;
+                foreach (var id in ids)
+                {
+                    var question = questionSetQuestions.FirstOrDefault(x => x.Id == id);
+                    if (question != default)
+                    {
+                        question.Order = order;
+                        question.UpdatedOn = DateTime.UtcNow;
+                        question.UpdatedBy = currentUserId;
+                        updateQuestion.Add(question);
+                        order++;
+                    }
+                }
+                if (updateQuestion.Count != default)
+                {
+                    _unitOfWork.GetRepository<QuestionSetQuestion>().Update(updateQuestion);
+                    await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                }
+            });
         }
 
         #region Start Exam and Submission
@@ -619,7 +671,8 @@
                     },
                     QuestionSetSubmissions = new List<QuestionSetResultDetailModel>()
                 };
-
+                response.HasExceededAttempt = response.AttemptCount >= questionSet.AllowedRetake;
+                response.EndDate = questionSet.EndTime.Value;
                 questionSetSubmissions.ForEach(res => response.QuestionSetSubmissions.Add(new QuestionSetResultDetailModel
                 {
                     QuestionSetSubmissionId = res.Id,

@@ -91,6 +91,16 @@ const UserRow = ({
 
   return (
     <tr key={item?.id}>
+      <td
+        style={{
+          width: '122px',
+          maxWidth: '122px',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}
+      >
+        {item.memberId}
+      </td>
       <td>
         <Modal
           size={800}
@@ -211,9 +221,12 @@ const UserMemberTable = ({
         verticalSpacing="sm"
         striped
         highlightOnHover
+        withBorder
+        withColumnBorders
       >
         <thead>
           <tr>
+            <th>{t('User ID')}</th>
             <th>
               {sortComponent({ sortKey: 'firstName', title: t('username') })}
             </th>

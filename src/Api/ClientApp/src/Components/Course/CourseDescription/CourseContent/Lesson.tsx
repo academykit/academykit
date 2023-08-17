@@ -1,7 +1,7 @@
 import {
   Badge,
-  Box,
   createStyles,
+  Flex,
   Group,
   Paper,
   Popover,
@@ -15,6 +15,7 @@ import RoutePath from '@utils/routeConstants';
 import { ILessons } from '@utils/services/courseService';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { IconCheck } from '@tabler/icons';
 
 const useStyle = createStyles((theme) => {
   return {
@@ -74,14 +75,25 @@ const Lesson = ({
         >
           <div ref={ref}>
             <Group>
-              <Box w={'100%'} p={15}>
-                <Title size={matches ? 14 : 13} lineClamp={2}>
-                  {index + 1}. {lesson.name}
-                </Title>
-                <Badge color="blue" variant="light" ml={10}>
-                  {t(`${LessonType[lesson.type]}`)}
-                </Badge>
-              </Box>
+              <Flex w={'100%'} p={15} direction={'row'}>
+                <div>
+                  <Title size={matches ? 14 : 13} lineClamp={2} mb={3}>
+                    {index + 1}. {lesson.name}
+                  </Title>
+                  <Badge color="blue" variant="light" ml={10}>
+                    {t(`${LessonType[lesson.type]}`)}
+                  </Badge>
+                </div>
+                {lesson.isCompleted && (
+                  <IconCheck
+                    style={{
+                      marginLeft: 'auto',
+                      marginTop: 'auto',
+                      marginBottom: 'auto',
+                    }}
+                  />
+                )}
+              </Flex>
             </Group>
           </div>
         </Paper>

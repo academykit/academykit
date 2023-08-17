@@ -995,4 +995,58 @@
   <data name="AssignmentStartTimeException" xml:space="preserve">
     <value>課題はまだ始まっていません。</value>
   </data>
+  <data name="SuccessfulAttendance" xml:space="preserve">
+    <value>無事にレッスンに参加できました。</value>
+  </data>
+  <data name="SuccessfullyReviewed" xml:space="preserve">
+    <value>無事にレビューされました。</value>
+  </data>
+  <data name="QuestionPoolQuestionNotFound" xml:space="preserve">
+    <value>質問プールの質問が見つかりませんでした。</value>
+  </data>
+  <data name="QuestionpoolUpdatedSuccesfully" xml:space="preserve">
+    <value>質問プールの質問が正常に更新されました。</value>
+  </data>
+  <data name="AssignmentUpdatedSuccessfully" xml:space="preserve">
+    <value>割り当てが正常に更新されました。</value>
+  </data>
+  <data name="AlreadyEnrolledUser" xml:space="preserve">
+    <value>すでに登録されているメールアドレスまたは携帯電話番号:</value>
+  </data>
+  <data name="InvalidEmailFormat" xml:space="preserve">
+    <value>無効なメールアドレス:</value>
+  </data>
+  <data name="TrainingPusbishedSuccessfully" xml:space="preserve">
+    <value>トレーニングは正常に公開されました。</value>
+  </data>
+  <data name="NewGroupMember" xml:space="preserve">
+    <value>新しいグループメンバー:</value>
+  </data>
+  <data name="UpdatedDeletedUser" xml:space="preserve">
+    <value>削除されたユーザーを更新しました:</value>
+  </data>
+  <data name="UpdatedUser" xml:space="preserve">
+    <value>登録されているグループメンバー:</value>
+  </data>
+  <data name="LessonContainsAttendance" xml:space="preserve">
+    <value>体育の授業には出席が含まれます。</value>
+  </data>
+  <data name="DuplicateMemberIdFound" xml:space="preserve">
+    <value>重複するメンバー ID が見つかりました。</value>
+  </data>
+  <data name="NewEnrolledUser" xml:space="preserve">
+    <value>新規登録ユーザー:</value>
+  </data>
+  <data name="EnrollmentFor" xml:space="preserve">
+    <value>登録対象者</value>
+  </data>
+  <data name="HasBeenSuccessful" xml:space="preserve">
+    <value>無事に完了しました。</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>ユーザー</value>
+  </data>
+  <data name="TokenVerifiedSuccessfully" xml:space="preserve">
+    <value>トークンが正常に検証されました。</value>
+  </data>
 </root>

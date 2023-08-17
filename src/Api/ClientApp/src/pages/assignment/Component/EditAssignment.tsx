@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import TextEditor from '@components/Ui/TextEditor';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import {
   Box,
   Button,
@@ -210,7 +210,7 @@ const EditAssignment = ({
             ></TextInput>
             <Box mt={20}>
               <Text size={'lg'}>{t('description')}</Text>
-              <TextEditor
+              <RichTextEditor
                 placeholder={t('question_description') as string}
                 formContext={useFormContext}
                 label="description"
@@ -219,7 +219,7 @@ const EditAssignment = ({
 
             <Box mt={20}>
               <Text size={'lg'}>{t('hint')}</Text>
-              <TextEditor
+              <RichTextEditor
                 placeholder={t('question_hint') as string}
                 formContext={useFormContext}
                 label="hints"
@@ -274,12 +274,12 @@ const EditAssignment = ({
                           ></Radio>
                         )}
                         <div style={{ width: '80%' }}>
-                          <TextEditor
+                          <RichTextEditor
                             // sx={{width:100}}
                             placeholder={t('option_placeholder') as string}
                             label={`answers.${i}.option`}
                             formContext={useFormContext}
-                          ></TextEditor>
+                          ></RichTextEditor>
                         </div>
                         <UnstyledButton
                           ml={10}

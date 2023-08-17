@@ -1,4 +1,4 @@
-import TextEditor from '@components/Ui/TextEditor';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import {
   Box,
   Button,
@@ -38,7 +38,9 @@ const [FormProvider, useFormContext, useForm] =
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t('question_title_required') as string),
+    name: Yup.string()
+      .trim()
+      .required(t('question_title_required') as string),
 
     answers: Yup.array()
 
@@ -229,7 +231,7 @@ const EditQuestion = () => {
             />
             <Box mt={20}>
               <Text size={'md'}>{t('description')}</Text>
-              <TextEditor
+              <RichTextEditor
                 placeholder={t('question_description') as string}
                 label="description"
                 formContext={useFormContext}
@@ -260,7 +262,7 @@ const EditQuestion = () => {
 
             <Box mt={20}>
               <Text size={'md'}>{t('hint')}</Text>
-              <TextEditor
+              <RichTextEditor
                 placeholder={t('question_hint') as string}
                 label={'hints'}
                 formContext={useFormContext}
@@ -302,11 +304,11 @@ const EditQuestion = () => {
                       ></Radio>
                     )}
                     <div style={{ width: '80%' }}>
-                      <TextEditor
+                      <RichTextEditor
                         placeholder={t('option_placeholder') as string}
                         label={`answers.${i}.option`}
                         formContext={useFormContext}
-                      ></TextEditor>
+                      ></RichTextEditor>
                     </div>
                     <UnstyledButton
                       onClick={() => {
