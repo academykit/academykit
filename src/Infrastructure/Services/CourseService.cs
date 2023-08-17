@@ -1327,7 +1327,12 @@ namespace Lingtren.Infrastructure.Services
 
             if (currentUserRole == UserRole.SuperAdmin || currentUserRole == UserRole.Admin || currentUserRole == UserRole.Trainer)
             {
-                predicate = predicate.And(p => p.CourseTeachers.Any(x => x.CourseId == p.Id || x.UserId == currentUserId));
+                predicate = predicate.And(p => p.CourseTeachers.Any(x => x.CourseId == p.Id && x.UserId == currentUserId));
+                if(currentUserRole == UserRole.Trainer)
+                {
+                    predicate = predicate.Or(p => p.CourseEnrollments.Any(x => x.CourseId == p.Id && x.UserId == currentUserId && !x.IsDeleted &&
+                                (x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed)));
+                }
             }
 
             if (currentUserRole == UserRole.Trainee)
