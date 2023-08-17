@@ -350,7 +350,7 @@
 
                 if (group.Courses.Any())
                 {
-                    var courseTeacher = group.Courses.Where(x => x.CourseTeachers.Any(x => x.UserId == groupMember.UserId)).SelectMany(x => x.CourseTeachers).ToList();
+                    var courseTeacher = group.Courses.SelectMany(x => x.CourseTeachers.Where(x => x.UserId == groupMember.UserId)).ToList();
                     var courseAuthor = group.Courses.Where(x => x.CreatedBy == groupMember.UserId).ToList();
                     courseAuthor.ForEach(x =>
                     {
