@@ -29,7 +29,7 @@ const PreviewQuestion = () => {
 
   useEffect(() => {
     setQuestionData(questions.data as QuestionSetQuestions[]);
-  }, [questions.isSuccess]);
+  }, [questions.isSuccess, questions.isRefetching]);
 
   const items = questionData?.map((x, index) => (
     <Draggable key={x.id} draggableId={x.id} index={index}>
