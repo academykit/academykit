@@ -100,6 +100,9 @@ const LoginPage = () => {
     setHeader();
 
     if (companySettings.isSuccess) {
+      const branding = JSON.parse(
+        companySettings.data.data.custonConfiguration ?? '{}'
+      );
       localStorage.setItem(
         'app-info',
         JSON.stringify({
@@ -107,6 +110,7 @@ const LoginPage = () => {
           logo: companySettings.data.data.imageUrl,
         })
       );
+      localStorage.setItem('branding', branding.accent);
       setHeader();
     }
   }, [companySettings.isSuccess]);

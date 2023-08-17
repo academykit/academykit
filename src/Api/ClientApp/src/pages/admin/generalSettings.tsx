@@ -95,6 +95,7 @@ const GeneralSettings = () => {
 
   const handleSubmit = async (values: any) => {
     try {
+      values = {...values, customConfiguration: JSON.stringify({accent: color})}
       await updateGeneral.mutateAsync(values);
       showNotification({
         title: t('successful'),
