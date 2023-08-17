@@ -11,6 +11,9 @@ const LessonDetails = lazyWithRetry(() => import('../manage/lessonDetails'));
 const ManageCourse = lazyWithRetry(() => import('../manage/manage'));
 const StudentDetails = lazyWithRetry(() => import('../manage/studentDetails'));
 const Questions = lazyWithRetry(() => import('../question'));
+const PreviewQuestions = lazyWithRetry(
+  () => import('../question/PreviewQuestion')
+);
 const Certificate = lazyWithRetry(() => import('./certificate'));
 const CourseEditNav = lazyWithRetry(() => import('./Components/Layout'));
 const Dashboard = lazyWithRetry(() => import('./dashboard'));
@@ -93,6 +96,10 @@ const CourseRoute = () => {
           <Route path="/certificate" element={<Certificate />} />
         </Route>
         <Route path="/lessons/questions/:lessonSlug" element={<Questions />} />
+        <Route
+          path="/lessons/questions/preview/:lessonSlug"
+          element={<PreviewQuestions />}
+        />
       </Routes>
     </>
   ) : (

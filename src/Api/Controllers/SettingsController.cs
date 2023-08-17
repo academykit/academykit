@@ -70,7 +70,8 @@ namespace Lingtren.Api.Controllers
             return new CompanyResponseModel
             {
                 Name = response.CompanyName,
-                ImageUrl = response.LogoUrl
+                ImageUrl = response.LogoUrl,
+                CustonConfiguration = response.CustomConfiguration,
             };
         }
 

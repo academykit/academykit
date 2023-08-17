@@ -71,10 +71,6 @@ namespace Lingtren.Infrastructure.Services
         /// <returns>the instance of <see cref="AuthenticationModel"/></returns>
         public async Task<AuthenticationModel> VerifyUserAndGetToken(LoginRequestModel model)
         {
-            _logger.LogInformation("Hello");
-            _logger.LogError("Hello");
-            _logger.LogWarning("hello");
-            _logger.LogTrace("hello");
             var authenticationModel = new AuthenticationModel();
 
             var user = await GetUserByEmailAsync(email: model.Email.Trim());
@@ -1028,15 +1024,14 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
-        /// 
+        /// Handle to remove refresh token
         /// </summary>
-        /// <param name="currentUserId"></param>
-        /// <returns></returns>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the task complete </returns>
         public async Task RemoveRefreshTokenAsync(Guid currentUserId)
         {
-            var userToken = await _unitOfWork.GetRepository<RefreshToken>().GetAllAsync(predicate: p => p.UserId == currentUserId && p.IsActive == true).ConfigureAwait(false);
-            userToken.ToList().ForEach(x => x.IsActive = false);
-            _unitOfWork.GetRepository<RefreshToken>().Update(userToken);
+            var userToken = await _unitOfWork.GetRepository<RefreshToken>().GetAllAsync(predicate: p => p.UserId == currentUserId).ConfigureAwait(false);
+            _unitOfWork.GetRepository<RefreshToken>().Delete(userToken);
         }
 
         /// <summary>
