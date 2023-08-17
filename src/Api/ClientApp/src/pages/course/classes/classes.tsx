@@ -149,6 +149,9 @@ const Classes = () => {
     );
   }
 
+  // finding the latest incomplete lesson i.e., current lesson
+  const currentLesson = data?.sections.map(section => section.lessons?.find(lesson => !lesson.isCompleted))
+
   return (
     <Box p={0}>
       <Grid className={classes.wrapper}>
@@ -179,7 +182,7 @@ const Classes = () => {
                     <Button
                       component={Link}
                       mt={20}
-                      to={`${RoutePath.classes}/${params.id}/1`}
+                      to={`${RoutePath.classes}/${params.id}/${currentLesson && currentLesson[0] && currentLesson[0].slug}/description`}
                     >
                       {t('view_previous_lesson')}
                     </Button>

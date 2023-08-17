@@ -100,7 +100,7 @@ export const api = {
       `/api/course/${identity}/certificate/issue`,
     dashboard: `/api/dashboard`,
     dashboardCourse: `/api/dashboard/course`,
-    dashboardUpcoming: `/api/dashboard/upcomminlesson`,
+    dashboardUpcoming: `/api/dashboard/upcominglesson`,
     updateCourse: (id: string) => `/api/course/${id}/updateCourse`,
 
     createSignature: (courseId: string) => `/api/course/${courseId}/signature`,

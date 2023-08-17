@@ -1,28 +1,12 @@
 import { Badge, Group, Indicator, Paper, Text } from '@mantine/core';
 import { LessonType } from '@utils/enums';
+import { UpcomingEvents } from '@utils/services/dashboardService';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-const EventCard = ({
-  lessonName,
-  trainingName,
-  lessonType,
-  date,
-}: {
-  lessonName: string;
-  trainingName: string;
-  lessonType: number;
-  date: string;
-}) => {
+const EventCard = ({ detail }: { detail: UpcomingEvents }) => {
   const { t } = useTranslation();
-
-  // #C5F6FA
-  // #E9FAC8
-  // #D6EFED
-  // #E3F4F4
-  // #D2DAFF
-  // #FBF4F9
 
   const videoType = {
     color: '#C5F6FA',
@@ -74,7 +58,7 @@ const EventCard = ({
       <Indicator
         ml={8}
         size={15}
-        disabled={true}
+        disabled={!detail.isLive}
         processing
         color={'green'}
         position="top-start"
@@ -84,21 +68,21 @@ const EventCard = ({
           p={10}
           radius={'md'}
           component={Link}
-          to={'/'}
-          bg={getTypeColor(lessonType).color}
+          to={`/classes/${detail.courseSlug}/${detail.lessonSlug}/description`}
+          bg={getTypeColor(detail.lessonType).color}
         >
           <Text size="lg" weight="bolder" lineClamp={2} color="black">
-            {lessonName}
+            {detail.lessonName}
           </Text>
           <Text size="sm" lineClamp={2} color="black">
-            {trainingName}
+            {detail.courseName ?? 'Training Name'}
           </Text>
           <Group mt={'sm'}>
             <Badge color="blue" variant="outline">
-              {t(`${LessonType[lessonType]}`)}
+              {t(`${LessonType[detail.lessonType]}`)}
             </Badge>
             <Text size="sm" color="black">
-              {moment(date).format('LL')}
+              {moment(detail.startDate).format('LL')}
             </Text>
           </Group>
         </Paper>

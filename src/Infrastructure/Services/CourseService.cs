@@ -1415,7 +1415,7 @@ namespace Lingtren.Infrastructure.Services
                     var course = await _unitOfWork.GetRepository<Course>().GetAllAsync(include: src => src.Include(x => x.Lessons).ThenInclude(x => x.Meeting)).ConfigureAwait(false);
                     var currentDateTime = DateTime.UtcNow;
                     var response = new List<DashboardLessonResponseModel>();
-                    var upcommingLessons = course.SelectMany(x => x.Lessons).Where(x => x.Meeting.StartDate.Value.AddMinutes(x.Meeting.Duration)>= currentDateTime).ToList();
+                    var upcommingLessons = course.SelectMany(x => x.Lessons).Where(x => x.Meeting.StartDate.Value.AddSeconds(x.Meeting.Duration)>= currentDateTime).ToList();
                     foreach (var lesson in upcommingLessons)
                     {
                         response.Add(new DashboardLessonResponseModel
@@ -1426,6 +1426,7 @@ namespace Lingtren.Infrastructure.Services
                             StartDate = lesson.Meeting.StartDate,
                             CourseSlug = course.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug,
                             IsLive = lesson.Meeting.StartDate <= currentDateTime,
+                            CourseName = course.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Name,
                         });
                     }
                     response = response.OrderByDescending(x => x.StartDate).Reverse().ToList();
@@ -1436,7 +1437,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var currentDateTime = DateTime.UtcNow;
                     var courseLiveLessons = await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p => (p.CourseTeachers.All(x => x.UserId == currentUserId) ||
-                    p.CourseEnrollments.All(x => x.UserId == currentUserId)) && p.Lessons.All(x=>x.Meeting.StartDate.Value.AddMinutes(x.Meeting.Duration) > currentDateTime),
+                    p.CourseEnrollments.All(x => x.UserId == currentUserId)) && p.Lessons.All(x=>x.Meeting.StartDate.Value.AddSeconds(x.Meeting.Duration) > currentDateTime),
                     include: src => src.Include(x => x.CourseEnrollments).Include(x => x.Lessons).ThenInclude(x => x.Meeting)).ConfigureAwait(false);
 
                     var courseExamLessons = await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p => (p.CourseTeachers.All(x => x.UserId == currentUserId) ||
@@ -1455,7 +1456,7 @@ namespace Lingtren.Infrastructure.Services
                     {
                         if (lesson.Meeting.StartDate.HasValue)
                         {
-                            DateTime endTime = lesson.Meeting.StartDate.Value.AddMinutes(lesson.Meeting.Duration);
+                            DateTime endTime = lesson.Meeting.StartDate.Value.AddSeconds(lesson.Meeting.Duration);
                             if (endTime > currentDateTime)
                             {
                                 upcommingLiveLessons.Add(lesson);
@@ -1478,6 +1479,7 @@ namespace Lingtren.Infrastructure.Services
                             CourseEnrollmentBool = courseLiveLessons.Any(x => x.CourseEnrollments.Any(x => x.CourseId == lesson.CourseId && x.UserId == currentUserId)),
                             CourseSlug = courseLiveLessons.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug,
                             IsLive = lesson.Meeting.StartDate <= currentDateTime,
+                            CourseName = courseLiveLessons.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Name,
                         });
                     }
 
@@ -1490,7 +1492,8 @@ namespace Lingtren.Infrastructure.Services
                             LessonName = lesson.Name,
                             StartDate = lesson.StartDate,
                             CourseEnrollmentBool = CourseAssignmentLesson.Any(x => x.CourseEnrollments.Any(x => x.CourseId == lesson.CourseId && x.UserId == currentUserId)),
-                            CourseSlug = CourseAssignmentLesson.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug
+                            CourseSlug = CourseAssignmentLesson.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug,
+                            CourseName = CourseAssignmentLesson.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Name,
                         });
                     }
 
@@ -1503,7 +1506,8 @@ namespace Lingtren.Infrastructure.Services
                             LessonName = lesson.Name,
                             StartDate = lesson.QuestionSet.StartTime,
                             CourseEnrollmentBool = courseExamLessons.Any(x => x.CourseEnrollments.Any(x => x.CourseId == lesson.CourseId && x.UserId == currentUserId)),
-                            CourseSlug = courseExamLessons.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug
+                            CourseSlug = courseExamLessons.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug,
+                            CourseName = courseExamLessons.Where(x => x.Id == lesson.CourseId).FirstOrDefault().Name,
                         });
                     }
                     response = response.OrderByDescending(x => x.StartDate).Reverse().ToList();
@@ -1515,7 +1519,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var currentDateTime = DateTime.UtcNow;
                     var lessonLiveClass = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.Course.CourseEnrollments.All(x => x.UserId == currentUserId) && 
-                    p.Meeting.StartDate.Value.AddMinutes(p.Meeting.Duration) > currentDateTime,
+                    p.Meeting.StartDate.Value.AddSeconds(p.Meeting.Duration) > currentDateTime,
                     include: src => src.Include(x => x.Meeting).Include(x=>x.Course)).ConfigureAwait(false);
                     var lessonExam = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.Course.CourseEnrollments.All(x => x.UserId == currentUserId) && 
                     p.QuestionSet.EndTime > currentDateTime,
@@ -1535,6 +1539,7 @@ namespace Lingtren.Infrastructure.Services
                             StartDate = lesson.Meeting.StartDate,
                             CourseSlug = lessonLiveClass.Select(x=>x.Course).Where(x=>x.Id == lesson.CourseId).FirstOrDefault().Slug,
                             IsLive =lesson.Meeting.StartDate <= currentDateTime,
+                            CourseName = lessonLiveClass.Select(x => x.Course).Where(x => x.Id == lesson.CourseId).FirstOrDefault().Name,
                         });
                     }
 
@@ -1547,6 +1552,7 @@ namespace Lingtren.Infrastructure.Services
                             LessonName = lesson.Name,
                             StartDate = lesson.StartDate,
                             CourseSlug = lessonAssignments.Select(x => x.Course).Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug,
+                            CourseName = lessonAssignments.Select(x => x.Course).Where(x => x.Id == lesson.CourseId).FirstOrDefault().Name,
                         });
                     }
 
@@ -1559,6 +1565,7 @@ namespace Lingtren.Infrastructure.Services
                             LessonName = lesson.Name,
                             StartDate = lesson.QuestionSet.StartTime,
                             CourseSlug = lessonExam.Select(x => x.Course).Where(x => x.Id == lesson.CourseId).FirstOrDefault().Slug,
+                            CourseName = lessonExam.Select(x => x.Course).Where(x => x.Id == lesson.CourseId).FirstOrDefault().Name,
                         });
                     }
                     response = response.OrderByDescending(x => x.StartDate).Reverse().ToList();

@@ -8,7 +8,7 @@ import {
 } from '@utils/services/commentService';
 import CommentReply from './CommentReply';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const CommentReplies = ({
   commentId,
@@ -49,6 +49,10 @@ const CommentReplies = ({
       });
     }
   };
+
+  useEffect(() => {
+    setVisibleReplies(initialVisibleReplies);
+  }, [addCommentReply.isSuccess]);
 
   if (commentReplies.isLoading) {
     return <Loader />;

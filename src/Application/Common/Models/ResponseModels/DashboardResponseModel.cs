@@ -37,6 +37,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
 
         public bool? CourseEnrollmentBool { get; set; }
         public bool? IsLive { get; set; }
+        public string CourseName { get; set; }
 
     }
 }
