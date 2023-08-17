@@ -29,7 +29,7 @@ const Dashboard = () => {
         {t('overview')}
       </Text>
       <Grid>
-        <Grid.Col sm={4} orderSm={2}>
+        <Grid.Col sm={3} orderSm={2}>
           <Card padding={10}>
             <Text size="lg" weight="bolder" mb={'sm'}>
               Upcoming Events
@@ -50,7 +50,7 @@ const Dashboard = () => {
             </ScrollArea.Autosize>
           </Card>
         </Grid.Col>
-        <Grid.Col sm={8} xs={12}>
+        <Grid.Col sm={9} xs={12}>
           {dashboard.isSuccess && dashboardCourses.isSuccess && (
             <>
               {role === UserRole.Admin || role === UserRole.SuperAdmin ? (
