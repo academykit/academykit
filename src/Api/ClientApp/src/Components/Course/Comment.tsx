@@ -241,7 +241,11 @@ const Comment = ({ comment }: { comment: IComment }) => {
         {(styles) => (
           <Box style={{ ...styles }} p="sm" mt={1}>
             {toggle ? (
-              <CommentReplies commentId={comment.id} courseId={id as string} />
+              <CommentReplies
+                replyCount={comment.repliesCount}
+                commentId={comment.id}
+                courseId={id as string}
+              />
             ) : (
               <></>
             )}

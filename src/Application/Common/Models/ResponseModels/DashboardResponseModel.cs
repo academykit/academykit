@@ -33,9 +33,11 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public LessonType LessonType { get; set; }
         public string LessonName { get; set; }
         public DateTime? StartDate { get; set; }
-
+        public string CourseSlug { get; set; }
 
         public bool? CourseEnrollmentBool { get; set; }
+        public bool? IsLive { get; set; }
+        public string CourseName { get; set; }
 
     }
 }

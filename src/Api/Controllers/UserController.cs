@@ -114,6 +114,7 @@ namespace Lingtren.Api.Controllers
                 CreatedOn = currentTimeStamp,
                 UpdatedBy = CurrentUser.Id,
                 UpdatedOn = currentTimeStamp,
+                MemberId = model.MemberId,
             };
 
             var password = await _userService.GenerateRandomPassword(8).ConfigureAwait(false);
@@ -211,6 +212,7 @@ namespace Lingtren.Api.Controllers
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
             existing.Email = model.Email;
+            existing.MemberId = model.MemberId;
 
             if (CurrentUser.Role == UserRole.SuperAdmin || CurrentUser.Role == UserRole.Admin)
             {

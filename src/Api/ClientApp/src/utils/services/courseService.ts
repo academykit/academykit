@@ -198,6 +198,33 @@ export const useSectionReorder = (id: string) => {
   });
 };
 
+const assignmentReorder = async ({
+  id,
+  data,
+  lessonIdentity,
+  lessonType,
+}: {
+  id: string;
+  lessonIdentity: string;
+  lessonType: number;
+  data: string[];
+}) =>
+  await httpClient.post(
+    api.course.reorder(id) +
+      `?lessonIdentity=${lessonIdentity}&lessonType=${lessonType}`,
+    data
+  );
+
+export const useQuestionReorder = (id: string) => {
+  const queryClient = useQueryClient();
+  return useMutation([], assignmentReorder, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([api.course.detail(id)]);
+      queryClient.invalidateQueries([api.questionSet.getQuestion(id)]);
+    },
+  });
+};
+
 export const useUpdateCourse = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation(
@@ -356,9 +383,8 @@ const createLesson = async (
     | ILessonAssignment
     | ILessonMeeting
     | ILessonFeedback
-) => {
-  return await httpClient.post(api.lesson.addLesson(data.courseId), data);
-};
+) => await httpClient.post<ILessons>(api.lesson.addLesson(data.courseId), data);
+
 export const useCreateLesson = (slug: string) => {
   const queryClient = useQueryClient();
 
@@ -531,6 +557,7 @@ export interface ICourseLesson {
   zoomId: string;
   password: string;
   hasAttended: boolean;
+  isTrainee: boolean;
 }
 
 const getCourseLesson = async (

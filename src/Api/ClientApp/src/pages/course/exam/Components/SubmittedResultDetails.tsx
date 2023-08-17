@@ -204,6 +204,24 @@ const SubmittedResultDetails = ({
               ))}
             </Container>
           </Card>
+
+          {questions[currentIndex].hints && (
+            <Card p={10} my={10} shadow="lg" withBorder>
+              <Text size={'lg'} mb={10}>
+                Hints:
+              </Text>
+              <TextViewer
+                key={questions[currentIndex].id}
+                styles={{
+                  root: {
+                    border: 'none',
+                    background: 'transparent',
+                  },
+                }}
+                content={questions[currentIndex].hints}
+              />
+            </Card>
+          )}
         </ScrollArea>
         <Card p={4} px={20} className={classes.buttonNav}>
           {currentIndex !== 0 ? (

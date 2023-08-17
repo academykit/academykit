@@ -100,6 +100,7 @@ export const api = {
       `/api/course/${identity}/certificate/issue`,
     dashboard: `/api/dashboard`,
     dashboardCourse: `/api/dashboard/course`,
+    dashboardUpcoming: `/api/dashboard/upcominglesson`,
     updateCourse: (id: string) => `/api/course/${id}/updateCourse`,
 
     createSignature: (courseId: string) => `/api/course/${courseId}/signature`,
@@ -236,8 +237,12 @@ export const api = {
     list: (courseId: string) => `/api/course/${courseId}/comments`,
     details: (courseId: string, commentId: string) =>
       `/api/course/${courseId}/comments/${commentId}`,
-    getRepliesList: (courseId: string, commentId: string) =>
-      `/api/course/${courseId}/comments/${commentId}`,
+    getRepliesList: (
+      courseId: string,
+      commentId: string,
+      replyCount?: number
+    ) =>
+      `/api/course/${courseId}/comments/${commentId}?page=1&size=${replyCount}`,
     repliesList: (courseId: string, commentId: string) =>
       `/api/course/${courseId}/comments/${commentId}/commentReply`,
     repliesDetails: (courseId: string, commentId: string, replyId: string) =>

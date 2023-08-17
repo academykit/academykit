@@ -865,6 +865,12 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "edit_questions": "質問を編集する",
+  "view_exam": "試験を表示する",
+  "view_assignment": "課題を表示する",
+  "ID": "ID",
+  "user_id": "ユーザーID",
+  "zoom_license_update_success": "Zoom ライセンスが正常に更新されました",
   "add_trainee_success": "受講生が正常に追加されました。",
   "add_trainee": "受講生を追加",
   "optional_cost_required": "オプショナルなコストが必要です",

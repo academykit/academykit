@@ -38,8 +38,8 @@
         /// dashboard api to get upcomming lesson
         /// </summary>
         /// <returns> the list of lesson <see cref="Lesson" /> .</returns>
-        [HttpGet("UpcomminLesson")]
-        public async Task<List<DashboardLessonResponseModel>> GetUpcomminLesson()
+        [HttpGet("UpcomingLesson")]
+        public async Task<List<DashboardLessonResponseModel>> GetUpcomingLesson()
         {
             return await _courseService.GetUpcommingLesson(CurrentUser.Id).ConfigureAwait(false);
         }

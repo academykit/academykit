@@ -28,6 +28,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using AngleSharp.Dom;
 
 namespace Lingtren.Infrastructure.Services
 {
@@ -70,10 +71,6 @@ namespace Lingtren.Infrastructure.Services
         /// <returns>the instance of <see cref="AuthenticationModel"/></returns>
         public async Task<AuthenticationModel> VerifyUserAndGetToken(LoginRequestModel model)
         {
-            _logger.LogInformation("Hello");
-            _logger.LogError("Hello");
-            _logger.LogWarning("hello");
-            _logger.LogTrace("hello");
             var authenticationModel = new AuthenticationModel();
 
             var user = await GetUserByEmailAsync(email: model.Email.Trim());
@@ -489,8 +486,8 @@ namespace Lingtren.Infrastructure.Services
         /// Handle to verify reset token
         /// </summary>
         /// <param name="model">the instance of <see cref="VerifyResetTokenModel"/></param>
-        /// <returns>the password change token</returns>
-        public async Task<string> VerifyPasswordResetTokenAsync(VerifyResetTokenModel model)
+        /// <returns> the instance of <see cref="VerificationTokenResponseModel"/></returns>
+        public async Task<VerificationTokenResponseModel> VerifyPasswordResetTokenAsync(VerifyResetTokenModel model)
         {
             try
             {
@@ -514,7 +511,11 @@ namespace Lingtren.Infrastructure.Services
                 user.PasswordChangeToken = await BuildResetPasswordJWTToken(user.Email).ConfigureAwait(false);
                 _unitOfWork.GetRepository<User>().Update(user);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                return user.PasswordChangeToken;
+                return new VerificationTokenResponseModel
+                {
+                    Token = user.PasswordChangeToken,
+                    Message = _localizer.GetString("TokenVerifiedSuccessfully")
+                };
             }
             catch (Exception ex)
             {
@@ -778,6 +779,10 @@ namespace Lingtren.Infrastructure.Services
         protected override async Task CreatePreHookAsync(User entity)
         {
             await CheckDuplicateEmailAsync(entity).ConfigureAwait(false);
+            if (entity.MemberId != default)
+            {
+                await CheckForDuplicateMemberId(entity).ConfigureAwait(false);
+            }
             await Task.FromResult(0);
         }
 
@@ -847,6 +852,10 @@ namespace Lingtren.Infrastructure.Services
         protected override async Task ResolveChildEntitiesAsync(User user)
         {
             var oldUser = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == user.Id).ConfigureAwait(false);
+            if (user.MemberId != default)
+            {
+                await CheckForDuplicateMemberId(user).ConfigureAwait(false);
+            }
             if (oldUser != null)
             {
                 var allowed = userRecordModificationValidity(user, oldUser);
@@ -1015,15 +1024,14 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
-        /// 
+        /// Handle to remove refresh token
         /// </summary>
-        /// <param name="currentUserId"></param>
-        /// <returns></returns>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the task complete </returns>
         public async Task RemoveRefreshTokenAsync(Guid currentUserId)
         {
-            var userToken = await _unitOfWork.GetRepository<RefreshToken>().GetAllAsync(predicate: p => p.UserId == currentUserId && p.IsActive == true).ConfigureAwait(false);
-            userToken.ToList().ForEach(x => x.IsActive = false);
-            _unitOfWork.GetRepository<RefreshToken>().Update(userToken);
+            var userToken = await _unitOfWork.GetRepository<RefreshToken>().GetAllAsync(predicate: p => p.UserId == currentUserId).ConfigureAwait(false);
+            _unitOfWork.GetRepository<RefreshToken>().Delete(userToken);
         }
 
         /// <summary>
@@ -1043,6 +1051,22 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
+        /// <summary>
+        /// Check dulpicate member id
+        /// </summary>
+        /// <param name="entity">User</param>
+        /// <returns>Task completed</returns>
+        /// <exception cref="ServiceException"></exception>
+        private async Task CheckForDuplicateMemberId(User entity)
+        {
+            var checkDuplicateMemberId = await _unitOfWork.GetRepository<User>().ExistsAsync(
+                predicate: p=>p.Id != entity.Id && p.MemberId.ToLower().Equals(entity.MemberId.ToLower())).ConfigureAwait(false);
+            if(checkDuplicateMemberId)
+            {
+                _logger.LogWarning("Duplicate MemberId : {UserId} is found.", entity.Id);
+                throw new ServiceException(_localizer.GetString("DuplicateMemberIdFound"));
+            }
+        }
         #endregion Private Methods
 
         /// <summary>
@@ -1168,7 +1192,7 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == currentUserId).ConfigureAwait(false);
+                var checkUser = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == currentUserId).ConfigureAwait(false);
 
                 if (checkForValidRows.userList.Count == default)
                 {
@@ -1177,9 +1201,9 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.FirstName)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                    .Select((user, index) => new { User = user, Index = index + 2 })
+                    .Select((user, index) => new { User = user, Index = index})
                     .Where(x => string.IsNullOrWhiteSpace(x.User.FirstName))
-                     .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
+                     .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) +1)
                      .ToList();
                     if (selectedSNs.Any())
                     {
@@ -1189,9 +1213,9 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.LastName)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                    .Select((user, index) => new { User = user, Index = index + 2 })
+                    .Select((user, index) => new { User = user, Index = index})
                     .Where(x => string.IsNullOrWhiteSpace(x.User.LastName))
-                     .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
+                     .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) +1)
                      .ToList();
 
                     if (selectedSNs.Any())
@@ -1203,9 +1227,9 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Email)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                     .Select((user, index) => new { User = user, Index = index + 2 })
+                     .Select((user, index) => new { User = user, Index = index})
                      .Where(x => string.IsNullOrWhiteSpace(x.User.Email))
-                      .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
+                      .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) + 1)
                       .ToList();
                     throw new ForbiddenException(_localizer.GetString("IncorrectEmail") + " " + string.Join(", ", selectedSNs) + " " + _localizer.GetString("TryAgain"));
                 }
@@ -1215,9 +1239,9 @@ namespace Lingtren.Infrastructure.Services
                            @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                               @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
                     var invalidEmailRows = checkForValidRows.userList
-                       .Select((user, index) => (user.Email, index + 2))
+                       .Select((user, index) => (user.Email, index))
                          .Where(entry => !Regex.IsMatch(entry.Email, emailPattern))
-                       .Select(entry => entry.Item2)
+                       .Select(entry => entry.Item2 +2)
                        .ToList();
                     if (invalidEmailRows.Any())
                     {
@@ -1229,9 +1253,9 @@ namespace Lingtren.Infrastructure.Services
                     string moblieNumberPattern = @"^[+\d]+$";
 
                     var invalidMoblieNumberRows = checkForValidRows.userList
-                       .Select((user, index) => (user.MobileNumber, index + 2))
+                       .Select((user, index) => (user.MobileNumber, index))
                          .Where(entry => !Regex.IsMatch(entry.MobileNumber, moblieNumberPattern))
-                       .Select(entry => entry.Item2)
+                       .Select(entry => entry.Item2 +2)
                        .ToList();
                     if (invalidMoblieNumberRows.Any())
                     {
@@ -1241,9 +1265,9 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Role) || !Enum.TryParse<UserRole>(x.Role, out _)))
                 {
                     var selectedSN = checkForValidRows.userList
-                      .Select((user, index) => new { User = user, Index = index + 2 })
+                      .Select((user, index) => new { User = user, Index = index })
                       .Where(x => string.IsNullOrWhiteSpace(x.User.Role))
-                       .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index))
+                       .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) +1)
                        .ToList();
 
                     if (selectedSN.Any())
@@ -1252,10 +1276,10 @@ namespace Lingtren.Infrastructure.Services
                     }
 
                     var selectedSNs = checkForValidRows.userList
-                    .Select((user, index) => new { User = user, Index = index + 2 })
+                    .Select((user, index) => new { User = user, Index = index })
                     .Where(x => !Enum.GetNames(typeof(UserRole))
                     .Any(enumvalue => string.Equals(enumvalue, x.User.Role, StringComparison.OrdinalIgnoreCase)))
-                    .Join(checkForValidRows.SN.Select((sn, index) => new { SN = sn, Index = index }), x => x.Index, sn => sn.Index, (x, sn) => sn.SN).ToList();
+                    .Join(checkForValidRows.SN.Select((sn, index) => new { SN = sn, Index = index }), x => x.Index, sn => sn.Index, (x, sn) => sn.SN +1).ToList();
 
                     if (selectedSNs.Any())
                     {
@@ -1264,11 +1288,11 @@ namespace Lingtren.Infrastructure.Services
 
                     var selectedIndices = Enum.GetValues(typeof(UserRole))
                      .Cast<UserRole>()
-                     .Select((role, index) => new { Role = role, Index = index + 2 })
+                     .Select((role, index) => new { Role = role, Index = index})
                        .Where(x => string.Equals(x.Role.ToString(), UserRole.Admin.ToString(), StringComparison.OrdinalIgnoreCase))
-                      .Select(x => x.Index)
+                      .Select(x => x.Index + 1)
                        .ToList();
-                    if (selectedIndices.Any() && user.Role != UserRole.SuperAdmin)
+                    if (selectedIndices.Any() && checkUser.Role != UserRole.SuperAdmin)
                     {
                         throw new ForbiddenException(_localizer.GetString("AdminCannotAddAdmin"));
                     }

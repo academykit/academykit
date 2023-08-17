@@ -510,4 +510,7 @@
   <data name="OptionalCostCannotBeNull" xml:space="preserve">
     <value>वैकल्पिक लागत शून्य हुन सक्दैन।</value>
   </data>
+  <data name="InvalidMoblieNumber" xml:space="preserve">
+    <value>अवैध मोबाइल नम्बर ढाँचा।</value>
+  </data>
 </root>

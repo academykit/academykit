@@ -3,9 +3,7 @@ import {
   Button,
   Grid,
   Group,
-  Modal,
   Paper,
-  ScrollArea,
   Switch,
   Text,
   Tooltip,
@@ -19,8 +17,7 @@ import {
 } from '@utils/services/courseService';
 import { ILessonAssignment } from '@utils/services/types';
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import CreateAssignment from '@pages/assignment/create';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import errorType from '@utils/services/axiosError';
 import * as Yup from 'yup';
 import { DatePickerInput, TimeInput } from '@mantine/dates';
@@ -79,13 +76,11 @@ const AddAssignment = ({
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const [isMandatory, setIsMandatory] = useState<boolean>(
     item?.isMandatory ?? false
   );
-
-  const [opened, setOpened] = useState(false);
-  const [lessonId, setLessonId] = useState('');
 
   const startDateTime = item?.startDate
     ? moment(item?.startDate + 'Z')
@@ -139,12 +134,11 @@ const AddAssignment = ({
       };
 
       if (!isEditing) {
-        const response: any = await lesson.mutateAsync(
+        const response = await lesson.mutateAsync(
           assignmentData as ILessonAssignment
         );
-        setLessonId(response?.data?.id);
         form.reset();
-        setOpened(true);
+        navigate(`${response.data.id}/assignment`);
       } else {
         await updateLesson.mutateAsync({
           ...assignmentData,
@@ -169,32 +163,6 @@ const AddAssignment = ({
   };
   return (
     <React.Fragment>
-      <Modal
-        scrollAreaComponent={ScrollArea.Autosize}
-        opened={opened}
-        // exitTransitionDuration={100}
-        transitionProps={{ transition: 'slide-up' }}
-        onClose={() => {
-          setOpened(false);
-          setAddState();
-        }}
-        size="100%"
-        style={{
-          height: '100%',
-        }}
-        styles={{
-          inner: {
-            paddingLeft: 0,
-            paddingRight: 0,
-            paddingBottom: 0,
-            paddingTop: '100px',
-            height: '100%',
-          },
-        }}
-      >
-        {opened && <CreateAssignment lessonId={lessonId} />}
-      </Modal>
-
       <form onSubmit={form.onSubmit(submitForm)}>
         <Paper withBorder p="md">
           <Grid align={'center'} justify="space-around">
@@ -291,12 +259,7 @@ const AddAssignment = ({
               </Button>
             )}
             {isEditing && (
-              <Button
-                onClick={() => {
-                  setLessonId(item?.id || '');
-                  setOpened(true);
-                }}
-              >
+              <Button component={Link} to={`${item?.id}/assignment`}>
                 {t('add_more_questions')}
               </Button>
             )}

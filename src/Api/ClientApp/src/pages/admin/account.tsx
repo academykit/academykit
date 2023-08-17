@@ -121,6 +121,7 @@ const Account = () => {
       });
     } catch (err) {
       const error = errorType(err);
+      form.reset();
       showNotification({
         message: error,
         color: 'red',

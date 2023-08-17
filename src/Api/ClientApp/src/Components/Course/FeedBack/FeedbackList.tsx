@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconEdit, IconTrash } from '@tabler/icons';
+import { IconEdit, IconTrash, IconDragDrop } from '@tabler/icons';
 import { FeedbackType, ReadableEnum } from '@utils/enums';
 
 import errorType from '@utils/services/axiosError';
@@ -41,10 +41,12 @@ const FeedbackItem = ({
   data,
   search,
   lessonId,
+  onEditChange,
 }: {
   data: IFeedbackQuestions;
   search: string;
   lessonId: string;
+  onEditChange: () => void;
 }) => {
   const { classes } = useStyle();
   const [edit, setEdit] = useToggle();
@@ -82,6 +84,7 @@ const FeedbackItem = ({
         search={search}
         onCancel={() => {
           setEdit();
+          onEditChange();
         }}
         feedbackQuestion={data}
       />
@@ -100,7 +103,14 @@ const FeedbackItem = ({
         <Flex justify={'space-between'}>
           <Title truncate>{data.name}</Title>
           <Group>
-            <Button variant="subtle" onClick={() => setEdit()}>
+            <IconDragDrop />
+            <Button
+              variant="subtle"
+              onClick={() => {
+                setEdit();
+                onEditChange();
+              }}
+            >
               <IconEdit />
             </Button>
             <Button
@@ -116,13 +126,13 @@ const FeedbackItem = ({
         {data.description && (
           <Box my={10}>
             <Text>{t('description')}</Text>
-            <TextViewer content={data.description} />
+            <TextViewer key={data.id} content={data.description} />
           </Box>
         )}
         {data.hint && (
           <Box my={10}>
             <Text size={'sm'}>{t('hint')}</Text>
-            <TextViewer content={data.hint} />
+            <TextViewer key={data.id} content={data.hint} />
           </Box>
         )}
         <Select

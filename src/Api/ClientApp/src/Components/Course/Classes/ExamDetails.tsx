@@ -146,7 +146,7 @@ const ExamDetails = ({
                     colorScheme: 'dark',
                   }}
                 >
-                  <UserResults lessonId={exam?.slug} studentId={userId} />
+                  <UserResults lessonId={exam?.slug} studentId={userId} isTrainee={data.isTrainee}/>
                 </MantineProvider>
               )}
             </Box>
@@ -159,7 +159,7 @@ const ExamDetails = ({
                     to={RoutePath.exam?.details(exam?.slug).route}
                     state={window.location.pathname}
                   >
-                    {t('start_exam')}
+                    {data.isTrainee ? t('start_exam') : t('view_exam')}
                   </Button>
                 ) : (
                   <Text mt={15}>{t('attempt_exceeded')}</Text>

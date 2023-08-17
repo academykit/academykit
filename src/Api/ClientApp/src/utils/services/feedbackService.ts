@@ -28,6 +28,7 @@ export interface IFeedbackQuestions {
   rating: number;
   answer?: string;
   feedbackQuestionOptions?: IFeedbackOptions[];
+  isTrainee: boolean;
 }
 
 export interface ICreateFeedback {

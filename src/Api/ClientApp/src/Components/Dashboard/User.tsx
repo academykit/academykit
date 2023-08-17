@@ -76,6 +76,7 @@ export const User = ({
       icon: 'enrollment',
       signLabel: t('enrollment'),
       pluLabel: t('enrollments'),
+      color: '#E9FAC8',
     },
     {
       key: 'totalInProgressCourses',
@@ -83,6 +84,7 @@ export const User = ({
       icon: 'trainings',
       signLabel: t('training'),
       pluLabel: t('trainings'),
+      color: '#63E6BE',
     },
     {
       key: 'totalCompletedCourses',
@@ -90,6 +92,7 @@ export const User = ({
       icon: 'completed',
       signLabel: t('training'),
       pluLabel: t('trainings'),
+      color: '#E5DBFF',
     },
   ];
   return (

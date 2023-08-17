@@ -30,6 +30,12 @@ function CourseEditNav() {
       label: t('lessons'),
       to: RoutePath.manageCourse.lessons(params.id).route,
       role: UserRole.Trainer,
+      // isActive: (pathName: string) =>
+      //   pathName.includes(
+      //     RoutePath.manageCourse.lessons(params.id).route ||
+      //       RoutePath.manageCourse.lessons(params.id).route +
+      //         `${params.lessonId}/${'assignment' || 'feedback'}`
+      //   ),
     },
     {
       label: t('trainers'),

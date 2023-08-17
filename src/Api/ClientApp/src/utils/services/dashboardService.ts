@@ -30,6 +30,7 @@ export interface DashboardStatsData {
   icon: string;
   signLabel: string;
   pluLabel: string;
+  color: string;
 }
 
 export interface DashboardCourses {
@@ -40,6 +41,17 @@ export interface DashboardCourses {
   thumbnailUrl: string;
   user: IUser;
   students: IUser[];
+}
+
+export interface UpcomingEvents {
+  lessonSlug: string;
+  lessonType: number;
+  lessonName: string;
+  startDate: string;
+  courseEnrollmentBool: boolean;
+  courseSlug: string;
+  isLive: true;
+  courseName: string;
 }
 
 export const useDashboard = () => {
@@ -57,6 +69,16 @@ export const useDashboardCourse = () => {
     [api.course.dashboardCourse],
     () =>
       httpClient.get<IPaginated<DashboardCourses>>(api.course.dashboardCourse),
+    {
+      select: (data) => data.data,
+    }
+  );
+};
+
+export const useUpcomingDashboardDetail = () => {
+  return useQuery(
+    [api.course.dashboardUpcoming],
+    () => httpClient.get<UpcomingEvents[]>(api.course.dashboardUpcoming),
     {
       select: (data) => data.data,
     }
