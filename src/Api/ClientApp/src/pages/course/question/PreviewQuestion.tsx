@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Breadcrumb from '@components/Ui/BreadCrumb';
-import { Title, Text, Box, Loader, Button } from '@mantine/core';
+import { Title, Text, Box, Loader, Button, Flex } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import {
   QuestionSetQuestions,
@@ -17,6 +17,7 @@ import {
 import { useQuestionReorder } from '@utils/services/courseService';
 import { LessonType } from '@utils/enums';
 import { useEffect, useState } from 'react';
+import { IconChevronLeft } from '@tabler/icons';
 
 const PreviewQuestion = () => {
   const navigate = useNavigate();
@@ -65,16 +66,27 @@ const PreviewQuestion = () => {
   return (
     <div>
       <Breadcrumb hide={3} />
-      <Title truncate mt={20} mb={20}>
-        {'Preview Questions'}
-      </Title>
       <Button
         variant="subtle"
+        leftIcon={<IconChevronLeft />}
         mx={4}
-        onClick={() => navigate('../lessons/questions/' + params?.lessonSlug)}
+        onClick={() => navigate(-1)}
+        mt={15}
       >
-        Edit Questions
+        Go Back
       </Button>
+      <Flex mt={10} align={'center'} justify={'space-between'}>
+        <Title truncate mb={20} ml={15}>
+          {'Preview Questions'}
+        </Title>
+        <Button
+          variant="subtle"
+          mx={4}
+          onClick={() => navigate('../lessons/questions/' + params?.lessonSlug)}
+        >
+          Edit Questions
+        </Button>
+      </Flex>
 
       {questions.isSuccess ? (
         <Box p={20}>

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import TextViewer from '@components/Ui/RichTextViewer';
 import {
   Paper,
@@ -6,7 +5,6 @@ import {
   Group,
   Box,
   Select,
-  Title,
   Text,
   Button,
   Collapse,
@@ -38,9 +36,9 @@ const PreviewQuestionCard = ({
     <>
       <Paper p={10} withBorder mb={25}>
         <Flex justify={'space-between'}>
-          <Title truncate w={'92%'}>
+          <Text size={'lg'} truncate w={'92%'}>
             {question.name}
-          </Title>
+          </Text>
           <Group>
             <IconDragDrop />
 
