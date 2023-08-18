@@ -66,6 +66,8 @@ const UserProfile = () => {
               )}
             </Group>
             {`${data?.profession ?? ''}`}
+            <br />
+            <Text>{data?.memberId}</Text>
           </div>
         </div>
         <Paper shadow={'lg'} withBorder sx={{ marginTop: '5px' }}>

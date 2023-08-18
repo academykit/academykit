@@ -12,6 +12,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string EmailSignature { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
+        public string CustomConfiguration { get; set; }
         public GeneralSettingResponseModel(GeneralSetting model)
         {
             Id = model.Id;
@@ -22,6 +23,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             EmailSignature = model.EmailSignature;
             UpdatedOn = model.UpdatedOn;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
+            CustomConfiguration = model.CustomConfiguration;
         }
     }
 }
