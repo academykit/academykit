@@ -119,6 +119,7 @@ const Dashboard = () => {
         color: 'red',
       });
     }
+    setOpened(false);
   };
   if (course.data?.status === CourseStatus.Published) {
     return (
@@ -128,10 +129,18 @@ const Dashboard = () => {
           onClose={() => setOpened(false)}
           title={t('status_change_completed') as string}
         >
-          <Button mr={5} onClick={handleCompleted}>
+          <Button
+            loading={courseStatus.isLoading}
+            mr={5}
+            onClick={handleCompleted}
+          >
             {t('yes')}
           </Button>
-          <Button variant="outline" onClick={() => setOpened(false)}>
+          <Button
+            loading={courseStatus.isLoading}
+            variant="outline"
+            onClick={() => setOpened(false)}
+          >
             {t('no')}
           </Button>
         </Modal>
