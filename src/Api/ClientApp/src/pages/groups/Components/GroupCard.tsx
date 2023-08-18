@@ -41,6 +41,9 @@ const useStyle = createStyles((theme) => ({
       theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
     }`,
   },
+  anchor: {
+    color: theme.colors[theme.primaryColor][7],
+  },
 }));
 const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
   const { classes } = useStyle();
@@ -92,6 +95,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
             to={RoutePath.groups.details(group.slug).route}
             size={22}
             lineClamp={1}
+            className={classes.anchor}
           >
             {group.name}
           </Anchor>
@@ -145,6 +149,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
                 weight={500}
                 component={Link}
                 to={RoutePath.groups.members(group.slug).route}
+                className={classes.anchor}
               >
                 {group.memberCount}
               </Anchor>
@@ -157,6 +162,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
                 weight={500}
                 component={Link}
                 to={RoutePath.groups.courses(group.slug).route}
+                className={classes.anchor}
               >
                 {group.courseCount}
               </Anchor>
@@ -169,6 +175,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
                 weight={500}
                 component={Link}
                 to={RoutePath.groups.attachments(group.slug).route}
+                className={classes.anchor}
               >
                 {group.attachmentCount}
               </Anchor>
