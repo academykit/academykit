@@ -1046,4 +1046,10 @@
   <data name="TokenVerifiedSuccessfully" xml:space="preserve">
     <value>टोकन सफलतापूर्वक प्रमाणित भयो।</value>
   </data>
+  <data name="InvalidZoomLicenseEmail" xml:space="preserve">
+    <value>इमेलको लागि जुम इजाजतपत्र फेला परेन।</value>
+  </data>
+  <data name="ZoomLicenseEmailAlreadyUsed" xml:space="preserve">
+    <value>जुम लाइसेन्स इमेल पहिले नै प्रयोग गरिएको छ।</value>
+  </data>
 </root>

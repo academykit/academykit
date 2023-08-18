@@ -78,25 +78,12 @@
         public async Task<ZoomLicenseResponseModel> CreateAsync(ZoomLicenseRequestModel model)
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
-
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var currentTimeStamp = DateTime.UtcNow;
-            var entity = new ZoomLicense
-            {
-                Id = Guid.NewGuid(),
-                LicenseEmail = model.LicenseEmail,
-                HostId = model.HostId,
-                Capacity = model.Capacity,
-                IsActive = true,
-                CreatedOn = currentTimeStamp,
-                CreatedBy = CurrentUser.Id,
-                UpdatedOn = currentTimeStamp,
-                UpdatedBy = CurrentUser.Id
-            };
-            var response = await _zoomLicenseService.CreateAsync(entity).ConfigureAwait(false);
+            var response = await _zoomLicenseService.CreateZoomLicenseAsync(model,CurrentUser.Id).ConfigureAwait(false);
             return new ZoomLicenseResponseModel(response);
         }
 
+        /// <summary>
         /// <summary>
         /// update zoomLicense api
         /// </summary>
@@ -107,20 +94,9 @@
         public async Task<ZoomLicenseResponseModel> UpdateAsync(Guid id, ZoomLicenseRequestModel model)
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
-
             await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _zoomLicenseService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
-            var currentTimeStamp = DateTime.UtcNow;
-
-            existing.Id = existing.Id;
-            existing.LicenseEmail = model.LicenseEmail;
-            existing.HostId = model.HostId;
-            existing.UpdatedBy = CurrentUser.Id;
-            existing.UpdatedOn = currentTimeStamp;
-            existing.Capacity = model.Capacity;
-
-            var savedEntity = await _zoomLicenseService.UpdateAsync(existing).ConfigureAwait(false);
-            return new ZoomLicenseResponseModel(savedEntity);
+            var response = await _zoomLicenseService.UpdateZoomLicenseAsync(id,model, CurrentUser.Id).ConfigureAwait(false);
+            return new ZoomLicenseResponseModel(response);
         }
 
         /// <summary>
