@@ -26,12 +26,18 @@ registerPlugin(
 );
 
 type IProps = {
+  disabled: boolean;
   label?: string;
   url?: string | null;
   formContext: () => UseFormReturnType<any, (values: any) => any>;
 };
 
-const AvatarEditor = ({ label = 'files', url, formContext }: IProps) => {
+const AvatarEditor = ({
+  label = 'files',
+  url,
+  formContext,
+  disabled,
+}: IProps) => {
   useEffect(() => {
     if (url) {
       setFiles([
@@ -77,6 +83,7 @@ const AvatarEditor = ({ label = 'files', url, formContext }: IProps) => {
   return (
     <div style={{ maxWidth: 200 }}>
       <FilePond
+        disabled={disabled}
         imagePreviewHeight={170}
         imageCropAspectRatio="1:1"
         styleLoadIndicatorPosition="center bottom"
