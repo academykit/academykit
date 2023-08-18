@@ -1,4 +1,5 @@
 import { BRANDING_SCHEME_KEY } from '@utils/constants';
+import generateTints from '@utils/services/colorService';
 import { Dispatch, FC, SetStateAction, createContext } from 'react';
 
 type BrandingThemeType = [
@@ -50,16 +51,10 @@ const BrandingProvider: FC<Props> = ({
     '#147885',
   ];
 
-  // const [brandingTheme, setBrandingTheme] = useState('#0E99AC');
-  // const [brandingThemeValue, setBrandingThemeValue] =
-  //   useState<BrandingThemeType>(defaultBranding);
-
   const toggleBrandingTheme = (value: string) => {
     // set new color if chosen by user
     const brandingColors: BrandingThemeType =
-      value == '#0E99AC'
-        ? defaultBranding
-        : (new Array(10).fill(value) as BrandingThemeType);
+      value == '#0E99AC' ? defaultBranding : generateTints(value, 10);
 
     setBrandingThemeValue(brandingColors);
     setBrandingTheme(value);

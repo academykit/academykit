@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ColorScheme,
   ColorSchemeProvider,
@@ -20,6 +19,7 @@ import './App.css';
 import { useTranslation } from 'react-i18next';
 import FormProvider from '@context/FormContext';
 import BrandingProvider from '@context/BrandingThemeContext';
+import generateTints from '@utils/services/colorService';
 
 const App = ({ queryClient }: { queryClient: QueryClient }) => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>(
@@ -60,7 +60,9 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
   const getBrandingTheme = () => {
     const storedValue = localStorage.getItem(BRANDING_SCHEME_KEY);
     return storedValue
-      ? (new Array(10).fill(storedValue) as BrandingThemeType)
+      ? storedValue == '#0E99AC'
+        ? defaultBranding
+        : generateTints(storedValue, 10)
       : defaultBranding;
   };
 
@@ -69,18 +71,6 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
   );
   const [brandingThemeValue, setBrandingThemeValue] =
     useState<BrandingThemeType>(getBrandingTheme());
-
-  // const toggleBrandingTheme = (value: string) => {
-  //   // set new color if chosen by user
-  //   const brandingColors: BrandingThemeType =
-  //     value == '#0E99AC'
-  //       ? defaultBranding
-  //       : (new Array(10).fill(value) as BrandingThemeType);
-
-  //   setBrandingThemeValue(brandingColors);
-  //   setBrandingTheme(value);
-  //   localStorage.setItem(BRANDING_SCHEME_KEY, brandingTheme);
-  // };
 
   const { i18n } = useTranslation();
 

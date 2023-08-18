@@ -103,7 +103,6 @@ const GeneralSettings = () => {
       });
       window.scrollTo(0, 0);
       toggleBrandingTheme && toggleBrandingTheme(color);
-      console.log("method", toggleBrandingTheme && toggleBrandingTheme(color));
     } catch (error) {
       const err = errorType(error);
 
