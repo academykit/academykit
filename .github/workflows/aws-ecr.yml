@@ -1,8 +1,8 @@
 on:
   push:
-    branches: [ dishhome ]
+    branches: [ 1.3.0-dishhome ]
   workflow_dispatch:
-    branches: [ dishhome ]
+    branches: [ 1.3.0-dishhome ]
 
 name: standalone app
 

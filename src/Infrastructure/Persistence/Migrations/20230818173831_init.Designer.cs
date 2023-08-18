@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230808041855_additionalfields")]
-    partial class additionalfields
+    [Migration("20230818173831_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1218,6 +1218,10 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("DATETIME")
                         .HasColumnName("created_on");
 
+                    b.Property<string>("CustomConfiguration")
+                        .HasColumnType("VARCHAR(5000)")
+                        .HasColumnName("custom_configuration");
+
                     b.Property<string>("EmailSignature")
                         .HasMaxLength(1000)
                         .HasColumnType("VARCHAR(1000)")
@@ -1228,10 +1232,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("VARCHAR(500)")
                         .HasColumnName("logo_url");
-
-                    b.Property<string>("OrganiationCustomConfiguration")
-                        .HasColumnType("VARCHAR(5000)")
-                        .HasColumnName("custom_configuration");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
@@ -1889,10 +1889,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("varchar(500)")
                         .HasColumnName("name");
 
-                    b.Property<int>("Order")
-                        .HasColumnType("int")
-                        .HasColumnName("order");
-
                     b.Property<int>("Type")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -2042,6 +2038,12 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("DATETIME")
                         .HasColumnName("created_on");
+
+                    b.Property<int>("Order")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("order");
 
                     b.Property<string>("QuestionId")
                         .IsRequired()
@@ -3011,6 +3013,10 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("last_name");
+
+                    b.Property<string>("MemberId")
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("member_id");
 
                     b.Property<string>("MiddleName")
                         .HasMaxLength(100)
