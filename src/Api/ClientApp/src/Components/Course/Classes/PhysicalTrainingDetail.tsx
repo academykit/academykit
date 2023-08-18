@@ -59,7 +59,7 @@ const PhysicalTrainingDetail = ({
       <Text>
         {t('start_time')}: {updatedTime}
       </Text>
-      {/* Super admin and admin cannot mark as attend */}
+      {/* Super admin,  admin and trainer of that lesson cannot mark as attend */}
       {!hasAttended
         ? user?.auth?.role !== UserRole.Admin &&
           user?.auth?.role !== UserRole.SuperAdmin &&
