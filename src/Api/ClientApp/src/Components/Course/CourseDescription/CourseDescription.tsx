@@ -309,7 +309,8 @@ const CourseDescription = () => {
                   >
                     {t('enroll_course')}
                   </Button>
-                ) : course.data?.userStatus === CourseUserStatus.Author ? (
+                ) : course.data?.userStatus === CourseUserStatus.Author ||
+                  course.data?.userStatus === CourseUserStatus.Teacher ? (
                   <>
                     {slug && (
                       <Link

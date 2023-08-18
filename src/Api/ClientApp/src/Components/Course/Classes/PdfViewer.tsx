@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from 'react';
 import { Viewer, Worker } from '@react-pdf-viewer/core';
 import { useMediaQuery } from '@mantine/hooks';
@@ -75,9 +76,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
                     - Training's trainer
                   */}
                   {!lesson.isCompleted ? (
-                    userRole != UserRole.SuperAdmin &&
-                    userRole != UserRole.Admin &&
-                    userRole != lesson.user.role && (
+                    lesson.isTrainee && (
                       <Button
                         onClick={onMarkComplete}
                         loading={watchHistory.isLoading}

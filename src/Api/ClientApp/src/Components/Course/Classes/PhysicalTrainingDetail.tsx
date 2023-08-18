@@ -15,12 +15,14 @@ const PhysicalTrainingDetail = ({
   hasAttended,
   startDate,
   lessonSlug,
+  isTrainee,
 }: {
   name: string;
   id: string;
   hasAttended: boolean | null;
   startDate: string;
   lessonSlug: string;
+  isTrainee: boolean;
 }) => {
   const { id: slug } = useParams();
   const { t } = useTranslation();
@@ -57,10 +59,12 @@ const PhysicalTrainingDetail = ({
       <Text>
         {t('start_time')}: {updatedTime}
       </Text>
-      {/* Super admin and admin cannot mark as attend */}
+      {/* Super admin,  admin and trainer of that lesson cannot mark as attend */}
       {!hasAttended
         ? user?.auth?.role !== UserRole.Admin &&
-          user?.auth?.role !== UserRole.SuperAdmin && (
+          user?.auth?.role !== UserRole.SuperAdmin &&
+          user?.auth?.role == UserRole.Trainer &&
+          isTrainee && (
             <Button
               onClick={() => handleAttendance()}
               loading={attendance.isLoading || attendance.isSuccess}
