@@ -232,10 +232,10 @@ namespace Lingtren.Api.Controllers
                 password = await _userService.GenerateRandomPassword(8).ConfigureAwait(false);
                 existing.HashPassword = _userService.HashPassword(password);
             }
-            if (oldRole != model.Role)
-            {
-                await _userService.RemoveRefreshTokenAsync(existing.Id);
-            }
+            // if (oldRole != model.Role)
+            // {
+            //     await _userService.RemoveRefreshTokenAsync(existing.Id);
+            // }
             var savedEntity = await _userService.UpdateAsync(existing).ConfigureAwait(false);
             if (imageKey != model.ImageUrl && !string.IsNullOrWhiteSpace(imageKey))
             {
