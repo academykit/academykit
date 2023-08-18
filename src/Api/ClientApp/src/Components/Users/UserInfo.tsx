@@ -103,14 +103,14 @@ const UserInfo = () => {
         mobileNumber: data?.mobileNumber ?? '',
         profession: data?.profession ?? '',
         address: data?.address ?? '',
-        bio: data?.bio ?? 'hm',
+        bio: data?.bio ?? '',
         role: data?.role ?? 1,
         isActive: data?.isActive ?? false,
         imageUrl: data?.imageUrl ?? '',
       });
       setImageURL(data?.imageUrl ?? '');
     }
-  }, [isSuccess]);
+  }, [isSuccess, params]); // reset on edit/view mode
 
   const updateUser = useUpdateUser(userId as string);
   const navigator = useNavigate();
@@ -145,6 +145,7 @@ const UserInfo = () => {
             url={imageURL}
             label={t('image') as string}
             formContext={useFormContext}
+            disabled={viewMode}
           />
 
           <Grid>
@@ -235,7 +236,7 @@ const UserInfo = () => {
             <Grid.Col lg={12}>
               {viewMode && (
                 <Button onClick={() => createEditMode('1')} type="button">
-                  Edit
+                  {t('edit')}
                 </Button>
               )}
 
@@ -249,7 +250,7 @@ const UserInfo = () => {
                     {t('save')}
                   </Button>
                   <Button onClick={() => createEditMode('0')} variant="outline">
-                    Cancel
+                    {t('cancel')}
                   </Button>
                 </>
               )}
