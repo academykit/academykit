@@ -36,7 +36,7 @@ const generateTints = (color: string, numTints: number) => {
 
   for (let i = 1; i <= numTints; i++) {
     // can be adjusted
-    const percent = i * 10;
+    const percent = i * 3;
     const tintColor = mixColors(baseColor, '000000', percent);
     tints.push(`#${tintColor}`);
   }
