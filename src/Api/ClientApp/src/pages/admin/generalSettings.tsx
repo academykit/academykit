@@ -1,7 +1,15 @@
 /* eslint-disable prettier/prettier */
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { createFormContext, yupResolver } from '@mantine/form';
-import { TextInput, Button, Textarea, Container, Text } from '@mantine/core';
+import {
+  TextInput,
+  Button,
+  Textarea,
+  Container,
+  Text,
+  ColorInput,
+  ActionIcon,
+} from '@mantine/core';
 import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
 import {
   useGeneralSetting,
@@ -14,6 +22,8 @@ import { PHONE_VALIDATION } from '@utils/constants';
 import { useTranslation } from 'react-i18next';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import useCustomForm from '@hooks/useCustomForm';
+import { BrandingContext } from '@context/BrandingThemeContext';
+import { IconRefresh } from '@tabler/icons-react';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -51,6 +61,15 @@ const GeneralSettings = () => {
   const updateGeneral = useUpdateGeneralSetting(generalSettings.data?.data.id);
   const data = generalSettings.data?.data;
   const { t } = useTranslation();
+  const context = useContext(BrandingContext);
+  const [color, setColor] = useState(context?.brandingTheme ?? '#0E99AC');
+
+  const toggleBrandingTheme = context?.toggleBrandingTheme;
+
+  const handleColorChange = (value: string) => {
+    setColor(value);
+    // toggleBrandingTheme && toggleBrandingTheme(value);
+  };
 
   useEffect(() => {
     form.setValues({
@@ -76,12 +95,14 @@ const GeneralSettings = () => {
 
   const handleSubmit = async (values: any) => {
     try {
+      values = {...values, customConfiguration: JSON.stringify({accent: color})}
       await updateGeneral.mutateAsync(values);
       showNotification({
         title: t('successful'),
         message: t('setting_updated'),
       });
       window.scrollTo(0, 0);
+      toggleBrandingTheme && toggleBrandingTheme(color);
     } catch (error) {
       const err = errorType(error);
 
@@ -135,6 +156,18 @@ const GeneralSettings = () => {
             name="ContactNumber"
             placeholder={t('enter_company_contact') as string}
             {...form.getInputProps('companyContactNumber')}
+          />
+          <ColorInput
+            value={color}
+            onChange={handleColorChange}
+            placeholder="Pick color"
+            label="Branding color"
+            // defaultValue="#0E99AC"
+            rightSection={
+              <ActionIcon onClick={() => handleColorChange('#0E99AC')}>
+                <IconRefresh size="1rem" />
+              </ActionIcon>
+            }
           />
           <Textarea
             mt={10}

@@ -11,7 +11,13 @@ import { useTranslation } from 'react-i18next';
 const TrainerCardDual = ({ dashboard }: { dashboard: DashboardStats }) => {
   const { t } = useTranslation();
   return (
-    <Paper withBorder p="md" radius={'md'}>
+    <Paper
+      withBorder
+      p="md"
+      radius={'md'}
+      bg="#E1D4BB"
+      style={{ color: 'black' }}
+    >
       <Group position="left" noWrap>
         <IconCertificate size={26} stroke={1.5} />
         <Text size="md">{t('my_trainings')}</Text>

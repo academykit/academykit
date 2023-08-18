@@ -72,6 +72,7 @@ export interface IGeneralSetting {
 export interface ICompanySetting {
   name: string;
   imageUrl: string;
+  custonConfiguration?: string;
 }
 
 export interface IGeneralSettingUpdate {
