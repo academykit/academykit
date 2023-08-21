@@ -148,14 +148,15 @@ const AddUpdateUserForm = ({
     <form onSubmit={form.onSubmit(onSubmitForm)}>
       <Grid align={'center'}>
         <Grid.Col xs={6} lg={4} mt={5}>
-          <TextInput
+          <CustomTextFieldWithAutoFocus
             label={t('ID')}
             placeholder={t('user_id') as string}
             {...form.getInputProps('memberId')}
+            name="memberId"
           />
         </Grid.Col>
         <Grid.Col xs={6} lg={4}>
-          <CustomTextFieldWithAutoFocus
+          <TextInput
             styles={{ error: { position: 'absolute' } }}
             withAsterisk
             label={t('firstname')}
