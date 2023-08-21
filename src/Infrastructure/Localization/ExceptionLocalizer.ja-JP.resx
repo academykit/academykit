@@ -1049,4 +1049,10 @@
   <data name="TokenVerifiedSuccessfully" xml:space="preserve">
     <value>トークンが正常に検証されました。</value>
   </data>
+  <data name="InvalidZoomLicenseEmail" xml:space="preserve">
+    <value>電子メール用の Zoom ライセンスが見つかりません。</value>
+  </data>
+  <data name="ZoomLicenseEmailAlreadyUsed" xml:space="preserve">
+    <value>Zoomライセンスメールはすでに使用されています。</value>
+  </data>
 </root>

@@ -15,6 +15,23 @@
         /// <param name="model">the instance of <see cref="LiveClassLicenseRequestModel"/></param>
         /// <returns>Instance of zoomid <see cref="ZoomLicenseResponseModel"/></returns>
         Task<IList<ZoomLicenseResponseModel>> GetActiveLicensesAsync(LiveClassLicenseRequestModel model);
+        
+        /// <summary>
+        /// Handle to create zoom license async 
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="ZoomLicenseRequestModel"/></param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the instance of <see cref="ZoomLicense"/></returns>
+        Task<ZoomLicense> CreateZoomLicenseAsync(ZoomLicenseRequestModel model,Guid currentUserId);
+
+        /// <summary>
+        /// Handle to update zoom license 
+        /// </summary>
+        /// <param name="id"> the zoom license id </param>
+        /// <param name="model"> the instance of <see cref="ZoomLicenseRequestModel"/></param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the instance of <see cref="ZoomLicense"/></returns>
+        Task<ZoomLicense> UpdateZoomLicenseAsync(Guid id, ZoomLicenseRequestModel model, Guid currentUserId);
 
         /// <summary>
         /// Handle to create zoom meeting

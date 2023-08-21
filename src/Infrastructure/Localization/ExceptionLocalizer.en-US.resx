@@ -1049,4 +1049,10 @@ recorded cannot be deleted.</value>
   <data name="TokenVerifiedSuccessfully" xml:space="preserve">
     <value>Token verified successfully.</value>
   </data>
+  <data name="InvalidZoomLicenseEmail" xml:space="preserve">
+    <value>Zoom license for email not found.</value>
+  </data>
+  <data name="ZoomLicenseEmailAlreadyUsed" xml:space="preserve">
+    <value>Zoom License Email is already used.</value>
+  </data>
 </root>

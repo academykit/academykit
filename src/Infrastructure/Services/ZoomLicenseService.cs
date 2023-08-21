@@ -25,6 +25,7 @@
     using System.Linq.Expressions;
     using System.Text;
     using static Dapper.SqlMapper;
+    using System.Data;
 
     public class ZoomLicenseService : BaseGenericService<ZoomLicense, ZoomLicenseBaseSearchCriteria>, IZoomLicenseService
     {
@@ -92,6 +93,70 @@
             return p => p.Id.ToString() == identity;
         }
         #endregion Protected Methods
+
+
+        /// <summary>
+        /// Handle to create zoom license async 
+        /// </summary>
+        /// <param name="model"> the instance of <see cref="ZoomLicenseRequestModel"/></param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the instance of <see cref="ZoomLicense"/></returns>
+        public async Task<ZoomLicense> CreateZoomLicenseAsync(ZoomLicenseRequestModel model, Guid currentUserId)
+        {
+            return await ExecuteWithResultAsync(async () =>
+            {
+                var emailExist = await _unitOfWork.GetRepository<ZoomLicense>().GetFirstOrDefaultAsync(predicate: p => p.LicenseEmail.ToLower() 
+                                == model.LicenseEmail.ToLower() && p.IsActive).ConfigureAwait(false);
+                if(emailExist != null)
+                {
+                    throw new ArgumentException(_localizer.GetString("ZoomLicenseEmailAlreadyUsed"));
+                }
+                await ValidateZoomLicenseAsync(model.LicenseEmail).ConfigureAwait(false);
+                var entity = new ZoomLicense
+                {
+                    Id = Guid.NewGuid(),
+                    LicenseEmail = model.LicenseEmail,
+                    HostId = model.HostId,
+                    Capacity = model.Capacity,
+                    IsActive = true,
+                    CreatedOn = DateTime.UtcNow,
+                    CreatedBy = currentUserId,
+                };
+                await _unitOfWork.GetRepository<ZoomLicense>().InsertAsync(entity).ConfigureAwait(false);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                return entity;
+            });
+        }
+
+        /// <summary>
+        /// Handle to update zoom license 
+        /// </summary>
+        /// <param name="id"> the zoom license id </param>
+        /// <param name="model"> the instance of <see cref="ZoomLicenseRequestModel"/></param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the instance of <see cref="ZoomLicense"/></returns>
+        public async Task<ZoomLicense> UpdateZoomLicenseAsync(Guid id, ZoomLicenseRequestModel model, Guid currentUserId)
+        {
+            return await ExecuteWithResultAsync(async () =>
+            {
+                var zoomLicenses = await _unitOfWork.GetRepository<ZoomLicense>().GetAllAsync(predicate : p => p.IsActive).ConfigureAwait(false);
+                var zoomLicense = zoomLicenses.FirstOrDefault(x => x.Id == id) ?? throw new EntityNotFoundException(_localizer.GetString("ZoomLisenceNotFound"));
+                var emailAddress = zoomLicenses.Where(x => x.LicenseEmail == model.LicenseEmail);
+                if(emailAddress.Any(x => x.LicenseEmail == model.LicenseEmail && x.Id != zoomLicense.Id))
+                {
+                    throw new ArgumentException(_localizer.GetString("ZoomLicenseEmailAlreadyUsed"));
+                }
+                await ValidateZoomLicenseAsync(model.LicenseEmail).ConfigureAwait(false);
+                zoomLicense.HostId = model.HostId;
+                zoomLicense.LicenseEmail = model.LicenseEmail;
+                zoomLicense.Capacity = model.Capacity;
+                zoomLicense.UpdatedOn = DateTime.UtcNow;
+                zoomLicense.UpdatedBy = currentUserId;
+                _unitOfWork.GetRepository<ZoomLicense>().Update(zoomLicense);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait (false);
+                return zoomLicense;
+            });
+        }
 
         /// <summary>
         /// Handels to get ZoomLicenseId
@@ -246,6 +311,34 @@
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handle to validate zoom license 
+        /// </summary>
+        /// <param name="email"> the email </param>
+        private async Task ValidateZoomLicenseAsync(string email)
+        {
+            try
+            {
+                var client = new RestClient($"{zoomAPIPath}/users/email");
+                var tokenString = await GetOAuthAccessToken().ConfigureAwait(false);
+                var request = new RestRequest().AddHeader("Authorization", string.Format("Bearer {0}", tokenString));
+                request.AddQueryParameter("email", email);
+                request.AddHeader("Content-Type", "application/json");
+                var response = await client.GetAsync(request).ConfigureAwait(false);
+                var jObject = JObject.Parse(response.Content);
+                var emailExist =  (bool)jObject["existed_email"];
+                if(!emailExist)
+                {
+                    throw new ArgumentException(_localizer.GetString("InvalidZoomLicenseEmail"));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+            }
+
+        }
+
         #region Zoom Api Service
 
         /// <summary>
@@ -346,13 +439,13 @@
         //     return tokenString;
         // }
 
-         /// <summary>
+        /// <summary>
         /// Handle to get OAuth access token
         /// </summary>
         /// <returns> the access token </returns>
         private async Task<string> GetOAuthAccessToken()
         {
-             var zoomSetting = await _unitOfWork.GetRepository<ZoomSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
+            var zoomSetting = await _unitOfWork.GetRepository<ZoomSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
             if (zoomSetting == null)
             {
                 throw new EntityNotFoundException(_localizer.GetString("ZoomSettingNotFound"));
