@@ -1031,7 +1031,8 @@ namespace Lingtren.Infrastructure.Services
         public async Task RemoveRefreshTokenAsync(Guid currentUserId)
         {
             var userToken = await _unitOfWork.GetRepository<RefreshToken>().GetAllAsync(predicate: p => p.UserId == currentUserId).ConfigureAwait(false);
-            _unitOfWork.GetRepository<RefreshToken>().Delete(userToken);
+            userToken.ForEach(x => x.IsActive = false);
+            _unitOfWork.GetRepository<RefreshToken>().Update(userToken);
         }
 
         /// <summary>
