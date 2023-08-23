@@ -1,5 +1,4 @@
-﻿using Infrastructure.Persistence.Migrations;
-using Lingtren.Application.Common.Dtos;
+﻿using Lingtren.Application.Common.Dtos;
 using Lingtren.Application.Common.Exceptions;
 using Lingtren.Application.Common.Models.RequestModels;
 using Lingtren.Domain.Entities;
