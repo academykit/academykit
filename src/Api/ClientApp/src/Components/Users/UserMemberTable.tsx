@@ -91,7 +91,7 @@ const UserRow = ({
 
   return (
     <tr key={item?.id}>
-      {/* <td
+      <td
         style={{
           width: '122px',
           maxWidth: '122px',
@@ -100,7 +100,7 @@ const UserRow = ({
         }}
       >
         {item.memberId}
-      </td> */}
+      </td>
       <td>
         <Modal
           size={800}
@@ -226,7 +226,7 @@ const UserMemberTable = ({
       >
         <thead>
           <tr>
-            {/* <th>{t('User ID')}</th> */}
+            <th>{t('userid')}</th>
             <th>
               {sortComponent({ sortKey: 'firstName', title: t('username') })}
             </th>
