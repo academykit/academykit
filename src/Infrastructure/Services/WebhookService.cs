@@ -38,6 +38,8 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
+                _logger.LogError("Recording meeting.");
+                _logger.LogInformation($" account id : {dto.Payload.Object}");
                 if (context == null)
                 {
                     throw new ArgumentException(_localizer.GetString("ContextNotFound"));
@@ -172,6 +174,8 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
+                _logger.LogError("Participant join meeting.");
+                _logger.LogInformation($" account id : {model.Payload.Account_Id}");
                 var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.MeetingNumber.ToString() ==
                           model.Payload.Object.Id, include: source => source.Include(x => x.Lesson)).ConfigureAwait(false);
 
@@ -236,6 +240,8 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
+                _logger.LogError("Participant Left meeting.");
+                _logger.LogInformation($" account id : {model.Payload.Account_Id}");
                 var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: x => x.MeetingNumber.ToString() == model.Payload.Object.Id).ConfigureAwait(false);
 
                 if (meeting == default)
