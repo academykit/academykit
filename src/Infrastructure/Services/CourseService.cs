@@ -1417,7 +1417,7 @@ namespace Lingtren.Infrastructure.Services
 
                 if (user.Role == UserRole.SuperAdmin || user.Role == UserRole.Admin)
                 {
-                    var course = await _unitOfWork.GetRepository<Course>().GetAllAsync(include: src => src.Include(x => x.Lessons).ThenInclude(x => x.Meeting)).ConfigureAwait(false);
+                    var course = await _unitOfWork.GetRepository<Course>().GetAllAsync(include: src => src.Include(x => x.Lessons.Where(x => x.Status == CourseStatus.Published)).ThenInclude(x => x.Meeting)).ConfigureAwait(false);
                     var currentDateTime = DateTime.UtcNow;
                     var response = new List<DashboardLessonResponseModel>();
                     var upcommingLessons = course.SelectMany(x => x.Lessons).Where(x => x.Meeting.StartDate.Value.AddSeconds(x.Meeting.Duration)>= currentDateTime).ToList();
@@ -1442,16 +1442,16 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var currentDateTime = DateTime.UtcNow;
                     var courseLiveLessons = await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p => (p.CourseTeachers.Any(x => x.UserId == currentUserId) ||
-                    p.CourseEnrollments.Any(x => x.UserId == currentUserId)) && p.Lessons.Any(x=>x.Meeting.StartDate.Value.AddSeconds(x.Meeting.Duration) > currentDateTime && x.Type == LessonType.LiveClass && !x.IsDeleted),
-                    include: src => src.Include(x => x.CourseEnrollments).Include(x => x.Lessons).ThenInclude(x => x.Meeting)).ConfigureAwait(false);
+                    p.CourseEnrollments.Any(x => x.UserId == currentUserId)) && p.Lessons.Any(x=>x.Meeting.StartDate.Value.AddSeconds(x.Meeting.Duration) > currentDateTime && x.Type == LessonType.LiveClass && !x.IsDeleted && x.Status == CourseStatus.Published),
+                    include: src => src.Include(x => x.CourseEnrollments).Include(x => x.Lessons.Where(x => x.Status == CourseStatus.Published)).ThenInclude(x => x.Meeting)).ConfigureAwait(false);
 
                     var courseExamLessons = await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p => (p.CourseTeachers.Any(x => x.UserId == currentUserId) ||
-                    p.CourseEnrollments.Any(x => x.UserId == currentUserId)) && p.Lessons.Any(x => x.QuestionSet.EndTime >= currentDateTime && x.Type == LessonType.Exam && !x.IsDeleted),
+                    p.CourseEnrollments.Any(x => x.UserId == currentUserId)) && p.Lessons.Any(x => x.QuestionSet.EndTime >= currentDateTime && x.Type == LessonType.Exam && !x.IsDeleted && x.Status == CourseStatus.Published),
                     include: src => src.Include(x => x.CourseEnrollments).Include(x => x.Lessons).ThenInclude(x => x.QuestionSet)).ConfigureAwait(false);
 
                     var CourseAssignmentLesson = await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p =>( p.CourseTeachers.Any(x => x.UserId == currentUserId) ||
-                    p.CourseEnrollments.Any(x => x.UserId == currentUserId)) && p.Lessons.Any(x => x.EndDate >= currentDateTime && x.Type == LessonType.Assignment && !x.IsDeleted),
-                    include: src => src.Include(x => x.CourseEnrollments).Include(x => x.Lessons).ThenInclude(x => x.Assignments)).ConfigureAwait(false);
+                    p.CourseEnrollments.Any(x => x.UserId == currentUserId)) && p.Lessons.Any(x => x.EndDate >= currentDateTime && x.Type == LessonType.Assignment && !x.IsDeleted && x.Status == CourseStatus.Published),
+                    include: src => src.Include(x => x.CourseEnrollments).Include(x => x.Lessons.Where(x => x.Status == CourseStatus.Published)).ThenInclude(x => x.Assignments)).ConfigureAwait(false);
 
                     var livelesson = courseLiveLessons.SelectMany(x => x.Lessons).ToList();
                     var upcommingLiveLessons = new List<Lesson>();
@@ -1524,13 +1524,13 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var currentDateTime = DateTime.UtcNow;
                     var lessonLiveClass = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.Course.CourseEnrollments.Any(x => x.UserId == currentUserId) && 
-                    p.Meeting.StartDate.Value.AddSeconds(p.Meeting.Duration) > currentDateTime && p.Type == LessonType.LiveClass && !p.IsDeleted,
+                    p.Meeting.StartDate.Value.AddSeconds(p.Meeting.Duration) > currentDateTime && p.Type == LessonType.LiveClass && !p.IsDeleted && p.Status == CourseStatus.Published,
                     include: src => src.Include(x => x.Meeting).Include(x=>x.Course)).ConfigureAwait(false);
                     var lessonExam = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.Course.CourseEnrollments.Any(x => x.UserId == currentUserId) && 
-                    p.QuestionSet.EndTime > currentDateTime && p.Type == LessonType.Exam && !p.IsDeleted,
+                    p.QuestionSet.EndTime > currentDateTime && p.Type == LessonType.Exam && !p.IsDeleted && p.Status == CourseStatus.Published,
                        include: src => src.Include(x => x.QuestionSet).Include(x=>x.Course)).ConfigureAwait(false);
                     var lessonAssignments = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.Course.CourseEnrollments.Any(x => x.UserId == currentUserId) &&
-                    p.EndDate > currentDateTime && p.Type == LessonType.Assignment && !p.IsDeleted,
+                    p.EndDate > currentDateTime && p.Type == LessonType.Assignment && !p.IsDeleted && p.Status == CourseStatus.Published,
                       include: src => src.Include(x => x.Assignments).Include(x => x.Course)).ConfigureAwait(false);
 
                     var response = new List<DashboardLessonResponseModel>();
