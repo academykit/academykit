@@ -61,10 +61,8 @@ const PhysicalTrainingDetail = ({
       </Text>
       {/* Super admin,  admin and trainer of that lesson cannot mark as attend */}
       {!hasAttended
-        ? user?.auth?.role !== UserRole.Admin &&
-          user?.auth?.role !== UserRole.SuperAdmin &&
-          user?.auth?.role == UserRole.Trainer &&
-          isTrainee && (
+        ? ((user?.auth?.role === UserRole.Trainer && isTrainee) ||
+            isTrainee) && (
             <Button
               onClick={() => handleAttendance()}
               loading={attendance.isLoading || attendance.isSuccess}
