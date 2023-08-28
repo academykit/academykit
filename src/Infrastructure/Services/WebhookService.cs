@@ -194,6 +194,14 @@ namespace Lingtren.Infrastructure.Services
                     return;
                 }
 
+                var student = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.Id == meeting.Lesson.CourseId && p.UserId == user.Id &&
+                               p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled).ConfigureAwait(false);
+
+                if (student == null)
+                {
+                    return;
+                }
+
                 var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == meeting.Lesson.CourseId &&
                 p.LessonId == meeting.Lesson.Id && p.UserId == user.Id).ConfigureAwait(false);
                 if (watchHistory == null)
@@ -255,6 +263,14 @@ namespace Lingtren.Infrastructure.Services
                 if (user == default)
                 {
                     _logger.LogWarning("User with id : {id} not found.", model.Payload.Object.Participant.Customer_Key);
+                    return;
+                }
+
+                var student = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.Id == meeting.Lesson.CourseId && p.UserId == user.Id &&
+                p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled).ConfigureAwait(false);
+
+                if (student == null)
+                {
                     return;
                 }
 
