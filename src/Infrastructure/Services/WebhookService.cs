@@ -194,7 +194,7 @@ namespace Lingtren.Infrastructure.Services
                     return;
                 }
 
-                var student = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.Id == meeting.Lesson.CourseId && p.UserId == user.Id &&
+                var student = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == meeting.Lesson.CourseId && p.UserId == user.Id &&
                                p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled).ConfigureAwait(false);
 
                 if (student == null)
@@ -266,7 +266,7 @@ namespace Lingtren.Infrastructure.Services
                     return;
                 }
 
-                var student = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.Id == meeting.Lesson.CourseId && p.UserId == user.Id &&
+                var student = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == meeting.Lesson.CourseId && p.UserId == user.Id &&
                 p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled).ConfigureAwait(false);
 
                 if (student == null)
