@@ -115,10 +115,11 @@ const AddUpdateUserForm = ({
       if (!isEditing) {
         await apiHooks.mutateAsync({
           ...data,
+          email: data?.email?.toLowerCase(),
           role: Number(data?.role),
         });
       } else {
-        const userData = { ...data };
+        const userData = { ...data, email: data?.email?.toLowerCase() };
         const status =
           item?.status === UserStatus.Pending
             ? UserStatus.Pending
