@@ -10,7 +10,7 @@ const ManageCourse = () => {
   const getStat = useGetCourseManageStatistics(course_id);
   const { t } = useTranslation();
   const theme = useMantineTheme();
-  console.log(theme);
+
   const incomingData = [
     {
       key: 'totalEnrollments',
