@@ -358,6 +358,20 @@
                         x.UpdatedOn = DateTime.UtcNow;
                         x.UpdatedBy = currentUserId;
                     });
+
+                     var courseEnrollmentUsers = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(predicate: p => p.UserId == groupMember.UserId &&
+                                                group.Courses.Select(x => x.Id).Contains(p.CourseId)).ConfigureAwait(false);
+                    if(courseEnrollmentUsers.Any())
+                    {
+                        courseEnrollmentUsers.ForEach(x =>
+                        {
+                            x.UpdatedOn = DateTime.UtcNow;
+                            x.UpdatedBy = currentUserId;
+                            x.IsDeleted = true;
+                            x.EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Unenrolled;
+                        });
+                        _unitOfWork.GetRepository<CourseEnrollment>().Update(courseEnrollmentUsers);
+                    }
                     _unitOfWork.GetRepository<Course>().Update(courseAuthor);
                     _unitOfWork.GetRepository<CourseTeacher>().Delete(courseTeacher);
                 }

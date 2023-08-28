@@ -344,6 +344,7 @@ namespace Lingtren.Infrastructure.Services
                     sections = sections.Where(x => x.Status != CourseStatus.Published).ToList();
                     lessons = lessons.Where(x => x.Status != CourseStatus.Published).ToList();
                 }
+
                 course.Status = isSuperAdminOrAdminAccess && model.Status != CourseStatus.Rejected ? CourseStatus.Published : model.Status;
                 course.UpdatedBy = currentUserId;
                 course.UpdatedOn = currentTimeStamp;
@@ -360,6 +361,7 @@ namespace Lingtren.Infrastructure.Services
                     x.UpdatedBy = currentUserId;
                     x.UpdatedOn = currentTimeStamp;
                 });
+
                 var meetings = new List<Meeting>();
                 if (course.Status == CourseStatus.Published)
                 {
@@ -381,6 +383,20 @@ namespace Lingtren.Infrastructure.Services
 
                     }
                 }
+
+                if (model.Status == CourseStatus.Completed)
+                {
+                    course.Status = CourseStatus.Completed;
+                    sections.ForEach(x =>
+                    {
+                        x.Status = CourseStatus.Completed;
+                    });
+                    lessons.ForEach(x =>
+                    {
+                        x.Status = CourseStatus.Completed;
+                    });
+                }
+
                 _unitOfWork.GetRepository<Section>().Update(sections);
                 _unitOfWork.GetRepository<Lesson>().Update(lessons);
                 _unitOfWork.GetRepository<Course>().Update(course);
