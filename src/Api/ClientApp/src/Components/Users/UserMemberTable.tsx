@@ -143,7 +143,7 @@ const UserRow = ({
         </div>
       </td>
       <td className={classes.roleContainer}>{t(`${UserRole[item.role]}`)}</td>
-      <td className={classes.emailContainer}>{item?.email}</td>
+      <td className={classes.emailContainer}>{item?.email.toLowerCase()}</td>
 
       <td className={classes.phoneContainer}>{item?.mobileNumber}</td>
       <td>

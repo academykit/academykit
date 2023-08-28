@@ -69,9 +69,10 @@ const Meetings = ({ data }: { data: ICourseLesson }) => {
       ) : (
         <div style={{ display: 'block' }}>
           {moment().isBefore(StartTime)
-            ? `${t('starts')} ${moment(
-                moment.utc(data.meeting.startDate).local()
-              ).fromNow()}`
+            ? `${t('start_date')}: ${moment(data.meeting.startDate)
+                .add(5, 'hours')
+                .add(45, 'minutes')
+                .format('DD/MM/YYYY HH:mm A')}`
             : `${t('started')} ${moment(
                 moment.utc(data.meeting.startDate).local()
               ).fromNow()}`}
