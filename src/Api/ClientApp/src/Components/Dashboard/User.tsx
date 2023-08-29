@@ -1,4 +1,11 @@
-import { createStyles, Group, Paper, SimpleGrid, Text } from '@mantine/core';
+import {
+  createStyles,
+  Group,
+  Paper,
+  SimpleGrid,
+  Text,
+  useMantineTheme,
+} from '@mantine/core';
 import {
   IconUserPlus,
   IconDiscount2,
@@ -69,6 +76,8 @@ export const User = ({
   dashboardCourses: DashboardCourses[];
 }) => {
   const { t } = useTranslation();
+  const theme = useMantineTheme();
+
   const incomingData = [
     {
       key: 'totalEnrolledCourses',
@@ -76,7 +85,7 @@ export const User = ({
       icon: 'enrollment',
       signLabel: t('enrollment'),
       pluLabel: t('enrollments'),
-      color: '#E9FAC8',
+      color: theme.colorScheme == 'dark' ? '#E9FAC8' : '#a3af8c',
     },
     {
       key: 'totalInProgressCourses',
@@ -92,7 +101,7 @@ export const User = ({
       icon: 'completed',
       signLabel: t('training'),
       pluLabel: t('trainings'),
-      color: '#E5DBFF',
+      color: theme.colorScheme == 'dark' ? '#E5DBFF' : '#b7afcc',
     },
   ];
   return (
