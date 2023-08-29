@@ -11,7 +11,6 @@
         public string SdkKey { get; set; }
         public string SdkSecret { get; set; }
         public string WebhookSecret { get; set; }
-        public string WebHookVerificationKey { get; set; }
         public bool IsRecordingEnabled { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
@@ -26,7 +25,6 @@
             IsRecordingEnabled = model.IsRecordingEnabled;
             UpdatedOn = model.UpdatedOn;
             WebhookSecret = model.WebHookSecret;
-            WebHookVerificationKey = model.WebHookVerificationKey;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
     }
