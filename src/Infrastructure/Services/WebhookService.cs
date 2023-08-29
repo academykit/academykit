@@ -273,29 +273,35 @@ namespace Lingtren.Infrastructure.Services
                 {
                     return;
                 }
-
+                 TimeZoneInfo nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
+                 var startTime = TimeZoneInfo.ConvertTime(DateTime.Parse(model.Payload.Object.Start_Time), nepalTimeZone);
                 var report = await _unitOfWork.GetRepository<MeetingReport>().GetFirstOrDefaultAsync(
                     predicate: p => p.UserId == user.Id && p.MeetingId == meeting.Id
-                            && p.StartTime == DateTime.Parse(model.Payload.Object.Start_Time)
+                            && p.StartTime == startTime
                             && p.LeftTime == default).ConfigureAwait(false);
-                if (report == default)
+                if (report == null)
                 {
                     _logger.LogWarning("Meeting Report not found for user with id : {userId} and meeting with id : {id}.",
                                         user.Id, meeting.Id);
                     return;
                 }
-                TimeZoneInfo nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
-                var LeftTime = TimeZoneInfo.ConvertTime(DateTime.Parse(model.Payload.Object.Participant.Leave_Time), nepalTimeZone);
-                report.Duration = LeftTime.Subtract(report.JoinTime);
-                report.LeftTime = LeftTime;
+               
+                var leftTime = TimeZoneInfo.ConvertTime(DateTime.Parse(model.Payload.Object.Participant.Leave_Time), nepalTimeZone);
+                _logger.LogInformation($"Left time : {leftTime}.");
+                _logger.LogInformation($"Join time : {report.JoinTime}.");
+                report.Duration = leftTime.Subtract(report.JoinTime);
+                report.LeftTime = leftTime;
                 report.UpdatedOn = DateTime.UtcNow;
+                _logger.LogInformation($"Duration : {report.Duration}.");
                 _unitOfWork.GetRepository<MeetingReport>().Update(report);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to save participant left record");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to save participant left record");
+                _logger.LogError(ex.Message);
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                // _logger.LogError(ex, "An error occurred while trying to save participant left record");
+                // throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to save participant left record");
             }
         }
     }
