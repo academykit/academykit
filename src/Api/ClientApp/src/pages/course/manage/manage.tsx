@@ -1,5 +1,5 @@
 import { StatsCard } from '@components/Dashboard/StatsCard';
-import { SimpleGrid } from '@mantine/core';
+import { SimpleGrid, useMantineTheme } from '@mantine/core';
 import { DashboardStats } from '@utils/services/dashboardService';
 import { useGetCourseManageStatistics } from '@utils/services/manageCourseService';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,8 @@ const ManageCourse = () => {
   const course_id = params.id as string;
   const getStat = useGetCourseManageStatistics(course_id);
   const { t } = useTranslation();
+  const theme = useMantineTheme();
+
   const incomingData = [
     {
       key: 'totalEnrollments',
@@ -16,6 +18,7 @@ const ManageCourse = () => {
       icon: 'userEnrollment',
       pluLabel: t('Enrollments'),
       signLabel: t('Enrollment'),
+      color: theme.colorScheme === 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalLessons',
@@ -23,6 +26,7 @@ const ManageCourse = () => {
       icon: 'book',
       pluLabel: t('Lessons'),
       signLabel: t('Lesson'),
+      color: theme.colorScheme === 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalTeachers',
@@ -30,6 +34,7 @@ const ManageCourse = () => {
       icon: 'groups',
       pluLabel: t('trainers'),
       signLabel: t('trainer'),
+      color: theme.colorScheme === 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalAssignments',
@@ -37,6 +42,7 @@ const ManageCourse = () => {
       icon: 'lecture',
       pluLabel: t('Assignments'),
       signLabel: t('Assignment'),
+      color: theme.colorScheme === 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalLectures',
@@ -44,6 +50,7 @@ const ManageCourse = () => {
       icon: 'video',
       pluLabel: t('Videos'),
       signLabel: t('Video'),
+      color: theme.colorScheme === 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalExams',
@@ -51,6 +58,7 @@ const ManageCourse = () => {
       icon: 'exam',
       pluLabel: t('Exams'),
       signLabel: t('Exam'),
+      color: theme.colorScheme === 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalMeetings',
@@ -58,6 +66,7 @@ const ManageCourse = () => {
       icon: 'meeting',
       pluLabel: t('Meetings'),
       signLabel: t('Meeting'),
+      color: theme.colorScheme === 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalDocuments',
@@ -65,6 +74,7 @@ const ManageCourse = () => {
       icon: 'document',
       pluLabel: t('Documents'),
       signLabel: t('Document'),
+      color: theme.colorScheme === 'dark' ? 'white' : 'black',
     },
   ];
   return (
