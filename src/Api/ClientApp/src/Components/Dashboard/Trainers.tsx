@@ -24,7 +24,7 @@ const TrainerCardDual = ({ dashboard }: { dashboard: DashboardStats }) => {
       withBorder
       p="md"
       radius={'md'}
-      style={{ color: theme.colorScheme == 'dark' ? '#E1D4BB' : '#9e9483' }}
+      style={{ color: theme.colorScheme == 'dark' ? 'white' : 'black' }}
     >
       <Group position="left" noWrap>
         <IconCertificate size={26} stroke={1.5} />
@@ -69,7 +69,7 @@ const Trainers = ({
       icon: 'groups',
       signLabel: t('group'),
       pluLabel: t('groups'),
-      color: theme.colorScheme == 'dark' ? '#C5F6FA' : '#9ec5c8',
+      color: theme.colorScheme == 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalEnrolledCourses',
@@ -77,7 +77,7 @@ const Trainers = ({
       icon: 'enrollment',
       signLabel: t('enrollment'),
       pluLabel: t('enrollments'),
-      color: theme.colorScheme == 'dark' ? '#E9FAC8' : '#a3af8c',
+      color: theme.colorScheme == 'dark' ? 'white' : 'black',
     },
   ];
   return (

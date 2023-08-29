@@ -85,7 +85,7 @@ export const User = ({
       icon: 'enrollment',
       signLabel: t('enrollment'),
       pluLabel: t('enrollments'),
-      color: theme.colorScheme == 'dark' ? '#E9FAC8' : '#a3af8c',
+      color: theme.colorScheme == 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalInProgressCourses',
@@ -93,7 +93,7 @@ export const User = ({
       icon: 'trainings',
       signLabel: t('training'),
       pluLabel: t('trainings'),
-      color: '#63E6BE',
+      color: theme.colorScheme == 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalCompletedCourses',
@@ -101,7 +101,7 @@ export const User = ({
       icon: 'completed',
       signLabel: t('training'),
       pluLabel: t('trainings'),
-      color: theme.colorScheme == 'dark' ? '#E5DBFF' : '#b7afcc',
+      color: theme.colorScheme == 'dark' ? 'white' : 'black',
     },
   ];
   return (
