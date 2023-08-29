@@ -25,7 +25,7 @@ const Admin = ({
       icon: 'userEnrollment',
       signLabel: t('user'),
       pluLabel: t('users'),
-      color: theme.colorScheme == 'dark' ? '#E5DBFF' : '#b7afcc',
+      color: theme.colorScheme == 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalActiveUsers',
@@ -33,7 +33,7 @@ const Admin = ({
       icon: 'active',
       signLabel: t('user'),
       pluLabel: t('users'),
-      color: '#63E6BE',
+      color: theme.colorScheme == 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalGroups',
@@ -41,7 +41,7 @@ const Admin = ({
       icon: 'groups',
       signLabel: t('group'),
       pluLabel: t('groups'),
-      color: theme.colorScheme == 'dark' ? '#C5F6FA' : '#9ec5c8',
+      color: theme.colorScheme == 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalTrainers',
@@ -49,7 +49,7 @@ const Admin = ({
       icon: 'trainers',
       signLabel: t('trainer'),
       pluLabel: t('trainers'),
-      color: theme.colorScheme == 'dark' ? '#FFE8CC' : '#b3a28f',
+      color: theme.colorScheme == 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalTrainings',
@@ -57,7 +57,7 @@ const Admin = ({
       icon: 'trainings',
       signLabel: t('training'),
       pluLabel: t('trainings'),
-      color: theme.colorScheme == 'dark' ? '#E9FAC8' : '#a3af8c',
+      color: theme.colorScheme == 'dark' ? 'white' : 'black',
     },
   ];
 
