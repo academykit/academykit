@@ -1,4 +1,11 @@
-import { Flex, Group, Paper, SimpleGrid, Text } from '@mantine/core';
+import {
+  Flex,
+  Group,
+  Paper,
+  SimpleGrid,
+  Text,
+  useMantineTheme,
+} from '@mantine/core';
 import { IconActivity, IconCertificate, IconFileCheck } from '@tabler/icons';
 import {
   DashboardCourses,
@@ -10,13 +17,14 @@ import { useTranslation } from 'react-i18next';
 
 const TrainerCardDual = ({ dashboard }: { dashboard: DashboardStats }) => {
   const { t } = useTranslation();
+  const theme = useMantineTheme();
+
   return (
     <Paper
       withBorder
       p="md"
       radius={'md'}
-      bg="#E1D4BB"
-      style={{ color: 'black' }}
+      style={{ color: theme.colorScheme == 'dark' ? '#E1D4BB' : '#9e9483' }}
     >
       <Group position="left" noWrap>
         <IconCertificate size={26} stroke={1.5} />
@@ -52,6 +60,8 @@ const Trainers = ({
   dashboardCourses: DashboardCourses[];
 }) => {
   const { t } = useTranslation();
+  const theme = useMantineTheme();
+
   const incomingData = [
     {
       key: 'totalGroups',
@@ -59,7 +69,7 @@ const Trainers = ({
       icon: 'groups',
       signLabel: t('group'),
       pluLabel: t('groups'),
-      color: '#C5F6FA',
+      color: theme.colorScheme == 'dark' ? '#C5F6FA' : '#9ec5c8',
     },
     {
       key: 'totalEnrolledCourses',
@@ -67,7 +77,7 @@ const Trainers = ({
       icon: 'enrollment',
       signLabel: t('enrollment'),
       pluLabel: t('enrollments'),
-      color: '#E9FAC8',
+      color: theme.colorScheme == 'dark' ? '#E9FAC8' : '#a3af8c',
     },
   ];
   return (
