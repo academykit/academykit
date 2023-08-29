@@ -219,16 +219,20 @@ namespace Lingtren.Infrastructure.Services
                     };
                     await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(entity).ConfigureAwait(false);
                 }
-
+                TimeZoneInfo nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
+                _logger.LogInformation($"Start time : {model.Payload.Object.Start_Time}");
+                _logger.LogInformation($"Join time : {model.Payload.Object.Participant.Join_Time}");
                 var meetingReport = new MeetingReport
                 {
                     Id = Guid.NewGuid(),
                     MeetingId = meeting.Id,
                     UserId = user.Id,
-                    StartTime = DateTime.Parse(model.Payload.Object.Start_Time),
-                    JoinTime = DateTime.Parse(model.Payload.Object.Participant.Join_Time),
+                    StartTime =TimeZoneInfo.ConvertTime( DateTime.Parse(model.Payload.Object.Start_Time), nepalTimeZone),
+                    JoinTime = TimeZoneInfo.ConvertTime( DateTime.Parse(model.Payload.Object.Participant.Join_Time), nepalTimeZone),
                     CreatedOn = DateTime.UtcNow
                 };
+                   _logger.LogInformation($"Start time : {meetingReport.StartTime}");
+                _logger.LogInformation($"Join time : {meetingReport.JoinTime}");
                 await _unitOfWork.GetRepository<MeetingReport>().InsertAsync(meetingReport).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
