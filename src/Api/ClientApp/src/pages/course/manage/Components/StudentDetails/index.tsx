@@ -176,6 +176,18 @@ const StudentLessonDetails = ({
             </ActionIcon>
           </Tooltip>
         );
+      case LessonType.RecordedVideo:
+        return (
+          <Tooltip label={t('view_live_class_report')}>
+            <ActionIcon
+              color="green"
+              variant="subtle"
+              onClick={() => setLiveClassReportModal()}
+            >
+              <IconEye />
+            </ActionIcon>
+          </Tooltip>
+        );
       default:
         return <div></div>;
     }
