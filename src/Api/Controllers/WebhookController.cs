@@ -104,6 +104,8 @@ namespace Lingtren.Api.Controllers
             {
                 var reader = await stream.ReadToEndAsync();
                 var model = JsonConvert.DeserializeObject<ZoomPayLoadDto>(reader);
+                _logger.LogInformation(model.ToString());
+                _logger.LogInformation(model.Payload.ToString());
                 _logger.LogInformation(model.Event);
                 if (model.Event.Equals("endpoint.url_validation"))
                 {

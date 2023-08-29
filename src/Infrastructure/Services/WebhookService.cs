@@ -250,13 +250,15 @@ namespace Lingtren.Infrastructure.Services
             {
                 _logger.LogError("Participant Left meeting.");
                 _logger.LogInformation($" account id : {model.Payload.Account_Id}");
-                var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: x => x.MeetingNumber.ToString() == model.Payload.Object.Id).ConfigureAwait(false);
+                 var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.MeetingNumber.ToString() ==
+                          model.Payload.Object.Id, include: source => source.Include(x => x.Lesson)).ConfigureAwait(false);
 
                 if (meeting == default)
                 {
                     _logger.LogWarning("Meeting id : {id} not found.", model.Payload.Object.Id);
                     return;
                 }
+
                 var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p =>
                              p.Id.ToString() == model.Payload.Object.Participant.Customer_Key).ConfigureAwait(false);
 
@@ -265,9 +267,8 @@ namespace Lingtren.Infrastructure.Services
                     _logger.LogWarning("User with id : {id} not found.", model.Payload.Object.Participant.Customer_Key);
                     return;
                 }
-
-                var student = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == meeting.Lesson.CourseId && p.UserId == user.Id &&
-                p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled).ConfigureAwait(false);
+                 var student = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == meeting.Lesson.CourseId && p.UserId == user.Id &&
+                               p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled).ConfigureAwait(false);
 
                 if (student == null)
                 {
