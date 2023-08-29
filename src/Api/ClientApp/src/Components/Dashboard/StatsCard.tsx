@@ -49,18 +49,18 @@ export const StatsCard = ({ data, dashboard }: StatsGridProps) => {
       : data.signLabel;
 
   return (
-    <Paper withBorder p="md" bg={data.color} color="black" radius="md">
-      <Group position="left" noWrap color="black">
-        <Icon size={26} stroke={1.5} color="black" />
-        <Text size="md" color="black">
+    <Paper withBorder p="md" color={data.color} radius="md">
+      <Group position="left" noWrap color={data.color}>
+        <Icon size={26} stroke={1.5} color={data.color} />
+        <Text size="md" color={data.color}>
           {data.label}
         </Text>
       </Group>
       <Group mt={20}>
-        <Text size="lg" weight={'bold'} color="black">
+        <Text size="lg" weight={'bold'} color={data.color}>
           {dashboard && dashboard[data.key as keyof DashboardStats]}
         </Text>
-        <Text color="black">{backLabel}</Text>
+        <Text color={data.color}>{backLabel}</Text>
       </Group>
     </Paper>
   );

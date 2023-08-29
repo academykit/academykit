@@ -1,4 +1,4 @@
-import { SimpleGrid, Text } from '@mantine/core';
+import { SimpleGrid, Text, useMantineTheme } from '@mantine/core';
 import {
   DashboardCourses,
   DashboardStats,
@@ -16,6 +16,7 @@ const Admin = ({
   dashboardCourses: DashboardCourses[];
 }) => {
   const { t } = useTranslation();
+  const theme = useMantineTheme();
 
   const incomingData = [
     {
@@ -24,7 +25,7 @@ const Admin = ({
       icon: 'userEnrollment',
       signLabel: t('user'),
       pluLabel: t('users'),
-      color: '#E5DBFF',
+      color: theme.colorScheme == 'dark' ? '#E5DBFF' : '#b7afcc',
     },
     {
       key: 'totalActiveUsers',
@@ -40,7 +41,7 @@ const Admin = ({
       icon: 'groups',
       signLabel: t('group'),
       pluLabel: t('groups'),
-      color: '#C5F6FA',
+      color: theme.colorScheme == 'dark' ? '#C5F6FA' : '#9ec5c8',
     },
     {
       key: 'totalTrainers',
@@ -48,7 +49,7 @@ const Admin = ({
       icon: 'trainers',
       signLabel: t('trainer'),
       pluLabel: t('trainers'),
-      color: '#FFE8CC',
+      color: theme.colorScheme == 'dark' ? '#FFE8CC' : '#b3a28f',
     },
     {
       key: 'totalTrainings',
@@ -56,7 +57,7 @@ const Admin = ({
       icon: 'trainings',
       signLabel: t('training'),
       pluLabel: t('trainings'),
-      color: '#E9FAC8',
+      color: theme.colorScheme == 'dark' ? '#E9FAC8' : '#a3af8c',
     },
   ];
 
