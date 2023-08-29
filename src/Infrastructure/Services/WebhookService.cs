@@ -248,8 +248,6 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                _logger.LogError("Participant Left meeting.");
-                _logger.LogInformation($" account id : {model.Payload.Account_Id}");
                  var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.MeetingNumber.ToString() ==
                           model.Payload.Object.Id, include: source => source.Include(x => x.Lesson)).ConfigureAwait(false);
 
@@ -275,7 +273,6 @@ namespace Lingtren.Infrastructure.Services
                     return;
                 }
                  TimeZoneInfo nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
-                 _logger.LogInformation($"start time : {model.Payload.Object.Start_Time}.");
                 var report = await _unitOfWork.GetRepository<MeetingReport>().GetFirstOrDefaultAsync(
                     predicate: p => p.UserId == user.Id && p.MeetingId == meeting.Id
                             && p.StartTime == DateTime.Parse(model.Payload.Object.Start_Time)
@@ -289,7 +286,6 @@ namespace Lingtren.Infrastructure.Services
                 }
                
                 var LeftTime = TimeZoneInfo.ConvertTime(DateTime.Parse(model.Payload.Object.Participant.Leave_Time), nepalTimeZone);
-                _logger.LogInformation($"Left time : {LeftTime}.");
                 report.Duration = LeftTime.Subtract(report.JoinTime);
                 report.LeftTime = LeftTime;
                 report.UpdatedOn = DateTime.UtcNow;
