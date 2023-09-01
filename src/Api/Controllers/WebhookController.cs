@@ -32,6 +32,7 @@ namespace Lingtren.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ZoomRecording()
         {
+             _logger.LogInformation("Zoom Recording API");
             var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync();
             using (var stream = new StreamReader(Request.Body))
             {
@@ -65,6 +66,7 @@ namespace Lingtren.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> JoinMeeting()
         {
+            _logger.LogInformation("Join Meeting API");
             var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync();
             using(var stream = new StreamReader(Request.Body))
             {
@@ -99,6 +101,7 @@ namespace Lingtren.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> LeftMeeting()
         {
+             _logger.LogInformation("Left Meeting API");
             var zoomSetting = await _zoomSettingService.GetFirstOrDefaultAsync();
             using (var stream = new StreamReader(Request.Body))
             {
