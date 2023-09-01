@@ -3326,11 +3326,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("webhook_secret");
 
-                    b.Property<string>("WebHookVerificationKey")
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("webhook_verification_key");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");

@@ -8,7 +8,6 @@
         public string SdkKey { get; set; }
         public string SdkSecret { get; set; }
         public string WebhookSecret { get; set; }
-        public string WebHookVerificationKey { get; set; }
         public bool IsRecordingEnabled { get; set; }
     }
 }

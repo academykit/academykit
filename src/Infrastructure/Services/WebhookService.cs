@@ -38,6 +38,8 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
+                _logger.LogError("Recording meeting.");
+                _logger.LogInformation($" account id : {dto.Payload.Object}");
                 if (context == null)
                 {
                     throw new ArgumentException(_localizer.GetString("ContextNotFound"));
@@ -172,6 +174,8 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
+                _logger.LogError("Participant join meeting.");
+                _logger.LogInformation($" account id : {model.Payload.Account_Id}");
                 var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.MeetingNumber.ToString() ==
                           model.Payload.Object.Id, include: source => source.Include(x => x.Lesson)).ConfigureAwait(false);
 
@@ -187,6 +191,14 @@ namespace Lingtren.Infrastructure.Services
                 if (user == default)
                 {
                     _logger.LogWarning("User with id : {id} not found.", model.Payload.Object.Participant.Customer_Key);
+                    return;
+                }
+
+                var student = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == meeting.Lesson.CourseId && p.UserId == user.Id &&
+                               p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled).ConfigureAwait(false);
+
+                if (student == null)
+                {
                     return;
                 }
 
@@ -207,14 +219,14 @@ namespace Lingtren.Infrastructure.Services
                     };
                     await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(entity).ConfigureAwait(false);
                 }
-
+                TimeZoneInfo nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
                 var meetingReport = new MeetingReport
                 {
                     Id = Guid.NewGuid(),
                     MeetingId = meeting.Id,
                     UserId = user.Id,
                     StartTime = DateTime.Parse(model.Payload.Object.Start_Time),
-                    JoinTime = DateTime.Parse(model.Payload.Object.Participant.Join_Time),
+                    JoinTime = TimeZoneInfo.ConvertTime(DateTime.Parse(model.Payload.Object.Participant.Join_Time), nepalTimeZone),
                     CreatedOn = DateTime.UtcNow
                 };
                 await _unitOfWork.GetRepository<MeetingReport>().InsertAsync(meetingReport).ConfigureAwait(false);
@@ -236,13 +248,15 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: x => x.MeetingNumber.ToString() == model.Payload.Object.Id).ConfigureAwait(false);
+                 var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.MeetingNumber.ToString() ==
+                          model.Payload.Object.Id, include: source => source.Include(x => x.Lesson)).ConfigureAwait(false);
 
                 if (meeting == default)
                 {
                     _logger.LogWarning("Meeting id : {id} not found.", model.Payload.Object.Id);
                     return;
                 }
+
                 var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p =>
                              p.Id.ToString() == model.Payload.Object.Participant.Customer_Key).ConfigureAwait(false);
 
@@ -251,18 +265,27 @@ namespace Lingtren.Infrastructure.Services
                     _logger.LogWarning("User with id : {id} not found.", model.Payload.Object.Participant.Customer_Key);
                     return;
                 }
+                 var student = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == meeting.Lesson.CourseId && p.UserId == user.Id &&
+                               p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled).ConfigureAwait(false);
 
+                if (student == null)
+                {
+                    return;
+                }
+                 TimeZoneInfo nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
                 var report = await _unitOfWork.GetRepository<MeetingReport>().GetFirstOrDefaultAsync(
                     predicate: p => p.UserId == user.Id && p.MeetingId == meeting.Id
                             && p.StartTime == DateTime.Parse(model.Payload.Object.Start_Time)
                             && p.LeftTime == default).ConfigureAwait(false);
+
                 if (report == default)
                 {
                     _logger.LogWarning("Meeting Report not found for user with id : {userId} and meeting with id : {id}.",
                                         user.Id, meeting.Id);
                     return;
                 }
-                var LeftTime = DateTime.Parse(model.Payload.Object.Participant.Leave_Time);
+               
+                var LeftTime = TimeZoneInfo.ConvertTime(DateTime.Parse(model.Payload.Object.Participant.Leave_Time), nepalTimeZone);
                 report.Duration = LeftTime.Subtract(report.JoinTime);
                 report.LeftTime = LeftTime;
                 report.UpdatedOn = DateTime.UtcNow;

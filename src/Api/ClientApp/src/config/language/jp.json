@@ -870,6 +870,7 @@
   "view_assignment": "課題を表示する",
   "ID": "ID",
   "user_id": "ユーザーID",
+  "userid": "ユーザーID",
   "zoom_license_update_success": "Zoom ライセンスが正常に更新されました",
   "add_trainee_success": "受講生が正常に追加されました。",
   "add_trainee": "受講生を追加",

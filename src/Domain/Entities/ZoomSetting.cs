@@ -6,7 +6,6 @@ namespace Lingtren.Domain.Entities
         public string SdkKey { get; set; }
         public string SdkSecret { get; set; }
         public string WebHookSecret { get; set; }
-        public string WebHookVerificationKey { get; set; }
         public string OAuthAccountId { get; set; }
         public string OAuthClientId { get; set; }
         public string OAuthClientSecret { get; set; }

@@ -23,7 +23,7 @@ const mapData = {
   sdkKey: 'zoom_sdk_key',
   sdkSecret: 'zoom_sdk_secret',
   webhookSecret: 'zoom_webhook_secret',
-  webhookVerification: 'zoom_webhook_verification',
+  // webhookVerification: 'zoom_webhook_verification',
   isRecordingEnabled: 'zoom_recording_enabled',
   oAuthAccountId: 'oAuth_accountId',
   oAuthClientId: 'oAuth_clientId',
@@ -79,7 +79,7 @@ const ZoomSettings = () => {
       sdkSecret: zoom.data?.data?.sdkSecret || '',
       isRecordingEnabled: zoom.data?.data?.isRecordingEnabled || false,
       webhookSecret: zoom.data?.data?.webhookSecret || '',
-      webhookVerification: zoom.data?.data?.webhookVerificationKey || '',
+      // webhookVerification: zoom.data?.data?.webhookVerificationKey || '',
     },
   });
 
@@ -92,7 +92,7 @@ const ZoomSettings = () => {
       sdkSecret: zoom.data?.data?.sdkSecret || '',
       isRecordingEnabled: zoom.data?.data?.isRecordingEnabled || false,
       webhookSecret: zoom.data?.data?.webhookSecret || '',
-      webhookVerification: zoom.data?.data?.webhookVerificationKey || '',
+      // webhookVerification: zoom.data?.data?.webhookVerificationKey || '',
     });
     setIsChecked(zoom.data?.data.isRecordingEnabled);
   }, [zoom.isSuccess]);
@@ -166,13 +166,13 @@ const ZoomSettings = () => {
               mb={10}
               {...form.getInputProps('webhookSecret')}
             />
-            <TextInput
+            {/* <TextInput
               label={t('zoom_webhook_verification')}
               name="webhookVerification"
               placeholder={t('enter_zoom_webhook_verification') as string}
               mb={10}
               {...form.getInputProps('webhookVerification')}
-            />
+            /> */}
             <Switch
               sx={{ input: { cursor: 'pointer' } }}
               checked={isChecked}

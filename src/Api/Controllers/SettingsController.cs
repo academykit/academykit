@@ -164,7 +164,6 @@ namespace Lingtren.Api.Controllers
             existing.SdkKey = model.SdkKey;
             existing.SdkSecret = model.SdkSecret;
             existing.WebHookSecret = model.WebhookSecret;
-            existing.WebHookVerificationKey = model.WebHookVerificationKey;
             existing.IsRecordingEnabled = model.IsRecordingEnabled;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;

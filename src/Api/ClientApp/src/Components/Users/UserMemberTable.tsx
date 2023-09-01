@@ -226,7 +226,7 @@ const UserMemberTable = ({
       >
         <thead>
           <tr>
-            <th>{t('User ID')}</th>
+            <th>{t('userid')}</th>
             <th>
               {sortComponent({ sortKey: 'firstName', title: t('username') })}
             </th>

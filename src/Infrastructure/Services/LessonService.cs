@@ -788,7 +788,7 @@ namespace Lingtren.Infrastructure.Services
                 JoinedTime = x.JoinTime.ToShortTimeString(),
                 LeftTime = x.LeftTime.HasValue ? x.LeftTime.Value.ToShortTimeString() : string.Empty,
                 LessonId = lesson.Id,
-                Duration = (int)x.Duration.Value.TotalSeconds,
+                Duration = x.Duration.HasValue ?  (int)x.Duration.Value.TotalSeconds : default,
             }).ToList();
         }
 
