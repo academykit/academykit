@@ -177,7 +177,8 @@
                     throw new ForbiddenException(_localizer.GetString("EnterUserEmail"));
                 }
                 var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(
-                    predicate: p => p.Slug.ToLower().Equals(identity) || p.Id.ToString().Equals(identity)).ConfigureAwait(false);
+                    predicate: p => p.Slug.ToLower().Equals(identity) || p.Id.ToString().Equals(identity),
+                    include: source => source.Include(x => x.Courses)).ConfigureAwait(false);
 
                 CommonHelper.CheckFoundEntity(group);
 
@@ -229,6 +230,24 @@
                         UpdatedBy = currentUserId,
                         UpdatedOn = currentTimeStamp
                     });
+                }
+
+                if (group.Courses?.Count > 0)
+                {
+                    var inactiveEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(predicate: p => p.IsDeleted && p.EnrollmentMemberStatus
+                                            == EnrollmentMemberStatusEnum.Unenrolled && usersToBeAdded.Contains(p.UserId) && group.Courses.Select(x =>
+                                            x.Id).Contains(p.CourseId)).ConfigureAwait(false);
+                    if (inactiveEnrollment?.Count > 0)
+                    {
+                        inactiveEnrollment.ForEach(x =>
+                        {
+                            x.IsDeleted = false;
+                            x.EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Enrolled;
+                            x.UpdatedBy = currentUserId;
+                            x.UpdatedOn = currentTimeStamp;
+                        });
+                        _unitOfWork.GetRepository<CourseEnrollment>().Update(inactiveEnrollment);
+                    }
                 }
                 await _unitOfWork.GetRepository<GroupMember>().InsertAsync(groupMembers).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -359,9 +378,9 @@
                         x.UpdatedBy = currentUserId;
                     });
 
-                     var courseEnrollmentUsers = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(predicate: p => p.UserId == groupMember.UserId &&
-                                                group.Courses.Select(x => x.Id).Contains(p.CourseId)).ConfigureAwait(false);
-                    if(courseEnrollmentUsers.Any())
+                    var courseEnrollmentUsers = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(predicate: p => p.UserId == groupMember.UserId &&
+                                               group.Courses.Select(x => x.Id).Contains(p.CourseId)).ConfigureAwait(false);
+                    if (courseEnrollmentUsers.Any())
                     {
                         courseEnrollmentUsers.ForEach(x =>
                         {
