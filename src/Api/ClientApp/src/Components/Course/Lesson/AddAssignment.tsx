@@ -138,7 +138,7 @@ const AddAssignment = ({
           assignmentData as ILessonAssignment
         );
         form.reset();
-        navigate(`${response.data.id}/assignment`);
+        navigate(`${response.data.id}/assignment/add`);
       } else {
         await updateLesson.mutateAsync({
           ...assignmentData,
@@ -259,7 +259,7 @@ const AddAssignment = ({
               </Button>
             )}
             {isEditing && (
-              <Button component={Link} to={`${item?.id}/assignment`}>
+              <Button component={Link} to={`${item?.id}/assignment/add`}>
                 {t('add_more_questions')}
               </Button>
             )}

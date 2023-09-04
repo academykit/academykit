@@ -86,7 +86,7 @@ const CourseRoute = () => {
           <Route path="/teachers" element={<Teacher />} />
           <Route path="/lessons" element={<CourseLessons />} />
           <Route
-            path="/lessons/:lessonId/assignment"
+            path="/lessons/:lessonId/assignment/add"
             element={<CreateAssignment />}
           />
           <Route
