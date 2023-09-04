@@ -96,7 +96,7 @@ app.MapControllers();
 
 app.MapFallbackToFile("index.html");
 // app.UseHttpLogging();
-// app.MigrateDatabase();
+app.MigrateDatabase();
 
 // download the chrome browser earlier 
 var browserFetcher = new BrowserFetcher();

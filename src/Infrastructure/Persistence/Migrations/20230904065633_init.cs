@@ -964,8 +964,6 @@ namespace Infrastructure.Persistence.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     webhook_secret = table.Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    webhook_verification_key = table.Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     oauth_account_id = table.Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     oauth_client_id = table.Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
@@ -1796,8 +1794,8 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "ZoomSettings",
-                columns: new[] { "id", "created_by", "created_on", "oauth_account_id", "oauth_client_id", "oauth_client_secret", "sdk_key", "sdk_secret", "updated_by", "updated_on", "webhook_secret", "webhook_verification_key" },
-                values: new object[] { "f41a902f-fabd-4749-ac28-91137f685cb8", "30fcd978-f256-4733-840f-759181bc5e63", new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004), "OAuth account id", "OAuth client id", "OAuth client secret", "sdk key value", "sdk secret value", "30fcd978-f256-4733-840f-759181bc5e63", new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004), null, null });
+                columns: new[] { "id", "created_by", "created_on", "oauth_account_id", "oauth_client_id", "oauth_client_secret", "sdk_key", "sdk_secret", "updated_by", "updated_on", "webhook_secret" },
+                values: new object[] { "f41a902f-fabd-4749-ac28-91137f685cb8", "30fcd978-f256-4733-840f-759181bc5e63", new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004), "OAuth account id", "OAuth client id", "OAuth client secret", "sdk key value", "sdk secret value", "30fcd978-f256-4733-840f-759181bc5e63", new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004), null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AssignmentAttachments_assignment_id",
