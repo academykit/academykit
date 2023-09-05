@@ -168,7 +168,7 @@
                 course.Group = new Group();
                 course.Group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(
                     predicate: p => p.Id == course.GroupId,
-                    include: src => src.Include(x => x.GroupMembers)).ConfigureAwait(false);
+                    include: src => src.Include(x => x.GroupMembers.Where(x => x.IsActive))).ConfigureAwait(false);
             }
 
             var isSuperAdminOrAdminAccess = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
@@ -242,10 +242,9 @@
 
         protected async Task<IList<Guid>> GetUserGroupIds(Guid userId)
         {
-            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
-                predicate: p => p.Id == userId,
-                include: src => src.Include(x => x.GroupMembers)).ConfigureAwait(false);
-            return user?.GroupMembers.Select(x => x.GroupId).ToList();
+            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == userId,include: src => src.Include(x => x.GroupMembers.
+                       Where(x => x.IsActive))).ConfigureAwait(false);
+            return user?.GroupMembers?.Select(x => x.GroupId).ToList();
         }
 
         protected async Task<bool> IsSuperAdmin(Guid currentUserId)

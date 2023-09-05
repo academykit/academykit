@@ -68,7 +68,7 @@
             }
             if (criteria.Role != UserRole.SuperAdmin && criteria.Role != UserRole.Admin)
             {
-                predicate = predicate.And(p => p.GroupMembers.Any(x => x.UserId == criteria.CurrentUserId));
+                predicate = predicate.And(p => p.GroupMembers.Any(x => x.UserId == criteria.CurrentUserId && x.IsActive));
             }
             return predicate;
         }
