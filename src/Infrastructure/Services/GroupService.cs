@@ -49,6 +49,8 @@
             await Task.FromResult(0);
         }
 
+
+
         /// <summary>
         /// Applies filters to the given query.
         /// </summary>
@@ -232,21 +234,37 @@
                     });
                 }
 
+                if (inActiveUsers?.Count > 0)
+                {
+                    inActiveUsers.ForEach(x =>
+                    {
+                        x.IsActive = true;
+                        x.UpdatedBy = currentUserId;
+                        x.UpdatedOn = currentTimeStamp;
+                    });
+                    _unitOfWork.GetRepository<GroupMember>().Update(inActiveUsers);
+                }
+
                 if (group.Courses?.Count > 0)
                 {
-                    var inactiveEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(predicate: p => p.IsDeleted && p.EnrollmentMemberStatus
-                                            == EnrollmentMemberStatusEnum.Unenrolled && usersToBeAdded.Contains(p.UserId) && group.Courses.Select(x =>
-                                            x.Id).Contains(p.CourseId)).ConfigureAwait(false);
-                    if (inactiveEnrollment?.Count > 0)
+                    var unenrollUsers = inActiveUsers?.Select(x => x.UserId).ToList();
+                    unenrollUsers?.AddRange(usersToBeAdded);
+                    if (unenrollUsers?.Count > 0)
                     {
-                        inactiveEnrollment.ForEach(x =>
+                        var inactiveEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(predicate: p => p.IsDeleted && p.EnrollmentMemberStatus
+                                           == EnrollmentMemberStatusEnum.Unenrolled && unenrollUsers.Contains(p.UserId) && group.Courses.Select(x =>
+                                           x.Id).Contains(p.CourseId)).ConfigureAwait(false);
+                        if (inactiveEnrollment?.Count > 0)
                         {
-                            x.IsDeleted = false;
-                            x.EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Enrolled;
-                            x.UpdatedBy = currentUserId;
-                            x.UpdatedOn = currentTimeStamp;
-                        });
-                        _unitOfWork.GetRepository<CourseEnrollment>().Update(inactiveEnrollment);
+                            inactiveEnrollment.ForEach(x =>
+                            {
+                                x.IsDeleted = false;
+                                x.EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Enrolled;
+                                x.UpdatedBy = currentUserId;
+                                x.UpdatedOn = currentTimeStamp;
+                            });
+                            _unitOfWork.GetRepository<CourseEnrollment>().Update(inactiveEnrollment);
+                        }
                     }
                 }
                 await _unitOfWork.GetRepository<GroupMember>().InsertAsync(groupMembers).ConfigureAwait(false);
@@ -258,7 +276,7 @@
 
                 var result = new GroupAddMemberResponseModel();
 
-                if (duplicateUsers.Count > 0 || inActiveUsers.Count > 0 || nonUsers.Count > 0 || adminAndSuperAdmin.Count > 0)
+                if (duplicateUsers.Count > 0 || nonUsers.Count > 0 || adminAndSuperAdmin.Count > 0)
                 {
                     result.HttpStatusCode = HttpStatusCode.PartialContent;
                     if (duplicateUsers.Count > 0)
@@ -266,10 +284,10 @@
                         result.Message += _localizer.GetString($"AlreadyAddedMember") + " : " + string.Join(", ", duplicateUsers.Select(x => x.User.Email)) + Environment.NewLine;
 
                     }
-                    if (inActiveUsers.Count > 0)
-                    {
-                        result.Message = _localizer.GetString("InactiveGroupMember") + " : " + string.Join(", ", inActiveUsers.Select(x => x.User.Email)) + Environment.NewLine;
-                    }
+                    //if (inActiveUsers.Count > 0)
+                    //{
+                    //    result.Message = _localizer.GetString("InactiveGroupMember") + " : " + string.Join(", ", inActiveUsers.Select(x => x.User.Email)) + Environment.NewLine;
+                    //}
                     if (nonUsers.Count > 0)
                     {
                         result.Message += _localizer.GetString("NotASystemUser") + " : " + string.Join(", ", adminAndSuperAdmin.Select(x => x.Email)) + Environment.NewLine;
@@ -394,8 +412,10 @@
                     _unitOfWork.GetRepository<Course>().Update(courseAuthor);
                     _unitOfWork.GetRepository<CourseTeacher>().Delete(courseTeacher);
                 }
-
-                _unitOfWork.GetRepository<GroupMember>().Delete(groupMember);
+                groupMember.IsActive = false;
+                groupMember.UpdatedBy = currentUserId;
+                groupMember.UpdatedOn = DateTime.UtcNow;
+                _unitOfWork.GetRepository<GroupMember>().Update(groupMember);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             });
 
@@ -601,7 +621,7 @@
                     var departmentId = criteria.DepartmentIdentity.ToLower().Trim();
                     predicate = predicate.And(x => x.DepartmentId.ToString() == departmentId || x.Department.Slug.ToLower().Trim() == departmentId);
                 }
-                predicate = predicate.And(p => !p.GroupMembers.Any(x => x.GroupId == group.Id && x.UserId == p.Id));
+                predicate = predicate.And(p => !p.GroupMembers.Any(x => x.GroupId == group.Id && x.UserId == p.Id && x.IsActive));
                 predicate = predicate.And(p => p.Status == UserStatus.Active && (p.Role != UserRole.SuperAdmin && p.Role != UserRole.Admin));
 
                 var users = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate, include: (x) => x.Include(p => p.Department)).ConfigureAwait(false);
