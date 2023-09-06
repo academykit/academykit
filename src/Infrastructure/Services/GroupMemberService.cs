@@ -30,7 +30,7 @@
         /// <returns>The updated predicate with applied filters.</returns>
         protected override Expression<Func<GroupMember, bool>> ConstructQueryConditions(Expression<Func<GroupMember, bool>> predicate, GroupMemberBaseSearchCriteria criteria)
         {
-            predicate = predicate.And(p => p.GroupId == criteria.GroupId);
+            predicate = predicate.And(p => p.GroupId == criteria.GroupId && p.IsActive);
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();

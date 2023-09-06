@@ -62,6 +62,7 @@ namespace Lingtren.Infrastructure.Services
                     message.AppendLine($"{_localizer.GetString("UserNotFoundWithEmail")}" + " :" + string.Join(",", invalidusers));
                 }
                 var groupMemberDto = new List<GroupMember>();
+                var existingGroupUsers = new List<GroupMember>();
                 var courseMembers = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(predicate: p => validUserIds.Contains(p.UserId) && p.CourseId == course.Id).ConfigureAwait(false);
                 if (courseMembers.Count != default)
                 {
@@ -85,7 +86,15 @@ namespace Lingtren.Infrastructure.Services
                     {
                         message.AppendLine($"{_localizer.GetString("UpdatedDeletedUser")}" + " " + string.Join(" ", userList.Where(x => deletedUserIds.Contains(x.Id)).Select(x => string.IsNullOrWhiteSpace(x.Email) ? x.MobileNumber : x.Email)));
                     }
+
+                    var groupMembers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(predicate: p => p.GroupId == course.GroupId && p.IsActive == false
+                                     && courseMembers.Select(x => x.UserId).Contains(p.UserId)).ConfigureAwait(false);
+                    if(groupMembers?.Count > 0)
+                    {
+                        existingGroupUsers.AddRange(groupMembers);
+                    }
                 }
+
                 var newEnrollmentIds = validUserIds.Except(courseMembers.Select(x => x.UserId)).ToList();
                 if (newEnrollmentIds.Count != default)
                 {
@@ -95,15 +104,9 @@ namespace Lingtren.Infrastructure.Services
                     var newGroupMemberIds = newEnrollmentIds.Except(existingGroupMember.Select(x => x.UserId)).ToList();
                     if (existingGroupMember != default)
                     {
-                        foreach (var member in existingGroupMember)
-                        {
-                            member.IsActive = true;
-                            member.UpdatedOn = DateTime.UtcNow;
-                            member.UpdatedBy = currentUserId;
-                            groupMemberDto.Add(member);
-                        }
-                        _unitOfWork.GetRepository<GroupMember>().Update(groupMemberDto);
+                        existingGroupUsers.AddRange(existingGroupMember);
                     }
+
                     if (newGroupMemberIds != default)
                     {
                         foreach (var newGroupMemberId in newGroupMemberIds)
@@ -124,7 +127,7 @@ namespace Lingtren.Infrastructure.Services
                                 });
                             }
                         }
-                        await _unitOfWork.GetRepository<GroupMember>().InsertAsync(newGroupMember).ConfigureAwait(false); 
+                        await _unitOfWork.GetRepository<GroupMember>().InsertAsync(newGroupMember).ConfigureAwait(false);
                     }
                     foreach (var newUserId in newEnrollmentIds)
                     {
@@ -144,18 +147,31 @@ namespace Lingtren.Infrastructure.Services
                     if (insertCourseEnrollment.Count != default)
                     {
                         await _unitOfWork.GetRepository<CourseEnrollment>().InsertAsync(insertCourseEnrollment);
-                        if(insertCourseEnrollment.Count == 1)
+                        if (insertCourseEnrollment.Count == 1)
                         {
                             message.AppendLine($"{_localizer.GetString("EnrollmentFor")}" + " " + string.Join(",", userList.Where(x => insertCourseEnrollment.Select(y => y.UserId).Contains(x.Id)).Select(x => x.FullName)) + " "
                                  + $"{_localizer.GetString("HasBeenSuccessful")}");
                         }
-                        if(insertCourseEnrollment.Count > 1)
+                        if (insertCourseEnrollment.Count > 1)
                         {
-                            message.AppendLine($"{_localizer.GetString("EnrollmentFor")}" + " " + insertCourseEnrollment.Count + " " + $"{_localizer.GetString("Users")}" + " " 
+                            message.AppendLine($"{_localizer.GetString("EnrollmentFor")}" + " " + insertCourseEnrollment.Count + " " + $"{_localizer.GetString("Users")}" + " "
                                 + $"{_localizer.GetString("HasBeenSuccessful")}");
                         }
                     }
                 }
+
+                if (existingGroupUsers.Count > 0)
+                {
+                    var updateGroupUsers = existingGroupUsers.DistinctBy(x => x.UserId).ToList();
+                    updateGroupUsers.ForEach(x =>
+                    {
+                        x.IsActive = true;
+                        x.UpdatedOn = DateTime.UtcNow;
+                        x.UpdatedBy = currentUserId;
+                    });
+                    _unitOfWork.GetRepository<GroupMember>().Update(updateGroupUsers);
+                }
+                _unitOfWork.GetRepository<GroupMember>().Update(groupMemberDto);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return message.ToString();
             });
@@ -179,7 +195,7 @@ namespace Lingtren.Infrastructure.Services
                         .Concat(course.CourseTeachers.Select(x => x.UserId)).ToList();
                     predicate = predicate.And(p => !enrolledUserIds.Contains(p.Id));
                 }
-                if(!string.IsNullOrEmpty(critera.CourseIdentity) && critera.EnrollmentStatus != EnrollmentMemberStatusEnum.Unenrolled)
+                if (!string.IsNullOrEmpty(critera.CourseIdentity) && critera.EnrollmentStatus != EnrollmentMemberStatusEnum.Unenrolled)
                 {
                     var enrolledUserIds = course.CourseEnrollments.Where(x => x.EnrollmentMemberStatus == critera.EnrollmentStatus).Select(x => x.UserId)
                         .Concat(course.CourseTeachers.Select(x => x.UserId)).ToList();
