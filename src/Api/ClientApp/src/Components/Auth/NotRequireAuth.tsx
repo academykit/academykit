@@ -1,14 +1,15 @@
-import { useEffect } from 'react';
-import { useLocation, Outlet, useNavigate } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth';
 import LanguageSelector from '@components/Ui/LanguageSelector';
+import { Text } from '@mantine/core';
+import { useEffect } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
 const NotRequiredAuth = () => {
   const auth = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
-
+  const appVersion = localStorage.getItem('version');
   useEffect(() => {
     if (auth?.loggedIn) {
       if (from === '/login') {
@@ -24,7 +25,11 @@ const NotRequiredAuth = () => {
       {!auth?.loggedIn && (
         <>
           <Outlet />
-
+          <div style={{ position: 'fixed', top: '10px', right: '10px' }}>
+            <Text color="dimmed" size="xs">
+              v{appVersion}
+            </Text>
+          </div>
           <div style={{ position: 'fixed', bottom: '10px', right: '10px' }}>
             <LanguageSelector />
           </div>

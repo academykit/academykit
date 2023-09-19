@@ -1,17 +1,17 @@
 import {
-  createStyles,
-  Text,
-  Container,
-  Group,
   Anchor,
-  Divider,
   Center,
+  Container,
+  Divider,
+  Group,
+  Text,
+  createStyles,
 } from '@mantine/core';
 
-import { Link, useLocation } from 'react-router-dom';
-import { ColorSchemeToggle } from './ColorSchemeToggle';
 import LanguageSelector from '@components/Ui/LanguageSelector';
 import { useTranslation } from 'react-i18next';
+import { Link, useLocation } from 'react-router-dom';
+import { ColorSchemeToggle } from './ColorSchemeToggle';
 
 const useStyles = createStyles((theme) => ({
   footer: {
@@ -50,7 +50,7 @@ export function AppFooter({ name }: { name: string }) {
   const { classes } = useStyles();
   const location = useLocation();
   const { t } = useTranslation();
-
+  const appVersion = localStorage.getItem('version');
   if (location.pathname.split('/')[1] === 'exam') return <></>;
 
   return (
@@ -78,6 +78,9 @@ export function AppFooter({ name }: { name: string }) {
         </Group>
       </Container>
       <Center>
+        <Text size={'xs'} color={'dimmed'} mr={'md'}>
+          v{appVersion}
+        </Text>
         <Text size={'xs'} color={'dimmed'} mr={3}>
           {t('powered_by')}
         </Text>

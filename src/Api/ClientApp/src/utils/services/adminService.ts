@@ -5,7 +5,7 @@ import axios from 'axios';
 import errorType from './axiosError';
 import { api } from './service-api';
 import { httpClient } from './service-axios';
-import { IPaginated, IUserProfile, IAddUser, IUser } from './types';
+import { IAddUser, IPaginated, IUser, IUserProfile } from './types';
 
 export interface IDepartmentSetting {
   id: string;
@@ -72,7 +72,8 @@ export interface IGeneralSetting {
 export interface ICompanySetting {
   name: string;
   imageUrl: string;
-  custonConfiguration?: string;
+  customConfiguration?: string;
+  appVersion: string;
 }
 
 export interface IGeneralSettingUpdate {

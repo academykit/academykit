@@ -20,7 +20,7 @@ services:
       Hangfire__User: standalone
       Hangfire__Password: Admino12
       AppUrls__App: api
-      image: 762344227131.dkr.ecr.ap-south-1.amazonaws.com/standalone:latest
+      image: 762344227131.dkr.ecr.ap-south-1.amazonaws.com/standalone:v1.0.3-alpha
     # ports:
     #   - '8080:80'
 

@@ -4,6 +4,7 @@
 
 namespace Lingtren.Api.Controllers
 {
+    using System.Reflection;
     using FluentValidation;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -73,7 +74,8 @@ namespace Lingtren.Api.Controllers
             {
                 Name = response.CompanyName,
                 ImageUrl = response.LogoUrl,
-                CustonConfiguration = response.CustomConfiguration,
+                CustomConfiguration = response.CustomConfiguration,
+                AppVersion = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
             };
         }
 

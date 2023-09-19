@@ -63,10 +63,6 @@ docker version
 
 Follow **[Application deployment guide](./application-deployment.md)** for application server
 
-# Certificate Server
-
-Follow **[Certificate deployment guide](./certificate-deployment.md)** for certificate server'
-
 # minio server
 
 Follow **[Minio deployment guide](./minio-deployment.md)** for minio server

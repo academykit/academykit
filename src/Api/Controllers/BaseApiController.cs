@@ -49,7 +49,7 @@ namespace Lingtren.Api.Controllers
         }
 
         /// <summary>
-        /// Checks if the user is superadmin.
+        /// Checks if the user is super admin.
         /// </summary>
         protected static void IsSuperAdmin(UserRole role)
         {
@@ -60,7 +60,7 @@ namespace Lingtren.Api.Controllers
         }
 
         /// <summary>
-        /// Checks if the user is superadmin or admin.
+        /// Checks if the user is super admin or admin.
         /// </summary>
         protected static void IsSuperAdminOrAdmin(UserRole role)
         {
@@ -71,7 +71,7 @@ namespace Lingtren.Api.Controllers
         }
 
         /// <summary>
-        /// Checks if the user is superadmin or admin or trainer.
+        /// Checks if the user is super admin or admin or trainer.
         /// </summary>
         protected static void IsSuperAdminOrAdminOrTrainer(UserRole role)
         {

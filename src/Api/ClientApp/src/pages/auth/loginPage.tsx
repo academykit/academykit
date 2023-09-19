@@ -1,27 +1,27 @@
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import {
-  PasswordInput,
-  Paper,
-  Title,
-  Container,
+  Anchor,
   Button,
   Center,
-  Anchor,
+  Container,
   Group,
   Image,
+  Paper,
+  PasswordInput,
+  Title,
 } from '@mantine/core';
-import { Link } from 'react-router-dom';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { useEffect } from 'react';
-import useAuth from '../../hooks/useAuth';
-import { useLogin } from '@utils/services/authService';
 import RoutePath from '@utils/routeConstants';
-import { IUserProfile } from '@utils/services/types';
 import { useCompanySetting } from '@utils/services/adminService';
-import { useTranslation } from 'react-i18next';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import * as Yup from 'yup';
+import { useLogin } from '@utils/services/authService';
+import { IUserProfile } from '@utils/services/types';
 import { AxiosError } from 'axios';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import * as Yup from 'yup';
+import useAuth from '../../hooks/useAuth';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -101,7 +101,7 @@ const LoginPage = () => {
 
     if (companySettings.isSuccess) {
       const branding = JSON.parse(
-        companySettings.data.data.custonConfiguration ?? '{}'
+        companySettings.data.data.customConfiguration ?? '{}'
       );
       localStorage.setItem(
         'app-info',
@@ -111,6 +111,7 @@ const LoginPage = () => {
         })
       );
       localStorage.setItem('branding', branding.accent);
+      localStorage.setItem('version', companySettings.data.data.appVersion);
       setHeader();
     }
   }, [companySettings.isSuccess]);
