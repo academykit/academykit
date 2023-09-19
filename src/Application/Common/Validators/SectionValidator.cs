@@ -1,4 +1,4 @@
-namespace Lingtren.Application.Common.Validators
+﻿namespace Lingtren.Application.Common.Validators
 {
     using FluentValidation;
     using Lingtren.Application.Common.Models.RequestModels;

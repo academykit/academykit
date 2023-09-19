@@ -1,11 +1,11 @@
 ﻿namespace Lingtren.Infrastructure.Configurations
 {
+    using System.Text;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
-    using System.Text;
 
     public static class ConfigurationExtension
     {
@@ -42,6 +42,7 @@
                             {
                                 context.Response.Headers.Add("IS-TOKEN-EXPIRED", "true");
                             }
+
                             return Task.CompletedTask;
                         }
                     };

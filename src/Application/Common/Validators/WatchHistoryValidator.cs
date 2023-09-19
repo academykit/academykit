@@ -9,9 +9,9 @@
     {
         public WatchHistoryValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            this.RuleFor(x => x.CourseIdentity).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("TrainingIdRequired"));
-            this.RuleFor(x => x.LessonIdentity).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("LessonIdRequired"));
-            this.RuleFor(x => x.WatchedPercentage).ExclusiveBetween(0, 101).WithMessage(context => stringLocalizer.GetString("ValidPercentageRange"));
+            RuleFor(x => x.CourseIdentity).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("TrainingIdRequired"));
+            RuleFor(x => x.LessonIdentity).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("LessonIdRequired"));
+            RuleFor(x => x.WatchedPercentage).ExclusiveBetween(0, 101).WithMessage(context => stringLocalizer.GetString("ValidPercentageRange"));
         }
     }
 }

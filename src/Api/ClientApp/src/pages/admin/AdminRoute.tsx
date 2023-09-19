@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 const AdminCourseList = lazyWithRetry(() => import('./course'));
 const Department = lazyWithRetry(() => import('./department'));
 const Hangfire = lazyWithRetry(() => import('./hangfire'));
-const FileStorage = lazyWithRetry(() => import('./filestorage'));
+const FileStorage = lazyWithRetry(() => import('./fileStorage'));
 const GeneralSettings = lazyWithRetry(() => import('./generalSettings'));
 const Level = lazyWithRetry(() => import('./level'));
 const Settings = lazyWithRetry(() => import('./settings'));
@@ -47,9 +47,9 @@ const AdminRoutesChild = () => {
         <Route path={'/'} element={<Settings />} />
         <Route path={'/account'} element={<Account />} />
         <Route element={<MyTrainings />}>
-          <Route path={'/mytraining'} element={<MyTrainingInternal />} />
+          <Route path={'/myTraining'} element={<MyTrainingInternal />} />
           <Route
-            path={'/mytraining/external'}
+            path={'/myTraining/external'}
             element={<AdminViewCertificate />}
           />
         </Route>
@@ -61,8 +61,8 @@ const AdminRoutesChild = () => {
           <Route path={'/log'} element={<Log />} />
           <Route path={'/courses'} element={<AdminCourseList />} />
           <Route path={'/certificate'} element={<CertificateList />} />
-          <Route path={'/zoomlicense'} element={<ZoomLicense />} />
-          <Route path={'/filestorage'} element={<FileStorage />} />
+          <Route path={'/zoomLicense'} element={<ZoomLicense />} />
+          <Route path={'/fileStorage'} element={<FileStorage />} />
           <Route path="*" element={<Navigate to={RoutePath[404]} replace />} />
         </Route>
         <Route element={<SuperAdminRoute />}>
@@ -87,8 +87,8 @@ const MyTrainings = () => {
         onTabChange={(value) => navigate(`${value}`)}
       >
         <Tabs.List>
-          <Tabs.Tab value="/settings/mytraining">{t('internal')}</Tabs.Tab>
-          <Tabs.Tab value="/settings/mytraining/external">
+          <Tabs.Tab value="/settings/myTraining">{t('internal')}</Tabs.Tab>
+          <Tabs.Tab value="/settings/myTraining/external">
             {t('external')}
           </Tabs.Tab>
         </Tabs.List>

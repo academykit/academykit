@@ -1,15 +1,14 @@
-﻿using Hangfire;
-using HangfireBasicAuthenticationFilter;
-using Lingtren.Infrastructure.Configurations;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.HttpOverrides;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Localization;
+﻿// <copyright file="Program.cs" company="Vurilo Nepal Pvt. Ltd.">
+// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
+// </copyright>
+
 using System.Globalization;
-using NLog.Web;
-using NLog;
+using Hangfire;
 using Hangfire.Dashboard;
-using Microsoft.IdentityModel.Tokens;
+using Lingtren.Infrastructure.Configurations;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,17 +41,15 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(
                builder => builder
                 .AllowAnyOrigin()
                 .AllowAnyHeader()
-                .AllowAnyMethod()
-                ));
+                .AllowAnyMethod()));
 
 builder.Services.AddAuthorization();
+
 // var logger = LogManager.Setup().LoadConfigurationFromFile("nlog.config").GetCurrentClassLogger();
 // //var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 // builder.Logging.ClearProviders();
 // builder.Host.UseNLog();
-
 var app = builder.Build();
-
 
 if (app.Environment.IsDevelopment())
 {
@@ -63,19 +60,18 @@ else
 {
     app.UseHsts();
 }
+
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
 });
-
 
 // app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-
 
 app.UseCors(x => x
               .AllowAnyMethod()
@@ -85,9 +81,10 @@ app.UseCors(x => x
 
 app.UseHangfireDashboard("/hangfire", new DashboardOptions
 {
-    Authorization = new IDashboardAuthorizationFilter[]{
+    Authorization = new IDashboardAuthorizationFilter[]
+    {
         new HangfireAuthorizationFilter(app.Configuration)
-    }
+    },
 });
 app.UseRequestLocalization();
 app.UseAuthentication();
@@ -95,10 +92,11 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapFallbackToFile("index.html");
+
 // app.UseHttpLogging();
 app.MigrateDatabase();
 
-// download the chrome browser earlier 
+// download the chrome browser earlier
 var browserFetcher = new BrowserFetcher();
 await browserFetcher.DownloadAsync();
 

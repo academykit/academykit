@@ -1,6 +1,8 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
-    using AngleSharp.Dom;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -14,9 +16,6 @@
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
 
     public class QuestionPoolService : BaseGenericService<QuestionPool, BaseSearchCriteria>, IQuestionPoolService
     {
@@ -67,6 +66,7 @@
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
             }
+
             return predicate.And(p => p.CreatedBy == criteria.CurrentUserId || p.QuestionPoolTeachers.Any(x => x.UserId == criteria.CurrentUserId));
         }
 
@@ -119,7 +119,6 @@
                 predicate: p => p.QuestionPoolId == questionPool.Id
                 ).ConfigureAwait(false);
 
-
                 var questionsetsubmission = await _unitOfWork.GetRepository<QuestionSetSubmission>().GetAllAsync(predicate: p => p.QuestionSet.QuestionSetQuestions.Any(x => x.QuestionPoolQuestionId.
                 Equals(questionPoolQuestions.Select(x => x.QuestionId)))).ConfigureAwait(false);
 
@@ -132,7 +131,6 @@
                 var ids = questionPoolQuestions.Select(x => x.Id).ToList();
                 var questionsetquestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(predicate: p => ids.Contains(p.QuestionPoolQuestionId.Value)).ConfigureAwait(false);
 
-
                 foreach (var questionsetquestion in questionsetquestions)
                 {
                     _unitOfWork.GetRepository<QuestionSetQuestion>().Delete(questionsetquestion);
@@ -142,7 +140,6 @@
                 {
                     _unitOfWork.GetRepository<QuestionPoolQuestion>().Delete(questionPoolQuestion);
                 }
-
 
                 foreach (var submission in questionsetsubmission)
                 {
@@ -207,12 +204,14 @@
                 {
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
+
                 var questionPoolQuestions = await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetAllAsync(predicate: p => p.QuestionPool.Id.ToString() == identity
                 || p.QuestionPool.Slug.ToLower().Trim() == identity.ToLower().Trim()).ConfigureAwait(false);
                 if (questionPoolQuestions == null)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("QuestionPoolQuestionNotFound"));
                 }
+
                 var order = 0;
                 var questionToUpdate = new List<QuestionPoolQuestion>();
                 foreach (var id in ids)
@@ -227,6 +226,7 @@
                         order++;
                     }
                 }
+
                 if (questionToUpdate.Count != default)
                 {
                     _unitOfWork.GetRepository<QuestionPoolQuestion>().Update(questionToUpdate);

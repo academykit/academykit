@@ -5,7 +5,7 @@
     public class ZoomSettingResponseModel
     {
         public Guid Id { get; set; }
-         public string OAuthAccountId { get; set; }
+        public string OAuthAccountId { get; set; }
         public string OAuthClientId { get; set; }
         public string OAuthClientSecret { get; set; }
         public string SdkKey { get; set; }

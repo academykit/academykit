@@ -1,45 +1,50 @@
-﻿using Lingtren.Api.Common;
-using Lingtren.Api.Controllers;
-using Lingtren.Application.Common.Dtos;
-using Lingtren.Application.Common.Interfaces;
-using Lingtren.Application.Common.Models.ResponseModels;
-using Microsoft.AspNetCore.Mvc;
+﻿// <copyright file="EnrollmentController.cs" company="Vurilo Nepal Pvt. Ltd.">
+// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
+// </copyright>
 
 namespace Api.Controllers
 {
+    using Lingtren.Api.Common;
+    using Lingtren.Api.Controllers;
+    using Lingtren.Application.Common.Dtos;
+    using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Application.Common.Models.ResponseModels;
+    using Microsoft.AspNetCore.Mvc;
+
     [Route("api/[controller]")]
     [ApiController]
     public class EnrollmentController : BaseApiController
     {
-        private readonly IEnrollmentService _enrollmentService;
+        private readonly IEnrollmentService enrollmentService;
+
         public EnrollmentController(IEnrollmentService enrollmentService)
         {
-            _enrollmentService = enrollmentService;
+            this.enrollmentService = enrollmentService;
         }
 
         /// <summary>
-        /// enroll user in course
+        /// enroll user in course.
         /// </summary>
-        /// <param name="emailOrMobileNumber">email of user</param>
-        /// <param name="courseIdentity">Course id or slug</param>
-        /// <returns>Task completed</returns>
-        [HttpPost("Enrollnment")]
-        public async Task<IActionResult> Enrolluser(IList<string> emailOrMobileNumber,string courseIdentity)
+        /// <param name="emailOrMobileNumber">email of user.</param>
+        /// <param name="courseIdentity">Course id or slug.</param>
+        /// <returns>Task completed.</returns>
+        [HttpPost("Enrollment")]
+        public async Task<IActionResult> EnrollUser(IList<string> emailOrMobileNumber, string courseIdentity)
         {
-            var message = await _enrollmentService.EnrollUserAsync(emailOrMobileNumber, CurrentUser.Id, courseIdentity).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = message});
+            var message = await enrollmentService.EnrollUserAsync(emailOrMobileNumber, CurrentUser.Id, courseIdentity).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = message });
         }
 
         /// <summary>
-        /// search operation for course user
+        /// search operation for course user.
         /// </summary>
-        /// <param name="searchCritera"></param>
-        /// <returns>List of user</returns>
+        /// <param name="searchCriteria"></param>
+        /// <returns>List of user.</returns>
         [HttpGet("User")]
-        public async Task<SearchResult<UserResponseModel>> User([FromQuery]EnrollmentBaseSearchCritera searchCritera)
+        public async Task<SearchResult<UserResponseModel>> SearchUser([FromQuery] EnrollmentBaseSearchCriteria searchCriteria)
         {
-            searchCritera.CurrentUserId = CurrentUser.Id;
-            var result = await _enrollmentService.CourseUserSearchAsync(searchCritera).ConfigureAwait(false);
+            searchCriteria.CurrentUserId = CurrentUser.Id;
+            var result = await enrollmentService.CourseUserSearchAsync(searchCriteria).ConfigureAwait(false);
             return result;
         }
     }

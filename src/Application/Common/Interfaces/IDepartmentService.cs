@@ -1,10 +1,10 @@
 ﻿namespace Lingtren.Application.Common.Interfaces
 {
+    using System;
+    using System.Threading.Tasks;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
-    using System;
-    using System.Threading.Tasks;
 
     public interface IDepartmentService : IGenericService<Department, DepartmentBaseSearchCriteria>
     {

@@ -1,5 +1,4 @@
-using System;
-namespace Lingtren.Infrastructure.Services
+﻿namespace Lingtren.Infrastructure.Services
 {
     using System;
     using Hangfire;
@@ -8,13 +7,13 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Domain.Entities;
-    using Lingtren.Infrastructure.Common;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.EntityFrameworkCore;
     using Lingtren.Domain.Enums;
+    using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
-    using Microsoft.Extensions.Localization;
     using Lingtren.Infrastructure.Localization;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Logging;
 
     public class WebhookService : BaseService, IWebhookService
     {
@@ -75,7 +74,7 @@ namespace Lingtren.Infrastructure.Services
                                     OrderBy(x => Convert.ToDateTime(x.Recording_start)).ToList();
                 var lessons = new List<Lesson>();
                 var recordingFileDtos = new List<RecordingFileDto>();
-                int order = 1;
+                var order = 1;
                 foreach (var file in recordingFile)
                 {
                     var videoModel = await _mediaService.UploadRecordingFileAsync(file.Download_url, dto.Download_token, file.File_size).ConfigureAwait(true);
@@ -104,6 +103,7 @@ namespace Lingtren.Infrastructure.Services
                             lessonorder.Order = lessonorder.Order + reoderNo;
                             reorderLessons.Add(lessonorder);
                         }
+
                         _unitOfWork.GetRepository<Lesson>().Update(reorderLessons);
                     }
 
@@ -144,6 +144,7 @@ namespace Lingtren.Infrastructure.Services
                         lessons.Add(lesson);
                         lessonOrder++;
                     }
+
                     _unitOfWork.GetRepository<Lesson>().Update(meeting.Lesson);
                     await _unitOfWork.GetRepository<Lesson>().InsertAsync(lessons).ConfigureAwait(false);
                 }
@@ -155,6 +156,7 @@ namespace Lingtren.Infrastructure.Services
                     meeting.Lesson.Duration = video.Duration;
                     _unitOfWork.GetRepository<Lesson>().Update(meeting.Lesson);
                 }
+
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 BackgroundJob.Schedule<IZoomLicenseService>(x => x.DeleteZoomMeetingRecordingAsync(dto.Payload.Object.Id, null), TimeSpan.FromMinutes(2880));
             }
@@ -219,7 +221,8 @@ namespace Lingtren.Infrastructure.Services
                     };
                     await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(entity).ConfigureAwait(false);
                 }
-                TimeZoneInfo nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
+
+                var nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
                 var meetingReport = new MeetingReport
                 {
                     Id = Guid.NewGuid(),
@@ -248,8 +251,8 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                 var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.MeetingNumber.ToString() ==
-                          model.Payload.Object.Id, include: source => source.Include(x => x.Lesson)).ConfigureAwait(false);
+                var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.MeetingNumber.ToString() ==
+                         model.Payload.Object.Id, include: source => source.Include(x => x.Lesson)).ConfigureAwait(false);
 
                 if (meeting == default)
                 {
@@ -265,14 +268,16 @@ namespace Lingtren.Infrastructure.Services
                     _logger.LogWarning("User with id : {id} not found.", model.Payload.Object.Participant.Customer_Key);
                     return;
                 }
-                 var student = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == meeting.Lesson.CourseId && p.UserId == user.Id &&
-                               p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled).ConfigureAwait(false);
+
+                var student = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == meeting.Lesson.CourseId && p.UserId == user.Id &&
+                              p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled).ConfigureAwait(false);
 
                 if (student == null)
                 {
                     return;
                 }
-                 TimeZoneInfo nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
+
+                var nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
                 var report = await _unitOfWork.GetRepository<MeetingReport>().GetFirstOrDefaultAsync(
                     predicate: p => p.UserId == user.Id && p.MeetingId == meeting.Id
                             && p.StartTime == DateTime.Parse(model.Payload.Object.Start_Time)
@@ -284,7 +289,7 @@ namespace Lingtren.Infrastructure.Services
                                         user.Id, meeting.Id);
                     return;
                 }
-               
+
                 var LeftTime = TimeZoneInfo.ConvertTime(DateTime.Parse(model.Payload.Object.Participant.Leave_Time), nepalTimeZone);
                 report.Duration = LeftTime.Subtract(report.JoinTime);
                 report.LeftTime = LeftTime;

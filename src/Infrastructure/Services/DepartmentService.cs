@@ -1,5 +1,7 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using System.Data;
+    using System.Linq.Expressions;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -14,8 +16,6 @@
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using System.Data;
-    using System.Linq.Expressions;
 
     public class DepartmentService : BaseGenericService<Department, DepartmentBaseSearchCriteria>, IDepartmentService
     {
@@ -64,10 +64,12 @@
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
             }
+
             if (criteria.IsActive != null)
             {
                 predicate = predicate.And(p => p.IsActive == criteria.IsActive);
             }
+
             return predicate;
         }
 
@@ -221,14 +223,13 @@
                             DepartmentName = departmentUser.Department?.Name
                         });
                     }
+
                     return resopnse;
                 }
                 else
                 {
                     throw new UnauthorizedAccessException(_localizer.GetString("TrainerNotAllowedDepartmentUser"));
                 }
-
-
             }
 
             catch

@@ -1,8 +1,7 @@
-namespace Lingtren.Application.Common.Interfaces
+﻿namespace Lingtren.Application.Common.Interfaces
 {
     using Hangfire.Server;
     using Lingtren.Application.Common.Dtos;
-    using Lingtren.Domain.Entities;
 
     public interface IHangfireJobService
     {
@@ -33,7 +32,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="message"> the message </param>
         /// <param name="context"> the instance of <see cref="PerformContext" /> .</param>
         /// <returns> the task complete </returns>
-        Task CourseRejectedMailAsync(Guid courseId, string message, PerformContext context = null);
+        Task CourseRejectedMailAsync(Guid courseId, string message, PerformContext context);
 
         /// <summary>
         /// Handle to send course review mail

@@ -1,4 +1,4 @@
-namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace Lingtren.Application.Common.Models.ResponseModels
 {
     public class ExternalCertificateResponseModel
     {

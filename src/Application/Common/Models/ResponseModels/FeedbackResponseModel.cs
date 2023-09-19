@@ -14,9 +14,9 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public FeedbackTypeEnum Type { get; set; }
         public UserModel User { get; set; }
         public Guid? FeedbackSubmissionId { get; set; }
-        public string? Answer { get; set; }
+        public string Answer { get; set; }
         public int? Rating { get; set; }
-        public UserModel? Student { get; set; }
+        public UserModel Student { get; set; }
         public IList<FeedbackQuestionOptionResponseModel> FeedbackQuestionOptions { get; set; }
         public bool IsTrainee { get; set; }
 

@@ -1,12 +1,12 @@
-namespace Lingtren.Application.Common.Interfaces
+﻿namespace Lingtren.Application.Common.Interfaces
 {
+    using System;
+    using System.Threading.Tasks;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
-    using System;
-    using System.Threading.Tasks;
 
     public interface ICourseService : IGenericService<Course, CourseBaseSearchCriteria>
     {
@@ -153,12 +153,12 @@ namespace Lingtren.Application.Common.Interfaces
         Task<SearchResult<DashboardCourseResponseModel>> GetDashboardCourses(Guid currentUserId, UserRole currentUserRole, BaseSearchCriteria criteria);
 
         /// <summary>
-        /// Handles to get upcomming lesson
+        /// Handles to get upcoming lesson
         /// </summary>
         /// <param name="UserId"></param>
         /// <returns> the list of lesson <see cref="Lesson" /> .</returns>
 
-        Task<List<DashboardLessonResponseModel>> GetUpcommingLesson(Guid currentUserId);
+        Task<List<DashboardLessonResponseModel>> GetUpcomingLesson(Guid currentUserId);
 
         #endregion Dashboard
 
@@ -227,7 +227,7 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="identity">the course id or slug </param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns></returns>
-        Task<CourseCertificateResponseModel?> GetCertificateDetailAsync(string identity, Guid currentUserId);
+        Task<CourseCertificateResponseModel> GetCertificateDetailAsync(string identity, Guid currentUserId);
 
         /// <summary>
         /// Handle to get user courses list with progress detail

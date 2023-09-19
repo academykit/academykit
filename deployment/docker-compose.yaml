@@ -16,7 +16,7 @@ services:
     environment:
       ConnectionStrings__DefaultConnection: 'Server=159.89.163.233;Database=standalone_uat_db;User=dev;Password=4ubiY2A163@f;Convert Zero Datetime=True;Allow User Variables=True;'
       JWT__DurationInMinutes: 60
-      ConnectionStrings__Hangfireconnection: 'Server=159.89.163.233;Database=standalonehangfire;User=dev;Password=4ubiY2A163@f;Convert Zero Datetime=True;Allow User Variables=True;'
+      ConnectionStrings__HangfireConnection: 'Server=159.89.163.233;Database=standalonehangfire;User=dev;Password=4ubiY2A163@f;Convert Zero Datetime=True;Allow User Variables=True;'
       Hangfire__User: standalone
       Hangfire__Password: Admino12
       AppUrls__App: api

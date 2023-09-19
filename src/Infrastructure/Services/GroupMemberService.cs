@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using System.Linq.Expressions;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Domain.Entities;
@@ -11,7 +12,6 @@
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using System.Linq.Expressions;
 
     public class GroupMemberService : BaseGenericService<GroupMember, GroupMemberBaseSearchCriteria>, IGroupMemberService
     {
@@ -37,6 +37,7 @@
                 predicate = predicate.And(x => ((x.User.FirstName.Trim() + " " + x.User.MiddleName.Trim()).Trim() + " " + x.User.LastName.Trim()).Trim().Contains(search) ||
                 x.User.Email.ToLower().Trim().Contains(search));
             }
+
             return predicate;
         }
 

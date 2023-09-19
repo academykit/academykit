@@ -1,6 +1,5 @@
-namespace Lingtren.Application.Common.Models.RequestModels
+﻿namespace Lingtren.Application.Common.Models.RequestModels
 {
-    using System.ComponentModel.DataAnnotations;
     using Lingtren.Application.Common.Dtos;
     using Microsoft.AspNetCore.Http;
 

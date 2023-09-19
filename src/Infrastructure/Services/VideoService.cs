@@ -1,13 +1,6 @@
-﻿using FFmpeg.NET;
-using Lingtren.Application.Common.Dtos;
-using Lingtren.Application.Common.Exceptions;
+﻿using System.Runtime.InteropServices;
+using FFmpeg.NET;
 using Lingtren.Application.Common.Interfaces;
-using Lingtren.Domain.Entities;
-using Lingtren.Infrastructure.Common;
-using Lingtren.Infrastructure.Localization;
-using Microsoft.Extensions.Localization;
-using System.IO;
-using System.Runtime.InteropServices;
 
 namespace Lingtren.Infrastructure.Services
 {
@@ -16,21 +9,15 @@ namespace Lingtren.Infrastructure.Services
 
         public VideoService()
         {
-
         }
 
         /// <summary>
         /// Returns the path of executable file of FFMPEG based on current OS platform
         /// </summary>
         /// <value>The executable file path of ffmpeg.</value>
-        private string GetFFMpegPath
-        {
-            get
-            {
+        private static string GetFFMpegPath =>
                 //return @"C:\ffmpeg\ffmpeg.exe";
-                return RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "/opt/homebrew/bin/ffmpeg" : "/usr/bin/ffmpeg";
-            }
-        }
+                RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "/opt/homebrew/bin/ffmpeg" : "/usr/bin/ffmpeg";
 
         /// <summary>
         /// Handle to get video duration
@@ -46,7 +33,7 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
-        /// Handle to delete tepmp file 
+        /// Handle to delete temp file 
         /// </summary>
         /// <param name="filePath"> the file path </param>
         public void DeleteTempFile(string filePath)
@@ -58,7 +45,6 @@ namespace Lingtren.Infrastructure.Services
         }
 
         #region private method
-
 
         #endregion
     }

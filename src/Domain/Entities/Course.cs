@@ -1,4 +1,4 @@
-namespace Lingtren.Domain.Entities
+﻿namespace Lingtren.Domain.Entities
 {
     using Lingtren.Domain.Common;
     using Lingtren.Domain.Enums;

@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using System.Linq.Expressions;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -13,7 +14,6 @@
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using System.Linq.Expressions;
 
     public class WatchHistoryService : BaseGenericService<WatchHistory, BaseSearchCriteria>, IWatchHistoryService
     {
@@ -100,6 +100,7 @@
                     _logger.LogWarning("Training with identity: {identity} not found for user with :{id}.", model.CourseIdentity, currentUserId);
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
+
                 var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                     predicate: p => p.CourseId == course.Id && (p.Id.ToString() == model.LessonIdentity || p.Slug == model.LessonIdentity)).ConfigureAwait(false);
                 if (lesson == null)
@@ -107,10 +108,12 @@
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and training with id : {courseId}.", model.LessonIdentity, currentUserId, course.Id);
                     throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
+
                 if (course.CourseTeachers.Any(x => x.UserId == currentUserId) || user != default)
                 {
                     return new WatchHistoryResponseModel();
                 }
+
                 var isCompleted = false;
                 var isPassed = false;
                 var currentTimeStamp = DateTime.UtcNow;
@@ -153,6 +156,7 @@
                     await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
                     response = watchHistory;
                 }
+
                 await ManageStudentCourseComplete(course.Id, lesson.Id, currentUserId, currentTimeStamp).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return new WatchHistoryResponseModel
@@ -170,8 +174,6 @@
                 throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorUpdateWatchHistory"));
             }
         }
-
-
 
         /// <summary>
         /// Handle to pass student in requested lesson
@@ -191,6 +193,7 @@
                     _logger.LogWarning("Training with identity: {identity} not found for user with :{id}.", model.CourseIdentity, currentUserId);
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
+
                 var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(
                     predicate: p => p.CourseId == course.Id && (p.Id.ToString() == model.LessonIdentity || p.Slug == model.LessonIdentity)).ConfigureAwait(false);
                 if (lesson == null)
@@ -198,6 +201,7 @@
                     _logger.LogWarning("Lesson with identity: {identity} not found for user with :{id} and training with id : {courseId}.", model.LessonIdentity, currentUserId, course.Id);
                     throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
+
                 if (course.CourseTeachers.Any(x => x.UserId != userId) || user == default)
                 {
 
@@ -247,6 +251,7 @@
                         watchHistory.UpdatedOn = DateTime.UtcNow;
                         _unitOfWork.GetRepository<WatchHistory>().Update(watchHistory);
                     }
+
                     await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 }
             }
@@ -258,31 +263,6 @@
         }
 
         #region Private Methods
-
-        /// <summary>
-        ///  Handle to get course completed percentage
-        /// </summary>
-        /// <param name="courseId"> the course id </param>
-        /// <param name="currentUserId"> the lesson id</param>
-        /// <returns> the percentage </returns>
-        private async Task<int> GetCourseCompletedPercentage(Guid courseId, Guid currentUserId)
-        {
-            try
-            {
-                var totalLessonCount = await _unitOfWork.GetRepository<Lesson>().CountAsync(
-                    predicate: p => p.CourseId == courseId && !p.IsDeleted && p.Status == CourseStatus.Published).ConfigureAwait(false);
-                var completedLessonCount = await _unitOfWork.GetRepository<WatchHistory>().CountAsync(
-                    predicate: p => p.CourseId == courseId && p.UserId == currentUserId && p.IsCompleted).ConfigureAwait(false);
-                var percentage = (Convert.ToDouble(completedLessonCount + 1) / Convert.ToDouble(totalLessonCount)) * 100;
-                var result = Convert.ToInt32(percentage);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while trying to calculate training completed percentage.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOnCalculateTrainingPercentage"));
-            }
-        }
 
         #endregion Private Methods
     }

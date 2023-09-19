@@ -1,8 +1,8 @@
-namespace Lingtren.Infrastructure.Persistence.Configurations
+﻿namespace Lingtren.Infrastructure.Persistence.Configurations
 {
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using Microsoft.EntityFrameworkCore;
     using Lingtren.Domain.Entities;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
     public class GroupFileConfiguration : IEntityTypeConfiguration<GroupFile>
     {

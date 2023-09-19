@@ -1,8 +1,8 @@
-namespace Lingtren.Application.Common.Interfaces
+﻿namespace Lingtren.Application.Common.Interfaces
 {
+    using System.Collections.Generic;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Domain.Entities;
-    using System.Collections.Generic;
 
     public interface ISectionService : IGenericService<Section, SectionBaseSearchCriteria>
     {

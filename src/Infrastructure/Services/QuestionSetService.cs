@@ -1,6 +1,6 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
-    using CsvHelper;
+    using System.Linq.Expressions;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -11,15 +11,10 @@
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Localization;
     using LinqKit;
-    using Microsoft.AspNetCore.Mvc.Routing;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using Microsoft.VisualBasic;
-    using Org.BouncyCastle.Math.EC.Rfc7748;
-    using System.Linq.Expressions;
-    using System.Web;
 
     public class QuestionSetService : BaseGenericService<QuestionSet, BaseSearchCriteria>, IQuestionSetService
     {
@@ -72,6 +67,7 @@
                     _logger.LogWarning("Question set not found with identity: {identity}.", identity);
                     throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
+
                 var isCourseTeacher = questionSet.Lesson.Course.CourseTeachers.Any(x => x.UserId == currentUserId);
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (questionSet.CreatedBy != currentUserId && !isCourseTeacher && !isSuperAdminOrAdmin)
@@ -79,6 +75,7 @@
                     _logger.LogWarning("User with userId: {userId} is unauthorized user to add questions in question set with id : {id}.", currentUserId, questionSet.Id);
                     throw new EntityNotFoundException(_localizer.GetString("UnauthorizedUserAddQuestionSet"));
                 }
+
                 var checkQuestionSetSubmission = await _unitOfWork.GetRepository<QuestionSetSubmission>().ExistsAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id).ConfigureAwait(false);
 
@@ -87,10 +84,11 @@
                     _logger.LogWarning("Question set with id: {questionSetId} contains question set submission.", questionSet.Id);
                     throw new ForbiddenException(_localizer.GetString("QuestionSetAddNotAllowed"));
                 }
+
                 var existingQuestionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id).ConfigureAwait(false);
 
-                int order = 0;
+                var order = 0;
                 if (existingQuestionSetQuestions.Count != default)
                 {
                     order = existingQuestionSetQuestions.OrderByDescending(x => x.Order).LastOrDefault().Order;
@@ -106,6 +104,7 @@
                 {
                     _unitOfWork.GetRepository<QuestionSetQuestion>().Delete(removeData);
                 }
+
                 if (newQuestionIds.Count != default)
                 {
                     foreach (var questionId in newQuestionIds)
@@ -122,8 +121,10 @@
                             Order = ++order
                         });
                     }
+
                     await _unitOfWork.GetRepository<QuestionSetQuestion>().InsertAsync(questionSetQuestions).ConfigureAwait(false);
                 }
+
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -151,6 +152,7 @@
                 _logger.LogWarning("Question set not found with identity: {identity}.", identity);
                 throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
             }
+
             var isCourseTeacher = questionSet.Lesson.Course.CourseTeachers.Any(x => x.UserId == currentUserId);
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
             if (questionSet.CreatedBy != currentUserId && !isCourseTeacher && !isSuperAdminOrAdmin)
@@ -158,6 +160,7 @@
                 _logger.LogWarning("User with userId: {userId} is unauthorized user to get questions in question set with id : {id}.", currentUserId, questionSet.Id);
                 throw new EntityNotFoundException(_localizer.GetString("UnauthorizedUserQuestionSet"));
             }
+
             IList<QuestionResponseModel> questionsLists = new List<QuestionResponseModel>();
             var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
                 predicate: p => p.QuestionSetId == questionSet.Id,
@@ -173,6 +176,7 @@
                 responseModels.Add(new QuestionResponseModel(question, questionPoolQuestionId: questionSetQuestion.QuestionPoolQuestion.Id,
                                                                              questionSetQuestionId: questionSetQuestion.Id));
             }
+
             return responseModels;
         }
 
@@ -195,15 +199,18 @@
                 {
                     throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
+
                 var hasAuthority = await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId, lesson.CourseId.ToString(), TrainingTypeEnum.Course).ConfigureAwait(false);
                 if (!hasAuthority)
                 {
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUserAddQuestionSet"));
                 }
+
                 if (lesson.QuestionSet == default)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
+
                 var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(predicate: p => p.QuestionSetId == lesson.QuestionSet.Id).ConfigureAwait(false);
                 var updateQuestion = new List<QuestionSetQuestion>();
                 var order = 0;
@@ -219,6 +226,7 @@
                         order++;
                     }
                 }
+
                 if (updateQuestion.Count != default)
                 {
                     _unitOfWork.GetRepository<QuestionSetQuestion>().Update(updateQuestion);
@@ -245,8 +253,6 @@
 
                 var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate: p => p.Id.Equals(questionSet.Lesson.CourseId),
                     include: src => src.Include(x => x.CourseTeachers).Include(x => x.CourseEnrollments)).ConfigureAwait(false);
-
-
 
                 if (questionSet == null)
                 {
@@ -296,6 +302,7 @@
                     _logger.LogWarning("User with Id {currentUserId} has already taken exam of Question Set with Id {questionSetId}.", currentUserId, questionSet.Id);
                     throw new ForbiddenException(_localizer.GetString("ExamAlreadyTaken"));
                 }
+
                 if (questionSet.EndTime.HasValue && questionSet.EndTime != default && questionSet.EndTime < currentTimeStamp)
                 {
                     _logger.LogWarning("Question set with id: {questionSetId} has been finished.", questionSet.Id);
@@ -339,6 +346,7 @@
                 {
                     await _unitOfWork.GetRepository<QuestionSetSubmission>().InsertAsync(questionSetSubmission).ConfigureAwait(false);
                 }
+
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return response;
             }
@@ -362,7 +370,7 @@
             try
             {
                 var currentTimeStamp = DateTime.UtcNow;
-                bool isSubmissionError = false;
+                var isSubmissionError = false;
 
                 var questionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
                     predicate: x => x.Id.ToString() == identity || x.Slug == identity,
@@ -372,6 +380,7 @@
                     _logger.LogWarning("Question set not found with identity: {identity} for user with id : {currentUserId}.", identity, currentUserId);
                     throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
+
                 var questionSetQuestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(
                     predicate: p => p.QuestionSetId == questionSet.Id,
                     include: src => src.Include(x => x.QuestionPoolQuestion.Question.QuestionOptions)).ConfigureAwait(false);
@@ -431,7 +440,7 @@
                     if (questionSetQuestion != null)
                     {
                         var answerIds = questionSetQuestion.QuestionPoolQuestion.Question.QuestionOptions.Where(x => x.IsCorrect).Select(x => x.Id);
-                        bool isCorrect = answerIds.OrderBy(x => x).ToList().SequenceEqual(item.Answers.OrderBy(x => x).ToList());
+                        var isCorrect = answerIds.OrderBy(x => x).ToList().SequenceEqual(item.Answers.OrderBy(x => x).ToList());
                         answerSubmissionAnswers.Add(new QuestionSetSubmissionAnswer
                         {
                             Id = Guid.NewGuid(),
@@ -444,6 +453,7 @@
                         });
                     }
                 }
+
                 var questionSetResult = new QuestionSetResult();
                 if (!isSubmissionError)
                 {
@@ -467,6 +477,7 @@
                         var incorrectAnswersCount = answerSubmissionAnswers.Count(x => !x.IsCorrect && !string.IsNullOrEmpty(x.SelectedAnswers));
                         questionSetResult.NegativeMark = incorrectAnswersCount * questionSet.NegativeMarking;
                     }
+
                     await _unitOfWork.GetRepository<QuestionSetResult>().InsertAsync(questionSetResult).ConfigureAwait(false);
                 }
 
@@ -564,6 +575,7 @@
                 {
                     predicate = predicate.And(p => p.UserId == currentUserId);
                 }
+
                 if (!string.IsNullOrWhiteSpace(searchCriteria.Search))
                 {
                     var search = searchCriteria.Search.ToLower().Trim();
@@ -658,6 +670,7 @@
                 {
                     return new StudentResultResponseModel();
                 }
+
                 var user = questionSetSubmissions.FirstOrDefault()?.User;
                 var response = new StudentResultResponseModel
                 {
@@ -733,6 +746,7 @@
                     _logger.LogWarning("Question set result not found for user with id: {currentUserId} and question-set-id: {questionSetId}.", currentUserId, questionSet.Id);
                     throw new EntityNotFoundException(_localizer.GetString("ExamResultNotFound"));
                 }
+
                 var questionSetSubmission = await _unitOfWork.GetRepository<QuestionSetSubmission>().GetFirstOrDefaultAsync(predicate: p => p.Id == questionSetSubmissionId
                                                                             && p.QuestionSetId == questionSet.Id).ConfigureAwait(false);
                 if (questionSetSubmission == null)
@@ -740,6 +754,7 @@
                     _logger.LogWarning("Question set submission not found with id: {questionSetSubmissionId} for user id: {currentUserId}.", questionSetSubmission, currentUserId);
                     throw new EntityNotFoundException(_localizer.GetString("ExamSubmissionNotFound"));
                 }
+
                 var questionSetSubmissionAnswers = await _unitOfWork.GetRepository<QuestionSetSubmissionAnswer>().GetAllAsync(predicate: p => p.QuestionSetSubmissionId == questionSetSubmissionId,
                                                             include: src => src.Include(x => x.QuestionSetQuestion.QuestionPoolQuestion.Question.QuestionOptions)).ConfigureAwait(false);
 
@@ -794,6 +809,7 @@
 
                     responseModel.Results.Add(result);
                 }
+
                 responseModel.Results = responseModel.Results.OrderBy(x => x.OrderNumber).ToList();
                 return responseModel;
             }

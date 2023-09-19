@@ -1,3 +1,7 @@
+﻿// <copyright file="UtilityController.cs" company="Vurilo Nepal Pvt. Ltd.">
+// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
+// </copyright>
+
 namespace Lingtren.Api.Controllers
 {
     using Lingtren.Application.Common.Interfaces;
@@ -7,17 +11,18 @@ namespace Lingtren.Api.Controllers
 
     public class UtilityController : BaseApiController
     {
-        private readonly IDynamicImageGenerator _dynamicImageGenerator;
+        private readonly IDynamicImageGenerator dynamicImageGenerator;
+
         public UtilityController(IDynamicImageGenerator dynamicImageGenerator)
         {
-            _dynamicImageGenerator = dynamicImageGenerator;
+            this.dynamicImageGenerator = dynamicImageGenerator;
         }
 
         [HttpGet("ogimage")]
         [AllowAnonymous]
-        public async Task<IActionResult> GenerateOpenGraphImage(String title, String author, String image, String logo, String company)
+        public async Task<IActionResult> GenerateOpenGraphImage(string title, string author, string image, string logo, string company)
         {
-            var bytes = await _dynamicImageGenerator.GenerateOgImage(title, author, image, logo, company);
+            var bytes = await dynamicImageGenerator.GenerateOgImage(title, author, image, logo, company);
 
             Response.Headers["Content-Type"] = "image/png";
             Response.Headers["Cache-Control"] = "public, immutable, no-transform, s-maxage=31536000, max-age=31536000";
@@ -48,10 +53,10 @@ namespace Lingtren.Api.Controllers
                     FullName = "Aryan Phuyal Aryan",
                     Designation = "Managing Director",
                     FileUrl = "https://static.cdn.wisestamp.com/wp-content/uploads/2020/08/Oprah-Winfrey-Signature-1.png"
-                }
+                },
             };
 
-            var bytes = _dynamicImageGenerator.GetCertificateHtml(companyLogo, companyName, name, training, startDate, endDate, authors);
+            var bytes = dynamicImageGenerator.GetCertificateHtml(companyLogo, companyName, name, training, startDate, endDate, authors);
 
             return Content(bytes, "text/html");
         }

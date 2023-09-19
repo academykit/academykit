@@ -1,7 +1,9 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
-    using AngleSharp.Common;
-    using Amazon.S3.Model.Internal.MarshallTransformations;
+    using System.Data;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Linq.Expressions;
+    using System.Text;
     using Hangfire;
     using Hangfire.Server;
     using Lingtren.Application.Common.Dtos;
@@ -21,11 +23,6 @@
     using Microsoft.IdentityModel.Tokens;
     using Newtonsoft.Json.Linq;
     using RestSharp;
-    using System.IdentityModel.Tokens.Jwt;
-    using System.Linq.Expressions;
-    using System.Text;
-    using static Dapper.SqlMapper;
-    using System.Data;
 
     public class ZoomLicenseService : BaseGenericService<ZoomLicense, ZoomLicenseBaseSearchCriteria>, IZoomLicenseService
     {
@@ -53,10 +50,12 @@
                 predicate = predicate.And(x => x.LicenseEmail.ToLower().Trim().Contains(search)
                 || x.HostId.Contains(search));
             }
+
             if (criteria.IsActive != null)
             {
                 predicate.And(p => p.IsActive == criteria.IsActive);
             }
+
             return predicate;
         }
 
@@ -94,7 +93,6 @@
         }
         #endregion Protected Methods
 
-
         /// <summary>
         /// Handle to create zoom license async 
         /// </summary>
@@ -105,12 +103,13 @@
         {
             return await ExecuteWithResultAsync(async () =>
             {
-                var emailExist = await _unitOfWork.GetRepository<ZoomLicense>().GetFirstOrDefaultAsync(predicate: p => p.LicenseEmail.ToLower() 
+                var emailExist = await _unitOfWork.GetRepository<ZoomLicense>().GetFirstOrDefaultAsync(predicate: p => p.LicenseEmail.ToLower()
                                 == model.LicenseEmail.ToLower() && p.IsActive).ConfigureAwait(false);
-                if(emailExist != null)
+                if (emailExist != null)
                 {
                     throw new ArgumentException(_localizer.GetString("ZoomLicenseEmailAlreadyUsed"));
                 }
+
                 await ValidateZoomLicenseAsync(model.LicenseEmail).ConfigureAwait(false);
                 var entity = new ZoomLicense
                 {
@@ -139,13 +138,14 @@
         {
             return await ExecuteWithResultAsync(async () =>
             {
-                var zoomLicenses = await _unitOfWork.GetRepository<ZoomLicense>().GetAllAsync(predicate : p => p.IsActive).ConfigureAwait(false);
-                var zoomLicense = zoomLicenses.FirstOrDefault(x => x.Id == id) ?? throw new EntityNotFoundException(_localizer.GetString("ZoomLisenceNotFound"));
+                var zoomLicenses = await _unitOfWork.GetRepository<ZoomLicense>().GetAllAsync(predicate: p => p.IsActive).ConfigureAwait(false);
+                var zoomLicense = zoomLicenses.FirstOrDefault(x => x.Id == id) ?? throw new EntityNotFoundException(_localizer.GetString("ZoomLicenseNotFound"));
                 var emailAddress = zoomLicenses.Where(x => x.LicenseEmail == model.LicenseEmail);
-                if(emailAddress.Any(x => x.LicenseEmail == model.LicenseEmail && x.Id != zoomLicense.Id))
+                if (emailAddress.Any(x => x.LicenseEmail == model.LicenseEmail && x.Id != zoomLicense.Id))
                 {
                     throw new ArgumentException(_localizer.GetString("ZoomLicenseEmailAlreadyUsed"));
                 }
+
                 await ValidateZoomLicenseAsync(model.LicenseEmail).ConfigureAwait(false);
                 zoomLicense.HostId = model.HostId;
                 zoomLicense.LicenseEmail = model.LicenseEmail;
@@ -153,7 +153,7 @@
                 zoomLicense.UpdatedOn = DateTime.UtcNow;
                 zoomLicense.UpdatedBy = currentUserId;
                 _unitOfWork.GetRepository<ZoomLicense>().Update(zoomLicense);
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait (false);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return zoomLicense;
             });
         }
@@ -185,6 +185,7 @@
                     }));
                     return response;
                 }
+
                 if (!string.IsNullOrEmpty(zoomLicenseIdRequestModel.LessonIdentity))
                 {
                     var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.Lesson.Id.ToString() == zoomLicenseIdRequestModel.LessonIdentity
@@ -223,6 +224,7 @@
                 {
                     throw new NullReferenceException(_localizer.GetString("AllLiscensePlaced"));
                 }
+
                 return response;
             }
             catch (Exception ex)
@@ -292,7 +294,6 @@
             return response;
         }
 
-
         /// <summary>
         /// Handle to create zoom meeting
         /// </summary>
@@ -326,8 +327,8 @@
                 request.AddHeader("Content-Type", "application/json");
                 var response = await client.GetAsync(request).ConfigureAwait(false);
                 var jObject = JObject.Parse(response.Content);
-                var emailExist =  (bool)jObject["existed_email"];
-                if(!emailExist)
+                var emailExist = (bool)jObject["existed_email"];
+                if (!emailExist)
                 {
                     throw new ArgumentException(_localizer.GetString("InvalidZoomLicenseEmail"));
                 }
@@ -336,7 +337,6 @@
             {
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
-
         }
 
         #region Zoom Api Service
@@ -353,7 +353,7 @@
         {
             var tokenString = await GetOAuthAccessToken().ConfigureAwait(false);
             var client = new RestClient($"{zoomAPIPath}/users/{hostEmail}/meetings");
-            var request = new RestRequest().AddHeader("Authorization", String.Format("Bearer {0}", tokenString))
+            var request = new RestRequest().AddHeader("Authorization", string.Format("Bearer {0}", tokenString))
                     .AddJsonBody(new
                     {
                         topic = meetingName,
@@ -381,7 +381,7 @@
             var tokenString = await GetOAuthAccessToken().ConfigureAwait(false);
             var id = (long)Convert.ToInt64(meetingId);
             var client = new RestClient($"{zoomAPIPath}/meetings/{id}");
-            var request = new RestRequest().AddHeader("Authorization", String.Format("Bearer {0}", tokenString));
+            var request = new RestRequest().AddHeader("Authorization", string.Format("Bearer {0}", tokenString));
 
             await client.DeleteAsync(request).ConfigureAwait(false);
         }
@@ -401,9 +401,10 @@
                 {
                     throw new ArgumentException(_localizer.GetString("ContextNotFound"));
                 }
+
                 var tokenString = await GetOAuthAccessToken().ConfigureAwait(false);
                 var client = new RestClient($"{zoomAPIPath}/meetings/{meetingId}/recordings?action=delete");
-                var request = new RestRequest().AddHeader("Authorization", String.Format("Bearer {0}", tokenString));
+                var request = new RestRequest().AddHeader("Authorization", string.Format("Bearer {0}", tokenString));
                 await client.DeleteAsync(request).ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -450,9 +451,10 @@
             {
                 throw new EntityNotFoundException(_localizer.GetString("ZoomSettingNotFound"));
             }
+
             var client = new RestClient($"{zoomOAuthTokenApi}");
             var credential = $"{zoomSetting.OAuthClientId}:{zoomSetting.OAuthClientSecret}";
-            byte[] credentailByte = Encoding.UTF8.GetBytes(credential);
+            var credentailByte = Encoding.UTF8.GetBytes(credential);
             var token = Convert.ToBase64String(credentailByte);
             var request = new RestRequest();
             request.AddQueryParameter("grant_type", "account_credentials");
@@ -474,7 +476,7 @@
         /// <returns></returns>
         public async Task<string> GenerateZoomSignatureAsync(string meetingNumber, bool isHost, int accessTokenValidityInMinutes = 120)
         {
-            DateTime now = DateTime.UtcNow;
+            var now = DateTime.UtcNow;
 
             var zoomSetting = await _unitOfWork.GetRepository<ZoomSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
             if (zoomSetting == null)
@@ -483,8 +485,8 @@
             }
 
             // Get the current epoch time-stamp
-            int tsNow = (int)(now - new DateTime(1970, 1, 1)).TotalSeconds;
-            int tsAccessExp = (int)(now.AddMinutes(accessTokenValidityInMinutes) - new DateTime(1970, 1, 1)).TotalSeconds;
+            var tsNow = (int)(now - new DateTime(1970, 1, 1)).TotalSeconds;
+            var tsAccessExp = (int)(now.AddMinutes(accessTokenValidityInMinutes) - new DateTime(1970, 1, 1)).TotalSeconds;
 
             return CreateToken(zoomSetting.SdkSecret, new JwtPayload
                 {

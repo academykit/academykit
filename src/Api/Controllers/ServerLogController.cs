@@ -1,35 +1,37 @@
-﻿using Lingtren.Application.Common.Dtos;
-using Lingtren.Application.Common.Interfaces;
-using Lingtren.Application.Common.Models.ResponseModels;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿// <copyright file="ServerLogController.cs" company="Vurilo Nepal Pvt. Ltd.">
+// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
+// </copyright>
 
 namespace Lingtren.Api.Controllers
 {
+    using Lingtren.Application.Common.Dtos;
+    using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Application.Common.Models.ResponseModels;
+    using Microsoft.AspNetCore.Mvc;
 
     public class ServerLogController : BaseApiController
     {
-        private readonly ILogsService _logService;
+        private readonly ILogsService logService;
+
         public ServerLogController(ILogsService logsService)
         {
-            _logService = logsService;
+            logService = logsService;
         }
 
         /// <summary>
-        /// get server logs api
+        /// get server logs api.
         /// </summary>
-        /// <param name="criteria"> the instance of <see cref="LogBaseSearchCriteria"/></param>
-        /// <returns> the instance of <see cref="ServerLogsResponseModel"/></returns>
+        /// <param name="criteria"> the instance of <see cref="LogBaseSearchCriteria"/>.</param>
+        /// <returns> the instance of <see cref="ServerLogsResponseModel"/>.</returns>
         [HttpGet("logs")]
-        public async Task<SearchResult<ServerLogsResponseModel>> Logs([FromQuery] LogBaseSearchCriteria criteria) => await _logService.GetServerLogsAsync(criteria, CurrentUser.Id).ConfigureAwait(false);
+        public async Task<SearchResult<ServerLogsResponseModel>> Logs([FromQuery] LogBaseSearchCriteria criteria) => await logService.GetServerLogsAsync(criteria, CurrentUser.Id).ConfigureAwait(false);
 
         /// <summary>
-        /// get log details api
+        /// get log details api.
         /// </summary>
-        /// <param name="logId"> the log id </param>
-        /// <returns> the instance of <see cref="ServerLogsResponseModel"/></returns>
+        /// <param name="logId"> the log id. </param>
+        /// <returns> the instance of <see cref="ServerLogsResponseModel"/>.</returns>
         [HttpGet("{logId}")]
-        public async Task<ServerLogsResponseModel> Log(Guid logId) => await _logService.GetLogDetailAsync(logId, CurrentUser.Id).ConfigureAwait(false);
-
+        public async Task<ServerLogsResponseModel> Log(Guid logId) => await logService.GetLogDetailAsync(logId, CurrentUser.Id).ConfigureAwait(false);
     }
 }

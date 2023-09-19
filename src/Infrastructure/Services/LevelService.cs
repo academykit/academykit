@@ -1,4 +1,4 @@
-namespace Lingtren.Infrastructure.Services
+﻿namespace Lingtren.Infrastructure.Services
 {
     using System;
     using System.Collections.Generic;
@@ -8,7 +8,6 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
     using Lingtren.Infrastructure.Localization;
@@ -37,6 +36,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
+
                 var slug = CommonHelper.GetEntityTitleSlug<Level>(_unitOfWork, (slug) => q => q.Slug == slug, levelName);
                 var level = await _unitOfWork.GetRepository<Level>().GetFirstOrDefaultAsync(predicate: x => x.Name.ToLower() == levelName.ToLower()
                           && x.IsActive).ConfigureAwait(false);
@@ -44,6 +44,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ForbiddenException(_localizer.GetString("LevelAlreadyExist"));
                 }
+
                 var entity = new Level()
                 {
                     Id = Guid.NewGuid(),
@@ -125,6 +126,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
+
                 var level = await _unitOfWork.GetRepository<Level>().GetFirstOrDefaultAsync(predicate: x => x.Id.ToString() == identity ||
                 x.Slug.Equals(identity)).ConfigureAwait(false);
                 if (level == default)

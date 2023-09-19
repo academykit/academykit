@@ -5,26 +5,25 @@ using Lingtren.Domain.Entities;
 using Lingtren.Domain.Enums;
 using Lingtren.Infrastructure.Common;
 using Lingtren.Infrastructure.Localization;
-using LinqKit;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 
 namespace Lingtren.Infrastructure.Services
 {
-    public class PhysicalLessonService : BaseGenericService<PhysicalLessonReview, BaseSearchCriteria>, IPhysicalLessonServices
+    public class PhysicalLessonService
+        : BaseGenericService<PhysicalLessonReview, BaseSearchCriteria>,
+            IPhysicalLessonServices
     {
-        public PhysicalLessonService(IUnitOfWork unitOfWork,
+        public PhysicalLessonService(
+            IUnitOfWork unitOfWork,
             ILogger<CourseService> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
-        {
-
-        }
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
+            : base(unitOfWork, logger, localizer) { }
 
         /// <summary>
-        /// Insetrs or updates physical lesson stats
+        /// Inserts or updates physical lesson stats
         /// </summary>
         /// <param name="lessonIdentity">Lesson identity</param>
         /// <param name="currentUserId">Current user id</param>
@@ -34,19 +33,44 @@ namespace Lingtren.Infrastructure.Services
         {
             await ExecuteAsync(async () =>
             {
-                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == lessonIdentity || p.Slug.ToLower().Trim() == lessonIdentity.ToLower().Trim(),
-                    include: src => src.Include(x => x.Course).ThenInclude(x => x.CourseEnrollments)).ConfigureAwait(false);
+                var lesson = await _unitOfWork
+                    .GetRepository<Lesson>()
+                    .GetFirstOrDefaultAsync(
+                        predicate: p =>
+                            p.Id.ToString() == lessonIdentity
+                            || p.Slug.ToLower().Trim() == lessonIdentity.ToLower().Trim(),
+                        include: src =>
+                            src.Include(x => x.Course).ThenInclude(x => x.CourseEnrollments)
+                    )
+                    .ConfigureAwait(false);
                 var physicalReview = new PhysicalLessonReview();
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == currentUserId).ConfigureAwait(false);
+                var user = await _unitOfWork
+                    .GetRepository<User>()
+                    .GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == currentUserId)
+                    .ConfigureAwait(false);
                 if (user == default)
                 {
                     throw new ForbiddenException("UnauthorizedUser");
                 }
-                var isAuthorizedUser = await IsSuperAdminOrAdminOrTrainerOfTraining(user.Id, lesson.CourseId.ToString(), TrainingTypeEnum.Course).ConfigureAwait(false);
-                var Review = await _unitOfWork.GetRepository<PhysicalLessonReview>().GetFirstOrDefaultAsync(predicate: p => p.UserId.ToString() == currentUserId && p.LessonId == lesson.Id).ConfigureAwait(false);
-                if (lesson.Course.CourseEnrollments.Any(x => x.UserId.ToString() == currentUserId) && !isAuthorizedUser)
-                {
 
+                var isAuthorizedUser = await IsSuperAdminOrAdminOrTrainerOfTraining(
+                        user.Id,
+                        lesson.CourseId.ToString(),
+                        TrainingTypeEnum.Course
+                    )
+                    .ConfigureAwait(false);
+                var Review = await _unitOfWork
+                    .GetRepository<PhysicalLessonReview>()
+                    .GetFirstOrDefaultAsync(
+                        predicate: p =>
+                            p.UserId.ToString() == currentUserId && p.LessonId == lesson.Id
+                    )
+                    .ConfigureAwait(false);
+                if (
+                    lesson.Course.CourseEnrollments.Any(x => x.UserId.ToString() == currentUserId)
+                    && !isAuthorizedUser
+                )
+                {
                     if (Review == default)
                     {
                         physicalReview.UserId = user.Id;
@@ -58,9 +82,16 @@ namespace Lingtren.Infrastructure.Services
                         physicalReview.HasAttended = true;
                         physicalReview.Id = Guid.NewGuid();
 
-                        await ManageStudentCourseComplete(lesson.CourseId, lesson.Id, user.Id, DateTime.UtcNow).ConfigureAwait(false);
+                        await ManageStudentCourseComplete(
+                                lesson.CourseId,
+                                lesson.Id,
+                                user.Id,
+                                DateTime.UtcNow
+                            )
+                            .ConfigureAwait(false);
                         _unitOfWork.GetRepository<PhysicalLessonReview>().Insert(physicalReview);
                     }
+
                     if (Review != default)
                     {
                         physicalReview = Review;
@@ -68,7 +99,13 @@ namespace Lingtren.Infrastructure.Services
                         physicalReview.UpdatedBy = user.Id;
                         _unitOfWork.GetRepository<PhysicalLessonReview>().Update(physicalReview);
                     }
-                    var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(predicate: p => p.LessonId == lesson.Id && p.UserId == user.Id).ConfigureAwait(false);
+
+                    var watchHistory = await _unitOfWork
+                        .GetRepository<WatchHistory>()
+                        .GetFirstOrDefaultAsync(
+                            predicate: p => p.LessonId == lesson.Id && p.UserId == user.Id
+                        )
+                        .ConfigureAwait(false);
                     if (watchHistory == default)
                     {
                         watchHistory = new WatchHistory
@@ -85,6 +122,7 @@ namespace Lingtren.Infrastructure.Services
                         };
                         await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory);
                     }
+
                     await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 }
             });
@@ -98,24 +136,49 @@ namespace Lingtren.Infrastructure.Services
         /// <returns>Task completed</returns>
         /// <exception cref="EntityNotFoundException"></exception>
         /// <exception cref="ForbiddenException"></exception>
-        public async Task PhysicalLessonReviewAsync(PhysicalLessonReviewRequestModel model, Guid currentUserId)
+        public async Task PhysicalLessonReviewAsync(
+            PhysicalLessonReviewRequestModel model,
+            Guid currentUserId
+        )
         {
             await ExecuteAsync(async () =>
             {
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == model.UserId).ConfigureAwait(false);
+                var user = await _unitOfWork
+                    .GetRepository<User>()
+                    .GetFirstOrDefaultAsync(predicate: p => p.Id == model.UserId)
+                    .ConfigureAwait(false);
                 if (user == default)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
                 }
-                var lesson = await _unitOfWork.GetRepository<Lesson>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == model.Identity || p.Slug.ToLower() == model.Identity.ToLower().Trim(),
-                   include: src => src.Include(x => x.Course)).ConfigureAwait(false);
-                var IsAuthorized = await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId, lesson.Course.Id.ToString(), TrainingTypeEnum.Course).ConfigureAwait(false);
+
+                var lesson = await _unitOfWork
+                    .GetRepository<Lesson>()
+                    .GetFirstOrDefaultAsync(
+                        predicate: p =>
+                            p.Id.ToString() == model.Identity
+                            || p.Slug.ToLower() == model.Identity.ToLower().Trim(),
+                        include: src => src.Include(x => x.Course)
+                    )
+                    .ConfigureAwait(false);
+                var IsAuthorized = await IsSuperAdminOrAdminOrTrainerOfTraining(
+                        currentUserId,
+                        lesson.Course.Id.ToString(),
+                        TrainingTypeEnum.Course
+                    )
+                    .ConfigureAwait(false);
                 if (!IsAuthorized)
                 {
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
+
                 var physicalLessonReview = new PhysicalLessonReview();
-                var review = await _unitOfWork.GetRepository<PhysicalLessonReview>().GetFirstOrDefaultAsync(predicate: p => p.UserId == model.UserId && p.LessonId == lesson.Id).ConfigureAwait(false);
+                var review = await _unitOfWork
+                    .GetRepository<PhysicalLessonReview>()
+                    .GetFirstOrDefaultAsync(
+                        predicate: p => p.UserId == model.UserId && p.LessonId == lesson.Id
+                    )
+                    .ConfigureAwait(false);
                 if (review == default)
                 {
                     physicalLessonReview.UserId = user.Id;
@@ -128,10 +191,20 @@ namespace Lingtren.Infrastructure.Services
                     physicalLessonReview.IsReviewed = true;
                     physicalLessonReview.ReviewMessage = model.Message;
                     physicalLessonReview.Id = Guid.NewGuid();
-                    var courseEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == lesson.CourseId).ConfigureAwait(false);
-                    await ManageStudentCourseComplete(lesson.CourseId, lesson.Id, user.Id, DateTime.UtcNow).ConfigureAwait(false);
+                    var courseEnrollment = await _unitOfWork
+                        .GetRepository<CourseEnrollment>()
+                        .GetFirstOrDefaultAsync(predicate: p => p.CourseId == lesson.CourseId)
+                        .ConfigureAwait(false);
+                    await ManageStudentCourseComplete(
+                            lesson.CourseId,
+                            lesson.Id,
+                            user.Id,
+                            DateTime.UtcNow
+                        )
+                        .ConfigureAwait(false);
                     _unitOfWork.GetRepository<PhysicalLessonReview>().Insert(physicalLessonReview);
                 }
+
                 if (review != default)
                 {
                     physicalLessonReview = review;
@@ -141,7 +214,13 @@ namespace Lingtren.Infrastructure.Services
                     physicalLessonReview.ReviewMessage = model.Message;
                     _unitOfWork.GetRepository<PhysicalLessonReview>().Update(physicalLessonReview);
                 }
-                var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(predicate: p => p.UserId == user.Id && p.LessonId == lesson.Id).ConfigureAwait(false);
+
+                var watchHistory = await _unitOfWork
+                    .GetRepository<WatchHistory>()
+                    .GetFirstOrDefaultAsync(
+                        predicate: p => p.UserId == user.Id && p.LessonId == lesson.Id
+                    )
+                    .ConfigureAwait(false);
                 if (watchHistory != null)
                 {
                     watchHistory.IsPassed = model.IsPassed;
@@ -162,8 +241,12 @@ namespace Lingtren.Infrastructure.Services
                         UpdatedBy = currentUserId,
                         UpdatedOn = DateTime.UtcNow,
                     };
-                    await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(watchHistory).ConfigureAwait(false);
+                    await _unitOfWork
+                        .GetRepository<WatchHistory>()
+                        .InsertAsync(watchHistory)
+                        .ConfigureAwait(false);
                 }
+
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             });
         }

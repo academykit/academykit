@@ -54,7 +54,7 @@ const StudentLessonDetails = ({
     lessonName,
     questionSetId,
     isPassed,
-    attendenceReviewed,
+    attendanceReviewed,
   },
   courseId,
   studentId,
@@ -233,7 +233,7 @@ const StudentLessonDetails = ({
         }}
       >
         {examResultModal && questionSetId && (
-          <UserResults studentId={studentId} lessonId={questionSetId} />
+          <UserResults isTrainee={false} studentId={studentId} lessonId={questionSetId} />
         )}
       </Modal>
 
@@ -358,7 +358,7 @@ const StudentLessonDetails = ({
         )}
 
         {/* button for other physical type */}
-        {!attendenceReviewed && type == LessonType.Physical && (
+        {!attendanceReviewed && type == LessonType.Physical && (
           <Tooltip label={`${t('mark_as')} ${getType(type).true}`}>
             <ActionIcon
               // open different pop up for physical lesson type

@@ -1,4 +1,4 @@
-namespace Lingtren.Application.Common.Dtos
+﻿namespace Lingtren.Application.Common.Dtos
 {
     public class FeedBackReportDto
     {
@@ -8,6 +8,5 @@ namespace Lingtren.Application.Common.Dtos
         public string Question { get; set; }
         public string Type { get; set; }
         public string Answer { get; set; }
-
     }
 }

@@ -107,7 +107,7 @@ const RoutePath = {
     },
 
     training: function () {
-      return this.base + '/mytraining';
+      return this.base + '/myTraining';
     },
     general: function () {
       return this.base + '/general';
@@ -115,14 +115,14 @@ const RoutePath = {
     zoom: function () {
       return this.base + '/zoom';
     },
-    zoomlicense: function () {
-      return this.base + '/zoomlicense';
+    zoomLicense: function () {
+      return this.base + '/zoomLicense';
     },
     smtp: function () {
       return this.base + '/smtp';
     },
-    filestorage: function () {
-      return this.base + '/filestorage';
+    fileStorage: function () {
+      return this.base + '/fileStorage';
     },
     department: function () {
       return this.base + '/department';
@@ -143,11 +143,11 @@ const RoutePath = {
   },
   profile: '/settings/account',
   general: '/settings/general',
-  zoom: '/settings/zoomsettings',
-  zoomlicense: '/settings/zoomlicense',
+  zoom: '/settings/zoomSettings',
+  zoomLicense: '/settings/zoomLicense',
   smtp: '/settings/smtp',
-  file: '/settings/filestorage',
-  payment: '/settings/paymentmethods',
+  file: '/settings/fileStorage',
+  payment: '/settings/paymentMethods',
   level: '/settings/level',
   department: '/settings/department',
   pool: {

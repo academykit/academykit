@@ -17,11 +17,12 @@
 
     public class CourseTeacherController : BaseApiController
     {
-        private readonly ICourseTeacherService _courseTeacherService;
-        private readonly ICourseService _courseService;
-        private readonly IUserService _userService;
-        private readonly IValidator<CourseTeacherRequestModel> _validator;
-        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
+        private readonly ICourseTeacherService courseTeacherService;
+        private readonly ICourseService courseService;
+        private readonly IUserService userService;
+        private readonly IValidator<CourseTeacherRequestModel> validator;
+        private readonly IStringLocalizer<ExceptionLocalizer> localizer;
+
         public CourseTeacherController(
                 ICourseTeacherService courseTeacherService,
                 ICourseService courseService,
@@ -29,25 +30,25 @@
                 IValidator<CourseTeacherRequestModel> validator,
                 IStringLocalizer<ExceptionLocalizer> localizer)
         {
-            _courseTeacherService = courseTeacherService;
-            _courseService = courseService;
-            _userService = userService;
-            _validator = validator;
-            _localizer = localizer;
+            this.courseTeacherService = courseTeacherService;
+            this.courseService = courseService;
+            this.userService = userService;
+            this.validator = validator;
+            this.localizer = localizer;
         }
 
         /// <summary>
         /// Searches the question pool moderators.
         /// </summary>
-        /// <param name="criteria">The search criteria</param>
-        /// <returns></returns>
+        /// <param name="criteria">The search criteria.</param>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpGet]
         public async Task<SearchResult<CourseTeacherResponseModel>> Search([FromQuery] CourseTeacherSearchCriteria criteria)
         {
             // question pool id is required
             CommonHelper.ValidateArgumentNotNullOrEmpty(criteria.CourseIdentity, nameof(criteria.CourseIdentity));
             criteria.CurrentUserId = CurrentUser.Id;
-            var searchResult = await _courseTeacherService.SearchAsync(criteria).ConfigureAwait(false);
+            var searchResult = await courseTeacherService.SearchAsync(criteria).ConfigureAwait(false);
 
             var response = new SearchResult<CourseTeacherResponseModel>
             {
@@ -59,30 +60,30 @@
             };
 
             searchResult.Items.ForEach(p =>
-                response.Items.Add(new CourseTeacherResponseModel(p))
-            );
+                response.Items.Add(new CourseTeacherResponseModel(p)));
 
             return response;
         }
 
         /// <summary>
-        /// add new moderator
+        /// add new moderator.
         /// </summary>
         /// <param name="model"> the instance of <see cref="CourseTeacherRequestModel" /> .</param>
         /// <returns> the instance of <see cref="CourseTeacherResponseModel" /> .</returns>
-        [HttpPost()]
+        [HttpPost]
         public async Task<CourseTeacherResponseModel> Create(CourseTeacherRequestModel model)
         {
-            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var course = await _courseService.GetByIdOrSlugAsync(model.CourseIdentity, CurrentUser.Id).ConfigureAwait(false);
+            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            var course = await courseService.GetByIdOrSlugAsync(model.CourseIdentity, CurrentUser.Id).ConfigureAwait(false);
             if (course.Status == CourseStatus.Completed)
             {
-                throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
+                throw new InvalidOperationException(localizer.GetString("CompletedCourseIssue"));
             }
-            var user = await _userService.GetUserByEmailAsync(model.Email).ConfigureAwait(false) ?? throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
+
+            var user = await userService.GetUserByEmailAsync(model.Email).ConfigureAwait(false) ?? throw new EntityNotFoundException(localizer.GetString("UserNotFound"));
             if (user.Role == UserRole.Trainee)
             {
-                throw new InvalidOperationException(_localizer.GetString("TraineeCannotBeTrainer"));
+                throw new InvalidOperationException(localizer.GetString("TraineeCannotBeTrainer"));
             }
 
             var currentTimeStamp = DateTime.UtcNow;
@@ -93,22 +94,22 @@
                 CreatedBy = CurrentUser.Id,
                 CreatedOn = currentTimeStamp,
                 UpdatedBy = CurrentUser.Id,
-                UpdatedOn = currentTimeStamp
+                UpdatedOn = currentTimeStamp,
             };
-            var response = await _courseTeacherService.CreateAsync(courseTeacher).ConfigureAwait(false);
+            var response = await courseTeacherService.CreateAsync(courseTeacher).ConfigureAwait(false);
             return new CourseTeacherResponseModel(response);
-
         }
 
         /// <summary>
-        /// Deletes the course teacher
+        /// Deletes the course teacher.
         /// </summary>
-        /// <param name="id">The id</param>
+        /// <param name="id">The id.</param>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _courseTeacherService.DeleteAsync(id.ToString(), CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel { Success = true, Message = _localizer.GetString("TrainingTrainer") });
+            await courseTeacherService.DeleteAsync(id.ToString(), CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel { Success = true, Message = localizer.GetString("TrainingTrainer") });
         }
     }
 }

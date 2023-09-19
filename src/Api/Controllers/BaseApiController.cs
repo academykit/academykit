@@ -1,4 +1,8 @@
-﻿namespace Lingtren.Api.Controllers
+﻿// <copyright file="BaseApiController.cs" company="Vurilo Nepal Pvt. Ltd.">
+// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
+// </copyright>
+
+namespace Lingtren.Api.Controllers
 {
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Exceptions;
@@ -11,14 +15,19 @@
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
-    // [ApiExplorerSettings(IgnoreApi = true)] 
+
+    // [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class BaseApiController : ControllerBase
     {
         /// <summary>
-        /// The current user
+        /// The current user.
         /// </summary>
-        private CurrentUser _currentUser;
+        private CurrentUser currentUser;
+
+        protected BaseApiController()
+        {
+        }
 
         /// <summary>
         /// Gets the current user.
@@ -30,15 +39,14 @@
         {
             get
             {
-                if (_currentUser == null && User.Identity.IsAuthenticated)
+                if (currentUser == null && User.Identity.IsAuthenticated)
                 {
-                    _currentUser = User.ToLoggedInUser();
+                    currentUser = User.ToLoggedInUser();
                 }
-                return _currentUser;
+
+                return currentUser;
             }
         }
-
-        protected BaseApiController() { }
 
         /// <summary>
         /// Checks if the user is superadmin.
@@ -50,6 +58,7 @@
                 throw new ForbiddenException("Super Admin Access");
             }
         }
+
         /// <summary>
         /// Checks if the user is superadmin or admin.
         /// </summary>
@@ -60,6 +69,7 @@
                 throw new ForbiddenException("Super Admin or Admin Access");
             }
         }
+
         /// <summary>
         /// Checks if the user is superadmin or admin or trainer.
         /// </summary>

@@ -4,7 +4,7 @@
 
     public class AssignmentSubmissionStudentResponseModel
     {
-        public UserModel? User { get; set; }
+        public UserModel User { get; set; }
         public Guid LessonId { get; set; }
         public string LessonSlug { get; set; }
         public CourseEnrollmentStatus UserStatus { get; set; }
@@ -21,6 +21,6 @@
         public bool? IsCompleted { get; set; }
         public bool? IsPassed { get; set; }
         public UserModel User { get; set; }
-        public UserModel? Teacher { get; set; }
+        public UserModel Teacher { get; set; }
     }
 }

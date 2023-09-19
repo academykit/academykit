@@ -1,4 +1,4 @@
-namespace Lingtren.Application.Common.Dtos
+﻿namespace Lingtren.Application.Common.Dtos
 {
     public class RecordingFileDto
     {

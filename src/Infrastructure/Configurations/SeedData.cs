@@ -1,9 +1,4 @@
-using Lingtren.Application.Common.Interfaces;
-using Lingtren.Domain.Entities;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Lingtren.Infrastructure.Configurations
+﻿namespace Lingtren.Infrastructure.Configurations
 {
     public class SeedData
     {

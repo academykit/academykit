@@ -1,4 +1,4 @@
-namespace Lingtren.Infrastructure.Configurations
+﻿namespace Lingtren.Infrastructure.Configurations
 {
     using Lingtren.Infrastructure.Persistence;
     using Microsoft.AspNetCore.Builder;
@@ -16,11 +16,12 @@ namespace Lingtren.Infrastructure.Configurations
                 {
                     appContext.Database.Migrate();
                 }
-                catch (Exception ex)
+                catch
                 {
                     throw;
                 }
             }
+
             return webApp;
         }
     }

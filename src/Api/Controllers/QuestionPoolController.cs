@@ -1,4 +1,8 @@
-﻿namespace Lingtren.Api.Controllers
+﻿// <copyright file="QuestionPoolController.cs" company="Vurilo Nepal Pvt. Ltd.">
+// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
+// </copyright>
+
+namespace Lingtren.Api.Controllers
 {
     using FluentValidation;
     using Lingtren.Api.Common;
@@ -15,20 +19,22 @@
 
     public class QuestionPoolController : BaseApiController
     {
-        private readonly IQuestionPoolService _questionPoolService;
-        private readonly IValidator<QuestionPoolRequestModel> _validator;
-        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
+        private readonly IQuestionPoolService questionPoolService;
+        private readonly IValidator<QuestionPoolRequestModel> validator;
+        private readonly IStringLocalizer<ExceptionLocalizer> localizer;
+
         public QuestionPoolController(
             IQuestionPoolService questionPoolService,
             IValidator<QuestionPoolRequestModel> validator,
             IStringLocalizer<ExceptionLocalizer> localizer)
         {
-            _questionPoolService = questionPoolService;
-            _validator = validator;
-            _localizer = localizer;
+            this.questionPoolService = questionPoolService;
+            this.validator = validator;
+            this.localizer = localizer;
         }
+
         /// <summary>
-        /// get QuestionPool api
+        /// get QuestionPool api.
         /// </summary>
         /// <returns> the list of <see cref="QuestionPoolResponseModel" /> .</returns>
         [HttpGet]
@@ -37,7 +43,7 @@
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
             searchCriteria.CurrentUserId = CurrentUser.Id;
-            var searchResult = await _questionPoolService.SearchAsync(searchCriteria).ConfigureAwait(false);
+            var searchResult = await questionPoolService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
             var response = new SearchResult<QuestionPoolResponseModel>
             {
@@ -49,13 +55,12 @@
             };
 
             searchResult.Items.ForEach(p =>
-                 response.Items.Add(new QuestionPoolResponseModel(p))
-             );
+                 response.Items.Add(new QuestionPoolResponseModel(p)));
             return response;
         }
 
         /// <summary>
-        /// create QuestionPool api
+        /// create QuestionPool api.
         /// </summary>
         /// <param name="model"> the instance of <see cref="QuestionPoolRequestModel" />. </param>
         /// <returns> the instance of <see cref="QuestionPoolRequestModel" /> .</returns>
@@ -63,7 +68,7 @@
         public async Task<QuestionPoolResponseModel> CreateAsync(QuestionPoolRequestModel model)
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
-            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
             var entity = new QuestionPool
             {
@@ -73,7 +78,7 @@
                 CreatedBy = CurrentUser.Id,
                 UpdatedOn = currentTimeStamp,
                 UpdatedBy = CurrentUser.Id,
-                QuestionPoolTeachers = new List<QuestionPoolTeacher>()
+                QuestionPoolTeachers = new List<QuestionPoolTeacher>(),
             };
             entity.QuestionPoolTeachers.Add(new QuestionPoolTeacher()
             {
@@ -86,35 +91,35 @@
                 UpdatedOn = currentTimeStamp,
                 UpdatedBy = CurrentUser.Id,
             });
-            var response = await _questionPoolService.CreateAsync(entity).ConfigureAwait(false);
+            var response = await questionPoolService.CreateAsync(entity).ConfigureAwait(false);
             return new QuestionPoolResponseModel(response);
         }
 
         /// <summary>
-        /// get QuestionPool by id or slug
+        /// get QuestionPool by id or slug.
         /// </summary>
-        /// <param name="identity"> the QuestionPool id or slug</param>
+        /// <param name="identity"> the QuestionPool id or slug.</param>
         /// <returns> the instance of <see cref="QuestionPoolResponseModel" /> .</returns>
         [HttpGet("{identity}")]
         public async Task<QuestionPoolResponseModel> Get(string identity)
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
-            var model = await _questionPoolService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
+            var model = await questionPoolService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
             return new QuestionPoolResponseModel(model);
         }
 
         /// <summary>
-        /// update QuestionPool api
+        /// update QuestionPool api.
         /// </summary>
-        /// <param name="identity"> id or slug </param>
+        /// <param name="identity"> id or slug. </param>
         /// <param name="model"> the instance of <see cref="QuestionPoolRequestModel" />. </param>
         /// <returns> the instance of <see cref="QuestionPoolResponseModel" /> .</returns>
         [HttpPut("{identity}")]
         public async Task<QuestionPoolResponseModel> UpdateAsync(string identity, QuestionPoolRequestModel model)
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
-            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _questionPoolService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            var existing = await questionPoolService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
 
             existing.Id = existing.Id;
@@ -122,33 +127,33 @@
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
 
-            var savedEntity = await _questionPoolService.UpdateAsync(existing).ConfigureAwait(false);
+            var savedEntity = await questionPoolService.UpdateAsync(existing).ConfigureAwait(false);
             return new QuestionPoolResponseModel(savedEntity);
         }
 
         /// <summary>
-        /// delete QuestionPool api
+        /// delete QuestionPool api.
         /// </summary>
-        /// <param name="identity"> id or slug </param>
-        /// <returns> the task complete </returns>
+        /// <param name="identity"> id or slug. </param>
+        /// <returns> the task complete. </returns>
         [HttpDelete("{identity}")]
         public async Task<IActionResult> DeleteAsync(string identity)
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
-            await _questionPoolService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("QuestionpoolRemoved") });
+            await questionPoolService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("QuestionpoolRemoved") });
         }
 
         /// <summary>
-        /// reorder questionpool question 
+        /// reorder questionpool question.
         /// </summary>
-        /// <param name="ids">Question ids</param>
-        /// <returns>task completed</returns>
+        /// <param name="ids">Question ids.</param>
+        /// <returns>task completed.</returns>
         [HttpPost("reorder")]
-        public async Task<IActionResult> Reorder([FromQuery]string identity,IList<Guid> ids)
+        public async Task<IActionResult> Reorder([FromQuery] string identity, IList<Guid> ids)
         {
-            await _questionPoolService.QuestionPoolQuestionReorderAsync(CurrentUser.Id,identity,ids);
-            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("QuestionpoolUpdatedSuccesfully") });
+            await questionPoolService.QuestionPoolQuestionReorderAsync(CurrentUser.Id, identity, ids);
+            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("QuestionpoolUpdatedSuccesfully") });
         }
     }
 }

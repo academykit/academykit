@@ -1,19 +1,19 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Domain.Enums;
-    using Microsoft.EntityFrameworkCore.ChangeTracking;
-    using Microsoft.EntityFrameworkCore.Metadata;
-    using Microsoft.EntityFrameworkCore.Query;
-    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Threading.Tasks;
+    using Lingtren.Application.Common.Dtos;
+    using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Helpers;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.ChangeTracking;
+    using Microsoft.EntityFrameworkCore.Metadata;
+    using Microsoft.EntityFrameworkCore.Query;
 
     /// <summary>
     /// Represents a default generic repository implements the <see cref="IRepository{TEntity}"/> interface.
@@ -290,12 +290,14 @@
             {
                 query = query.IgnoreQueryFilters();
             }
+
             if (criteria.SortBy != null)
             {
                 query = criteria.SortType == SortType.Ascending
                         ? query.OrderBy(criteria.SortBy)
                         : query.OrderByDescending(criteria.SortBy);
             }
+
             return query.Select(selector).ToPagedList(criteria.Page, criteria.Size);
         }
 
@@ -342,6 +344,7 @@
             {
                 query = query.IgnoreQueryFilters();
             }
+
             if (criteria.SortBy != null)
             {
                 query = criteria.SortType == SortType.Ascending
@@ -635,9 +638,13 @@
         public virtual T Max<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null)
         {
             if (predicate == null)
+            {
                 return _dbSet.Max(selector);
+            }
             else
+            {
                 return _dbSet.Where(predicate).Max(selector);
+            }
         }
 
         /// <summary>
@@ -649,9 +656,13 @@
         public virtual async Task<T> MaxAsync<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null)
         {
             if (predicate == null)
+            {
                 return await _dbSet.MaxAsync(selector);
+            }
             else
+            {
                 return await _dbSet.Where(predicate).MaxAsync(selector);
+            }
         }
 
         /// <summary>
@@ -663,9 +674,13 @@
         public virtual T Min<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null)
         {
             if (predicate == null)
+            {
                 return _dbSet.Min(selector);
+            }
             else
+            {
                 return _dbSet.Where(predicate).Min(selector);
+            }
         }
 
         /// <summary>
@@ -677,9 +692,13 @@
         public virtual async Task<T> MinAsync<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null)
         {
             if (predicate == null)
+            {
                 return await _dbSet.MinAsync(selector);
+            }
             else
+            {
                 return await _dbSet.Where(predicate).MinAsync(selector);
+            }
         }
 
         /// <summary>
@@ -691,9 +710,13 @@
         public virtual decimal Average(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null)
         {
             if (predicate == null)
+            {
                 return _dbSet.Average(selector);
+            }
             else
+            {
                 return _dbSet.Where(predicate).Average(selector);
+            }
         }
 
         /// <summary>
@@ -705,9 +728,13 @@
         public virtual async Task<decimal> AverageAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null)
         {
             if (predicate == null)
+            {
                 return await _dbSet.AverageAsync(selector);
+            }
             else
+            {
                 return await _dbSet.Where(predicate).AverageAsync(selector);
+            }
         }
 
         /// <summary>
@@ -719,9 +746,13 @@
         public virtual decimal Sum(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null)
         {
             if (predicate == null)
+            {
                 return _dbSet.Sum(selector);
+            }
             else
+            {
                 return _dbSet.Where(predicate).Sum(selector);
+            }
         }
 
         /// <summary>
@@ -733,9 +764,13 @@
         public virtual async Task<decimal> SumAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null)
         {
             if (predicate == null)
+            {
                 return await _dbSet.SumAsync(selector);
+            }
             else
+            {
                 return await _dbSet.Where(predicate).SumAsync(selector);
+            }
         }
 
         /// <summary>
@@ -743,7 +778,7 @@
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public bool Exists(Expression<Func<TEntity, bool>>? predicate = null)
+        public bool Exists(Expression<Func<TEntity, bool>> predicate = null)
         {
             if (predicate == null)
             {
@@ -759,7 +794,7 @@
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>>? predicate = null)
+        public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate = null)
         {
             if (predicate == null)
             {

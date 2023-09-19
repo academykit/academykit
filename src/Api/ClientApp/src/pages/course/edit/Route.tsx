@@ -5,7 +5,7 @@ import { CourseUserStatus, UserRole } from '@utils/enums';
 import lazyWithRetry from '@utils/lazyImportWithReload';
 import { useCourseDescription } from '@utils/services/courseService';
 import { useEffect } from 'react';
-import { Routes, Route, useParams, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
 
 const LessonDetails = lazyWithRetry(() => import('../manage/lessonDetails'));
 const ManageCourse = lazyWithRetry(() => import('../manage/manage'));
@@ -47,8 +47,8 @@ const CourseRoute = () => {
     if (courseDetail.isSuccess) {
       nav.setBreadCrumb &&
         nav.setBreadCrumb([
-          { href: '/trainings', title: 'Tranning' },
-          { href: '/trainings', title: 'Tranning' },
+          { href: '/trainings', title: 'Training' },
+          { href: '/trainings', title: 'Training' },
           {
             href: `/trainings/stat/${courseDetail.data.slug}`,
             title: courseDetail?.data?.name ?? '',

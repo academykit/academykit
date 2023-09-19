@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using System.Linq.Expressions;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -13,8 +14,6 @@
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using System.Linq.Expressions;
-    using System.Text.RegularExpressions;
 
     public class CourseTeacherService : BaseGenericService<CourseTeacher, CourseTeacherSearchCriteria>, ICourseTeacherService
     {
@@ -70,11 +69,13 @@
                 _logger.LogWarning("Training with id {courseId} creator User Id {userId} can't be training trainer.", course.Id, entity.UserId);
                 throw new ForbiddenException(_localizer.GetString("TrainingAuthorAdded"));
             }
+
             if (course.CourseEnrollments.Any(x => x.UserId == entity.UserId))
             {
                 _logger.LogWarning("Training with id {courseId} User with UserID{userId} cant be training trainer.", course.Id, entity.UserId);
                 throw new ForbiddenException(_localizer.GetString("EnrolledUserCan'tBeTrainer"));
             }
+
             var hasAccess = await IsSuperAdminOrAdminOrTrainer(entity.CreatedBy).ConfigureAwait(false);
             if (!hasAccess)
             {
@@ -111,6 +112,7 @@
                     }
                 }
             }
+
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == entity.UserId).ConfigureAwait(false);
             CommonHelper.CheckFoundEntity(user);
             await Task.FromResult(0);

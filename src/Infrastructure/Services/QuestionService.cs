@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using System.Linq.Expressions;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -12,7 +13,6 @@
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using System.Linq.Expressions;
 
     public class QuestionService : BaseGenericService<Question, QuestionBaseSearchCriteria>, IQuestionService
     {
@@ -42,10 +42,12 @@
             {
                 predicate = predicate.And(p => p.QuestionTags.Any(x => criteria.Tags.Contains(x.TagId)));
             }
+
             if (criteria.Type.HasValue)
             {
                 predicate = predicate.And(p => p.Type.Equals(criteria.Type.Value));
             }
+
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
@@ -54,6 +56,7 @@
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search)
                             || ((x.User.FirstName.Trim() + " " + x.User.MiddleName.Trim()).Trim() + " " + x.User.LastName.Trim()).Trim().Contains(search));
             }
+
             return predicate;
         }
 
@@ -98,11 +101,13 @@
                     _logger.LogWarning("Question pool not found with identity: {identity}.", identity);
                     throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
                 }
+
                 if (currentUserId != questionPool.CreatedBy && !questionPool.QuestionPoolTeachers.Any(x => x.UserId == currentUserId))
                 {
                     _logger.LogWarning("User with id: {currentUserId} is not allowed to add question in the question pool with id: {questionPoolId}.", currentUserId, questionPool.Id);
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUserAddQuestion"));
                 }
+
                 var currentTimeStamp = DateTime.UtcNow;
                 var entity = new Question()
                 {
@@ -131,7 +136,8 @@
                         UpdatedOn = currentTimeStamp
                     });
                 }
-                var questionPoolQuestionCount = await _unitOfWork.GetRepository<QuestionPoolQuestion>().CountAsync(predicate : p=>p.QuestionPoolId == questionPool.Id).ConfigureAwait(false);
+
+                var questionPoolQuestionCount = await _unitOfWork.GetRepository<QuestionPoolQuestion>().CountAsync(predicate: p => p.QuestionPoolId == questionPool.Id).ConfigureAwait(false);
                 foreach (var item in question.Answers.Select((answer, i) => new { i, answer }))
                 {
                     entity.QuestionOptions.Add(new QuestionOption
@@ -147,6 +153,7 @@
                         UpdatedOn = currentTimeStamp,
                     });
                 }
+
                 var questionPoolQuestion = new QuestionPoolQuestion
                 {
                     Id = Guid.NewGuid(),
@@ -156,7 +163,7 @@
                     CreatedOn = currentTimeStamp,
                     UpdatedBy = currentUserId,
                     UpdatedOn = currentTimeStamp,
-                    Order = questionPoolQuestionCount 
+                    Order = questionPoolQuestionCount
                 };
                 await _unitOfWork.GetRepository<QuestionPoolQuestion>().InsertAsync(questionPoolQuestion).ConfigureAwait(false);
                 await _unitOfWork.GetRepository<QuestionTag>().InsertAsync(entity.QuestionTags).ConfigureAwait(false);
@@ -192,6 +199,7 @@
                     _logger.LogWarning("Question pool not found with identity: {poolIdentity}.", poolIdentity);
                     throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
                 }
+
                 var existing = await _unitOfWork.GetRepository<Question>().GetFirstOrDefaultAsync(predicate: x => x.Id == questionId,
                                                             include: src => src.Include(x => x.QuestionOptions).Include(x => x.QuestionTags)).ConfigureAwait(false);
                 if (existing == null)
@@ -199,6 +207,7 @@
                     _logger.LogWarning("Question not found with id: {questionId}.", questionId);
                     throw new EntityNotFoundException(_localizer.GetString("QuestionNotFound"));
                 }
+
                 if (existing.CreatedBy != currentUserId)
                 {
                     _logger.LogWarning("User with id: {currentUserId} is not allowed to update question with id: {id}.", currentUserId, existing.Id);
@@ -222,6 +231,7 @@
                         throw new ForbiddenException(_localizer.GetString("QuestionCannotEdit"));
                     }
                 }
+
                 var currentTimeStamp = DateTime.UtcNow;
 
                 existing.Id = existing.Id;
@@ -263,14 +273,17 @@
                         UpdatedOn = currentTimeStamp
                     });
                 }
+
                 if (existing.QuestionOptions.Count > 0)
                 {
                     _unitOfWork.GetRepository<QuestionOption>().Delete(existing.QuestionOptions);
                 }
+
                 if (existing.QuestionTags.Count > 0)
                 {
                     _unitOfWork.GetRepository<QuestionTag>().Delete(existing.QuestionTags);
                 }
+
                 await _unitOfWork.GetRepository<QuestionOption>().InsertAsync(questionOptions).ConfigureAwait(false);
                 await _unitOfWork.GetRepository<QuestionTag>().InsertAsync(questionTags).ConfigureAwait(false);
                 _unitOfWork.GetRepository<Question>().Update(existing);
@@ -310,11 +323,13 @@
                     _logger.LogWarning("Question not found with id: {id}.", questionId);
                     throw new EntityNotFoundException(_localizer.GetString("QuestionNotFound"));
                 }
+
                 if (existing.CreatedBy != currentUserId)
                 {
                     _logger.LogWarning("User with id: {currentUserId} is not allowed to update question with id: {id}.", currentUserId, existing.Id);
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUserDeleteQuestion"));
                 }
+
                 var questionPoolQuestion = await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetFirstOrDefaultAsync(
                     predicate: p => p.QuestionPoolId == questionPool.Id && p.QuestionId == existing.Id).ConfigureAwait(false);
 

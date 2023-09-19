@@ -192,7 +192,7 @@
   <data name="DepartmentIdRequired" xml:space="preserve">
     <value>部署名は必須です。</value>
   </data>
-  <data name="DescriptionLenght500" xml:space="preserve">
+  <data name="DescriptionLength500" xml:space="preserve">
     <value>説明の長さは 5000 文字以下である必要があります。</value>
   </data>
   <data name="DesignationLength50" xml:space="preserve">
@@ -387,12 +387,39 @@
   <data name="PasswordRequired" xml:space="preserve">
     <value>パスワードが必要。</value>
   </data>
-  <data name="PreofessionLength200" xml:space="preserve">
+  <data name="ProfessionLength200" xml:space="preserve">
     <value>職業の長さは 200 文字以下である必要があります。</value>
   </data>
   <data name="PublicUrlLength2000" xml:space="preserve">
     <value>パブリック URL の長さは 2000 文字以下である必要があります。</value>
   </data>
+  <data name="FatherNameLength100" xml:space="preserve">
+  <value>父親の名前の長さは100文字以下でなければなりません。</value>
+</data>
+<data name="FatherNameRequired" xml:space="preserve">
+  <value>父親の名前は必須です。</value>
+</data>
+<data name="MotherNameLength100" xml:space="preserve">
+  <value>母親の名前の長さは100文字以下でなければなりません。</value>
+</data>
+<data name="MotherNameRequired" xml:space="preserve">
+  <value>母親の名前は必須です。</value>
+</data>
+<data name="SpouseNameLength100" xml:space="preserve">
+  <value>配偶者の名前の長さは100文字以下でなければなりません。</value>
+</data>
+<data name="SpouseNameRequired" xml:space="preserve">
+  <value>配偶者の名前は必須です。</value>
+</data>
+<data name="GrandfatherNameLength100" xml:space="preserve">
+  <value>祖父の名前の長さは100文字以下でなければなりません。</value>
+</data>
+<data name="GrandfatherNameRequired" xml:space="preserve">
+  <value>祖父の名前は必須です。</value>
+</data>
+<data name="GenderRequired" xml:space="preserve">
+  <value>性別は必須です。</value>
+</data>
   <data name="QuestionHint5000Length" xml:space="preserve">
     <value>質問のヒントの長さは 5000 文字以下である必要があります。</value>
   </data>
@@ -510,7 +537,7 @@
   <data name="OptionalCostCannotBeNull" xml:space="preserve">
     <value>オプションのコストを空にすることはできません。</value>
   </data>
-  <data name="InvalidMoblieNumber" xml:space="preserve">
+  <data name="InvalidMobileNumber" xml:space="preserve">
     <value>携帯電話番号の形式が無効です。</value>
   </data>
 </root>

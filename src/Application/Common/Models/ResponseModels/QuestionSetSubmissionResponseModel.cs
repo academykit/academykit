@@ -1,5 +1,4 @@
-using Lingtren.Application.Common.Dtos;
-using Lingtren.Domain.Enums;
+﻿using Lingtren.Application.Common.Dtos;
 
 namespace Lingtren.Application.Common.Models.ResponseModels
 {

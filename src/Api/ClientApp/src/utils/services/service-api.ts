@@ -10,9 +10,9 @@ export const api = {
     getUser: (userId: string) => `/api/user/${userId}`,
     changeEmail: '/api/user/changeEmailRequest',
     resendEmailVerification: '/api/user/resendChangeEmailRequest',
-    verifyChangeEmail: '/api/user/verifychangeemail',
+    verifyChangeEmail: '/api/user/verifyChangeEmail',
     me: '/api/account',
-    resendEmail: (id: string) => `/api/User/${id}/resendemail`,
+    resendEmail: (id: string) => `/api/User/${id}/resendEmail`,
   },
   adminUser: {
     users: (queryString: any) => `api/user?${queryString}`,
@@ -21,8 +21,8 @@ export const api = {
     getCompanySettings: `api/admin/settings/company`,
     getGeneralSettings: `api/admin/settings`,
     getZoomSettings: `api/admin/settings/zoom`,
-    getZoomLicense: `api/zoomlicense`,
-    getActiveZoomLicense: (query: string) => `api/zoomlicense/active?${query}`,
+    getZoomLicense: `api/zoomLicense`,
+    getActiveZoomLicense: (query: string) => `api/zoomLicense/active?${query}`,
     getSMTPSettings: `api/admin/settings/smtp`,
     updateGeneralSettings: (id: string | undefined) =>
       `api/admin/settings/${id}`,
@@ -250,7 +250,7 @@ export const api = {
   },
   enrollment: {
     enrollTrainee: (courseIdentity: string) =>
-      `/api/Enrollment/Enrollnment?courseIdentity=${courseIdentity}`,
+      `/api/Enrollment/Enrollment?courseIdentity=${courseIdentity}`,
     trainee: (courseIdentity: string, query: string) =>
       `/api/Enrollment/User?CourseIdentity=${courseIdentity}&${query}`,
   },

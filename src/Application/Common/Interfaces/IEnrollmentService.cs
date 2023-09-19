@@ -4,7 +4,7 @@ using Lingtren.Domain.Entities;
 
 namespace Lingtren.Application.Common.Interfaces
 {
-    public interface IEnrollmentService:IGenericService<User, EnrollmentBaseSearchCritera>
+    public interface IEnrollmentService : IGenericService<User, EnrollmentBaseSearchCriteria>
     {
         /// <summary>
         /// enroll user in training
@@ -19,8 +19,8 @@ namespace Lingtren.Application.Common.Interfaces
         /// <summary>
         /// get filtered user list for course
         /// </summary>
-        /// <param name="critera">enrolled user search critera</param>
+        /// <param name="criteria">enrolled user search criteria</param>
         /// <returns>Task completed</returns>
-        Task<SearchResult<UserResponseModel>> CourseUserSearchAsync(EnrollmentBaseSearchCritera critera);
+        Task<SearchResult<UserResponseModel>> CourseUserSearchAsync(EnrollmentBaseSearchCriteria criteria);
     }
 }

@@ -1,11 +1,12 @@
-namespace Lingtren.Infrastructure.Services
+﻿namespace Lingtren.Infrastructure.Services
 {
+    using System;
+    using System.Text;
     using Hangfire;
     using Hangfire.Server;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
@@ -14,9 +15,6 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using System;
-    using System.Net.Mail;
-    using System.Text;
     using static Dapper.SqlMapper;
 
     public class HangfireJobService : BaseService, IHangfireJobService
@@ -33,7 +31,6 @@ namespace Lingtren.Infrastructure.Services
             _videoService = videoService;
             _fileServerService = fileServerService;
         }
-
 
         /// <summary>
         /// Handle to send course review mail
@@ -56,12 +53,13 @@ namespace Lingtren.Infrastructure.Services
                 {
                     return;
                 }
+
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
                 foreach (var user in users)
                 {
                     var html = $"Dear {user.FirstName},<br><br>";
                     html += $"Training " +
-                            @$"<a href = '{this._appUrl}/settings/courses'>""{courseName}""</a> is under review. Kindly provide feedback and assessment. Your input is vital for quality assurance. Thank you.<br><br>";
+                            @$"<a href = '{_appUrl}/settings/courses'>""{courseName}""</a> is under review. Kindly provide feedback and assessment. Your input is vital for quality assurance. Thank you.<br><br>";
                     html += $"Best regards, <br> {settings.CompanyName}";
                     var model = new EmailRequestDto
                     {
@@ -133,7 +131,6 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
-
         /// <summary>
         /// Email for account created and password
         /// </summary>
@@ -153,7 +150,7 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var html = $"Dear {firstName},<br><br>";
-                html += $@"Your account has been created in the <a href = '{this._appUrl}'><u  style='color:blue;'>LMS</u></a>.<br><br>";
+                html += $@"Your account has been created in the <a href = '{_appUrl}'><u  style='color:blue;'>LMS</u></a>.<br><br>";
                 html += "Here are the login details for your LMS account:<br><br>";
                 html += $"Email:{emailAddress}<br>";
                 html += $"Password:{password}<br><br>";
@@ -191,7 +188,7 @@ namespace Lingtren.Infrastructure.Services
                 foreach (var emailDto in dtos)
                 {
                     var html = $"Dear {emailDto.FullName},<br><br>";
-                    html += $@"Your account has been created in the <a href = '{this._appUrl}'><u  style='color:blue;'>LMS</u></a>.<br><br>";
+                    html += $@"Your account has been created in the <a href = '{_appUrl}'><u  style='color:blue;'>LMS</u></a>.<br><br>";
                     html += "Here are the login details for your LMS account:<br><br>";
                     html += $"Email:{emailDto.Email}<br>";
                     html += $"Password:{emailDto.Password}<br><br>";
@@ -237,6 +234,7 @@ namespace Lingtren.Infrastructure.Services
                     {
                         throw new ArgumentException(_localizer.GetString("FileNotFound"));
                     }
+
                     var vidoePath = await _fileServerService.GetFileLocalPathAsync(lesson.VideoUrl).ConfigureAwait(true);
                     var duration = await _videoService.GetVideoDuration(vidoePath).ConfigureAwait(true);
                     lesson.Duration = duration;
@@ -246,7 +244,6 @@ namespace Lingtren.Infrastructure.Services
                 }
             });
         }
-
 
         /// <summary>
         /// Handle to send mail to new group member
@@ -273,6 +270,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     return;
                 }
+
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
 
                 foreach (var user in users)
@@ -282,7 +280,7 @@ namespace Lingtren.Infrastructure.Services
                     var html = $"Dear {fullName},<br><br>";
                     html += $"You have been added to the {gropName}. Now you can find the Training Materials which has been created for this {gropName}. <br><br>";
                     html += $"Link to the group :";
-                    html += $"<a href = '{this._appUrl}/groups/{groupSlug}' ><u  style='color:blue;'> Click here </u> </a>";
+                    html += $"<a href = '{_appUrl}/groups/{groupSlug}' ><u  style='color:blue;'> Click here </u> </a>";
                     html += $"<br>Thank You, <br> {settings.CompanyName}";
 
                     var model = new EmailRequestDto
@@ -329,7 +327,7 @@ namespace Lingtren.Infrastructure.Services
                         var fullName = string.IsNullOrEmpty(member.User?.MiddleName) ? $"{member.User?.FirstName} {member.User?.LastName}" : $"{member.User?.FirstName} {member.User?.MiddleName} {member.User?.LastName}";
                         var html = $"Dear {fullName},<br><br>";
                         html += $"You have new {courseName} training available for the {group.Name} group. Please, go to {group.Name} group or " +
-                                @$"<a href ='{this._appUrl}/trainings/{courseSlug}'><u  style='color:blue;'>Click Here </u></a> to find the training there. <br>";
+                                @$"<a href ='{_appUrl}/trainings/{courseSlug}'><u  style='color:blue;'>Click Here </u></a> to find the training there. <br>";
                         html += $"<br><br>Thank You, <br> {settings.CompanyName}";
                         var model = new EmailRequestDto
                         {
@@ -389,7 +387,6 @@ namespace Lingtren.Infrastructure.Services
                     };
                     await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
                 }
-
             }
             catch (Exception ex)
             {
@@ -414,6 +411,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
                 }
+
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
 
                 foreach (var user in certificateUserIssuedDtos)
@@ -466,11 +464,12 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ArgumentException("No enrollments");
                 }
+
                 foreach (var users in course.CourseEnrollments.AsList())
                 {
                     var firstName = users.User.FirstName;
                     var html = $"Dear {firstName},<br><br>";
-                    html += @$"Your enrolled training entitled  <a href='{this._appUrl}/trainings/{courseSlug}' ><u  style='color:blue;'>'{courseName}'</u></a>  has been updated with new content. We encourage you to visit the training page and "
+                    html += @$"Your enrolled training entitled  <a href='{_appUrl}/trainings/{courseSlug}' ><u  style='color:blue;'>'{courseName}'</u></a>  has been updated with new content. We encourage you to visit the training page and "
                         + $"explore the new materials to enhance your learning experience.<br><br>";
 
                     html += $"<br><br>Thank You, <br> {settings.CompanyName}";
@@ -482,7 +481,6 @@ namespace Lingtren.Infrastructure.Services
                     };
                     await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
                 }
-
             }
 
             catch (Exception ex)
@@ -491,7 +489,6 @@ namespace Lingtren.Infrastructure.Services
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
-
 
         /// <summary>
         /// handel to send email update mail
@@ -510,6 +507,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
                 }
+
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
                 var html = $"Dear {fullName}<br><br>";
                 html += @$"A recent change has been made to the email address associated with your account to {Newemail}<br>.Please check your email for the login credentials. If you encounter any difficulties, please contact your administrator immediately.";
@@ -547,6 +545,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
                 }
+
                 var settings = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
                 var html = $"Dear {fullName} <br><br>";
                 html += $"A recent change has been made to the email address associated with your account to {newEmail}.Please check your email to verify the email address.If you did not initiate this change, please contact your administrator immediately to address the issue.";

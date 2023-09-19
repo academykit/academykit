@@ -1,4 +1,4 @@
-// create class
+﻿// create class
 using System.Text;
 using Lingtren.Application.Common.Interfaces;
 using Lingtren.Domain.Entities;
@@ -34,7 +34,7 @@ namespace Lingtren.Infrastructure.Services
             return memoryStream.ToArray();
         }
 
-        public async Task<Stream> GenerateCertificateImage(CourseCertificate? certificate, string fullName, IList<Signature> signatures, GeneralSetting company)
+        public async Task<Stream> GenerateCertificateImage(CourseCertificate certificate, string fullName, IList<Signature> signatures, GeneralSetting company)
         {
             using var browserFetcher = new BrowserFetcher();
             await browserFetcher.DownloadAsync();
@@ -53,7 +53,6 @@ namespace Lingtren.Infrastructure.Services
             var endDate = certificate?.EventEndDate.ToString("dd MMMM yyyy");
             var companyName = company.CompanyName;
             var companyLogo = company.LogoUrl;
-
 
             var html = GetCertificateHtml(companyLogo, companyName, fullName, training, startDate, endDate, signatures);
 
@@ -288,6 +287,7 @@ namespace Lingtren.Infrastructure.Services
                 html.AppendLine("                        </div>");
                 html.AppendLine("                    </div>");
             }
+
             html.AppendLine("                </div>");
             html.AppendLine("            </div>");
             html.AppendLine("        </div>");

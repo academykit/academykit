@@ -14,7 +14,7 @@
             RuleFor(x => x.Name).NotEmpty().NotNull().WithMessage(context => stringLocalizer.GetString("AssignmentRequired")).MaximumLength(500)
                         .WithMessage(context => stringLocalizer.GetString("NameLength500"));
             RuleFor(x => x.Hints).MaximumLength(5000).WithMessage(context => stringLocalizer.GetString("HintLength500"));
-            RuleFor(x => x.Description).MaximumLength(5000).WithMessage("DescriptionLenght500");
+            RuleFor(x => x.Description).MaximumLength(5000).WithMessage("DescriptionLength500");
             RuleFor(x => x.Type).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("Assignmenttypeid")).IsInEnum().WithMessage(context => stringLocalizer.GetString("InvalidFileType"));
             RuleFor(x => x.Answers).NotNull().WithMessage(context => stringLocalizer.GetString("OptionIsRequired"))
                                     .When(x => x.Type == QuestionTypeEnum.SingleChoice || x.Type == QuestionTypeEnum.MultipleChoice);

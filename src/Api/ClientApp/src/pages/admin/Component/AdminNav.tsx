@@ -46,7 +46,7 @@ const AdminNav = () => {
     },
     {
       label: t('zoom_license'),
-      to: RoutePath.settings.zoomlicense(),
+      to: RoutePath.settings.zoomLicense(),
       role: UserRole.Admin,
     },
     {
@@ -56,7 +56,7 @@ const AdminNav = () => {
     },
     {
       label: t('file_storage'),
-      to: RoutePath.settings.filestorage(),
+      to: RoutePath.settings.fileStorage(),
       role: UserRole.Admin,
     },
     {

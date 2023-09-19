@@ -29,7 +29,7 @@
                 x.UseFilter(new AutomaticRetryAttribute());
                 if (environment.IsProduction())
                 {
-                    x.UseStorage(new MySqlStorage(configuration.GetConnectionString("Hangfireconnection"), new MySqlStorageOptions
+                    x.UseStorage(new MySqlStorage(configuration.GetConnectionString("HangfireConnection"), new MySqlStorageOptions
                     {
                         QueuePollInterval = TimeSpan.FromSeconds(15),
                         JobExpirationCheckInterval = TimeSpan.FromHours(1),
@@ -44,7 +44,6 @@
                     GlobalConfiguration.Configuration.UseInMemoryStorage();
                 }
             });
-
 
             #region Service DI
 
@@ -122,6 +121,7 @@
             services.AddSingleton<IValidator<SignatureRequestModel>, SignatureValidator>();
             services.AddSingleton<IValidator<CourseCertificateRequestModel>, CourseCertificateValidator>();
             services.AddSingleton<IValidator<PhysicalLessonReviewRequestModel>, PhysicalLessonReviewRequestModelValidator>();
+            services.AddSingleton<IValidator<UserUpdateRequestModel>, UserUpdateValidator>();
 
             #endregion Validator DI
 

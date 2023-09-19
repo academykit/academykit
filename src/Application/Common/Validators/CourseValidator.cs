@@ -4,27 +4,15 @@
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.ValidatorLocalization;
     using Microsoft.Extensions.Localization;
-    using System.Text.RegularExpressions;
 
     public class CourseValidator : AbstractValidator<CourseRequestModel>
     {
         public CourseValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.Name).Must(name => RemoveHtmlTags(name).Length <= 100).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("NameRequired")).MaximumLength(100).WithMessage(context => stringLocalizer.GetString("NameLengthError"));
+            RuleFor(x => x.Name).Must(name => Helpers.CommonHelper.RemoveHtmlTags(name).Length <= 100).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("NameRequired")).MaximumLength(100).WithMessage(context => stringLocalizer.GetString("NameLengthError"));
             RuleFor(x => x.LevelId).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("LevelRequired"));
             RuleFor(x => x.GroupId).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("SelectGroup"));
-            RuleFor(x => x.Description).MaximumLength(5000).WithMessage(context => stringLocalizer.GetString("DescriptionLenght500"));
-
-        }
-        private string RemoveHtmlTags(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                return string.Empty;
-            }
-            string textonly = Regex.Replace(name, "<.*?>", "");
-            return textonly;
-
+            RuleFor(x => x.Description).MaximumLength(5000).WithMessage(context => stringLocalizer.GetString("DescriptionLength500"));
         }
     }
 }

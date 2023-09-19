@@ -1,5 +1,8 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using System;
+    using System.Data;
+    using System.Threading.Tasks;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Domain.Common;
     using Lingtren.Domain.Entities;
@@ -11,9 +14,6 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using System;
-    using System.Data;
-    using System.Threading.Tasks;
 
     public abstract class BaseService
     {
@@ -50,7 +50,7 @@
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex.Message, ex);
+                _logger.LogError(ex.Message, ex);
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
@@ -63,7 +63,7 @@
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex.Message, ex);
+                _logger.LogError(ex.Message, ex);
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
@@ -76,7 +76,7 @@
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex.Message, ex);
+                _logger.LogError(ex.Message, ex);
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
@@ -89,7 +89,7 @@
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex.Message, ex);
+                _logger.LogError(ex.Message, ex);
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
@@ -127,7 +127,7 @@
                 throw new ArgumentException($"{argumentName} cannot be null.", argumentName);
             }
 
-            TEntity child = _unitOfWork.GetRepository<TEntity>().GetFirstOrDefault(predicate: e => e.Id == entity.Id);
+            var child = _unitOfWork.GetRepository<TEntity>().GetFirstOrDefault(predicate: e => e.Id == entity.Id);
 
             if (child == null)
             {
@@ -185,8 +185,10 @@
                 {
                     return course;
                 }
+
                 throw new ForbiddenException(_localizer.GetString("Trainingaccessnotallowed"));
             }
+
             throw new ForbiddenException(_localizer.GetString("TrainingModifynotallowed"));
         }
 
@@ -196,6 +198,7 @@
             {
                 return true;
             }
+
             var isCourseMember = await _unitOfWork.GetRepository<Group>().ExistsAsync(
                 predicate: p => p.Courses.Any(x => x.Id == course.Id)
                             && p.GroupMembers.Any(x => x.GroupId == course.GroupId && x.UserId == currentUserId && x.IsActive)).ConfigureAwait(false);
@@ -242,7 +245,7 @@
 
         protected async Task<IList<Guid>> GetUserGroupIds(Guid userId)
         {
-            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == userId,include: src => src.Include(x => x.GroupMembers.
+            var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == userId, include: src => src.Include(x => x.GroupMembers.
                        Where(x => x.IsActive))).ConfigureAwait(false);
             return user?.GroupMembers?.Select(x => x.GroupId).ToList();
         }
@@ -274,7 +277,6 @@
             return user != null;
         }
 
-
         /// <summary>
         /// to get valid user for course and questionpool authority
         /// </summary>
@@ -284,29 +286,32 @@
         /// <returns>bool</returns>
         protected async Task<bool> IsSuperAdminOrAdminOrTrainerOfTraining(Guid currentuserId, string identity, TrainingTypeEnum trainingType)
         {
-            bool isValidUser = false;
+            var isValidUser = false;
             var IsAdimOrSuperAdmin = await IsSuperAdminOrAdmin(currentuserId);
             switch (trainingType)
             {
                 case TrainingTypeEnum.Course:
                     var course = await _unitOfWork.GetRepository<Course>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == identity || p.Slug == identity,
                         include: src => src.Include(x => x.CourseTeachers)).ConfigureAwait(false);
-                    if(course == default)
+                    if (course == default)
                     {
                         throw new EntityNotFoundException(_localizer.GetString("CourseNotFound"));
                     }
+
                     isValidUser = course.CourseTeachers.Any(x => x.UserId == currentuserId) || course.CreatedBy == currentuserId;
                     break;
                 case TrainingTypeEnum.QuestionPool:
                     var questionpool = await _unitOfWork.GetRepository<QuestionPool>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == identity || p.Slug == identity,
                         include: src => src.Include(x => x.QuestionPoolTeachers)).ConfigureAwait(false);
-                    if(questionpool == default)
+                    if (questionpool == default)
                     {
                         throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
                     }
+
                     isValidUser = questionpool.QuestionPoolTeachers.Any(x => x.UserId == currentuserId) || questionpool.CreatedBy == currentuserId;
                     break;
             }
+
             return isValidUser || IsAdimOrSuperAdmin;
         }
 
@@ -362,6 +367,7 @@
                 {
                     courseEnrollment.EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Completed;
                 }
+
                 _unitOfWork.GetRepository<CourseEnrollment>().Update(courseEnrollment);
             }
         }

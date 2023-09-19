@@ -38,9 +38,9 @@
         {
             try
             {
-                string filePath = Path.Combine(_hostingEnvironment.WebRootPath, Path.Combine("Templates", "DefaultTemplate.html"));
+                var filePath = Path.Combine(_hostingEnvironment.WebRootPath, Path.Combine("Templates", "DefaultTemplate.html"));
                 using StreamReader str = new(filePath);
-                string htmlBody = str.ReadToEnd();
+                var htmlBody = str.ReadToEnd();
 
                 var smtpSetting = await _smtpSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
                 if (smtpSetting == null)

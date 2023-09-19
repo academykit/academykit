@@ -1,4 +1,4 @@
-namespace Lingtren.Infrastructure.Persistence.Configurations
+﻿namespace Lingtren.Infrastructure.Persistence.Configurations
 {
     using Lingtren.Domain.Entities;
     using Microsoft.EntityFrameworkCore;

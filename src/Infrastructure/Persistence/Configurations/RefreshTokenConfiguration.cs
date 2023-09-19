@@ -1,8 +1,8 @@
-namespace Lingtren.Infrastructure.Persistence.Configurations
+﻿namespace Lingtren.Infrastructure.Persistence.Configurations
 {
+    using Lingtren.Domain.Entities;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using Lingtren.Domain.Entities;
     public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
     {
         public void Configure(EntityTypeBuilder<RefreshToken> builder)

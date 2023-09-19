@@ -1,5 +1,6 @@
-namespace Lingtren.Infrastructure.Services
+﻿namespace Lingtren.Infrastructure.Services
 {
+    using System;
     using Application.Common.Dtos;
     using global::Infrastructure.Helpers;
     using Lingtren.Application.Common.Exceptions;
@@ -11,7 +12,6 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using MimeKit;
-    using System;
 
     public class FileServerService : BaseService, IFileServerService
     {
@@ -34,20 +34,21 @@ namespace Lingtren.Infrastructure.Services
             {
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient().WithEndpoint(credentails.EndPoint).
-                            WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
+                            WithCredentials(credentails.AccessKey, credentails.SecretKey).Build();
                 var fileName = string.Concat(model.File.FileName.Where(c => !char.IsWhiteSpace(c)));
                 var extension = Path.GetExtension(fileName);
                 fileName = $"{Guid.NewGuid()}_{fileName}";
-                var bucketName = "";
                 if (!string.IsNullOrWhiteSpace(extension))
                 {
                     MimeTypes.TryGetExtension(model.File.ContentType, out extension);
                     fileName = $"{Guid.NewGuid()}{extension}";
                 }
+
                 if (model.Type == MediaType.Private)
                 {
                     fileName = $"private/{fileName}";
                 }
+
                 if (model.Type == MediaType.Public)
                 {
                     fileName = $"public/{fileName}";
@@ -61,7 +62,10 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, "An error occurred while attempting to upload file to the server.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UploadFileinServerError"));
+                _logger.LogError(ex.Message, "An error occurred while attempting to upload file to the server.");
+                _logger.LogInformation(ex.InnerException.ToString());
+                _logger.LogInformation(ex.StackTrace.ToString());
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
 
@@ -131,9 +135,13 @@ namespace Lingtren.Infrastructure.Services
             {
                 throw new ArgumentException(_localizer.GetString("FileNotFound"));
             }
+
             var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.mp4");
             using (var client = new HttpClient())
+            {
                 await client.DownloadFileTaskAsync(new Uri(fileUrl), filePath).ConfigureAwait(true);
+            }
+
             return filePath;
         }
 
@@ -149,7 +157,6 @@ namespace Lingtren.Infrastructure.Services
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient().WithEndpoint(credentails.EndPoint).
                             WithCredentials(credentails.AccessKey, credentails.SecretKey).WithSSL().Build();
-
 
                 var objectArgs = new Minio.RemoveObjectArgs().WithBucket(credentails.Bucket).WithObject(key);
                 await minio.RemoveObjectAsync(objectArgs);
@@ -190,6 +197,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new EntityNotFoundException(_localizer.GetString("ServerUrlNotFound"));
                 }
+
                 var bucket = settings.FirstOrDefault(x => x.Key == "Server_Bucket")?.Value;
                 if (string.IsNullOrEmpty(bucket))
                 {
@@ -201,16 +209,19 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new EntityNotFoundException(_localizer.GetString("ServerEndPointNotFound"));
                 }
+
                 var preSigned = settings.FirstOrDefault(x => x.Key == "Server_PresignedUrl")?.Value;
                 if (string.IsNullOrEmpty(preSigned))
                 {
                     throw new EntityNotFoundException(_localizer.GetString("ServerPreSignedUlrNotFound"));
                 }
+
                 var expiryTime = settings.FirstOrDefault(x => x.Key == "Server_PresignedExpiryTime")?.Value;
                 if (string.IsNullOrEmpty(expiryTime))
                 {
                     throw new EntityNotFoundException(_localizer.GetString("ServerPreSignedExpiryTimeNotFound"));
                 }
+
                 miniodto.AccessKey = accessKey;
                 miniodto.SecretKey = secretKey;
                 miniodto.PresignedUrl = preSigned;

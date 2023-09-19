@@ -1,12 +1,12 @@
 ﻿namespace Lingtren.Application.Common.Interfaces
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
 
     public interface IAssignmentService : IGenericService<Assignment, AssignmentBaseSearchCriteria>
     {
@@ -79,6 +79,6 @@
         /// <param name="lessonIdentity">lesson identity</param>
         /// <param name="ids">list of assignment question id</param>
         /// <returns>Task completed</returns>
-        Task ReorderAssignmentQuestionAsync(Guid currentUserId,string lessonIdentity,IList<Guid> ids);
+        Task ReorderAssignmentQuestionAsync(Guid currentUserId, string lessonIdentity, IList<Guid> ids);
     }
 }

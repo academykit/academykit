@@ -1,10 +1,9 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Hangfire.Annotations;
 using Hangfire.Dashboard;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 
@@ -13,12 +12,10 @@ namespace Lingtren.Infrastructure.Configurations
     public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
     {
         private readonly string _appUrl;
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly string HangFireCookieName = "HangFireCookie";
         private static readonly int CookieExpirationMinutes = 60;
-        private IConfiguration configuration;
-        private string role;
-
+        private readonly IConfiguration configuration;
 
         public HangfireAuthorizationFilter(IConfiguration configuration)
         {
@@ -29,16 +26,14 @@ namespace Lingtren.Infrastructure.Configurations
 
             _appUrl = configuration.GetSection("AppUrls:App").Value;
             this.configuration = configuration;
-            this.role = role;
         }
 
         public bool Authorize([NotNull] DashboardContext context)
         {
             var httpContext = context.GetHttpContext();
-
-            var access_token = String.Empty;
             var setCookie = false;
 
+            string access_token;
             // try to get token from query string
             if (httpContext.Request.Query.ContainsKey("access_token"))
             {
@@ -50,14 +45,15 @@ namespace Lingtren.Infrastructure.Configurations
                 access_token = httpContext.Request.Cookies[HangFireCookieName];
             }
 
-            if (String.IsNullOrEmpty(access_token))
+            if (string.IsNullOrEmpty(access_token))
             {
                 httpContext?.Response?.Redirect(_appUrl);
             }
+
             try
             {
                 SecurityToken validatedToken = null;
-                JwtSecurityTokenHandler hand = new JwtSecurityTokenHandler();
+                var hand = new JwtSecurityTokenHandler();
                 var claims = hand.ValidateToken(access_token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
@@ -91,6 +87,7 @@ namespace Lingtren.Infrastructure.Configurations
                     Expires = DateTime.Now.AddMinutes(CookieExpirationMinutes)
                 });
             }
+
             return true;
         }
     }

@@ -1,4 +1,4 @@
-using Lingtren.Domain.Entities;
+﻿using Lingtren.Domain.Entities;
 
 namespace Lingtren.Application.Common.Models.ResponseModels
 {
@@ -11,7 +11,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string Url { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
-        public UserModel? User { get; set; }
+        public UserModel User { get; set; }
 
         public GroupFileResponseModel()
         {

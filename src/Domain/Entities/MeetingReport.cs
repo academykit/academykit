@@ -1,4 +1,4 @@
-namespace Lingtren.Domain.Entities
+﻿namespace Lingtren.Domain.Entities
 {
     public class MeetingReport
     {

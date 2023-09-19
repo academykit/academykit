@@ -1,6 +1,5 @@
 ﻿namespace Lingtren.Application.Common.Models.RequestModels
 {
-    using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
 
     public class QuestionRequestModel

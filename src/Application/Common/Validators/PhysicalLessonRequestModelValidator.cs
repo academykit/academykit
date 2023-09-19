@@ -1,7 +1,7 @@
-﻿using FluentValidation;
+﻿using System.Text;
+using FluentValidation;
 using Lingtren.Application.Common.Models.RequestModels;
 using Microsoft.Extensions.Localization;
-using System.Text;
 
 namespace Lingtren.Application.Common.Validators
 {

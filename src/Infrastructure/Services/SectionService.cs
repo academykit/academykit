@@ -1,5 +1,6 @@
-namespace Lingtren.Infrastructure.Services
+﻿namespace Lingtren.Infrastructure.Services
 {
+    using System.Linq.Expressions;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -13,7 +14,6 @@ namespace Lingtren.Infrastructure.Services
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using System.Linq.Expressions;
 
     public class SectionService : BaseGenericService<Section, SectionBaseSearchCriteria>, ISectionService
     {
@@ -37,6 +37,7 @@ namespace Lingtren.Infrastructure.Services
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
             }
+
             return predicate.And(p => !p.IsDeleted && p.CourseId == criteria.CourseId);
         }
 
@@ -118,10 +119,12 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
                 }
+
                 if (section == null)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("SectionNotFound"));
                 }
+
                 if (section.Status == CourseStatus.Published)
                 {
                     _logger.LogWarning("Section with id: {sectionId} is in published status.", section.Id);
@@ -131,7 +134,8 @@ namespace Lingtren.Infrastructure.Services
                 if (section.Lessons.Any(x => !x.IsDeleted))
                 {
                     _logger.LogWarning("Section with id: {sectionId} consist lessons for delete.", section.Id);
-                    throw new ForbiddenException(_localizer.GetString("TrainingSectionLesson")); ;
+                    throw new ForbiddenException(_localizer.GetString("TrainingSectionLesson"));
+                    ;
                 }
 
                 section.IsDeleted = true;
@@ -185,6 +189,7 @@ namespace Lingtren.Infrastructure.Services
                         order++;
                     }
                 }
+
                 if (updateEntities.Count > 0)
                 {
                     _unitOfWork.GetRepository<Section>().Update(updateEntities);

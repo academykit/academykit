@@ -1,17 +1,17 @@
-namespace Lingtren.Infrastructure.Services
+﻿namespace Lingtren.Infrastructure.Services
 {
+    using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
-    using Lingtren.Infrastructure.Common;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.EntityFrameworkCore;
-    using Lingtren.Application.Common.Dtos;
     using Lingtren.Domain.Enums;
-    using Microsoft.Extensions.Localization;
+    using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Localization;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Logging;
 
     public class CertificateService : BaseService, ICertificateService
     {
@@ -45,16 +45,19 @@ namespace Lingtren.Infrastructure.Services
                     CreatedBy = currentUserId,
                     CreatedOn = DateTime.UtcNow,
                     OptionalCost = model.OptionalCost,
-                }; ;
+                };
+                ;
                 var isAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
                 if (isAdmin)
                 {
                     certificate.Status = CertificateStatus.Approved;
                 }
+
                 if (model.StartDate.AddHours(model.Duration).Date > model.EndDate)
                 {
                     throw new ForbiddenException(_localizer.GetString("AddingDuratrionError"));
                 }
+
                 await _unitOfWork.GetRepository<Certificate>().InsertAsync(certificate).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return new CertificateResponseModel(certificate);
@@ -125,6 +128,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
+
                 _unitOfWork.GetRepository<Certificate>().Delete(ceritificate);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
@@ -266,6 +270,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
+
                 var certificates = await _unitOfWork.GetRepository<Certificate>().GetAllAsync(predicate: p => p.Status == CertificateStatus.Draft,
                 include: source => source.Include(x => x.User)).ConfigureAwait(false);
 
@@ -327,7 +332,6 @@ namespace Lingtren.Infrastructure.Services
             }
         }
 
-
         /// <summary>
         /// Handle to get internal certificate
         /// </summary>
@@ -357,7 +361,8 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                throw ex is ServiceException ? ex : new ServiceException(ex.Message); throw;
+                throw ex is ServiceException ? ex : new ServiceException(ex.Message);
+                throw;
             }
         }
 
@@ -378,7 +383,6 @@ namespace Lingtren.Infrastructure.Services
 
             return await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
         }
-
 
         #endregion
     }

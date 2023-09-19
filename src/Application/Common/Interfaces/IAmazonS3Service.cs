@@ -1,4 +1,4 @@
-namespace Lingtren.Application.Common.Interfaces
+﻿namespace Lingtren.Application.Common.Interfaces
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;

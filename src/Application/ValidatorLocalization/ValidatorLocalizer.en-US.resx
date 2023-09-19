@@ -192,7 +192,7 @@
   <data name="DepartmentIdRequired" xml:space="preserve">
     <value>Department name is required.</value>
   </data>
-  <data name="DescriptionLenght500" xml:space="preserve">
+  <data name="DescriptionLength500" xml:space="preserve">
     <value>Description length must be less than or equal to 5000 characters.</value>
   </data>
   <data name="DesignationLength50" xml:space="preserve">
@@ -387,8 +387,35 @@
   <data name="PasswordRequired" xml:space="preserve">
     <value>Password is required.</value>
   </data>
-  <data name="PreofessionLength200" xml:space="preserve">
+  <data name="ProfessionLength200" xml:space="preserve">
     <value>Profession length must be less than or equal to 200 characters.</value>
+  </data>
+  <data name="FatherNameLength100" xml:space="preserve">
+    <value>Father name length must be less than or equal to 100 characters.</value>
+  </data>
+  <data name="FatherNameRequired" xml:space="preserve">
+    <value>Father name is required.</value>
+  </data>
+  <data name="MotherNameLength100" xml:space="preserve">
+    <value>Mother name length must be less than or equal to 100 characters.</value>
+  </data>
+  <data name="MotherNameRequired" xml:space="preserve">
+    <value>Mother name is required.</value>
+  </data>
+   <data name="SpouseNameLength100" xml:space="preserve">
+    <value>Spouse name length must be less than or equal to 100 characters.</value>
+  </data>
+  <data name="SpouseNameRequired" xml:space="preserve">
+    <value>Spouse name is required.</value>
+  </data>
+  <data name="GrandfatherNameLength100" xml:space="preserve">
+    <value>Grandfather name length must be less than or equal to 100 characters.</value>
+  </data>
+  <data name="GrandfatherNameRequired" xml:space="preserve">
+    <value>Grandfather name is required.</value>
+  </data>
+  <data name="GenderRequired" xml:space="preserve">
+    <value>Gender is required.</value>
   </data>
   <data name="PublicUrlLength2000" xml:space="preserve">
     <value>Public url length must be less than or equal to 2000 characters.</value>
@@ -510,7 +537,7 @@
   <data name="OptionalCostCannotBeNull" xml:space="preserve">
     <value>Optional cost cannot be null.</value>
   </data>
-  <data name="InvalidMoblieNumber" xml:space="preserve">
+  <data name="InvalidMobileNumber" xml:space="preserve">
     <value>Invalid mobile number format.</value>
   </data>
 </root>

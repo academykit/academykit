@@ -192,7 +192,7 @@
   <data name="DepartmentIdRequired" xml:space="preserve">
     <value>विभागको नाम आवश्यक छ।</value>
   </data>
-  <data name="DescriptionLenght500" xml:space="preserve">
+  <data name="DescriptionLength500" xml:space="preserve">
     <value>वर्णन लम्बाइ 5000 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
   <data name="DesignationLength50" xml:space="preserve">
@@ -387,12 +387,39 @@
   <data name="PasswordRequired" xml:space="preserve">
     <value>पासवर्ड आवश्यक छ।</value>
   </data>
-  <data name="PreofessionLength200" xml:space="preserve">
+  <data name="ProfessionLength200" xml:space="preserve">
     <value>पेशाको लम्बाइ 200 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
   <data name="PublicUrlLength2000" xml:space="preserve">
     <value>सार्वजनिक url लम्बाइ 2000 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
+  <data name="FatherNameLength100" xml:space="preserve">
+  <value>पिताको नामको लम्बाइ १०० वा तदुन्ध भन्दा कम गर्नुपर्छ।</value>
+</data>
+<data name="FatherNameRequired" xml:space="preserve">
+  <value>पिताको नाम आवश्यक छ।</value>
+</data>
+<data name="MotherNameLength100" xml:space="preserve">
+  <value>आमाको नामको लम्बाइ १०० वा तदुन्ध भन्दा कम गर्नुपर्छ।</value>
+</data>
+<data name="MotherNameRequired" xml:space="preserve">
+  <value>आमाको नाम आवश्यक छ।</value>
+</data>
+<data name="SpouseNameLength100" xml:space="preserve">
+  <value>पति/पत्नि को नामको लम्बाइ १०० वा तदुन्ध भन्दा कम गर्नुपर्छ।</value>
+</data>
+<data name="SpouseNameRequired" xml:space="preserve">
+  <value>पति/पत्नि को नाम आवश्यक छ।</value>
+</data>
+<data name="GrandfatherNameLength100" xml:space="preserve">
+  <value>बाजेको नामको लम्बाइ १०० वा तदुन्ध भन्दा कम गर्नुपर्छ।</value>
+</data>
+<data name="GrandfatherNameRequired" xml:space="preserve">
+  <value>बाजेको नाम आवश्यक छ।</value>
+</data>
+<data name="GenderRequired" xml:space="preserve">
+  <value>लिङ्ग आवश्यक छ।</value>
+</data>
   <data name="QuestionHint5000Length" xml:space="preserve">
     <value>प्रश्न संकेत लम्बाइ 5000 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
@@ -510,7 +537,7 @@
   <data name="OptionalCostCannotBeNull" xml:space="preserve">
     <value>वैकल्पिक लागत शून्य हुन सक्दैन।</value>
   </data>
-  <data name="InvalidMoblieNumber" xml:space="preserve">
+  <data name="InvalidMobileNumber" xml:space="preserve">
     <value>अवैध मोबाइल नम्बर ढाँचा।</value>
   </data>
 </root>

@@ -26,18 +26,18 @@
         public UserModel User { get; set; }
         public bool IsCompleted { get; set; }
         public bool IsPassed { get; set; }
-        public string? NextLessonSlug { get; set; }
+        public string NextLessonSlug { get; set; }
         public bool? HasResult { get; set; }
         public bool? HasFeedbackSubmitted { get; set; }
-        public bool? HasSubmittedAssigment { get; set; }
+        public bool? HasSubmittedAssignment { get; set; }
         public bool? HasReviewedAssignment { get; set; }
         public int? RemainingAttempt { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool AssignmentExpired { get; set; }
-        public MeetingResponseModel? Meeting { get; set; }
-        public QuestionSetResponseModel? QuestionSet { get; set; }
-        public AssignmentReviewResponseModel? AssignmentReview { get; set; }
+        public MeetingResponseModel Meeting { get; set; }
+        public QuestionSetResponseModel QuestionSet { get; set; }
+        public AssignmentReviewResponseModel AssignmentReview { get; set; }
         public string ZoomId { get; set; }
         public string Password { get; set; }
         public bool? HasAttended { get; set; }

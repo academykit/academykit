@@ -1,5 +1,6 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using System.Linq.Expressions;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -15,7 +16,6 @@
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using System.Linq.Expressions;
 
     public class CommentService : BaseGenericService<Comment, BaseSearchCriteria>, ICommentService
     {
@@ -43,6 +43,7 @@
                 criteria.SortBy = nameof(Comment.CreatedOn);
                 criteria.SortType = SortType.Descending;
             }
+
             query = criteria.SortType == SortType.Ascending
                 ? query.OrderBy(criteria.SortBy)
                 : query.OrderByDescending(criteria.SortBy);
@@ -128,11 +129,13 @@
                 _logger.LogWarning("Comment with id :{id} not found.", commentId);
                 throw new EntityNotFoundException(_localizer.GetString("CommentNotFound"));
             }
+
             if (existing.CreatedBy != currentUserId)
             {
                 _logger.LogWarning("User with id: {currentUserId} is not authorized user to edit comment with id :{id}.", currentUserId, commentId);
                 throw new ForbiddenException(_localizer.GetString("UnauthorizedUserEditComment"));
             }
+
             existing.Content = model.Content;
             existing.UpdatedBy = currentUserId;
             existing.UpdatedOn = DateTime.UtcNow;
@@ -171,6 +174,7 @@
                 _logger.LogWarning("Comment with id :{id} not found.", id);
                 throw new EntityNotFoundException(_localizer.GetString("CommentNotFound"));
             }
+
             var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
             if (comment.CreatedBy != currentUserId && !isSuperAdminOrAdmin && !isTeacher)
@@ -178,6 +182,7 @@
                 _logger.LogWarning("User with id: {currentUserId} is not authorized user to delete comment with id :{id}.", currentUserId, id);
                 throw new ForbiddenException(_localizer.GetString("UnauthorizedUserDeleteComment"));
             }
+
             var existReply = await _unitOfWork.GetRepository<CommentReply>().ExistsAsync(p => p.CommentId == comment.Id && !p.IsDeleted).ConfigureAwait(false);
             if (existReply)
             {
@@ -211,6 +216,7 @@
                 criteria.SortBy = nameof(CommentReply.CreatedOn);
                 criteria.SortType = SortType.Descending;
             }
+
             query = criteria.SortType == SortType.Ascending
                 ? query.OrderBy(criteria.SortBy)
                 : query.OrderByDescending(criteria.SortBy);
@@ -305,6 +311,7 @@
                 _logger.LogWarning("Comment reply with id :{id} and comment with id :{commentId} not found.", replyId, commentId);
                 throw new EntityNotFoundException(_localizer.GetString("CommentReplyNotFound"));
             }
+
             if (existing.CreatedBy != currentUserId)
             {
                 _logger.LogWarning("User with id: {currentUserId} is not authorized user to edit reply with id: {replyId} comment with id :{id}.",
@@ -354,6 +361,7 @@
                 _logger.LogWarning("Comment reply with id :{id} and comment with id :{commentId} not found.", replyId, id);
                 throw new EntityNotFoundException(_localizer.GetString("CommentReplyNotFound"));
             }
+
             var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
             if (commentReply.CreatedBy != currentUserId && !isSuperAdminOrAdmin && !isTeacher)
@@ -361,6 +369,7 @@
                 _logger.LogWarning("User with id: {currentUserId} is not authorized user to delete comment reply with id :{replyId} having comment with id :{id}.", currentUserId, replyId, id);
                 throw new ForbiddenException(_localizer.GetString("UnauthorizedUserDeleteComment"));
             }
+
             commentReply.IsDeleted = true;
             commentReply.UpdatedBy = currentUserId;
             commentReply.UpdatedOn = DateTime.UtcNow;
@@ -383,6 +392,7 @@
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Content.ToLower().Trim().Contains(search));
             }
+
             return predicate;
         }
 

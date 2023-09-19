@@ -18,7 +18,7 @@
                                     .WithMessage(context => stringLocalizer.GetString("DocumentTypeRequired"));
             RuleFor(x => x.VideoUrl).NotNull().NotEmpty().When(x => x.Type == LessonType.Video || x.Type == LessonType.RecordedVideo)
                                     .WithMessage(context => stringLocalizer.GetString("VideoIsRequired"));
-            RuleFor(x => x.Description).MaximumLength(5000).WithMessage(context => stringLocalizer.GetString("DescriptionLenght500"));
+            RuleFor(x => x.Description).MaximumLength(5000).WithMessage(context => stringLocalizer.GetString("DescriptionLength500"));
             RuleFor(x => x.QuestionSet).SetValidator(new QuestionSetValidator(stringLocalizer))
                                          .When(x => x.Type == LessonType.Exam);
             RuleFor(x => x.Meeting).SetValidator(new MeetingValidator(stringLocalizer))
@@ -42,7 +42,7 @@
         {
             RuleFor(x => x.QuestionMarking).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("QuestionMarkingRequired"));
             RuleFor(x => x.AllowedRetake).NotNull().GreaterThan(0).WithMessage(context => stringLocalizer.GetString("RetakeMustBeGreaterThan0"));
-            RuleFor(x => x.Description).MaximumLength(5000).WithMessage(context => stringLocalizer.GetString("DescriptionLenght500"));
+            RuleFor(x => x.Description).MaximumLength(5000).WithMessage(context => stringLocalizer.GetString("DescriptionLength500"));
             RuleFor(x => x).Must(x => x.EndTime != default && x.StartTime != default && x.EndTime > x.StartTime).WithMessage(context => stringLocalizer.GetString("EnddateMustBeGreater"));
         }
     }

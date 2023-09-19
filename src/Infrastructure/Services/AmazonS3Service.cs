@@ -1,4 +1,4 @@
-namespace Lingtren.Infrastructure.Services
+﻿namespace Lingtren.Infrastructure.Services
 {
     using Amazon.S3;
     using Amazon.S3.Model;
@@ -42,6 +42,7 @@ namespace Lingtren.Infrastructure.Services
                     MimeTypes.TryGetExtension(model.File.ContentType, out extension);
                     fileName = $"{Guid.NewGuid()}{extension}";
                 }
+
                 var transferUtility = new TransferUtility(client);
                 var request = new TransferUtilityUploadRequest
                 {
@@ -142,6 +143,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new EntityNotFoundException(_localizer.GetString("AwsRegionEndPointNotFound"));
                 }
+
                 var fileBucket = settings.FirstOrDefault(x => x.Key == "AWS_FileBucket")?.Value;
                 var videoBucket = settings.FirstOrDefault(x => x.Key == "AWS_VideoBucket")?.Value;
                 var cloudFront = settings.FirstOrDefault(x => x.Key == "AWS_CloudFront")?.Value;

@@ -2,7 +2,7 @@
 
 namespace Lingtren.Application.Common.Dtos
 {
-    public class EnrollmentBaseSearchCritera : BaseSearchCriteria
+    public class EnrollmentBaseSearchCriteria : BaseSearchCriteria
     {
         public string CourseIdentity { get; set; }
 

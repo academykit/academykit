@@ -1,11 +1,15 @@
-﻿namespace Lingtren.Api.Common
+﻿// <copyright file="Util.cs" company="Vurilo Nepal Pvt. Ltd.">
+// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
+// </copyright>
+
+namespace Lingtren.Api.Common
 {
+    using System.Linq;
+    using System.Security.Claims;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Domain.Enums;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
-    using System.Linq;
-    using System.Security.Claims;
 
     /// <summary>
     /// This class contains validation methods.
@@ -20,7 +24,7 @@
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
             DateFormatString = "MM/dd/yyyy HH:mm:ss",
-            DateTimeZoneHandling = DateTimeZoneHandling.Utc
+            DateTimeZoneHandling = DateTimeZoneHandling.Utc,
         };
 
         /// <summary>
@@ -28,7 +32,7 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="value">The value.</param>
-        /// <returns>Serialized data,</returns>
+        /// <returns>Serialized data,.</returns>
         public static string Serialize<T>(T value)
         {
             return JsonConvert.SerializeObject(value, SerializerSettings);
@@ -40,7 +44,7 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="value">The value.</param>
         /// <returns>De-serialized object.</returns>
-        public static T? Deserialize<T>(string value)
+        public static T Deserialize<T>(string value)
         {
             return JsonConvert.DeserializeObject<T>(value, SerializerSettings);
         }
@@ -68,7 +72,7 @@
         /// <param name="claimType">Type of the claim.</param>
         /// <param name="isRequired">if set to <c>true</c> [is required].</param>
         /// <returns>The claim value.</returns>
-        public static string? GetClaim(this ClaimsPrincipal claimsPrincipal, string claimType, bool isRequired = false)
+        public static string GetClaim(this ClaimsPrincipal claimsPrincipal, string claimType, bool isRequired = false)
         {
             var claim = FindClaim(claimsPrincipal, claimType, isRequired);
             return claim?.Value;
@@ -82,13 +86,14 @@
         /// <param name="claimType">Type of the claim.</param>
         /// <param name="isRequired">if set to <c>true</c> [is required].</param>
         /// <returns>Claim object value.</returns>
-        public static T? GetClaim<T>(this ClaimsPrincipal claimsPrincipal, string claimType, bool isRequired = false)
+        public static T GetClaim<T>(this ClaimsPrincipal claimsPrincipal, string claimType, bool isRequired = false)
         {
             var claim = FindClaim(claimsPrincipal, claimType, isRequired);
             if (claim == null)
             {
                 return default;
             }
+
             return Deserialize<T>(claim.Value);
         }
 
@@ -99,7 +104,7 @@
         /// <param name="claimType">Type of the claim.</param>
         /// <param name="isRequired">if set to <c>true</c> [is required].</param>
         /// <returns>Found claim.</returns>
-        private static Claim? FindClaim(ClaimsPrincipal claimsPrincipal, string claimType, bool isRequired)
+        private static Claim FindClaim(ClaimsPrincipal claimsPrincipal, string claimType, bool isRequired)
         {
             var claim = claimsPrincipal.Claims.FirstOrDefault(x => x.Type == claimType);
             if (claim == null && isRequired)

@@ -24,7 +24,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public string ThumbnailUrl { get; set; }
         public decimal? Percentage { get; set; }
         public UserModel User { get; set; }
-        public IList<UserModel>? Students { get; set; }
+        public IList<UserModel> Students { get; set; }
     }
 
     public class DashboardLessonResponseModel
@@ -38,6 +38,5 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public bool? CourseEnrollmentBool { get; set; }
         public bool? IsLive { get; set; }
         public string CourseName { get; set; }
-
     }
 }

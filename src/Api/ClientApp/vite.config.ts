@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { readFileSync } from 'fs';
 import path, { join } from 'path';
+import { defineConfig } from 'vite';
 import eslintPlugin from 'vite-plugin-eslint';
 
 const dir = __dirname;
@@ -19,6 +19,7 @@ export default defineConfig({
       key: readFileSync(keyFilePath),
       cert: readFileSync(certFilePath),
     },
+    host: true,
     port: 44414,
     strictPort: true,
     proxy: {

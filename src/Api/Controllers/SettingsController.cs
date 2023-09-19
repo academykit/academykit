@@ -1,27 +1,31 @@
-﻿using FluentValidation;
-using Lingtren.Application.Common.Exceptions;
-using Lingtren.Application.Common.Interfaces;
-using Lingtren.Application.Common.Models.RequestModels;
-using Lingtren.Application.Common.Models.ResponseModels;
-using Lingtren.Infrastructure.Localization;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
+﻿// <copyright file="SettingsController.cs" company="Vurilo Nepal Pvt. Ltd.">
+// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
+// </copyright>
 
 namespace Lingtren.Api.Controllers
 {
+    using FluentValidation;
+    using Lingtren.Application.Common.Exceptions;
+    using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Models.ResponseModels;
+    using Lingtren.Infrastructure.Localization;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
+
     [Route("api/admin/settings")]
     public class SettingsController : BaseApiController
     {
-        private readonly ILogger<SettingsController> _logger;
-        private readonly IGeneralSettingService _generalSettingService;
-        private readonly IZoomSettingService _zoomSettingService;
-        private readonly ISMTPSettingService _smtpSettingService;
-        private readonly IFileServerService _fileServerService;
-        private readonly IValidator<GeneralSettingRequestModel> _generalSettingValidator;
-        private readonly IValidator<ZoomSettingRequestModel> _zoomSettingValidator;
-        private readonly IValidator<SMTPSettingRequestModel> _smtpSettingValidator;
-        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
+        private readonly ILogger<SettingsController> logger;
+        private readonly IGeneralSettingService generalSettingService;
+        private readonly IZoomSettingService zoomSettingService;
+        private readonly ISMTPSettingService smtpSettingService;
+        private readonly IFileServerService fileServerService;
+        private readonly IValidator<GeneralSettingRequestModel> generalSettingValidator;
+        private readonly IValidator<ZoomSettingRequestModel> zoomSettingValidator;
+        private readonly IValidator<SMTPSettingRequestModel> smtpSettingValidator;
+        private readonly IStringLocalizer<ExceptionLocalizer> localizer;
 
         public SettingsController(
             ILogger<SettingsController> logger,
@@ -34,39 +38,37 @@ namespace Lingtren.Api.Controllers
             IStringLocalizer<ExceptionLocalizer> localizer,
             IValidator<SMTPSettingRequestModel> smtpSettingValidator)
         {
-            _logger = logger;
-            _generalSettingService = generalSettingService;
-            _zoomSettingService = zoomSettingService;
-            _smtpSettingService = smtpSettingService;
-            _fileServerService = fileServerService;
-            _generalSettingValidator = generalSettingValidator;
-            _zoomSettingValidator = zoomSettingValidator;
-            _smtpSettingValidator = smtpSettingValidator;
-            _localizer = localizer;
+            this.logger = logger;
+            this.generalSettingService = generalSettingService;
+            this.zoomSettingService = zoomSettingService;
+            this.smtpSettingService = smtpSettingService;
+            this.fileServerService = fileServerService;
+            this.generalSettingValidator = generalSettingValidator;
+            this.zoomSettingValidator = zoomSettingValidator;
+            this.smtpSettingValidator = smtpSettingValidator;
+            this.localizer = localizer;
         }
 
-        #region General settings
-
         /// <summary>
-        /// get general setting
+        /// get general setting.
         /// </summary>
         /// <returns> the instance of <see cref="GeneralSettingResponseModel" /> .</returns>
         [HttpGet]
         public async Task<GeneralSettingResponseModel> Get()
         {
-            var model = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
+            var model = await generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return new GeneralSettingResponseModel(model);
         }
 
         /// <summary>
-        /// get company info api
+        /// get company info api.
         /// </summary>
         /// <returns> the instance of <see cref="CompanyResponseModel" /> .</returns>
         [HttpGet("company")]
         [AllowAnonymous]
         public async Task<CompanyResponseModel> Company()
         {
-            var response = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
+            var response = await generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return new CompanyResponseModel
             {
                 Name = response.CompanyName,
@@ -76,9 +78,9 @@ namespace Lingtren.Api.Controllers
         }
 
         /// <summary>
-        /// update general settings
+        /// update general settings.
         /// </summary>
-        /// <param name="id"> the general setting id</param>
+        /// <param name="id"> the general setting id.</param>
         /// <param name="model"> the  instance of <see cref="GeneralSettingRequestModel" /> .</param>
         /// <returns> the instance of <see cref="GeneralSettingResponseModel" /> .</returns>
         [HttpPut("{id}")]
@@ -86,14 +88,15 @@ namespace Lingtren.Api.Controllers
         {
             IsSuperAdmin(CurrentUser.Role);
 
-            await _generalSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _generalSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
+            await generalSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            var existing = await generalSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
 
             if (existing == null)
             {
-                _logger.LogWarning("General setting with id : {id} was not found.", id);
-                throw new EntityNotFoundException(_localizer.GetString("GeneralSettingNotFound"));
+                logger.LogWarning("General setting with id : {id} was not found.", id);
+                throw new EntityNotFoundException(localizer.GetString("GeneralSettingNotFound"));
             }
+
             var currentTimeStamp = DateTime.UtcNow;
 
             var logoUrlKey = existing.LogoUrl;
@@ -108,7 +111,7 @@ namespace Lingtren.Api.Controllers
             existing.UpdatedOn = currentTimeStamp;
             existing.CustomConfiguration = model.CustomConfiguration;
 
-            var savedEntity = await _generalSettingService.UpdateAsync(existing).ConfigureAwait(false);
+            var savedEntity = await generalSettingService.UpdateAsync(existing).ConfigureAwait(false);
 
             if (logoUrlKey != model.LogoUrl && !string.IsNullOrWhiteSpace(logoUrlKey))
             {
@@ -116,18 +119,15 @@ namespace Lingtren.Api.Controllers
                 {
                     logoUrlKey = logoUrlKey.Substring(logoUrlKey.IndexOf("/standalone/") + "/standalone/".Length);
                 }
-                await _fileServerService.RemoveFileAsync(logoUrlKey).ConfigureAwait(false);
+
+                await fileServerService.RemoveFileAsync(logoUrlKey).ConfigureAwait(false);
             }
 
             return new GeneralSettingResponseModel(savedEntity);
         }
 
-        #endregion General settings
-
-        #region zoom settings
-
         /// <summary>
-        /// get zoom setting
+        /// get zoom setting.
         /// </summary>
         /// <returns> the instance of <see cref="ZoomSettingResponseModel" /> .</returns>
         [HttpGet("zoom")]
@@ -135,14 +135,14 @@ namespace Lingtren.Api.Controllers
         {
             IsSuperAdmin(CurrentUser.Role);
 
-            var model = await _zoomSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
+            var model = await zoomSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return new ZoomSettingResponseModel(model);
         }
 
         /// <summary>
-        /// update zoom settings
+        /// update zoom settings.
         /// </summary>
-        /// <param name="id"> the zoom setting id</param>
+        /// <param name="id"> the zoom setting id.</param>
         /// <param name="model"> the  instance of <see cref="ZoomSettingRequestModel" /> .</param>
         /// <returns> the instance of <see cref="ZoomSettingResponseModel" /> .</returns>
         [HttpPut("zoom/{id}")]
@@ -150,14 +150,15 @@ namespace Lingtren.Api.Controllers
         {
             IsSuperAdmin(CurrentUser.Role);
 
-            await _zoomSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _zoomSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
+            await zoomSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            var existing = await zoomSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
 
             if (existing == null)
             {
-                _logger.LogWarning("Zoom setting with id : {id} was not found.", id);
-                throw new EntityNotFoundException(_localizer.GetString("ZoomSettingNotFound"));
+                logger.LogWarning("Zoom setting with id : {id} was not found.", id);
+                throw new EntityNotFoundException(localizer.GetString("ZoomSettingNotFound"));
             }
+
             var currentTimeStamp = DateTime.UtcNow;
 
             existing.Id = existing.Id;
@@ -171,30 +172,26 @@ namespace Lingtren.Api.Controllers
             existing.OAuthClientId = model.OAuthClientId;
             existing.OAuthClientSecret = model.OAuthClientSecret;
 
-            var savedEntity = await _zoomSettingService.UpdateAsync(existing).ConfigureAwait(false);
+            var savedEntity = await zoomSettingService.UpdateAsync(existing).ConfigureAwait(false);
             return new ZoomSettingResponseModel(savedEntity);
         }
 
-        #endregion zoom settings
-
-        #region SMTP settings
-
         /// <summary>
-        /// get SMTP setting
+        /// get SMTP setting.
         /// </summary>
         /// <returns> the instance of <see cref="SMTPSettingResponseModel" /> .</returns>
         [HttpGet("smtp")]
         public async Task<SMTPSettingResponseModel> GetSMTPSetting()
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
-            var model = await _smtpSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
+            var model = await smtpSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return new SMTPSettingResponseModel(model);
         }
 
         /// <summary>
-        /// update SMTP settings
+        /// update SMTP settings.
         /// </summary>
-        /// <param name="id"> the SMTP setting id</param>
+        /// <param name="id"> the SMTP setting id.</param>
         /// <param name="model"> the  instance of <see cref="SMTPSettingRequestModel" /> .</param>
         /// <returns> the instance of <see cref="SMTPSettingResponseModel" /> .</returns>
         [HttpPut("smtp/{id}")]
@@ -202,14 +199,15 @@ namespace Lingtren.Api.Controllers
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
 
-            await _smtpSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await _smtpSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
+            await smtpSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            var existing = await smtpSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
 
             if (existing == null)
             {
-                _logger.LogWarning("SMTP setting with id : {id} was not found.", id);
-                throw new EntityNotFoundException(_localizer.GetString("SMTPSettingNotFound"));
+                logger.LogWarning("SMTP setting with id : {id} was not found.", id);
+                throw new EntityNotFoundException(localizer.GetString("SMTPSettingNotFound"));
             }
+
             var currentTimeStamp = DateTime.UtcNow;
 
             existing.Id = existing.Id;
@@ -225,10 +223,8 @@ namespace Lingtren.Api.Controllers
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
 
-            var savedEntity = await _smtpSettingService.UpdateAsync(existing).ConfigureAwait(false);
+            var savedEntity = await smtpSettingService.UpdateAsync(existing).ConfigureAwait(false);
             return new SMTPSettingResponseModel(savedEntity);
         }
-
-        #endregion SMTP settings
     }
 }

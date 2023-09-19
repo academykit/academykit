@@ -1,5 +1,6 @@
-namespace Lingtren.Infrastructure.Services
+﻿namespace Lingtren.Infrastructure.Services
 {
+    using System.Net.Http.Headers;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -10,28 +11,23 @@ namespace Lingtren.Infrastructure.Services
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Localization;
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using MimeKit;
-    using System.Net.Http.Headers;
     public class MediaService : BaseService, IMediaService
     {
 
         private readonly IFileServerService _fileServerService;
         private readonly IAmazonS3Service _amazonService;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IVideoService _videoService;
 
         public MediaService(IUnitOfWork unitOfWork,
         ILogger<MediaService> logger, IFileServerService fileServerService,
-        IAmazonS3Service amazonService, IWebHostEnvironment webHostEnvironment,
+        IAmazonS3Service amazonService,
         IStringLocalizer<ExceptionLocalizer> localizer, IVideoService videoService) : base(unitOfWork, logger, localizer)
         {
             _amazonService = amazonService;
             _fileServerService = fileServerService;
-            _webHostEnvironment = webHostEnvironment;
             _videoService = videoService;
         }
 
@@ -62,6 +58,7 @@ namespace Lingtren.Infrastructure.Services
                     newSettings.Add(keyValue);
                 }
             }
+
             _unitOfWork.GetRepository<Setting>().Update(newSettings);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             var response = new StorageSettingResponseModel();
@@ -109,7 +106,7 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="key"> the file key </param>
         /// <returns> the pre-signed url </returns>
-        public async Task<string> GetFileAsnc(string key)
+        public async Task<string> GetFileAsync(string key)
         {
             try
             {
@@ -118,6 +115,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ArgumentException(_localizer.GetString("StorageSettingNotConfigured"));
                 }
+
                 var url = "";
                 if (Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
                 {
@@ -128,6 +126,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     url = await _fileServerService.GetFilePresignedUrl(key).ConfigureAwait(false);
                 }
+
                 return url;
             }
             catch (Exception ex)
@@ -146,11 +145,14 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var storage = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: p => p.Key == "Storage").ConfigureAwait(false);
+                var storage = await _unitOfWork.GetRepository<Setting>().GetFirstOrDefaultAsync(predicate: p => p.Key == "Storage")
+                    .ConfigureAwait(false);
+
                 if (string.IsNullOrEmpty(storage.Value))
                 {
                     throw new ArgumentException(_localizer.GetString("StorageSettingNotConfigured"));
                 }
+
                 var key = "";
                 if (Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
                 {
@@ -160,6 +162,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     key = await _fileServerService.UploadFileAsync(model).ConfigureAwait(false);
                 }
+
                 return key;
             }
             catch (Exception ex)
@@ -183,6 +186,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ArgumentException(_localizer.GetString("StorageSettingNotConfigured"));
                 }
+
                 var model = new MediaRequestModel
                 {
                     File = file,
@@ -227,8 +231,9 @@ namespace Lingtren.Infrastructure.Services
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{downloadToken}");
                     await client.DownloadFileTaskAsync(new Uri(fileUrl), filePath).ConfigureAwait(true);
                 }
+
                 var duration = await _videoService.GetVideoDuration(filePath).ConfigureAwait(false);
-                string videoPath = "";
+                var videoPath = "";
                 if (Enum.Parse<StorageType>(storage.Value) == StorageType.AWS)
                 {
 
@@ -238,6 +243,7 @@ namespace Lingtren.Infrastructure.Services
                     videoPath = await _fileServerService.UploadRecordingFileAsync(filePath, fileSize);
                     DeleteFilePath(filePath);
                 }
+
                 return new VideoModel
                 {
                     VideoUrl = videoPath,
@@ -286,6 +292,7 @@ namespace Lingtren.Infrastructure.Services
                     }).ToList();
                 }
             }
+
             return response;
         }
 
@@ -293,7 +300,7 @@ namespace Lingtren.Infrastructure.Services
         /// Handle to delete the file path
         /// </summary>
         /// <param name="filePath"> the file path h</param>
-        private void DeleteFilePath(string filePath)
+        private static void DeleteFilePath(string filePath)
         {
             if (File.Exists(filePath))
             {

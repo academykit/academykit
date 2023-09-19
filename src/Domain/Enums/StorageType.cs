@@ -1,4 +1,4 @@
-namespace Lingtren.Domain.Enums
+﻿namespace Lingtren.Domain.Enums
 {
     public enum StorageType
     {

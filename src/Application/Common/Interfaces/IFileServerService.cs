@@ -1,7 +1,5 @@
-namespace Lingtren.Application.Common.Interfaces
+﻿namespace Lingtren.Application.Common.Interfaces
 {
-    using System;
-    using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
 
     public interface IFileServerService

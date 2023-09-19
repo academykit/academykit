@@ -1,7 +1,7 @@
-namespace Lingtren.Application.Common.Interfaces
+﻿namespace Lingtren.Application.Common.Interfaces
 {
-    using Lingtren.Domain.Entities;
     using Lingtren.Application.Common.Dtos;
+    using Lingtren.Domain.Entities;
     public interface ITagService : IGenericService<Tag, TagBaseSearchCriteria>
     {
         /// <summary>

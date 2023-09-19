@@ -1,4 +1,4 @@
-namespace Lingtren.Application.Common.Dtos
+﻿namespace Lingtren.Application.Common.Dtos
 {
     using System.ComponentModel.DataAnnotations;
 
@@ -6,6 +6,5 @@ namespace Lingtren.Application.Common.Dtos
     {
         [Required]
         public string GroupIdentity { get; set; }
-        public string Search { get; set; }
     }
 }

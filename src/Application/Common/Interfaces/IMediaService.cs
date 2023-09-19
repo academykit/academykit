@@ -1,6 +1,5 @@
-namespace Lingtren.Application.Common.Interfaces
+﻿namespace Lingtren.Application.Common.Interfaces
 {
-    using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Http;
@@ -49,6 +48,6 @@ namespace Lingtren.Application.Common.Interfaces
         /// </summary>
         /// <param name="key"> the file key </param>
         /// <returns> the pre-signed url </returns>
-        Task<string> GetFileAsnc(string key);
+        Task<string> GetFileAsync(string key);
     }
 }

@@ -13,7 +13,7 @@
             RuleFor(x => x.Name).NotEmpty().NotNull().WithMessage(context => stringLocalizer.GetString("QuestionPoolNameRequired")).MaximumLength(500)
                         .WithMessage(context => stringLocalizer.GetString("NameLength500"));
             RuleFor(x => x.Hints).MaximumLength(5000).WithMessage(context => stringLocalizer.GetString("QuestionHint5000Length"));
-            RuleFor(x => x.Description).MaximumLength(5000).WithMessage(context => stringLocalizer.GetString("DescriptionLenght500"));
+            RuleFor(x => x.Description).MaximumLength(5000).WithMessage(context => stringLocalizer.GetString("DescriptionLength500"));
             RuleFor(x => x.Type).NotNull().NotEmpty().WithMessage("Question type is required.").IsInEnum().WithMessage(context => stringLocalizer.GetString("InvalidQuestionType"));
             RuleFor(x => x.Answers).NotNull().WithMessage(context => stringLocalizer.GetString("OptionIsRequired"));
             RuleFor(x => x.Answers).Must(x => x.Count >= 2).WithMessage(context => stringLocalizer.GetString("OptionMoreThanOne"));

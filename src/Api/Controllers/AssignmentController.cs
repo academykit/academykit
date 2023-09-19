@@ -1,4 +1,8 @@
-﻿namespace Lingtren.Api.Controllers
+﻿// <copyright file="AssignmentController.cs" company="Vurilo Nepal Pvt. Ltd.">
+// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
+// </copyright>
+
+namespace Lingtren.Api.Controllers
 {
     using FluentValidation;
     using Lingtren.Api.Common;
@@ -15,25 +19,25 @@
 
     public class AssignmentController : BaseApiController
     {
-        private readonly IAssignmentService _assignmentService;
-        private readonly IValidator<AssignmentRequestModel> _validator;
-        private readonly IValidator<AssignmentReviewRequestModel> _reviewValidator;
-        private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
+        private readonly IAssignmentService assignmentService;
+        private readonly IValidator<AssignmentRequestModel> validator;
+        private readonly IValidator<AssignmentReviewRequestModel> reviewValidator;
+        private readonly IStringLocalizer<ExceptionLocalizer> localizer;
+
         public AssignmentController(
             IAssignmentService assignmentService,
             IValidator<AssignmentRequestModel> validator,
             IValidator<AssignmentReviewRequestModel> reviewValidator,
-            IStringLocalizer<ExceptionLocalizer> localizer
-            )
+            IStringLocalizer<ExceptionLocalizer> localizer)
         {
-            _assignmentService = assignmentService;
-            _validator = validator;
-            _reviewValidator = reviewValidator;
-            _localizer = localizer;
+            this.assignmentService = assignmentService;
+            this.validator = validator;
+            this.reviewValidator = reviewValidator;
+            this.localizer = localizer;
         }
 
         /// <summary>
-        /// get assignment api
+        /// get assignment api.
         /// </summary>
         /// <returns> the list of <see cref="AssignmentResponseModel" /> .</returns>
         [HttpGet]
@@ -41,11 +45,11 @@
         {
             CommonHelper.ValidateArgumentNotNullOrEmpty(searchCriteria.LessonIdentity, nameof(searchCriteria.LessonIdentity));
             searchCriteria.CurrentUserId = CurrentUser.Id;
-            return await _assignmentService.SearchAsync(searchCriteria).ConfigureAwait(false);
+            return await assignmentService.SearchAsync(searchCriteria).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// create assignment api
+        /// create assignment api.
         /// </summary>
         /// <param name="model"> the instance of <see cref="AssignmentRequestModel" />. </param>
         /// <returns> the instance of <see cref="AssignmentRequestModel" /> .</returns>
@@ -54,7 +58,7 @@
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
-            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
             var entity = new Assignment
             {
@@ -70,7 +74,7 @@
                 UpdatedOn = currentTimeStamp,
                 UpdatedBy = CurrentUser.Id,
                 AssignmentAttachments = new List<AssignmentAttachment>(),
-                AssignmentQuestionOptions = new List<AssignmentQuestionOption>()
+                AssignmentQuestionOptions = new List<AssignmentQuestionOption>(),
             };
             if (model.Type == QuestionTypeEnum.Subjective && model.FileUrls?.Count > 0)
             {
@@ -89,6 +93,7 @@
                     });
                 }
             }
+
             if (model.Type == QuestionTypeEnum.SingleChoice || model.Type == QuestionTypeEnum.MultipleChoice)
             {
                 foreach (var item in model.Answers.Select((answer, i) => new { i, answer }))
@@ -107,111 +112,112 @@
                     });
                 }
             }
-            var response = await _assignmentService.CreateAsync(entity).ConfigureAwait(false);
+
+            var response = await assignmentService.CreateAsync(entity).ConfigureAwait(false);
             return new AssignmentResponseModel(response, showHints: true, showCorrect: true);
         }
 
         /// <summary>
-        /// get assignment by id or slug
+        /// get assignment by id or slug.
         /// </summary>
-        /// <param name="identity"> the assignment id or slug</param>
+        /// <param name="identity"> the assignment id or slug.</param>
         /// <returns> the instance of <see cref="AssignmentResponseModel" /> .</returns>
         [HttpGet("{identity}")]
         public async Task<AssignmentResponseModel> Get(string identity)
         {
-            var model = await _assignmentService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
+            var model = await assignmentService.GetByIdOrSlugAsync(identity).ConfigureAwait(false);
             return new AssignmentResponseModel(model, showHints: true, showCorrect: true);
         }
 
         /// <summary>
-        /// update assignment api
+        /// update assignment api.
         /// </summary>
-        /// <param name="identity"> id or slug </param>
+        /// <param name="identity"> id or slug. </param>
         /// <param name="model"> the instance of <see cref="AssignmentRequestModel" />. </param>
         /// <returns> the instance of <see cref="AssignmentResponseModel" /> .</returns>
         [HttpPut("{identity}")]
         public async Task<AssignmentResponseModel> UpdateAsync(string identity, AssignmentRequestModel model)
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
-            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var savedEntity = await _assignmentService.UpdateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
+            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            var savedEntity = await assignmentService.UpdateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
             return new AssignmentResponseModel(savedEntity, showHints: true, showCorrect: true);
         }
 
         /// <summary>
-        /// delete assignment api
+        /// delete assignment api.
         /// </summary>
-        /// <param name="identity"> id or slug </param>
-        /// <returns> the task complete </returns>
+        /// <param name="identity"> id or slug. </param>
+        /// <returns> the task complete. </returns>
         [HttpDelete("{identity}")]
         public async Task<IActionResult> DeleteAsync(string identity)
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
-            await _assignmentService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("AssignmentRemoved") });
+            await assignmentService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("AssignmentRemoved") });
         }
 
         /// <summary>
-        /// assignment submission api
+        /// assignment submission api.
         /// </summary>
-        /// <param name="identity">lesson id or slug </param>
-        /// <returns> the task complete </returns>
+        /// <param name="identity">lesson id or slug. </param>
+        /// <returns> the task complete. </returns>
         [HttpPost("{lessonIdentity}/submissions")]
         public async Task<IActionResult> SubmissionAsync(string lessonIdentity, IList<AssignmentSubmissionRequestModel> model)
         {
-            await _assignmentService.AssignmentSubmissionAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("AssignmentSubmitted") });
+            await assignmentService.AssignmentSubmissionAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("AssignmentSubmitted") });
         }
 
         /// <summary>
-        /// Get assignment submitted student api
+        /// Get assignment submitted student api.
         /// </summary>
-        /// <param name="lessonIdentity">the lesson id or slug</param>
-        /// <param name="userId">the user id</param>
-        /// <returns></returns>
+        /// <param name="lessonIdentity">the lesson id or slug.</param>
+        /// <param name="userId">the user id.</param>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpGet("{lessonIdentity}/user/{userId}")]
         public async Task<AssignmentSubmissionStudentResponseModel> SubmissionAsync(string lessonIdentity, Guid userId) =>
-            await _assignmentService.GetStudentSubmittedAssignment(lessonIdentity, userId, CurrentUser.Id).ConfigureAwait(false);
+            await assignmentService.GetStudentSubmittedAssignment(lessonIdentity, userId, CurrentUser.Id).ConfigureAwait(false);
 
         /// <summary>
-        /// assignment review api
+        /// assignment review api.
         /// </summary>
-        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug.</param>
         /// <param name="model"></param>
-        /// <returns></returns>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpPost("{lessonIdentity}/review")]
         public async Task<IActionResult> ReviewAsync(string lessonIdentity, AssignmentReviewRequestModel model)
         {
-            await _reviewValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            await _assignmentService.AssignmentReviewAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("AssignmentReviewed") });
+            await reviewValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await assignmentService.AssignmentReviewAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("AssignmentReviewed") });
         }
 
         /// <summary>
-        /// assignment review api
+        /// assignment review api.
         /// </summary>
-        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug.</param>
         /// <param name="model"></param>
-        /// <returns></returns>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpPut("{lessonIdentity}/review/{id}")]
         public async Task<IActionResult> UpdateReviewAsync(string lessonIdentity, Guid id, AssignmentReviewRequestModel model)
         {
-            await _reviewValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            await _assignmentService.UpdateAssignmentReviewAsync(lessonIdentity, id, model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("AssignmentReviewUpdate") });
+            await reviewValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await assignmentService.UpdateAssignmentReviewAsync(lessonIdentity, id, model, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("AssignmentReviewUpdate") });
         }
 
         /// <summary>
-        /// assignment review api
+        /// assignment review api.
         /// </summary>
-        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug.</param>
         /// <param name="model"></param>
-        /// <returns>task completed</returns>
+        /// <returns>task completed.</returns>
         [HttpDelete("{lessonIdentity}/review/{id}")]
         public async Task<IActionResult> DeleteReviewAsync(string lessonIdentity, Guid id)
         {
-            await _assignmentService.DeleteReviewAsync(lessonIdentity, id, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = _localizer.GetString("AssignmentReviewDeleted") });
+            await assignmentService.DeleteReviewAsync(lessonIdentity, id, CurrentUser.Id).ConfigureAwait(false);
+            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("AssignmentReviewDeleted") });
         }
     }
 }

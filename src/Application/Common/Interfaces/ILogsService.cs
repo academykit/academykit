@@ -1,6 +1,5 @@
 ﻿using Lingtren.Application.Common.Dtos;
 using Lingtren.Application.Common.Models.ResponseModels;
-using Lingtren.Domain.Entities;
 
 namespace Lingtren.Application.Common.Interfaces
 {

@@ -1,4 +1,5 @@
-﻿using Lingtren.Application.Common.Dtos;
+﻿using System.Linq.Expressions;
+using Lingtren.Application.Common.Dtos;
 using Lingtren.Application.Common.Exceptions;
 using Lingtren.Application.Common.Interfaces;
 using Lingtren.Application.Common.Models.ResponseModels;
@@ -8,7 +9,6 @@ using Lingtren.Infrastructure.Localization;
 using LinqKit;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 
 namespace Lingtren.Infrastructure.Services
 {
@@ -17,7 +17,6 @@ namespace Lingtren.Infrastructure.Services
         public LogsService(IUnitOfWork unitOfWork, ILogger<LogsService> logger, IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
         }
-
 
         /// <summary>
         /// Handle to get server logs async
@@ -78,6 +77,7 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
+
                 return new ServerLogsResponseModel();
             });
         }

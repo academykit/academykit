@@ -1,10 +1,10 @@
-namespace Lingtren.Application.Common.Interfaces
+﻿namespace Lingtren.Application.Common.Interfaces
 {
+    using System.Threading.Tasks;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
-    using System.Threading.Tasks;
 
     public interface ILessonService : IGenericService<Lesson, LessonBaseSearchCriteria>
     {

@@ -1,4 +1,4 @@
-import FileStorageUI from '@components/Admin/filestorage';
+import FileStorageUI from '@components/Admin/fileStorage';
 import { Loader } from '@mantine/core';
 import { useGetFileStorageSetting } from '@utils/services/adminService';
 

@@ -1,4 +1,4 @@
-namespace Lingtren.Application.Common.Models.RequestModels
+﻿namespace Lingtren.Application.Common.Models.RequestModels
 {
     using Lingtren.Domain.Enums;
 

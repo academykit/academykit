@@ -1,9 +1,9 @@
 ﻿namespace Lingtren.Infrastructure.Persistence
 {
+    using System.Reflection;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Microsoft.EntityFrameworkCore;
-    using System.Reflection;
 
     public class ApplicationDbContext : DbContext
     {
@@ -55,164 +55,12 @@
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Logs> Logs { get; set; }
         public DbSet<PhysicalLessonReview> PhysicalLessonReviews { get; set; }
+        public DbSet<UserEducation> UserEducations { get; set; }
+        public DbSet<UserWorkExperience> UserWorkExperiences { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            var userId = new Guid("30fcd978-f256-4733-840f-759181bc5e63");
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            builder.Entity<User>().HasData(
-                new User
-                {
-                    Id = userId,
-                    FirstName = "ABC",
-                    MiddleName = null,
-                    LastName = "XYZ",
-                    Address = "ADDRESS",
-                    Email = "vuriloapp@gmail.com",
-                    MobileNumber = "1234567890",
-                    CreatedBy = userId,
-                    CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                    UpdatedBy = userId,
-                    UpdatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                    Status = UserStatus.Active,
-                    HashPassword = "+gURQgHBT1zJz5AljZhAMyaNRFQBVorq5HIlEmhf+ZQ=:BBLvXedGXzdz0ZlypoKQxQ==",  // Admin@123
-                    Role = UserRole.SuperAdmin,
-                }
-            );
-            builder.Entity<SMTPSetting>().HasData(
-                new SMTPSetting
-                {
-                    Id = new Guid("d3c343d8-adf8-45d4-afbe-e09c3285da24"),
-                    MailPort = 123,
-                    MailServer = "email-smtp.ap-south-1.amazonaws.com",
-                    Password = "password",
-                    ReplyTo = "support@vurilo.com",
-                    SenderEmail = "noreply@vurilo.com",
-                    SenderName = "Vurilo",
-                    UserName = "username",
-                    UseSSL = true,
-                    CreatedBy = userId,
-                    CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                    UpdatedBy = userId,
-                    UpdatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                }
-            );
-            builder.Entity<ZoomSetting>().HasData(
-                new ZoomSetting
-                {
-                    Id = new Guid("f41a902f-fabd-4749-ac28-91137f685cb8"),
-                    SdkKey = "sdk key value",
-                    SdkSecret = "sdk secret value",
-                    OAuthAccountId = "OAuth account id",
-                    OAuthClientId = "OAuth client id",
-                    OAuthClientSecret = "OAuth client secret",
-                    IsRecordingEnabled = false,
-                    CreatedBy = userId,
-                    CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                    UpdatedBy = userId,
-                    UpdatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                }
-            );
-            builder.Entity<GeneralSetting>().HasData(
-                new GeneralSetting
-                {
-                    Id = new Guid("2d7867fc-b7e7-461d-9257-d0990b5ac991"),
-                    CompanyName = "company name",
-                    CompanyAddress = "company address",
-                    CompanyContactNumber = "company contact number",
-                    EmailSignature = "company default email signature",
-                    LogoUrl = "image path",
-                    CreatedBy = userId,
-                    CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                    UpdatedBy = userId,
-                    UpdatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                }
-            );
-            builder.Entity<Level>().HasData(new Level
-            {
-                Id = new Guid("7e6ff101-cfa2-4aec-bd25-42780be476c3"),
-                Name = "Beginner",
-                Slug = "beginner",
-                IsActive = false,
-                CreatedBy = userId,
-                CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004)
-            },
-            new Level
-            { 
-                Id = new Guid("7df8d749-6172-482b-b5a1-016fbe478795"),
-                Name = "Intermediate",
-                Slug = "intermediate",
-                IsActive = false,
-                CreatedBy = userId,
-                CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004)
-            },
-            new Level{
-                  Id = new Guid("9be84cd8-1566-4af5-8442-61cb1796dc46"),
-                Name = "Advanced",
-                Slug = "advanced",
-                IsActive = false,
-                CreatedBy = userId,
-                CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004)
-            });
-            builder.Entity<Setting>().HasData(
-                new Setting
-                {
-                    Key = "Storage",
-                    Value = nameof(StorageType.AWS)
-                },
-                new Setting
-                {
-                    Key = "AWS_AccessKey",
-                },
-                new Setting
-                {
-                    Key = "AWS_SecretKey",
-                },
-                new Setting
-                {
-                    Key = "AWS_FileBucket",
-                },
-                new Setting
-                {
-                    Key = "AWS_VideoBucket",
-                },
-                new Setting
-                {
-                    Key = "AWS_CloudFront",
-                },
-                new Setting
-                {
-                    Key = "AWS_RegionEndpoint"
-                },
-                new Setting
-                {
-                    Key = "Server_Url",
-                },
-                new Setting
-                {
-                    Key = "Server_Bucket",
-                },
-                new Setting
-                {
-                    Key = "Server_AccessKey",
-                },
-                new Setting
-                {
-                    Key = "Server_SecretKey",
-                },
-                 new Setting
-                 {
-                     Key = "Server_PresignedExpiryTime",
-                 },
-                new Setting
-                {
-                    Key = "Server_EndPoint",
-                },
-                new Setting
-                {
-                    Key = "Server_PresignedUrl",
-                }
-            );
             base.OnModelCreating(builder);
         }
     }

@@ -18,10 +18,12 @@
         public static string RemoveAccents(this string text)
         {
             if (string.IsNullOrWhiteSpace(text))
+            {
                 return text;
+            }
 
             text = text.Normalize(NormalizationForm.FormD);
-            char[] chars = text
+            var chars = text
                 .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) !=
                    UnicodeCategory.NonSpacingMark).ToArray();
 
@@ -38,7 +40,7 @@
         public static string Slugify(this string phrase)
         {
             // Remove all accents and make the string lower case.  
-            string output = phrase.RemoveAccents().ToLower();
+            var output = phrase.RemoveAccents().ToLower();
 
             // Remove all special characters from the string.  
             output = Regex.Replace(output, @"[^\p{L}0-9\s-]", "");

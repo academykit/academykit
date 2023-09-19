@@ -262,7 +262,7 @@
     <value>Watch history updated successfully.</value>
   </data>
   <data name="ZoomLicense" xml:space="preserve">
-    <value>zoomlicense removed successfully.</value>
+    <value>Zoom license removed successfully.</value>
   </data>
   <data name="AssignmentSubmission" xml:space="preserve">
     <value>Assignment contains assignment submissions. So, it cannot be deleted.</value>
@@ -483,7 +483,7 @@
   <data name="UploadFileError" xml:space="preserve">
     <value>An error occurred while trying to upload file.</value>
   </data>
-  <data name="ZoomLisenceNotFound" xml:space="preserve">
+  <data name="ZoomLicenseNotFound" xml:space="preserve">
     <value>Zoom license not found.</value>
   </data>
   <data name="AssignRoleQuestionPoolError" xml:space="preserve">
@@ -747,13 +747,13 @@
   <data name="ErrorOccuredSubmitAssignment" xml:space="preserve">
     <value>An error occurred while trying to submit the assignment.</value>
   </data>
-  <data name="ErrorOccurrecdRemoveFileFromGroup" xml:space="preserve">
+  <data name="ErrorOccurredRemoveFileFromGroup" xml:space="preserve">
     <value>An error occurred while trying to remove the file from group.</value>
   </data>
   <data name="ErrorOccurredDeleteSignature" xml:space="preserve">
     <value>An error occurred while trying to delete signature in the training.</value>
   </data>
-  <data name="ErrorOccurredFetachTrainingUserList" xml:space="preserve">
+  <data name="ErrorOccurredFetchTrainingUserList" xml:space="preserve">
     <value>An error occurred while trying to fetch training list of the user.</value>
   </data>
   <data name="ErrorOccurredFetchLessonStatistics" xml:space="preserve">
@@ -774,7 +774,7 @@
   <data name="ErrorOccurredFetchUserDetails" xml:space="preserve">
     <value>An error occurred while attempting to fetch user detail information.</value>
   </data>
-  <data name="ErrorOccurredFtechGroupFiles" xml:space="preserve">
+  <data name="ErrorOccurredFetchGroupFiles" xml:space="preserve">
     <value>An error occurred while trying to fetch the group files.</value>
   </data>
   <data name="ErrorOccurredGettingAWsCredential" xml:space="preserve">
@@ -795,7 +795,7 @@
   <data name="ErrorOccurredUploadSignature" xml:space="preserve">
     <value>An error occurred while trying to upload signature in the training.</value>
   </data>
-  <data name="ErrorOccurredVerifyChnageEmailToken" xml:space="preserve">
+  <data name="ErrorOccurredVerifyChangeEmailToken" xml:space="preserve">
     <value>An error occurred while attempting to verify change email token.</value>
   </data>
   <data name="FeedbackCompletedStatus" xml:space="preserve">
@@ -830,7 +830,7 @@ recorded cannot be deleted.</value>
   <data name="OnlySuperAdminTrainerAllowedToRemoveMember" xml:space="preserve">
     <value>Only user with super-admin or admin or trainer role is allowed to remove member from the group.</value>
   </data>
-  <data name="OnlySuperAdminTranerAccessToAddMember" xml:space="preserve">
+  <data name="OnlySuperAdminTrainerAccessToAddMember" xml:space="preserve">
     <value>Only user with super-admin or admin or trainer role is allowed to add member in the group.</value>
   </data>
   <data name="QuestionSetSubmissionNotFound" xml:space="preserve">
@@ -887,7 +887,7 @@ recorded cannot be deleted.</value>
   <data name="CompletedCourseIssue" xml:space="preserve">
     <value>Completed course cannot be modified</value>
   </data>
-  <data name="TrainingWithDraftgStatusCanOnlyRemoved" xml:space="preserve">
+  <data name="TrainingWithDraftStatusCanOnlyRemoved" xml:space="preserve">
     <value>Traning with draft status can only be removed</value>
   </data>
   <data name="TraineeCannotBeTrainer" xml:space="preserve">
@@ -923,7 +923,7 @@ recorded cannot be deleted.</value>
   <data name="IncorrectLastName" xml:space="preserve">
     <value>Enter data in the mandatory field LastName of row number</value>
   </data>
-  <data name="IncorrectMoblieNumberFormat" xml:space="preserve">
+  <data name="IncorrectMobileNumberFormat" xml:space="preserve">
     <value>Correct  MobileNumber  of row number</value>
   </data>
   <data name="IncorrectRole" xml:space="preserve">
@@ -1016,7 +1016,7 @@ recorded cannot be deleted.</value>
   <data name="InvalidEmailFormat" xml:space="preserve">
     <value>Invalid email adderss :</value>
   </data>
-  <data name="TrainingPusbishedSuccessfully" xml:space="preserve">
+  <data name="TrainingPublishedSuccessfully" xml:space="preserve">
     <value>Training published successfully.</value>
   </data>
   <data name="NewGroupMember" xml:space="preserve">

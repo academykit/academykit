@@ -1,14 +1,14 @@
 ﻿namespace Lingtren.Infrastructure.Helpers
 {
+    using System.Data;
+    using System.Linq.Expressions;
+    using System.Reflection;
+    using System.Text.RegularExpressions;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Domain.Common;
     using Lingtren.Infrastructure.Common;
     using Newtonsoft.Json;
-    using System.Data;
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// This class is the helper class for this project.
@@ -190,7 +190,7 @@
             var type = typeof(T);
             var arg = Expression.Parameter(type, "x");
             Expression expr = arg;
-            foreach (string prop in props)
+            foreach (var prop in props)
             {
                 var pi = type.GetPublicProperties().FirstOrDefault(
                     p => p.Name.Equals(prop, StringComparison.OrdinalIgnoreCase));
@@ -198,9 +198,11 @@
                 {
                     throw new ServiceException($"'{colName}' is not a valid SortBy value.");
                 }
+
                 expr = Expression.Property(expr, pi);
                 type = pi.PropertyType;
             }
+
             var delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
             var lambda = Expression.Lambda(delegateType, expr, arg);
             var resultExp = Expression.Call(typeof(Queryable),
@@ -278,6 +280,7 @@
                 {
                     return stream.Length.ToString();
                 }
+
                 return JsonConvert.SerializeObject(obj, SerializerSettings);
             }
             catch
@@ -302,6 +305,7 @@
             {
                 title = $"{title} {counter}";
             }
+
             var slug = title.Slugify();
             var repo = unitOfWork.GetRepository<TEntity>();
             var exists = repo.Exists(checkIfExists(slug));
@@ -310,6 +314,7 @@
                 counter++;
                 return GetEntityTitleSlug(unitOfWork, checkIfExists, name, counter);
             }
+
             return slug;
         }
 
@@ -329,6 +334,7 @@
             {
                 title = $"{title} {counter}";
             }
+
             var slug = title.Slugify();
             var repo = unitOfWork.GetRepository<TEntity>();
             var exists = await repo.ExistsAsync(checkIfExists(slug)).ConfigureAwait(false);
@@ -337,6 +343,7 @@
                 counter++;
                 return await GetEntityTitleSlugAsync(unitOfWork, checkIfExists, name, counter).ConfigureAwait(false);
             }
+
             return slug;
         }
 
@@ -348,20 +355,20 @@
             DataTable dataTable = new(typeof(T).Name);
 
             //Get all the properties of that model  
-            PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             // Loop through all the properties              
             // Adding Column name to our data-table  
-            foreach (PropertyInfo prop in Props)
+            foreach (var prop in Props)
             {
                 //Setting column names as Property names    
                 dataTable.Columns.Add(prop.Name);
             }
             // Adding Row and its value to our dataTable  
-            foreach (T item in models)
+            foreach (var item in models)
             {
                 var values = new object[Props.Length];
-                for (int i = 0; i < Props.Length; i++)
+                for (var i = 0; i < Props.Length; i++)
                 {
                     //inserting property values to datatable rows    
                     values[i] = Props[i].GetValue(item, null);
@@ -369,6 +376,7 @@
                 // Finally add value to datatable    
                 dataTable.Rows.Add(values);
             }
+
             return dataTable;
         }
 
@@ -377,12 +385,12 @@
         /// </summary>
         /// <param name="email">email</param>
         /// <returns>bool</returns>
-        public static async Task<bool> ValidateEmailFormat(string email)
+        public static bool ValidateEmailFormat(string email)
         {
-            string emailPattern = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+            var emailPattern = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
                           @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                              @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
-            return Regex.IsMatch(email,emailPattern);
+            return Regex.IsMatch(email, emailPattern);
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace Lingtren.Application.Common.Interfaces
+﻿namespace Lingtren.Application.Common.Interfaces
 {
     using Hangfire.Server;
     using Lingtren.Application.Common.Dtos;

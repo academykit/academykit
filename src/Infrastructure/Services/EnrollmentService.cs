@@ -1,4 +1,5 @@
-﻿using Lingtren.Application.Common.Dtos;
+﻿using System.Text;
+using Lingtren.Application.Common.Dtos;
 using Lingtren.Application.Common.Exceptions;
 using Lingtren.Application.Common.Interfaces;
 using Lingtren.Application.Common.Models.ResponseModels;
@@ -8,14 +9,12 @@ using Lingtren.Infrastructure.Common;
 using Lingtren.Infrastructure.Helpers;
 using Lingtren.Infrastructure.Localization;
 using LinqKit;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using System.Text;
 
 namespace Lingtren.Infrastructure.Services
 {
-    public class EnrollmentService : BaseGenericService<User, EnrollmentBaseSearchCritera>, IEnrollmentService
+    public class EnrollmentService : BaseGenericService<User, EnrollmentBaseSearchCriteria>, IEnrollmentService
     {
         public EnrollmentService(IUnitOfWork unitOfWork, ILogger<EnrollmentService> logger, IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
         {
@@ -38,14 +37,16 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new EntityNotFoundException(_localizer.GetString("CourseNotFound"));
                 }
+
                 foreach (var email in emails)
                 {
-                    var isMatch = await CommonHelper.ValidateEmailFormat(email.Trim());
+                    var isMatch = CommonHelper.ValidateEmailFormat(email.Trim());
                     if (!isMatch)
                     {
                         throw new ForbiddenException($"{_localizer.GetString("InvalidEmailFormat")}" + " " + email);
                     }
                 }
+
                 var hasAUthority = await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId, course.Id.ToString(), TrainingTypeEnum.Course);
                 var userEmail = emails.Select(email => email.ToLower().Trim()).ToList();
                 var message = new StringBuilder();
@@ -54,13 +55,15 @@ namespace Lingtren.Infrastructure.Services
                 {
                     throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
                 }
+
                 var validUserIds = userList.Select(x => x.Id).ToList();
                 var validEmail = userList.Select(x => x.Email).ToList();
-                var invalidusers = emails.Except(validEmail).ToList();
-                if (invalidusers.Count != default)
+                var invalidUsers = emails.Except(validEmail).ToList();
+                if (invalidUsers.Count != default)
                 {
-                    message.AppendLine($"{_localizer.GetString("UserNotFoundWithEmail")}" + " :" + string.Join(",", invalidusers));
+                    message.AppendLine($"{_localizer.GetString("UserNotFoundWithEmail")}" + " :" + string.Join(",", invalidUsers));
                 }
+
                 var groupMemberDto = new List<GroupMember>();
                 var existingGroupUsers = new List<GroupMember>();
                 var courseMembers = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(predicate: p => validUserIds.Contains(p.UserId) && p.CourseId == course.Id).ConfigureAwait(false);
@@ -79,8 +82,10 @@ namespace Lingtren.Infrastructure.Services
                             deletedUserIds.Add(courseMember.UserId);
                             courseMember.IsDeleted = false;
                         }
+
                         courseEnrollmentDto.Add(courseMember);
                     }
+
                     _unitOfWork.GetRepository<CourseEnrollment>().Update(courseEnrollmentDto);
                     if (deletedUserIds.Count != default)
                     {
@@ -89,7 +94,7 @@ namespace Lingtren.Infrastructure.Services
 
                     var groupMembers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(predicate: p => p.GroupId == course.GroupId && p.IsActive == false
                                      && courseMembers.Select(x => x.UserId).Contains(p.UserId)).ConfigureAwait(false);
-                    if(groupMembers?.Count > 0)
+                    if (groupMembers?.Count > 0)
                     {
                         existingGroupUsers.AddRange(groupMembers);
                     }
@@ -127,8 +132,10 @@ namespace Lingtren.Infrastructure.Services
                                 });
                             }
                         }
+
                         await _unitOfWork.GetRepository<GroupMember>().InsertAsync(newGroupMember).ConfigureAwait(false);
                     }
+
                     foreach (var newUserId in newEnrollmentIds)
                     {
                         insertCourseEnrollment.Add(new CourseEnrollment
@@ -144,6 +151,7 @@ namespace Lingtren.Infrastructure.Services
                             EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Enrolled,
                         });
                     }
+
                     if (insertCourseEnrollment.Count != default)
                     {
                         await _unitOfWork.GetRepository<CourseEnrollment>().InsertAsync(insertCourseEnrollment);
@@ -152,6 +160,7 @@ namespace Lingtren.Infrastructure.Services
                             message.AppendLine($"{_localizer.GetString("EnrollmentFor")}" + " " + string.Join(",", userList.Where(x => insertCourseEnrollment.Select(y => y.UserId).Contains(x.Id)).Select(x => x.FullName)) + " "
                                  + $"{_localizer.GetString("HasBeenSuccessful")}");
                         }
+
                         if (insertCourseEnrollment.Count > 1)
                         {
                             message.AppendLine($"{_localizer.GetString("EnrollmentFor")}" + " " + insertCourseEnrollment.Count + " " + $"{_localizer.GetString("Users")}" + " "
@@ -171,6 +180,7 @@ namespace Lingtren.Infrastructure.Services
                     });
                     _unitOfWork.GetRepository<GroupMember>().Update(updateGroupUsers);
                 }
+
                 _unitOfWork.GetRepository<GroupMember>().Update(groupMemberDto);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return message.ToString();
@@ -180,37 +190,40 @@ namespace Lingtren.Infrastructure.Services
         /// <summary>
         /// get filtered user list for course
         /// </summary>
-        /// <param name="critera">enrolled user search critera</param>
+        /// <param name="criteria">enrolled user search criteria</param>
         /// <returns>Task completed</returns>
-        public async Task<SearchResult<UserResponseModel>> CourseUserSearchAsync(EnrollmentBaseSearchCritera critera)
+        public async Task<SearchResult<UserResponseModel>> CourseUserSearchAsync(EnrollmentBaseSearchCriteria criteria)
         {
             return await ExecuteWithResultAsync(async () =>
             {
-                var course = await ValidateAndGetCourse(critera.CurrentUserId, critera.CourseIdentity).ConfigureAwait(false);
+                var course = await ValidateAndGetCourse(criteria.CurrentUserId, criteria.CourseIdentity).ConfigureAwait(false);
                 var predicate = PredicateBuilder.New<User>(true);
                 predicate = predicate.And(p => p.Role == UserRole.Trainee || p.Role == UserRole.Trainer);
-                if (!string.IsNullOrEmpty(critera.CourseIdentity) && critera.EnrollmentStatus == EnrollmentMemberStatusEnum.Unenrolled)
+                if (!string.IsNullOrEmpty(criteria.CourseIdentity) && criteria.EnrollmentStatus == EnrollmentMemberStatusEnum.Unenrolled)
                 {
                     var enrolledUserIds = course.CourseEnrollments.Where(x => x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled).Select(x => x.UserId)
                         .Concat(course.CourseTeachers.Select(x => x.UserId)).ToList();
                     predicate = predicate.And(p => !enrolledUserIds.Contains(p.Id));
                 }
-                if (!string.IsNullOrEmpty(critera.CourseIdentity) && critera.EnrollmentStatus != EnrollmentMemberStatusEnum.Unenrolled)
+
+                if (!string.IsNullOrEmpty(criteria.CourseIdentity) && criteria.EnrollmentStatus != EnrollmentMemberStatusEnum.Unenrolled)
                 {
-                    var enrolledUserIds = course.CourseEnrollments.Where(x => x.EnrollmentMemberStatus == critera.EnrollmentStatus).Select(x => x.UserId)
+                    var enrolledUserIds = course.CourseEnrollments.Where(x => x.EnrollmentMemberStatus == criteria.EnrollmentStatus).Select(x => x.UserId)
                         .Concat(course.CourseTeachers.Select(x => x.UserId)).ToList();
                     predicate = predicate.And(p => enrolledUserIds.Contains(p.Id));
                 }
-                if (!string.IsNullOrEmpty(critera.Search))
+
+                if (!string.IsNullOrEmpty(criteria.Search))
                 {
-                    var search = critera.Search.ToLower().Trim();
+                    var search = criteria.Search.ToLower().Trim();
                     predicate = predicate.And(x =>
                         ((x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim() + " " + x.LastName.Trim()).Trim().Contains(search)
                      || x.Email.ToLower().Trim().Contains(search)
                      || x.MobileNumber.ToLower().Trim().Contains(search));
                 }
+
                 var user = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: predicate).ConfigureAwait(false);
-                var searchResult = user.ToIPagedList(critera.Page, critera.Size);
+                var searchResult = user.ToIPagedList(criteria.Page, criteria.Size);
                 var response = new SearchResult<UserResponseModel>
                 {
                     Items = new List<UserResponseModel>(),

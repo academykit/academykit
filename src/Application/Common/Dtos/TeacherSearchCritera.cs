@@ -8,7 +8,7 @@ namespace Lingtren.Application.Common.Dtos
         /// <summary>
         /// course id or slug of specific course
         /// </summary>
-        public string? Identity { get; set; }
+        public string Identity { get; set; }
 
         /// <summary>
         ///specify type of enum 

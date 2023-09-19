@@ -16,8 +16,8 @@
         public QuestionTypeEnum Type { get; set; }
         public UserModel User { get; set; }
         public Guid? AssignmentSubmissionId { get; set; }
-        public string? Answer { get; set; }
-        public UserModel? Student { get; set; }
+        public string Answer { get; set; }
+        public UserModel Student { get; set; }
         public bool IsTrainee { get; set; }
         public IList<AssignmentAttachmentResponseModel> AssignmentAttachments { get; set; }
         public IList<AssignmentSubmissionAttachmentResponseModel> AssignmentSubmissionAttachments { get; set; }

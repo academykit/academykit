@@ -1,5 +1,9 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -12,10 +16,6 @@
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using System;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// This abstract class is a base for all <see cref="IGenericService{T,S}"/> service implementations. It
@@ -69,7 +69,7 @@
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
                 // load entity again to return all fields populated, because child entities may contain just Ids
-                T entityRetrievedFromDb = await Get(entity.Id, includeProperties).ConfigureAwait(false);
+                var entityRetrievedFromDb = await Get(entity.Id, includeProperties).ConfigureAwait(false);
 
                 await CreatePostHookAsync(entityRetrievedFromDb).ConfigureAwait(false);
 
@@ -102,7 +102,7 @@
             {
                 CommonHelper.ValidateArgumentNotNull(entity, nameof(entity));
 
-                T existing = await Get(entity.Id, includeProperties).ConfigureAwait(false);
+                var existing = await Get(entity.Id, includeProperties).ConfigureAwait(false);
 
                 // get existing child entities from DB, otherwise new entities will be created in database
                 await ResolveChildEntitiesAsync(entity).ConfigureAwait(false);
@@ -146,7 +146,7 @@
         {
             return await ExecuteWithResult(async () =>
             {
-                T entity = await Get(id, includeProperties).ConfigureAwait(false);
+                var entity = await Get(id, includeProperties).ConfigureAwait(false);
                 await PopulateRetrievedEntity(entity).ConfigureAwait(false);
                 await CheckGetPermissionsAsync(entity, currentUserId).ConfigureAwait(false);
                 return entity;
@@ -177,7 +177,7 @@
             return await ExecuteWithResult(async () =>
             {
                 CommonHelper.ValidateArgumentNotNullOrEmpty(identity, nameof(identity));
-                T entity = await Get(PredicateForIdOrSlug(identity), includeProperties).ConfigureAwait(false);
+                var entity = await Get(PredicateForIdOrSlug(identity), includeProperties).ConfigureAwait(false);
                 await PopulateRetrievedEntity(entity).ConfigureAwait(false);
                 await CheckGetPermissionsAsync(entity, currentUserId).ConfigureAwait(false);
                 return entity;
@@ -207,7 +207,7 @@
         {
             return await ExecuteWithResult(async () =>
             {
-                T entity = await _unitOfWork.GetRepository<T>().GetFirstOrDefaultAsync(
+                var entity = await _unitOfWork.GetRepository<T>().GetFirstOrDefaultAsync(
                     include: includeProperties ? IncludeNavigationProperties : null).ConfigureAwait(false);
                 await PopulateRetrievedEntity(entity).ConfigureAwait(false);
                 await CheckGetPermissionsAsync(entity, currentUserId).ConfigureAwait(false);
@@ -238,7 +238,7 @@
         {
             await ExecuteAsync(async () =>
             {
-                T entity = await GetByIdOrSlugAsync(identity, currentUserId, false).ConfigureAwait(false);
+                var entity = await GetByIdOrSlugAsync(identity, currentUserId, false).ConfigureAwait(false);
                 await CheckDeletePermissionsAsync(entity, currentUserId).ConfigureAwait(false);
                 _unitOfWork.GetRepository<T>().Delete(entity);
                 _unitOfWork.SaveChanges();
@@ -288,6 +288,7 @@
                     {
                         SetDefaultSortOption(criteria);
                     }
+
                     query = criteria.SortType == SortType.Ascending
                         ? query.OrderBy(criteria.SortBy)
                         : query.OrderByDescending(criteria.SortBy);
@@ -490,7 +491,7 @@
         private async Task<T> Get(Guid id, bool full)
         {
             CommonHelper.ValidateArgumentGuid(id, nameof(id));
-            T entity = await _unitOfWork.GetRepository<T>().GetFirstOrDefaultAsync(predicate: e => e.Id == id,
+            var entity = await _unitOfWork.GetRepository<T>().GetFirstOrDefaultAsync(predicate: e => e.Id == id,
             include: full ? IncludeNavigationProperties : null).ConfigureAwait(false);
             CommonHelper.CheckFoundEntity(entity, id);
             await PopulateRetrievedEntity(entity).ConfigureAwait(false);
@@ -516,7 +517,7 @@
         /// </exception>
         protected virtual async Task<T> Get(Expression<Func<T, bool>> predicate, bool full)
         {
-            T entity = await _unitOfWork.GetRepository<T>().GetFirstOrDefaultAsync(predicate: predicate,
+            var entity = await _unitOfWork.GetRepository<T>().GetFirstOrDefaultAsync(predicate: predicate,
             include: full ? IncludeNavigationProperties : null).ConfigureAwait(false);
             CommonHelper.CheckFoundEntity(entity);
             return entity;

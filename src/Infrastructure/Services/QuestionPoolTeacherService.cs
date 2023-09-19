@@ -1,5 +1,7 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Linq.Expressions;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -13,8 +15,6 @@
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-    using System.Linq.Expressions;
 
     public class QuestionPoolTeacherService : BaseGenericService<QuestionPoolTeacher, QuestionPoolTeacherBaseSearchCriteria>, IQuestionPoolTeacherService
     {
@@ -91,6 +91,7 @@
             {
                 return true;
             }
+
             var currentUser = question?.QuestionPoolTeachers.FirstOrDefault(x => x.UserId == currentUserId && x.Role == PoolRole.Creator);
             return currentUser != null;
         }
@@ -136,12 +137,14 @@
                 _logger.LogWarning("QuestionPool with Id : {id} creator User Id : {userId} can't be questionPool teacher.", questionPool.Id, entity.UserId);
                 throw new ForbiddenException(_localizer.GetString("QuestionPoolAuthorCanNotAdded"));
             }
+
             if (questionPool.QuestionPoolTeachers.Any(p => p.UserId == entity.UserId))
             {
                 var poolRole = questionPool.QuestionPoolTeachers.FirstOrDefault(p => p.UserId == entity.UserId)?.Role;
                 _logger.LogWarning("User with Id {userId} is already question pool {role} of question pool with Id  : {id}.", entity.UserId, poolRole, questionPool.Id);
                 throw new ForbiddenException(_localizer.GetString("UserAlreadyFoundQuestionPool"));
             }
+
             var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == entity.UserId).ConfigureAwait(false);
             CommonHelper.CheckFoundEntity(user);
             await Task.FromResult(0);

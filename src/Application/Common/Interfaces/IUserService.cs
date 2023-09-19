@@ -35,7 +35,7 @@
         /// </summary>
         /// <param name="user">the instance of <see cref="User"/></param>
         /// <returns>the instance of <see cref="RefreshToken"/></returns>
-        Task<RefreshToken?> GetActiveRefreshToken(User user);
+        Task<RefreshToken> GetActiveRefreshToken(User user);
 
         /// <summary>
         /// Handle to get user detail by email
@@ -51,7 +51,7 @@
         /// <param name="salt"></param>
         /// <param name="needsOnlyHash"></param>
         /// <returns></returns>
-        string HashPassword(string password, byte[]? salt = null, bool needsOnlyHash = false);
+        string HashPassword(string password, byte[] salt = null, bool needsOnlyHash = false);
 
         /// <summary>
         /// Handle to verify password
@@ -130,10 +130,9 @@
         /// Handle to get trainer 
         /// </summary>
         /// <param name="currentUserId"> the current user id </param>
-        /// <param name="critera"> the instance of <see cref="TeacherSearchCriteria"></see></param>
+        /// <param name="criteria"> the instance of <see cref="TeacherSearchCriteria"></see></param>
         /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
         Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId, TeacherSearchCriteria criteria);
-
 
         /// <summary>
         /// Handle to import the user

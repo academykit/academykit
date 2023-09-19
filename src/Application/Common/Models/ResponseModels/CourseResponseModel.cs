@@ -3,8 +3,6 @@
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
-    using Microsoft.EntityFrameworkCore.ChangeTracking;
-    using System.Security.Cryptography;
 
     public class CourseResponseModel
     {

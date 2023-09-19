@@ -31,8 +31,8 @@ namespace Lingtren.Application.Common.Dtos
 
         public string Search
         {
-            get { return _search; }
-            set { _search = value?.Trim().ToLower(); }
+            get => _search;
+            set => _search = value?.Trim().ToLower();
         }
 
         /// <summary>

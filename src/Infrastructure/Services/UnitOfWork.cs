@@ -1,11 +1,11 @@
 ﻿namespace Lingtren.Infrastructure.Services
 {
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Persistence;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Lingtren.Application.Common.Interfaces;
+    using Lingtren.Infrastructure.Common;
+    using Lingtren.Infrastructure.Persistence;
 
     public class UnitOfWork : Disposable, IUnitOfWork
     {

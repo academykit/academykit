@@ -1,5 +1,11 @@
 ﻿namespace Lingtren.Infrastructure.Configurations
 {
+    using System;
+    using System.Linq;
+    using System.Net;
+    using System.Security;
+    using System.Text;
+    using System.Threading.Tasks;
     using FluentValidation;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Models.ResponseModels;
@@ -8,12 +14,6 @@
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
-    using System;
-    using System.Linq;
-    using System.Net;
-    using System.Security;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class ExceptionHandlingMiddleware
     {
@@ -34,7 +34,7 @@
         {
             try
             {
-                await this.next(context).ConfigureAwait(false);
+                await next(context).ConfigureAwait(false);
             }
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)

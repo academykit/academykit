@@ -1,4 +1,4 @@
-namespace Lingtren.Infrastructure.Services
+﻿namespace Lingtren.Infrastructure.Services
 {
     using System;
     using System.Linq.Expressions;
@@ -93,7 +93,8 @@ namespace Lingtren.Infrastructure.Services
                 // to do check tag exist on other services 
 
                 tag.IsActive = false;
-                tag.UpdatedBy = currentUserId; tag.UpdatedOn = DateTime.UtcNow;
+                tag.UpdatedBy = currentUserId;
+                tag.UpdatedOn = DateTime.UtcNow;
 
                 _unitOfWork.GetRepository<Tag>().Update(tag);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -162,6 +163,7 @@ namespace Lingtren.Infrastructure.Services
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search)
                  || x.User.FirstName.ToLower().Trim().Contains(search));
             }
+
             if (!string.IsNullOrWhiteSpace(criteria.Idenitiy))
             {
                 switch (criteria.TrainingType)
@@ -176,6 +178,7 @@ namespace Lingtren.Infrastructure.Services
                         break;
                 }
             }
+
             return predicate.And(x => x.IsActive);
         }
 

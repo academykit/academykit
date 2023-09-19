@@ -480,7 +480,7 @@
   <data name="UploadFileError" xml:space="preserve">
     <value>फाइल अपलोड गर्ने प्रयास गर्दा त्रुटि भयो।</value>
   </data>
-  <data name="ZoomLisenceNotFound" xml:space="preserve">
+  <data name="ZoomLicenseNotFound" xml:space="preserve">
     <value>जुम लाइसेन्स फेला परेन</value>
   </data>
   <data name="AssignRoleQuestionPoolError" xml:space="preserve">
@@ -741,13 +741,13 @@
   <data name="ErrorOccuredSubmitAssignment" xml:space="preserve">
     <value>असाइनमेन्ट पेश गर्ने प्रयास गर्दा एउटा त्रुटि भयो।</value>
   </data>
-  <data name="ErrorOccurrecdRemoveFileFromGroup" xml:space="preserve">
+  <data name="ErrorOccurredRemoveFileFromGroup" xml:space="preserve">
     <value>समूहबाट फाइल हटाउन प्रयास गर्दा एउटा त्रुटि भयो।</value>
   </data>
   <data name="ErrorOccurredDeleteSignature" xml:space="preserve">
     <value>तालिममा हस्ताक्षर मेटाउने प्रयास गर्दा त्रुटि भयो।</value>
   </data>
-  <data name="ErrorOccurredFetachTrainingUserList" xml:space="preserve">
+  <data name="ErrorOccurredFetchTrainingUserList" xml:space="preserve">
     <value>प्रयोगकर्ताको प्रशिक्षण सूची ल्याउने प्रयास गर्दा त्रुटि भयो।</value>
   </data>
   <data name="ErrorOccurredFetchLessonStatistics" xml:space="preserve">
@@ -768,7 +768,7 @@
   <data name="ErrorOccurredFetchUserDetails" xml:space="preserve">
     <value>प्रयोगकर्ता विवरण जानकारी ल्याउन प्रयास गर्दा त्रुटि भयो।</value>
   </data>
-  <data name="ErrorOccurredFtechGroupFiles" xml:space="preserve">
+  <data name="ErrorOccurredFetchGroupFiles" xml:space="preserve">
     <value>समूह फाइलहरू ल्याउन प्रयास गर्दा एउटा त्रुटि भयो।</value>
   </data>
   <data name="ErrorOccurredGettingAWsCredential" xml:space="preserve">
@@ -789,7 +789,7 @@
   <data name="ErrorOccurredUploadSignature" xml:space="preserve">
     <value>तालिममा हस्ताक्षर अपलोड गर्ने प्रयास गर्दा एउटा त्रुटि भयो।</value>
   </data>
-  <data name="ErrorOccurredVerifyChnageEmailToken" xml:space="preserve">
+  <data name="ErrorOccurredVerifyChangeEmailToken" xml:space="preserve">
     <value>इमेल टोकन परिवर्तन प्रमाणीकरण गर्ने प्रयास गर्दा त्रुटि भयो।</value>
   </data>
   <data name="FeedbackCompletedStatus" xml:space="preserve">
@@ -824,7 +824,7 @@
   <data name="OnlySuperAdminTrainerAllowedToRemoveMember" xml:space="preserve">
     <value>सुपर-एडमिन वा प्रशासक वा प्रशिक्षकको भूमिका भएको प्रयोगकर्तालाई मात्र समूहबाट सदस्य हटाउन अनुमति दिइन्छ।</value>
   </data>
-  <data name="OnlySuperAdminTranerAccessToAddMember" xml:space="preserve">
+  <data name="OnlySuperAdminTrainerAccessToAddMember" xml:space="preserve">
     <value>सुपर-एडमिन वा प्रशासक वा प्रशिक्षकको भूमिका भएको प्रयोगकर्तालाई मात्र समूहमा सदस्य थप्न अनुमति दिइन्छ।</value>
   </data>
   <data name="QuestionSetSubmissionNotFound" xml:space="preserve">
@@ -881,7 +881,7 @@
   <data name="CompletedCourseIssue" xml:space="preserve">
     <value>पूरा भएको पाठ्यक्रम परिमार्जन गर्न सकिँदैन</value>
   </data>
-  <data name="TrainingWithDraftgStatusCanOnlyRemoved" xml:space="preserve">
+  <data name="TrainingWithDraftStatusCanOnlyRemoved" xml:space="preserve">
     <value>मस्यौदा स्थितिको साथ प्रशिक्षण मात्र हटाउन सकिन्छ</value>
   </data>
   <data name="TraineeCannotBeTrainer" xml:space="preserve">
@@ -1013,7 +1013,7 @@
   <data name="InvalidEmailFormat" xml:space="preserve">
     <value>अवैध इमेल एडर र मोबाइल नम्बर:</value>
   </data>
-  <data name="TrainingPusbishedSuccessfully" xml:space="preserve">
+  <data name="TrainingPublishedSuccessfully" xml:space="preserve">
     <value>प्रशिक्षण सफलतापूर्वक प्रकाशित।</value>
   </data>
   <data name="NewGroupMember" xml:space="preserve">

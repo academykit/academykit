@@ -63,6 +63,7 @@
             {
                 options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
             }
+
             return options;
         }
     }
