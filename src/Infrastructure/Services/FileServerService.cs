@@ -62,7 +62,6 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, "An error occurred while attempting to upload file to the server.");
-                _logger.LogError(ex.Message, "An error occurred while attempting to upload file to the server.");
                 _logger.LogInformation(ex.InnerException.ToString());
                 _logger.LogInformation(ex.StackTrace.ToString());
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
