@@ -3,6 +3,7 @@ import AdminAuthRoute, { SuperAdminRoute } from '@routes/AdminRoute';
 import lazyWithRetry from '@utils/lazyImportWithReload';
 import RoutePath from '@utils/routeConstants';
 import { Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Navigate,
   Outlet,
@@ -11,16 +12,14 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router-dom';
-import Account from './account';
 import AdminNav from './Component/AdminNav';
 import AdminViewCertificate from './Component/training/adminViewCertificate';
 import CertificateList from './Component/training/certificateList';
 import MyTrainingInternal from './Component/training/myTrainingInternal';
-import { useTranslation } from 'react-i18next';
+import Account from './account';
 
 const AdminCourseList = lazyWithRetry(() => import('./course'));
 const Department = lazyWithRetry(() => import('./department'));
-const Hangfire = lazyWithRetry(() => import('./hangfire'));
 const FileStorage = lazyWithRetry(() => import('./fileStorage'));
 const GeneralSettings = lazyWithRetry(() => import('./generalSettings'));
 const Level = lazyWithRetry(() => import('./level'));
@@ -57,7 +56,6 @@ const AdminRoutesChild = () => {
           <Route path={'/smtp'} element={<SMTP />} />
           <Route path={'/level'} element={<Level />} />
           <Route path={'/department'} element={<Department />} />
-          <Route path={'/hangfire'} element={<Hangfire />} />
           <Route path={'/log'} element={<Log />} />
           <Route path={'/courses'} element={<AdminCourseList />} />
           <Route path={'/certificate'} element={<CertificateList />} />

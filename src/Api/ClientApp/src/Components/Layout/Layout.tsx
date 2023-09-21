@@ -2,30 +2,30 @@ import UserProfileMenu from '@components/UserProfileMenu';
 import useCustomLayout from '@context/LayoutProvider';
 import useAuth from '@hooks/useAuth';
 import {
-  createStyles,
+  AppShell,
+  Box,
   Burger,
   Container,
   Group,
   Header,
-  AppShell,
   MediaQuery,
+  NavLink,
   Navbar,
   ScrollArea,
-  Box,
-  NavLink,
   ThemeIcon,
+  createStyles,
   rem,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { IconInfoSquare } from '@tabler/icons';
+import { UserRole } from '@utils/enums';
 import { useGeneralSetting } from '@utils/services/adminService';
 import { IUser } from '@utils/services/types';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, Outlet } from 'react-router-dom';
 import { AppFooter } from './AppFooter';
 import { LeftMainLinks } from './LeftMainLink';
-import { IconInfoSquare } from '@tabler/icons';
-import { UserRole } from '@utils/enums';
-import { useTranslation } from 'react-i18next';
 
 const HEADER_HEIGHT = 60;
 const useStyles = createStyles((theme) => ({
@@ -158,7 +158,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
     icon: <IconInfoSquare size={16} />,
     color: 'blue',
     label: 'help',
-    href: 'https://docs.google.com/document/d/1S_wlCY7XH2oELa8ZvNPSGVik2117HuclOGC04iHpP-w/edit?usp=sharing ',
+    href: 'https://files.arkbotech.com/s/jx9G9o3NQtLQJSF',
     replace: true,
     role: UserRole.Trainee,
     target: '_blank',
