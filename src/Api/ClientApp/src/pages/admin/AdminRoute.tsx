@@ -53,19 +53,19 @@ const AdminRoutesChild = () => {
           />
         </Route>
         <Route element={<AdminAuthRoute />}>
-          <Route path={'/smtp'} element={<SMTP />} />
           <Route path={'/level'} element={<Level />} />
           <Route path={'/department'} element={<Department />} />
           <Route path={'/log'} element={<Log />} />
           <Route path={'/courses'} element={<AdminCourseList />} />
           <Route path={'/certificate'} element={<CertificateList />} />
           <Route path={'/zoomLicense'} element={<ZoomLicense />} />
-          <Route path={'/fileStorage'} element={<FileStorage />} />
           <Route path="*" element={<Navigate to={RoutePath[404]} replace />} />
         </Route>
         <Route element={<SuperAdminRoute />}>
           <Route path={'/zoom'} element={<ZoomSettings />} />
           <Route path={'/general'} element={<GeneralSettings />} />
+          <Route path={'/smtp'} element={<SMTP />} />
+          <Route path={'/fileStorage'} element={<FileStorage />} />
         </Route>
       </Routes>
     </Suspense>

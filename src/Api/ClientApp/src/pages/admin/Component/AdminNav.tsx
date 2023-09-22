@@ -52,12 +52,12 @@ const AdminNav = () => {
     {
       label: t('smtp'),
       to: RoutePath.settings.smtp(),
-      role: UserRole.Admin,
+      role: UserRole.SuperAdmin,
     },
     {
       label: t('file_storage'),
       to: RoutePath.settings.fileStorage(),
-      role: UserRole.Admin,
+      role: UserRole.SuperAdmin,
     },
     {
       label: t('levels'),
@@ -96,7 +96,7 @@ const AdminNav = () => {
       label: t('System Monitoring'),
       to: RoutePath.settings.hangfire(),
       separator: true,
-      role: UserRole.Admin,
+      role: UserRole.SuperAdmin,
     },
     {
       label: t('hangfire'),
@@ -104,7 +104,7 @@ const AdminNav = () => {
         RoutePath.settings.hangfire() +
         '?access_token=' +
         localStorage.getItem(TOKEN_STORAGE),
-      role: UserRole.Admin,
+      role: UserRole.SuperAdmin,
       target: '_blank',
     },
   ];
