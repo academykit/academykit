@@ -122,8 +122,10 @@ const LoginPage = () => {
         <Link to={'/'}>
           <Image
             height={50}
-            width={50}
+            width={140}
             src={companySettings?.data?.data?.imageUrl}
+            alt="logo"
+            fit="contain"
           ></Image>
         </Link>
       </Center>
