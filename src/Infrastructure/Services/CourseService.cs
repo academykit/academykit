@@ -754,7 +754,7 @@
                         Status = l.Status,
                         Duration = l.Duration,
                         IsMandatory = l.IsMandatory,
-                        QuestionSet = l.Type == LessonType.Exam ? new QuestionSetResponseModel(_unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefault(predicate: x => x.Id == l.QuestionSetId)) : null,
+                        QuestionSet = l.Type == LessonType.Exam ? new QuestionSetResponseModel(_unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefault(predicate: x => x.Id == l.QuestionSetId, include: x => x.Include(p => p.QuestionSetQuestions))) : null,
                         Meeting = l.Meeting != null ? new MeetingResponseModel(l.Meeting) : null,
                         IsCompleted = currentUserWatchHistories.Any(h => h.LessonId == l.Id && h.IsCompleted),
                         IsPassed = currentUserWatchHistories.Any(h => h.LessonId == l.Id && h.IsPassed),

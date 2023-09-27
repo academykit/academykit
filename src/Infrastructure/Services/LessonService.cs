@@ -156,7 +156,7 @@
             {
                 lesson.QuestionSet = new QuestionSet();
                 lesson.QuestionSet = await _unitOfWork.GetRepository<QuestionSet>().GetFirstOrDefaultAsync(
-                    predicate: p => p.Id == lesson.QuestionSetId).ConfigureAwait(false);
+                    predicate: p => p.Id == lesson.QuestionSetId, include: x => x.Include(p => p.QuestionSetQuestions)).ConfigureAwait(false);
                 var containResults = await _unitOfWork.GetRepository<QuestionSetResult>().ExistsAsync(
                     predicate: p => p.UserId == currentUserId && p.QuestionSetId == lesson.QuestionSetId
                     ).ConfigureAwait(false);

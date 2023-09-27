@@ -863,6 +863,11 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "ends": "Ends",
+  "total_marks": "Total Marks",
+  "pass_mark": "Pass Marks",
+  "negative_mark": "Negative Marking",
+  "passing_percent": "Passing percent",
   "edit_questions": "Edit Questions",
   "view_exam": "View exam",
   "view_assignment": "View assignment",

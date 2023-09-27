@@ -1,5 +1,6 @@
 import {
   Badge,
+  Box,
   createStyles,
   Flex,
   Group,
@@ -9,13 +10,13 @@ import {
   Title,
 } from '@mantine/core';
 import { useHover, useMediaQuery } from '@mantine/hooks';
+import { IconCheck } from '@tabler/icons';
 import { LessonType } from '@utils/enums';
 import formatDuration from '@utils/formatDuration';
 import RoutePath from '@utils/routeConstants';
 import { ILessons } from '@utils/services/courseService';
-import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { IconCheck } from '@tabler/icons';
+import { Link, useParams } from 'react-router-dom';
 
 const useStyle = createStyles((theme) => {
   return {
@@ -76,14 +77,14 @@ const Lesson = ({
           <div ref={ref}>
             <Group>
               <Flex w={'100%'} p={15} direction={'row'}>
-                <div>
-                  <Title size={matches ? 14 : 13} lineClamp={2} mb={3}>
+                <Box w={'100%'}>
+                  <Title size={matches ? 14 : 13} mb={3} truncate>
                     {index + 1}. {lesson.name}
                   </Title>
                   <Badge color="blue" variant="light" ml={10}>
                     {t(`${LessonType[lesson.type]}`)}
                   </Badge>
-                </div>
+                </Box>
                 {lesson.isCompleted && (
                   <IconCheck
                     style={{
@@ -99,7 +100,7 @@ const Lesson = ({
         </Paper>
       </Popover.Target>
       <Popover.Dropdown sx={{ pointerEvents: 'none' }}>
-        <Text fw={700} size="md">
+        <Text fw={700} size="md" truncate>
           {lesson.name}
         </Text>
 

@@ -866,6 +866,11 @@
       "AWS_VideoBucket": "भिडियो संग्रह"
     }
   },
+  "ends": "सकिन्छ",
+  "total_marks": "कुल अंक",
+  "pass_mark": "पास अंक",
+  "negative_mark": "नकेटिभ गर्ने अंक",
+  "passing_percent": "उत्तीर्ण प्रतिशत",
   "edit_questions": "प्रश्नहरू सम्पादन गर्नुहोस्",
   "view_exam": "परीक्षा हेर्नुहोस्",
   "view_assignment": "असाइनमेन्ट हेर्नुहोस्",

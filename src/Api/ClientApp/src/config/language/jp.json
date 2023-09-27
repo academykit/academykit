@@ -866,6 +866,11 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "ends": "終わる",
+  "total_marks": "合計得点",
+  "pass_mark": "合格点",
+  "negative_mark": "マイナスポイント",
+  "passing_percent": "合格率",
   "edit_questions": "質問を編集する",
   "view_exam": "試験を表示する",
   "view_assignment": "課題を表示する",

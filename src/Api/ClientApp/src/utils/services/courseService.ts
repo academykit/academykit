@@ -5,7 +5,9 @@ import {
   CourseUserStatus,
   LessonType,
 } from '@utils/enums';
+import { ResponseData } from './authService';
 import errorType from './axiosError';
+import { INotMember } from './groupService';
 import { api } from './service-api';
 import { httpClient } from './service-axios';
 import {
@@ -17,8 +19,6 @@ import {
   IPaginated,
   IUser,
 } from './types';
-import { ResponseData } from './authService';
-import { INotMember } from './groupService';
 
 interface ICourseTag {
   id: string;
@@ -499,6 +499,8 @@ export interface ICourseMcq {
   startTime?: string;
   thumbnailUrl: string;
   updatedOn?: string;
+  totalMarks: number;
+  totalQuestions: number;
 }
 
 export interface ICourseMeeting {

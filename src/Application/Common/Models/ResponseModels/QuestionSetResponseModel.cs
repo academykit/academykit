@@ -10,6 +10,9 @@
         public string ThumbnailUrl { get; set; }
         public string Description { get; set; }
         public decimal NegativeMarking { get; set; }
+        public int TotalQuestions { get; set; }
+        public decimal TotalMarks { get; set; }
+
         /// <summary>
         /// Weightage of single question
         /// </summary>
@@ -41,6 +44,8 @@
             EndTime = model.EndTime;
             UpdatedOn = model.UpdatedOn;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
+            TotalMarks = model.QuestionSetQuestions?.Count * model.QuestionMarking ?? 0;
+            TotalQuestions = model.QuestionSetQuestions?.Count ?? 0;
         }
     }
 }

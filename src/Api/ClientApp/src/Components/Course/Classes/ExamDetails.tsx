@@ -66,32 +66,52 @@ const ExamDetails = ({
       ss: `%d ${t('in_seconds')}`,
       m: moment().isBefore(exam?.startTime + 'Z')
         ? `%d ${t('in_minute')}`
+        : `%d ${t('minute_ago')}` && moment().isBefore(exam?.endTime + 'Z')
+        ? `%d ${t('in_minute')}`
         : `%d ${t('minute_ago')}`,
       mm: moment().isBefore(exam?.startTime + 'Z')
+        ? `%d ${t('in_minutes')}`
+        : `%d ${t('minutes_ago')}` && moment().isBefore(exam?.endTime + 'Z')
         ? `%d ${t('in_minutes')}`
         : `%d ${t('minutes_ago')}`,
       h: moment().isBefore(exam?.startTime + 'Z')
         ? `%d ${t('in_hour')}`
+        : `%d ${t('hour_ago')}` && moment().isBefore(exam?.endTime + 'Z')
+        ? `%d ${t('in_hour')}`
         : `%d ${t('hour_ago')}`,
       hh: moment().isBefore(exam?.startTime + 'Z')
+        ? `%d ${t('in_hours')}`
+        : `%d ${t('hours_ago')}` && moment().isBefore(exam?.endTime + 'Z')
         ? `%d ${t('in_hours')}`
         : `%d ${t('hours_ago')}`,
       d: moment().isBefore(exam?.startTime + 'Z')
         ? `%d ${t('in_day')}`
+        : `%d ${t('day_ago')}` && moment().isBefore(exam?.endTime + 'Z')
+        ? `%d ${t('in_day')}`
         : `%d ${t('day_ago')}`,
       dd: moment().isBefore(exam?.startTime + 'Z')
+        ? `%d ${t('in_days')}`
+        : `%d ${t('days_ago')}` && moment().isBefore(exam?.endTime + 'Z')
         ? `%d ${t('in_days')}`
         : `%d ${t('days_ago')}`,
       M: moment().isBefore(exam?.startTime + 'Z')
         ? `%d ${t('in_month')}`
+        : `%d ${t('month_ago')}` && moment().isBefore(exam?.endTime + 'Z')
+        ? `%d ${t('in_month')}`
         : `%d ${t('month_ago')}`,
       MM: moment().isBefore(exam?.startTime + 'Z')
+        ? `%d ${t('in_months')}`
+        : `%d ${t('months_ago')}` && moment().isBefore(exam?.endTime + 'Z')
         ? `%d ${t('in_months')}`
         : `%d ${t('months_ago')}`,
       y: moment().isBefore(exam?.startTime + 'Z')
         ? `%d ${t('in_year')}`
+        : `%d ${t('year_ago')}` && moment().isBefore(exam?.endTime + 'Z')
+        ? `%d ${t('in_year')}`
         : `%d ${t('year_ago')}`,
       yy: moment().isBefore(exam?.startTime + 'Z')
+        ? `%d ${t('in_years')}`
+        : `%d ${t('years_ago')}` && moment().isBefore(exam?.endTime + 'Z')
         ? `%d ${t('in_years')}`
         : `%d ${t('years_ago')}`,
     },
@@ -105,79 +125,116 @@ const ExamDetails = ({
         justifyContent: 'center',
         alignItems: 'center',
       }}
+      pos={'relative'}
     >
       {exam && (
-        <Group sx={{ justifyContent: 'space-around', width: '100%' }}>
-          <Box>
-            <Title lineClamp={3} align="justify">
-              {exam?.name}
-            </Title>
-            {exam?.startTime && (
+        <>
+          {moment.utc().isBefore(exam?.endTime + 'Z') && (
+            <Box pos={'absolute'} top={40} right={50}>
+              <Text>{`${t('ends')} ${moment(exam?.endTime + 'Z')
+                .utc()
+                .fromNow()}`}</Text>
+            </Box>
+          )}
+          <Group sx={{ justifyContent: 'space-around', width: '100%' }}>
+            <Box>
+              <Box w={350}>
+                <Title lineClamp={1} truncate align="justify" display={'block'}>
+                  {exam?.name}
+                </Title>
+              </Box>
+              {exam?.startTime && (
+                <Text>
+                  {t('start_date')}:{' '}
+                  {moment(exam?.startTime).format(DATE_FORMAT)}{' '}
+                </Text>
+              )}
+              {exam?.duration ? (
+                <Text>
+                  {t('duration')}: {exam?.duration / 60} minute(s){' '}
+                </Text>
+              ) : (
+                ''
+              )}
               <Text>
-                {t('start_date')}: {moment(exam?.startTime).format(DATE_FORMAT)}{' '}
+                {t('total_retake')}: {exam?.allowedRetake}
               </Text>
-            )}
-            {exam?.duration ? (
               <Text>
-                {t('duration')}: {exam?.duration / 60} minute(s){' '}
+                {t('remaining_retakes')}: {data?.remainingAttempt}
               </Text>
-            ) : (
-              ''
-            )}
-            <Text>
-              {t('total_retake')}: {exam?.allowedRetake}
-            </Text>
-            <Text>
-              {t('remaining_retakes')}: {data?.remainingAttempt}
-            </Text>
-            {exam?.negativeMarking ? (
-              <Text>
-                {t('negative_marking')} {exam?.negativeMarking}
-              </Text>
-            ) : (
-              ''
-            )}
-          </Box>
-          <div>
-            <Box sx={{ overflow: 'auto', maxHeight: '60vh' }} px={10}>
-              {data.hasResult && (
-                <MantineProvider
-                  theme={{
-                    colorScheme: 'dark',
-                  }}
-                >
-                  <UserResults lessonId={exam?.slug} studentId={userId} isTrainee={data.isTrainee}/>
-                </MantineProvider>
+              {exam?.totalQuestions > 0 && (
+                <Text>
+                  {t('total_question')} {exam?.totalQuestions}
+                </Text>
+              )}
+              {exam?.negativeMarking ? (
+                <Text>
+                  {t('negative_marking')}:{' '}
+                  <span style={{ color: 'red' }}>{exam?.negativeMarking}</span>
+                </Text>
+              ) : (
+                ''
+              )}
+              {exam?.totalMarks > 0 && (
+                <Text>
+                  {t('total_marks')}: {exam?.totalMarks}
+                </Text>
+              )}
+              {exam?.passingWeightage > 0 && (
+                <Text>
+                  {t('pass_mark')}:{' '}
+                  {exam?.totalMarks * (exam?.passingWeightage / 100)}
+                </Text>
               )}
             </Box>
-            {moment().isBetween(exam?.startTime + 'Z', exam?.endTime + 'Z') ? (
-              <>
-                {data.remainingAttempt > 0 ? (
-                  <Button
-                    mt={10}
-                    component={Link}
-                    to={RoutePath.exam?.details(exam?.slug).route}
-                    state={window.location.pathname}
+            <div>
+              <Box sx={{ overflow: 'auto', maxHeight: '60vh' }} px={10}>
+                {data.hasResult && (
+                  <MantineProvider
+                    theme={{
+                      colorScheme: 'dark',
+                    }}
                   >
-                    {data.isTrainee ? t('start_exam') : t('view_exam')}
-                  </Button>
-                ) : (
-                  <Text mt={15}>{t('attempt_exceeded')}</Text>
+                    <UserResults
+                      lessonId={exam?.slug}
+                      studentId={userId}
+                      isTrainee={data.isTrainee}
+                    />
+                  </MantineProvider>
                 )}
-              </>
-            ) : (
-              <Box mt={10}>
-                {moment.utc().isBefore(exam?.startTime + 'Z')
-                  ? `${t('starts')} ${moment(exam?.startTime + 'Z')
-                      .utc()
-                      .fromNow()}`
-                  : `${t('ended')} ${moment(exam?.endTime + 'Z')
-                      .utc()
-                      .fromNow()}`}
               </Box>
-            )}
-          </div>
-        </Group>
+              {moment().isBetween(
+                exam?.startTime + 'Z',
+                exam?.endTime + 'Z'
+              ) ? (
+                <>
+                  {data.remainingAttempt > 0 ? (
+                    <Button
+                      mt={10}
+                      component={Link}
+                      to={RoutePath.exam?.details(exam?.slug).route}
+                      state={window.location.pathname}
+                    >
+                      {data.isTrainee ? t('start_exam') : t('view_exam')}
+                    </Button>
+                  ) : (
+                    <Text mt={15}>{t('attempt_exceeded')}</Text>
+                  )}
+                </>
+              ) : (
+                <Box mt={10}>
+                  {moment.utc().isBefore(exam?.startTime + 'Z')
+                    ? `${t('starts')} ${moment(exam?.startTime + 'Z')
+                        .utc()
+                        .fromNow()}`
+                    : `${t('ended')} ${moment(exam?.endTime + 'Z')
+                        .utc()
+                        .fromNow()}`}
+                </Box>
+              )}
+            </div>
+          </Group>
+        </>
       )}
     </Group>
   );
