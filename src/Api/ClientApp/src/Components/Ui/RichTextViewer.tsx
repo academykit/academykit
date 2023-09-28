@@ -1,19 +1,20 @@
+import { Styles, Sx } from '@mantine/core';
 import {
-  RichTextEditor,
   Link,
+  RichTextEditor,
   RichTextEditorStylesNames,
 } from '@mantine/tiptap';
+import Mathematics from '@tiptap-pro/extension-mathematics';
+import Color from '@tiptap/extension-color';
+import Highlight from '@tiptap/extension-highlight';
+import Placeholder from '@tiptap/extension-placeholder';
+import SubScript from '@tiptap/extension-subscript';
+import Superscript from '@tiptap/extension-superscript';
+import TextAlign from '@tiptap/extension-text-align';
+import TextStyle from '@tiptap/extension-text-style';
+import Underline from '@tiptap/extension-underline';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import Placeholder from '@tiptap/extension-placeholder';
-import Highlight from '@tiptap/extension-highlight';
-import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
-import Superscript from '@tiptap/extension-superscript';
-import SubScript from '@tiptap/extension-subscript';
-import { Styles, Sx } from '@mantine/core';
-import Mathematics from '@tiptap-pro/extension-mathematics';
-
 import 'katex/dist/katex.min.css';
 
 type IProps = {
@@ -34,6 +35,8 @@ const TextViewer = ({ content, styles, sx }: IProps) => {
       StarterKit,
       Placeholder.configure({ placeholder: 'This is placeholder' }),
       Mathematics,
+      TextStyle,
+      Color,
     ],
     content,
   });

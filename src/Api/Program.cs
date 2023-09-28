@@ -37,11 +37,12 @@ builder.Services.AddRequestLocalization(x =>
     x.SupportedUICultures = new List<CultureInfo> { new("ne-NP"), new("en-US"), new("ja-JP") };
 });
 builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment);
-builder.Services.AddCors(options => options.AddDefaultPolicy(
-               builder => builder
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod()));
+builder.Services.AddCors(
+    options =>
+        options.AddDefaultPolicy(
+            builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
+        )
+);
 
 builder.Services.AddAuthorization();
 
@@ -63,29 +64,36 @@ else
 
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
-});
+app.UseForwardedHeaders(
+    new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+    }
+);
 
 // app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-app.UseCors(x => x
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .SetIsOriginAllowed(_ => true) // allow any origin
-              .AllowCredentials());
+app.UseCors(
+    x =>
+        x.AllowAnyMethod()
+            .AllowAnyHeader()
+            .SetIsOriginAllowed(_ => true) // allow any origin
+            .AllowCredentials()
+);
 
-app.UseHangfireDashboard("/hangfire", new DashboardOptions
-{
-    Authorization = new IDashboardAuthorizationFilter[]
+app.UseHangfireDashboard(
+    "/hangfire",
+    new DashboardOptions
     {
-        new HangfireAuthorizationFilter(app.Configuration)
-    },
-});
+        Authorization = new IDashboardAuthorizationFilter[]
+        {
+            new HangfireAuthorizationFilter(app.Configuration)
+        },
+    }
+);
 app.UseRequestLocalization();
 app.UseAuthentication();
 app.UseAuthorization();
