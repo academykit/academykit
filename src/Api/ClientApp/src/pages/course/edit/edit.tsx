@@ -27,9 +27,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import useCustomForm from '@hooks/useCustomForm';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import { DynamicAutoFocusTextField } from '@components/Ui/CustomTextFieldWithAutoFocus';
 import useAuth from '@hooks/useAuth';
 import { UserRole } from '@utils/enums';
+import TextViewer from '@components/Ui/RichTextViewer';
 
 interface FormValues {
   thumbnail: string;
@@ -55,6 +56,7 @@ const schema = () => {
 export const [FormProvider, useFormContext, useForm] =
   createFormContext<FormValues>();
 const EditCourse = () => {
+  const [viewMode, setViewMode] = useState(true);
   const cForm = useCustomForm();
   const { t } = useTranslation();
   const form = useForm({
@@ -190,9 +192,12 @@ const EditCourse = () => {
               formContext={useFormContext}
               currentThumbnail={courseSingleData?.thumbnailUrl}
               label={t('thumbnail') as string}
+              disabled={viewMode}
             />
             <Group mt={10} grow>
-              <CustomTextFieldWithAutoFocus
+              <DynamicAutoFocusTextField
+                isViewMode={viewMode}
+                readOnly={viewMode}
                 placeholder={t('title_course') as string}
                 label={t('title')}
                 withAsterisk
@@ -204,6 +209,13 @@ const EditCourse = () => {
             <Group grow mt={20}>
               {tags.isSuccess ? (
                 <MultiSelect
+                  styles={{
+                    input: {
+                      border: viewMode ? 'none' : '',
+                      cursor: viewMode ? 'text !important' : '',
+                    },
+                  }}
+                  readOnly={viewMode}
                   searchable
                   creatable
                   sx={{ maxWidth: '500px' }}
@@ -225,6 +237,13 @@ const EditCourse = () => {
               )}
               {label.isSuccess ? (
                 <Select
+                  styles={{
+                    input: {
+                      border: viewMode ? 'none' : '',
+                      cursor: viewMode ? 'text !important' : '',
+                    },
+                  }}
+                  readOnly={viewMode}
                   withAsterisk
                   size="lg"
                   label={t('level')}
@@ -241,6 +260,13 @@ const EditCourse = () => {
             <Group grow>
               {!groups.isLoading ? (
                 <Select
+                  styles={{
+                    input: {
+                      border: viewMode ? 'none' : '',
+                      cursor: viewMode ? 'text !important' : '',
+                    },
+                  }}
+                  readOnly={viewMode}
                   mt={20}
                   searchable
                   withAsterisk
@@ -277,6 +303,13 @@ const EditCourse = () => {
               )}
 
               <Select
+                readOnly={viewMode}
+                styles={{
+                  input: {
+                    border: viewMode ? 'none' : '',
+                    cursor: viewMode ? 'text !important' : '',
+                  },
+                }}
                 mt={48}
                 label={t('Language')}
                 size={'lg'}
@@ -286,20 +319,43 @@ const EditCourse = () => {
             </Group>
             <Box mt={20}>
               <Text>{t('description')}</Text>
-              <RichTextEditor
-                placeholder={t('course_description') as string}
-                formContext={useFormContext}
-              />
+              {!viewMode && (
+                <RichTextEditor
+                  placeholder={t('course_description') as string}
+                  formContext={useFormContext}
+                />
+              )}
+              {viewMode && (
+                <TextViewer content={courseSingleData?.description as string} />
+              )}
             </Box>
             <Box mt={20}>
-              <Button
-                disabled={!cForm?.isReady}
-                size="lg"
-                type="submit"
-                loading={updateCourse.isLoading}
-              >
-                {t('submit')}
-              </Button>
+              {viewMode && (
+                <Button size="lg" onClick={() => setViewMode(false)}>
+                  {t('edit')}
+                </Button>
+              )}
+
+              {!viewMode && (
+                <>
+                  <Button
+                    disabled={!cForm?.isReady}
+                    size="lg"
+                    type="submit"
+                    loading={updateCourse.isLoading}
+                  >
+                    {t('submit')}
+                  </Button>
+                  <Button
+                    ml={15}
+                    size="lg"
+                    onClick={() => setViewMode(true)}
+                    variant="outline"
+                  >
+                    {t('cancel')}
+                  </Button>
+                </>
+              )}
             </Box>
           </Box>
         </form>

@@ -30,6 +30,7 @@ type IProps = {
   FormField?: string;
   currentThumbnail?: string;
   width?: string;
+  disabled?: boolean;
 };
 
 const ThumbnailEditor = ({
@@ -38,6 +39,7 @@ const ThumbnailEditor = ({
   FormField = 'thumbnail',
   currentThumbnail,
   width,
+  disabled = false,
 }: IProps) => {
   const cForm = useCustomForm();
 
@@ -91,6 +93,7 @@ const ThumbnailEditor = ({
       }}
     >
       <FilePond
+        disabled={disabled}
         instantUpload={true}
         acceptedFileTypes={[
           'image/png',
