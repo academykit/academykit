@@ -1,24 +1,25 @@
+import withSearchPagination, {
+  IWithSearchPagination,
+} from '@hoc/useSearchPagination';
 import {
+  Box,
   Button,
   Center,
   Group,
+  Loader,
   Paper,
   Table,
-  Box,
-  Loader,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { LessonType } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import { exportFeedback } from '@utils/services/feedbackService';
+import { downloadCSVFile } from '@utils/services/fileService';
 import { useGetLessonStatisticsDetails } from '@utils/services/manageCourseService';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import CourseLessonDetails from './Components/CourseLessonDetails';
-import { useTranslation } from 'react-i18next';
-import withSearchPagination, {
-  IWithSearchPagination,
-} from '@hoc/useSearchPagination';
 
 const LessonDetails = ({
   searchComponent,
@@ -66,11 +67,23 @@ const LessonDetails = ({
     setLoading(false);
   };
 
+  const exportUserCSV = `/api/course/${id}/lessonStatistics/${lessonId}/export`;
+
   return (
     <>
       {lessonDetails.data?.items[0]?.lessonType === LessonType.Feedback && (
         <Group position="right" my="md">
           <Button onClick={handleExport} loading={loading}>
+            {t('export')}
+          </Button>
+        </Group>
+      )}
+      {lessonDetails.data?.items[0]?.lessonType === LessonType.Exam && (
+        <Group position="right" my="md">
+          <Button
+            variant="outline"
+            onClick={() => downloadCSVFile(exportUserCSV, 'lessonStats')}
+          >
             {t('export')}
           </Button>
         </Group>

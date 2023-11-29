@@ -1,5 +1,9 @@
 ﻿namespace Lingtren.Api.Controllers
 {
+    using System.Globalization;
+
+    using CsvHelper;
+
     using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
@@ -24,7 +28,8 @@
             ICourseService courseService,
             IValidator<CourseRequestModel> validator,
             IValidator<CourseStatusRequestModel> courseStatusValidator,
-            IStringLocalizer<ExceptionLocalizer> localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
         {
             this.courseService = courseService;
             this.validator = validator;
@@ -37,7 +42,9 @@
         /// </summary>
         /// <returns> the list of <see cref="CourseResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<SearchResult<CourseResponseModel>> SearchAsync([FromQuery] CourseBaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<CourseResponseModel>> SearchAsync(
+            [FromQuery] CourseBaseSearchCriteria searchCriteria
+        )
         {
             if (searchCriteria.UserId != Guid.Empty)
             {
@@ -48,7 +55,9 @@
                 searchCriteria.CurrentUserId = CurrentUser.Id;
             }
 
-            var searchResult = await courseService.SearchAsync(searchCriteria).ConfigureAwait(false);
+            var searchResult = await courseService
+                .SearchAsync(searchCriteria)
+                .ConfigureAwait(false);
 
             var response = new SearchResult<CourseResponseModel>
             {
@@ -59,8 +68,20 @@
                 TotalPage = searchResult.TotalPage,
             };
 
-            searchResult.Items.ForEach(p =>
-                 response.Items.Add(new CourseResponseModel(p, searchCriteria.EnrollmentStatus == null ? courseService.GetUserCourseEnrollmentStatus(p, searchCriteria.CurrentUserId) : searchCriteria.EnrollmentStatus.FirstOrDefault())));
+            searchResult.Items.ForEach(
+                p =>
+                    response.Items.Add(
+                        new CourseResponseModel(
+                            p,
+                            searchCriteria.EnrollmentStatus == null
+                                ? courseService.GetUserCourseEnrollmentStatus(
+                                    p,
+                                    searchCriteria.CurrentUserId
+                                )
+                                : searchCriteria.EnrollmentStatus.FirstOrDefault()
+                        )
+                    )
+            );
             return response;
         }
 
@@ -73,7 +94,9 @@
         public async Task<CourseResponseModel> CreateAsync(CourseRequestModel model)
         {
             await courseService.ISSuperAdminAdminOrTrainerAsync(CurrentUser.Id);
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
             var entity = new Course
             {
@@ -95,28 +118,32 @@
             };
             foreach (var tagId in model.TagIds)
             {
-                entity.CourseTags.Add(new CourseTag
+                entity.CourseTags.Add(
+                    new CourseTag
+                    {
+                        Id = Guid.NewGuid(),
+                        TagId = tagId,
+                        CourseId = entity.Id,
+                        CreatedOn = currentTimeStamp,
+                        CreatedBy = CurrentUser.Id,
+                        UpdatedOn = currentTimeStamp,
+                        UpdatedBy = CurrentUser.Id,
+                    }
+                );
+            }
+
+            entity.CourseTeachers.Add(
+                new CourseTeacher
                 {
                     Id = Guid.NewGuid(),
-                    TagId = tagId,
                     CourseId = entity.Id,
+                    UserId = CurrentUser.Id,
                     CreatedOn = currentTimeStamp,
                     CreatedBy = CurrentUser.Id,
                     UpdatedOn = currentTimeStamp,
                     UpdatedBy = CurrentUser.Id,
-                });
-            }
-
-            entity.CourseTeachers.Add(new CourseTeacher
-            {
-                Id = Guid.NewGuid(),
-                CourseId = entity.Id,
-                UserId = CurrentUser.Id,
-                CreatedOn = currentTimeStamp,
-                CreatedBy = CurrentUser.Id,
-                UpdatedOn = currentTimeStamp,
-                UpdatedBy = CurrentUser.Id,
-            });
+                }
+            );
 
             var response = await courseService.CreateAsync(entity).ConfigureAwait(false);
             return new CourseResponseModel(response, null);
@@ -130,7 +157,9 @@
         [HttpGet("{identity}")]
         public async Task<CourseResponseModel> Get(string identity)
         {
-            return await courseService.GetDetailAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            return await courseService
+                .GetDetailAsync(identity, CurrentUser.Id)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -140,11 +169,21 @@
         /// <param name="model"> the instance of <see cref="CourseRequestModel" />. </param>
         /// <returns> the instance of <see cref="CourseResponseModel" /> .</returns>
         [HttpPut("{identity}")]
-        public async Task<CourseResponseModel> UpdateAsync(string identity, CourseRequestModel model)
+        public async Task<CourseResponseModel> UpdateAsync(
+            string identity,
+            CourseRequestModel model
+        )
         {
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var savedEntity = await courseService.UpdateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
-            var userStatus = courseService.GetUserCourseEnrollmentStatus(savedEntity, CurrentUser.Id);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var savedEntity = await courseService
+                .UpdateAsync(identity, model, CurrentUser.Id)
+                .ConfigureAwait(false);
+            var userStatus = courseService.GetUserCourseEnrollmentStatus(
+                savedEntity,
+                CurrentUser.Id
+            );
             return new CourseResponseModel(savedEntity, userStatus);
         }
 
@@ -157,7 +196,13 @@
         public async Task<IActionResult> DeleteAsync(string identity)
         {
             await courseService.DeleteCourseAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("TrainingRemoved") });
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("TrainingRemoved")
+                }
+            );
         }
 
         /// <summary>
@@ -168,8 +213,16 @@
         [HttpPatch("{identity}/updateCourse")]
         public async Task<IActionResult> UpdateCourse(string identity)
         {
-            await courseService.UpdateCourseStatusAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("TrainingUpdated") });
+            await courseService
+                .UpdateCourseStatusAsync(identity, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("TrainingUpdated")
+                }
+            );
         }
 
         /// <summary>
@@ -180,8 +233,12 @@
         [HttpPatch("status")]
         public async Task<IActionResult> ChangeStatus(CourseStatusRequestModel model)
         {
-            await courseStatusValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var result = await courseService.ChangeStatusAsync(model, CurrentUser.Id).ConfigureAwait(false);
+            await courseStatusValidator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var result = await courseService
+                .ChangeStatusAsync(model, CurrentUser.Id)
+                .ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = result });
         }
 
@@ -194,7 +251,13 @@
         public async Task<IActionResult> Enroll(string identity)
         {
             await courseService.EnrollmentAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("UserEnrolled") });
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("UserEnrolled")
+                }
+            );
         }
 
         /// <summary>
@@ -203,7 +266,13 @@
         /// <param name="identity"> the course id or slug.</param>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpGet("{identity}/lessonStatistics")]
-        public async Task<SearchResult<LessonStatisticsResponseModel>> LessonStatistics(string identity, [FromQuery] BaseSearchCriteria criteria) => await courseService.LessonStatistics(identity, CurrentUser.Id, criteria).ConfigureAwait(false);
+        public async Task<SearchResult<LessonStatisticsResponseModel>> LessonStatistics(
+            string identity,
+            [FromQuery] BaseSearchCriteria criteria
+        ) =>
+            await courseService
+                .LessonStatistics(identity, CurrentUser.Id, criteria)
+                .ConfigureAwait(false);
 
         /// <summary>
         /// get course statistics api.
@@ -211,7 +280,10 @@
         /// <param name="identity"> the course id or slug. </param>
         /// <returns> the instance of <see cref="CourseStatisticsResponseModel" /> >.</returns>
         [HttpGet("{identity}/statistics")]
-        public async Task<CourseStatisticsResponseModel> Statistics(string identity) => await courseService.GetCourseStatisticsAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+        public async Task<CourseStatisticsResponseModel> Statistics(string identity) =>
+            await courseService
+                .GetCourseStatisticsAsync(identity, CurrentUser.Id)
+                .ConfigureAwait(false);
 
         /// <summary>
         /// Course Lesson Student's report api.
@@ -219,10 +291,16 @@
         /// <param name="identity"> the course id or slug.</param>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpGet("{identity}/lessonStatistics/{lessonIdentity}")]
-        public async Task<SearchResult<LessonStudentResponseModel>> LessonDetailStatistics(string identity, string lessonIdentity, [FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<LessonStudentResponseModel>> LessonDetailStatistics(
+            string identity,
+            string lessonIdentity,
+            [FromQuery] BaseSearchCriteria searchCriteria
+        )
         {
             searchCriteria.CurrentUserId = CurrentUser.Id;
-            return await courseService.LessonStudentsReport(identity, lessonIdentity, searchCriteria).ConfigureAwait(false);
+            return await courseService
+                .LessonStudentsReport(identity, lessonIdentity, searchCriteria)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -231,9 +309,14 @@
         /// <param name="identity"> the course id or slug.</param>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpGet("{identity}/studentStatistics")]
-        public async Task<SearchResult<StudentCourseStatisticsResponseModel>> StudentStatistics(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<StudentCourseStatisticsResponseModel>> StudentStatistics(
+            string identity,
+            [FromQuery] BaseSearchCriteria searchCriteria
+        )
         {
-            return await courseService.StudentStatistics(identity, CurrentUser.Id, searchCriteria).ConfigureAwait(false);
+            return await courseService
+                .StudentStatistics(identity, CurrentUser.Id, searchCriteria)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -242,9 +325,14 @@
         /// <param name="identity"> the course id or slug.</param>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpGet("{identity}/studentStatistics/{userId}")]
-        public async Task<IList<LessonStudentResponseModel>> StudentStatistics(string identity, Guid userId)
+        public async Task<IList<LessonStudentResponseModel>> StudentStatistics(
+            string identity,
+            Guid userId
+        )
         {
-            return await courseService.StudentLessonsDetail(identity, userId, CurrentUser.Id).ConfigureAwait(false);
+            return await courseService
+                .StudentLessonsDetail(identity, userId, CurrentUser.Id)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -254,10 +342,35 @@
         /// <param name="searchCriteria">the instance of <see cref="BaseSearchCriteria"/>.</param>
         /// <returns>the search result of <see cref="CourseResponseModel"/>.</returns>
         [HttpGet("user/{userId}")]
-        public async Task<SearchResult<CourseResponseModel>> GetUserCourses(Guid userId, [FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<CourseResponseModel>> GetUserCourses(
+            Guid userId,
+            [FromQuery] BaseSearchCriteria searchCriteria
+        )
         {
             searchCriteria.CurrentUserId = CurrentUser.Id;
             return await courseService.GetUserCourses(userId, searchCriteria).ConfigureAwait(false);
+        }
+
+        [HttpGet("{identity}/lessonStatistics/{lessonIdentity}/export")]
+        public async Task<IActionResult> Export(string lessonIdentity)
+        {
+            var searchResult = await courseService
+                .GetResultsExportAsync(lessonIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
+
+            var response = new List<ExamResultExportModel>();
+
+            searchResult.ForEach(p => response.Add(new ExamResultExportModel(p)));
+
+            using var memoryStream = new MemoryStream();
+            using var steamWriter = new StreamWriter(memoryStream);
+            using (var csv = new CsvWriter(steamWriter, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(response);
+                csv.Flush();
+            }
+
+            return File(memoryStream.ToArray(), "text/csv", "Results.csv");
         }
     }
 }

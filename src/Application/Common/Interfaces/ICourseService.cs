@@ -67,7 +67,10 @@
         /// <param name="identity">the group id or slug</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the paginated search result</returns>
-        Task<SearchResult<Course>> GroupCourseSearchAsync(string identity, BaseSearchCriteria criteria);
+        Task<SearchResult<Course>> GroupCourseSearchAsync(
+            string identity,
+            BaseSearchCriteria criteria
+        );
 
         /// <summary>
         /// Handle to update course status
@@ -88,15 +91,22 @@
         /// <param name="currentUserId">the current user id or slug</param>
         /// <param name="criteria"> the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the list of <see cref="LessonStatisticsResponseModel"/></returns>
-        Task<SearchResult<LessonStatisticsResponseModel>> LessonStatistics(string identity, Guid currentUserId, BaseSearchCriteria criteria);
+        Task<SearchResult<LessonStatisticsResponseModel>> LessonStatistics(
+            string identity,
+            Guid currentUserId,
+            BaseSearchCriteria criteria
+        );
 
         /// <summary>
-        /// Handle to get course statistics 
+        /// Handle to get course statistics
         /// </summary>
         /// <param name="identity"> the course id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the instance of <see cref="CourseStatisticsResponseModel" /> . </returns>
-        Task<CourseStatisticsResponseModel> GetCourseStatisticsAsync(string identity, Guid currentUserId);
+        Task<CourseStatisticsResponseModel> GetCourseStatisticsAsync(
+            string identity,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to get lesson students report
@@ -105,7 +115,11 @@
         /// <param name="lessonIdentity">the lesson id or slug</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the paginated data</returns>
-        Task<SearchResult<LessonStudentResponseModel>> LessonStudentsReport(string identity, string lessonIdentity, BaseSearchCriteria criteria);
+        Task<SearchResult<LessonStudentResponseModel>> LessonStudentsReport(
+            string identity,
+            string lessonIdentity,
+            BaseSearchCriteria criteria
+        );
 
         /// <summary>
         /// Handle to fetch student course statistics report
@@ -113,7 +127,11 @@
         /// <param name="identity">the course id or slug</param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the search result</returns>
-        Task<SearchResult<StudentCourseStatisticsResponseModel>> StudentStatistics(string identity, Guid currentUserId, BaseSearchCriteria criteria);
+        Task<SearchResult<StudentCourseStatisticsResponseModel>> StudentStatistics(
+            string identity,
+            Guid currentUserId,
+            BaseSearchCriteria criteria
+        );
 
         /// <summary>
         /// Handle to get student lessons detail
@@ -122,7 +140,11 @@
         /// <param name="userId">the student id</param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns>the list of <see cref="LessonStudentResponseModel"/></returns>
-        Task<IList<LessonStudentResponseModel>> StudentLessonsDetail(string identity, Guid userId, Guid currentUserId);
+        Task<IList<LessonStudentResponseModel>> StudentLessonsDetail(
+            string identity,
+            Guid userId,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// handel to check role of current user
@@ -141,7 +163,10 @@
         /// <param name="currentUserId">the current logged in user id</param>
         /// <param name="currentUserRole">the current logged in user role</param>
         /// <returns>the instance of <see cref="DashboardResponseModel"/></returns>
-        Task<DashboardResponseModel> GetDashboardStats(Guid currentUserId, UserRole currentUserRole);
+        Task<DashboardResponseModel> GetDashboardStats(
+            Guid currentUserId,
+            UserRole currentUserRole
+        );
 
         /// <summary>
         /// Handle to get dashboard courses
@@ -150,7 +175,11 @@
         /// <param name="currentUserRole">the current logged in user role</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the search result of <see cref="DashboardResponseModel"/></returns>
-        Task<SearchResult<DashboardCourseResponseModel>> GetDashboardCourses(Guid currentUserId, UserRole currentUserRole, BaseSearchCriteria criteria);
+        Task<SearchResult<DashboardCourseResponseModel>> GetDashboardCourses(
+            Guid currentUserId,
+            UserRole currentUserRole,
+            BaseSearchCriteria criteria
+        );
 
         /// <summary>
         /// Handles to get upcoming lesson
@@ -170,9 +199,13 @@
         /// <param name="model">the instance of <see cref="CertificateIssueRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the list of <see cref="CourseCertificateResponseModel"/></returns>
-        Task<IList<CourseCertificateIssuedResponseModel>> IssueCertificateAsync(string identity, CertificateIssueRequestModel model, Guid currentUserId);
+        Task<IList<CourseCertificateIssuedResponseModel>> IssueCertificateAsync(
+            string identity,
+            CertificateIssueRequestModel model,
+            Guid currentUserId
+        );
 
-        #endregion Certificate 
+        #endregion Certificate
 
         #region Signature
 
@@ -182,7 +215,10 @@
         /// <param name="identity"> the course id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the list of <see cref="SignatureResponseModel" /> . </returns>
-        Task<IList<SignatureResponseModel>> GetAllSignatureAsync(string identity, Guid currentUserId);
+        Task<IList<SignatureResponseModel>> GetAllSignatureAsync(
+            string identity,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to upload signature
@@ -191,7 +227,11 @@
         /// <param name="model">the instance of <see cref="SignatureRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the instance of <see cref="SignatureResponseModel"/></returns>
-        Task<SignatureResponseModel> InsertSignatureAsync(string identity, SignatureRequestModel model, Guid currentUserId);
+        Task<SignatureResponseModel> InsertSignatureAsync(
+            string identity,
+            SignatureRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to update signature
@@ -201,7 +241,12 @@
         /// <param name="model">the instance of <see cref="SignatureRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the instance of <see cref="SignatureResponseModel"/></returns>
-        Task<SignatureResponseModel> UpdateSignatureAsync(string identity, Guid id, SignatureRequestModel model, Guid currentUserId);
+        Task<SignatureResponseModel> UpdateSignatureAsync(
+            string identity,
+            Guid id,
+            SignatureRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to delete signature
@@ -219,7 +264,11 @@
         /// <param name="model">the instance of <see cref="CourseCertificateRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns></returns>
-        Task<CourseCertificateResponseModel> InsertCertificateDetail(string identity, CourseCertificateRequestModel model, Guid currentUserId);
+        Task<CourseCertificateResponseModel> InsertCertificateDetail(
+            string identity,
+            CourseCertificateRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to get certificate detail information
@@ -227,7 +276,10 @@
         /// <param name="identity">the course id or slug </param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns></returns>
-        Task<CourseCertificateResponseModel> GetCertificateDetailAsync(string identity, Guid currentUserId);
+        Task<CourseCertificateResponseModel> GetCertificateDetailAsync(
+            string identity,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to get user courses list with progress detail
@@ -235,7 +287,15 @@
         /// <param name="userId">the requested user id</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the search result of <see cref="CourseResponseModel"/></returns>
-        Task<SearchResult<CourseResponseModel>> GetUserCourses(Guid userId, BaseSearchCriteria criteria);
+        Task<SearchResult<CourseResponseModel>> GetUserCourses(
+            Guid userId,
+            BaseSearchCriteria criteria
+        );
+
+        Task<IList<QuestionSetResult>> GetResultsExportAsync(
+            string lessonIdentity,
+            Guid currentUserId
+        );
 
         #endregion Signature
     }

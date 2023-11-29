@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import { httpClient } from './service-axios';
-import errorType from './axiosError';
 import { showNotification } from '@mantine/notifications';
+import { useQuery } from '@tanstack/react-query';
+import errorType from './axiosError';
+import { httpClient } from './service-axios';
 
 export enum FileAccess {
   Private = 1,
@@ -53,7 +53,7 @@ export const uploadUserCsv = (file: File | null) => {
   );
 };
 
-export const downloadCSVFile = async (path: string) => {
+export const downloadCSVFile = async (path: string, fileName: string) => {
   try {
     const response = await httpClient.get(path);
     const link = document.createElement('a');
@@ -62,7 +62,7 @@ export const downloadCSVFile = async (path: string) => {
       new Blob([response.data as Blob], { type: 'text/csv; charset=UTF-8' })
     );
     link.href = objRef;
-    link.setAttribute('download', 'sample.csv');
+    link.setAttribute('download', `${fileName}.csv`);
     document.body.appendChild(link);
     link.click();
     window.URL.revokeObjectURL(objRef);

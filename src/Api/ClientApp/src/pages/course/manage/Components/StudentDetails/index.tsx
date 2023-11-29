@@ -233,7 +233,11 @@ const StudentLessonDetails = ({
         }}
       >
         {examResultModal && questionSetId && (
-          <UserResults isTrainee={false} studentId={studentId} lessonId={questionSetId} />
+          <UserResults
+            isTrainee={false}
+            studentId={studentId}
+            lessonId={questionSetId}
+          />
         )}
       </Modal>
 

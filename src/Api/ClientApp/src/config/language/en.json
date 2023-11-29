@@ -1,4 +1,6 @@
 {
+  "multiple_choice": "Multiple Choice",
+  "single_choice": "Single Choice",
   "welcome_back": "Welcome Back",
   "email": "Email",
   "password": "Password",

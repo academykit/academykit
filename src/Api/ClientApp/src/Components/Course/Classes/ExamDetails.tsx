@@ -117,6 +117,8 @@ const ExamDetails = ({
     },
   });
 
+  const formattedTime = moment(exam?.startTime).format('HH:mm A');
+
   return (
     <Group
       p={10}
@@ -147,6 +149,15 @@ const ExamDetails = ({
                 <Text>
                   {t('start_date')}:{' '}
                   {moment(exam?.startTime).format(DATE_FORMAT)}{' '}
+                </Text>
+              )}
+              {exam?.startTime && (
+                <Text>
+                  {t('start_time')}:{' '}
+                  {moment(formattedTime, 'hh:mm A')
+                    .add(5, 'hours')
+                    .add(45, 'minutes')
+                    .format('hh:mm A')}{' '}
                 </Text>
               )}
               {exam?.duration ? (

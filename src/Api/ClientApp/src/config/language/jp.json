@@ -1,4 +1,6 @@
 {
+  "multiple_choice": "複数選択",
+  "single_choice": "単一選択",
   "welcome_back": "おかえり",
   "email": "Eメール",
   "password": "パスワード",

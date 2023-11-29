@@ -51,7 +51,7 @@ const ExamRadio = ({ form, options, currentIndex }: Props) => {
     <Box mt={10} px={20} className={classes.option}>
       <Group>
         <Title size={'xs'} mb={5}>
-          {t('options')}
+          {t('options')} ({t('single_choice')})
         </Title>
       </Group>
       {options.map((option, index) => (

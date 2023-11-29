@@ -24,5 +24,8 @@
 
         [Name("Designation")]
         public string Designation { get; set; }
+
+        [Name("Department")]
+        public string Department { get; set; }
     }
 }

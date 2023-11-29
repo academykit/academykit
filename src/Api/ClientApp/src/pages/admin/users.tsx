@@ -1,34 +1,33 @@
-import { Suspense, useState } from 'react';
-import {
-  ScrollArea,
-  Group,
-  Button,
-  Modal,
-  Loader,
-  Box,
-  Title,
-  Text,
-  Tabs,
-  FileInput,
-  Flex,
-  // Anchor,
-} from '@mantine/core';
 import UserMemberTable from '@components/Users/UserMemberTable';
-import { useAddUser, useUsers } from '@utils/services/adminService';
 import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
-import errorType from '@utils/services/axiosError';
-import lazyWithRetry from '@utils/lazyImportWithReload';
-import { downloadCSVFile, uploadUserCsv } from '@utils/services/fileService';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import {
+  Box,
+  Button,
+  FileInput,
+  Flex,
+  Group,
+  Loader,
+  Modal,
+  ScrollArea,
+  Tabs,
+  Text,
+  Title,
+} from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+import lazyWithRetry from '@utils/lazyImportWithReload';
+import { useAddUser, useUsers } from '@utils/services/adminService';
+import errorType from '@utils/services/axiosError';
+import { downloadCSVFile, uploadUserCsv } from '@utils/services/fileService';
+import { Suspense, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
 const AddUpdateUserForm = lazyWithRetry(
   () => import('../../Components/Users/AddUpdateUserForm')
 );
-import * as Yup from 'yup';
-import { useForm, yupResolver } from '@mantine/form';
-import { useTranslation } from 'react-i18next';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -141,7 +140,7 @@ const UsersList = ({
                       cursor: 'pointer',
                       color: '#128797',
                     }}
-                    onClick={() => downloadCSVFile(sampleFileURL)}
+                    onClick={() => downloadCSVFile(sampleFileURL, 'sample')}
                   >
                     {t('click_here')}
                   </span>{' '}

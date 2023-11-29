@@ -41,24 +41,36 @@ namespace Lingtren.Infrastructure.Services
         private readonly string _resendChangeEmailEncryptionKey;
         private readonly int _resendChangeEmailTokenExpiry;
         private readonly IGeneralSettingService _generalSettingService;
-        public UserService(IUnitOfWork unitOfWork,
+        private readonly IDepartmentService departmentService;
+
+        public UserService(
+            IUnitOfWork unitOfWork,
             ILogger<UserService> logger,
             IEmailService emailService,
             IRefreshTokenService refreshTokenService,
             IOptions<JWT> jwt,
             IConfiguration configuration,
             IStringLocalizer<ExceptionLocalizer> localizer,
-            IGeneralSettingService generalSettingService) : base(unitOfWork, logger, localizer)
+            IGeneralSettingService generalSettingService,
+            IDepartmentService departmentService
+        )
+            : base(unitOfWork, logger, localizer)
         {
             _emailService = emailService;
             _refreshTokenService = refreshTokenService;
             _jwt = jwt.Value;
             _changeEmailEncryptionKey = configuration.GetSection("ChangeEmail:EncryptionKey").Value;
-            _changeEmailTokenExpiry = int.Parse(configuration.GetSection("ChangeEmail:ExpireInMinutes").Value);
-            _resendChangeEmailEncryptionKey = configuration.GetSection("ResendChangeEmail:EncryptionKey").Value;
-            _resendChangeEmailTokenExpiry = int.Parse(configuration.GetSection("ResendChangeEmail:ExpireInMinutes").Value);
+            _changeEmailTokenExpiry = int.Parse(
+                configuration.GetSection("ChangeEmail:ExpireInMinutes").Value
+            );
+            _resendChangeEmailEncryptionKey = configuration
+                .GetSection("ResendChangeEmail:EncryptionKey")
+                .Value;
+            _resendChangeEmailTokenExpiry = int.Parse(
+                configuration.GetSection("ResendChangeEmail:ExpireInMinutes").Value
+            );
             _generalSettingService = generalSettingService;
-
+            this.departmentService = departmentService;
         }
 
         #region Account Services
@@ -116,7 +128,7 @@ namespace Lingtren.Infrastructure.Services
                 IsActive = true,
             };
 
-            //Create Token 
+            //Create Token
             authenticationModel.IsAuthenticated = true;
             var jwtSecurityToken = await CreateJwtToken(user);
             authenticationModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
@@ -228,7 +240,9 @@ namespace Lingtren.Infrastructure.Services
         /// <returns>the instance of <see cref="RefreshToken"/></returns>
         public async Task<RefreshToken> GetActiveRefreshToken(User user)
         {
-            var refreshTokens = await _refreshTokenService.GetByUserId(user.Id).ConfigureAwait(false);
+            var refreshTokens = await _refreshTokenService
+                .GetByUserId(user.Id)
+                .ConfigureAwait(false);
             return refreshTokens.FirstOrDefault();
         }
 
@@ -241,7 +255,10 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Email == email).ConfigureAwait(false);
+                var user = await _unitOfWork
+                    .GetRepository<User>()
+                    .GetFirstOrDefaultAsync(predicate: p => p.Email == email)
+                    .ConfigureAwait(false);
                 if (user == default)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
@@ -273,12 +290,15 @@ namespace Lingtren.Infrastructure.Services
                 rng.GetBytes(salt);
             }
 
-            var hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 10000,
-                numBytesRequested: 256 / 8));
+            var hashed = Convert.ToBase64String(
+                KeyDerivation.Pbkdf2(
+                    password: password,
+                    salt: salt,
+                    prf: KeyDerivationPrf.HMACSHA256,
+                    iterationCount: 10000,
+                    numBytesRequested: 256 / 8
+                )
+            );
 
             if (needsOnlyHash)
             {
@@ -289,16 +309,20 @@ namespace Lingtren.Infrastructure.Services
         }
 
         /// <summary>
-        /// Handle to get trainer 
+        /// Handle to get trainer
         /// </summary>
         /// <param name="currentUserId"> the current user id </param>
         /// <param name="criteria"> the instance of <see cref="TeacherSearchCriteria"></see></param>
         /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
-        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId, TeacherSearchCriteria criteria)
+        public async Task<IList<TrainerResponseModel>> GetTrainerAsync(
+            Guid currentUserId,
+            TeacherSearchCriteria criteria
+        )
         {
             return await ExecuteWithResultAsync(async () =>
             {
-                var isValidUser = await IsSuperAdminOrAdminOrTrainer(currentUserId).ConfigureAwait(false);
+                var isValidUser = await IsSuperAdminOrAdminOrTrainer(currentUserId)
+                    .ConfigureAwait(false);
                 if (!isValidUser)
                 {
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
@@ -308,33 +332,59 @@ namespace Lingtren.Infrastructure.Services
                 if (!string.IsNullOrWhiteSpace(criteria.Search))
                 {
                     var search = criteria.Search.ToLower().Trim();
-                    predicate = predicate.And(x => x.FirstName.ToLower().Trim().Contains(search)
-                    || x.LastName.ToLower().Trim().Contains(search)
-                    || x.Email.ToLower().Trim().Contains(search));
+                    predicate = predicate.And(
+                        x =>
+                            x.FirstName.ToLower().Trim().Contains(search)
+                            || x.LastName.ToLower().Trim().Contains(search)
+                            || x.Email.ToLower().Trim().Contains(search)
+                    );
                 }
 
-                predicate = predicate.And(p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer);
+                predicate = predicate.And(
+                    p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer
+                );
                 //for filtering course trainers
-                if (!string.IsNullOrWhiteSpace(criteria.Identity) && criteria.LessonType == TrainingTypeEnum.Course)
+                if (
+                    !string.IsNullOrWhiteSpace(criteria.Identity)
+                    && criteria.LessonType == TrainingTypeEnum.Course
+                )
                 {
-                    var courseTeacher = await _unitOfWork.GetRepository<CourseTeacher>().GetAllAsync(predicate: p => p.CourseId.ToString() == criteria.Identity ||
-                    p.Course.Slug.ToLower() == criteria.Identity.ToLower().Trim()).ConfigureAwait(false);
+                    var courseTeacher = await _unitOfWork
+                        .GetRepository<CourseTeacher>()
+                        .GetAllAsync(
+                            predicate: p =>
+                                p.CourseId.ToString() == criteria.Identity
+                                || p.Course.Slug.ToLower() == criteria.Identity.ToLower().Trim()
+                        )
+                        .ConfigureAwait(false);
 
                     var userIds = courseTeacher.Select(x => x.UserId).ToList();
                     predicate = predicate.And(p => !userIds.Contains(p.Id));
                 }
                 // for filtering question pool trainers
-                if (!string.IsNullOrWhiteSpace(criteria.Identity) && criteria.LessonType == TrainingTypeEnum.QuestionPool)
+                if (
+                    !string.IsNullOrWhiteSpace(criteria.Identity)
+                    && criteria.LessonType == TrainingTypeEnum.QuestionPool
+                )
                 {
-                    var questionPoolTeachers = await _unitOfWork.GetRepository<QuestionPoolTeacher>().GetAllAsync(predicate: p => p.QuestionPoolId.ToString() == criteria.Identity ||
-                   p.QuestionPool.Slug.ToLower() == criteria.Identity.ToLower().Trim()).ConfigureAwait(false);
+                    var questionPoolTeachers = await _unitOfWork
+                        .GetRepository<QuestionPoolTeacher>()
+                        .GetAllAsync(
+                            predicate: p =>
+                                p.QuestionPoolId.ToString() == criteria.Identity
+                                || p.QuestionPool.Slug.ToLower()
+                                    == criteria.Identity.ToLower().Trim()
+                        )
+                        .ConfigureAwait(false);
 
                     var userIds = questionPoolTeachers.Select(x => x.UserId).ToList();
                     predicate = predicate.And(p => !userIds.Contains(p.Id));
                 }
 
-                return await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: predicate,
-               selector: s => new TrainerResponseModel(s)).ConfigureAwait(false);
+                return await _unitOfWork
+                    .GetRepository<User>()
+                    .GetAllAsync(predicate: predicate, selector: s => new TrainerResponseModel(s))
+                    .ConfigureAwait(false);
             });
         }
 
@@ -348,7 +398,6 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-
                 MimeTypes.TryGetExtension(file.ContentType, out var extension);
                 if (extension != ".csv")
                 {
@@ -356,7 +405,10 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 var users = new List<UserImportDto>();
-                (List<UserImportDto> userList, List<int> SN) checkForValidRows = (new List<UserImportDto>(), new List<int>());
+                (List<UserImportDto> userList, List<int> SN) checkForValidRows = (
+                    new List<UserImportDto>(),
+                    new List<int>()
+                );
                 using (var reader = new StreamReader(file.OpenReadStream()))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
@@ -378,16 +430,36 @@ namespace Lingtren.Infrastructure.Services
 
                 await CheckBulkImport(checkForValidRows, currentUserId);
                 var message = new StringBuilder();
-                users = checkForValidRows.userList.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && !string.IsNullOrWhiteSpace(x.LastName) && !string.IsNullOrWhiteSpace(x.Email)).ToList();
-                var company = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync().ConfigureAwait(false);
+                users = checkForValidRows.userList
+                    .Where(
+                        x =>
+                            !string.IsNullOrWhiteSpace(x.FirstName)
+                            && !string.IsNullOrWhiteSpace(x.LastName)
+                            && !string.IsNullOrWhiteSpace(x.Email)
+                    )
+                    .ToList();
+                var company = await _unitOfWork
+                    .GetRepository<GeneralSetting>()
+                    .GetFirstOrDefaultAsync()
+                    .ConfigureAwait(false);
                 var stringBuilder = new StringBuilder();
                 if (users.Count != default)
                 {
                     var userEmails = users.ConvertAll(x => x.Email);
-                    var duplicateUser = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate: p => userEmails.Contains(p.Email), selector: x => x.Email).ConfigureAwait(false);
+                    var duplicateUser = await _unitOfWork
+                        .GetRepository<User>()
+                        .GetAllAsync(
+                            predicate: p => userEmails.Contains(p.Email),
+                            selector: x => x.Email
+                        )
+                        .ConfigureAwait(false);
                     if (duplicateUser.Count != default)
                     {
-                        message.AppendLine($"{_localizer.GetString("AlreadyRegistered")}" + " " + string.Join(",", duplicateUser));
+                        message.AppendLine(
+                            $"{_localizer.GetString("AlreadyRegistered")}"
+                                + " "
+                                + string.Join(",", duplicateUser)
+                        );
                     }
 
                     var newUsersList = users.Where(x => !duplicateUser.Contains(x.Email)).ToList();
@@ -398,6 +470,15 @@ namespace Lingtren.Infrastructure.Services
                     {
                         foreach (var user in newUsersList)
                         {
+                            var existDepartment = await departmentService
+                                .SearchAsync(
+                                    new DepartmentBaseSearchCriteria
+                                    {
+                                        departmentName = user.Department
+                                    },
+                                    false
+                                )
+                                .ConfigureAwait(false);
                             var userEntity = new User()
                             {
                                 Id = Guid.NewGuid(),
@@ -410,7 +491,11 @@ namespace Lingtren.Infrastructure.Services
                                 MobileNumber = user.MobileNumber,
                                 Role = (UserRole)Enum.Parse(typeof(UserRole), user.Role, true),
                                 CreatedBy = currentUserId,
-                                CreatedOn = DateTime.UtcNow
+                                CreatedOn = DateTime.UtcNow,
+                                DepartmentId =
+                                    existDepartment.Items.Count > 0
+                                        ? existDepartment.Items[0].Id
+                                        : null,
                             };
                             var password = await GenerateRandomPassword(8).ConfigureAwait(false);
                             userEntity.HashPassword = HashPassword(password);
@@ -427,10 +512,17 @@ namespace Lingtren.Infrastructure.Services
                             newUserEmails.Add(userEmailDto);
                         }
 
-                        await _unitOfWork.GetRepository<User>().InsertAsync(newUsers).ConfigureAwait(false);
+                        await _unitOfWork
+                            .GetRepository<User>()
+                            .InsertAsync(newUsers)
+                            .ConfigureAwait(false);
                         await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                        BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailImportedUserAsync(newUserEmails, null));
-                        message.AppendLine($"{newUsers.Count}" + " " + _localizer.GetString("UserImported"));
+                        BackgroundJob.Enqueue<IHangfireJobService>(
+                            job => job.SendEmailImportedUserAsync(newUserEmails, null)
+                        );
+                        message.AppendLine(
+                            $"{newUsers.Count}" + " " + _localizer.GetString("UserImported")
+                        );
                     }
                 }
                 else
@@ -443,7 +535,9 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(_localizer.GetString("NoUserImported"));
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("NoUserImported"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("NoUserImported"));
             }
         }
 
@@ -489,14 +583,21 @@ namespace Lingtren.Infrastructure.Services
                 user.PasswordResetTokenExpiry = tokenExpiry;
                 user.Status = UserStatus.Active;
                 _unitOfWork.GetRepository<User>().Update(user);
-                var companyName = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync(selector: x => x.CompanyName).ConfigureAwait(false);
+                var companyName = await _unitOfWork
+                    .GetRepository<GeneralSetting>()
+                    .GetFirstOrDefaultAsync(selector: x => x.CompanyName)
+                    .ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                await _emailService.SendForgetPasswordEmail(user.Email, user.FirstName, token, companyName).ConfigureAwait(false);
+                await _emailService
+                    .SendForgetPasswordEmail(user.Email, user.FirstName, token, companyName)
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to verify reset token.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredVerifyResetToken"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("ErrorOccurredVerifyResetToken"));
             }
         }
 
@@ -505,7 +606,9 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="model">the instance of <see cref="VerifyResetTokenModel"/></param>
         /// <returns> the instance of <see cref="VerificationTokenResponseModel"/></returns>
-        public async Task<VerificationTokenResponseModel> VerifyPasswordResetTokenAsync(VerifyResetTokenModel model)
+        public async Task<VerificationTokenResponseModel> VerifyPasswordResetTokenAsync(
+            VerifyResetTokenModel model
+        )
         {
             try
             {
@@ -519,7 +622,10 @@ namespace Lingtren.Infrastructure.Services
 
                 if (currentTimeStamp > user.PasswordResetTokenExpiry)
                 {
-                    _logger.LogWarning("Password reset token expired for the user with id : {id}.", user.Id);
+                    _logger.LogWarning(
+                        "Password reset token expired for the user with id : {id}.",
+                        user.Id
+                    );
                     throw new ForbiddenException(_localizer.GetString("ResetTokenExpired"));
                 }
 
@@ -529,7 +635,8 @@ namespace Lingtren.Infrastructure.Services
                     throw new ForbiddenException(_localizer.GetString("ResetTokenNotMatched"));
                 }
 
-                user.PasswordChangeToken = await BuildResetPasswordJWTToken(user.Email).ConfigureAwait(false);
+                user.PasswordChangeToken = await BuildResetPasswordJWTToken(user.Email)
+                    .ConfigureAwait(false);
                 _unitOfWork.GetRepository<User>().Update(user);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return new VerificationTokenResponseModel
@@ -541,7 +648,9 @@ namespace Lingtren.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to verify reset token.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredVerifyResetToken"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("ErrorOccurredVerifyResetToken"));
             }
         }
 
@@ -554,8 +663,9 @@ namespace Lingtren.Infrastructure.Services
         {
             Random random = new();
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            var password = new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
+            var password = new string(
+                Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray()
+            );
             return await Task.FromResult(password.ToLower());
         }
 
@@ -567,11 +677,15 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         public async Task ChangePasswordAsync(ChangePasswordRequestModel model, Guid currentUserId)
         {
-            var user = await GetAsync(currentUserId, includeProperties: false).ConfigureAwait(false);
+            var user = await GetAsync(currentUserId, includeProperties: false)
+                .ConfigureAwait(false);
             var currentPasswordMatched = VerifyPassword(user.HashPassword, model.CurrentPassword);
             if (!currentPasswordMatched)
             {
-                _logger.LogWarning("User with userId : {id} current password does not matched while changing password.", currentUserId);
+                _logger.LogWarning(
+                    "User with userId : {id} current password does not matched while changing password.",
+                    currentUserId
+                );
                 throw new ForbiddenException(_localizer.GetString("CurrentPasswordNotMatched"));
             }
 
@@ -586,39 +700,80 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="model">the instance of <see cref="ChangeEmailRequestModel"/></param>
         /// <returns>the instance of <see cref="ChangeEmailResponseModel"/></returns>
-        public async Task<ChangeEmailResponseModel> ChangeEmailRequestAsync(ChangeEmailRequestModel model, Guid currentUserId)
+        public async Task<ChangeEmailResponseModel> ChangeEmailRequestAsync(
+            ChangeEmailRequestModel model,
+            Guid currentUserId
+        )
         {
             var user = await GetUserByEmailAsync(model.OldEmail).ConfigureAwait(false);
             if (user == null)
             {
                 _logger.LogWarning("User with email : {email} not found.", model.OldEmail);
-                throw new ForbiddenException(_localizer.GetString("UserNotFoundWithEmail") + " " + model.OldEmail);
+                throw new ForbiddenException(
+                    _localizer.GetString("UserNotFoundWithEmail") + " " + model.OldEmail
+                );
             }
 
-            var newUser = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Email == model.NewEmail).ConfigureAwait(false);
+            var newUser = await _unitOfWork
+                .GetRepository<User>()
+                .GetFirstOrDefaultAsync(predicate: p => p.Email == model.NewEmail)
+                .ConfigureAwait(false);
             if (newUser != null)
             {
-                _logger.LogWarning("User with new email : {email} found in the system.", model.NewEmail);
-                throw new ForbiddenException(model.NewEmail + " " + _localizer.GetString("AlreadyExistInAnotherAccount"));
+                _logger.LogWarning(
+                    "User with new email : {email} found in the system.",
+                    model.NewEmail
+                );
+                throw new ForbiddenException(
+                    model.NewEmail + " " + _localizer.GetString("AlreadyExistInAnotherAccount")
+                );
             }
 
             var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password);
             if (!isUserAuthenticated)
             {
-                _logger.LogWarning("User with id : {userId} password not matched for email change.", user.Id);
+                _logger.LogWarning(
+                    "User with id : {userId} password not matched for email change.",
+                    user.Id
+                );
                 throw new ForbiddenException(_localizer.GetString("PasswordNotMatched"));
             }
 
             if (user.Id != currentUserId)
             {
-                _logger.LogWarning("User with email: {email} is invalid user request to change email of current user with id: {currentUserId}", user.Email, currentUserId);
+                _logger.LogWarning(
+                    "User with email: {email} is invalid user request to change email of current user with id: {currentUserId}",
+                    user.Email,
+                    currentUserId
+                );
                 throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
             }
 
-            var companyName = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync(selector: x => x.CompanyName).ConfigureAwait(false);
-            var changeEmailToken = GenerateResendAndChangeEmailToken(model.OldEmail, model.NewEmail, _changeEmailEncryptionKey, _changeEmailTokenExpiry);
-            var resendToken = GenerateResendAndChangeEmailToken(model.OldEmail, model.NewEmail, _resendChangeEmailEncryptionKey, _resendChangeEmailTokenExpiry);
-            await _emailService.SendChangePasswordMailAsync(model.NewEmail, user.FirstName, changeEmailToken, _changeEmailTokenExpiry, companyName).ConfigureAwait(false);
+            var companyName = await _unitOfWork
+                .GetRepository<GeneralSetting>()
+                .GetFirstOrDefaultAsync(selector: x => x.CompanyName)
+                .ConfigureAwait(false);
+            var changeEmailToken = GenerateResendAndChangeEmailToken(
+                model.OldEmail,
+                model.NewEmail,
+                _changeEmailEncryptionKey,
+                _changeEmailTokenExpiry
+            );
+            var resendToken = GenerateResendAndChangeEmailToken(
+                model.OldEmail,
+                model.NewEmail,
+                _resendChangeEmailEncryptionKey,
+                _resendChangeEmailTokenExpiry
+            );
+            await _emailService
+                .SendChangePasswordMailAsync(
+                    model.NewEmail,
+                    user.FirstName,
+                    changeEmailToken,
+                    _changeEmailTokenExpiry,
+                    companyName
+                )
+                .ConfigureAwait(false);
 
             return new ChangeEmailResponseModel() { ResendToken = resendToken };
         }
@@ -639,7 +794,10 @@ namespace Lingtren.Infrastructure.Services
                     throw new ForbiddenException("You are not authorized to resend email.");
                 }
 
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == userId).ConfigureAwait(false);
+                var user = await _unitOfWork
+                    .GetRepository<User>()
+                    .GetFirstOrDefaultAsync(predicate: p => p.Id == userId)
+                    .ConfigureAwait(false);
                 if (user == default)
                 {
                     throw new ForbiddenException("User not found.");
@@ -657,9 +815,20 @@ namespace Lingtren.Infrastructure.Services
                 user.UpdatedOn = DateTime.UtcNow;
                 _unitOfWork.GetRepository<User>().Update(user);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                var company = await _generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
-                BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendUserCreatedPasswordEmail(user.Email, user.FullName, password, company.CompanyName, company.CompanyContactNumber, null));
-
+                var company = await _generalSettingService
+                    .GetFirstOrDefaultAsync()
+                    .ConfigureAwait(false);
+                BackgroundJob.Enqueue<IHangfireJobService>(
+                    job =>
+                        job.SendUserCreatedPasswordEmail(
+                            user.Email,
+                            user.FullName,
+                            password,
+                            company.CompanyName,
+                            company.CompanyContactNumber,
+                            null
+                        )
+                );
             }
             catch (Exception ex)
             {
@@ -676,10 +845,16 @@ namespace Lingtren.Infrastructure.Services
         public async Task<ChangeEmailResponseModel> ResendChangeEmailRequestAsync(string token)
         {
             var currentTimeStamp = DateTime.UtcNow;
-            var (oldEmail, newEmail) = VerifyResendAndEmailChangeToken(token, currentTimeStamp, _resendChangeEmailEncryptionKey);
+            var (oldEmail, newEmail) = VerifyResendAndEmailChangeToken(
+                token,
+                currentTimeStamp,
+                _resendChangeEmailEncryptionKey
+            );
             if (string.IsNullOrWhiteSpace(oldEmail) || string.IsNullOrWhiteSpace(newEmail))
             {
-                _logger.LogWarning("Old email or new email is null or empty for resend change email.");
+                _logger.LogWarning(
+                    "Old email or new email is null or empty for resend change email."
+                );
                 throw new ForbiddenException(_localizer.GetString("EmailShouldNotEmpty"));
             }
 
@@ -687,13 +862,36 @@ namespace Lingtren.Infrastructure.Services
             if (user == null)
             {
                 _logger.LogWarning("User with email : {email} not found.", oldEmail);
-                throw new ForbiddenException(_localizer.GetString("UserNotFoundWithEmail") + " " + newEmail);
+                throw new ForbiddenException(
+                    _localizer.GetString("UserNotFoundWithEmail") + " " + newEmail
+                );
             }
 
-            var changeEmailToken = GenerateResendAndChangeEmailToken(oldEmail, newEmail, _changeEmailEncryptionKey, _changeEmailTokenExpiry);
-            var resendToken = GenerateResendAndChangeEmailToken(oldEmail, newEmail, _resendChangeEmailEncryptionKey, _resendChangeEmailTokenExpiry);
-            var companyName = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync(selector: x => x.CompanyName).ConfigureAwait(false);
-            await _emailService.SendChangePasswordMailAsync(newEmail, user.FirstName, changeEmailToken, _changeEmailTokenExpiry, companyName).ConfigureAwait(false);
+            var changeEmailToken = GenerateResendAndChangeEmailToken(
+                oldEmail,
+                newEmail,
+                _changeEmailEncryptionKey,
+                _changeEmailTokenExpiry
+            );
+            var resendToken = GenerateResendAndChangeEmailToken(
+                oldEmail,
+                newEmail,
+                _resendChangeEmailEncryptionKey,
+                _resendChangeEmailTokenExpiry
+            );
+            var companyName = await _unitOfWork
+                .GetRepository<GeneralSetting>()
+                .GetFirstOrDefaultAsync(selector: x => x.CompanyName)
+                .ConfigureAwait(false);
+            await _emailService
+                .SendChangePasswordMailAsync(
+                    newEmail,
+                    user.FirstName,
+                    changeEmailToken,
+                    _changeEmailTokenExpiry,
+                    companyName
+                )
+                .ConfigureAwait(false);
             return new ChangeEmailResponseModel() { ResendToken = resendToken };
         }
 
@@ -705,10 +903,16 @@ namespace Lingtren.Infrastructure.Services
         public async Task VerifyChangeEmailAsync(string token)
         {
             var currentTimeStamp = DateTime.UtcNow;
-            var (oldEmail, newEmail) = VerifyResendAndEmailChangeToken(token, currentTimeStamp, _changeEmailEncryptionKey);
+            var (oldEmail, newEmail) = VerifyResendAndEmailChangeToken(
+                token,
+                currentTimeStamp,
+                _changeEmailEncryptionKey
+            );
             if (string.IsNullOrWhiteSpace(oldEmail) || string.IsNullOrWhiteSpace(newEmail))
             {
-                _logger.LogWarning("Old email or new email is null or empty for verify change email.");
+                _logger.LogWarning(
+                    "Old email or new email is null or empty for verify change email."
+                );
                 throw new ForbiddenException(_localizer.GetString("EmailShouldNotEmpty"));
             }
 
@@ -716,7 +920,9 @@ namespace Lingtren.Infrastructure.Services
             if (user == null)
             {
                 _logger.LogWarning("User with email : {email} not found.", oldEmail);
-                throw new ForbiddenException(_localizer.GetString("UserNotFoundWithEmail") + " " + newEmail);
+                throw new ForbiddenException(
+                    _localizer.GetString("UserNotFoundWithEmail") + " " + newEmail
+                );
             }
 
             user.Email = newEmail;
@@ -724,7 +930,9 @@ namespace Lingtren.Infrastructure.Services
 
             _unitOfWork.GetRepository<User>().Update(user);
             await _unitOfWork.SaveChangesAsync();
-            BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendEmailChangedMailAsync(newEmail, oldEmail, user.FirstName, null));
+            BackgroundJob.Enqueue<IHangfireJobService>(
+                job => job.SendEmailChangedMailAsync(newEmail, oldEmail, user.FirstName, null)
+            );
         }
 
         /// <summary>
@@ -733,7 +941,12 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="oldEmail">the old email</param>
         /// <param name="newEmail">the new email for change requested</param>
         /// <returns>the jwt token</returns>
-        public static string GenerateResendAndChangeEmailToken(string oldEmail, string newEmail, string encryptionKey, int tokenExpiry)
+        public static string GenerateResendAndChangeEmailToken(
+            string oldEmail,
+            string newEmail,
+            string encryptionKey,
+            int tokenExpiry
+        )
         {
             var securityKey = Encoding.UTF8.GetBytes(encryptionKey);
             var symmetricSecurityKey = new SymmetricSecurityKey(securityKey);
@@ -742,11 +955,14 @@ namespace Lingtren.Infrastructure.Services
             {
                 Claims = new Dictionary<string, object>()
                 {
-                    {"oldEmail",oldEmail },
-                    {"newEmail",newEmail},
+                    { "oldEmail", oldEmail },
+                    { "newEmail", newEmail },
                 },
                 Expires = DateTime.UtcNow.AddMinutes(tokenExpiry),
-                SigningCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(
+                    symmetricSecurityKey,
+                    SecurityAlgorithms.HmacSha256Signature
+                )
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
@@ -759,7 +975,11 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="token">the email change token</param>
         /// <param name="currentTimeStamp">the current time stamp</param>
         /// <returns>the old email and new email</returns>
-        private (string, string) VerifyResendAndEmailChangeToken(string token, DateTime currentTimeStamp, string encryptionKey)
+        private (string, string) VerifyResendAndEmailChangeToken(
+            string token,
+            DateTime currentTimeStamp,
+            string encryptionKey
+        )
         {
             try
             {
@@ -774,7 +994,11 @@ namespace Lingtren.Infrastructure.Services
                     IssuerSigningKey = new SymmetricSecurityKey(securityKey)
                 };
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var principal = tokenHandler.ValidateToken(token, validationParameters, out var security);
+                var principal = tokenHandler.ValidateToken(
+                    token,
+                    validationParameters,
+                    out var security
+                );
                 var oldEmail = principal.Claims?.FirstOrDefault(x => x.Type == "oldEmail")?.Value;
                 var newEmail = principal.Claims?.FirstOrDefault(x => x.Type == "newEmail")?.Value;
                 var tokenExpiry = security.ValidTo;
@@ -787,10 +1011,15 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while attempting to verify change email token.");
+                _logger.LogError(
+                    ex,
+                    "An error occurred while attempting to verify change email token."
+                );
                 if (ex is SecurityTokenInvalidSignatureException)
                 {
-                    throw new ForbiddenException(_localizer.GetString("TokenSignatureNotFormatted"));
+                    throw new ForbiddenException(
+                        _localizer.GetString("TokenSignatureNotFormatted")
+                    );
                 }
 
                 if (ex is SecurityTokenExpiredException)
@@ -798,7 +1027,11 @@ namespace Lingtren.Infrastructure.Services
                     throw new ForbiddenException(_localizer.GetString("TokenExpired"));
                 }
 
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredVerifyChangeEmailToken"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(
+                        _localizer.GetString("ErrorOccurredVerifyChangeEmailToken")
+                    );
             }
         }
         #endregion Account Services
@@ -828,15 +1061,26 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="predicate"></param>
         /// <param name="criteria"></param>
         /// <returns></returns>
-        protected override Expression<Func<User, bool>> ConstructQueryConditions(Expression<Func<User, bool>> predicate, UserSearchCriteria criteria)
+        protected override Expression<Func<User, bool>> ConstructQueryConditions(
+            Expression<Func<User, bool>> predicate,
+            UserSearchCriteria criteria
+        )
         {
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(x =>
-                    ((x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim() + " " + x.LastName.Trim()).Trim().Contains(search)
-                 || x.Email.ToLower().Trim().Contains(search)
-                 || x.MobileNumber.ToLower().Trim().Contains(search));
+                predicate = predicate.And(
+                    x =>
+                        (
+                            (x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim()
+                            + " "
+                            + x.LastName.Trim()
+                        )
+                            .Trim()
+                            .Contains(search)
+                        || x.Email.ToLower().Trim().Contains(search)
+                        || x.MobileNumber.ToLower().Trim().Contains(search)
+                );
             }
 
             if (criteria.Role.HasValue)
@@ -863,8 +1107,14 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="user"></param>
         protected override void DeleteChildEntities(User user)
         {
-            var courseTeacher = _unitOfWork.GetRepository<CourseTeacher>().GetAll(predicate: p => p.UserId == user.Id).ToList();
-            var questionPoolTeacher = _unitOfWork.GetRepository<QuestionPoolTeacher>().GetAll(predicate: p => p.UserId == user.Id).ToList();
+            var courseTeacher = _unitOfWork
+                .GetRepository<CourseTeacher>()
+                .GetAll(predicate: p => p.UserId == user.Id)
+                .ToList();
+            var questionPoolTeacher = _unitOfWork
+                .GetRepository<QuestionPoolTeacher>()
+                .GetAll(predicate: p => p.UserId == user.Id)
+                .ToList();
             if (courseTeacher.Count() != default && !string.IsNullOrEmpty(courseTeacher.ToString()))
             {
                 foreach (var removeUser in courseTeacher)
@@ -873,7 +1123,10 @@ namespace Lingtren.Infrastructure.Services
                 }
             }
 
-            if (questionPoolTeacher.Count() != default && string.IsNullOrEmpty(questionPoolTeacher.ToString()))
+            if (
+                questionPoolTeacher.Count() != default
+                && string.IsNullOrEmpty(questionPoolTeacher.ToString())
+            )
             {
                 foreach (var removeUser in questionPoolTeacher)
                 {
@@ -889,7 +1142,10 @@ namespace Lingtren.Infrastructure.Services
         /// <returns></returns>
         protected override async Task ResolveChildEntitiesAsync(User user)
         {
-            var oldUser = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == user.Id).ConfigureAwait(false);
+            var oldUser = await _unitOfWork
+                .GetRepository<User>()
+                .GetFirstOrDefaultAsync(predicate: p => p.Id == user.Id)
+                .ConfigureAwait(false);
             if (user.MemberId != default)
             {
                 await CheckForDuplicateMemberId(user).ConfigureAwait(false);
@@ -900,9 +1156,18 @@ namespace Lingtren.Infrastructure.Services
                 var allowed = userRecordModificationValidity(user, oldUser);
                 if (allowed == true)
                 {
-                    var superAdmin = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Role == UserRole.SuperAdmin).ConfigureAwait(false);
-                    var courses = await _unitOfWork.GetRepository<Course>().GetAllAsync(predicate: p => p.CreatedBy == oldUser.Id).ConfigureAwait(false);
-                    var questionPools = await _unitOfWork.GetRepository<QuestionPool>().GetAllAsync(predicate: p => p.CreatedBy == oldUser.Id).ConfigureAwait(false);
+                    var superAdmin = await _unitOfWork
+                        .GetRepository<User>()
+                        .GetFirstOrDefaultAsync(predicate: p => p.Role == UserRole.SuperAdmin)
+                        .ConfigureAwait(false);
+                    var courses = await _unitOfWork
+                        .GetRepository<Course>()
+                        .GetAllAsync(predicate: p => p.CreatedBy == oldUser.Id)
+                        .ConfigureAwait(false);
+                    var questionPools = await _unitOfWork
+                        .GetRepository<QuestionPool>()
+                        .GetAllAsync(predicate: p => p.CreatedBy == oldUser.Id)
+                        .ConfigureAwait(false);
                     var updateCourse = new List<Course>();
                     var updatePool = new List<QuestionPool>();
                     var currentDateTime = DateTime.UtcNow;
@@ -989,7 +1254,9 @@ namespace Lingtren.Infrastructure.Services
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>The updated query.</returns>
-        protected override IIncludableQueryable<User, object> IncludeNavigationProperties(IQueryable<User> query)
+        protected override IIncludableQueryable<User, object> IncludeNavigationProperties(
+            IQueryable<User> query
+        )
         {
             return query.Include(x => x.Department);
         }
@@ -1014,17 +1281,22 @@ namespace Lingtren.Infrastructure.Services
             };
 
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
-            var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+            var signingCredentials = new SigningCredentials(
+                symmetricSecurityKey,
+                SecurityAlgorithms.HmacSha256
+            );
             var jwtSecurityToken = new JwtSecurityToken(
-            issuer: _jwt.Issuer,
+                issuer: _jwt.Issuer,
                 audience: _jwt.Audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(_jwt.DurationInMinutes),
-                signingCredentials: signingCredentials);
+                signingCredentials: signingCredentials
+            );
 
             await Task.CompletedTask;
             return jwtSecurityToken;
         }
+
         private async Task<RefreshToken> GetUserRefreshToken(string token)
         {
             return await _refreshTokenService.GetByValue(token).ConfigureAwait(false);
@@ -1048,20 +1320,25 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="userName"></param>
         /// <param name="allowedMinutes"></param>
         /// <returns></returns>
-        private async Task<string> BuildResetPasswordJWTToken(string email, double allowedMinutes = 5)
+        private async Task<string> BuildResetPasswordJWTToken(
+            string email,
+            double allowedMinutes = 5
+        )
         {
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
-            var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Email, email),
-            };
+            var signingCredentials = new SigningCredentials(
+                symmetricSecurityKey,
+                SecurityAlgorithms.HmacSha256
+            );
+            var claims = new[] { new Claim(JwtRegisteredClaimNames.Email, email), };
 
-            var token = new JwtSecurityToken(_jwt.Issuer,
-              _jwt.Audience,
-              claims: claims,
-              expires: DateTime.UtcNow.AddMinutes(allowedMinutes),
-              signingCredentials: signingCredentials);
+            var token = new JwtSecurityToken(
+                _jwt.Issuer,
+                _jwt.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(allowedMinutes),
+                signingCredentials: signingCredentials
+            );
 
             return await Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
         }
@@ -1073,7 +1350,10 @@ namespace Lingtren.Infrastructure.Services
         /// <returns> the task complete </returns>
         public async Task RemoveRefreshTokenAsync(Guid currentUserId)
         {
-            var userToken = await _unitOfWork.GetRepository<RefreshToken>().GetAllAsync(predicate: p => p.UserId == currentUserId).ConfigureAwait(false);
+            var userToken = await _unitOfWork
+                .GetRepository<RefreshToken>()
+                .GetAllAsync(predicate: p => p.UserId == currentUserId)
+                .ConfigureAwait(false);
             userToken.ForEach(x => x.IsActive = false);
             _unitOfWork.GetRepository<RefreshToken>().Update(userToken);
         }
@@ -1086,8 +1366,13 @@ namespace Lingtren.Infrastructure.Services
         /// <exception cref="ServiceException"></exception>
         private async Task CheckDuplicateEmailAsync(User entity)
         {
-            var checkDuplicateEmail = await _unitOfWork.GetRepository<User>().ExistsAsync(
-                predicate: p => p.Id != entity.Id && p.Email.ToLower().Equals(entity.Email.ToLower())).ConfigureAwait(false);
+            var checkDuplicateEmail = await _unitOfWork
+                .GetRepository<User>()
+                .ExistsAsync(
+                    predicate: p =>
+                        p.Id != entity.Id && p.Email.ToLower().Equals(entity.Email.ToLower())
+                )
+                .ConfigureAwait(false);
             if (checkDuplicateEmail)
             {
                 _logger.LogWarning("Duplicate user email : {email} is found.", entity.Email);
@@ -1103,8 +1388,13 @@ namespace Lingtren.Infrastructure.Services
         /// <exception cref="ServiceException"></exception>
         private async Task CheckForDuplicateMemberId(User entity)
         {
-            var checkDuplicateMemberId = await _unitOfWork.GetRepository<User>().ExistsAsync(
-                predicate: p => p.Id != entity.Id && p.MemberId.ToLower().Equals(entity.MemberId.ToLower())).ConfigureAwait(false);
+            var checkDuplicateMemberId = await _unitOfWork
+                .GetRepository<User>()
+                .ExistsAsync(
+                    predicate: p =>
+                        p.Id != entity.Id && p.MemberId.ToLower().Equals(entity.MemberId.ToLower())
+                )
+                .ConfigureAwait(false);
             if (checkDuplicateMemberId)
             {
                 _logger.LogWarning("Duplicate MemberId : {UserId} is found.", entity.Id);
@@ -1122,52 +1412,75 @@ namespace Lingtren.Infrastructure.Services
         {
             try
             {
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(
-                    predicate: p => p.Id == userId,
-                    include: src => src.Include(x => x.Department)
-                    ).ConfigureAwait(false);
+                var user = await _unitOfWork
+                    .GetRepository<User>()
+                    .GetFirstOrDefaultAsync(
+                        predicate: p => p.Id == userId,
+                        include: src => src.Include(x => x.Department)
+                    )
+                    .ConfigureAwait(false);
 
-                var userCertificates = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(
-                    predicate: p => p.UserId == userId && p.HasCertificateIssued.HasValue && p.HasCertificateIssued.Value,
-                    include: src => src.Include(x => x.Course)
-                    ).ConfigureAwait(false);
-                var externalCertificates = await _unitOfWork.GetRepository<Certificate>().GetAllAsync(predicate: p => p.CreatedBy == userId &&
-                                         p.Status == CertificateStatus.Approved).ConfigureAwait(false);
+                var userCertificates = await _unitOfWork
+                    .GetRepository<CourseEnrollment>()
+                    .GetAllAsync(
+                        predicate: p =>
+                            p.UserId == userId
+                            && p.HasCertificateIssued.HasValue
+                            && p.HasCertificateIssued.Value,
+                        include: src => src.Include(x => x.Course)
+                    )
+                    .ConfigureAwait(false);
+                var externalCertificates = await _unitOfWork
+                    .GetRepository<Certificate>()
+                    .GetAllAsync(
+                        predicate: p =>
+                            p.CreatedBy == userId && p.Status == CertificateStatus.Approved
+                    )
+                    .ConfigureAwait(false);
                 var response = new UserResponseModel(user);
                 foreach (var item in userCertificates)
                 {
-                    response.Certificates.Add(new CourseCertificateIssuedResponseModel
-                    {
-                        CourseId = item.CourseId,
-                        CourseName = item.Course.Name,
-                        CourseSlug = item.Course.Slug,
-                        Percentage = item.Percentage,
-                        HasCertificateIssued = item.HasCertificateIssued,
-                        CertificateIssuedDate = item.CertificateIssuedDate,
-                        CertificateUrl = item.CertificateUrl,
-                    });
+                    response.Certificates.Add(
+                        new CourseCertificateIssuedResponseModel
+                        {
+                            CourseId = item.CourseId,
+                            CourseName = item.Course.Name,
+                            CourseSlug = item.Course.Slug,
+                            Percentage = item.Percentage,
+                            HasCertificateIssued = item.HasCertificateIssued,
+                            CertificateIssuedDate = item.CertificateIssuedDate,
+                            CertificateUrl = item.CertificateUrl,
+                        }
+                    );
                 }
 
                 foreach (var external in externalCertificates)
                 {
-                    response.ExternalCertificates.Add(new ExternalCertificateResponseModel
-                    {
-                        Name = external.Name,
-                        StartDate = external.StartDate,
-                        EndDate = external.EndDate,
-                        ImageUrl = external.ImageUrl,
-                        Location = external.Location,
-                        Institute = external.Institute,
-                        Duration = external.Duration != 0 ? external.Duration.ToString() : null
-                    });
+                    response.ExternalCertificates.Add(
+                        new ExternalCertificateResponseModel
+                        {
+                            Name = external.Name,
+                            StartDate = external.StartDate,
+                            EndDate = external.EndDate,
+                            ImageUrl = external.ImageUrl,
+                            Location = external.Location,
+                            Institute = external.Institute,
+                            Duration = external.Duration != 0 ? external.Duration.ToString() : null
+                        }
+                    );
                 }
 
                 return response;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while attempting to fetch user detail information.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredFetchUserDetails"));
+                _logger.LogError(
+                    ex,
+                    "An error occurred while attempting to fetch user detail information."
+                );
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("ErrorOccurredFetchUserDetails"));
             }
         }
 
@@ -1177,42 +1490,62 @@ namespace Lingtren.Infrastructure.Services
         /// <param name="userId"> the user id </param>
         /// <param name="CourseID">the current course id </param>
         /// <returns> the instance of <see cref="UserResponseModel" /> .</returns>
-        public async Task<List<UserResponseModel>> GetUserForCourseEnrollment(Guid userId, string courseId)
+        public async Task<List<UserResponseModel>> GetUserForCourseEnrollment(
+            Guid userId,
+            string courseId
+        )
         {
             try
             {
-                var course = await ValidateAndGetCourse(userId, courseId, validateForModify: false).ConfigureAwait(false);
+                var course = await ValidateAndGetCourse(userId, courseId, validateForModify: false)
+                    .ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Training with identity : {identity} not found for user with id : {currentUserId}.", courseId, userId);
+                    _logger.LogWarning(
+                        "Training with identity : {identity} not found for user with id : {currentUserId}.",
+                        courseId,
+                        userId
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
-                var users = await _unitOfWork.GetRepository<User>().GetAllAsync().ConfigureAwait(false);
+                var users = await _unitOfWork
+                    .GetRepository<User>()
+                    .GetAllAsync()
+                    .ConfigureAwait(false);
                 var user = users.FirstOrDefault(x => x.Id == userId);
                 if (user.Role == UserRole.Admin || user.Role == UserRole.SuperAdmin)
                 {
-                    var trimmedUsers = users.Where(x => x.Id != userId && x.CourseEnrollments != course.CourseEnrollments && x.Role != UserRole.SuperAdmin && x.Role != UserRole.Admin &&
-                    x.Id != course.CreatedBy && x.CourseTeachers != course.CourseTeachers);
+                    var trimmedUsers = users.Where(
+                        x =>
+                            x.Id != userId
+                            && x.CourseEnrollments != course.CourseEnrollments
+                            && x.Role != UserRole.SuperAdmin
+                            && x.Role != UserRole.Admin
+                            && x.Id != course.CreatedBy
+                            && x.CourseTeachers != course.CourseTeachers
+                    );
 
                     var response = new List<UserResponseModel>();
                     foreach (var trimmedUser in trimmedUsers)
                     {
-                        response.Add(new UserResponseModel
-                        {
-                            Id = trimmedUser.Id,
-                            FullName = trimmedUser.FullName,
-                            Address = trimmedUser.Address,
-                            Email = trimmedUser.Email,
-                            FirstName = trimmedUser.FirstName,
-                            LastName = trimmedUser.LastName,
-                            MobileNumber = trimmedUser.MobileNumber,
-                            Bio = trimmedUser.Bio,
-                            Role = trimmedUser.Role,
-                            DepartmentId = trimmedUser.DepartmentId,
-                            Status = trimmedUser.Status,
-                            PublicUrls = trimmedUser.PublicUrls,
-                        });
+                        response.Add(
+                            new UserResponseModel
+                            {
+                                Id = trimmedUser.Id,
+                                FullName = trimmedUser.FullName,
+                                Address = trimmedUser.Address,
+                                Email = trimmedUser.Email,
+                                FirstName = trimmedUser.FirstName,
+                                LastName = trimmedUser.LastName,
+                                MobileNumber = trimmedUser.MobileNumber,
+                                Bio = trimmedUser.Bio,
+                                Role = trimmedUser.Role,
+                                DepartmentId = trimmedUser.DepartmentId,
+                                Status = trimmedUser.Status,
+                                PublicUrls = trimmedUser.PublicUrls,
+                            }
+                        );
                     }
 
                     return response;
@@ -1224,22 +1557,33 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while attempting to fetch user detail information.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredFetchUserDetails"));
+                _logger.LogError(
+                    ex,
+                    "An error occurred while attempting to fetch user detail information."
+                );
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("ErrorOccurredFetchUserDetails"));
             }
         }
 
         /// <summary>
-        /// handel to check for valid user rows 
+        /// handel to check for valid user rows
         /// </summary>
         /// <param name="checkForValidRows">instance of <see cref=""></param>
         /// <returns></returns>
         /// <exception cref="ForbiddenException"></exception>
-        private async Task CheckBulkImport((List<UserImportDto> userList, List<int> SN) checkForValidRows, Guid currentUserId)
+        private async Task CheckBulkImport(
+            (List<UserImportDto> userList, List<int> SN) checkForValidRows,
+            Guid currentUserId
+        )
         {
             try
             {
-                var checkUser = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p => p.Id == currentUserId).ConfigureAwait(false);
+                var checkUser = await _unitOfWork
+                    .GetRepository<User>()
+                    .GetFirstOrDefaultAsync(predicate: p => p.Id == currentUserId)
+                    .ConfigureAwait(false);
 
                 if (checkForValidRows.userList.Count == default)
                 {
@@ -1249,54 +1593,78 @@ namespace Lingtren.Infrastructure.Services
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.FirstName)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                    .Select((user, index) => new { User = user, Index = index })
-                    .Where(x => string.IsNullOrWhiteSpace(x.User.FirstName))
-                     .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) + 1)
-                     .ToList();
+                        .Select((user, index) => new { User = user, Index = index })
+                        .Where(x => string.IsNullOrWhiteSpace(x.User.FirstName))
+                        .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) + 1)
+                        .ToList();
                     if (selectedSNs.Any())
                     {
-                        throw new ForbiddenException(_localizer.GetString("IncorrectFirstName") + " " + string.Join(", ", selectedSNs) + " " + _localizer.GetString("TryAgain"));
+                        throw new ForbiddenException(
+                            _localizer.GetString("IncorrectFirstName")
+                                + " "
+                                + string.Join(", ", selectedSNs)
+                                + " "
+                                + _localizer.GetString("TryAgain")
+                        );
                     }
                 }
 
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.LastName)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                    .Select((user, index) => new { User = user, Index = index })
-                    .Where(x => string.IsNullOrWhiteSpace(x.User.LastName))
-                     .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) + 1)
-                     .ToList();
+                        .Select((user, index) => new { User = user, Index = index })
+                        .Where(x => string.IsNullOrWhiteSpace(x.User.LastName))
+                        .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) + 1)
+                        .ToList();
 
                     if (selectedSNs.Any())
                     {
-
-                        throw new ForbiddenException(_localizer.GetString("IncorrectLastName") + " " + string.Join(",", selectedSNs) + " " + _localizer.GetString("TryAgain"));
+                        throw new ForbiddenException(
+                            _localizer.GetString("IncorrectLastName")
+                                + " "
+                                + string.Join(",", selectedSNs)
+                                + " "
+                                + _localizer.GetString("TryAgain")
+                        );
                     }
                 }
 
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Email)))
                 {
                     var selectedSNs = checkForValidRows.userList
-                     .Select((user, index) => new { User = user, Index = index })
-                     .Where(x => string.IsNullOrWhiteSpace(x.User.Email))
-                      .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) + 1)
-                      .ToList();
-                    throw new ForbiddenException(_localizer.GetString("IncorrectEmail") + " " + string.Join(", ", selectedSNs) + " " + _localizer.GetString("TryAgain"));
+                        .Select((user, index) => new { User = user, Index = index })
+                        .Where(x => string.IsNullOrWhiteSpace(x.User.Email))
+                        .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) + 1)
+                        .ToList();
+                    throw new ForbiddenException(
+                        _localizer.GetString("IncorrectEmail")
+                            + " "
+                            + string.Join(", ", selectedSNs)
+                            + " "
+                            + _localizer.GetString("TryAgain")
+                    );
                 }
 
                 if (!checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Email)))
                 {
-                    var emailPattern = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
-                           @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
-                              @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+                    var emailPattern =
+                        @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}"
+                        + @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\"
+                        + @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
                     var invalidEmailRows = checkForValidRows.userList
-                       .Select((user, index) => (user.Email, index))
-                         .Where(entry => !Regex.IsMatch(entry.Email, emailPattern))
-                       .Select(entry => entry.Item2 + 2)
-                       .ToList();
+                        .Select((user, index) => (user.Email, index))
+                        .Where(entry => !Regex.IsMatch(entry.Email, emailPattern))
+                        .Select(entry => entry.Item2 + 2)
+                        .ToList();
                     if (invalidEmailRows.Any())
                     {
-                        throw new ForbiddenException(_localizer.GetString("IncorrectEmailFormat") + " " + string.Join(", ", invalidEmailRows) + " " + _localizer.GetString("TryAgain"));
+                        throw new ForbiddenException(
+                            _localizer.GetString("IncorrectEmailFormat")
+                                + " "
+                                + string.Join(", ", invalidEmailRows)
+                                + " "
+                                + _localizer.GetString("TryAgain")
+                        );
                     }
                 }
 
@@ -1305,46 +1673,95 @@ namespace Lingtren.Infrastructure.Services
                     var mobileNumberPattern = @"^[+\d]+$";
 
                     var invalidMobileNumberRows = checkForValidRows.userList
-                       .Select((user, index) => (user.MobileNumber, index))
-                         .Where(entry => !Regex.IsMatch(entry.MobileNumber, mobileNumberPattern))
-                       .Select(entry => entry.Item2 + 2)
-                       .ToList();
+                        .Select((user, index) => (user.MobileNumber, index))
+                        .Where(entry => !Regex.IsMatch(entry.MobileNumber, mobileNumberPattern))
+                        .Select(entry => entry.Item2 + 2)
+                        .ToList();
                     if (invalidMobileNumberRows.Any())
                     {
-                        throw new ForbiddenException(_localizer.GetString("IncorrectMobileNumberFormat") + " " + string.Join(", ", invalidMobileNumberRows) + " " + _localizer.GetString("TryAgain"));
+                        throw new ForbiddenException(
+                            _localizer.GetString("IncorrectMobileNumberFormat")
+                                + " "
+                                + string.Join(", ", invalidMobileNumberRows)
+                                + " "
+                                + _localizer.GetString("TryAgain")
+                        );
                     }
                 }
 
-                if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Role) || !Enum.TryParse<UserRole>(x.Role, out _)))
+                if (
+                    checkForValidRows.userList.Any(
+                        x =>
+                            string.IsNullOrWhiteSpace(x.Role)
+                            || !Enum.TryParse<UserRole>(x.Role, out _)
+                    )
+                )
                 {
                     var selectedSN = checkForValidRows.userList
-                      .Select((user, index) => new { User = user, Index = index })
-                      .Where(x => string.IsNullOrWhiteSpace(x.User.Role))
-                       .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) + 1)
-                       .ToList();
+                        .Select((user, index) => new { User = user, Index = index })
+                        .Where(x => string.IsNullOrWhiteSpace(x.User.Role))
+                        .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) + 1)
+                        .ToList();
 
                     if (selectedSN.Any())
                     {
-                        throw new ForbiddenException(_localizer.GetString("IncorrectRole") + " " + string.Join(", ", selectedSN) + " " + _localizer.GetString("TryAgain"));
+                        throw new ForbiddenException(
+                            _localizer.GetString("IncorrectRole")
+                                + " "
+                                + string.Join(", ", selectedSN)
+                                + " "
+                                + _localizer.GetString("TryAgain")
+                        );
                     }
 
                     var selectedSNs = checkForValidRows.userList
-                    .Select((user, index) => new { User = user, Index = index })
-                    .Where(x => !Enum.GetNames(typeof(UserRole))
-                    .Any(enumValue => string.Equals(enumValue, x.User.Role, StringComparison.OrdinalIgnoreCase)))
-                    .Join(checkForValidRows.SN.Select((sn, index) => new { SN = sn, Index = index }), x => x.Index, sn => sn.Index, (x, sn) => sn.SN + 1).ToList();
+                        .Select((user, index) => new { User = user, Index = index })
+                        .Where(
+                            x =>
+                                !Enum.GetNames(typeof(UserRole))
+                                    .Any(
+                                        enumValue =>
+                                            string.Equals(
+                                                enumValue,
+                                                x.User.Role,
+                                                StringComparison.OrdinalIgnoreCase
+                                            )
+                                    )
+                        )
+                        .Join(
+                            checkForValidRows.SN.Select(
+                                (sn, index) => new { SN = sn, Index = index }
+                            ),
+                            x => x.Index,
+                            sn => sn.Index,
+                            (x, sn) => sn.SN + 1
+                        )
+                        .ToList();
 
                     if (selectedSNs.Any())
                     {
-                        throw new ForbiddenException(_localizer.GetString("IncorrectRoleFormat") + " " + string.Join(", ", selectedSNs) + " " + _localizer.GetString("TryAgain"));
+                        throw new ForbiddenException(
+                            _localizer.GetString("IncorrectRoleFormat")
+                                + " "
+                                + string.Join(", ", selectedSNs)
+                                + " "
+                                + _localizer.GetString("TryAgain")
+                        );
                     }
 
                     var selectedIndices = Enum.GetValues(typeof(UserRole))
-                     .Cast<UserRole>()
-                     .Select((role, index) => new { Role = role, Index = index })
-                       .Where(x => string.Equals(x.Role.ToString(), UserRole.Admin.ToString(), StringComparison.OrdinalIgnoreCase))
-                      .Select(x => x.Index + 1)
-                       .ToList();
+                        .Cast<UserRole>()
+                        .Select((role, index) => new { Role = role, Index = index })
+                        .Where(
+                            x =>
+                                string.Equals(
+                                    x.Role.ToString(),
+                                    UserRole.Admin.ToString(),
+                                    StringComparison.OrdinalIgnoreCase
+                                )
+                        )
+                        .Select(x => x.Index + 1)
+                        .ToList();
                     if (selectedIndices.Any() && checkUser.Role != UserRole.SuperAdmin)
                     {
                         throw new ForbiddenException(_localizer.GetString("AdminCannotAddAdmin"));
@@ -1353,7 +1770,10 @@ namespace Lingtren.Infrastructure.Services
             }
             catch (ForbiddenException ex)
             {
-                _logger.LogError(ex, "An error occurred while attempting to fetch user detail information.");
+                _logger.LogError(
+                    ex,
+                    "An error occurred while attempting to fetch user detail information."
+                );
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
         }
