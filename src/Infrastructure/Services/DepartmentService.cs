@@ -16,6 +16,8 @@
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
+    using Microsoft.IdentityModel.Tokens;
+
 
     public class DepartmentService : BaseGenericService<Department, DepartmentBaseSearchCriteria>, IDepartmentService
     {
@@ -68,6 +70,11 @@
             if (criteria.IsActive != null)
             {
                 predicate = predicate.And(p => p.IsActive == criteria.IsActive);
+            }
+
+            if (!criteria.departmentName.IsNullOrEmpty())
+            {
+                predicate = predicate.And(p => p.Name.ToLower() == criteria.departmentName);
             }
 
             return predicate;

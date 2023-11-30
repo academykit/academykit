@@ -33,7 +33,9 @@ const CheckBoxType = ({ options, form, currentIndex }: Props) => {
   return (
     <Box mt={10} px={20} className={classes.option}>
       <Group>
-        <Title size={'xs'}>{t('options')}</Title>
+        <Title size={'xs'}>
+          {t('options')} ({t('multiple_choice')})
+        </Title>
       </Group>
       {options.map((option, index) => (
         <label key={option.id} htmlFor={option.id}>

@@ -50,7 +50,9 @@ const FeedbackRadio = ({ options, form, currentIndex }: Props) => {
   return (
     <Box mt={10} px={20} className={classes.option}>
       <Group>
-        <Title size={'xs'}>{t('options')}</Title>
+        <Title size={'xs'}>
+          {t('options')} ({t('single_choice')})
+        </Title>
       </Group>
       {options.map((option, index) => (
         <div
