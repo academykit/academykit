@@ -85,11 +85,11 @@ export function AppFooter({ name }: { name: string }) {
           {t('powered_by')}
         </Text>
         <Anchor
-          href={'https://www.arkbotech.com'}
+          href={'https://www.vurilo.com/'}
           style={{ textDecoration: 'none' }}
         >
           <Text size={'xs'} color={'dimmed'}>
-            ARKBO Technologies
+            VURILO
           </Text>
         </Anchor>
       </Center>

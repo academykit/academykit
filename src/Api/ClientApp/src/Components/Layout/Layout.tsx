@@ -158,7 +158,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
     icon: <IconInfoSquare size={16} />,
     color: 'blue',
     label: 'help',
-    href: 'https://files.arkbotech.com/s/jx9G9o3NQtLQJSF',
+    href: 'https://docs.google.com/document/d/1S_wlCY7XH2oELa8ZvNPSGVik2117HuclOGC04iHpP-w/edit#heading=h.yf9se9jmezfr',
     replace: true,
     role: UserRole.Trainee,
     target: '_blank',
