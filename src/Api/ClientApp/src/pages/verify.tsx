@@ -35,7 +35,7 @@ const Verify = () => {
         <Text>{t('check_inbox')}</Text>
         <Text>
           {t('email_vurilo')}
-          <a href="mailto:support@arkbotech.com.np">
+          <a href="mailto:support@vurilo.com">
             {t('email_address_vurilo')}
           </a>
         </Text>
