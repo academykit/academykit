@@ -546,7 +546,8 @@
                                         liveClass.Name,
                                         liveClass.Meeting.Duration,
                                         liveClass.Meeting.StartDate.Value,
-                                        liveClass.Meeting.ZoomLicense.LicenseEmail
+                                        liveClass.Meeting.ZoomLicense.LicenseEmail,
+                                        liveClass.Meeting.MeetingNumber.ToString()
                                     )
                                     .ConfigureAwait(false);
                                 var meeting = liveClass.Meeting;
