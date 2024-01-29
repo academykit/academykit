@@ -1,29 +1,28 @@
-/* eslint-disable prettier/prettier */
-import React, { useContext, useEffect, useState } from 'react';
-import { createFormContext, yupResolver } from '@mantine/form';
+import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
+import { BrandingContext } from '@context/BrandingThemeContext';
+import useCustomForm from '@hooks/useCustomForm';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-  TextInput,
+  ActionIcon,
   Button,
-  Textarea,
+  ColorInput,
   Container,
   Text,
-  ColorInput,
-  ActionIcon,
+  TextInput,
+  Textarea,
 } from '@mantine/core';
-import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
+import { createFormContext, yupResolver } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import { IconRefresh } from '@tabler/icons-react';
+import { PHONE_VALIDATION } from '@utils/constants';
 import {
   useGeneralSetting,
   useUpdateGeneralSetting,
 } from '@utils/services/adminService';
-import { showNotification } from '@mantine/notifications';
-import * as Yup from 'yup';
 import errorType from '@utils/services/axiosError';
-import { PHONE_VALIDATION } from '@utils/constants';
+import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import useCustomForm from '@hooks/useCustomForm';
-import { BrandingContext } from '@context/BrandingThemeContext';
-import { IconRefresh } from '@tabler/icons-react';
+import * as Yup from 'yup';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -68,7 +67,6 @@ const GeneralSettings = () => {
 
   const handleColorChange = (value: string) => {
     setColor(value);
-    // toggleBrandingTheme && toggleBrandingTheme(value);
   };
 
   useEffect(() => {
@@ -95,7 +93,10 @@ const GeneralSettings = () => {
 
   const handleSubmit = async (values: any) => {
     try {
-      values = {...values, customConfiguration: JSON.stringify({accent: color})}
+      values = {
+        ...values,
+        customConfiguration: JSON.stringify({ accent: color }),
+      };
       await updateGeneral.mutateAsync(values);
       showNotification({
         title: t('successful'),

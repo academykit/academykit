@@ -1,41 +1,40 @@
-/* eslint-disable prettier/prettier */
-import { Suspense, useState } from 'react';
+import AssignmentDetails from '@components/Course/Classes/AssignmentDetails';
+import ExamDetails from '@components/Course/Classes/ExamDetails';
+import FeedbackDetails from '@components/Course/Classes/FeedbackDetails';
+import PhysicalTrainingDetail from '@components/Course/Classes/PhysicalTrainingDetail';
+import CourseContent from '@components/Course/CourseDescription/CourseContent/CourseContent';
+import Meetings from '@components/Course/Meetings';
+import useAuth from '@hooks/useAuth';
 import {
   AspectRatio,
   Box,
   Button,
   Center,
   Container,
-  createStyles,
   Grid,
   Loader,
   Tabs,
+  createStyles,
 } from '@mantine/core';
-import CourseContent from '@components/Course/CourseDescription/CourseContent/CourseContent';
 import { useMediaQuery } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
 import { IconFileDescription, IconMessage } from '@tabler/icons';
-import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
+import { CourseUserStatus, LessonType, UserRole } from '@utils/enums';
+import lazyWithRetry from '@utils/lazyImportWithReload';
+import RoutePath from '@utils/routeConstants';
+import errorType from '@utils/services/axiosError';
 import {
   useCourseDescription,
   useGetCourseLesson,
 } from '@utils/services/courseService';
-import { CourseUserStatus, LessonType, UserRole } from '@utils/enums';
-import ExamDetails from '@components/Course/Classes/ExamDetails';
-import AssignmentDetails from '@components/Course/Classes/AssignmentDetails';
+import { useWatchHistory } from '@utils/services/watchHistory';
+import { AxiosError } from 'axios';
+import { Suspense, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
 const VideoPlayer = lazyWithRetry(
   () => import('@components/VideoPlayer/VideoPlayer')
 );
-import Meetings from '@components/Course/Meetings';
-import useAuth from '@hooks/useAuth';
-import { useWatchHistory } from '@utils/services/watchHistory';
-import RoutePath from '@utils/routeConstants';
-import { showNotification } from '@mantine/notifications';
-import errorType from '@utils/services/axiosError';
-import FeedbackDetails from '@components/Course/Classes/FeedbackDetails';
-import lazyWithRetry from '@utils/lazyImportWithReload';
-import { useTranslation } from 'react-i18next';
-import { AxiosError } from 'axios';
-import PhysicalTrainingDetail from '@components/Course/Classes/PhysicalTrainingDetail';
 
 const PdfViewer = lazyWithRetry(
   () => import('@components/Course/Classes/PdfViewer')
@@ -150,7 +149,9 @@ const Classes = () => {
   }
 
   // finding the latest incomplete lesson i.e., current lesson
-  const currentLesson = data?.sections.map(section => section.lessons?.find(lesson => !lesson.isCompleted))
+  const currentLesson = data?.sections.map(
+    (section) => section.lessons?.find((lesson) => !lesson.isCompleted)
+  );
 
   return (
     <Box p={0}>
@@ -182,7 +183,11 @@ const Classes = () => {
                     <Button
                       component={Link}
                       mt={20}
-                      to={`${RoutePath.classes}/${params.id}/${currentLesson && currentLesson[0] && currentLesson[0].slug}/description`}
+                      to={`${RoutePath.classes}/${params.id}/${
+                        currentLesson &&
+                        currentLesson[0] &&
+                        currentLesson[0].slug
+                      }/description`}
                     >
                       {t('view_previous_lesson')}
                     </Button>

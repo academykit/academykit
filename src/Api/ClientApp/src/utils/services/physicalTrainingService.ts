@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ResponseData } from './authService';
 import { api } from './service-api';
 import { httpClient } from './service-axios';
-import { ResponseData } from './authService';
 
 const postAttendance = async ({ identity }: { identity: string }) =>
   await httpClient.post<ResponseData>(

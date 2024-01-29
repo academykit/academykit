@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Box,
   Button,
@@ -17,7 +17,7 @@ import {
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { IconPlus, IconTrash } from '@tabler/icons';
-import { QuestionType, ReadableEnum } from '@utils/enums';
+import { QuestionType } from '@utils/enums';
 import {
   IAssignmentQuestion,
   ICreateAssignment,
@@ -25,10 +25,9 @@ import {
   useEditAssignmentQuestion,
 } from '@utils/services/assignmentService';
 import errorType from '@utils/services/axiosError';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -145,18 +144,6 @@ const EditAssignment = ({
 
   const addAssignmentQuestion = useAddAssignmentQuestion(lessonId, search);
   const editAssignment = useEditAssignmentQuestion(lessonId, search);
-
-  // useEffect(() => {
-  //   if (
-  //     form.values.type &&
-  //     !addAssignmentQuestion.isSuccess &&
-  //     form?.values.answers
-  //   ) {
-  //     form.values.answers.forEach((x, i) => {
-  //       return form.setFieldValue(`answers.${i}.isCorrect`, false);
-  //     });
-  //   }
-  // }, [form.values.type]);
 
   const onChangeRadioType = (index: number) => {
     form?.values.answers &&

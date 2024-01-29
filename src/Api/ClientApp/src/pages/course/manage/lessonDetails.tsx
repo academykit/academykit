@@ -9,6 +9,7 @@ import {
   Loader,
   Paper,
   Table,
+  Tabs,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { LessonType } from '@utils/enums';
@@ -20,6 +21,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import CourseLessonDetails from './Components/CourseLessonDetails';
+import FeedbackGraphDetail from './FeedbackGraphDetail';
 
 const LessonDetails = ({
   searchComponent,
@@ -71,56 +73,69 @@ const LessonDetails = ({
 
   return (
     <>
-      {lessonDetails.data?.items[0]?.lessonType === LessonType.Feedback && (
-        <Group position="right" my="md">
-          <Button onClick={handleExport} loading={loading}>
-            {t('export')}
-          </Button>
-        </Group>
-      )}
-      {lessonDetails.data?.items[0]?.lessonType === LessonType.Exam && (
-        <Group position="right" my="md">
-          <Button
-            variant="outline"
-            onClick={() => downloadCSVFile(exportUserCSV, 'lessonStats')}
-          >
-            {t('export')}
-          </Button>
-        </Group>
-      )}
-      <Paper>
-        <Box mb={'sm'}>{searchComponent('Search Student')}</Box>
-        {lessonDetails.data && lessonDetails.data?.items.length > 0 ? (
-          <Table striped withBorder withColumnBorders highlightOnHover>
-            <thead>
-              <tr>
-                <th>{t('trainees')}</th>
-                <th>
-                  <Center>{t('status')}</Center>
-                </th>
+      <Tabs defaultValue="list" orientation="horizontal">
+        <Tabs.List>
+          <Tabs.Tab value="list">{t('list_tab')}</Tabs.Tab>
+          <Tabs.Tab value="graph">{t('graphical')}</Tabs.Tab>
+        </Tabs.List>
 
-                <th>{t('actions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {lessonDetails.data?.items.map((x) => (
-                <CourseLessonDetails
-                  element={x}
-                  key={x.lessonId}
-                  courseId={id as string}
-                />
-              ))}
-            </tbody>
-          </Table>
-        ) : (
-          <Box>{t('no_enrolled_student_found')}</Box>
-        )}
-        {lessonDetails.data &&
-          pagination(
-            lessonDetails.data.totalPage,
-            lessonDetails.data?.items.length
+        <Tabs.Panel value="list" pt="xs">
+          {lessonDetails.data?.items[0]?.lessonType === LessonType.Feedback && (
+            <Group position="right" my="md">
+              <Button onClick={handleExport} loading={loading}>
+                {t('export')}
+              </Button>
+            </Group>
           )}
-      </Paper>
+          {lessonDetails.data?.items[0]?.lessonType === LessonType.Exam && (
+            <Group position="right" my="md">
+              <Button
+                variant="outline"
+                onClick={() => downloadCSVFile(exportUserCSV, 'lessonStats')}
+              >
+                {t('export')}
+              </Button>
+            </Group>
+          )}
+          <Paper>
+            <Box mb={'sm'}>{searchComponent('Search Student')}</Box>
+            {lessonDetails.data && lessonDetails.data?.items.length > 0 ? (
+              <Table striped withBorder withColumnBorders highlightOnHover>
+                <thead>
+                  <tr>
+                    <th>{t('trainees')}</th>
+                    <th>
+                      <Center>{t('status')}</Center>
+                    </th>
+
+                    <th>{t('actions')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {lessonDetails.data?.items.map((x) => (
+                    <CourseLessonDetails
+                      element={x}
+                      key={x.lessonId}
+                      courseId={id as string}
+                    />
+                  ))}
+                </tbody>
+              </Table>
+            ) : (
+              <Box>{t('no_enrolled_student_found')}</Box>
+            )}
+            {lessonDetails.data &&
+              pagination(
+                lessonDetails.data.totalPage,
+                lessonDetails.data?.items.length
+              )}
+          </Paper>
+        </Tabs.Panel>
+
+        <Tabs.Panel value="graph" pt="xs">
+          <FeedbackGraphDetail />
+        </Tabs.Panel>
+      </Tabs>
     </>
   );
 };

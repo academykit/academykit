@@ -1,40 +1,38 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Breadcrumb from '@components/Ui/BreadCrumb';
-import { useEffect, useState } from 'react';
+import TextViewer from '@components/Ui/RichTextViewer';
 import {
+  Anchor,
+  Button,
   Checkbox,
+  Grid,
   Group,
-  Text,
+  Loader,
+  Pagination,
+  Paper,
   Select,
+  Text,
   TransferList,
   TransferListData,
-  Grid,
-  createStyles,
-  Button,
-  Paper,
-  Pagination,
-  Loader,
   TransferListItemComponent,
   TransferListItemComponentProps,
-  Anchor,
+  createStyles,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IPool, usePools } from '@utils/services/poolService';
-import { ITag, useTags } from '@utils/services/tagService';
+import { showNotification } from '@mantine/notifications';
+import errorType from '@utils/services/axiosError';
+import { usePools } from '@utils/services/poolService';
 import {
   useAddQuestionQuestionSet,
   useQuestion,
   useQuestionSetQuestions,
 } from '@utils/services/questionService';
-import { showNotification } from '@mantine/notifications';
-import { useNavigate, useParams } from 'react-router-dom';
-import errorType from '@utils/services/axiosError';
-import { useTranslation } from 'react-i18next';
-import TextViewer from '@components/Ui/RichTextViewer';
-import { httpClient } from '@utils/services/service-axios';
 import { api } from '@utils/services/service-api';
+import { httpClient } from '@utils/services/service-axios';
+import { ITag } from '@utils/services/tagService';
 import { IPaginated } from '@utils/services/types';
-import { UseQueryResult } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface ISelectList {
   label: string;

@@ -158,3 +158,65 @@ export const useFeedbackSubmission = ({ lessonId }: { lessonId: string }) => {
 
 export const exportFeedback = (lessonId: string) =>
   httpClient.get(api.feedback.exportFeedback(lessonId));
+
+interface IFeedbackChart {
+  id: string;
+  lessonId: string;
+  lessonName: string;
+  feedbackId: string;
+  feedbackName: string;
+  order: number;
+  isActive: boolean;
+  type: number;
+  singleChoiceCount: number;
+  multipleChoiceCount: number;
+  ratingCount: number;
+  answerCount: number;
+  user: {
+    id: string;
+    fullName: string;
+    imageUrl: string;
+    email: string;
+    mobileNumber: string;
+    role: number;
+    departmentId: string;
+    departmentName: string;
+  };
+  subjectiveAnswer: [
+    {
+      answer: string;
+    },
+  ];
+  rating: {
+    fiveRating: number;
+    fourRating: number;
+    threeRating: number;
+    twoRating: number;
+    oneRating: number;
+  };
+  feedbackQuestionOptions: [
+    {
+      id: string;
+      feedbackId: string;
+      feedbackName: string;
+      option: string;
+      isSelected: boolean;
+      order: number;
+      selectedCount: number;
+    },
+  ];
+}
+
+const getFeedbackGraph = (lessonId: string) => {
+  return httpClient.get<IFeedbackChart[]>(api.feedback.graph(lessonId));
+};
+
+export const useGetFeedbackGraph = (lessonId: string) => {
+  return useQuery(
+    [api.feedback.graph(lessonId)],
+    () => getFeedbackGraph(lessonId),
+    {
+      select: (data) => data.data,
+    }
+  );
+};

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Avatar,
@@ -55,7 +54,6 @@ const schema = () => {
 
 const AddTrainee = ({
   onCancel,
-  searchParams,
 }: {
   onCancel: () => void;
   searchParams: string;

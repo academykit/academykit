@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
@@ -12,8 +11,8 @@ import {
   Table,
 } from '@mantine/core';
 import { useCourse } from '@utils/services/courseService';
-import CourseRow from './Component/CourseRow';
 import { useTranslation } from 'react-i18next';
+import CourseRow from './Component/CourseRow';
 
 const AdminCourseList = ({
   searchParams,
@@ -37,7 +36,6 @@ const AdminCourseList = ({
                     <th>{t('training_name')}</th>
                     <th>{t('created_date')}</th>
                     <th>{t('author')}</th>
-
                     <th>{t('status')}</th>
                     <th>{t('actions')}</th>
                   </tr>

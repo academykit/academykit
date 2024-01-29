@@ -204,6 +204,7 @@ export const api = {
           `?${search}&LessonIdentity=${lessonId}&UserId=${userId}`
         : '/api/feedback' + `?LessonIdentity=${lessonId}&UserId=${userId}`,
     exportFeedback: (lessonId: string) => `/api/Feedback/${lessonId}/export`,
+    graph: (id: string) => `/api/Feedback/${id}/chart`,
   },
   exam: {
     startExam: (id: string) => `/api/QuestionSet/${id}/startExam`,

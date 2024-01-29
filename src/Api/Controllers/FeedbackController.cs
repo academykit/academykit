@@ -28,7 +28,8 @@ namespace Lingtren.Api.Controllers
             IFeedbackService feedbackService,
             IValidator<FeedbackRequestModel> validator,
             IValidator<IList<FeedbackSubmissionRequestModel>> submissionValidator,
-            IStringLocalizer<ExceptionLocalizer> localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
         {
             this.feedbackService = feedbackService;
             this.validator = validator;
@@ -41,9 +42,14 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <returns> the list of <see cref="FeedbackResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<IList<FeedbackResponseModel>> SearchAsync([FromQuery] FeedbackBaseSearchCriteria searchCriteria)
+        public async Task<IList<FeedbackResponseModel>> SearchAsync(
+            [FromQuery] FeedbackBaseSearchCriteria searchCriteria
+        )
         {
-            CommonHelper.ValidateArgumentNotNullOrEmpty(searchCriteria.LessonIdentity, nameof(searchCriteria.LessonIdentity));
+            CommonHelper.ValidateArgumentNotNullOrEmpty(
+                searchCriteria.LessonIdentity,
+                nameof(searchCriteria.LessonIdentity)
+            );
             searchCriteria.CurrentUserId = CurrentUser.Id;
             return await feedbackService.SearchAsync(searchCriteria).ConfigureAwait(false);
         }
@@ -58,7 +64,9 @@ namespace Lingtren.Api.Controllers
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
             var entity = new Feedback
             {
@@ -73,21 +81,26 @@ namespace Lingtren.Api.Controllers
                 UpdatedBy = CurrentUser.Id,
                 FeedbackQuestionOptions = new List<FeedbackQuestionOption>(),
             };
-            if (model.Type == FeedbackTypeEnum.SingleChoice || model.Type == FeedbackTypeEnum.MultipleChoice)
+            if (
+                model.Type == FeedbackTypeEnum.SingleChoice
+                || model.Type == FeedbackTypeEnum.MultipleChoice
+            )
             {
                 foreach (var item in model.Answers.Select((answer, i) => new { i, answer }))
                 {
-                    entity.FeedbackQuestionOptions.Add(new FeedbackQuestionOption
-                    {
-                        Id = Guid.NewGuid(),
-                        FeedbackId = entity.Id,
-                        Order = item.i + 1,
-                        Option = item.answer.Option,
-                        CreatedBy = CurrentUser.Id,
-                        CreatedOn = currentTimeStamp,
-                        UpdatedBy = CurrentUser.Id,
-                        UpdatedOn = currentTimeStamp,
-                    });
+                    entity.FeedbackQuestionOptions.Add(
+                        new FeedbackQuestionOption
+                        {
+                            Id = Guid.NewGuid(),
+                            FeedbackId = entity.Id,
+                            Order = item.i + 1,
+                            Option = item.answer.Option,
+                            CreatedBy = CurrentUser.Id,
+                            CreatedOn = currentTimeStamp,
+                            UpdatedBy = CurrentUser.Id,
+                            UpdatedOn = currentTimeStamp,
+                        }
+                    );
                 }
             }
 
@@ -114,11 +127,18 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the instance of <see cref="FeedbackRequestModel" />. </param>
         /// <returns> the instance of <see cref="FeedbackResponseModel" /> .</returns>
         [HttpPut("{identity}")]
-        public async Task<FeedbackResponseModel> UpdateAsync(string identity, FeedbackRequestModel model)
+        public async Task<FeedbackResponseModel> UpdateAsync(
+            string identity,
+            FeedbackRequestModel model
+        )
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var savedEntity = await feedbackService.UpdateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var savedEntity = await feedbackService
+                .UpdateAsync(identity, model, CurrentUser.Id)
+                .ConfigureAwait(false);
             return new FeedbackResponseModel(savedEntity);
         }
 
@@ -132,7 +152,13 @@ namespace Lingtren.Api.Controllers
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await feedbackService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("FeedbackRemoved") });
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("FeedbackRemoved")
+                }
+            );
         }
 
         /// <summary>
@@ -141,11 +167,24 @@ namespace Lingtren.Api.Controllers
         /// <param name="identity">lesson id or slug. </param>
         /// <returns> the task complete. </returns>
         [HttpPost("{lessonIdentity}/submissions")]
-        public async Task<IActionResult> SubmissionAsync(string lessonIdentity, IList<FeedbackSubmissionRequestModel> model)
+        public async Task<IActionResult> SubmissionAsync(
+            string lessonIdentity,
+            IList<FeedbackSubmissionRequestModel> model
+        )
         {
-            await submissionValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            await feedbackService.FeedbackSubmissionAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("FeedbackSubmitted") });
+            await submissionValidator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            await feedbackService
+                .FeedbackSubmissionAsync(lessonIdentity, model, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("FeedbackSubmitted")
+                }
+            );
         }
 
         /// <summary>
@@ -154,8 +193,25 @@ namespace Lingtren.Api.Controllers
         /// <param name="lessonIdentity">the lesson id or slug.</param>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpGet("{lessonIdentity}/users")]
-        public async Task<IList<FeedbackSubmissionStudentResponseModel>> SubmissionAsync(string lessonIdentity) =>
-            await feedbackService.GetFeedbackSubmittedStudent(lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
+        public async Task<IList<FeedbackSubmissionStudentResponseModel>> SubmissionAsync(
+            string lessonIdentity
+        ) =>
+            await feedbackService
+                .GetFeedbackSubmittedStudent(lessonIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Get feedback submitted student list api.
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug.</param>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        [HttpGet("{lessonIdentity}/chart")]
+        public async Task<IList<FeedBackChartResponseModel>> GetLessonFeedBackData(
+            string lessonIdentity
+        ) =>
+            await feedbackService
+                .GetFeedbackChartData(lessonIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
 
         /// <summary>
         /// feedback export api.
@@ -165,7 +221,9 @@ namespace Lingtren.Api.Controllers
         [HttpGet("{lessonIdentity}/export")]
         public async Task<IActionResult> Export(string lessonIdentity)
         {
-            var report = await feedbackService.GetFeedBackReportAsync(lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
+            var report = await feedbackService
+                .GetFeedBackReportAsync(lessonIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
             return File(report, "text/csv", $"{lessonIdentity}.csv");
         }
     }

@@ -13,7 +13,10 @@
         /// <param name="lessonIdentity">the lesson id or slug</param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
-        Task<IList<FeedbackSubmissionStudentResponseModel>> GetFeedbackSubmittedStudent(string lessonIdentity, Guid currentUserId);
+        Task<IList<FeedbackSubmissionStudentResponseModel>> GetFeedbackSubmittedStudent(
+            string lessonIdentity,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to update course
@@ -31,7 +34,11 @@
         /// <param name="models">the list of <see cref="FeedbackSubmissionRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user</param>
         /// <returns></returns>
-        Task FeedbackSubmissionAsync(string lessonIdentity, IList<FeedbackSubmissionRequestModel> models, Guid currentUserId);
+        Task FeedbackSubmissionAsync(
+            string lessonIdentity,
+            IList<FeedbackSubmissionRequestModel> models,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to search feedback
@@ -39,6 +46,17 @@
         /// <param name="searchCriteria">the instance of <see cref="FeedbackBaseSearchCriteria"/></param>
         /// <returns>the list of <see cref="FeedbackResponseModel"/></returns>
         Task<IList<FeedbackResponseModel>> SearchAsync(FeedbackBaseSearchCriteria searchCriteria);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="lessonIdentity"></param>
+        /// <param name="currentUserId"></param>
+        /// <returns></returns> <summary>
+        Task<IList<FeedBackChartResponseModel>> GetFeedbackChartData(
+            string lessonIdentity,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to get feedback report
@@ -55,6 +73,10 @@
         /// <param name="lessonIdentiy">lesson id or slug</param>
         /// <param name="ids">list of feedback id</param>
         /// <returns>Task completed</returns>
-        Task ReorderFeedbackQuestionsAsync(Guid currentUserId, string lessonIdentiy, List<Guid> ids);
+        Task ReorderFeedbackQuestionsAsync(
+            Guid currentUserId,
+            string lessonIdentiy,
+            List<Guid> ids
+        );
     }
 }

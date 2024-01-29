@@ -865,6 +865,14 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "no_data": "No data found",
+  "rating_questions": "Rating Questions",
+  "single_choice_questions": "Single Choice Questions",
+  "multi_choice_questions": "Multi Choice Questions",
+  "subjective_questions": "Subjective Questions",
+  "responses": "Responses",
+  "list_tab": "List",
+  "graphical": "Graphical",
   "ends": "Ends",
   "total_marks": "Total Marks",
   "pass_mark": "Pass Marks",

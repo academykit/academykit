@@ -1,5 +1,6 @@
-/* eslint-disable prettier/prettier */
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Box,
   Button,
@@ -30,9 +31,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-// import RoutePath from '@utils/routeConstants';
+
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IAddQuestionType>();
 
@@ -40,7 +39,9 @@ const schema = () => {
   const { t } = useTranslation();
 
   return Yup.object().shape({
-    name: Yup.string().trim().required(t('question_title_required') as string),
+    name: Yup.string()
+      .trim()
+      .required(t('question_title_required') as string),
     type: Yup.string()
       .required(t('question_type_required') as string)
       .nullable(),
@@ -277,7 +278,6 @@ const Create = () => {
                       <Radio
                         onChange={() => onChangeRadioType(i)}
                         checked={form.values.answers[i].isCorrect}
-                        // {...form.getInputProps(`answers.${i}.isCorrect`)}
                       ></Radio>
                     )}
                     <div style={{ width: '80%' }}>

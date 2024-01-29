@@ -1,37 +1,36 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ActionIcon,
+  Box,
   Button,
   Group,
   Loader,
   Modal,
-  Tooltip,
-  Box,
-  Table,
   ScrollArea,
+  Table,
   Textarea,
+  Tooltip,
 } from '@mantine/core';
+import { useForm } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
 import UserResults from '@pages/course/exam/Components/UserResults';
 import { IconCheck, IconEye } from '@tabler/icons';
+import { DATE_FORMAT } from '@utils/constants';
 import { LessonType } from '@utils/enums';
+import formatDuration from '@utils/formatDuration';
 import RoutePath from '@utils/routeConstants';
-import { Link, useParams } from 'react-router-dom';
-import { useWatchHistoryUser } from '@utils/services/watchHistory';
-import { showNotification } from '@mantine/notifications';
 import errorType from '@utils/services/axiosError';
 import {
   IReportDetail,
   useGetMeetingReport,
 } from '@utils/services/liveSessionService';
-import moment from 'moment';
-import formatDuration from '@utils/formatDuration';
-import { getType } from './LessonStatusColor';
 import { IStudentInfoLesson } from '@utils/services/manageCourseService';
-import { useTranslation } from 'react-i18next';
-import { DATE_FORMAT } from '@utils/constants';
 import { useReviewAttendance } from '@utils/services/physicalTrainingService';
-import { useForm } from '@mantine/form';
+import { useWatchHistoryUser } from '@utils/services/watchHistory';
+import moment from 'moment';
+import { useTranslation } from 'react-i18next';
+import { Link, useParams } from 'react-router-dom';
+import { getType } from './LessonStatusColor';
 
 const TableRow = ({ values }: { values: IReportDetail }) => {
   const { t } = useTranslation();

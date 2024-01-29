@@ -868,6 +868,14 @@
       "AWS_VideoBucket": "भिडियो संग्रह"
     }
   },
+  "no_data": "कुनै डाटा प्राप्त गरिएन",
+  "rating_questions": "रेटिङ प्रश्नहरू",
+  "single_choice_questions": "एकल छनोट प्रश्नहरू",
+  "multi_choice_questions": "बहु छनोट प्रश्नहरू",
+  "subjective_questions": "बारेमा प्रश्नहरू",
+  "responses": "प्रतिक्रियाहरू",
+  "list_tab": "सूची",
+  "graphical": "रेखाचित्र",
   "ends": "सकिन्छ",
   "total_marks": "कुल अंक",
   "pass_mark": "पास अंक",

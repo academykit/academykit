@@ -1,4 +1,5 @@
 import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from '@utils/constants';
+import { LanguageString } from '@utils/enums';
 import { BASE_URL } from '@utils/env';
 import axios, {
   AxiosDefaults,
@@ -7,7 +8,6 @@ import axios, {
   AxiosResponse,
 } from 'axios';
 import { api } from './service-api';
-import { LanguageString } from '@utils/enums';
 
 type RequestData = Record<string, any>;
 
