@@ -53,6 +53,13 @@ export default defineConfig({
         connect: path.resolve(dir, 'meet.html'),
         verify: path.resolve(dir, 'zoomverify/verifyzoom.html'),
       },
+      onwarn(warning, warn) {
+        // discussion to safely ignore this warning: https://github.com/TanStack/query/issues/5175
+        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+          return;
+        }
+        warn(warning);
+      },
     },
   },
 });
