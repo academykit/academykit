@@ -32,7 +32,6 @@ const Rows = ({
   course_id: string;
 }) => {
   const { t } = useTranslation();
-
   return (
     <Table.Tr key={item?.id}>
       <Table.Td style={{ maxWidth: '200px' }}>
@@ -73,7 +72,14 @@ const Rows = ({
             }}
             label={`${t('view_details_for')} ${item.name} ${t('lesson')}`}
           >
-            <Button component={Link} variant="subtle" to={`${item.slug}`}>
+            <Button
+              component={Link}
+              variant="subtle"
+              to={`${item.slug}`}
+              state={{
+                lessonType: item.lessonType,
+              }}
+            >
               <IconEye />
             </Button>
           </Tooltip>

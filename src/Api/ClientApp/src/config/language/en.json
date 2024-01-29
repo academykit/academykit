@@ -865,6 +865,7 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "summary": "Summary",
   "responses": "Responses",
   "list_tab": "List",
   "graphical": "Graphical",

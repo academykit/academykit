@@ -15,12 +15,15 @@ import { showNotification } from '@mantine/notifications';
 import { IconTableExport } from '@tabler/icons';
 import { LessonType } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
-import { exportFeedback } from '@utils/services/feedbackService';
+import {
+  exportFeedback,
+  useGetFeedbackGraph,
+} from '@utils/services/feedbackService';
 import { downloadCSVFile } from '@utils/services/fileService';
 import { useGetLessonStatisticsDetails } from '@utils/services/manageCourseService';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import CourseLessonDetails from './Components/CourseLessonDetails';
 import FeedbackGraphDetail from './FeedbackGraphDetail';
 
@@ -31,13 +34,14 @@ const LessonDetails = ({
 }: IWithSearchPagination) => {
   const { id, lessonId } = useParams();
   const { t } = useTranslation();
-
+  const { state } = useLocation();
   const lessonDetails = useGetLessonStatisticsDetails(
     id as string,
     lessonId as string,
     searchParams
   );
   const [loading, setLoading] = useState(false);
+  const chartData = useGetFeedbackGraph(lessonId as string);
 
   if (lessonDetails.isLoading) return <Loader />;
 
@@ -77,7 +81,11 @@ const LessonDetails = ({
       <Tabs defaultValue="list" orientation="horizontal">
         <Tabs.List>
           <Tabs.Tab value="list">{t('list_tab')}</Tabs.Tab>
-          <Tabs.Tab value="graph">{t('graphical')}</Tabs.Tab>
+          {state?.lessonType == LessonType.Feedback && (
+            <Tabs.Tab value="graph" onClick={() => chartData.refetch()}>
+              {t('summary')}
+            </Tabs.Tab>
+          )}
         </Tabs.List>
 
         <Tabs.Panel value="list" pt="xs">
@@ -135,7 +143,7 @@ const LessonDetails = ({
         </Tabs.Panel>
 
         <Tabs.Panel value="graph" pt="xs">
-          <FeedbackGraphDetail />
+          <FeedbackGraphDetail chartData={chartData} />
         </Tabs.Panel>
       </Tabs>
     </>

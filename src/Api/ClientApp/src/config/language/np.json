@@ -868,6 +868,7 @@
       "AWS_VideoBucket": "भिडियो संग्रह"
     }
   },
+  "summary": "संक्षेप",
   "responses": "प्रतिक्रियाहरू",
   "list_tab": "सूची",
   "graphical": "रेखाचित्र",

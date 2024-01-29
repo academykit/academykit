@@ -868,6 +868,7 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "summary": "概要",
   "responses": "回答",
   "list_tab": "リスト",
   "graphical": "グラフィカル",

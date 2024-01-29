@@ -1,15 +1,16 @@
 import { Box } from '@mantine/core';
+import { UseQueryResult } from '@tanstack/react-query';
 import { FeedbackType } from '@utils/enums';
-import { useGetFeedbackGraph } from '@utils/services/feedbackService';
-import { useParams } from 'react-router-dom';
+import { IFeedbackChart } from '@utils/services/feedbackService';
 import HorizontalBarGraph from './Components/Graph/HorizontalBarGraph';
 import RatingGraph from './Components/Graph/RatingGraph';
 import SubjectiveData from './Components/Graph/SubjectiveData';
 
-const FeedbackGraphDetail = () => {
-  const param = useParams();
-  const chartData = useGetFeedbackGraph(param.lessonId as string);
-
+const FeedbackGraphDetail = ({
+  chartData,
+}: {
+  chartData: UseQueryResult<IFeedbackChart[], unknown>;
+}) => {
   return (
     <>
       <Box mb={25}>

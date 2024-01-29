@@ -159,7 +159,7 @@ export const useFeedbackSubmission = ({ lessonId }: { lessonId: string }) => {
 export const exportFeedback = (lessonId: string) =>
   httpClient.get(api.feedback.exportFeedback(lessonId));
 
-interface IFeedbackChart {
+export interface IFeedbackChart {
   id: string;
   lessonId: string;
   lessonName: string;
@@ -217,6 +217,8 @@ export const useGetFeedbackGraph = (lessonId: string) => {
     () => getFeedbackGraph(lessonId),
     {
       select: (data) => data.data,
+      retry: 2,
+      enabled: false,
     }
   );
 };
