@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Box,
   Button,
@@ -7,13 +9,14 @@ import {
   NumberInput,
   Select,
   Switch,
-  Tooltip,
   Text,
+  Tooltip,
 } from '@mantine/core';
 import { DatePickerInput, TimeInput } from '@mantine/dates';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { LessonType } from '@utils/enums';
+import { getDateTime } from '@utils/getDateTime';
 import { useActiveZoomLicense } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import {
@@ -23,13 +26,10 @@ import {
 } from '@utils/services/courseService';
 import { ILessonMeeting } from '@utils/services/types';
 import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import { useTranslation } from 'react-i18next';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import { getDateTime } from '@utils/getDateTime';
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -220,7 +220,7 @@ const AddMeeting = ({
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Grid align="center">
-        <Grid.Col span={12} lg={6}>
+        <Grid.Col span={{ base: 12, lg: 6 }}>
           <CustomTextFieldWithAutoFocus
             label={t('meeting_name')}
             placeholder={t('meeting_name') as string}
@@ -228,8 +228,8 @@ const AddMeeting = ({
             withAsterisk
           />
         </Grid.Col>
-        <Tooltip multiline label={t('mandatory_tooltip')} width={220}>
-          <Grid.Col span={6} lg={3}>
+        <Tooltip multiline label={t('mandatory_tooltip')} w={220}>
+          <Grid.Col span={6}>
             <Switch
               label={t('is_mandatory')}
               {...form.getInputProps('isMandatory')}
@@ -296,7 +296,7 @@ const AddMeeting = ({
           {...form.getInputProps('description')}
         />
       </Box>
-      <Group position="left" mt="md">
+      <Group mt="md">
         <Button
           type="submit"
           loading={lesson.isLoading || updateLesson.isLoading}

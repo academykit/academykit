@@ -16,21 +16,20 @@ import {
   Table,
   Text,
   Title,
-  rem,
 } from '@mantine/core';
 import { useDisclosure, useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconPlus, IconTrash } from '@tabler/icons';
+import { UserRole } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import {
   IGroupMember,
   useGroupMember,
   useRemoveGroupMember,
 } from '@utils/services/groupService';
+import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import AddMember from '../Components/AddMember';
-import { UserRole } from '@utils/enums';
-import { useTranslation } from 'react-i18next';
 
 const GroupMember = ({
   pagination,
@@ -50,7 +49,7 @@ const GroupMember = ({
   return (
     <Container fluid>
       <Group
-        sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+        style={{ justifyContent: 'space-between', alignItems: 'center' }}
         mt={20}
       >
         <Box>
@@ -58,8 +57,8 @@ const GroupMember = ({
           <Text>{t('group_members_description')}</Text>
         </Box>
 
-        {auth?.auth && auth?.auth?.role <= UserRole.Trainer && (
-          <Button leftIcon={<IconPlus size={rem(14)} />} onClick={open}>
+        {auth?.auth && Number(auth?.auth?.role) <= UserRole.Trainer && (
+          <Button leftSection={<IconPlus size={15} />} onClick={open}>
             {t('add_group_member')}
           </Button>
         )}
@@ -68,7 +67,7 @@ const GroupMember = ({
         opened={opened}
         onClose={close}
         title={t('add_group_member')}
-        overlayProps={{ opacity: 0.5, blur: 4 }}
+        overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
       >
         <AddMember onCancel={close} searchParams={searchParams} />
       </Drawer>
@@ -81,17 +80,17 @@ const GroupMember = ({
       )}
       {groupMember.isSuccess && groupMember.data.totalCount !== 0 && (
         <Paper mt={10}>
-          <Table striped withBorder withColumnBorders highlightOnHover>
-            <thead>
-              <tr>
-                <th>{t('user_name')}</th>
-                <th>{t('email_or_phone')}</th>
-                {auth?.auth && auth?.auth?.role <= UserRole.Trainer && (
-                  <th>{t('actions')}</th>
+          <Table striped withTableBorder withColumnBorders highlightOnHover>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>{t('user_name')}</Table.Th>
+                <Table.Th>{t('email_or_phone')}</Table.Th>
+                {auth?.auth && Number(auth?.auth?.role) <= UserRole.Trainer && (
+                  <Table.Th>{t('actions')}</Table.Th>
                 )}
-              </tr>
-            </thead>
-            <tbody>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
               {groupMember.data?.items.map((d) => (
                 <GroupMemberRow
                   data={d}
@@ -100,7 +99,7 @@ const GroupMember = ({
                   auth={auth}
                 />
               ))}
-            </tbody>
+            </Table.Tbody>
           </Table>
         </Paper>
       )}
@@ -149,7 +148,7 @@ const GroupMemberRow = ({
     setDeleteDialog();
   }
   return (
-    <tr>
+    <Table.Tr>
       <DeleteModal
         title={`${t('sure_want_to_remove')} "${data.user.fullName?.split(
           ' '
@@ -159,34 +158,34 @@ const GroupMemberRow = ({
         onConfirm={deleteMember}
       />
 
-      <td>
-        <Group spacing="sm">
+      <Table.Td>
+        <Group gap="sm">
           <Link to={`/userProfile/${data.user.id}/certificate`}>
             <Avatar size={26} src={data?.user?.imageUrl || ''} radius={26} />
           </Link>
-          <Text size="sm" weight={500}>
+          <Text size="sm" fw={500}>
             {data?.user?.fullName}
           </Text>
         </Group>
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         {data?.user?.email} {data?.user?.mobileNumber && `| `}
         {data.user?.mobileNumber}
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         {auth?.auth?.id !== data?.user?.id &&
           auth?.auth &&
-          auth?.auth?.role <= UserRole.Trainer && (
+          Number(auth?.auth?.role) <= UserRole.Trainer && (
             <Button
               onClick={() => setDeleteDialog()}
               variant="subtle"
-              color={'red'}
+              c={'red'}
             >
               <IconTrash />
             </Button>
           )}
-      </td>
-    </tr>
+      </Table.Td>
+    </Table.Tr>
   );
 };
 

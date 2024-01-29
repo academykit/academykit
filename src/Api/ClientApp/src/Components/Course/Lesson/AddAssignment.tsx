@@ -1,3 +1,6 @@
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Box,
   Button,
@@ -8,26 +11,23 @@ import {
   Text,
   Tooltip,
 } from '@mantine/core';
+import { DatePickerInput, TimeInput } from '@mantine/dates';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+import { IconCalendar } from '@tabler/icons';
 import { LessonType } from '@utils/enums';
+import { getDateTime } from '@utils/getDateTime';
+import errorType from '@utils/services/axiosError';
 import {
   useCreateLesson,
   useUpdateLesson,
 } from '@utils/services/courseService';
 import { ILessonAssignment } from '@utils/services/types';
-import React, { useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import errorType from '@utils/services/axiosError';
-import * as Yup from 'yup';
-import { DatePickerInput, TimeInput } from '@mantine/dates';
-import { IconCalendar } from '@tabler/icons';
-import { getDateTime } from '@utils/getDateTime';
 import moment from 'moment';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import * as Yup from 'yup';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -165,8 +165,8 @@ const AddAssignment = ({
     <React.Fragment>
       <form onSubmit={form.onSubmit(submitForm)}>
         <Paper withBorder p="md">
-          <Grid align={'center'} justify="space-around">
-            <Grid.Col span={12} lg={8}>
+          <Grid align={'center'}>
+            <Grid.Col span={6}>
               <CustomTextFieldWithAutoFocus
                 label={t('assignment_title')}
                 placeholder={t('assignment_title') as string}
@@ -175,7 +175,7 @@ const AddAssignment = ({
                 styles={{ error: { position: 'absolute' } }}
               />
             </Grid.Col>
-            <Tooltip multiline label={t('mandatory_tooltip')} width={220}>
+            <Tooltip multiline label={t('mandatory_tooltip')} w={220}>
               <Grid.Col span={4}>
                 <Switch
                   label={t('is_mandatory')}
@@ -194,7 +194,7 @@ const AddAssignment = ({
                 valueFormat="MMM DD, YYYY"
                 placeholder={t('pick_start_date') as string}
                 label={t('start_date')}
-                icon={<IconCalendar size={16} />}
+                leftSection={<IconCalendar size={16} />}
                 minDate={moment(new Date()).toDate()}
                 withAsterisk
                 {...form.getInputProps('eventStartDate')}
@@ -217,7 +217,7 @@ const AddAssignment = ({
                 placeholder={t('pick_end_date') as string}
                 label={t('end_date')}
                 minDate={form.values.eventStartDate}
-                icon={<IconCalendar size={16} />}
+                leftSection={<IconCalendar size={16} />}
                 withAsterisk
                 {...form.getInputProps('eventEndDate')}
                 styles={{ error: { position: 'absolute' } }}
@@ -241,7 +241,7 @@ const AddAssignment = ({
               </Box>
             </Grid.Col>
           </Grid>
-          <Group position="left" mt="md">
+          <Group mt="md">
             <Button
               type="submit"
               loading={lesson.isLoading || updateLesson.isLoading}

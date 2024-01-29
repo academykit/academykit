@@ -1,6 +1,5 @@
-import { createStyles } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { useContext, useState, createContext } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 interface ISectionContext {
   setIsAddSection: any;
@@ -14,15 +13,8 @@ interface ISectionContext {
 
 const SectionContext = createContext<ISectionContext | null>(null);
 
-const useStyle = createStyles((theme) => ({
-  section: {
-    background: theme.colorScheme === 'dark' ? theme.black[2] : theme.white[2],
-  },
-}));
-
 export const EditSectionProvider = ({ children }: any) => {
-  const { theme } = useStyle();
-  const matches = useMediaQuery(`(min-width: ${theme.breakpoints.sm}px)`);
+  const matches = useMediaQuery(`(min-width: 48em)`) as boolean;
   const [isAddSection, setIsAddSection] = useState<boolean>(false);
   const [addLessonClick, setAddLessonClick] = useState<boolean>(false);
   const [activeSection, setActiveSection] = useState<string | undefined>();

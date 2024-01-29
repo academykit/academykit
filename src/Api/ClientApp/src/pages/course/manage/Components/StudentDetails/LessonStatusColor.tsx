@@ -71,7 +71,7 @@ const LessonStatusColor = ({
 
   return (
     <>
-      <Group position="center">
+      <Group justify="center">
         {type !== LessonType.Assignment &&
           type !== LessonType.Physical &&
           // Logic for other lesson types

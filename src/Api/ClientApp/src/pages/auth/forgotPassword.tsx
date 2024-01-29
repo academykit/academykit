@@ -1,25 +1,25 @@
 import {
-  TextInput,
-  Paper,
-  Title,
-  Container,
+  Anchor,
   Button,
   Center,
-  Anchor,
+  Container,
   Group,
   Image,
+  Paper,
+  TextInput,
+  Title,
 } from '@mantine/core';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { useEffect } from 'react';
-import useAuth from '../../hooks/useAuth';
-import { useForgotPassword } from '@utils/services/authService';
 import RoutePath from '@utils/routeConstants';
-import errorType from '@utils/services/axiosError';
 import { useCompanySetting } from '@utils/services/adminService';
+import { useForgotPassword } from '@utils/services/authService';
+import errorType from '@utils/services/axiosError';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
+import useAuth from '../../hooks/useAuth';
 
 const ForgotPassword = () => {
   const schema = () => {
@@ -114,8 +114,8 @@ const ForgotPassword = () => {
         </Link>
       </Center>
       <Title
-        align="center"
-        sx={(theme) => ({
+        ta="center"
+        style={(theme) => ({
           fontFamily: `Greycliff CF, ${theme.fontFamily}`,
           fontWeight: 500,
         })}
@@ -130,13 +130,13 @@ const ForgotPassword = () => {
             placeholder={t('your_email') as string}
           />
 
-          <Group position="right" mt={10}>
+          <Group justify="flex-end" mt={10}>
             <Link to={RoutePath.login}>
               <Anchor
                 component="button"
-                align="end"
+                ta="end"
                 type="button"
-                color="dimmed"
+                c="dimmed"
                 size="xs"
               >
                 {t('want_login')}?

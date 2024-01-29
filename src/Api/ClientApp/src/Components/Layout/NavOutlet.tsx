@@ -1,26 +1,14 @@
-import Breadcrumb from '@components/Ui/BreadCrumb';
 import useAuth from '@hooks/useAuth';
-import {
-  AppShell,
-  Navbar,
-  Box,
-  NavLink,
-  Divider,
-  Group,
-  Burger,
-  useMantineTheme,
-  MediaQuery,
-  Flex,
-  Loader,
-} from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { ActionIcon, Loader, Menu, ScrollArea, Tabs } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
+import { IconDotsVertical, IconSettings, IconUser } from '@tabler/icons';
 import { UserRole } from '@utils/enums';
+import { t } from 'i18next';
 import { Suspense } from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 const NavOutlet = ({
   data,
-  hideBreadCrumb,
 }: {
   data: {
     label: string;
@@ -29,124 +17,117 @@ const NavOutlet = ({
     role: UserRole;
     isActive?: (pathName: string) => boolean;
     target?: string;
+    icon?: JSX.Element;
   }[];
   hideBreadCrumb?: number;
 }) => {
-  const theme = useMantineTheme();
-  const router = useLocation();
-  const [opened, { toggle }] = useDisclosure(false);
   const auth = useAuth();
-  return (
-    <AppShell
-      sx={{}}
-      styles={(theme) => ({
-        main: {
-          padding: '0px',
-          width: '100%',
-          backgroundColor:
-            theme.colorScheme === 'dark'
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0],
-        },
-        header: {
-          height: '0',
-          backgroundColor: 'red',
-        },
-        inner: {
-          height: '0px',
-        },
-      })}
-      navbarOffsetBreakpoint="sm"
-      asideOffsetBreakpoint="sm"
-      navbar={
-        <Navbar
-          sx={{ position: 'sticky', zIndex: 20, overflowY: 'auto' }}
-          p="xs"
-          hiddenBreakpoint="sm"
-          hidden={!opened}
-          width={{ sm: 200 }}
-        >
-          <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
-            <Flex direction={'row-reverse'}>
-              <Burger
-                sx={{}}
-                aria-label="Toggle navbar"
-                opened={opened}
-                onClick={() => toggle()}
-                size="sm"
-                color={theme.colors.gray[6]}
-                mr="xl"
-              />
-            </Flex>
-          </MediaQuery>
-          <Navbar.Section>
-            <Box py="sm">
-              {data.map((x) => {
-                if (auth?.auth?.role) {
-                  if (x.role >= auth?.auth?.role) {
-                    return x.separator ? (
-                      <div key={x.label}>
-                        <Divider mt="sm" />
-                        <span>{x.label}</span>
-                        <Divider mb="sm" />
-                      </div>
-                    ) : (
-                      <NavLink
-                        key={x.label}
-                        onClick={toggle}
-                        component={Link}
-                        to={x.to}
-                        replace
-                        active={
-                          x.isActive
-                            ? x.isActive(router.pathname)
-                            : x.to === decodeURI(router.pathname) // decodeURI for multi-language support
-                        }
-                        label={x.label}
-                        sx={(theme) => ({
-                          padding: theme.spacing.xs,
-                          borderRadius: theme.radius.sm,
-                        })}
-                        target={x.target ?? '_self'}
-                      ></NavLink>
-                    );
-                  }
-                }
-              })}
-            </Box>
-          </Navbar.Section>
-        </Navbar>
+  const navigate = useNavigate();
+  const location = useLocation();
+  const exactLocation = location.pathname;
+  const isMobileView = useMediaQuery('(max-width: 48em)');
+  const isTabletView = useMediaQuery('(min-width: 48em) and (max-width: 64em)');
+
+  const getExactLocation = (location: string) => {
+    // when user is inspecting lesson details, highlight lesson-stat tab
+    if (
+      location.split('/')[5] !== undefined &&
+      location.split('/')[3] !== 'questions'
+    ) {
+      const loc = location.split('/lessons-stat')[0] + '/lessons-stat';
+      return loc;
+    } else if (
+      // when user is inspecting create/edit/pull pools, highlight questions tab
+      location.split('/questions')[1] !== '' &&
+      location.split('/')[3] === 'questions'
+    ) {
+      const loc = location.split('/questions')[0] + '/questions';
+      return loc;
+    }
+    return location;
+  };
+
+  const routeData = data.filter((x) => {
+    if (auth?.auth?.role) {
+      if (x.role >= Number(auth?.auth?.role) && !x.separator) {
+        return x;
       }
-    >
-      <Box mt={20} mx={20}>
-        <MediaQuery
-          smallerThan="sm"
-          styles={{ display: opened ? 'none' : 'block' }}
-        >
-          <Box>
-            <Group mx={5}>
-              <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
-                <Burger
-                  aria-label="Toggle navbar"
-                  opened={opened}
-                  onClick={() => toggle()}
-                  size="sm"
-                  color={theme.colors.gray[6]}
-                  mr="xl"
-                />
-              </MediaQuery>
-              <Breadcrumb
-                start={{ href: '/', title: 'home' }}
-                hide={hideBreadCrumb}
-              />
-            </Group>
-            <Suspense fallback={<Loader />}>
-              <Outlet />
-            </Suspense>
-          </Box>
-        </MediaQuery>
-      </Box>
-    </AppShell>
+    }
+  });
+
+  return (
+    <>
+      <Tabs
+        defaultChecked={true}
+        defaultValue={location.pathname?.split('/').at(-1) ?? 'settings'}
+        value={getExactLocation(exactLocation)}
+        onChange={(value) => {
+          if (value == '#') {
+            // route by menu items
+            return;
+          } else {
+            navigate(`${value}`, { preventScrollReset: true });
+          }
+        }}
+        styles={{
+          // make tabs scrollable
+          list: {
+            flexWrap: 'nowrap',
+          },
+        }}
+        mb={15}
+      >
+        <ScrollArea scrollHideDelay={0}>
+          <Tabs.List>
+            {routeData
+              .slice(0, isMobileView || isTabletView ? 2 : routeData.length)
+              .map((x) => {
+                return (
+                  <Tabs.Tab
+                    key={x.label}
+                    value={x.to}
+                    leftSection={x.icon ?? <IconUser size={14} />}
+                  >
+                    {x.label}
+                  </Tabs.Tab>
+                );
+              })}
+
+            {/* display only when mobile view and contains more than 2 elements */}
+            {routeData.length > 2 && (isMobileView || isTabletView) && (
+              <Tabs.Tab ml="auto" value="#">
+                <Menu withArrow>
+                  <Menu.Target>
+                    <ActionIcon variant="light">
+                      <IconDotsVertical size={18} />
+                    </ActionIcon>
+                  </Menu.Target>
+
+                  <Menu.Dropdown>
+                    {routeData.slice(2).map((x) => {
+                      return (
+                        <Menu.Item
+                          key={x.label}
+                          leftSection={<IconSettings size={14} />}
+                          component={Link}
+                          to={x.to}
+                        >
+                          {t(`${x.label}`)}
+                        </Menu.Item>
+                      );
+                    })}
+                  </Menu.Dropdown>
+                </Menu>
+              </Tabs.Tab>
+            )}
+          </Tabs.List>
+        </ScrollArea>
+      </Tabs>
+
+      <Suspense fallback={<Loader />}>
+        <Outlet />
+      </Suspense>
+    </>
   );
 };
 

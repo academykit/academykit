@@ -26,7 +26,7 @@ const NotRequiredAuth = () => {
         <>
           <Outlet />
           <div style={{ position: 'fixed', top: '10px', right: '10px' }}>
-            <Text color="dimmed" size="xs">
+            <Text c="dimmed" size="xs">
               v{appVersion}
             </Text>
           </div>

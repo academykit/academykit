@@ -1,12 +1,13 @@
-import { LANGUAGES } from '../../constants';
-import { useTranslation } from 'react-i18next';
 import { Select } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
+import { LANGUAGES } from '../../constants';
 
 const LanguageSelector = () => {
   const { i18n } = useTranslation();
   const lang = localStorage.getItem('lang');
   return (
     <Select
+      allowDeselect={false}
       value={lang ?? i18n.language}
       w={110}
       mr={5}

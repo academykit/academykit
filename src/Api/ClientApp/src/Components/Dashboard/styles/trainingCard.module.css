@@ -1,0 +1,16 @@
+.card {
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.card:hover {
+  transform: scale(1.01);
+  box-shadow: var(--mantine-shadow-md);
+}
+
+.footer {
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-lg);
+  margin-top: var(--mantine-spacing-sm);
+  border-top: 1px solid var(--mantine-color-training-footer);
+}

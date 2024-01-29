@@ -1,5 +1,17 @@
 import AvatarEditor from '@components/Ui/AvatarEditor';
-import { Button, Divider, Grid, Paper, Text, TextInput } from '@mantine/core';
+import { DynamicAutoFocusTextField } from '@components/Ui/CustomTextFieldWithAutoFocus';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
+import TextViewer from '@components/Ui/RichTextViewer';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import {
+  Button,
+  Divider,
+  Grid,
+  Paper,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { PHONE_VALIDATION } from '@utils/constants';
@@ -10,13 +22,6 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import CustomTextFieldWithAutoFocus, {
-  DynamicAutoFocusTextField,
-} from '@components/Ui/CustomTextFieldWithAutoFocus';
-import TextViewer from '@components/Ui/RichTextViewer';
 
 export interface FormValues {
   email: string;
@@ -131,9 +136,10 @@ const UserInfo = () => {
       showNotification({ message: error, title: t('error'), color: 'red' });
     }
   };
+
   return (
     <Paper shadow={'xl'} radius="md" p="xl" withBorder>
-      {t('profile_section')}
+      <Title>{t('profile_section')}</Title>
       <Divider mb={10} />
       <Text variant="text" size={'xl'}>
         {t('introduction')}
@@ -149,7 +155,7 @@ const UserInfo = () => {
           />
 
           <Grid>
-            <Grid.Col xs={6} lg={4}>
+            <Grid.Col span={{ xs: 6, lg: 4 }}>
               <DynamicAutoFocusTextField
                 isViewMode={viewMode}
                 readOnly={viewMode}
@@ -160,7 +166,7 @@ const UserInfo = () => {
                 {...formData.getInputProps('firstName')}
               />
             </Grid.Col>
-            <Grid.Col xs={6} lg={4} mt={7}>
+            <Grid.Col span={{ xs: 6, lg: 4 }} mt={7}>
               <TextInput
                 styles={{ input: { border: viewMode ? 'none' : '' } }}
                 readOnly={viewMode}
@@ -170,7 +176,7 @@ const UserInfo = () => {
                 {...formData.getInputProps('middleName')}
               />
             </Grid.Col>
-            <Grid.Col xs={6} lg={4}>
+            <Grid.Col span={{ xs: 6, lg: 4 }}>
               <TextInput
                 styles={{ input: { border: viewMode ? 'none' : '' } }}
                 readOnly={viewMode}
@@ -181,7 +187,7 @@ const UserInfo = () => {
                 {...formData.getInputProps('lastName')}
               />
             </Grid.Col>
-            <Grid.Col xs={6} lg={4}>
+            <Grid.Col span={{ xs: 6, lg: 4 }}>
               <TextInput
                 styles={{ input: { border: viewMode ? 'none' : '' } }}
                 withAsterisk
@@ -193,7 +199,7 @@ const UserInfo = () => {
                 {...formData.getInputProps('email')}
               />
             </Grid.Col>
-            <Grid.Col xs={6} lg={4} mt={7}>
+            <Grid.Col span={{ xs: 6, lg: 4 }} mt={7}>
               <TextInput
                 styles={{ input: { border: viewMode ? 'none' : '' } }}
                 readOnly={viewMode}
@@ -203,7 +209,7 @@ const UserInfo = () => {
                 {...formData.getInputProps('mobileNumber')}
               />
             </Grid.Col>
-            <Grid.Col xs={6} lg={4} mt={7}>
+            <Grid.Col span={{ xs: 6, lg: 4 }} mt={7}>
               <TextInput
                 styles={{ input: { border: viewMode ? 'none' : '' } }}
                 readOnly={viewMode}
@@ -213,7 +219,7 @@ const UserInfo = () => {
                 {...formData.getInputProps('profession')}
               />
             </Grid.Col>
-            <Grid.Col xs={6} lg={4}>
+            <Grid.Col span={{ xs: 6, lg: 4 }}>
               <TextInput
                 styles={{ input: { border: viewMode ? 'none' : '' } }}
                 readOnly={viewMode}
@@ -222,7 +228,7 @@ const UserInfo = () => {
                 {...formData.getInputProps('address')}
               />
             </Grid.Col>
-            <Grid.Col xs={12} lg={12}>
+            <Grid.Col span={{ xs: 12, lg: 12 }}>
               <Text size="sm">{t('bio')}</Text>
               {!viewMode && (
                 <RichTextEditor
@@ -233,7 +239,7 @@ const UserInfo = () => {
               )}
               {viewMode && <TextViewer content={data?.bio as string} />}
             </Grid.Col>
-            <Grid.Col lg={12}>
+            <Grid.Col span={{ lg: 12 }}>
               {viewMode && (
                 <Button onClick={() => createEditMode('1')} type="button">
                   {t('edit')}

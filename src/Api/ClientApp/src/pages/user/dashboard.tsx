@@ -17,7 +17,7 @@ const Dashboard = () => {
   const dashboardCourses = useDashboardCourse();
   const upcomingEvents = useUpcomingDashboardDetail();
   const hasUpcomingEvents = ((upcomingEvents.data?.length as number) ?? 0) > 0;
-  console.log(hasUpcomingEvents);
+
   const { t } = useTranslation();
 
   const auth = useAuth();
@@ -25,13 +25,13 @@ const Dashboard = () => {
 
   return (
     <Container fluid>
-      <Text size="lg" weight="bolder" mb={'sm'}>
+      <Text size="lg" fw="bolder" mb={'sm'}>
         {t('overview')}
       </Text>
       <Grid>
-        <Grid.Col sm={3} orderSm={2}>
+        <Grid.Col span={{ sm: 3 }} order={{ sm: 2 }}>
           <Card padding={10}>
-            <Text size="lg" weight="bolder" mb={'sm'}>
+            <Text size="lg" fw="bolder" mb={'sm'}>
               Upcoming Events
             </Text>
             <ScrollArea.Autosize mah={570} offsetScrollbars>
@@ -50,15 +50,16 @@ const Dashboard = () => {
             </ScrollArea.Autosize>
           </Card>
         </Grid.Col>
-        <Grid.Col sm={9} xs={12}>
+        <Grid.Col span={{ sm: 9, xs: 12 }}>
           {dashboard.isSuccess && dashboardCourses.isSuccess && (
             <>
-              {role === UserRole.Admin || role === UserRole.SuperAdmin ? (
+              {Number(role) === UserRole.Admin ||
+              Number(role) === UserRole.SuperAdmin ? (
                 <Admin
                   dashboard={dashboard.data}
                   dashboardCourses={dashboardCourses.data?.items}
                 />
-              ) : role === UserRole.Trainer ? (
+              ) : Number(role) === UserRole.Trainer ? (
                 <Trainers
                   dashboard={dashboard.data}
                   dashboardCourses={dashboardCourses.data?.items}

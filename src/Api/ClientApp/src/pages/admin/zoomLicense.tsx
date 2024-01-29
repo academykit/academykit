@@ -1,21 +1,22 @@
 import DeleteModal from '@components/Ui/DeleteModal';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-  Badge,
-  Table,
-  Group,
-  Text,
   ActionIcon,
-  ScrollArea,
-  useMantineTheme,
-  Switch,
+  Badge,
   Button,
-  TextInput,
+  Drawer,
+  Group,
   Paper,
+  ScrollArea,
+  Switch,
+  Table,
+  Text,
+  TextInput,
   Title,
-  Transition,
+  useMantineColorScheme,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
-import { useToggle } from '@mantine/hooks';
+import { useDisclosure } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconEdit, IconTrash } from '@tabler/icons';
 import {
@@ -31,7 +32,6 @@ import { IUser } from '@utils/services/types';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
 
 interface IZoomLicensePost {
   licenseEmail: string;
@@ -40,14 +40,14 @@ interface IZoomLicensePost {
 }
 
 export default function ZoomLicense() {
-  const theme = useMantineTheme();
+  const { t } = useTranslation();
+  const [opened, { open, close }] = useDisclosure(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editItem, setEditItem] = useState<IZoomLicense<IUser>>();
   const getZoomLicense = useZoomLicense();
   const updateZoomLicense = useUpdateZoomLicense();
   const addZoomLicense = useAddZoomLicense();
-  const [showAddForm, toggleAddForm] = useToggle();
-  const [isEditing, setIsEditing] = useState(false);
-  const [editItem, setEditItem] = useState<IZoomLicense<IUser>>();
-  const { t } = useTranslation();
+  const { colorScheme } = useMantineColorScheme();
 
   const schema = () => {
     return Yup.object().shape({
@@ -58,7 +58,8 @@ export default function ZoomLicense() {
       capacity: Yup.number()
         .integer()
         .nullable(false)
-        .min(1, t('capacity_required') as string),
+        .min(1, t('capacity_required') as string)
+        .typeError(t('capacity_required') as string),
     });
   };
 
@@ -104,7 +105,7 @@ export default function ZoomLicense() {
     };
 
     return (
-      <tr key={item.id}>
+      <Table.Tr key={item.id}>
         {opened && (
           <DeleteModal
             key={item.id}
@@ -117,21 +118,21 @@ export default function ZoomLicense() {
           />
         )}
 
-        <td>
-          <Group spacing="sm">
-            <Text size="sm" weight={500}>
+        <Table.Td>
+          <Group gap="sm">
+            <Text size="sm" fw={500}>
               {item.licenseEmail}
             </Text>
           </Group>
-        </td>
+        </Table.Td>
 
-        <td>
-          <Badge variant={theme.colorScheme === 'dark' ? 'light' : 'outline'}>
+        <Table.Td>
+          <Badge variant={colorScheme === 'dark' ? 'light' : 'outline'}>
             {item.hostId}
           </Badge>
-        </td>
-        <td style={{ textAlign: 'center' }}>{item.capacity}</td>
-        <td style={{ textAlign: 'center' }}>
+        </Table.Td>
+        <Table.Td style={{ textAlign: 'center' }}>{item.capacity}</Table.Td>
+        <Table.Td style={{ textAlign: 'center' }}>
           <Switch
             checked={isChecked}
             onChange={async () => {
@@ -158,13 +159,13 @@ export default function ZoomLicense() {
               }
             }}
           />
-        </td>
-        <td>
-          <Group spacing={0} position="center">
+        </Table.Td>
+        <Table.Td>
+          <Group gap={0} justify="center">
             <ActionIcon
-              color="red"
+              c="red"
               onClick={() => {
-                toggleAddForm();
+                opened ? close() : open();
                 setIsEditing(true);
                 setEditItem(item);
               }}
@@ -172,7 +173,7 @@ export default function ZoomLicense() {
               <IconEdit size={16} stroke={1.5} />
             </ActionIcon>
             <ActionIcon
-              color="red"
+              c="red"
               onClick={() => {
                 setOpened(true);
               }}
@@ -180,14 +181,13 @@ export default function ZoomLicense() {
               <IconTrash size={16} stroke={1.5} />
             </ActionIcon>
           </Group>
-        </td>
-      </tr>
+        </Table.Td>
+      </Table.Tr>
     );
   };
 
   const handleSubmit = async (values: IZoomLicensePost) => {
     try {
-      console.log(values);
       if (isEditing) {
         await updateZoomLicense.mutateAsync({
           id: (editItem?.id as string) ?? '',
@@ -197,8 +197,7 @@ export default function ZoomLicense() {
           title: t('successful'),
           message: t('zoom_license_update_success'),
         });
-        setIsEditing(false);
-        toggleAddForm();
+        form.reset();
       } else {
         await addZoomLicense.mutateAsync(values);
         showNotification({
@@ -207,7 +206,6 @@ export default function ZoomLicense() {
           message: t('zoom_license_added'),
         });
         form.reset();
-        toggleAddForm();
       }
     } catch (error) {
       const err = errorType(error);
@@ -215,97 +213,102 @@ export default function ZoomLicense() {
         message: err,
         color: 'red',
       });
+    } finally {
+      close();
+      setIsEditing(false);
     }
   };
 
   return (
     <ScrollArea>
       <Group
-        sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+        style={{ justifyContent: 'space-between', alignItems: 'center' }}
         mb={15}
       >
         <Title>{t('zoom_licenses')}</Title>
-        {!showAddForm && (
-          <Button onClick={() => toggleAddForm()}>{t('add_license')}</Button>
-        )}
-        {/* <Button onClick={() => toggleAddForm()}>
-          {!showAddForm ? "Add License" : "Cancel"}
-        </Button> */}
+        <Button
+          onClick={() => {
+            open();
+            form.reset();
+          }}
+        >
+          {t('add_license')}
+        </Button>
       </Group>
-      <Transition
-        mounted={showAddForm}
-        transition={'slide-down'}
-        duration={200}
-        timingFunction="ease"
+
+      <Drawer
+        opened={opened}
+        onClose={() => {
+          close();
+          setIsEditing(false);
+          setEditItem(undefined);
+        }}
+        overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
       >
-        {() => (
-          <Paper shadow={'sm'} radius="md" p="xl" withBorder mb={20}>
-            <form key={`${showAddForm}`} onSubmit={form.onSubmit(handleSubmit)}>
-              <TextInput
-                placeholder={t('License_email') as string}
-                name="licenseEmail"
-                label={t('license_email')}
-                withAsterisk
-                {...form.getInputProps('licenseEmail')}
-              />
-              <TextInput
-                placeholder={t('License_host_Id') as string}
-                name="hostId"
-                label={t('host_id')}
-                withAsterisk
-                {...form.getInputProps('hostId')}
-              />
-              <TextInput
-                placeholder={t('license_capacity') as string}
-                name="capacity"
-                label={t('capacity')}
-                type={'number'}
-                withAsterisk
-                {...form.getInputProps('capacity')}
-              />
-              <Group mt={10}>
-                <Button type="submit">{t('submit')}</Button>
-                {showAddForm && (
-                  <Button
-                    onClick={() => {
-                      form.reset();
-                      toggleAddForm();
-                      setIsEditing(false);
-                    }}
-                    variant="outline"
-                  >
-                    {t('cancel')}
-                  </Button>
-                )}
-              </Group>
-            </form>
-          </Paper>
-        )}
-      </Transition>
+        <form onSubmit={form.onSubmit(handleSubmit)}>
+          <TextInput
+            placeholder={t('License_email') as string}
+            name="licenseEmail"
+            label={t('license_email')}
+            withAsterisk
+            {...form.getInputProps('licenseEmail')}
+          />
+          <TextInput
+            placeholder={t('License_host_Id') as string}
+            name="hostId"
+            label={t('host_id')}
+            withAsterisk
+            {...form.getInputProps('hostId')}
+          />
+          <TextInput
+            placeholder={t('license_capacity') as string}
+            name="capacity"
+            label={t('capacity')}
+            type={'number'}
+            withAsterisk
+            {...form.getInputProps('capacity')}
+          />
+          <Group mt={10}>
+            <Button
+              type="submit"
+              loading={addZoomLicense.isLoading || updateZoomLicense.isLoading}
+            >
+              {t('submit')}
+            </Button>
+          </Group>
+        </form>
+      </Drawer>
+
       <Paper>
         <Table
-          sx={{ minWidth: 800 }}
+          style={{ minWidth: 800 }}
           verticalSpacing="sm"
           horizontalSpacing="md"
           striped
           highlightOnHover
-          withBorder
+          withTableBorder
           withColumnBorders
         >
-          <thead>
-            <tr>
-              <th>{t('license_email')}</th>
-              <th>{t('host_id')}</th>
-              <th style={{ textAlign: 'center' }}>{t('capacity')}</th>
-              <th style={{ textAlign: 'center' }}>{t('active_status')}</th>
-              <th style={{ textAlign: 'center' }}>{t('actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>{t('license_email')}</Table.Th>
+              <Table.Th>{t('host_id')}</Table.Th>
+              <Table.Th style={{ textAlign: 'center' }}>
+                {t('capacity')}
+              </Table.Th>
+              <Table.Th style={{ textAlign: 'center' }}>
+                {t('active_status')}
+              </Table.Th>
+              <Table.Th style={{ textAlign: 'center' }}>
+                {t('actions')}
+              </Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
             {getZoomLicense.data?.data.items.map((item) => (
               <Rows item={item} key={item.id} />
             ))}
-          </tbody>
+          </Table.Tbody>
         </Table>
       </Paper>
     </ScrollArea>

@@ -1,11 +1,11 @@
 import SearchBar from '@components/Ui/SearchBar';
 import { Pagination, Select, UnstyledButton } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
+import { IconArrowsSort, IconChevronDown, IconChevronUp } from '@tabler/icons';
 import queryStringGenerator from '@utils/queryStringGenerator';
+import moment from 'moment';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { IconChevronDown, IconChevronUp, IconArrowsSort } from '@tabler/icons';
-import moment from 'moment';
 
 export interface IWithSearchPagination {
   searchParams: string;
@@ -176,8 +176,8 @@ const withSearchPagination = <P extends object>(
           maw={'184px'}
           value={filterValue}
           data={data}
-          onChange={(e: string) => {
-            setFilterValue(() => e);
+          onChange={(value) => {
+            setFilterValue(() => value ?? '');
             setFilterKey(() => key);
           }}
         />

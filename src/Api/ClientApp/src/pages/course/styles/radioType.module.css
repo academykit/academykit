@@ -1,0 +1,24 @@
+/* Option */
+option {
+  display: flex;
+  flex-direction: column;
+}
+
+option > label {
+  cursor: pointer;
+}
+
+/* Active */
+.active {
+  outline: 2px solid var(--mantine-color-answer-active);
+}
+
+/* Wrong */
+.wrong {
+  border: 2px solid var(--mantine-color-red-6);
+}
+
+/* Correct */
+.correct {
+  border: 2px solid var(--mantine-color-green-6);
+}

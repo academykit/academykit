@@ -2,8 +2,8 @@ import {
   Avatar,
   Box,
   Flex,
-  MantineNumberSize,
-  SystemProp,
+  MantineSize,
+  StyleProp,
   Text,
   UnstyledButton,
 } from '@mantine/core';
@@ -16,8 +16,8 @@ import { Link } from 'react-router-dom';
 
 type Props = {
   user: IUser;
-  size?: MantineNumberSize | undefined;
-  direction?: SystemProp<CSSProperties['flexDirection']>;
+  size?: MantineSize | undefined;
+  direction?: StyleProp<CSSProperties['flexDirection']>;
   page?: string;
   color?: string;
 };
@@ -33,21 +33,21 @@ const UserShortProfile: FC<Props> = ({
   return (
     <UnstyledButton
       component={Link}
-      to={`/userProfile/${id}/certificate`}
-      sx={{ textDecoration: 'none' }}
+      to={`/userProfile/${id}/about`}
+      style={{ textDecoration: 'none' }}
     >
-      <Flex direction={direction} gap={'md'} sx={{ alignItems: 'center' }}>
-        <Avatar my={3} src={imageUrl} color="cyan" radius={10000} size={size}>
+      <Flex direction={direction} gap={'md'} style={{ alignItems: 'center' }}>
+        <Avatar my={3} src={imageUrl} c="cyan" radius={10000} size={size}>
           {!imageUrl && getInitials(fullName ?? '')}
         </Avatar>
         <Box>
-          <Text size={size} weight="bolder" color={color}>
+          <Text size={size} fw="bolder" c={color}>
             {fullName}
           </Text>
-          <Text size={'sm'} color={'dimmed'}>
+          <Text size={'sm'} c={'dimmed'}>
             {page === 'Pool'
-              ? t(`${PoolRole[role] ?? ''}`)
-              : t(`${UserRole[role]}`)}
+              ? t(`${PoolRole[Number(role)] ?? ''}`)
+              : t(`${UserRole[Number(role)]}`)}
           </Text>
         </Box>
       </Flex>

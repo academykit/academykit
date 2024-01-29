@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import { Box, Button, Grid, Group, Text } from '@mantine/core';
 import { DatePickerInput, TimeInput } from '@mantine/dates';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { LessonType } from '@utils/enums';
+import { getDateTime } from '@utils/getDateTime';
 import errorType from '@utils/services/axiosError';
 import {
   useCreateLesson,
@@ -12,13 +15,10 @@ import {
 } from '@utils/services/courseService';
 import { IPhysicalTraining } from '@utils/services/types';
 import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import { useTranslation } from 'react-i18next';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import { getDateTime } from '@utils/getDateTime';
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -153,7 +153,7 @@ const AddPhysical = ({
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Grid align="center">
-        <Grid.Col span={12} lg={6}>
+        <Grid.Col span={{ base: 12, lg: 6 }}>
           <CustomTextFieldWithAutoFocus
             label={t('physical_name')}
             placeholder={t('physical_name') as string}
@@ -184,7 +184,7 @@ const AddPhysical = ({
           {...form.getInputProps('description')}
         />
       </Box>
-      <Group position="left" mt="md">
+      <Group mt="md">
         <Button
           type="submit"
           loading={lesson.isLoading || updateLesson.isLoading}

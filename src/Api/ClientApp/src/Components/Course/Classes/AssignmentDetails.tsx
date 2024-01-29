@@ -27,7 +27,7 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
   const current_time = moment.utc(moment().toDate(), 'YYYY-MM-DD[T]HH:mm[Z]');
 
   return (
-    <Group sx={{ flexDirection: 'column' }}>
+    <Group style={{ flexDirection: 'column' }}>
       <Title>{lesson.name}</Title>
 
       {lesson.hasReviewedAssignment ? (
@@ -60,16 +60,16 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
         </Text>
       )}
       {lesson.assignmentReview && (
-        <Box mb={20} sx={{ color: theme.white }}>
+        <Box mb={20} style={{ color: theme.white }}>
           <Title order={3}> {t('assignment_reviewed')}</Title>
-          <Group sx={{ alignItems: 'start' }} mt={20}>
+          <Group style={{ alignItems: 'start' }} mt={20}>
             <UserShortProfile
               user={lesson.assignmentReview.teacher}
               size={'sm'}
               color="#C1C2C5"
             />
             <Paper
-              sx={{
+              style={{
                 background: theme.colors.dark[6],
                 minWidth: '300px',
                 maxWidth: '500px',
@@ -77,20 +77,16 @@ const AssignmentDetails = ({ lesson }: { lesson: ICourseLesson }) => {
               p={10}
             >
               <Group>
-                <Text color={'dimmed'}>
+                <Text c={'dimmed'}>
                   {t('obtained_mark')}:{'  '}
                 </Text>
-                <Text color={theme.white}>
-                  {lesson.assignmentReview.mark}/100
-                </Text>
+                <Text c={theme.white}>{lesson.assignmentReview.mark}/100</Text>
               </Group>
               <Group>
-                <Text color={'dimmed'}>
+                <Text c={'dimmed'}>
                   {t('review')}:{'  '}
                 </Text>
-                <Text color={theme.white}>
-                  {lesson.assignmentReview.review}
-                </Text>
+                <Text c={theme.white}>{lesson.assignmentReview.review}</Text>
               </Group>
             </Paper>
           </Group>

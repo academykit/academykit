@@ -2,30 +2,19 @@ import TextViewer from '@components/Ui/RichTextViewer';
 import {
   Box,
   Card,
-  createStyles,
   Group,
   Title,
   UnstyledButton,
+  useMantineColorScheme,
 } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 import {
   IAssignmentOptions,
   IAssignmentQuestion,
 } from '@utils/services/assignmentService';
+import cx from 'clsx';
 import { useTranslation } from 'react-i18next';
-
-const useStyle = createStyles((theme) => ({
-  option: {
-    '>label': {
-      cursor: 'pointer',
-    },
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  active: {
-    outline: `2px solid ${theme.colors[theme.primaryColor][1]}`,
-  },
-}));
+import classes from '../../styles/radioType.module.css';
 
 type Props = {
   form: UseFormReturnType<
@@ -37,7 +26,6 @@ type Props = {
 };
 
 const RadioType = ({ options, form, currentIndex }: Props) => {
-  const { classes, cx } = useStyle();
   const changeFieldValue = (optionCurrentIndex: number) => {
     options.map((_option, index) => {
       if (index !== optionCurrentIndex) {
@@ -55,7 +43,7 @@ const RadioType = ({ options, form, currentIndex }: Props) => {
   };
   const { t } = useTranslation();
   const onChangeRadioType = (index: number) => {
-    options.forEach((x, i) => {
+    options.forEach((_x, i) => {
       if (i === index) {
         return form.setFieldValue(
           `${currentIndex}.assignmentQuestionOptions.${index}.isSelected`,
@@ -68,6 +56,7 @@ const RadioType = ({ options, form, currentIndex }: Props) => {
       );
     });
   };
+  const theme = useMantineColorScheme();
 
   return (
     <Box mt={10} px={20} className={classes.option}>
@@ -78,14 +67,21 @@ const RadioType = ({ options, form, currentIndex }: Props) => {
       </Group>
       {options.map((option, index) => (
         <UnstyledButton
-          style={{ cursor: 'pointer' }}
+          style={{
+            cursor: 'pointer',
+            width: '100%',
+            color: theme.colorScheme == 'dark' ? 'white' : 'black',
+          }}
           key={option.id}
           onClick={() => changeFieldValue(index)}
         >
           <input
             type={'radio'}
             id={option.id}
-            style={{ display: 'none' }}
+            style={{
+              display: 'none',
+              color: theme.colorScheme == 'dark' ? 'white' : 'black',
+            }}
             onChange={() => onChangeRadioType(index)}
             checked={
               form.values[currentIndex].assignmentQuestionOptions![index]
@@ -101,12 +97,16 @@ const RadioType = ({ options, form, currentIndex }: Props) => {
                 form.values[currentIndex].assignmentQuestionOptions![index]
                   .isSelected,
             })}
+            style={{
+              color: theme.colorScheme == 'dark' ? 'white' : 'black',
+            }}
           >
             <input type={'checkbox'} style={{ display: 'none' }} />
             <TextViewer
               styles={{
                 root: {
                   border: 'none',
+                  color: theme.colorScheme == 'dark' ? 'white' : 'black',
                 },
               }}
               content={option.option}

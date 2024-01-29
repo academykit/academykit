@@ -1,4 +1,5 @@
 import DeleteModal from '@components/Ui/DeleteModal';
+import TextViewer from '@components/Ui/RichTextViewer';
 import {
   Box,
   Button,
@@ -12,7 +13,7 @@ import {
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconEdit, IconTrash, IconDragDrop } from '@tabler/icons';
+import { IconDragDrop, IconEdit, IconTrash } from '@tabler/icons';
 import { QuestionType } from '@utils/enums';
 import {
   IAssignmentQuestion,
@@ -20,7 +21,6 @@ import {
 } from '@utils/services/assignmentService';
 import errorType from '@utils/services/axiosError';
 import { useTranslation } from 'react-i18next';
-import TextViewer from '@components/Ui/RichTextViewer';
 import EditAssignment from './EditAssignment';
 
 const AssignmentItem = ({
@@ -83,9 +83,9 @@ const AssignmentItem = ({
         onConfirm={deleteHandler}
       />
 
-      <Paper shadow={'lg'} sx={{ width: '100%' }} my={20} withBorder p={20}>
+      <Paper shadow={'lg'} style={{ width: '100%' }} my={20} withBorder p={20}>
         <Flex justify={'space-between'}>
-          <Title truncate>{data.name}</Title>
+          <Title>{data.name}</Title>
           <Group>
             <IconDragDrop />
 
@@ -98,11 +98,7 @@ const AssignmentItem = ({
             >
               <IconEdit />
             </Button>
-            <Button
-              variant="subtle"
-              color="red"
-              onClick={() => setConfirmDelete()}
-            >
+            <Button variant="subtle" c="red" onClick={() => setConfirmDelete()}>
               <IconTrash />
             </Button>
           </Group>
@@ -146,7 +142,7 @@ const AssignmentItem = ({
                 >
                   <Checkbox readOnly checked={x.isCorrect} />
                   <TextViewer
-                    sx={{ width: '90%' }}
+                    styles={{ root: { flexGrow: 1 } }}
                     content={x.option}
                   ></TextViewer>
                 </Flex>

@@ -85,7 +85,7 @@ const GroupAttachment = ({
     };
 
     return (
-      <tr key={item.id}>
+      <Table.Tr key={item.id}>
         <DeleteModal
           title={t('sure_to_delete_attachment')}
           open={item.id === deleteAttachment}
@@ -93,28 +93,37 @@ const GroupAttachment = ({
           onConfirm={handleDelete}
         />
 
-        <td>{moment(item.createdOn + 'Z').format('YYYY-MM-DD HH:mm:ss')}</td>
-        <td>{item.name}</td>
-        <td>{item.mimeType}</td>
+        <Table.Td>
+          {moment(item.createdOn + 'Z').format('YYYY-MM-DD HH:mm:ss')}
+        </Table.Td>
+        <Table.Td>{item.name}</Table.Td>
+        <Table.Td>{item.mimeType}</Table.Td>
 
-        <td>
+        <Table.Td>
           <Flex>
             <Tooltip label={t('download_attachment')}>
-              <ActionIcon onClick={() => handleDownload()}>
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                onClick={() => handleDownload()}
+              >
                 <IconDownload />
               </ActionIcon>
             </Tooltip>
 
-            {auth?.auth && auth?.auth?.role !== UserRole.Trainee && (
+            {auth?.auth && Number(auth?.auth?.role) !== UserRole.Trainee && (
               <Tooltip label={t('delete_attachment')}>
-                <ActionIcon onClick={() => setDeleteAttachment(item.id)}>
+                <ActionIcon
+                  variant="subtle"
+                  onClick={() => setDeleteAttachment(item.id)}
+                >
                   <IconTrash color="red" />
                 </ActionIcon>
               </Tooltip>
             )}
           </Flex>
-        </td>
-      </tr>
+        </Table.Td>
+      </Table.Tr>
     );
   };
   return (
@@ -134,16 +143,16 @@ const GroupAttachment = ({
         <Flex
           my={10}
           wrap={'wrap'}
-          sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+          style={{ justifyContent: 'space-between', alignItems: 'center' }}
         >
-          <Title sx={{ flexGrow: 2 }}>{t('attachments')}</Title>
+          <Title style={{ flexGrow: 2 }}>{t('attachments')}</Title>
           <Flex
-            sx={{
+            style={{
               justifyContent: 'end',
               alignItems: 'center',
             }}
           >
-            {authUser?.auth && authUser?.auth?.role <= 3 && (
+            {authUser?.auth && Number(authUser?.auth?.role) <= 3 && (
               <Button onClick={() => setOpened(true)} my={10} ml={5}>
                 {t('add_new_attachment')}
               </Button>
@@ -157,26 +166,26 @@ const GroupAttachment = ({
           <ScrollArea>
             <Paper mt={10}>
               <Table
-                sx={{ minWidth: 800, overflow: 'auto' }}
+                style={{ minWidth: 800, overflow: 'auto' }}
                 verticalSpacing="xs"
                 striped
                 highlightOnHover
-                withBorder
+                withTableBorder
                 withColumnBorders
               >
-                <thead>
-                  <tr>
-                    <th>{t('uploaded_date')}</th>
-                    <th>{t('name')}</th>
-                    <th>{t('type')}</th>
-                    <th>{t('action')}</th>
-                  </tr>
-                </thead>
-                <tbody>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>{t('uploaded_date')}</Table.Th>
+                    <Table.Th>{t('name')}</Table.Th>
+                    <Table.Th>{t('type')}</Table.Th>
+                    <Table.Th>{t('action')}</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
                   {getGroupAttachment.data?.items?.map((item: any) => (
                     <Rows item={item} key={item?.id} />
                   ))}
-                </tbody>
+                </Table.Tbody>
               </Table>
               {getGroupAttachment.data &&
                 getGroupAttachment.data.totalPage > 1 &&

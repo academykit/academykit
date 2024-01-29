@@ -67,7 +67,7 @@ const SMTP = () => {
     >
       <Container
         size={450}
-        sx={{
+        style={{
           marginLeft: '0px',
         }}
       >

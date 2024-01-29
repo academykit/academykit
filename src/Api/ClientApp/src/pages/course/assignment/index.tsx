@@ -1,36 +1,11 @@
-import { Button, Container, createStyles, Divider, Title } from '@mantine/core';
-
+import { Button, Container, Divider, Title } from '@mantine/core';
 import { useAssignmentQuestion } from '@utils/services/assignmentService';
-import { useNavigate, useParams } from 'react-router-dom';
-import AssignmentForm from './Component/AssignmentForm';
 import { useTranslation } from 'react-i18next';
-
-const useStyles = createStyles((theme) => ({
-  root: {
-    paddingTop: 80,
-    paddingBottom: 80,
-  },
-
-  title: {
-    fontWeight: 900,
-    fontSize: 34,
-    marginBottom: theme.spacing.md,
-    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-
-    [theme.fn.smallerThan('sm')]: {
-      fontSize: 32,
-    },
-  },
-
-  control: {
-    [theme.fn.smallerThan('sm')]: {
-      width: '100%',
-    },
-  },
-}));
+import { useNavigate, useParams } from 'react-router-dom';
+import classes from '../styles/assignment.module.css';
+import AssignmentForm from './Component/AssignmentForm';
 
 const AssignmentPage = () => {
-  const { classes } = useStyles();
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();

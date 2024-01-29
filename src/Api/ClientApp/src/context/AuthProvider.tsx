@@ -4,7 +4,7 @@ import { showNotification } from '@mantine/notifications';
 import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from '@utils/constants';
 import { useLogout, useReAuth } from '@utils/services/authService';
 import { IUserProfile } from '@utils/services/types';
-import React, { createContext, useState, FC, useEffect } from 'react';
+import React, { FC, createContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export interface IAuthContext {
@@ -99,7 +99,7 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
         opened={showLogout}
         title={t('logout_confirmation')}
       >
-        <Group position="center">
+        <Group justify="center">
           <Button onClick={confirmLogout}>{t('sure')}</Button>
           <Button variant="outline" onClick={() => setShowLogout()}>
             {t('cancel')}

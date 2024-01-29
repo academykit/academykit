@@ -1,19 +1,19 @@
 import TextViewer from '@components/Ui/RichTextViewer';
 import {
-  Paper,
+  ActionIcon,
+  Box,
+  Collapse,
   Flex,
   Group,
-  Box,
+  Paper,
   Select,
   Text,
-  Button,
-  Collapse,
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { IconChevronDown, IconChevronUp, IconDragDrop } from '@tabler/icons';
 import { QuestionType, ReadableEnum } from '@utils/enums';
 import { QuestionSetQuestions } from '@utils/services/questionService';
 import { useTranslation } from 'react-i18next';
-import { useDisclosure } from '@mantine/hooks';
 
 const PreviewQuestionCard = ({
   question,
@@ -42,9 +42,9 @@ const PreviewQuestionCard = ({
           <Group>
             <IconDragDrop />
 
-            <Button type="button" compact variant="subtle" onClick={toggle}>
+            <ActionIcon color="gray" onClick={toggle} variant="subtle">
               {opened ? <IconChevronUp /> : <IconChevronDown />}
-            </Button>
+            </ActionIcon>
           </Group>
         </Flex>
 

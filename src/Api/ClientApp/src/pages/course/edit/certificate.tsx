@@ -1,3 +1,5 @@
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   ActionIcon,
   Box,
@@ -11,26 +13,24 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
+import { DatePickerInput } from '@mantine/dates';
+import { useForm, yupResolver } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
-import { IconCalendar, IconEye, IconDownload } from '@tabler/icons';
+import { showNotification } from '@mantine/notifications';
+import { IconCalendar, IconDownload, IconEye } from '@tabler/icons';
+import downloadImage from '@utils/downloadImage';
+import errorType from '@utils/services/axiosError';
 import {
   useAddCertificate,
   useGetCertificateDetails,
   useGetSignature,
 } from '@utils/services/courseService';
-import { useForm, yupResolver } from '@mantine/form';
-import { useParams } from 'react-router-dom';
-import CreateSignature from './Components/Signature/CreateSignature';
-import { showNotification } from '@mantine/notifications';
-import * as Yup from 'yup';
-import errorType from '@utils/services/axiosError';
-import { useEffect } from 'react';
 import moment from 'moment';
-import downloadImage from '@utils/downloadImage';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import { DatePickerInput } from '@mantine/dates';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import { useParams } from 'react-router-dom';
+import * as Yup from 'yup';
+import CreateSignature from './Components/Signature/CreateSignature';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -122,11 +122,8 @@ const Certificate = () => {
       <Text>{t('certificates_description')}</Text>
       <Box mt={20}>
         <form onSubmit={form.onSubmit(handleSubmit)}>
-          <SimpleGrid
-            cols={2}
-            breakpoints={[{ maxWidth: 1050, cols: 1, spacing: 'sm' }]}
-          >
-            <Box sx={{ width: '300px', margin: 'auto' }}>
+          <SimpleGrid cols={{ cmd: 1, lg: 2 }} spacing={{ cmd: 'sm' }}>
+            <Box style={{ width: '300px', margin: 'auto' }}>
               {getCertificateDetails.isSuccess &&
               getCertificateDetails.data?.data?.sampleUrl ? (
                 <div style={{ position: 'relative', backgroundColor: 'black' }}>
@@ -152,7 +149,7 @@ const Certificate = () => {
                   >
                     <Tooltip label={t('view_certificate')}>
                       <ActionIcon
-                        variant="default"
+                        variant="subtle"
                         onClick={() => window.open(data?.sampleUrl)}
                         mr={10}
                         size="md"
@@ -162,7 +159,7 @@ const Certificate = () => {
                     </Tooltip>
                     <Tooltip label={t('download_certificate')}>
                       <ActionIcon
-                        variant="default"
+                        variant="subtle"
                         onClick={() => {
                           downloadImage(
                             data?.sampleUrl ?? '',
@@ -204,7 +201,7 @@ const Certificate = () => {
                     placeholder={t('start_date_placeholder') as string}
                     label={t('start_date')}
                     withAsterisk
-                    icon={<IconCalendar size={16} />}
+                    leftSection={<IconCalendar size={16} />}
                     {...form.getInputProps('eventStartDate')}
                   />
                 </Grid.Col>
@@ -217,7 +214,7 @@ const Certificate = () => {
                     label={t('end_date')}
                     withAsterisk
                     minDate={form.values.eventStartDate}
-                    icon={<IconCalendar size={16} />}
+                    leftSection={<IconCalendar size={16} />}
                     {...form.getInputProps('eventEndDate')}
                   />
                 </Grid.Col>
@@ -230,7 +227,7 @@ const Certificate = () => {
         </form>
         <div style={{ marginTop: '30px' }}>
           <Flex justify={'space-between'} mb={10}>
-            <Text size={'xl'} weight="bold">
+            <Text size={'xl'} fw="bold">
               {t('add_signatures')}
             </Text>
           </Flex>

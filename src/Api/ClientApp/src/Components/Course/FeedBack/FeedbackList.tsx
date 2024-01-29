@@ -2,7 +2,6 @@ import DeleteModal from '@components/Ui/DeleteModal';
 import {
   Box,
   Button,
-  createStyles,
   Flex,
   Group,
   Paper,
@@ -12,30 +11,18 @@ import {
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconEdit, IconTrash, IconDragDrop } from '@tabler/icons';
+import { IconDragDrop, IconEdit, IconTrash } from '@tabler/icons';
 import { FeedbackType, ReadableEnum } from '@utils/enums';
 
+import TextViewer from '@components/Ui/RichTextViewer';
 import errorType from '@utils/services/axiosError';
 import {
   IFeedbackQuestions,
   useDeleteFeedbackQuestion,
 } from '@utils/services/feedbackService';
-import EditFeedback from './EditFeedBack';
 import { useTranslation } from 'react-i18next';
-import TextViewer from '@components/Ui/RichTextViewer';
-
-const useStyle = createStyles(() => ({
-  wrapper: {
-    ':hover': {
-      '.action': {
-        display: 'flex',
-      },
-    },
-    '.action': {
-      display: 'none',
-    },
-  },
-}));
+import classes from '../styles/feedbackList.module.css';
+import EditFeedback from './EditFeedBack';
 
 const FeedbackItem = ({
   data,
@@ -48,7 +35,6 @@ const FeedbackItem = ({
   lessonId: string;
   onEditChange: () => void;
 }) => {
-  const { classes } = useStyle();
   const [edit, setEdit] = useToggle();
   const getQuestionType = () => {
     return Object.entries(FeedbackType)
@@ -99,9 +85,9 @@ const FeedbackItem = ({
         onConfirm={deleteHandler}
       />
 
-      <Paper shadow={'lg'} sx={{ width: '100%' }} my={20} withBorder p={20}>
+      <Paper shadow={'lg'} style={{ width: '100%' }} my={20} withBorder p={20}>
         <Flex justify={'space-between'}>
-          <Title truncate>{data.name}</Title>
+          <Title>{data.name}</Title>
           <Group>
             <IconDragDrop />
             <Button
@@ -113,11 +99,7 @@ const FeedbackItem = ({
             >
               <IconEdit />
             </Button>
-            <Button
-              variant="subtle"
-              color="red"
-              onClick={() => setConfirmDelete()}
-            >
+            <Button variant="subtle" c="red" onClick={() => setConfirmDelete()}>
               <IconTrash />
             </Button>
           </Group>

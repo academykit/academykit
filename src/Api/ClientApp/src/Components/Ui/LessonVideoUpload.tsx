@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { FilePond, registerPlugin } from 'react-filepond';
-import 'filepond/dist/filepond.min.css';
+import { Box, Text, Tooltip } from '@mantine/core';
+import { UseFormReturnType } from '@mantine/form';
+import { FileAccess, uploadVideo } from '@utils/services/fileService';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
-import { Box, Text, Tooltip } from '@mantine/core';
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
-import { FileAccess, uploadVideo } from '@utils/services/fileService';
-import { UseFormReturnType } from '@mantine/form';
 import FilePondPluginImageValidateSize from 'filepond-plugin-image-validate-size';
+import 'filepond/dist/filepond.min.css';
+import { useEffect, useState } from 'react';
+import { FilePond, registerPlugin } from 'react-filepond';
 import { useTranslation } from 'react-i18next';
 
 registerPlugin(
@@ -67,8 +67,8 @@ const LessonVideoUpload = ({
   };
 
   return (
-    <Tooltip multiline label={t('acceptable_files')} width={320}>
-      <Box my={marginy} sx={{ maxWidth: 470 }} pos="relative">
+    <Tooltip multiline label={t('acceptable_files')} w={320}>
+      <Box my={marginy} style={{ maxWidth: 470 }} pos="relative">
         <FilePond
           files={files}
           onaddfile={() => {}}

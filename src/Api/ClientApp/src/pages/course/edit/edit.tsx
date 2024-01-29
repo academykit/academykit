@@ -1,14 +1,12 @@
+import { DynamicAutoFocusTextField } from '@components/Ui/CustomTextFieldWithAutoFocus';
+import GroupCreatableSelect from '@components/Ui/GroupCreatableSelect';
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
+import TextViewer from '@components/Ui/RichTextViewer';
 import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
-import {
-  Box,
-  Button,
-  Group,
-  Loader,
-  MultiSelect,
-  Select,
-  Text,
-} from '@mantine/core';
+import useAuth from '@hooks/useAuth';
+import useCustomForm from '@hooks/useCustomForm';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import { Box, Button, Group, Loader, Select, Text } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import queryStringGenerator from '@utils/queryStringGenerator';
@@ -20,17 +18,12 @@ import {
 } from '@utils/services/courseService';
 import { useAddGroup, useGroups } from '@utils/services/groupService';
 import { useLevels } from '@utils/services/levelService';
-import { useAddTag, useTags } from '@utils/services/tagService';
+import { ITag, useAddTag, useTags } from '@utils/services/tagService';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import useCustomForm from '@hooks/useCustomForm';
-import { DynamicAutoFocusTextField } from '@components/Ui/CustomTextFieldWithAutoFocus';
-import useAuth from '@hooks/useAuth';
-import { UserRole } from '@utils/enums';
-import TextViewer from '@components/Ui/RichTextViewer';
+import TagMultiSelectCreatable from '../component/TagMultiSelectCreatable';
 
 interface FormValues {
   thumbnail: string;
@@ -79,7 +72,7 @@ const EditCourse = () => {
   const auth = useAuth();
 
   const label = useLevels();
-  const { mutate, data: addTagData, isSuccess } = useAddTag();
+  const { data: addTagData, isSuccess, mutateAsync: mutAsync } = useAddTag();
   const [language] = useState([
     { value: '1', label: 'English' },
     { value: '2', label: 'Nepali' },
@@ -106,9 +99,7 @@ const EditCourse = () => {
     refetch,
   } = useCourseDescription(slug.id as string);
 
-  const [tagsList, setTagsList] = useState<{ value: string; label: string }[]>(
-    []
-  );
+  const [tagsLists, setTagsLists] = useState<ITag[]>([]);
 
   useEffect(() => {
     if (label.isSuccess) {
@@ -124,7 +115,8 @@ const EditCourse = () => {
 
   useEffect(() => {
     if (tags.isSuccess) {
-      setTagsList(tags.data.items.map((x) => ({ label: x.name, value: x.id })));
+      // setTagsList(tags.data.items.map((x) => ({ label: x.name, value: x.id })));
+      setTagsLists(tags.data.items.map((x) => x));
       courseSingleData?.tags &&
         form.setFieldValue('tags', [
           ...(form.values.tags ?? []),
@@ -135,10 +127,11 @@ const EditCourse = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      setTagsList([
-        ...tagsList,
-        { label: addTagData.data.name, value: addTagData.data.id },
-      ]);
+      // setTagsList([
+      //   ...tagsList,
+      //   { label: addTagData.data.name, value: addTagData.data.id },
+      // ]);
+      setTagsLists([...tagsLists, addTagData.data]);
     }
   }, [isSuccess]);
 
@@ -208,27 +201,13 @@ const EditCourse = () => {
 
             <Group grow mt={20}>
               {tags.isSuccess ? (
-                <MultiSelect
-                  styles={{
-                    input: {
-                      border: viewMode ? 'none' : '',
-                      cursor: viewMode ? 'text !important' : '',
-                    },
-                  }}
+                <TagMultiSelectCreatable
+                  data={tagsLists ?? []}
+                  mutateAsync={mutAsync}
+                  form={form}
+                  existingTags={courseSingleData}
+                  size="lg"
                   readOnly={viewMode}
-                  searchable
-                  creatable
-                  sx={{ maxWidth: '500px' }}
-                  data={tagsList}
-                  {...form.getInputProps('tags')}
-                  getCreateLabel={(query) => `+ Create ${query}`}
-                  onCreate={(query) => {
-                    mutate(query);
-                    return null;
-                  }}
-                  size={'lg'}
-                  label={t('tags')}
-                  placeholder={t('tags_placeholder') as string}
                 />
               ) : (
                 <div>
@@ -257,46 +236,15 @@ const EditCourse = () => {
                 </div>
               )}
             </Group>
-            <Group grow>
+            <Group grow mt={20}>
               {!groups.isLoading ? (
-                <Select
-                  styles={{
-                    input: {
-                      border: viewMode ? 'none' : '',
-                      cursor: viewMode ? 'text !important' : '',
-                    },
-                  }}
+                <GroupCreatableSelect
+                  api={groupAdd}
+                  form={form}
+                  data={groups?.data?.data?.items}
+                  size="lg"
+                  auth={auth}
                   readOnly={viewMode}
-                  mt={20}
-                  searchable
-                  withAsterisk
-                  description={
-                    <Text size={'xs'}>{t('group_create_info')}</Text>
-                  }
-                  sx={{ maxWidth: '500px' }}
-                  data={
-                    groups?.data?.data?.items?.map((x) => ({
-                      label: x.name,
-                      value: x.id,
-                    })) ?? []
-                  }
-                  {...form.getInputProps('groups')}
-                  size={'lg'}
-                  label={t('group')}
-                  placeholder={t('group_placeholder') as string}
-                  creatable={
-                    // allow for admin and superadmin only
-                    auth?.auth?.role == UserRole.SuperAdmin ||
-                    auth?.auth?.role == UserRole.Admin
-                  }
-                  getCreateLabel={(query) => `+ Create ${query}`}
-                  onCreate={(value) => {
-                    groupAdd
-                      .mutateAsync(value)
-                      .then((res) => form.setFieldValue('groups', res.data.id)); // setting value after fetch
-                    return value;
-                  }}
-                  nothingFound="No options"
                 />
               ) : (
                 <Loader style={{ flexGrow: '0' }} />
@@ -310,7 +258,6 @@ const EditCourse = () => {
                     cursor: viewMode ? 'text !important' : '',
                   },
                 }}
-                mt={48}
                 label={t('Language')}
                 size={'lg'}
                 data={language}

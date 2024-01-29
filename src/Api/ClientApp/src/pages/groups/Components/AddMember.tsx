@@ -1,3 +1,4 @@
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Avatar,
   Box,
@@ -10,19 +11,18 @@ import {
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+import { IconX } from '@tabler/icons';
+import { useDepartmentSetting } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import {
   INotMember,
   useAddGroupMember,
   useGroupNotMember,
 } from '@utils/services/groupService';
-import { useEffect, useState, useRef, forwardRef } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import { useDepartmentSetting } from '@utils/services/adminService';
-import { IconX } from '@tabler/icons';
 
 interface IAddMember {
   email: string[];
@@ -36,15 +36,15 @@ interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
   departementId: string;
 }
 
-// eslint-disable-next-line react/display-name
+// eslint-disable-next-line react/display-name, @typescript-eslint/no-unused-vars
 const SelectUserItem = forwardRef<HTMLDivElement, ItemProps>(
   ({ fullName, imageUrl, email, ...others }: ItemProps, ref) => (
     <div ref={ref} {...others}>
-      <Group noWrap>
+      <Group wrap="nowrap">
         <Avatar src={imageUrl} />
         <div>
           <Text>{fullName}</Text>
-          <Text size="xs" color="dimmed">
+          <Text size="xs" c="dimmed">
             {email}
           </Text>
         </div>
@@ -194,24 +194,22 @@ const AddMember = ({
             data={data}
             mb={10}
             label={t('email_address')}
-            itemComponent={SelectUserItem}
             withAsterisk
             name="email"
             size="md"
-            nothingFound={
+            nothingFoundMessage={
               getNotMemberList.isLoading ? (
                 <Loader />
               ) : (
                 <Box>{t('User Not found')}</Box>
               )
             }
-            getCreateLabel={(query) => `+ Create ${query}`}
             onSearchChange={(d) => {
               setSearch(d);
             }}
             {...form.getInputProps('email')}
           />
-          <Group mt={'lg'} position="right">
+          <Group mt={'lg'} justify="flex-end">
             <Button loading={isLoading} mr={10} type="submit" size="md">
               {t('submit')}
             </Button>

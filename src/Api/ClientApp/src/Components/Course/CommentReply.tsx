@@ -1,14 +1,6 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import useAuth from '@hooks/useAuth';
-import {
-  createStyles,
-  Text,
-  Avatar,
-  Group,
-  Box,
-  Button,
-  Textarea,
-} from '@mantine/core';
+import { Avatar, Box, Button, Group, Text, Textarea } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
@@ -22,21 +14,7 @@ import {
 import { IUser } from '@utils/services/types';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-
-const useStyles = createStyles((theme) => ({
-  wrapper: {
-    border: 1,
-    backgroundColor:
-      theme.colorScheme === 'dark'
-        ? theme.colors.dark[4]
-        : theme.colors.gray[4],
-    borderRadius: theme.radius.md,
-  },
-  body: {
-    paddingLeft: 54,
-    paddingTop: theme.spacing.sm,
-  },
-}));
+import classes from './styles/reply.module.css';
 
 const CommentReply = ({
   reply,
@@ -47,8 +25,6 @@ const CommentReply = ({
   courseId: string;
   commentId: string;
 }) => {
-  const { classes } = useStyles();
-
   const deleteReply = useDeleteCommentReply(courseId, commentId);
   const editReply = useEditCommentReply(courseId, commentId);
   const { t } = useTranslation();
@@ -78,7 +54,7 @@ const CommentReply = ({
       }
     } else {
       const role = auth?.auth?.role ?? UserRole.Trainee;
-      if (role < UserRole.Trainee) {
+      if (Number(role) < UserRole.Trainee) {
         return true;
       } else {
         if (auth?.auth?.id === user.id) return true;
@@ -129,7 +105,7 @@ const CommentReply = ({
         />
         <div>
           <Text size="sm">{reply.user.fullName}</Text>
-          <Text size="xs" color="dimmed">
+          <Text size="xs" c="dimmed">
             {moment(reply.createdOn + 'Z').fromNow()}
           </Text>
         </div>
@@ -139,7 +115,7 @@ const CommentReply = ({
           <form onSubmit={form.onSubmit(submitForm)}>
             <Textarea
               {...form.getInputProps('content')}
-              sx={{ width: '100%' }}
+              style={{ width: '100%' }}
               mt={20}
               mb={10}
               placeholder={t('your_comment') as string}
@@ -151,7 +127,7 @@ const CommentReply = ({
                 size="sm"
                 type="submit"
                 disabled={!form.values.content.trim()}
-                sx={{ '&[data-disabled]': { pointerEvents: 'all' } }}
+                style={{ '&[data-disabled]': { pointerEvents: 'all' } }}
               >
                 {t('edit')}
               </Button>
@@ -173,9 +149,9 @@ const CommentReply = ({
           {reply.content}
         </Text>
       )}
-      <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+      <Box style={{ display: 'flex', justifyContent: 'end' }}>
         {!edit && showEdit(reply.user, true) && (
-          <Button variant="subtle" compact mx={4} onClick={() => setEdit()}>
+          <Button variant="subtle" mx={4} onClick={() => setEdit()}>
             {t('edit')}
           </Button>
         )}
@@ -183,8 +159,7 @@ const CommentReply = ({
           <Button
             onClick={() => setDeleteConfirmation()}
             variant="subtle"
-            compact
-            color="red"
+            c="red"
             mx={4}
           >
             {t('delete')}

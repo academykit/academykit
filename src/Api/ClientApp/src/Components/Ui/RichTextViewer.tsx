@@ -42,7 +42,7 @@ const TextViewer = ({ content, styles, sx }: IProps) => {
   });
 
   return (
-    <RichTextEditor styles={styles} editor={editor} sx={sx}>
+    <RichTextEditor styles={styles} editor={editor} style={sx}>
       <RichTextEditor.Content />
     </RichTextEditor>
   );

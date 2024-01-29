@@ -33,7 +33,7 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
   };
   return (
     <form onSubmit={form.onSubmit(submitHandler)}>
-      <Group>
+      <Group mb={10}>
         <Radio
           onChange={() => {
             form.setFieldValue(`0.isActive`, true);

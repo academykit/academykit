@@ -1,4 +1,4 @@
-import { Button, Group, Title, Text } from '@mantine/core';
+import { Button, Group, Text, Title } from '@mantine/core';
 import { CourseStatus } from '@utils/enums';
 import { ICourseLesson } from '@utils/services/courseService';
 import moment from 'moment';
@@ -53,10 +53,8 @@ const Meetings = ({ data }: { data: ICourseLesson }) => {
   });
 
   return (
-    <Group px={40} sx={{ flexDirection: 'column' }}>
-      <Title lineClamp={3} align="justify">
-        {data.name}
-      </Title>
+    <Group px={40} style={{ flexDirection: 'column' }}>
+      <Title>{data.name}</Title>
       {t('class_duration')} : {Number(data?.meeting?.duration) / 60}
       {t('minutes')}
       {moment().isBetween(StartTime, EndTime) ? (

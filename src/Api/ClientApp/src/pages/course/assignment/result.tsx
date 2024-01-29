@@ -1,10 +1,10 @@
+import TextViewer from '@components/Ui/RichTextViewer';
 import UserShortProfile from '@components/UserShortProfile';
 import useAuth from '@hooks/useAuth';
 import {
   Button,
   Card,
   Container,
-  createStyles,
   Group,
   Loader,
   Modal,
@@ -15,30 +15,13 @@ import {
 import { useToggle } from '@mantine/hooks';
 import { QuestionType, UserRole } from '@utils/enums';
 import { useAssignmentReview } from '@utils/services/assignmentService';
-import { useNavigate, useParams } from 'react-router-dom';
-import AssignmentReviewForm from './Component/AssignmentReviewForm';
+import cx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import TextViewer from '@components/Ui/RichTextViewer';
-
-const useStyle = createStyles((theme) => ({
-  option: {
-    '>label': {
-      cursor: 'pointer',
-    },
-  },
-  wrong: {
-    border: `2px solid ${theme.colors.red[6]}`,
-  },
-  correct: {
-    border: `2px solid ${theme.colors.green[6]}`,
-  },
-  active: {
-    outline: `2px solid ${theme.colors[theme.primaryColor][1]}`,
-  },
-}));
+import { useNavigate, useParams } from 'react-router-dom';
+import classes from '../styles/radioType.module.css';
+import AssignmentReviewForm from './Component/AssignmentReviewForm';
 
 const AssignmentResult = () => {
-  const { classes, cx } = useStyle();
   const [showReviewBox, setShowReviewBox] = useToggle();
   const { id, studentId } = useParams();
   const navigate = useNavigate();
@@ -77,7 +60,7 @@ const AssignmentResult = () => {
           <Title>{x.name}</Title>
           {x.description && (
             <>
-              <Text mt={15} weight="bold">
+              <Text mt={15} fw="bold">
                 {t('description')}
               </Text>
               <TextViewer content={x.description}></TextViewer>
@@ -86,13 +69,13 @@ const AssignmentResult = () => {
 
           {x.hints && (
             <>
-              <Text weight="bold">{t('hint')}</Text>
+              <Text fw="bold">{t('hint')}</Text>
               <TextViewer content={x.hints} />
             </>
           )}
           {x.type === QuestionType.Subjective ? (
             <>
-              <Text weight="bold">{t('answers')}</Text>
+              <Text fw="bold">{t('answers')}</Text>
               <TextViewer content={x.answer ?? ''} />
             </>
           ) : (
@@ -134,13 +117,13 @@ const AssignmentResult = () => {
             <Paper withBorder shadow={'xl'} px={40} py={20} mx={20}>
               <Group>
                 <Text> {t('mark')}</Text>
-                <Text color={'dimmed'}>
+                <Text c={'dimmed'}>
                   {getAssignment.data?.assignmentReview?.mark}/100
                 </Text>
               </Group>
               <Group>
                 <Text>{t('review')}</Text>
-                <Text color={'dimmed'}>
+                <Text c={'dimmed'}>
                   {getAssignment.data?.assignmentReview?.review}
                 </Text>
               </Group>
@@ -150,7 +133,7 @@ const AssignmentResult = () => {
       )}
 
       <Group my={20}>
-        {auth?.auth && auth?.auth?.role <= UserRole.Trainer && (
+        {auth?.auth && Number(auth?.auth?.role) <= UserRole.Trainer && (
           <Button onClick={() => setShowReviewBox()}>
             {getAssignment.data?.assignmentReview?.review
               ? t('edit_review')

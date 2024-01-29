@@ -2,28 +2,28 @@ import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import {
+  Box,
+  Flex,
+  Grid,
   Group,
-  Title,
+  Loader,
+  Modal,
   Paper,
+  ScrollArea,
   Table,
   Text,
-  Flex,
-  ScrollArea,
-  Modal,
-  Grid,
-  Box,
-  Loader,
+  Title,
 } from '@mantine/core';
+import { IconEye } from '@tabler/icons';
+import { SeverityType } from '@utils/enums';
 import {
   IServerLogs,
   useGetServerLogs,
   useGetSingleLog,
 } from '@utils/services/adminService';
-import { useTranslation } from 'react-i18next';
-import { SeverityType } from '@utils/enums';
 import { IPaginated } from '@utils/services/types';
 import { useState } from 'react';
-import { IconEye } from '@tabler/icons';
+import { useTranslation } from 'react-i18next';
 
 const serverLogs: IServerLogs[] = [
   {
@@ -145,7 +145,7 @@ const DetailFields = ({
   return (
     <Grid.Col span={6}>
       <div>
-        <Text weight={'bold'}>{title}</Text>
+        <Text fw={'bold'}>{title}</Text>
         <Text>{content}</Text>
       </div>
     </Grid.Col>
@@ -180,7 +180,7 @@ const Rows = ({ item }: { item: IServerLogs }) => {
 
   return (
     <>
-      <tr>
+      <Table.Tr>
         <Modal
           title={t('log_details')}
           opened={viewLog}
@@ -190,44 +190,44 @@ const Rows = ({ item }: { item: IServerLogs }) => {
         >
           <LogDetails logId={item.id} />
         </Modal>
-        <td>
-          <Group spacing="sm">
-            <Text size="sm" weight={500}>
+        <Table.Td>
+          <Group gap="sm">
+            <Text size="sm" fw={500}>
               {SeverityType[item.type]}
             </Text>
           </Group>
-        </td>
+        </Table.Td>
 
-        <td>
-          <Group spacing="sm">
-            <Text size="sm" weight={500}>
+        <Table.Td>
+          <Group gap="sm">
+            <Text size="sm" fw={500}>
               {`${item.timeStamp}`}
             </Text>
           </Group>
-        </td>
-        <td>
-          <Group spacing="sm">
-            <Text size="sm" weight={500}>
+        </Table.Td>
+        <Table.Td>
+          <Group gap="sm">
+            <Text size="sm" fw={500}>
               {item.message}
             </Text>
           </Group>
-        </td>
-        <td>
-          <Group spacing="sm">
-            <Text size="sm" weight={500}>
+        </Table.Td>
+        <Table.Td>
+          <Group gap="sm">
+            <Text size="sm" fw={500}>
               {item.trackBy}
             </Text>
           </Group>
-        </td>
-        <td>
-          <Group spacing="sm">
+        </Table.Td>
+        <Table.Td>
+          <Group gap="sm">
             <IconEye
               onClick={() => setViewLog(true)}
               style={{ cursor: 'pointer' }}
             />
           </Group>
-        </td>
-      </tr>
+        </Table.Td>
+      </Table.Tr>
     </>
   );
 };
@@ -246,7 +246,7 @@ const Log = ({
   return (
     <>
       <Group
-        sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+        style={{ justifyContent: 'space-between', alignItems: 'center' }}
         mb={15}
       >
         <Title>{t('log')}</Title>
@@ -276,28 +276,27 @@ const Log = ({
         <ScrollArea>
           <Paper>
             <Table
-              sx={{ minWidth: 800 }}
+              style={{ minWidth: 800 }}
               verticalSpacing="sm"
               striped
               highlightOnHover
-              withBorder
+              withTableBorder
               withColumnBorders
             >
-              <thead>
-                <tr>
-                  <th>{t('severity')}</th>
-                  <th>{t('time_stamp')}</th>
-                  <th>{t('message')}</th>
-                  <th>{t('faced_by')}</th>
-                  <th>{t('actions')}</th>
-                </tr>
-              </thead>
-              <tbody>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>{t('severity')}</Table.Th>
+                  <Table.Th>{t('time_stamp')}</Table.Th>
+                  <Table.Th>{t('message')}</Table.Th>
+                  <Table.Th>{t('faced_by')}</Table.Th>
+                  <Table.Th>{t('actions')}</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
                 {getLogData.data.items.map((item) => (
                   <Rows key={item.id} item={item} />
-                  // <Rows item={item} key={item.id} />
                 ))}
-              </tbody>
+              </Table.Tbody>
             </Table>
           </Paper>
         </ScrollArea>

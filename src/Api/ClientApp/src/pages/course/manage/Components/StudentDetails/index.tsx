@@ -36,12 +36,12 @@ const TableRow = ({ values }: { values: IReportDetail }) => {
   const { t } = useTranslation();
 
   return (
-    <tr>
-      <td>{moment(values.startDate).format(DATE_FORMAT)}</td>
-      <td>{values.joinedTime}</td>
-      <td>{values.leftTime}</td>
-      <td>{formatDuration(values.duration ?? 0, true, t)}</td>
-    </tr>
+    <Table.Tr>
+      <Table.Td>{moment(values.startDate).format(DATE_FORMAT)}</Table.Td>
+      <Table.Td>{values.joinedTime}</Table.Td>
+      <Table.Td>{values.leftTime}</Table.Td>
+      <Table.Td>{formatDuration(values.duration ?? 0, true, t)}</Table.Td>
+    </Table.Tr>
   );
 };
 
@@ -128,7 +128,7 @@ const StudentLessonDetails = ({
         return (
           <Tooltip label={t('view_result')}>
             <ActionIcon
-              color="green"
+              c="green"
               variant="subtle"
               onClick={() => setExamResultModal()}
             >
@@ -140,7 +140,7 @@ const StudentLessonDetails = ({
         return (
           <Tooltip label={t('view_live_class_report')}>
             <ActionIcon
-              color="green"
+              c="green"
               variant="subtle"
               onClick={() => setLiveClassReportModal()}
             >
@@ -153,7 +153,7 @@ const StudentLessonDetails = ({
           <Tooltip label={t('view_assignment_result')}>
             <ActionIcon
               component={Link}
-              color="green"
+              c="green"
               variant="subtle"
               to={RoutePath.assignment.result(lessonId, studentId).route}
             >
@@ -167,7 +167,7 @@ const StudentLessonDetails = ({
           <Tooltip label={t('view_feedback')}>
             <ActionIcon
               component={Link}
-              color="green"
+              c="green"
               variant="subtle"
               to={RoutePath.feedback.result(lessonId, studentId).route}
             >
@@ -179,7 +179,7 @@ const StudentLessonDetails = ({
         return (
           <Tooltip label={t('view_live_class_report')}>
             <ActionIcon
-              color="green"
+              c="green"
               variant="subtle"
               onClick={() => setLiveClassReportModal()}
             >
@@ -316,21 +316,26 @@ const StudentLessonDetails = ({
           ) : (
             <>
               {!meetingReport.isError && (
-                <Table striped withBorder withColumnBorders highlightOnHover>
-                  <thead>
-                    <tr>
-                      <th>{t('start_date')}</th>
-                      <th>{t('join_time')}</th>
-                      <th>{t('left_time')}</th>
-                      <th>{t('duration')}</th>
-                    </tr>
-                  </thead>
+                <Table
+                  striped
+                  withTableBorder
+                  withColumnBorders
+                  highlightOnHover
+                >
+                  <Table.Thead>
+                    <Table.Tr>
+                      <Table.Th>{t('start_date')}</Table.Th>
+                      <Table.Th>{t('join_time')}</Table.Th>
+                      <Table.Th>{t('left_time')}</Table.Th>
+                      <Table.Th>{t('duration')}</Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
 
-                  <tbody>
+                  <Table.Tbody>
                     {meetingReport.data.map((x) => (
                       <TableRow values={x} key={x.joinedTime} />
                     ))}
-                  </tbody>
+                  </Table.Tbody>
                 </Table>
               )}
               {meetingReport.isError && <Box>{t('something_went_wrong')}</Box>}

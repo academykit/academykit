@@ -1,37 +1,12 @@
 import FeedbackForm from '@components/Course/FeedBack/ViewFeedback';
-import { Title, Button, Container, createStyles } from '@mantine/core';
-
+import { Button, Container, Title } from '@mantine/core';
 import { useFeedbackQuestion } from '@utils/services/feedbackService';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-
-const useStyles = createStyles((theme) => ({
-  root: {
-    paddingTop: 80,
-    paddingBottom: 80,
-  },
-
-  title: {
-    fontWeight: 900,
-    fontSize: 34,
-    marginBottom: theme.spacing.md,
-    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-
-    [theme.fn.smallerThan('sm')]: {
-      fontSize: 32,
-    },
-  },
-
-  control: {
-    [theme.fn.smallerThan('sm')]: {
-      width: '100%',
-    },
-  },
-}));
+import classes from '../styles/assignment.module.css';
 
 const FeedbackPage = () => {
   const { id } = useParams();
-  const { classes } = useStyles();
   const { t } = useTranslation();
   const feedback = useFeedbackQuestion(id as string, '');
   const navigate = useNavigate();

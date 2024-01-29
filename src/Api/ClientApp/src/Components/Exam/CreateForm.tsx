@@ -1,4 +1,3 @@
-import React, { FC, useEffect, useState } from 'react';
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import {
   Box,
@@ -16,7 +15,8 @@ import { IconPlus, IconTrash } from '@tabler/icons';
 import { QuestionType, ReadableEnum } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import { IAddQuestionType } from '@utils/services/questionService';
-import { useAddTag, useTags } from '@utils/services/tagService';
+import { useTags } from '@utils/services/tagService';
+import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
@@ -62,7 +62,7 @@ const CreateForm: FC<Props> = ({ form, useFormContext }) => {
     }
   }, [tags.isSuccess]);
 
-  const { mutate } = useAddTag();
+  // const { mutate } = useAddTag();
   const { t } = useTranslation();
   return (
     <>
@@ -82,15 +82,9 @@ const CreateForm: FC<Props> = ({ form, useFormContext }) => {
         <MultiSelect
           searchable
           withAsterisk
-          creatable
-          sx={{ maxWidth: '500px' }}
+          style={{ maxWidth: '500px' }}
           data={tagsList}
           {...form.getInputProps('tags')}
-          getCreateLabel={(query) => `+ Create ${query}`}
-          onCreate={(query) => {
-            mutate(query);
-            return undefined;
-          }}
           size={'lg'}
           label={t('tags')}
           placeholder={t('select_tags') as string}

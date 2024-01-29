@@ -1,21 +1,35 @@
-import NavOutlet from '@components/Layout/NavOutlet';
-import { TOKEN_STORAGE } from '@utils/constants';
+import AdminNavOutlet from '@components/Layout/AdminNavOutlet';
+import {
+  IconCertificate,
+  IconFileCertificate,
+  IconLicense,
+  IconServerCog,
+  IconUser,
+  IconUserCircle,
+  IconVideo,
+} from '@tabler/icons';
+import { IconMailCog } from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import { useTranslation } from 'react-i18next';
 
 const AdminNav = () => {
   const { t } = useTranslation();
-  const adminNavLink = [
+
+  const adminNavLinks = [
     {
       label: t('profile'),
       to: RoutePath.settings.base,
       role: UserRole.Trainee,
+      group: 'account',
+      icon: <IconUserCircle size={14} />,
     },
     {
       label: t('account'),
       to: RoutePath.settings.profile(),
       role: UserRole.Trainee,
+      group: 'account',
+      icon: <IconUser size={14} />,
     },
     {
       label: t('my_certificate'),
@@ -27,48 +41,54 @@ const AdminNav = () => {
           RoutePath.settings.training() ||
             RoutePath.settings.training() + '/external'
         ),
-    },
-    {
-      label: t('admin_settings'),
-      to: RoutePath.settings.base,
-      separator: true,
-      role: UserRole.Admin,
+      group: 'account',
+      icon: <IconCertificate size={14} />,
     },
     {
       label: t('general_settings'),
       to: RoutePath.settings.general(),
       role: UserRole.SuperAdmin,
+      group: 'admin',
     },
     {
       label: t('zoom_settings'),
       to: RoutePath.settings.zoom(),
       role: UserRole.SuperAdmin,
+      group: 'admin',
+      icon: <IconVideo size={14} />,
     },
     {
       label: t('zoom_license'),
       to: RoutePath.settings.zoomLicense(),
       role: UserRole.Admin,
+      group: 'admin',
+      icon: <IconLicense size={14} />,
     },
     {
       label: t('smtp'),
       to: RoutePath.settings.smtp(),
       role: UserRole.SuperAdmin,
+      group: 'admin',
+      icon: <IconMailCog size={14} />,
     },
     {
       label: t('file_storage'),
       to: RoutePath.settings.fileStorage(),
       role: UserRole.SuperAdmin,
+      group: 'admin',
+      icon: <IconServerCog size={14} />,
     },
     {
       label: t('levels'),
       to: RoutePath.level,
       role: UserRole.Admin,
+      group: 'admin',
     },
-
     {
       label: t('departments'),
       to: RoutePath.settings.department(),
       role: UserRole.Admin,
+      group: 'admin',
     },
     // {
     //   label: t('log'),
@@ -76,39 +96,28 @@ const AdminNav = () => {
     //   role: UserRole.Admin,
     // },
     {
-      label: t('reviews'),
-      to: RoutePath.settings.base,
-      separator: true,
-      role: UserRole.Admin,
-    },
-    {
       label: t('trainings'),
       to: RoutePath.settings.courses(),
       role: UserRole.Admin,
+      group: 'reviews',
     },
     {
       label: t('certificates'),
       to: RoutePath.settings.userCertificate(),
       role: UserRole.Admin,
+      group: 'reviews',
+      icon: <IconFileCertificate size={14} />,
     },
     // { label: "Payment System", to: "/paymentmethods" },
     {
-      label: t('System Monitoring'),
-      to: RoutePath.settings.hangfire(),
-      separator: true,
-      role: UserRole.SuperAdmin,
-    },
-    {
       label: t('hangfire'),
-      to:
-        RoutePath.settings.hangfire() +
-        '?access_token=' +
-        localStorage.getItem(TOKEN_STORAGE),
+      to: 'hangfire',
       role: UserRole.SuperAdmin,
       target: '_blank',
+      group: 'hangfire',
     },
   ];
-  return <NavOutlet data={adminNavLink} />;
+  return <AdminNavOutlet data={adminNavLinks} />;
 };
 
 export default AdminNav;

@@ -1,3 +1,6 @@
+import { IAuthContext } from '@context/AuthProvider';
+import { IWithSearchPagination } from '@hoc/useSearchPagination';
+import useAuth from '@hooks/useAuth';
 import {
   ActionIcon,
   Avatar,
@@ -8,52 +11,23 @@ import {
   Table,
   Text,
   Tooltip,
-  createStyles,
   useMantineColorScheme,
 } from '@mantine/core';
-import { useEditUser, useResendEmail } from '@utils/services/adminService';
-import { UserRole, UserStatus } from '@utils/enums';
-
-import { Suspense, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { showNotification } from '@mantine/notifications';
 import { IconEdit, IconSend } from '@tabler/icons';
-import { IUserProfile } from '@utils/services/types';
-import useAuth from '@hooks/useAuth';
-import { IAuthContext } from '@context/AuthProvider';
+import { UserRole, UserStatus } from '@utils/enums';
 import { getInitials } from '@utils/getInitialName';
 import lazyWithRetry from '@utils/lazyImportWithReload';
-import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
-import { showNotification } from '@mantine/notifications';
+import { useEditUser, useResendEmail } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
-import { IWithSearchPagination } from '@hoc/useSearchPagination';
+import { IUserProfile } from '@utils/services/types';
+import { TFunction } from 'i18next';
+import { Suspense, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import classes from './styles/memberTable.module.css';
 
 const AddUpdateUserForm = lazyWithRetry(() => import('./AddUpdateUserForm'));
-
-const useStyles = createStyles(() => ({
-  nameCotainer: {
-    maxWidth: '210px',
-    minWidth: '210px',
-    width: '210px',
-  },
-  emailContainer: {
-    maxWidth: '230px',
-    minWidth: '230px',
-    width: '230px',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-  roleContainer: {
-    maxWidth: '120px',
-    minWidth: '120px',
-    width: '120px',
-  },
-  phoneContainer: {
-    maxWidth: '120px',
-    minWidth: '120px',
-    width: '120px',
-  },
-}));
 
 const UserRow = ({
   item,
@@ -70,7 +44,6 @@ const UserRow = ({
   const editUser = useEditUser(item?.id, search);
   const { colorScheme } = useMantineColorScheme();
   const resend = useResendEmail(item?.id);
-  const { classes } = useStyles();
 
   const handleResendEmail = async () => {
     try {
@@ -90,8 +63,8 @@ const UserRow = ({
   };
 
   return (
-    <tr key={item?.id}>
-      <td
+    <Table.Tr key={item?.id}>
+      <Table.Td
         style={{
           width: '122px',
           maxWidth: '122px',
@@ -100,8 +73,8 @@ const UserRow = ({
         }}
       >
         {item.memberId}
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         <Modal
           size={800}
           opened={opened}
@@ -133,7 +106,7 @@ const UserRow = ({
 
           <Text
             size="sm"
-            weight={500}
+            fw={500}
             lineClamp={1}
             ml={5}
             className={classes.nameCotainer}
@@ -141,25 +114,38 @@ const UserRow = ({
             {item?.fullName}
           </Text>
         </div>
-      </td>
-      <td className={classes.roleContainer}>{t(`${UserRole[item.role]}`)}</td>
-      <td className={classes.emailContainer}>{item?.email.toLowerCase()}</td>
+      </Table.Td>
+      <Table.Td className={classes.roleContainer}>
+        {t(`${UserRole[item.role]}`)}
+      </Table.Td>
+      <Table.Td className={classes.emailContainer}>
+        {item?.email.toLowerCase()}
+      </Table.Td>
 
-      <td className={classes.phoneContainer}>{item?.mobileNumber}</td>
-      <td>
+      <Table.Td className={classes.phoneContainer}>
+        {item?.mobileNumber}
+      </Table.Td>
+      <Table.Td>
         {item?.status === UserStatus.Active ? (
-          <Badge color={'green'}>{t('active')}</Badge>
+          <Badge variant="light" color={'green'}>
+            {t('active')}
+          </Badge>
         ) : item?.status === UserStatus.InActive ? (
-          <Badge color={'red'}>{t('inactive')}</Badge>
+          <Badge variant="light" color={'red'}>
+            {t('inactive')}
+          </Badge>
         ) : (
-          <Badge color="yellow">{t('pending')}</Badge>
+          <Badge variant="light" color="yellow">
+            {t('pending')}
+          </Badge>
         )}
-      </td>
+      </Table.Td>
 
-      <td style={{ display: 'flex' }}>
+      <Table.Td style={{ display: 'flex' }}>
         {item.role !== UserRole.SuperAdmin && auth?.auth?.id !== item.id && (
           <Tooltip label={t('edit_user_detail')}>
             <ActionIcon
+              variant="transparent"
               style={{
                 cursor: 'pointer',
                 color: colorScheme === 'dark' ? '#F8F9FA' : '#25262B',
@@ -177,6 +163,7 @@ const UserRow = ({
         {auth?.auth?.id !== item.id && item.status === UserStatus.Pending && (
           <Tooltip label={t('resend_email')} onClick={handleResendEmail}>
             <ActionIcon
+              variant="transparent"
               style={{
                 cursor: 'pointer',
                 color: colorScheme === 'dark' ? '#F8F9FA' : '#25262B',
@@ -190,8 +177,8 @@ const UserRow = ({
             </ActionIcon>
           </Tooltip>
         )}
-      </td>
-    </tr>
+      </Table.Td>
+    </Table.Tr>
   );
 };
 
@@ -217,27 +204,29 @@ const UserMemberTable = ({
   return (
     <Paper>
       <Table
-        sx={{ minWidth: 800 }}
+        style={{ minWidth: 800 }}
         verticalSpacing="sm"
         striped
         highlightOnHover
-        withBorder
+        withTableBorder
         withColumnBorders
       >
-        <thead>
-          <tr>
-            <th>{t('userid')}</th>
-            <th>
+        <Table.Thead>
+          <Table.Tr>
+            <Table.Th>{t('userid')}</Table.Th>
+            <Table.Th>
               {sortComponent({ sortKey: 'firstName', title: t('username') })}
-            </th>
-            <th>{t('role')}</th>
-            <th>{sortComponent({ sortKey: 'email', title: t('email') })}</th>
-            <th>{t('phone_number')}</th>
-            <th>{t('active_status')}</th>
-            <th>{t('actions')}</th>
-          </tr>
-        </thead>
-        <tbody>{Rows(auth)}</tbody>
+            </Table.Th>
+            <Table.Th>{t('role')}</Table.Th>
+            <Table.Th>
+              {sortComponent({ sortKey: 'email', title: t('email') })}
+            </Table.Th>
+            <Table.Th>{t('phone_number')}</Table.Th>
+            <Table.Th>{t('active_status')}</Table.Th>
+            <Table.Th>{t('actions')}</Table.Th>
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody>{Rows(auth)}</Table.Tbody>
       </Table>
     </Paper>
   );

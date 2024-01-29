@@ -198,10 +198,10 @@ const updateLevelSetting = async ({
   return await httpClient.put(`/api/level/${id}`, { name });
 };
 
-export const useUpdateLevelSetting = (id: string) => {
+export const useUpdateLevelSetting = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    ['update' + api.adminUser.updateLevelSetting(id)],
+    ['update' + api.adminUser.getLevelSetting],
     updateLevelSetting,
     {
       onSuccess: () => {
@@ -335,10 +335,10 @@ const updateDepartmentSetting = async ({
   return await httpClient.put(`/api/department/${id}`, { name, isActive });
 };
 
-export const useUpdateDepartmentSetting = (id: string) => {
+export const useUpdateDepartmentSetting = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    ['update' + api.adminUser.updateDepartmentSetting(id)],
+    ['update' + api.adminUser.getDepartmentSettings],
     updateDepartmentSetting,
     {
       onSuccess: () => {

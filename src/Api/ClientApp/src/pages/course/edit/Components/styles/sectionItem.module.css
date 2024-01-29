@@ -1,0 +1,12 @@
+/* Dragging */
+.dragging {
+  background-color: light-dark(
+    var(--mantine-color-drag),
+    var(--mantine-color-dark-7)
+  );
+}
+
+/* Drop */
+.drop {
+  background-color: var(--mantine-color-drop);
+}

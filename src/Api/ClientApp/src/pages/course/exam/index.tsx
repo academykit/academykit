@@ -1,33 +1,10 @@
 import Exam from '@components/Course/Classes/Exam';
-import { createStyles, Button, Container, Loader, Title } from '@mantine/core';
+import { Button, Container, Loader, Title } from '@mantine/core';
 import { useStartExam } from '@utils/services/examService';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-
-const useStyles = createStyles((theme) => ({
-  root: {
-    paddingTop: 80,
-    paddingBottom: 80,
-  },
-
-  title: {
-    fontWeight: 900,
-    fontSize: 34,
-    marginBottom: theme.spacing.md,
-    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-
-    [theme.fn.smallerThan('sm')]: {
-      fontSize: 32,
-    },
-  },
-
-  control: {
-    [theme.fn.smallerThan('sm')]: {
-      width: '100%',
-    },
-  },
-}));
+import classes from '../styles/assignment.module.css';
 
 const LessonExam = () => {
   const { id } = useParams();
@@ -38,7 +15,6 @@ const LessonExam = () => {
   useEffect(() => {
     exam.mutate();
   }, []);
-  const { classes } = useStyles();
 
   if (exam.isLoading) {
     return <Loader />;

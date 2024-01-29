@@ -1,5 +1,8 @@
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import DeleteModal from '@components/Ui/DeleteModal';
 import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
+import useCustomForm from '@hooks/useCustomForm';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import { Button, Group, Paper, Text, TextInput } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
@@ -12,12 +15,9 @@ import {
   useEditSignature,
 } from '@utils/services/courseService';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import { useTranslation } from 'react-i18next';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import useCustomForm from '@hooks/useCustomForm';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IGetSignature>();
@@ -121,7 +121,7 @@ const CreateSignature = ({
 
       <form onSubmit={form.onSubmit(edit ? handelEdit : handleSubmit)}>
         <Paper p={10} style={{ marginBottom: '20px' }} withBorder>
-          <Group noWrap mb={10}>
+          <Group wrap="nowrap" mb={10}>
             <CustomTextFieldWithAutoFocus
               w={'100%'}
               label={t('name')}
@@ -152,6 +152,9 @@ const CreateSignature = ({
             currentThumbnail={signatureUrl}
             width="48.5%"
           />
+          <Text c="dimmed" size="xs">
+            {t('image_dimension')}
+          </Text>
           <Group mt={30}>
             <Button
               disabled={!cForm?.isReady}

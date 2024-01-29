@@ -1,13 +1,14 @@
 import {
   Badge,
   Box,
-  createStyles,
   Flex,
   Group,
   Paper,
   Popover,
   Text,
   Title,
+  useMantineColorScheme,
+  useMantineTheme,
 } from '@mantine/core';
 import { useHover, useMediaQuery } from '@mantine/hooks';
 import { IconCheck } from '@tabler/icons';
@@ -17,20 +18,8 @@ import RoutePath from '@utils/routeConstants';
 import { ILessons } from '@utils/services/courseService';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
+import classes from '../../styles/lesson.module.css';
 
-const useStyle = createStyles((theme) => {
-  return {
-    paper: {
-      '&:hover': {
-        backgroundColor:
-          theme.colorScheme === 'light'
-            ? theme.colors.dark[2]
-            : theme.colors.gray[7],
-        transform: 'scale(1.02)',
-      },
-    },
-  };
-});
 const Lesson = ({
   lesson,
   courseSlug,
@@ -40,11 +29,12 @@ const Lesson = ({
   courseSlug: string;
   index: number;
 }) => {
-  const { classes, theme } = useStyle();
-  const matches = useMediaQuery(`(min-width: ${theme.breakpoints.lg}px)`);
+  const matches = useMediaQuery(`(min-width: 75em)`);
   const { hovered, ref } = useHover();
   const { lessonId } = useParams();
   const { t } = useTranslation();
+  const { colorScheme } = useMantineColorScheme();
+  const theme = useMantineTheme();
 
   return (
     <Popover
@@ -62,10 +52,10 @@ const Lesson = ({
           shadow={'md'}
           className={classes.paper}
           withBorder
-          sx={{
+          style={{
             backgroundColor:
               lessonId === lesson.slug
-                ? theme.colorScheme === 'light'
+                ? colorScheme === 'light'
                   ? theme.colors.dark[0]
                   : theme.colors.gray[7]
                 : '',
@@ -78,7 +68,11 @@ const Lesson = ({
             <Group>
               <Flex w={'100%'} p={15} direction={'row'}>
                 <Box w={'100%'}>
-                  <Title size={matches ? 14 : 13} mb={3} truncate>
+                  <Title
+                    c={colorScheme == 'dark' ? '#C1C2C5' : 'dark'}
+                    size={matches ? 14 : 13}
+                    mb={3}
+                  >
                     {index + 1}. {lesson.name}
                   </Title>
                   <Badge color="blue" variant="light" ml={10}>
@@ -99,7 +93,7 @@ const Lesson = ({
           </div>
         </Paper>
       </Popover.Target>
-      <Popover.Dropdown sx={{ pointerEvents: 'none' }}>
+      <Popover.Dropdown style={{ pointerEvents: 'none' }}>
         <Text fw={700} size="md" truncate>
           {lesson.name}
         </Text>

@@ -1,54 +1,38 @@
 import DeleteModal from '@components/Ui/DeleteModal';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   ActionIcon,
   Box,
   Button,
-  Container,
-  createStyles,
+  Drawer,
   Group,
-  Modal,
   Paper,
   Table,
   Text,
   TextInput,
   Title,
-  Transition,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
-import { useToggle } from '@mantine/hooks';
+import { useDisclosure } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconPencil, IconTrash } from '@tabler/icons';
 import {
-  useUpdateLevelSetting,
+  useDeleteLevelSetting,
   useLevelSetting,
   usePostLevelSetting,
-  useDeleteLevelSetting,
+  useUpdateLevelSetting,
 } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import { IUser } from '@utils/services/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+
 interface ILevel<T> {
   id: string;
   name: string;
   user: T;
 }
-
-const useStyles = createStyles((theme) => ({
-  paper: {
-    [theme.fn.smallerThan('md')]: {
-      width: '100%',
-    },
-    [theme.fn.smallerThan('lg')]: {
-      width: '100%',
-    },
-
-    width: '50%',
-    marginBottom: '20px',
-  },
-}));
 
 const schema = () => {
   const { t } = useTranslation();
@@ -65,6 +49,14 @@ const editSchema = () => {
 };
 
 const Level = () => {
+  const { t } = useTranslation();
+  const [opened, { open, close }] = useDisclosure(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editItem, setEditItem] = useState<ILevel<IUser>>();
+  const updateLevel = useUpdateLevelSetting();
+  const getLevel = useLevelSetting();
+  const postLevel = usePostLevelSetting();
+
   const form = useForm({
     initialValues: {
       name: '',
@@ -72,14 +64,17 @@ const Level = () => {
     validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
-  const { t } = useTranslation();
 
-  const { classes } = useStyles();
+  useEffect(() => {
+    if (isEditing) {
+      form.setValues({
+        name: editItem?.name,
+      });
+    }
+  }, [isEditing]);
 
   const Rows = ({ item }: { item: ILevel<IUser> }) => {
     const [opened, setOpened] = useState(false);
-    const [isEdit, setIsEdit] = useState<boolean>(false);
-    const updateLevel = useUpdateLevelSetting(item.id);
 
     const form = useForm({
       initialValues: {
@@ -107,58 +102,7 @@ const Level = () => {
     };
 
     return (
-      <tr key={item.id}>
-        <Modal
-          opened={isEdit}
-          onClose={() => {
-            form.reset();
-            setIsEdit(false);
-          }}
-        >
-          {isEdit && (
-            <Box mt={10}>
-              <form
-                onSubmit={form.onSubmit(async (data) => {
-                  try {
-                    await updateLevel.mutateAsync({
-                      name: data.eName,
-                      id: item.id,
-                    });
-                    showNotification({ message: t('update_success') });
-                    setIsEdit(false);
-                  } catch (error) {
-                    const err = errorType(error);
-                    showNotification({
-                      message: err,
-                      color: 'red',
-                    });
-                  }
-                })}
-              >
-                <Container
-                  size={450}
-                  sx={{
-                    marginLeft: '0px',
-                  }}
-                >
-                  <TextInput
-                    withAsterisk
-                    label={t('level_name')}
-                    placeholder={t('level_name_placeholder') as string}
-                    name="eName"
-                    {...form.getInputProps('eName')}
-                  />
-                </Container>
-
-                <Group mt={20} ml={10}>
-                  <Button type="submit" loading={updateLevel.isLoading}>
-                    {t('save')}
-                  </Button>
-                </Group>
-              </form>
-            </Box>
-          )}
-        </Modal>
+      <Table.Tr key={item.id}>
         {opened && (
           <DeleteModal
             title={`${t('want_to_delete')} "${item?.name}" ${t('level?')}`}
@@ -168,23 +112,27 @@ const Level = () => {
             loading={deleteLevel.isLoading}
           />
         )}
-        <td>
-          <Group spacing="sm">
-            <Text size="sm" weight={500}>
+        <Table.Td>
+          <Group gap="sm">
+            <Text size="sm" fw={500}>
               {item.name}
             </Text>
           </Group>
-        </td>
-        <td>
-          <Group spacing={0} position="center">
-            <ActionIcon>
+        </Table.Td>
+        <Table.Td>
+          <Group gap={0} justify="center">
+            <ActionIcon variant="subtle">
               <IconPencil
                 size={16}
                 stroke={1.5}
-                onClick={() => setIsEdit(true)}
+                onClick={() => {
+                  opened ? close() : open();
+                  setIsEditing(true);
+                  setEditItem(item);
+                }}
               />
             </ActionIcon>
-            <ActionIcon color="red">
+            <ActionIcon variant="subtle" color="red">
               <IconTrash
                 size={16}
                 stroke={1.5}
@@ -194,113 +142,114 @@ const Level = () => {
               />
             </ActionIcon>
           </Group>
-        </td>
-      </tr>
+        </Table.Td>
+      </Table.Tr>
     );
   };
-
-  const getLevel = useLevelSetting();
-  const postLevel = usePostLevelSetting();
-
-  const [showAddForm, toggleAddForm] = useToggle();
 
   return (
     <>
       <Group
-        sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+        style={{ justifyContent: 'space-between', alignItems: 'center' }}
         mb={15}
       >
         <Title>{t('levels')}</Title>
-        {!showAddForm && (
-          <Button onClick={() => toggleAddForm()}>{t('add_level')}</Button>
+        {!opened && (
+          <Button
+            onClick={() => {
+              open();
+              form.reset();
+            }}
+          >
+            {t('add_level')}
+          </Button>
         )}
       </Group>
 
-      <Transition
-        mounted={showAddForm}
-        transition={'slide-down'}
-        duration={200}
-        timingFunction="ease"
+      <Drawer
+        opened={opened}
+        onClose={() => {
+          close();
+          setIsEditing(false);
+        }}
+        overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
       >
-        {() => (
-          <Paper
-            shadow={'sm'}
-            radius="md"
-            p="xl"
-            withBorder
-            className={classes.paper}
+        <Box>
+          <form
+            onSubmit={form.onSubmit(async (values) => {
+              try {
+                if (isEditing) {
+                  await updateLevel.mutateAsync({
+                    id: editItem?.id as string,
+                    ...values,
+                  });
+                  form.reset();
+                  showNotification({
+                    message: t('update_success'),
+                  });
+                } else {
+                  await postLevel.mutateAsync(values);
+                  showNotification({
+                    message: t('add_level_success'),
+                  });
+                  form.reset();
+                }
+              } catch (error) {
+                const err = errorType(error);
+
+                showNotification({
+                  title: t('error'),
+                  message: err,
+                  color: 'red',
+                });
+              } finally {
+                close();
+                setIsEditing(false);
+              }
+            })}
           >
-            <Box mt={10}>
-              <form
-                onSubmit={form.onSubmit(async (values) => {
-                  try {
-                    await postLevel.mutateAsync(values);
-                    showNotification({
-                      message: t('add_level_success'),
-                    });
-                    form.reset();
-                    toggleAddForm();
-                  } catch (error) {
-                    const err = errorType(error);
+            <TextInput
+              label={t('level_name')}
+              name="levelName"
+              withAsterisk
+              placeholder={t('level_name_placeholder') as string}
+              {...form.getInputProps('name')}
+            />
 
-                    showNotification({
-                      title: t('error'),
-                      message: err,
-                      color: 'red',
-                    });
-                  }
-                })}
+            <Group mt={10}>
+              <Button
+                type="submit"
+                loading={updateLevel.isLoading || postLevel.isLoading}
               >
-                <TextInput
-                  label={t('level_name')}
-                  name="levelName"
-                  withAsterisk
-                  placeholder={t('level_name_placeholder') as string}
-                  {...form.getInputProps('name')}
-                />
-
-                <Group mt={10}>
-                  <Button type="submit">{t('submit')}</Button>
-                  {showAddForm && (
-                    <Button
-                      onClick={() => {
-                        form.reset();
-                        toggleAddForm();
-                      }}
-                      variant="outline"
-                    >
-                      {t('cancel')}
-                    </Button>
-                  )}
-                </Group>
-              </form>
-            </Box>
-          </Paper>
-        )}
-      </Transition>
+                {t('submit')}
+              </Button>
+            </Group>
+          </form>
+        </Box>
+      </Drawer>
 
       <Paper>
         <Table
           striped
           highlightOnHover
-          withBorder
+          withTableBorder
           withColumnBorders
-          sx={{ marginTop: '10px' }}
+          style={{ marginTop: '10px' }}
         >
-          <thead>
-            <tr>
-              <th>{t('name')}</th>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>{t('name')}</Table.Th>
 
-              <th>
-                <Text align="center">{t('actions')}</Text>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              <Table.Th>
+                <Text ta="center">{t('actions')}</Text>
+              </Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
             {getLevel.data?.map((item: any) => (
               <Rows item={item} key={item.id} />
             ))}
-          </tbody>
+          </Table.Tbody>
         </Table>
       </Paper>
     </>

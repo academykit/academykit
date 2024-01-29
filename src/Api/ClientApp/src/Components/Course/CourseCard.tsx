@@ -1,13 +1,5 @@
 import TextViewer from '@components/Ui/RichTextViewer';
-import {
-  Card,
-  Image,
-  Text,
-  Group,
-  Badge,
-  Button,
-  createStyles,
-} from '@mantine/core';
+import { Badge, Button, Card, Group, Image, Text } from '@mantine/core';
 import { CourseLanguage } from '@utils/enums';
 import getCourseOgImageUrl from '@utils/getCourseOGImage';
 import RoutePath from '@utils/routeConstants';
@@ -15,24 +7,9 @@ import { useGeneralSetting } from '@utils/services/adminService';
 import { ICourse } from '@utils/services/courseService';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-
-const useStyles = createStyles((theme) => ({
-  card: {
-    [theme.fn.largerThan(theme.breakpoints.md)]: {
-      width: '400px',
-      minHeight: '300px',
-    },
-    [theme.fn.smallerThan(theme.breakpoints.sm)]: {
-      width: '100%',
-    },
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  },
-}));
+import classes from './styles/coursecard.module.css';
 
 const CourseCard = ({ course }: { course: ICourse }) => {
-  const { classes } = useStyles();
   const { t } = useTranslation();
   const generalSettings = useGeneralSetting();
   const companyName = generalSettings.data?.data.companyName;
@@ -53,11 +30,6 @@ const CourseCard = ({ course }: { course: ICourse }) => {
         to={RoutePath.courses.description(course.slug).route}
       >
         <Image
-          // src={getCourseOgImageUrl(
-          //   course?.user,
-          //   course?.name,
-          //   course?.thumbnailUrl
-          // )}
           src={getCourseOgImageUrl({
             author: course?.user,
             title: course?.name,
@@ -70,8 +42,8 @@ const CourseCard = ({ course }: { course: ICourse }) => {
         />
       </Card.Section>
 
-      <Group position="left" mt="md" mb="xs">
-        <Text weight={600} lineClamp={2}>
+      <Group mt="md" mb="xs">
+        <Text style={{ fontWeight: '600px' }} lineClamp={2}>
           {course?.name}
         </Text>
         {course.language && (
@@ -86,7 +58,7 @@ const CourseCard = ({ course }: { course: ICourse }) => {
         )}
       </Group>
 
-      <Text size="sm" color="dimmed" lineClamp={2} sx={{ height: '60px' }}>
+      <Text size="sm" c="dimmed" lineClamp={2} style={{ height: '60px' }}>
         <TextViewer
           styles={{
             root: {
@@ -100,7 +72,7 @@ const CourseCard = ({ course }: { course: ICourse }) => {
         style={{ textDecoration: 'none' }}
         to={RoutePath.courses.description(course.slug).route}
       >
-        <Button variant="light" color="blue" fullWidth mt="md" radius="md">
+        <Button variant="light" c="blue" fullWidth mt="md" radius="md">
           {t('watch')}
         </Button>
       </Link>

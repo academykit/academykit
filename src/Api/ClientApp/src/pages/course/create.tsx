@@ -1,15 +1,12 @@
 import Breadcrumb from '@components/Ui/BreadCrumb';
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import GroupCreatableSelect from '@components/Ui/GroupCreatableSelect';
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
-import {
-  Box,
-  Button,
-  Group,
-  Loader,
-  MultiSelect,
-  Select,
-  Text,
-} from '@mantine/core';
+import useAuth from '@hooks/useAuth';
+import useCustomForm from '@hooks/useCustomForm';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import { Box, Button, Group, Loader, Select, Text } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import queryStringGenerator from '@utils/queryStringGenerator';
@@ -18,16 +15,12 @@ import errorType from '@utils/services/axiosError';
 import { useCreateCourse } from '@utils/services/courseService';
 import { useAddGroup, useGroups } from '@utils/services/groupService';
 import { useLevels } from '@utils/services/levelService';
-import { useAddTag, useTags } from '@utils/services/tagService';
+import { ITag, useAddTag, useTags } from '@utils/services/tagService';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import useCustomForm from '@hooks/useCustomForm';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import useAuth from '@hooks/useAuth';
-import { UserRole } from '@utils/enums';
+import TagMultiSelectCreatable from './component/TagMultiSelectCreatable';
 
 interface FormValues {
   thumbnail: string;
@@ -103,7 +96,8 @@ const CreateCoursePage = () => {
   const [searchParam] = useState('');
 
   const label = useLevels();
-  const { mutate, data: addTagData, isSuccess } = useAddTag();
+  const { data: addTagData, isSuccess, mutateAsync: mutAsync } = useAddTag();
+
   const navigate = useNavigate();
 
   const tags = useTags(
@@ -113,21 +107,21 @@ const CreateCoursePage = () => {
     })
   );
 
-  const [tagsList, setTagsList] = useState<{ value: string; label: string }[]>(
-    []
-  );
+  const [tagsLists, setTagsLists] = useState<ITag[]>([]);
   useEffect(() => {
     if (tags.isSuccess && tags.isFetched) {
-      setTagsList(tags.data.items.map((x) => ({ label: x.name, value: x.id })));
+      // setTagsList(tags.data.items.map((x) => ({ label: x.name, value: x.id })));
+      setTagsLists(tags.data.items.map((x) => x));
     }
   }, [tags.isSuccess]);
 
   useEffect(() => {
     if (isSuccess) {
-      setTagsList([
-        ...tagsList,
-        { label: addTagData.data.name, value: addTagData.data.id },
-      ]);
+      // setTagsList([
+      //   ...tagsList,
+      //   { label: addTagData.data.name, value: addTagData.data.id },
+      // ]);
+      setTagsLists([...tagsLists, addTagData.data]);
       form.setFieldValue('tags', [...form.values.tags, addTagData?.data?.id]);
     }
   }, [isSuccess]);
@@ -182,31 +176,11 @@ const CreateCoursePage = () => {
 
             <Group grow mt={20}>
               {tags.isSuccess ? (
-                <MultiSelect
-                  searchable
-                  creatable
-                  sx={{ maxWidth: '500px' }}
-                  style={{ marginTop: '3px' }}
-                  data={
-                    tagsList.length
-                      ? tagsList
-                      : [
-                          {
-                            label: t('no_tags') as string,
-                            value: 'null',
-                            disabled: true,
-                          },
-                        ]
-                  }
-                  {...form.getInputProps('tags')}
-                  getCreateLabel={(query) => `+ Create ${query}`}
-                  onCreate={(query) => {
-                    mutate(query);
-                    return null;
-                  }}
-                  size={'lg'}
-                  label={t('tags')}
-                  placeholder={t('tags_placeholder') as string}
+                <TagMultiSelectCreatable
+                  data={tagsLists ?? []}
+                  mutateAsync={mutAsync}
+                  form={form}
+                  size="lg"
                 />
               ) : (
                 <div>
@@ -240,52 +214,20 @@ const CreateCoursePage = () => {
               )}
             </Group>
 
-            <Group grow>
+            <Group grow mt={20}>
               {!groups.isLoading ? (
-                <Select
-                  mt={20}
-                  description={
-                    <Text size={'xs'}>{t('group_create_info')}</Text>
-                  }
-                  searchable
-                  withAsterisk
-                  sx={{ maxWidth: '500px' }}
-                  data={
-                    groups?.data?.data?.items?.map((x) => ({
-                      label: x.name,
-                      value: x.id,
-                    })) ?? [
-                      {
-                        label: t('no_groups') as string,
-                        value: 'null',
-                        disabled: true,
-                      },
-                    ]
-                  }
-                  {...form.getInputProps('groups')}
-                  size={'lg'}
-                  label={t('group')}
-                  placeholder={t('group_placeholder') as string}
-                  creatable={
-                    // allow for admin and superadmin only
-                    auth?.auth?.role == UserRole.SuperAdmin ||
-                    auth?.auth?.role == UserRole.Admin
-                  }
-                  getCreateLabel={(query) => `+ Create ${query}`}
-                  onCreate={(value) => {
-                    groupAdd
-                      .mutateAsync(value)
-                      .then((res) => form.setFieldValue('groups', res.data.id)); // setting value after fetch
-                    return value;
-                  }}
-                  nothingFound="No options"
+                <GroupCreatableSelect
+                  api={groupAdd}
+                  form={form}
+                  data={groups?.data?.data?.items}
+                  size="lg"
+                  auth={auth}
                 />
               ) : (
                 <Loader style={{ flexGrow: '0' }} />
               )}
 
               <Select
-                mt={48}
                 label={t('Language')}
                 size={'lg'}
                 data={language}

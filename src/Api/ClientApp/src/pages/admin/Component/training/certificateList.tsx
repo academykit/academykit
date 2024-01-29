@@ -1,22 +1,24 @@
+import UserShortProfile from '@components/UserShortProfile';
+import { IAuthContext } from '@context/AuthProvider';
 import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
-import { IAuthContext } from '@context/AuthProvider';
 import useAuth from '@hooks/useAuth';
 import {
+  ActionIcon,
+  Badge,
+  Box,
+  Button,
   Card,
   Container,
+  Flex,
+  Image,
   Text,
   Title,
-  Box,
-  Flex,
-  Button,
-  Badge,
-  Image,
-  ActionIcon,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IconDownload, IconEye } from '@tabler/icons';
+import { DATE_FORMAT } from '@utils/constants';
 import downloadImage from '@utils/downloadImage';
 import { UserRole } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
@@ -27,9 +29,7 @@ import {
   useUpdateCertificateStatus,
 } from '@utils/services/certificateService';
 import moment from 'moment';
-import UserShortProfile from '@components/UserShortProfile';
 import { useTranslation } from 'react-i18next';
-import { DATE_FORMAT } from '@utils/constants';
 
 const CertificateCard = ({
   auth,
@@ -66,9 +66,9 @@ const CertificateCard = ({
     <Card withBorder mt={10}>
       <Flex justify={'space-between'}>
         <Box>
-          <Text weight={'bold'}>
+          <Text fw={'bold'}>
             {item.name}
-            <Badge ml={20} color="cyan">
+            <Badge ml={20} c="cyan">
               {CertificateStatus[item.status]}
             </Badge>
           </Text>
@@ -125,7 +125,7 @@ const CertificateCard = ({
         </Box>
       </Flex>
       {auth?.auth &&
-        auth.auth.role <= UserRole.Admin &&
+        Number(auth.auth.role) <= UserRole.Admin &&
         auth.auth.id !== item.user.id && (
           <Box mt={10}>
             <Button

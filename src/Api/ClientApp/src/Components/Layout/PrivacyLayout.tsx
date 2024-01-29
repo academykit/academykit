@@ -1,116 +1,41 @@
 import {
   AppShell,
+  Button,
   Container,
   Group,
-  Header,
-  Button,
-  createStyles,
+  useMantineColorScheme,
 } from '@mantine/core';
+import { useCompanySetting } from '@utils/services/adminService';
 import { Link, Outlet } from 'react-router-dom';
 import { AppFooter } from './AppFooter';
-import { useCompanySetting } from '@utils/services/adminService';
 
-import useAuth from '@hooks/useAuth';
 import UserProfileMenu from '@components/UserProfileMenu';
+import useAuth from '@hooks/useAuth';
 import { IUser } from '@utils/services/types';
-
-const HEADER_HEIGHT = 60;
-const useStyles = createStyles((theme) => ({
-  header: {
-    backgroundColor: theme.fn.variant({
-      variant: 'filled',
-      color: theme.primaryColor,
-    }).background,
-    borderBottom: 0,
-  },
-
-  inner: {
-    height: HEADER_HEIGHT,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-
-  burger: {
-    [theme.fn.largerThan('sm')]: {
-      display: 'none',
-    },
-  },
-
-  links: {
-    paddingTop: theme.spacing.lg,
-    height: HEADER_HEIGHT,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-
-    [theme.fn.smallerThan('sm')]: {
-      display: 'none',
-    },
-  },
-
-  mainLinks: {
-    marginRight: -theme.spacing.sm,
-  },
-
-  mainLink: {
-    textTransform: 'uppercase',
-    fontSize: 13,
-    color: theme.white,
-    padding: `7px ${theme.spacing.sm}px`,
-    fontWeight: 700,
-    borderBottom: '2px solid transparent',
-    transition: 'border-color 100ms ease, opacity 100ms ease',
-    opacity: 0.9,
-    borderTopRightRadius: theme.radius.sm,
-    borderTopLeftRadius: theme.radius.sm,
-
-    '&:hover': {
-      opacity: 1,
-      textDecoration: 'none',
-    },
-  },
-
-  secondaryLink: {
-    color: theme.colors[theme.primaryColor][0],
-    fontSize: theme.fontSizes.xs,
-    textTransform: 'uppercase',
-    transition: 'color 100ms ease',
-
-    '&:hover': {
-      color: theme.white,
-      textDecoration: 'none',
-    },
-  },
-
-  mainLinkActive: {
-    color: theme.white,
-    opacity: 1,
-    borderBottomColor:
-      theme.colorScheme === 'dark'
-        ? theme.white
-        : theme.colors[theme.primaryColor][5],
-    backgroundColor: theme.fn.lighten(
-      theme.fn.variant({ variant: 'filled', color: theme.primaryColor })
-        .background!,
-      0.1
-    ),
-  },
-}));
+import classes from './styles/layout.module.css';
 
 const PrivacyLayout = () => {
   const companySettings = useCompanySetting();
   const auth = useAuth();
-
-  const { classes } = useStyles();
+  const { colorScheme } = useMantineColorScheme();
+  // const theme = useMantineTheme();
 
   return (
     <AppShell
       padding="md"
-      header={
-        <Header height={60}>
+      styles={(theme) => ({
+        main: {
+          backgroundColor:
+            colorScheme === 'dark'
+              ? theme.colors.dark[8]
+              : theme.colors.gray[0],
+        },
+      })}
+    >
+      <AppShell.Header>
+        {
           <Container className={classes.inner} fluid>
-            <Group position={'apart'} w={'100%'}>
+            <Group justify={'space-between'} w={'100%'}>
               <Link to="/">
                 <img
                   height={50}
@@ -137,21 +62,16 @@ const PrivacyLayout = () => {
               )}
             </Group>
           </Container>
-        </Header>
-      }
-      styles={(theme) => ({
-        main: {
-          backgroundColor:
-            theme.colorScheme === 'dark'
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0],
-        },
-      })}
-      footer={
-        <AppFooter name={companySettings.data?.data?.name ?? ''}></AppFooter>
-      }
-    >
-      <Outlet />
+        }
+      </AppShell.Header>
+
+      <AppShell.Main>
+        <Outlet />
+      </AppShell.Main>
+
+      <AppFooter name={companySettings.data?.data?.name ?? ''}></AppFooter>
+      {/* <AppShell.Footer>
+      </AppShell.Footer> */}
     </AppShell>
   );
 };

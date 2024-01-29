@@ -232,7 +232,7 @@ const EditAssignment = ({
               <Box>
                 <Text mt={20}>{t('options')}</Text>
                 {form.values.answers &&
-                  form.values.answers.map((x, i) => (
+                  form.values.answers.map((_x, i) => (
                     <div
                       key={i}
                       style={{ marginBottom: '30px', marginTop: '10px' }}
@@ -262,7 +262,7 @@ const EditAssignment = ({
                         )}
                         <div style={{ width: '80%' }}>
                           <RichTextEditor
-                            // sx={{width:100}}
+                            // style={{width:100}}
                             placeholder={t('option_placeholder') as string}
                             label={`answers.${i}.option`}
                             formContext={useFormContext}

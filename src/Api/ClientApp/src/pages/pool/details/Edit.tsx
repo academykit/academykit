@@ -1,4 +1,6 @@
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Box,
   Button,
@@ -8,7 +10,6 @@ import {
   Flex,
   Group,
   Loader,
-  MultiSelect,
   Radio,
   Select,
   Text,
@@ -16,6 +17,7 @@ import {
 } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+import TagMultiSelectCreatable from '@pages/course/component/TagMultiSelectCreatable';
 import { IconPlus, IconTrash } from '@tabler/icons';
 import { QuestionType } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
@@ -25,13 +27,11 @@ import {
   useEditQuestion,
   useGetQuestion,
 } from '@utils/services/questionService';
-import { useAddTag, useTags } from '@utils/services/tagService';
+import { ITag, useAddTag, useTags } from '@utils/services/tagService';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IAddQuestionType>();
 
@@ -90,12 +90,13 @@ const EditQuestion = () => {
   const { t } = useTranslation();
   const { id, slug } = useParams();
   const navigate = useNavigate();
-  const { mutate, data: addTagData, isSuccess } = useAddTag();
+  const { mutateAsync, data: addTagData, isSuccess } = useAddTag();
   const getQuestion = useGetQuestion(id as string, slug as string);
   const editQuestion = useEditQuestion(id as string, slug as string);
-  const [tagsList, setTagsList] = useState<{ value: string; label: string }[]>(
-    []
-  );
+  // const [tagsList, setTagsList] = useState<{ value: string; label: string }[]>(
+  //   []
+  // );
+  const [tagsLists, setTagsLists] = useState<ITag[]>([]);
 
   const form = useForm({
     initialValues: {
@@ -156,9 +157,10 @@ const EditQuestion = () => {
 
   useEffect(() => {
     if (tags.isSuccess && tags.isFetched) {
-      setTagsList(() =>
-        tags.data.items.map((x) => ({ label: x.name, value: x.id }))
-      );
+      // setTagsList(() =>
+      //   tags.data.items.map((x) => ({ label: x.name, value: x.id }))
+      // );
+      setTagsLists(tags.data.items.map((x) => x));
     }
   }, [tags.isSuccess]);
 
@@ -187,10 +189,11 @@ const EditQuestion = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      setTagsList([
-        ...tagsList,
-        { label: addTagData.data.name, value: addTagData.data.id },
-      ]);
+      // setTagsList([
+      //   ...tagsList,
+      //   { label: addTagData.data.name, value: addTagData.data.id },
+      // ]);
+      setTagsLists([...tagsLists, addTagData.data]);
 
       form.setFieldValue('tags', [...form.values.tags, addTagData?.data?.id]);
     }
@@ -239,22 +242,21 @@ const EditQuestion = () => {
             </Box>
 
             {tags.isSuccess ? (
-              <MultiSelect
-                searchable
-                mt={10}
-                creatable
-                sx={{ maxWidth: '500px' }}
-                data={tagsList}
-                // value={[]}
-                {...form.getInputProps('tags')}
-                getCreateLabel={(query) => `+ Create ${query}`}
-                onCreate={(query) => {
-                  mutate(query);
-                  return null;
-                }}
-                size={'md'}
-                label={t('tags')}
-                placeholder={t('select_tags') as string}
+              // <MultiSelect
+              //   searchable
+              //   mt={10}
+              //   style={{ maxWidth: '500px' }}
+              //   data={tagsList}
+              //   {...form.getInputProps('tags')}
+              //   size={'md'}
+              //   label={t('tags')}
+              //   placeholder={t('select_tags') as string}
+              // />
+              <TagMultiSelectCreatable
+                data={tagsLists ?? []}
+                mutateAsync={mutateAsync}
+                form={form}
+                size="lg"
               />
             ) : (
               <Loader />

@@ -30,21 +30,22 @@ const AdminCourseList = ({
         {data &&
           (data.totalCount > 0 ? (
             <Paper mt={10}>
-              <Table striped highlightOnHover withBorder withColumnBorders>
-                <thead>
-                  <tr>
-                    <th>{t('training_name')}</th>
-                    <th>{t('created_date')}</th>
-                    <th>{t('author')}</th>
-                    <th>{t('status')}</th>
-                    <th>{t('actions')}</th>
-                  </tr>
-                </thead>
-                <tbody>
+              <Table striped highlightOnHover withTableBorder withColumnBorders>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>{t('training_name')}</Table.Th>
+                    <Table.Th>{t('created_date')}</Table.Th>
+                    <Table.Th>{t('author')}</Table.Th>
+
+                    <Table.Th>{t('status')}</Table.Th>
+                    <Table.Th>{t('actions')}</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
                   {data.items.map((x) => (
                     <CourseRow course={x} key={x.id} search={searchParams} />
                   ))}
-                </tbody>
+                </Table.Tbody>
               </Table>
             </Paper>
           ) : (

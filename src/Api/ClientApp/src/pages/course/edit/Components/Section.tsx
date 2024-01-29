@@ -10,8 +10,8 @@ import { useMemo, useState } from 'react';
 import {
   DragDropContext,
   Draggable,
-  Droppable,
   DropResult,
+  Droppable,
 } from 'react-beautiful-dnd';
 
 import SectionItem from './Section/SectionItem';

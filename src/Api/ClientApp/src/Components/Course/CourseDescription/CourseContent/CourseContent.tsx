@@ -3,8 +3,8 @@ import { Box, Group, Text, Title } from '@mantine/core';
 import formatDuration from '@utils/formatDuration';
 import { ISection } from '@utils/services/courseService';
 import { IUser } from '@utils/services/types';
-import Sessions from './Sessions';
 import { useTranslation } from 'react-i18next';
+import Sessions from './Sessions';
 
 const CourseContent = ({
   sections,
@@ -24,13 +24,13 @@ const CourseContent = ({
   const { t } = useTranslation();
   return (
     <Box my={20}>
-      <Group my={4} position="apart">
+      <Group my={4} justify="space-between">
         {user && <UserShortProfile user={user} size={'md'} />}
       </Group>
-      <Title size={'h5'}>
+      <Title order={5}>
         {t('content_of')} {courseName}
       </Title>
-      <Text size={10} color={'dimmed'}>
+      <Text size={'md'} c={'dimmed'}>
         {formatDuration(duration, false, t)} {sections.length} {t('section/s')}{' '}
       </Text>
       <Box m={4} mx={10}>

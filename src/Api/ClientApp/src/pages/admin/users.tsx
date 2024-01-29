@@ -96,7 +96,7 @@ const UsersList = ({
           <Suspense fallback={<Loader />}>
             <Tabs
               value={currentTab}
-              onTabChange={(val) => {
+              onChange={(val) => {
                 setCurrentTab(val);
                 form.reset(); // resetting csv file on every tab change
               }}
@@ -174,7 +174,7 @@ const UsersList = ({
       </Modal>
 
       <Group
-        sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+        style={{ justifyContent: 'space-between', alignItems: 'center' }}
         mb={15}
       >
         <Title>{t('users')}</Title>

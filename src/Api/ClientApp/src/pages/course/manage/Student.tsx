@@ -1,45 +1,44 @@
-import {
-  Table,
-  Anchor,
-  ScrollArea,
-  Badge,
-  UnstyledButton,
-  Box,
-  Paper,
-  Avatar,
-  Flex,
-  Button,
-  Group,
-  Title,
-  Checkbox,
-  Text,
-  Tooltip,
-  Loader,
-  Drawer,
-  rem,
-} from '@mantine/core';
-import { Link, useParams } from 'react-router-dom';
+import ConfirmationModal from '@components/Ui/ConfirmationModal';
 import ProgressBar from '@components/Ui/ProgressBar';
 import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import {
+  Anchor,
+  Avatar,
+  Badge,
+  Box,
+  Button,
+  Checkbox,
+  Drawer,
+  Flex,
+  Group,
+  Loader,
+  Paper,
+  ScrollArea,
+  Table,
+  Text,
+  Title,
+  Tooltip,
+  UnstyledButton,
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
+import { IconDownload, IconEye, IconPlus } from '@tabler/icons';
+import { DATE_FORMAT } from '@utils/constants';
+import downloadImage from '@utils/downloadImage';
+import { getInitials } from '@utils/getInitialName';
+import RoutePath from '@utils/routeConstants';
+import errorType from '@utils/services/axiosError';
+import {
   IStudentStat,
   useGetStudentStatistics,
   usePostStatisticsCertificate,
 } from '@utils/services/manageCourseService';
-import RoutePath from '@utils/routeConstants';
-import { Dispatch, SetStateAction, useState } from 'react';
-import ConfirmationModal from '@components/Ui/ConfirmationModal';
-import { showNotification } from '@mantine/notifications';
-import errorType from '@utils/services/axiosError';
 import moment from 'moment';
-import { getInitials } from '@utils/getInitialName';
-import { IconDownload, IconEye, IconPlus } from '@tabler/icons';
-import downloadImage from '@utils/downloadImage';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DATE_FORMAT } from '@utils/constants';
-import { useDisclosure } from '@mantine/hooks';
+import { Link, useParams } from 'react-router-dom';
 import AddTrainee from './AddTrainee';
 
 const Rows = ({
@@ -86,22 +85,22 @@ const Rows = ({
   };
 
   return (
-    <tr key={item.userId}>
-      <td>
+    <Table.Tr key={item.userId}>
+      <Table.Td>
         <Checkbox
           onChange={() => handelCheckboxChange(item?.userId)}
           checked={selected.includes(item.userId)}
         />
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         <Anchor
           component={Link}
-          to={`${RoutePath.userProfile}/${item.userId}/certificate`}
+          to={`${RoutePath.userProfile}/${item.userId}/about`}
           size="sm"
-          sx={{ display: 'flex' }}
+          style={{ display: 'flex' }}
         >
           <Avatar
-            sx={{ cursor: 'pointer' }}
+            style={{ cursor: 'pointer' }}
             size={26}
             mr={8}
             src={item?.imageUrl}
@@ -112,16 +111,16 @@ const Rows = ({
 
           {item?.fullName}
         </Anchor>
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         <ProgressBar total={100} positive={item?.percentage} />
         <UnstyledButton component={Link} to={item.userId}>
           <Badge color="green" variant="outline" mt={10}>
             {t('view')}
           </Badge>
         </UnstyledButton>
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         <Flex direction={'column'} justify={'center'} align={'center'}>
           {item?.hasCertificateIssued ? (
             <div style={{ marginTop: '10px' }}>
@@ -165,8 +164,8 @@ const Rows = ({
             </>
           )}
         </Flex>
-      </td>
-      <td style={{ textAlign: 'center' }}>
+      </Table.Td>
+      <Table.Td style={{ textAlign: 'center' }}>
         <Anchor
           component={Link}
           to={`${RoutePath.classes}/${course_id}/${item.lessonSlug}`}
@@ -174,8 +173,8 @@ const Rows = ({
         >
           {item?.lessonName}
         </Anchor>
-      </td>
-    </tr>
+      </Table.Td>
+    </Table.Tr>
   );
 };
 
@@ -249,17 +248,17 @@ const ManageStudents = ({
         onClose={() => setSubmitModal(false)}
         onConfirm={handleSubmit}
       />
-      <Group position="apart" mb={'lg'}>
+      <Group justify="space-between" mb={'lg'}>
         <Title>{t('trainee')}</Title>
         <Flex>
-          <Button mr={20} leftIcon={<IconPlus size={rem(14)} />} onClick={open}>
+          <Button mr={20} leftSection={<IconPlus size={15} />} onClick={open}>
             {t('add_trainee')}
           </Button>
           <Drawer
             opened={opened}
             onClose={close}
             title={t('add_trainee')}
-            overlayProps={{ opacity: 0.5, blur: 4 }}
+            overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
           >
             <AddTrainee onCancel={close} searchParams={searchParams} />
           </Drawer>
@@ -288,34 +287,36 @@ const ManageStudents = ({
       </Group>
 
       <div style={{ display: 'flex' }}>
-        <Box mx={3} sx={{ width: '100%' }}>
+        <Box mx={3} style={{ width: '100%' }}>
           {searchComponent(t('search_trainees') as string)}
         </Box>
       </div>
       {getStudentStat.data && getStudentStat.data?.totalCount > 0 ? (
         <Paper mt={10}>
           <Table
-            sx={{ minWidth: 800 }}
+            style={{ minWidth: 800 }}
             verticalSpacing="xs"
             striped
             highlightOnHover
-            withBorder
+            withTableBorder
             withColumnBorders
           >
-            <thead>
-              <tr>
-                <th></th>
-                <th>{t('name')}</th>
-                <th>{t('progress')}</th>
-                <th>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th></Table.Th>
+                <Table.Th>{t('name')}</Table.Th>
+                <Table.Th>{t('progress')}</Table.Th>
+                <Table.Th>
                   <Flex align={'center'} direction={'column'}>
                     {t('internal_certificate')}
                   </Flex>
-                </th>
-                <th style={{ textAlign: 'center' }}>{t('current_lesson')}</th>
-              </tr>
-            </thead>
-            <tbody>
+                </Table.Th>
+                <Table.Th style={{ textAlign: 'center' }}>
+                  {t('current_lesson')}
+                </Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
               {getStudentStat.data?.items?.map((item) => (
                 <Rows
                   item={item}
@@ -325,7 +326,7 @@ const ManageStudents = ({
                   searchParams={searchParams}
                 />
               ))}
-            </tbody>
+            </Table.Tbody>
           </Table>
         </Paper>
       ) : (

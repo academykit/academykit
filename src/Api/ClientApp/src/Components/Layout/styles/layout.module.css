@@ -1,0 +1,82 @@
+/* Header */
+header {
+  background-color: gray;
+  border-bottom: 0;
+}
+
+/* Inner */
+.inner {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Burger */
+@media (min-width: 48em) {
+  .burger {
+    display: none;
+  }
+}
+
+/* Links */
+.links {
+  padding-top: var(--mantine-spacing-lg);
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Main Links */
+.mainLinks {
+  margin-right: -var(--mantine-spacing-sm);
+}
+
+.mainLink {
+  text-transform: uppercase;
+  font-size: 13px;
+  color: white;
+  padding: 7px 0.75rem;
+  font-weight: 700;
+  border-bottom: 2px solid transparent;
+  transition:
+    border-color 100ms ease,
+    opacity 100ms ease;
+  opacity: 0.9;
+  border-top-right-radius: var(--mantine-radius-sm);
+  border-top-left-radius: var(--mantine-radius-sm);
+}
+
+.mainLink:hover {
+  opacity: 1;
+  text-decoration: none;
+}
+
+/* Secondary Link */
+.secondaryLink {
+  color: var(--mantine-color-primary-0);
+  font-size: var(--mantine-font-size-xs);
+  text-transform: uppercase;
+  transition: color 100ms ease;
+}
+
+.secondaryLink:hover {
+  color: white;
+  text-decoration: none;
+}
+
+/* Main Link Active */
+.mainLinkActive {
+  color: white;
+  opacity: 1;
+  border-bottom-color: white;
+  background-color: blue;
+}
+
+/* Footer */
+footer {
+  padding-top: var(--mantine-spacing-xs);
+  margin-top: var(--mantine-spacing-md);
+  border-top: 0.2rem solid;
+}

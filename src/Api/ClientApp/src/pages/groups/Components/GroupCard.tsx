@@ -1,13 +1,7 @@
-import {
-  Anchor,
-  Button,
-  Card,
-  createStyles,
-  Group,
-  Menu,
-  rem,
-  Text,
-} from '@mantine/core';
+import DeleteModal from '@components/Ui/DeleteModal';
+import UserShortProfile from '@components/UserShortProfile';
+import useAuth from '@hooks/useAuth';
+import { Anchor, Button, Card, Group, Menu, Text } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import {
@@ -16,37 +10,15 @@ import {
   IconEdit,
   IconTrash,
 } from '@tabler/icons';
+import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import errorType from '@utils/services/axiosError';
 import { IGroup, useDeleteGroup } from '@utils/services/groupService';
-import { Link } from 'react-router-dom';
-import DeleteModal from '@components/Ui/DeleteModal';
-import useAuth from '@hooks/useAuth';
-import { UserRole } from '@utils/enums';
 import { useTranslation } from 'react-i18next';
-import UserShortProfile from '@components/UserShortProfile';
+import { Link } from 'react-router-dom';
+import classes from '../styles/groupCard.module.css';
 
-const useStyle = createStyles((theme) => ({
-  card: {
-    transition: 'transform 150ms ease, box-shadow 150ms ease',
-    '&:hover': {
-      transform: 'scale(1.01)',
-      boxShadow: theme.shadows.md,
-    },
-  },
-  footer: {
-    padding: `${theme.spacing.xs} ${theme.spacing.lg}`,
-    marginTop: theme.spacing.sm,
-    borderTop: `${rem(1)} solid ${
-      theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
-    }`,
-  },
-  anchor: {
-    color: theme.colors[theme.primaryColor][7],
-  },
-}));
 const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
-  const { classes } = useStyle();
   const [deleteModal, setDeleteModal] = useToggle();
   const deleteGroup = useDeleteGroup(group.id, search);
   const auth = useAuth();
@@ -89,17 +61,18 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
         withBorder
         radius={'md'}
       >
-        <Group position="apart">
+        <Group justify="space-between">
           <Anchor
             component={Link}
             to={RoutePath.groups.details(group.slug).route}
-            size={22}
+            size={'md'}
             lineClamp={1}
             className={classes.anchor}
+            maw={'80%'}
           >
-            {group.name}
+            <Text truncate>{group.name}</Text>
           </Anchor>
-          {auth?.auth && auth.auth?.role < UserRole.Trainer && (
+          {auth?.auth && Number(auth.auth?.role) < UserRole.Trainer && (
             <Menu
               shadow="md"
               width={150}
@@ -108,23 +81,23 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
               position="left"
             >
               <Menu.Target>
-                <Button sx={{ zIndex: 50 }} variant="subtle" px={4}>
+                <Button style={{ zIndex: 50 }} variant="subtle" px={4}>
                   <IconDotsVertical />
                 </Button>
               </Menu.Target>
               <Menu.Dropdown>
                 <Menu.Item
-                  icon={<IconEdit size={14} />}
+                  leftSection={<IconEdit size={14} />}
                   component={Link}
                   to={RoutePath.groups.details(group.slug).route}
                   rightSection={<IconChevronRight size={12} stroke={1.5} />}
                 >
-                  {t('edit')}
+                  {t('manage')}
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item
-                  color="red"
-                  icon={<IconTrash size={14} />}
+                  c="red"
+                  leftSection={<IconTrash size={14} />}
                   onClick={(e) => {
                     e.preventDefault();
                     setDeleteModal();
@@ -140,13 +113,13 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
           <UserShortProfile user={group.user} size={'sm'} />
         </Group>
         <Card.Section className={classes.footer}>
-          <Group position="apart">
+          <Group justify="space-between">
             <div>
-              <Text size="xs" color="dimmed">
+              <Text size="xs" c="dimmed">
                 {t('members')}
               </Text>
               <Anchor
-                weight={500}
+                fw={500}
                 component={Link}
                 to={RoutePath.groups.members(group.slug).route}
                 className={classes.anchor}
@@ -155,11 +128,11 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
               </Anchor>
             </div>
             <div>
-              <Text size="xs" color="dimmed">
+              <Text size="xs" c="dimmed">
                 {t('trainings')}
               </Text>
               <Anchor
-                weight={500}
+                fw={500}
                 component={Link}
                 to={RoutePath.groups.courses(group.slug).route}
                 className={classes.anchor}
@@ -168,11 +141,11 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
               </Anchor>
             </div>
             <div>
-              <Text size="xs" color="dimmed">
+              <Text size="xs" c="dimmed">
                 {t('attachments')}
               </Text>
               <Anchor
-                weight={500}
+                fw={500}
                 component={Link}
                 to={RoutePath.groups.attachments(group.slug).route}
                 className={classes.anchor}

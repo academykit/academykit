@@ -1,0 +1,41 @@
+/* Root */
+.root {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+/* Label */
+.label {
+  text-align: center;
+  font-weight: 900;
+  font-size: 220px;
+  line-height: 1;
+  margin-bottom: calc(2rem * 1.5);
+  color: var(--mantine-color-error-label);
+}
+@media (max-width: 0.875rem) {
+  .label {
+    font-size: 120px;
+  }
+}
+
+/* Title */
+.title {
+  font-family: 'Greycliff CF', var(--mantine-font-family);
+  text-align: center;
+  font-weight: 900;
+  font-size: 38px;
+}
+@media (max-width: 0.875rem) {
+  .title {
+    font-size: 32px;
+  }
+}
+
+/* Description */
+.description {
+  max-width: 500px;
+  margin: auto !important;
+  margin-top: var(--mantine-spacing-xl) !important;
+  margin-bottom: calc(2rem * 1.5) !important;
+}

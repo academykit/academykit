@@ -1,5 +1,12 @@
 import useAuth from '@hooks/useAuth';
-import { ActionIcon, Box, Loader, Table, Title } from '@mantine/core';
+import {
+  ActionIcon,
+  Box,
+  Loader,
+  Table,
+  Title,
+  useMantineTheme,
+} from '@mantine/core';
 import { IconEye } from '@tabler/icons';
 import { DATE_FORMAT } from '@utils/constants';
 import { UserRole } from '@utils/enums';
@@ -8,7 +15,7 @@ import { useMyResult } from '@utils/services/examService';
 import axios from 'axios';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const UserResults = ({
   lessonId,
@@ -22,11 +29,13 @@ const UserResults = ({
   const user = useAuth();
   const { t } = useTranslation();
   const result = useMyResult(lessonId, studentId);
+  const theme = useMantineTheme();
 
   const hasExceededAttempt = result.data?.hasExceededAttempt;
   const endDate = result.data?.endDate;
   const exam_endDate = moment.utc(endDate, 'YYYY-MM-DD[T]HH:mm[Z]');
   const current_time = moment.utc(moment().toDate(), 'YYYY-MM-DD[T]HH:mm[Z]');
+  const location = useLocation();
 
   if (result.isLoading) {
     return <Loader />;
@@ -53,36 +62,43 @@ const UserResults = ({
     <>
       <Title mt={20}> {t('previous_result')}</Title>
       <Table
-        sx={(theme) => ({
-          ...theme.defaultGradient,
-        })}
+        styles={{
+          td: {
+            backgroundColor: location.pathname.includes('lessons-stat')
+              ? ''
+              : theme.colors.gray[9],
+          },
+        }}
         w={'100%'}
         striped
-        withBorder
+        withTableBorder
         withColumnBorders
         highlightOnHover
       >
-        <thead>
-          <tr>
-            <th>{t('obtained')}</th>
-            <th>{t('submission_date')}</th>
-            <th>{t('completed_duration')}</th>
-            <th>{t('actions')}</th>
-          </tr>
-        </thead>
-        <tbody>
+        <Table.Thead>
+          <Table.Tr>
+            <Table.Th>{t('obtained')}</Table.Th>
+            <Table.Th>{t('submission_date')}</Table.Th>
+            <Table.Th>{t('completed_duration')}</Table.Th>
+            <Table.Th>{t('actions')}</Table.Th>
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody>
           {result.data?.questionSetSubmissions?.map((r) => (
-            <tr key={r.questionSetSubmissionId}>
-              <td>{r.obtainedMarks}</td>
-              <td>{moment(r.submissionDate).format(DATE_FORMAT)}</td>
-              <td>{r.completeDuration}</td>
-              <td>
+            <Table.Tr key={r.questionSetSubmissionId}>
+              <Table.Td>{r.obtainedMarks}</Table.Td>
+              <Table.Td>
+                {moment(r.submissionDate).format(DATE_FORMAT)}
+              </Table.Td>
+              <Table.Td>{r.completeDuration}</Table.Td>
+              <Table.Td>
                 {(hasExceededAttempt ||
                   current_time.isAfter(exam_endDate) ||
-                  user?.auth?.role == UserRole.Admin ||
-                  user?.auth?.role == UserRole.SuperAdmin ||
+                  Number(user?.auth?.role) == UserRole.Admin ||
+                  Number(user?.auth?.role) == UserRole.SuperAdmin ||
                   // trainer who is not trainee
-                  (user?.auth?.role == UserRole.Trainer && !isTrainee)) && (
+                  (Number(user?.auth?.role) == UserRole.Trainer &&
+                    !isTrainee)) && (
                   <ActionIcon
                     component={Link}
                     to={
@@ -91,14 +107,15 @@ const UserResults = ({
                         r.questionSetSubmissionId
                       ).route
                     }
+                    variant="light"
                   >
                     <IconEye />
                   </ActionIcon>
                 )}
-              </td>
-            </tr>
+              </Table.Td>
+            </Table.Tr>
           ))}
-        </tbody>
+        </Table.Tbody>
       </Table>
     </>
   );

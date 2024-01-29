@@ -1,56 +1,26 @@
 import {
-  createStyles,
   Group,
   Paper,
   SimpleGrid,
   Text,
-  useMantineTheme,
+  useMantineColorScheme,
 } from '@mantine/core';
 import {
-  IconUserPlus,
+  IconArrowDownRight,
+  IconArrowUpRight,
+  IconCoin,
   IconDiscount2,
   IconReceipt2,
-  IconCoin,
-  IconArrowUpRight,
-  IconArrowDownRight,
+  IconUserPlus,
 } from '@tabler/icons';
 import {
   DashboardCourses,
   DashboardStats,
 } from '@utils/services/dashboardService';
+import { useTranslation } from 'react-i18next';
 import { StatsCard } from './StatsCard';
 import TrainingCards from './TrainingCards';
-import { useTranslation } from 'react-i18next';
-
-const useStyles = createStyles((theme) => ({
-  root: {
-    padding: '20em',
-  },
-
-  value: {
-    fontSize: 24,
-    fontWeight: 700,
-    lineHeight: 1,
-  },
-
-  diff: {
-    lineHeight: 1,
-    display: 'flex',
-    alignItems: 'center',
-  },
-
-  icon: {
-    color:
-      theme.colorScheme === 'dark'
-        ? theme.colors.dark[3]
-        : theme.colors.gray[4],
-  },
-
-  title: {
-    fontWeight: 700,
-    textTransform: 'uppercase',
-  },
-}));
+import classes from './styles/user.module.css';
 
 export const icons = {
   user: IconUserPlus,
@@ -76,7 +46,7 @@ export const User = ({
   dashboardCourses: DashboardCourses[];
 }) => {
   const { t } = useTranslation();
-  const theme = useMantineTheme();
+  const { colorScheme } = useMantineColorScheme();
 
   const incomingData = [
     {
@@ -85,7 +55,7 @@ export const User = ({
       icon: 'enrollment',
       signLabel: t('enrollment'),
       pluLabel: t('enrollments'),
-      color: theme.colorScheme == 'dark' ? 'white' : 'black',
+      color: colorScheme == 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalInProgressCourses',
@@ -93,7 +63,7 @@ export const User = ({
       icon: 'trainings',
       signLabel: t('training'),
       pluLabel: t('trainings'),
-      color: theme.colorScheme == 'dark' ? 'white' : 'black',
+      color: colorScheme == 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalCompletedCourses',
@@ -101,25 +71,18 @@ export const User = ({
       icon: 'completed',
       signLabel: t('training'),
       pluLabel: t('trainings'),
-      color: theme.colorScheme == 'dark' ? 'white' : 'black',
+      color: colorScheme == 'dark' ? 'white' : 'black',
     },
   ];
   return (
     <div>
-      <SimpleGrid
-        mb={20}
-        cols={4}
-        breakpoints={[
-          { maxWidth: 'md', cols: 2 },
-          { maxWidth: 'xs', cols: 1 },
-        ]}
-      >
+      <SimpleGrid mb={20} cols={{ base: 4, md: 2, xs: 1 }}>
         {dashboard &&
           incomingData.map((x) => (
             <StatsCard key={x.key} data={x} dashboard={dashboard} />
           ))}
       </SimpleGrid>
-      <Text size={'xl'} weight="bold">
+      <Text size={'xl'} fw={700}>
         {t('my_trainings')}
       </Text>
       {dashboardCourses.length > 0 ? (
@@ -130,15 +93,8 @@ export const User = ({
         <Text c="dimmed">{t('not_enrolled_training')}</Text>
       )}
       <SimpleGrid
-        cols={1}
+        cols={{ base: 1, sm: 2, md: 3, '1280': 3, '1780': 4 }}
         spacing={10}
-        breakpoints={[
-          { minWidth: 'sx', cols: 1 },
-          { minWidth: 'sm', cols: 2 },
-          { minWidth: 'md', cols: 3 },
-          { minWidth: 1280, cols: 3 },
-          { minWidth: 1780, cols: 4 },
-        ]}
       >
         {dashboardCourses.length > 0 &&
           dashboardCourses.map((x) => <TrainingCards key={x.id} data={x} />)}
@@ -148,7 +104,6 @@ export const User = ({
 };
 
 export function StatsGrid({ data }: StatsGridProps) {
-  const { classes } = useStyles();
   const { t } = useTranslation();
 
   const stats = data.map((stat) => {
@@ -157,19 +112,18 @@ export function StatsGrid({ data }: StatsGridProps) {
 
     return (
       <Paper withBorder p="md" radius="md" key={stat.title}>
-        <Group position="apart">
-          <Text size="xs" color="dimmed" className={classes.title}>
+        <Group justify="space-between">
+          <Text size="xs" c="dimmed" className={classes.title}>
             {stat.title}
           </Text>
           <Icon className={classes.icon} size={22} stroke={1.5} />
         </Group>
 
-        <Group align="flex-end" spacing="xs" mt={25}>
+        <Group justify="flex-end" gap="xs" mt={25}>
           <Text className={classes.value}>{stat.value}</Text>
           <Text
-            color={stat.diff > 0 ? 'teal' : 'red'}
+            c={stat.diff > 0 ? 'teal' : 'red'}
             size="sm"
-            weight={500}
             className={classes.diff}
           >
             <span>{stat.diff}%</span>
@@ -177,7 +131,7 @@ export function StatsGrid({ data }: StatsGridProps) {
           </Text>
         </Group>
 
-        <Text size="xs" color="dimmed" mt={7}>
+        <Text size="xs" c="dimmed" mt={7}>
           {t('previous_month')}
         </Text>
       </Paper>
@@ -185,15 +139,7 @@ export function StatsGrid({ data }: StatsGridProps) {
   });
   return (
     <div className={classes.root}>
-      <SimpleGrid
-        cols={4}
-        breakpoints={[
-          { maxWidth: 'md', cols: 2 },
-          { maxWidth: 'xs', cols: 1 },
-        ]}
-      >
-        {stats}
-      </SimpleGrid>
+      <SimpleGrid cols={{ base: 4, md: 2, xs: 1 }}>{stats}</SimpleGrid>
     </div>
   );
 }

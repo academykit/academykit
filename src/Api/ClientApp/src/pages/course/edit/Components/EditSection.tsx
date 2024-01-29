@@ -1,38 +1,34 @@
 import InlineInput from '@components/Ui/InlineInput';
+import { useSection } from '@context/SectionProvider';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Box,
   Button,
   Container,
-  createStyles,
   Grid,
   Text,
   Title,
+  useMantineColorScheme,
+  useMantineTheme,
 } from '@mantine/core';
-import CourseSection from './Section';
-import { useSection } from '@context/SectionProvider';
+import { useForm, yupResolver } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import { IconDragDrop } from '@tabler/icons';
+import { CourseStatus } from '@utils/enums';
+import errorType from '@utils/services/axiosError';
 import {
   useCourseDescription,
   useCreateSection,
 } from '@utils/services/courseService';
-import { useParams } from 'react-router-dom';
-import { showNotification } from '@mantine/notifications';
-import { useForm, yupResolver } from '@mantine/form';
-import errorType from '@utils/services/axiosError';
-import { IconDragDrop } from '@tabler/icons';
-import { CourseStatus } from '@utils/enums';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-
-const useStyle = createStyles((theme) => ({
-  section: {
-    background: theme.colorScheme === 'dark' ? theme.black[2] : theme.white[2],
-  },
-}));
+import CourseSection from './Section';
 
 const EditSection = () => {
-  const { classes } = useStyle();
   const section = useSection();
+  const { colorScheme } = useMantineColorScheme();
+  const theme = useMantineTheme();
 
   const { id: slug } = useParams();
 
@@ -49,7 +45,11 @@ const EditSection = () => {
         </Grid.Col>
       </Grid>
 
-      <Box className={classes.section}>
+      <Box
+        style={{
+          background: colorScheme === 'dark' ? theme.black[2] : theme.white[2],
+        }}
+      >
         <Box mt={20}>
           {getCourseDetails.data && (
             <CourseSection

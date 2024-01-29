@@ -1,0 +1,18 @@
+.body {
+  padding-left: 54px;
+  padding-top: var(--mantine-spacing-sm);
+  font-size: var(--mantine-font-size-sm);
+}
+
+.content > p:last-child {
+  margin-bottom: 0;
+}
+
+.editor {
+  background-color: var(--mantine-color-editor-bg);
+}
+
+.replies {
+  background-color: var(--mantine-color-reply-bg);
+  border-radius: var(--mantine-radius-md);
+}

@@ -1,8 +1,8 @@
 //manage lessons stat
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import errorType from './axiosError';
 import { LessonType } from '@utils/enums';
+import errorType from './axiosError';
 import { api } from './service-api';
 import { httpClient } from './service-axios';
 import { IPaginated, IUser } from './types';
@@ -49,11 +49,12 @@ export interface LessonStatDetails {
   lessonSlug: string;
   lessonName: string;
   lessonType: number;
-  isCompleted: true;
-  isPassed: true;
+  isCompleted: boolean;
+  isPassed: boolean;
   user: IUser;
   questionSetId: string;
   isAssignmentReviewed: boolean | null;
+  attendanceReviewed: boolean;
 }
 
 const getLessonStatisticsDetails = async (

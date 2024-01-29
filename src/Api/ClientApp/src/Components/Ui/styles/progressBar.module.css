@@ -1,0 +1,7 @@
+.progressBar:not(:first-of-type) {
+  border-left: 3px solid var(--mantine-color-progress-bar);
+}
+
+.section {
+  color: var(--mantine-color-progress-section);
+}

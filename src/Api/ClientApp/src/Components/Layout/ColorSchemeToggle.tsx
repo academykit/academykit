@@ -1,19 +1,20 @@
-import {
-  ActionIcon,
-  MantineNumberSize,
-  useMantineColorScheme,
-} from '@mantine/core';
-import { IconSun, IconMoonStars } from '@tabler/icons';
+import { ActionIcon, MantineSize, useMantineColorScheme } from '@mantine/core';
+import { IconMoonStars, IconSun } from '@tabler/icons';
 
 type Props = {
-  size: MantineNumberSize;
+  size: MantineSize;
 };
 
 export function ColorSchemeToggle({ size }: Props) {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
   return (
-    <ActionIcon onClick={() => toggleColorScheme()} size={size} color="primary">
+    <ActionIcon
+      variant="subtle"
+      onClick={() => toggleColorScheme()}
+      size={size}
+      c="primary"
+    >
       {colorScheme === 'dark' ? (
         <IconSun size={20} stroke={1.5} />
       ) : (

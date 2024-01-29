@@ -22,15 +22,15 @@ const ZoomMettingMessage = () => {
     return (
       <Center pt="20%">
         <Container>
-          <Title align="center">{t('error_while_joining')}</Title>
-          <Text align="center">{e}</Text>
+          <Title ta="center">{t('error_while_joining')}</Title>
+          <Text ta="center">{e}</Text>
           <Box my={20} ml={180}>
             <Group>
               <Anchor
                 size={'xs'}
                 component={Link}
                 to={`/classes/${courseId}/${lessonId}/description`}
-                color={'dimmed'}
+                c={'dimmed'}
               >
                 <Button>{t('back_course')}</Button>
               </Anchor>
@@ -38,7 +38,7 @@ const ZoomMettingMessage = () => {
                 size={'xs'}
                 component={Link}
                 to={'#'}
-                color={'dimmed'}
+                c={'dimmed'}
                 target="_blank"
               >
                 <Button
@@ -60,8 +60,8 @@ const ZoomMettingMessage = () => {
     return (
       <Center pt="20%">
         <Container>
-          <Title align="center">{t('thank_for_attending_meeting')}</Title>
-          <Text size={'xl'} align="center">
+          <Title ta="center">{t('thank_for_attending_meeting')}</Title>
+          <Text size={'xl'} ta="center">
             {t('left_meeting')}
           </Text>
           <Box my={20}>
@@ -70,7 +70,7 @@ const ZoomMettingMessage = () => {
                 size={'xs'}
                 component={Link}
                 to={`/classes/${courseId}/${lessonId}/description`}
-                color={'dimmed'}
+                c={'dimmed'}
               >
                 <Button>{t('back_course')}</Button>
               </Anchor>
@@ -78,7 +78,7 @@ const ZoomMettingMessage = () => {
                 size={'xs'}
                 component={Link}
                 to={'#'}
-                color={'dimmed'}
+                c={'dimmed'}
                 target="_blank"
               >
                 <Button
@@ -100,7 +100,7 @@ const ZoomMettingMessage = () => {
     <Center pt={'20%'}>
       <Container>
         <Title>{t('meeting_end')}</Title>
-        <Text size={'xl'} align="center">
+        <Text size={'xl'} ta="center">
           {t('meeting_end_desc')}
         </Text>
         <Box my={20} ml={125}>
@@ -109,16 +109,11 @@ const ZoomMettingMessage = () => {
               size={'xs'}
               component={Link}
               to={`/classes/${courseId}/${lessonId}/description`}
-              color={'dimmed'}
+              c={'dimmed'}
             >
               <Button>{t('back_course')}</Button>
             </Anchor>
-            <Anchor
-              size={'xs'}
-              component={Link}
-              to={'#'}
-              color={'dimmed'}
-            ></Anchor>
+            <Anchor size={'xs'} component={Link} to={'#'} c={'dimmed'}></Anchor>
           </Group>
         </Box>
       </Container>

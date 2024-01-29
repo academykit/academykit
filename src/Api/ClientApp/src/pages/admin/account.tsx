@@ -1,4 +1,5 @@
 import useAuth from '@hooks/useAuth';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Button,
   Container,
@@ -13,7 +14,6 @@ import { useChangeEmail, useChangePassword } from '@utils/services/authService';
 import errorType from '@utils/services/axiosError';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
@@ -190,11 +190,11 @@ const Account = () => {
           </Button>
         </form>
       </Modal>
-      <SimpleGrid cols={2} breakpoints={[{ maxWidth: 600, cols: 1 }]}>
+      <SimpleGrid cols={{ base: 1, md: 1, lg: 2 }}>
         <form onSubmit={form.onSubmit(onSubmitForm)} style={{ width: '100%' }}>
           <Container
             fluid
-            sx={{
+            style={{
               marginLeft: '0px',
             }}
           >
@@ -233,7 +233,7 @@ const Account = () => {
           <TextInput
             label={t('your_email')}
             disabled
-            sx={{
+            style={{
               marginBottom: '15px',
             }}
             placeholder={t('placeholder_email') as string}

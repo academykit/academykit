@@ -1,0 +1,25 @@
+.root {
+  padding: 20em;
+}
+
+.value {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.diff {
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.icon {
+  color: var(--mantine-color-user-icon);
+}
+
+title {
+  font-weight: 700;
+  text-transform: uppercase;
+}

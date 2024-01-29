@@ -3,7 +3,7 @@
 import { ActionIcon, Group, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { ToolbarSlot } from '@react-pdf-viewer/toolbar';
-import { IconArrowUp, IconArrowDown } from '@tabler/icons';
+import { IconArrowDown, IconArrowUp } from '@tabler/icons';
 
 const SwitchPage = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {
   const matchesSmallScreen = useMediaQuery('(min-width: 450px');
@@ -27,12 +27,12 @@ const SwitchPage = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {
           </Text>
         )}
       />
-      <Text color={'dimmed'} size={matchesSmallScreen ? 'md' : 'sm'}>
+      <Text c={'dimmed'} size={matchesSmallScreen ? 'md' : 'sm'}>
         /
       </Text>
       <toolbarSlot.NumberOfPages
         children={(props) => (
-          <Text size={matchesSmallScreen ? 'md' : 'sm'} color={'dimmed'}>
+          <Text size={matchesSmallScreen ? 'md' : 'sm'} c={'dimmed'}>
             {props.numberOfPages}
           </Text>
         )}

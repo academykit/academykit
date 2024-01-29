@@ -1,125 +1,45 @@
+import TextViewer from '@components/Ui/RichTextViewer';
 import UserShortProfile from '@components/UserShortProfile';
 import useAuth from '@hooks/useAuth';
 import {
-  createStyles,
-  Image,
-  Container,
-  Title,
-  Button,
-  Group,
   AspectRatio,
-  Center,
-  Box,
-  Loader,
   Badge,
+  Box,
+  Button,
+  Center,
+  Container,
+  Group,
+  Image,
+  Loader,
   Modal,
   Textarea,
+  Title,
 } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
+import { color } from '@utils/constants';
 import {
-  CourseUserStatus,
-  UserRole,
   CourseStatus,
+  CourseUserStatus,
   CourseUserStatusValue,
+  UserRole,
 } from '@utils/enums';
 import getCourseOgImageUrl from '@utils/getCourseOGImage';
 import RoutePath from '@utils/routeConstants';
+import { useGeneralSetting } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import {
   useCourseDescription,
   useCourseStatus,
   useEnrollCourse,
 } from '@utils/services/courseService';
-import { Link, useParams } from 'react-router-dom';
-import CourseContent from './CourseContent/CourseContent';
 import { useTranslation } from 'react-i18next';
-import { color } from '@utils/constants';
-import TextViewer from '@components/Ui/RichTextViewer';
-import { useToggle } from '@mantine/hooks';
-import { useForm } from '@mantine/form';
-import { useGeneralSetting } from '@utils/services/adminService';
-
-const useStyles = createStyles((theme) => ({
-  wrapper: {
-    marginLeft: 40,
-    marginRight: 40,
-  },
-  inner: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    paddingTop: '80px',
-    paddingBottom: '80px',
-    [theme.fn.smallerThan('sm')]: {
-      flexDirection: 'column-reverse',
-    },
-  },
-
-  content: {
-    width: '60%',
-    marginRight: '80px',
-
-    [theme.fn.smallerThan('lg')]: {
-      width: '50%',
-    },
-    [theme.fn.smallerThan('sm')]: {
-      width: '100%',
-    },
-  },
-
-  title: {
-    color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-    fontSize: 42,
-    lineHeight: 1.2,
-    fontWeight: 800,
-
-    [theme.fn.smallerThan('xs')]: {
-      fontSize: 28,
-    },
-  },
-
-  control: {
-    [theme.fn.smallerThan('xs')]: {
-      flex: 1,
-    },
-  },
-
-  aside: {
-    width: '40%',
-    [theme.fn.smallerThan('lg')]: {
-      width: '50%',
-    },
-    [theme.fn.smallerThan('sm')]: {
-      width: '100%',
-    },
-  },
-
-  highlight: {
-    position: 'relative',
-    backgroundColor: theme.fn.variant({
-      variant: 'light',
-      color: theme.primaryColor,
-    }).background,
-    borderRadius: theme.radius.sm,
-    padding: '4px 12px',
-  },
-  CourseContentSmall: {
-    display: 'none',
-    [theme.fn.smallerThan('sm')]: {
-      display: 'block',
-    },
-  },
-
-  CourseContentLarge: {
-    display: 'block',
-    [theme.fn.smallerThan('sm')]: {
-      display: 'none',
-    },
-  },
-}));
+import { Link, useParams } from 'react-router-dom';
+import classes from '../styles/courseDescription.module.css';
+import CourseContent from './CourseContent/CourseContent';
 
 const CourseDescription = () => {
-  const { classes } = useStyles();
   const { id } = useParams();
   const auth = useAuth();
   const courseStatus = useCourseStatus(id as string, '');
@@ -253,7 +173,7 @@ const CourseDescription = () => {
               <Badge ml={10}>
                 {t(`${CourseUserStatusValue[course?.data?.userStatus]}`)}
               </Badge>
-              {auth?.auth && auth?.auth?.role <= UserRole.Admin && (
+              {auth?.auth && Number(auth?.auth?.role) <= UserRole.Admin && (
                 <>
                   <Badge ml={10} color={color(course?.data?.status)}>
                     {t(`${CourseStatus[course?.data?.status]}`)}
@@ -270,7 +190,7 @@ const CourseDescription = () => {
             <TextViewer content={course.data?.description} />
           </div>
           <div className={classes.aside}>
-            <AspectRatio ratio={16 / 9} mx="auto">
+            <AspectRatio ratio={16 / 8} mx="auto">
               <Image
                 src={getCourseOgImageUrl({
                   author: course?.data?.user,
@@ -283,7 +203,7 @@ const CourseDescription = () => {
             </AspectRatio>
             <Center>
               <Group my={30}>
-                {auth?.auth && auth?.auth?.role <= UserRole.Admin ? (
+                {auth?.auth && Number(auth?.auth?.role) <= UserRole.Admin ? (
                   <>
                     {slug && (
                       <Link
@@ -344,7 +264,7 @@ const CourseDescription = () => {
                   </>
                 )}
                 {auth?.auth &&
-                  auth?.auth?.role <= UserRole.Admin &&
+                  Number(auth?.auth?.role) <= UserRole.Admin &&
                   course.data?.status === CourseStatus.Review && (
                     <Button
                       onClick={() => togglePublished()}
@@ -357,7 +277,7 @@ const CourseDescription = () => {
                   )}
 
                 {auth?.auth &&
-                  auth?.auth?.role <= UserRole.Trainer &&
+                  Number(auth?.auth?.role) <= UserRole.Trainer &&
                   course.data?.status === CourseStatus.Draft && (
                     <Link to={RoutePath.manageCourse.edit(id).route}>
                       <Button radius="xl" size="md" className={classes.control}>
@@ -368,7 +288,7 @@ const CourseDescription = () => {
                 {auth?.auth &&
                   course.data?.status !==
                     (CourseStatus.Draft || CourseStatus.Review) &&
-                  (auth?.auth?.role <= UserRole.Admin ||
+                  (Number(auth?.auth?.role) <= UserRole.Admin ||
                     course.data?.userStatus === CourseUserStatus.Author ||
                     course.data?.userStatus === CourseUserStatus.Teacher) && (
                     <Link to={RoutePath.manageCourse.dashboard(id).route}>

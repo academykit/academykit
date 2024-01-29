@@ -1,10 +1,5 @@
 import useNav from '@hooks/useNav';
-import {
-  Breadcrumbs,
-  Anchor,
-  Divider,
-  MantineStyleSystemProps,
-} from '@mantine/core';
+import { Anchor, Breadcrumbs, Divider, MantineStyleProps } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -46,7 +41,7 @@ const Breadcrumb = ({
   py = 20,
 }: {
   hide?: number | null;
-  py?: MantineStyleSystemProps['py'];
+  py?: MantineStyleProps['py'];
   start?: { title: string; href: string };
 }) => {
   const { breadCrumb } = useNav();

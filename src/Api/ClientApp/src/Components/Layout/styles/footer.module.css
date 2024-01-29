@@ -1,0 +1,33 @@
+.footer {
+  border-top: 1px solid var(--mantine-color-footer-border);
+  padding-left: 310px;
+  padding-right: 10px;
+  z-index: 1000;
+  margin-top: 0px;
+}
+@media (max-width: 48em) {
+  .footer {
+    padding-left: 10px;
+  }
+}
+
+.inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--mantine-spacing-sm);
+  padding-bottom: var(--mantine-spacing-sm);
+  gap: 10px;
+}
+
+@media (max-width: 36em) {
+  .inner {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 36em) {
+  .links {
+    margin-top: var(--mantine-spacing-md);
+  }
+}

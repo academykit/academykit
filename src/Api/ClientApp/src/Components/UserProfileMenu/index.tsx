@@ -1,43 +1,28 @@
 import useAuth from '@hooks/useAuth';
-import {
-  Avatar,
-  Box,
-  createStyles,
-  Divider,
-  Group,
-  MantineNumberSize,
-  Menu,
-  SystemProp,
-  Text,
-} from '@mantine/core';
+import { Avatar, Box, Divider, Group, Menu, Text } from '@mantine/core';
 import { IconLock, IconLogout, IconPencil, IconUser } from '@tabler/icons';
 import { UserRole } from '@utils/enums';
 import { getInitials } from '@utils/getInitialName';
 import { IUser } from '@utils/services/types';
-import { CSSProperties, FC } from 'react';
-import { Link } from 'react-router-dom';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 type Props = {
   user: IUser;
-  size?: MantineNumberSize | undefined;
-  direction?: SystemProp<CSSProperties['flexDirection']>;
+  size?: any;
+  direction?: any;
 };
-const useStyle = createStyles({
-  item: {
-    width: '100%',
-  },
-});
+
 const UserProfileMenu: FC<Props> = ({
   user: { fullName, id, imageUrl, role },
   size = 'md',
 }) => {
-  const { classes } = useStyle();
   const auth = useAuth();
   const { t } = useTranslation();
 
   return (
-    <Group position="center">
+    <Group justify="center">
       <Menu
         withArrow
         styles={{
@@ -52,10 +37,10 @@ const UserProfileMenu: FC<Props> = ({
               <Avatar
                 my={3}
                 src={imageUrl}
-                color="cyan"
+                c="cyan"
                 radius={10000}
                 size={size}
-                sx={{ cursor: 'pointer' }}
+                style={{ cursor: 'pointer' }}
               >
                 {!imageUrl && getInitials(fullName ?? '')}
               </Avatar>
@@ -64,12 +49,12 @@ const UserProfileMenu: FC<Props> = ({
         </Menu.Target>
 
         <Menu.Dropdown miw={'200px'}>
-          <Box sx={{ textAlign: 'center' }}>
-            <Text size={'xl'} weight="bolder">
+          <Box style={{ textAlign: 'center' }}>
+            <Text size={'xl'} fw="bolder">
               {fullName}
             </Text>
-            <Text size={'sm'} color={'dimmed'}>
-              {t(`${UserRole[role]}`)}
+            <Text size={'sm'} c={'dimmed'}>
+              {t(`${UserRole[Number(role)]}`)}
             </Text>
           </Box>
           <Divider />
@@ -77,16 +62,16 @@ const UserProfileMenu: FC<Props> = ({
           <Menu.Item
             component={Link}
             to={`/userProfile/${id}/certificate`}
-            className={classes.item}
-            icon={<IconUser size={14} />}
+            style={{ width: '100%' }}
+            leftSection={<IconUser size={14} />}
           >
             <Text size={size}>{t('myProfile')}</Text>
           </Menu.Item>
           <Menu.Item
             component={Link}
-            to={`/settings`}
-            className={classes.item}
-            icon={<IconPencil size={14} />}
+            to={`/settings?edit=1`}
+            style={{ width: '100%' }}
+            leftSection={<IconPencil size={14} />}
           >
             <Text size={size}>{t('editProfile')}</Text>
           </Menu.Item>
@@ -94,15 +79,15 @@ const UserProfileMenu: FC<Props> = ({
           <Menu.Item
             component={Link}
             to={`/settings/account`}
-            className={classes.item}
-            icon={<IconLock size={14} />}
+            style={{ width: '100%' }}
+            leftSection={<IconLock size={14} />}
           >
             <Text size={size}>{t('Account')}</Text>
           </Menu.Item>
           <Menu.Item
             onClick={auth?.logout}
-            className={classes.item}
-            icon={<IconLogout size={14} />}
+            style={{ width: '100%' }}
+            leftSection={<IconLogout size={14} />}
           >
             <Text size={size}>{t('Logout')}</Text>
           </Menu.Item>

@@ -3,17 +3,16 @@ import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import {
-  Table,
-  ScrollArea,
-  Badge,
-  Paper,
-  Center,
-  Tooltip,
-  Button,
   Anchor,
-  Loader,
+  Badge,
   Box,
-  // Box,
+  Button,
+  Center,
+  Loader,
+  Paper,
+  ScrollArea,
+  Table,
+  Tooltip,
 } from '@mantine/core';
 import { IconEye } from '@tabler/icons';
 import { LessonType } from '@utils/enums';
@@ -35,23 +34,23 @@ const Rows = ({
   const { t } = useTranslation();
 
   return (
-    <tr key={item?.id}>
-      <td style={{ maxWidth: '200px' }}>
+    <Table.Tr key={item?.id}>
+      <Table.Td style={{ maxWidth: '200px' }}>
         <Anchor
           component={Link}
           to={`${RoutePath.classes}/${course_id}/${item.slug}`}
         >
           {item.name}
         </Anchor>
-      </td>
-      <td>{t(`${LessonType[item.lessonType]}`)}</td>
-      <td>
+      </Table.Td>
+      <Table.Td>{t(`${LessonType[item.lessonType]}`)}</Table.Td>
+      <Table.Td>
         <ProgressBar
           total={item?.enrolledStudent}
           positive={item?.lessonWatched}
         />
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         <Center>
           {item?.isMandatory ? (
             <Badge color="green" variant="outline">
@@ -63,8 +62,8 @@ const Rows = ({
             </Badge>
           )}
         </Center>
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         <Center>
           <Tooltip
             style={{
@@ -79,8 +78,8 @@ const Rows = ({
             </Button>
           </Tooltip>
         </Center>
-      </td>
-    </tr>
+      </Table.Td>
+    </Table.Tr>
   );
 };
 
@@ -106,34 +105,34 @@ function TableReviews({ searchParams, pagination }: IWithSearchPagination) {
       <Paper>
         <Table
           cellSpacing={''}
-          sx={{ minWidth: 800 }}
+          style={{ minWidth: 800 }}
           verticalSpacing="xs"
           styles={{}}
           striped
           highlightOnHover
-          withBorder
+          withTableBorder
           withColumnBorders
         >
-          <thead>
-            <tr>
-              <th>{t('lesson_name')}</th>
-              <th>{t('lesson_type')}</th>
-              <th>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>{t('lesson_name')}</Table.Th>
+              <Table.Th>{t('lesson_type')}</Table.Th>
+              <Table.Th>
                 <Center>{t('progress')}</Center>
-              </th>
-              <th>
+              </Table.Th>
+              <Table.Th>
                 <Center>{t('is_mandatory')}</Center>
-              </th>
-              <th>
+              </Table.Th>
+              <Table.Th>
                 <Center>{t('action')}</Center>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
             {getLessonStatistics.data?.items?.map((item: ILessonStats) => (
               <Rows item={item} key={item.id} course_id={course_id} />
             ))}
-          </tbody>
+          </Table.Tbody>
         </Table>
       </Paper>
 

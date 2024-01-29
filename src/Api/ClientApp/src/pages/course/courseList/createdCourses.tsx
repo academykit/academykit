@@ -3,11 +3,11 @@ import withSearchPagination, {
 } from '@hoc/useSearchPagination';
 import useAuth from '@hooks/useAuth';
 import { Box, Container, Flex, Loader } from '@mantine/core';
-import { UserRole, CourseStatus } from '@utils/enums';
+import { CourseStatus, UserRole } from '@utils/enums';
 import { useCourse } from '@utils/services/courseService';
 import { useEffect, useState } from 'react'; // Import useState
-import CourseList from './component/List';
 import { useTranslation } from 'react-i18next';
+import CourseList from './component/List';
 
 const ReviewedCourse = ({
   setInitialSearch,
@@ -43,7 +43,7 @@ const ReviewedCourse = ({
       <Container fluid>
         <Flex
           pb={20}
-          sx={{
+          style={{
             justifyContent: 'end',
             alignItems: 'center',
           }}

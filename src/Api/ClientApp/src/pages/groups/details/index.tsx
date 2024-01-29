@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   Container,
-  createStyles,
   Flex,
   Paper,
   Text,
@@ -24,8 +23,6 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 
-const useStyle = createStyles({});
-
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
@@ -37,7 +34,6 @@ const schema = () => {
 };
 const GroupDetail = () => {
   const { id } = useParams();
-  const { theme } = useStyle();
   const { t } = useTranslation();
   const form = useForm({
     initialValues: {
@@ -89,7 +85,7 @@ const GroupDetail = () => {
       <Flex justify={'space-between'} w={'100%'}>
         <Title>{t('group_details')}</Title>
 
-        {!edit && auth?.auth && auth?.auth?.role < UserRole.Trainer && (
+        {!edit && auth?.auth && Number(auth?.auth?.role) < UserRole.Trainer && (
           <Button
             onClick={() => {
               setEdit(true);
@@ -108,7 +104,7 @@ const GroupDetail = () => {
         {!edit ? (
           <Paper withBorder p={10} mt={10}>
             <Flex direction="column">
-              <Text size="lg" weight={'bold'}>
+              <Text size="lg" fw={'bold'}>
                 {t('group_name')}
               </Text>
               <Text>{groupDetail?.data?.data?.name}</Text>
@@ -118,7 +114,7 @@ const GroupDetail = () => {
           <Paper withBorder p={20} mt={10}>
             <Box>
               <CustomTextFieldWithAutoFocus
-                sx={{ maxWidth: theme.breakpoints.xs }}
+                style={{ maxWidth: '36rem' }}
                 name="name"
                 label={t('group_name')}
                 withAsterisk

@@ -1,22 +1,13 @@
 import TextViewer from '@components/Ui/RichTextViewer';
-import { Box, Card, createStyles, Group, Title } from '@mantine/core';
+import { Box, Card, Group, Title } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 import {
   ILessonStartQuestion,
   ILessonStartQuestionOption,
 } from '@utils/services/examService';
+import cx from 'clsx';
 import { useTranslation } from 'react-i18next';
-
-const useStyle = createStyles((theme) => ({
-  option: {
-    '>label': {
-      cursor: 'pointer',
-    },
-  },
-  active: {
-    outline: `2px solid ${theme.colors[theme.primaryColor][1]}`,
-  },
-}));
+import classes from '../style/class.module.css';
 
 type Props = {
   form: UseFormReturnType<
@@ -30,7 +21,6 @@ type Props = {
 };
 
 const ExamCheckBox = ({ form, options, currentIndex }: Props) => {
-  const { classes, cx } = useStyle();
   const { t } = useTranslation();
 
   return (

@@ -6,9 +6,9 @@ import {
   useGetCommentReplies,
   usePostCommentReply,
 } from '@utils/services/commentService';
-import CommentReply from './CommentReply';
-import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import CommentReply from './CommentReply';
 
 const CommentReplies = ({
   commentId,
@@ -79,7 +79,7 @@ const CommentReplies = ({
         <Group mx={14}>
           <Textarea
             {...form.getInputProps('content')}
-            sx={{ width: '100%' }}
+            style={{ width: '100%' }}
             placeholder={t('your_comment') as string}
             withAsterisk
           />
@@ -87,7 +87,7 @@ const CommentReplies = ({
             type="submit"
             loading={addCommentReply.isLoading}
             disabled={!form.values.content.trim()}
-            sx={{ '&[data-disabled]': { pointerEvents: 'all' } }}
+            style={{ '&[data-disabled]': { pointerEvents: 'all' } }}
           >
             {t('reply')}
           </Button>

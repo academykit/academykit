@@ -1,12 +1,12 @@
 import {
-  RingProgress,
-  Text,
-  SimpleGrid,
-  Paper,
   Center,
   Group,
+  Paper,
+  RingProgress,
+  SimpleGrid,
+  Text,
 } from '@mantine/core';
-import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons';
+import { IconArrowDownRight, IconArrowUpRight } from '@tabler/icons';
 
 interface StatsRingProps {
   data: {
@@ -42,10 +42,10 @@ export function StatsRing({ data }: StatsRingProps) {
           />
 
           <div>
-            <Text color="dimmed" size="xs" transform="uppercase" weight={700}>
+            <Text c="dimmed" size="xs" tt="uppercase" fw={700}>
               {stat.label}
             </Text>
-            <Text weight={700} size="xl">
+            <Text fw={700} size="xl">
               {stat.stats}
             </Text>
           </div>

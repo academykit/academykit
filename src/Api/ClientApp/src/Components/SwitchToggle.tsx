@@ -1,17 +1,17 @@
 import {
-  Switch,
   Group,
+  Switch,
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
-import { IconSun, IconMoonStars } from '@tabler/icons';
+import { IconMoonStars, IconSun } from '@tabler/icons';
 
 export function SwitchToggle() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const theme = useMantineTheme();
 
   return (
-    <Group position="center" my={30}>
+    <Group justify="center" my={30}>
       <Switch
         checked={colorScheme === 'dark'}
         onChange={() => toggleColorScheme()}

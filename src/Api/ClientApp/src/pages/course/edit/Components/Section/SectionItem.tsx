@@ -1,13 +1,7 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import EditNameForm from '@components/Ui/EditNameForm';
 import { useSection } from '@context/SectionProvider';
-import {
-  ActionIcon,
-  Container,
-  createStyles,
-  Group,
-  Paper,
-} from '@mantine/core';
+import { ActionIcon, Container, Group, Paper } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import {
@@ -23,21 +17,13 @@ import {
   useDeleteSection,
   useUpdateSectionName,
 } from '@utils/services/courseService';
+import cx from 'clsx';
 import { useState } from 'react';
 import { DraggableStateSnapshot } from 'react-beautiful-dnd';
-import Lessons from './Lessons';
 import { useTranslation } from 'react-i18next';
+import classes from '../styles/sectionItem.module.css';
+import Lessons from './Lessons';
 
-const useStyle = createStyles((theme) => ({
-  dragging: {
-    backgroundColor:
-      theme.colorScheme === 'dark' ? theme.colors.blue : theme.colors.gray[3],
-  },
-  drop: {
-    backgroundColor:
-      theme.colorScheme === 'dark' ? theme.colors.blue : theme.colors.gray[4],
-  },
-}));
 const SectionItem = ({
   item,
   slug,
@@ -51,7 +37,6 @@ const SectionItem = ({
   snapshot: DraggableStateSnapshot;
   status: CourseStatus;
 }) => {
-  const { cx, classes } = useStyle();
   const [value, toggle] = useToggle();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const updateSection = useUpdateSectionName(slug);
@@ -123,7 +108,7 @@ const SectionItem = ({
             setIsEditing={setIsEditing}
           />
         )}
-        <Group position="right" grow>
+        <Group justify="flex-end" grow>
           <IconTrashX
             size={18}
             style={{ color: 'red', cursor: 'pointer' }}
@@ -142,7 +127,7 @@ const SectionItem = ({
               cursor: 'pointer',
             }}
           />
-          <ActionIcon {...dragHandleProps}>
+          <ActionIcon {...dragHandleProps} variant="subtle" color="gray">
             <IconDragDrop />
           </ActionIcon>
         </Group>

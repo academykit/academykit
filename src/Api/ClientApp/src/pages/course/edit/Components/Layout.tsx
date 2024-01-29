@@ -1,8 +1,17 @@
-import { useParams } from 'react-router-dom';
-import RoutePath from '@utils/routeConstants';
 import NavOutlet from '@components/Layout/NavOutlet';
+import {
+  IconBooks,
+  IconCertificate,
+  IconChartInfographic,
+  IconClipboard,
+  IconGraph,
+  IconTool,
+} from '@tabler/icons';
+import { IconUsersGroup } from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
+import RoutePath from '@utils/routeConstants';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 
 function CourseEditNav() {
   const params = useParams();
@@ -13,23 +22,27 @@ function CourseEditNav() {
       label: t('statistics'),
       to: RoutePath.manageCourse.manage(params.id).route,
       role: UserRole.Trainer,
+      icon: <IconGraph size={14} />,
     },
 
     {
       label: t('settings'),
       to: RoutePath.manageCourse.dashboard(params.id).route,
       role: UserRole.Trainer,
+      icon: <IconTool size={14} />,
     },
     {
       label: t('details'),
       to: RoutePath.manageCourse.edit(params.id).routes(),
       role: UserRole.Trainer,
+      icon: <IconClipboard size={14} />,
     },
 
     {
       label: t('lessons'),
       to: RoutePath.manageCourse.lessons(params.id).route,
       role: UserRole.Trainer,
+      icon: <IconBooks size={14} />,
       // isActive: (pathName: string) =>
       //   pathName.includes(
       //     RoutePath.manageCourse.lessons(params.id).route ||
@@ -46,6 +59,7 @@ function CourseEditNav() {
       label: t('certificates'),
       to: RoutePath.manageCourse.certificate(params.id).route,
       role: UserRole.Trainer,
+      icon: <IconCertificate size={14} />,
     },
     {
       label: t('lesson_stats'),
@@ -58,11 +72,13 @@ function CourseEditNav() {
             RoutePath.manageCourse.lessonsStat(params.id).route +
               `${params.lessonId}`
         ),
+      icon: <IconChartInfographic size={14} />,
     },
     {
       label: t('trainee'),
       to: RoutePath.manageCourse.student(params.id).route,
       role: UserRole.Trainer,
+      icon: <IconUsersGroup size={14} />,
     },
   ];
 

@@ -1,31 +1,31 @@
 import {
-  TextInput,
-  PasswordInput,
-  Paper,
-  Image,
-  Container,
-  Button,
-  Center,
   Anchor,
   Box,
+  Button,
+  Center,
+  Container,
   Group,
+  Image,
+  Paper,
+  PasswordInput,
+  TextInput,
   Transition,
 } from '@mantine/core';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from '@mantine/form';
+import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { useEffect, useState } from 'react';
-import useAuth from '../../hooks/useAuth';
+import RoutePath from '@utils/routeConstants';
+import { useCompanySetting } from '@utils/services/adminService';
 import {
   useLogin,
   useResetPassword,
   useResetPasswordToken,
 } from '@utils/services/authService';
-import RoutePath from '@utils/routeConstants';
-import { useToggle } from '@mantine/hooks';
 import errorType from '@utils/services/axiosError';
-import { useCompanySetting } from '@utils/services/adminService';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
 const ConfirmToken = () => {
   const navigate = useNavigate();
@@ -141,7 +141,7 @@ const ConfirmToken = () => {
   }, [companySettings.isSuccess]);
 
   return (
-    <Container size={470} my={40} sx={{ position: 'relative' }}>
+    <Container size={470} my={40} style={{ position: 'relative' }}>
       <Center m={'lg'}>
         <Link to={'/'}>
           <Image
@@ -152,7 +152,7 @@ const ConfirmToken = () => {
         </Link>
       </Center>
 
-      <Box sx={{ position: 'absolute', width: '100%' }}>
+      <Box style={{ position: 'absolute', width: '100%' }}>
         <Transition
           mounted={!toggle}
           transition="fade"
@@ -170,13 +170,13 @@ const ConfirmToken = () => {
                     required
                   />
 
-                  <Group position="right" mt={10}>
+                  <Group justify="flex-end" mt={10}>
                     <Link to={RoutePath.login}>
                       <Anchor
                         component="button"
-                        align="end"
+                        ta="end"
                         type="button"
-                        color="dimmed"
+                        c="dimmed"
                         size="xs"
                       >
                         {t('want_login')}
@@ -198,7 +198,7 @@ const ConfirmToken = () => {
         </Transition>
       </Box>
 
-      <Box sx={{ position: 'absolute', width: '100%' }}>
+      <Box style={{ position: 'absolute', width: '100%' }}>
         <Transition
           mounted={toggle}
           transition="pop"
@@ -224,13 +224,13 @@ const ConfirmToken = () => {
                     required
                   />
 
-                  <Group position="right" mt={10}>
+                  <Group justify="flex-end" mt={10}>
                     <Link to={RoutePath.login}>
                       <Anchor
                         component="button"
-                        align="end"
+                        ta="end"
                         type="button"
-                        color="dimmed"
+                        c="dimmed"
                         size="xs"
                       >
                         {t('want_login')}?

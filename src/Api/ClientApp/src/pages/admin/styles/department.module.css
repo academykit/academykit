@@ -1,0 +1,16 @@
+.paper {
+  width: 50%;
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 767px) {
+  .paper {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .paper {
+    width: 100%;
+  }
+}

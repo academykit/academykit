@@ -16,13 +16,13 @@ import {
   usePoolsTeacher,
 } from '@utils/services/poolService';
 
+import { TrainingTypeEnum } from '@utils/enums';
+import queryStringGenerator from '@utils/queryStringGenerator';
+import { useGetTrainers } from '@utils/services/adminService';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import TeacherCard from './Component/TeacherCard';
-import { useTranslation } from 'react-i18next';
-import { useGetTrainers } from '@utils/services/adminService';
-import queryStringGenerator from '@utils/queryStringGenerator';
-import { useState } from 'react';
-import { TrainingTypeEnum } from '@utils/enums';
 
 const MCQTeacher = () => {
   const { t } = useTranslation();
@@ -63,7 +63,7 @@ const MCQTeacher = () => {
   };
   return (
     <Container fluid>
-      <Group sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+      <Group style={{ justifyContent: 'space-between', alignItems: 'center' }}>
         <Title>{t('trainers')}</Title>
         <Button
           onClick={() => {
@@ -83,12 +83,14 @@ const MCQTeacher = () => {
         {() => (
           <Box mt={10}>
             <form onSubmit={form.onSubmit(onSubmitForm)}>
-              <Group sx={{ alignItems: 'start' }}>
+              <Group style={{ alignItems: 'start' }}>
                 <Select
                   clearable
                   placeholder={t('enter_email_trainer') as string}
                   searchable
-                  nothingFound={isLoading ? 'Loading...' : 'No Trainers Found!'}
+                  nothingFoundMessage={
+                    isLoading ? 'Loading...' : 'No Trainers Found!'
+                  }
                   data={trainers?.map((e) => e.email) ?? []}
                   onSearchChange={setSearch}
                   searchValue={search}

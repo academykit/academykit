@@ -1,3 +1,6 @@
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Box,
   Button,
@@ -25,9 +28,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -173,7 +173,7 @@ const AddExam = ({
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Paper withBorder p="md">
         <Grid align={'center'}>
-          <Grid.Col span={12} xs={6} lg={4}>
+          <Grid.Col span={{ base: 12, xs: 6, lg: 4 }}>
             <CustomTextFieldWithAutoFocus
               withAsterisk
               label={t('exam_title')}
@@ -183,7 +183,7 @@ const AddExam = ({
               styles={{ error: { position: 'absolute' } }}
             />
           </Grid.Col>
-          <Grid.Col span={12} xs={6} lg={4} mt={5}>
+          <Grid.Col span={{ base: 12, xs: 6, lg: 4 }} mt={5}>
             <NumberInput
               label={t('passing_percentage')}
               max={100}
@@ -192,7 +192,7 @@ const AddExam = ({
               {...form.getInputProps('passingWeightage')}
             />
           </Grid.Col>
-          <Grid.Col span={12} xs={6} lg={4}>
+          <Grid.Col span={{ base: 12, xs: 6, lg: 4 }}>
             <NumberInput
               withAsterisk
               label={t('question_weightage')}
@@ -203,7 +203,7 @@ const AddExam = ({
               styles={{ error: { position: 'absolute' } }}
             />
           </Grid.Col>
-          <Grid.Col span={12} xs={6} lg={4}>
+          <Grid.Col span={{ base: 12, xs: 6, lg: 4 }}>
             <DatePickerInput
               valueFormat="MMM DD, YYYY"
               placeholder={t('pick_date') as string}
@@ -213,7 +213,7 @@ const AddExam = ({
               {...form.getInputProps('startDate')}
             />
           </Grid.Col>
-          <Grid.Col span={12} xs={6} lg={4}>
+          <Grid.Col span={{ base: 12, xs: 6, lg: 4 }}>
             <TimeInput
               label={t('start_time')}
               withAsterisk
@@ -222,7 +222,7 @@ const AddExam = ({
             />
           </Grid.Col>
 
-          <Grid.Col span={12} xs={6} lg={4}>
+          <Grid.Col span={{ base: 12, xs: 6, lg: 4 }}>
             <NumberInput
               label={t('duration_minutes')}
               placeholder={t('duration') as string}
@@ -233,7 +233,7 @@ const AddExam = ({
             />
           </Grid.Col>
 
-          <Grid.Col span={12} xs={6} lg={4}>
+          <Grid.Col span={{ base: 12, xs: 6, lg: 4 }}>
             <DatePickerInput
               valueFormat="MMM DD, YYYY"
               placeholder={t('pick_date') as string}
@@ -243,7 +243,7 @@ const AddExam = ({
               {...form.getInputProps('endDate')}
             />
           </Grid.Col>
-          <Grid.Col span={12} xs={6} lg={4}>
+          <Grid.Col span={{ base: 12, xs: 6, lg: 4 }}>
             <TimeInput
               label={t('end_time')}
               withAsterisk
@@ -252,18 +252,18 @@ const AddExam = ({
             />
           </Grid.Col>
 
-          <Grid.Col span={12} xs={6} lg={4} mt={5}>
+          <Grid.Col span={{ base: 12, xs: 6, lg: 4 }} mt={5}>
             <NumberInput
               label={t('negative_marking')}
               placeholder={t('negative_marking') as string}
               min={0}
               step={0.05}
-              precision={2}
+              decimalScale={2}
               max={100}
               {...form.getInputProps('negativeMarking')}
             />
           </Grid.Col>
-          <Grid.Col span={12} xs={6} lg={4}>
+          <Grid.Col span={{ base: 12, xs: 6, lg: 4 }}>
             <NumberInput
               label={t('number_retake')}
               placeholder={t('retakes') as string}
@@ -272,8 +272,8 @@ const AddExam = ({
             />
           </Grid.Col>
 
-          <Tooltip multiline label={t('mandatory_tooltip')} width={220}>
-            <Grid.Col span={6} lg={4}>
+          <Tooltip multiline label={t('mandatory_tooltip')} w={220}>
+            <Grid.Col span={{ base: 6, lg: 4 }}>
               <Switch
                 label={t('is_mandatory')}
                 {...form.getInputProps('isMandatory')}
@@ -297,7 +297,7 @@ const AddExam = ({
           </Grid.Col>
         </Grid>
 
-        <Group position="left" mt="md">
+        <Group mt="md">
           <Button
             type="submit"
             loading={updateLesson.isLoading || lesson.isLoading}

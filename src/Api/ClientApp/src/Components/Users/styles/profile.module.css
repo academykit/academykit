@@ -1,0 +1,16 @@
+/* AvatarImage */
+.avatarImage {
+  height: 200px;
+}
+
+/* Avatar */
+.avatar {
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 48em) {
+  .avatar {
+    flex-direction: column;
+  }
+}

@@ -1,18 +1,22 @@
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import DeleteModal from '@components/Ui/DeleteModal';
 import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
 import useAuth from '@hooks/useAuth';
+import useCustomForm from '@hooks/useCustomForm';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   ActionIcon,
+  Badge,
   Box,
   Button,
   Card,
   Flex,
   Group,
-  Badge,
   Image,
   Modal,
+  NumberInput,
   Text,
   TextInput,
-  NumberInput,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { createFormContext, yupResolver } from '@mantine/form';
@@ -29,15 +33,11 @@ import {
   useGetExternalCertificate,
   useUpdateCertificate,
 } from '@utils/services/certificateService';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import useCustomForm from '@hooks/useCustomForm';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import moment from 'moment';
-import DeleteModal from '@components/Ui/DeleteModal';
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
 
@@ -216,7 +216,7 @@ const MyTrainingExternal = () => {
                 label={t('optional_cost')}
                 placeholder={t('enter_optional_cost') as string}
                 name="optionalCost"
-                precision={2}
+                decimalScale={2}
                 {...form.getInputProps('optionalCost')}
                 min={0}
               />
@@ -239,6 +239,9 @@ const MyTrainingExternal = () => {
                 FormField="imageUrl"
                 currentThumbnail={idd?.imageUrl}
               />
+              <Text c="dimmed" size="xs">
+                {t('image_dimension')}
+              </Text>
               <Button
                 disabled={!cForm?.isReady}
                 type="submit"
@@ -251,7 +254,7 @@ const MyTrainingExternal = () => {
         </FormProvider>
       </Modal>
 
-      <Group position="right">
+      <Group justify="flex-end">
         <Button onClick={() => setShowConfirmation()}>
           {t('add_certificate')}
         </Button>
@@ -265,9 +268,10 @@ const MyTrainingExternal = () => {
             <Flex justify={'space-between'}>
               <Box>
                 <Flex>
-                  <Text weight={'bold'}>
+                  <Text fw={'bold'}>
                     {x.name}
                     <Badge
+                      variant="light"
                       color={
                         CertificateStatus[x.status] == 'Rejected'
                           ? 'red'
@@ -286,6 +290,7 @@ const MyTrainingExternal = () => {
                           setIdd(x);
                           setUpdates(true);
                         }}
+                        variant="subtle"
                       >
                         <IconEdit />
                       </ActionIcon>
@@ -295,6 +300,7 @@ const MyTrainingExternal = () => {
                           setDeleteCertificateId(x.id);
                           setDeleteCertificate(true);
                         }}
+                        variant="subtle"
                       >
                         <IconTrash color="red" />
                       </ActionIcon>
@@ -343,6 +349,7 @@ const MyTrainingExternal = () => {
                       <ActionIcon
                         onClick={() => window.open(x.imageUrl)}
                         mr={10}
+                        variant="subtle"
                       >
                         <IconEye color="black" />
                       </ActionIcon>
@@ -350,6 +357,7 @@ const MyTrainingExternal = () => {
                         onClick={() =>
                           downloadImage(x.imageUrl, x.user.fullName ?? '')
                         }
+                        variant="subtle"
                       >
                         <IconDownload color="black" />
                       </ActionIcon>
@@ -359,7 +367,7 @@ const MyTrainingExternal = () => {
               </Box>
             </Flex>
             {auth?.auth &&
-              auth.auth.role <= UserRole.Admin &&
+              Number(auth.auth.role) <= UserRole.Admin &&
               auth.auth.id !== x.user.id && (
                 <Box mt={10}>
                   <Button>{t('approve')}</Button>

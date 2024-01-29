@@ -1,10 +1,11 @@
+import TextViewer from '@components/Ui/RichTextViewer';
 import useCustomLayout from '@context/LayoutProvider';
+import useAuth from '@hooks/useAuth';
 import {
   Box,
   Button,
   Card,
   Container,
-  createStyles,
   Grid,
   Group,
   Modal,
@@ -21,86 +22,14 @@ import {
   ILessonStartQuestionOption,
   useSubmitExam,
 } from '@utils/services/examService';
-import { useTranslation } from 'react-i18next';
+import cx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ExamCounter from './ExamCounter';
 import ExamCheckBox from './ExamOptions/ExamCheckBox';
 import ExamRadio from './ExamOptions/ExamRadio';
-import useAuth from '@hooks/useAuth';
-import TextViewer from '@components/Ui/RichTextViewer';
-
-const useStyle = createStyles((theme) => ({
-  option: {
-    padding: 20,
-    width: '100%',
-    justifyContent: 'start',
-    alignItems: 'start',
-    borderRadius: '5px',
-    border: '1px solid gray',
-    '>label': {
-      cursor: 'pointer',
-    },
-    marginBottom: '15px',
-    // height: "fit-content"
-  },
-  navigate: {
-    display: 'flex',
-    height: '50px',
-    width: '50px',
-    justifyContent: 'center',
-    alignItems: 'center',
-    cursor: 'pointer',
-  },
-  navigateWrapper: {
-    border: '1px solid grey',
-    borderRadius: '5px',
-
-    maxHeight: '80vh',
-    height: '100%',
-    overflowY: 'auto',
-    alignContent: 'start',
-    justifyContent: 'start',
-  },
-  buttonNav: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    position: 'fixed',
-    bottom: '0',
-    right: '0',
-    width: '100%',
-    zIndex: 100,
-  },
-  active: {
-    border: `3px solid ${theme.colors.green[4]}`,
-  },
-  visited: {
-    border: `2px solid ${theme.colors.yellow[4]}`,
-  },
-  answered: {
-    backgroundColor: theme.colorScheme == 'dark' ? '#128797' : '#09ADC3',
-  },
-  parentGrid: {
-    flexDirection: 'row',
-
-    [theme.fn.smallerThan('lg')]: {
-      flexDirection: 'column',
-    },
-  },
-  optionsGridCol: {
-    order: 2,
-    [theme.fn.smallerThan('lg')]: {
-      order: 1,
-      maxWidth: '100%',
-    },
-  },
-  questionGridCol: {
-    order: 1,
-    [theme.fn.smallerThan('lg')]: {
-      order: 2,
-    },
-  },
-}));
+import classes from './style/exam.module.css';
 
 const Exam = ({
   data,
@@ -139,7 +68,7 @@ const Exam = ({
     customLayout.setExamPageAction &&
       customLayout.setExamPageAction(
         auth?.auth &&
-          auth?.auth?.role >= UserRole.Trainer &&
+          Number(auth?.auth?.role) >= UserRole.Trainer &&
           !isAuthorOrTeacher ? (
           <ExamCounter
             duration={data.duration}
@@ -158,8 +87,7 @@ const Exam = ({
     };
   }, [customLayout.examPage]);
 
-  const { classes, theme, cx } = useStyle();
-  const matches = useMediaQuery(`(min-width: ${theme.breakpoints.md}px)`);
+  const matches = useMediaQuery('(min-width: 56.25em)');
   const [visited, setVisited] = useState<number[]>([]);
 
   const onQuestionVisit = (index: number) => {
@@ -247,11 +175,11 @@ const Exam = ({
         {/* <Grid.Col span={matches ? 9 : 12}> */}
         <Grid.Col
           span={matches ? 9 : 9}
-          sx={{ maxWidth: '100%' }}
+          style={{ maxWidth: '100%' }}
           className={classes.questionGridCol}
         >
           <Box
-            sx={{
+            style={{
               flexDirection: 'column',
               overflow: 'auto',
             }}
@@ -259,7 +187,7 @@ const Exam = ({
             <Box
               p={10}
               pb={20}
-              sx={{
+              style={{
                 flexDirection: 'column',
                 width: '100%',
                 justifyContent: 'start',
@@ -271,7 +199,7 @@ const Exam = ({
                 <TextViewer
                   key={currentIndex}
                   content={questions[currentIndex]?.description}
-                  sx={{ wordBreak: 'break-all' }}
+                  styles={{ wordBreak: 'break-all' }}
                 />
               )}
             </Box>
@@ -302,6 +230,7 @@ const Exam = ({
                   onQuestionVisit(currentIndex);
                   setCurrentIndex(currentIndex - 1);
                 }}
+                w={100}
               >
                 {t('previous')}
               </Button>
@@ -320,6 +249,7 @@ const Exam = ({
                   onQuestionVisit(currentIndex);
                   setCurrentIndex((currentIndex) => currentIndex + 1);
                 }}
+                w={100}
               >
                 {t('next')}
               </Button>

@@ -1,8 +1,9 @@
-import { useParams } from 'react-router-dom';
-import RoutePath from '@utils/routeConstants';
 import NavOutlet from '@components/Layout/NavOutlet';
+import { IconClipboard, IconListNumbers } from '@tabler/icons';
 import { UserRole } from '@utils/enums';
+import RoutePath from '@utils/routeConstants';
 import i18next from 'i18next';
+import { useParams } from 'react-router-dom';
 
 function MCQPoolNav() {
   const params = useParams();
@@ -12,6 +13,7 @@ function MCQPoolNav() {
       label: i18next.t('details'),
       to: RoutePath.pool.details(params.id).route,
       role: UserRole.Trainer,
+      icon: <IconClipboard size={14} />,
     },
     {
       label: i18next.t('trainers'),
@@ -22,6 +24,7 @@ function MCQPoolNav() {
       label: i18next.t('questions'),
       to: RoutePath.pool.questions(params.id).route,
       role: UserRole.Trainer,
+      icon: <IconListNumbers size={14} />,
     },
   ];
 

@@ -1,17 +1,17 @@
 import { Group, Paper, Text } from '@mantine/core';
 import {
-  IconSchool,
-  IconUserCheck,
-  IconUsers,
-  IconFileCheck,
-  IconCertificate,
-  IconBooks,
   IconBook2,
+  IconBooks,
   IconBrandZoom,
+  IconCertificate,
   IconFile,
-  IconUserCircle,
+  IconFileCheck,
   IconPencil,
   IconPlayerPlay,
+  IconSchool,
+  IconUserCheck,
+  IconUserCircle,
+  IconUsers,
 } from '@tabler/icons';
 import {
   DashboardStats,
@@ -50,17 +50,17 @@ export const StatsCard = ({ data, dashboard }: StatsGridProps) => {
 
   return (
     <Paper withBorder p="md" color={data.color} radius="md">
-      <Group position="left" noWrap color={data.color}>
+      <Group wrap="nowrap" color={data.color}>
         <Icon size={26} stroke={1.5} color={data.color} />
-        <Text size="md" color={data.color}>
+        <Text size="md" c={data.color}>
           {data.label}
         </Text>
       </Group>
       <Group mt={20}>
-        <Text size="lg" weight={'bold'} color={data.color}>
+        <Text size="lg" fw={'bold'} c={data.color}>
           {dashboard && dashboard[data.key as keyof DashboardStats]}
         </Text>
-        <Text color={data.color}>{backLabel}</Text>
+        <Text c={data.color}>{backLabel}</Text>
       </Group>
     </Paper>
   );

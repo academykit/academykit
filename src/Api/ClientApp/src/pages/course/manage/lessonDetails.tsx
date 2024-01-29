@@ -12,6 +12,7 @@ import {
   Tabs,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
+import { IconTableExport } from '@tabler/icons';
 import { LessonType } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import { exportFeedback } from '@utils/services/feedbackService';
@@ -81,15 +82,16 @@ const LessonDetails = ({
 
         <Tabs.Panel value="list" pt="xs">
           {lessonDetails.data?.items[0]?.lessonType === LessonType.Feedback && (
-            <Group position="right" my="md">
+            <Group justify="flex-end" my="md">
               <Button onClick={handleExport} loading={loading}>
                 {t('export')}
               </Button>
             </Group>
           )}
           {lessonDetails.data?.items[0]?.lessonType === LessonType.Exam && (
-            <Group position="right" my="md">
+            <Group justify="flex-end" my="md">
               <Button
+                rightSection={<IconTableExport size={18} />}
                 variant="outline"
                 onClick={() => downloadCSVFile(exportUserCSV, 'lessonStats')}
               >
@@ -100,18 +102,18 @@ const LessonDetails = ({
           <Paper>
             <Box mb={'sm'}>{searchComponent('Search Student')}</Box>
             {lessonDetails.data && lessonDetails.data?.items.length > 0 ? (
-              <Table striped withBorder withColumnBorders highlightOnHover>
-                <thead>
-                  <tr>
-                    <th>{t('trainees')}</th>
-                    <th>
+              <Table striped withTableBorder withColumnBorders highlightOnHover>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>{t('trainees')}</Table.Th>
+                    <Table.Th>
                       <Center>{t('status')}</Center>
-                    </th>
+                    </Table.Th>
 
-                    <th>{t('actions')}</th>
-                  </tr>
-                </thead>
-                <tbody>
+                    <Table.Th>{t('actions')}</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
                   {lessonDetails.data?.items.map((x) => (
                     <CourseLessonDetails
                       element={x}
@@ -119,7 +121,7 @@ const LessonDetails = ({
                       courseId={id as string}
                     />
                   ))}
-                </tbody>
+                </Table.Tbody>
               </Table>
             ) : (
               <Box>{t('no_enrolled_student_found')}</Box>

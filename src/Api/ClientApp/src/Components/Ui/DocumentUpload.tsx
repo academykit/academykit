@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { FilePond, registerPlugin } from 'react-filepond';
-import 'filepond/dist/filepond.min.css';
-import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import { Box } from '@mantine/core';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import FilePondPluginImageValidateSize from 'filepond-plugin-image-validate-size';
+import 'filepond/dist/filepond.min.css';
+import { useState } from 'react';
+import { FilePond, registerPlugin } from 'react-filepond';
 import { useTranslation } from 'react-i18next';
 
 registerPlugin(
@@ -42,7 +42,7 @@ const DcoumentUpload = ({ setUrl }: { setUrl: (url: string) => void }) => {
     labelButtonProcessItem: t('Process'),
   };
   return (
-    <Box my={10} sx={{ maxWidth: 470 }}>
+    <Box my={10} style={{ maxWidth: 470 }}>
       <FilePond
         files={files}
         onaddfile={(error) => {

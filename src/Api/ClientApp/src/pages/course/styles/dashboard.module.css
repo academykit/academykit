@@ -1,0 +1,36 @@
+/* Group */
+.group {
+  justify-content: center;
+}
+
+/* Right */
+.right {
+  width: 40%;
+}
+@media (max-width: 62em) {
+  .right {
+    width: 100%;
+  }
+}
+
+/* Left */
+.left {
+  width: 50%;
+}
+@media (max-width: 62em) {
+  .left {
+    width: 100%;
+  }
+}
+
+.center {
+  width: 50%;
+  margin: auto;
+}
+
+/* Center */
+@media (max-width: 527px) {
+  .center {
+    width: 100%;
+  }
+}

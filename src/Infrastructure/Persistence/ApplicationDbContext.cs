@@ -2,12 +2,13 @@
 {
     using System.Reflection;
     using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
     using Microsoft.EntityFrameworkCore;
 
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options) { }
+
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Group> Groups { get; set; }
@@ -55,8 +56,6 @@
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Logs> Logs { get; set; }
         public DbSet<PhysicalLessonReview> PhysicalLessonReviews { get; set; }
-        public DbSet<UserEducation> UserEducations { get; set; }
-        public DbSet<UserWorkExperience> UserWorkExperiences { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

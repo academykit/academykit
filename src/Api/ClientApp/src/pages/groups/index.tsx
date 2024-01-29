@@ -16,9 +16,9 @@ import { useDisclosure } from '@mantine/hooks';
 import { UserRole } from '@utils/enums';
 import { useGroups } from '@utils/services/groupService';
 
+import { useTranslation } from 'react-i18next';
 import AddGroups from './Components/AddGroups';
 import GroupCard from './Components/GroupCard';
-import { useTranslation } from 'react-i18next';
 
 const GroupsPage = ({
   searchParams,
@@ -34,12 +34,12 @@ const GroupsPage = ({
     <Container fluid>
       <Box my={10}>
         <Group
-          sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+          style={{ justifyContent: 'space-between', alignItems: 'center' }}
           mb={15}
         >
           <Title>{t('groups')}</Title>
 
-          {auth?.auth && auth.auth.role <= UserRole.Admin && (
+          {auth?.auth && Number(auth.auth.role) <= UserRole.Admin && (
             <Button onClick={open}>{t('add_group')}</Button>
           )}
         </Group>
@@ -48,7 +48,7 @@ const GroupsPage = ({
           opened={opened}
           onClose={close}
           title={t('groups')}
-          overlayProps={{ opacity: 0.5, blur: 4 }}
+          overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
         >
           <AddGroups onCancel={close} />
         </Drawer>
@@ -57,17 +57,7 @@ const GroupsPage = ({
           <Box>{searchComponent(t('search_groups') as string)}</Box>
         </div>
       </Box>
-      <SimpleGrid
-        cols={1}
-        spacing={10}
-        breakpoints={[
-          { minWidth: 'sx', cols: 1 },
-          { minWidth: 'sm', cols: 2 },
-          { minWidth: 'md', cols: 3 },
-          { minWidth: 1280, cols: 3 },
-          { minWidth: 1780, cols: 4 },
-        ]}
-      >
+      <SimpleGrid cols={{ sx: 1, sm: 2, md: 3, 1280: 3, 1780: 4 }} spacing={10}>
         {isLoading && <Loader />}
         {data?.data &&
           (data.data.totalCount > 0 ? (

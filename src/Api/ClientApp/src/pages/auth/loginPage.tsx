@@ -1,4 +1,5 @@
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import { BrandingContext } from '@context/BrandingThemeContext';
 import {
   Anchor,
   Button,
@@ -17,7 +18,7 @@ import { useCompanySetting } from '@utils/services/adminService';
 import { useLogin } from '@utils/services/authService';
 import { IUserProfile } from '@utils/services/types';
 import { AxiosError } from 'axios';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -48,6 +49,7 @@ const LoginPage = () => {
   const onFormSubmit = (values: { email: string; password: string }) => {
     login.mutate({ email: values.email, password: values.password });
   };
+  const context = useContext(BrandingContext);
 
   useEffect(() => {
     if (login.isError) {
@@ -112,6 +114,7 @@ const LoginPage = () => {
       );
       localStorage.setItem('branding', branding.accent);
       localStorage.setItem('version', companySettings.data.data.appVersion);
+      context?.toggleBrandingTheme(branding.accent ?? '#0E99AC'); // set the accent after fetching
       setHeader();
     }
   }, [companySettings.isSuccess]);
@@ -130,8 +133,8 @@ const LoginPage = () => {
         </Link>
       </Center>
       <Title
-        align="center"
-        sx={(theme) => ({
+        ta="center"
+        style={(theme) => ({
           fontFamily: `Greycliff CF, ${theme.fontFamily}`,
           fontWeight: 900,
         })}
@@ -156,13 +159,13 @@ const LoginPage = () => {
             mt="md"
             name="password"
           />
-          <Group position="right" mt={10}>
+          <Group justify="flex-end" mt={10}>
             <Link to={RoutePath.forgotPassword}>
               <Anchor
                 component="button"
-                align="end"
+                ta="end"
                 type="button"
-                color="dimmed"
+                c="dimmed"
                 size="xs"
               >
                 {t('forgot_password')}?

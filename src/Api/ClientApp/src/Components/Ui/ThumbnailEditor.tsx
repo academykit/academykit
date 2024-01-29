@@ -1,19 +1,19 @@
-import { useEffect, useState } from 'react';
-import { FilePond, registerPlugin } from 'react-filepond';
-import 'filepond/dist/filepond.min.css';
+import useCustomForm from '@hooks/useCustomForm';
+import { Text } from '@mantine/core';
+import { UseFormReturnType } from '@mantine/form/lib/types';
+import { FileAccess, uploadFile } from '@utils/services/fileService';
+import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
-import { UseFormReturnType } from '@mantine/form/lib/types';
-import FilePondPluginImageValidateSize from 'filepond-plugin-image-validate-size';
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
-import { FileAccess, uploadFile } from '@utils/services/fileService';
-import { Text } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
-import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
-import useCustomForm from '@hooks/useCustomForm';
+import FilePondPluginImageValidateSize from 'filepond-plugin-image-validate-size';
+import 'filepond/dist/filepond.min.css';
+import { useEffect, useState } from 'react';
+import { FilePond, registerPlugin } from 'react-filepond';
+import { useTranslation } from 'react-i18next';
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -173,7 +173,7 @@ const ThumbnailEditor = ({
         {...filePondProps}
       />
       {form.errors[FormField] && (
-        <Text color={'red'} size={'xs'} pos="absolute" top={'100%'}>
+        <Text c={'red'} size={'xs'} pos="absolute" top={'100%'}>
           {form.errors[FormField]}
         </Text>
       )}

@@ -6,7 +6,7 @@ import AddLecture from '@components/Course/Lesson/AddLecture';
 import AddMeeting from '@components/Course/Lesson/AddMeeting';
 import AddPhysical from '@components/Course/Lesson/AddPhysical';
 import DeleteModal from '@components/Ui/DeleteModal';
-import { Button, createStyles, Grid, Group, Text } from '@mantine/core';
+import { Button, Grid, Group, Text } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconTrashX } from '@tabler/icons';
@@ -24,40 +24,7 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-
-const useStyles = createStyles((theme) => ({
-  item: {
-    alignItems: 'center',
-    marginTop: '10px',
-    borderRadius: theme.radius.md,
-    border: `1px solid ${
-      theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[7]
-    }`,
-    padding: `${theme.spacing.sm}px ${theme.spacing.xl}px`,
-    paddingLeft: `calc(${theme.spacing.xl} - ${theme.spacing.md})`, // to offset drag handle
-    backgroundColor:
-      theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
-    marginBottom: theme.spacing.sm,
-  },
-
-  itemDragging: {
-    boxShadow: theme.shadows.sm,
-  },
-
-  dragHandle: {
-    ...theme.fn.focusStyles(),
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-    color:
-      theme.colorScheme === 'dark'
-        ? theme.colors.dark[1]
-        : theme.colors.gray[6],
-    paddingLeft: theme.spacing.md,
-    paddingRight: theme.spacing.md,
-  },
-}));
+import classes from '../styles/lesson.module.css';
 
 const Lesson = ({
   lesson,
@@ -66,7 +33,6 @@ const Lesson = ({
   lesson: ILessons;
   sectionId: string;
 }) => {
-  const { classes } = useStyles();
   const { id: slug } = useParams();
   const { t } = useTranslation();
 
@@ -113,7 +79,7 @@ const Lesson = ({
             </div>
           </Grid.Col>
           <Grid.Col span={4}>
-            <Group position="center">
+            <Group justify="center">
               <Text m={'auto'} style={{ padding: '10px' }}>
                 {ReadableEnum[
                   t(`${LessonType[lesson.type]}`) as keyof typeof ReadableEnum
@@ -122,7 +88,7 @@ const Lesson = ({
             </Group>
           </Grid.Col>
           <Grid.Col span={4}>
-            <Group position="right">
+            <Group justify="flex-end">
               <IconTrashX
                 size={18}
                 style={{

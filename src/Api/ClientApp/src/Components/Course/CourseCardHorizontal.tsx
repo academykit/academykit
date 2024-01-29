@@ -1,6 +1,7 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import useAuth from '@hooks/useAuth';
 import {
+  Anchor,
   AspectRatio,
   Badge,
   Box,
@@ -10,10 +11,9 @@ import {
   Flex,
   Group,
   Image,
+  Menu,
   Text,
   useMantineTheme,
-  Menu,
-  Anchor,
 } from '@mantine/core';
 import { useMediaQuery, useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
@@ -42,6 +42,7 @@ import { ICourse, useDeleteCourse } from '@utils/services/courseService';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import classes from './styles/horizontalCard.module.css';
 
 const CourseCardHorizontal = ({
   course,
@@ -80,15 +81,7 @@ const CourseCardHorizontal = ({
   const companyLogo = generalSettings.data?.data.logoUrl;
 
   return (
-    <Box
-      sx={{
-        position: 'relative',
-        height: '350px',
-        '@media (min-width: 55em)': {
-          height: '180px',
-        },
-      }}
-    >
+    <Box className={classes.container}>
       {/* <Link
         to={RoutePath.courses.description(course.slug).route}
         style={{
@@ -103,7 +96,7 @@ const CourseCardHorizontal = ({
       <Card
         my={10}
         radius={'md'}
-        sx={{
+        style={{
           position: 'absolute',
           top: 0,
           left: 0,
@@ -118,19 +111,10 @@ const CourseCardHorizontal = ({
           onConfirm={handleDelete}
         />
 
-        <Flex
-          gap={'lg'}
-          sx={() => ({
-            flexWrap: 'wrap',
-            '@media (min-width: 55em)': {
-              flexWrap: 'nowrap',
-            },
-            justifyContent: 'center',
-          })}
-        >
+        <Flex gap={'lg'} className={classes.inner}>
           <Center>
             <Box
-              sx={{
+              style={{
                 heigh: matches ? '100px' : '300px',
                 width: !matchesSmall ? '220px' : matches ? '240px' : '300px',
               }}
@@ -160,8 +144,8 @@ const CourseCardHorizontal = ({
               alignItems: 'stretch',
             }}
           >
-            <Group sx={{ justifyContent: 'space-between' }}>
-              <Group spacing={10}>
+            <Group style={{ justifyContent: 'space-between' }}>
+              <Group gap={10}>
                 <Badge color="pink" variant="light">
                   {t(`${CourseLanguage[course.language]}`)}
                 </Badge>
@@ -169,15 +153,19 @@ const CourseCardHorizontal = ({
                   {course?.levelName}
                 </Badge>
                 {/* {auth?.auth && auth?.auth?.role > UserRole.Admin && ( */}
-                <Badge color="cyan">
+                <Badge color="cyan" variant="light">
                   {t(`${CourseUserStatusValue[course.userStatus]}`)}
                 </Badge>
                 {/* )} */}
-                {((auth?.auth && auth?.auth?.role <= UserRole.Admin) ||
+                {((auth?.auth && Number(auth?.auth?.role) <= UserRole.Admin) ||
                   course.userStatus === CourseUserStatus.Author ||
                   course.userStatus === CourseUserStatus.Teacher) && (
                   <>
-                    <Badge ml={10} color={color(course?.status)}>
+                    <Badge
+                      variant="light"
+                      ml={10}
+                      color={color(course?.status)}
+                    >
                       {t(`${CourseStatus[course?.status]}`)}
                     </Badge>
                   </>
@@ -185,7 +173,7 @@ const CourseCardHorizontal = ({
               </Group>
               {(course.userStatus === CourseUserStatus.Author ||
                 course.userStatus === CourseUserStatus.Teacher ||
-                (auth?.auth && auth.auth.role <= UserRole.Admin)) && (
+                (auth?.auth && Number(auth.auth.role) <= UserRole.Admin)) && (
                 <Menu
                   shadow="md"
                   width={200}
@@ -194,14 +182,14 @@ const CourseCardHorizontal = ({
                   position="right"
                 >
                   <Menu.Target>
-                    <Button sx={{ zIndex: 50 }} variant="subtle" px={4}>
+                    <Button style={{ zIndex: 50 }} variant="subtle" px={4}>
                       <IconDotsVertical />
                     </Button>
                   </Menu.Target>
                   <Menu.Dropdown>
                     <Menu.Label>{t('manage')}</Menu.Label>
                     <Menu.Item
-                      icon={<IconSettings size={14} />}
+                      leftSection={<IconSettings size={14} />}
                       component={Link}
                       to={RoutePath.manageCourse.manage(course.slug).route}
                       rightSection={<IconChevronRight size={12} stroke={1.5} />}
@@ -209,7 +197,7 @@ const CourseCardHorizontal = ({
                       {t('statistics')}
                     </Menu.Item>
                     <Menu.Item
-                      icon={<IconGraph size={14} />}
+                      leftSection={<IconGraph size={14} />}
                       component={Link}
                       to={RoutePath.manageCourse.lessonsStat(course.slug).route}
                       rightSection={<IconChevronRight size={12} stroke={1.5} />}
@@ -217,7 +205,7 @@ const CourseCardHorizontal = ({
                       {t('lesson_stats')}
                     </Menu.Item>
                     <Menu.Item
-                      icon={<IconUsers size={14} />}
+                      leftSection={<IconUsers size={14} />}
                       component={Link}
                       to={RoutePath.manageCourse.student(course.slug).route}
                       rightSection={<IconChevronRight size={12} stroke={1.5} />}
@@ -226,8 +214,8 @@ const CourseCardHorizontal = ({
                     </Menu.Item>
                     <Menu.Divider />
                     <Menu.Item
-                      color="red"
-                      icon={<IconTrash size={14} />}
+                      c="red"
+                      leftSection={<IconTrash size={14} />}
                       onClick={() => setDeleteModal()}
                     >
                       {t('delete')}
@@ -240,19 +228,19 @@ const CourseCardHorizontal = ({
               component={Link}
               to={RoutePath.courses.description(course.slug).route}
               size="lg"
-              weight="bold"
+              fw="bold"
             >
               {course.name}
             </Anchor>
 
-            <Group spacing={70}>
+            <Group gap={70}>
               {/* <Group>
                 {!matches ? (
                   <Box>
                     <IconClock />
                   </Box>
                 ) : (
-                  <Text color="dimmed">Duration:</Text>
+                  <Text c="dimmed">Duration:</Text>
                 )}
                 <Text color={"dimmed"}>
                   {" "}
@@ -261,13 +249,13 @@ const CourseCardHorizontal = ({
                     .format("H[h] mm[m] ss[s]")}
                 </Text>
               </Group> */}
-              <Group sx={{ justifyContent: 'center', alignItems: 'center' }}>
+              <Group style={{ justifyContent: 'center', alignItems: 'center' }}>
                 {!matches ? (
                   <IconCalendar />
                 ) : (
-                  <Text color="dimmed">{t('created_on')}</Text>
+                  <Text c="dimmed">{t('created_on')}</Text>
                 )}
-                <Text color={'dimmed'}>
+                <Text c={'dimmed'}>
                   {moment(course.createdOn).format(DATE_FORMAT)}
                 </Text>{' '}
                 <Badge
@@ -277,6 +265,7 @@ const CourseCardHorizontal = ({
                   to={'/groups/' + course.groupId}
                   style={{ maxWidth: '230px', cursor: 'pointer' }}
                   leftSection={<IconUsers size={14} />}
+                  variant="light"
                 >
                   {course.groupName}
                 </Badge>

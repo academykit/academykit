@@ -1,26 +1,7 @@
-import { Badge, Card, createStyles, Group, Image, Text } from '@mantine/core';
+import { Badge, Card, Group, Image, Text } from '@mantine/core';
+import classes from './styles/session.module.css';
 
 function SessionCard() {
-  const useStyles = createStyles((theme) => ({
-    BadgeWrapperLive: {
-      position: 'absolute',
-      top: 5,
-      color: 'red',
-    },
-    BadgeWrapperEnrolled: {
-      position: 'absolute',
-      top: 5,
-      left: '25%',
-      marginLeft: '5px',
-      [theme.fn.smallerThan('lg')]: {
-        marginLeft: '35px',
-      },
-      [theme.fn.smallerThan('sm')]: {
-        marginLeft: '30px',
-      },
-    },
-  }));
-  const { classes } = useStyles();
   return (
     <Card
       shadow="sm"
@@ -42,22 +23,22 @@ function SessionCard() {
 
       <Badge
         className={classes.BadgeWrapperEnrolled}
-        color="green"
+        c="green"
         variant="filled"
       >
         Enrolled
       </Badge>
 
-      <Text weight={500} size="lg" mt="md">
+      <Text fw={500} size="lg" mt="md">
         Ielts master class
       </Text>
 
-      <Group position="apart" mt="md" mb="xs">
-        <Text weight={500}>Duration: 1hr</Text>
-        <Text weight={500}>Starts in 1hr</Text>
+      <Group justify="space-between" mt="md" mb="xs">
+        <Text fw={500}>Duration: 1hr</Text>
+        <Text fw={500}>Starts in 1hr</Text>
       </Group>
 
-      <Text mt="xs" color="dimmed" size="sm">
+      <Text mt="xs" c="dimmed" size="sm">
         Balen name
       </Text>
     </Card>

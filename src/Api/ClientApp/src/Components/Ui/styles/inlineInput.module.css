@@ -1,0 +1,12 @@
+/* Check */
+.check {
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+/* Cross */
+.cross {
+  cursor: pointer;
+  margin-left: 10px;
+  line-height: 1.15;
+}

@@ -1,14 +1,15 @@
 import {
   Avatar,
   Container,
-  createStyles,
   Group,
   Paper,
   Text,
   TextInput,
 } from '@mantine/core';
-import React, { useState } from 'react';
+import cx from 'clsx';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import classes from './styles/payment.module.css';
 
 interface AccordionLabelProps {
   title: string;
@@ -16,27 +17,13 @@ interface AccordionLabelProps {
   description: string;
 }
 
-const useStyles = createStyles((theme) => ({
-  accordionLabel: {
-    display: 'flex',
-    // justifyContent: "space-around",
-  },
-  accordionBody: {
-    maxWidth: '300px',
-    cursor: 'pointer',
-  },
-  accordionActive: {
-    borderColor: theme.colors.brand[1],
-  },
-}));
-
 function AccordionLabel({ title, image, description }: AccordionLabelProps) {
   return (
-    <Group noWrap>
+    <Group wrap="nowrap">
       <Avatar src={image} radius="xl" size="lg" />
       <div>
         <Text>{title}</Text>
-        <Text size="sm" color="dimmed" weight={400}>
+        <Text size="sm" c="dimmed" fw={400}>
           {description}
         </Text>
       </div>
@@ -46,7 +33,6 @@ function AccordionLabel({ title, image, description }: AccordionLabelProps) {
 
 const Accordion = ({ items }: any) => {
   const [isActive, setIsActive] = useState(false);
-  const { classes, cx } = useStyles();
   const { t } = useTranslation();
   return (
     <div style={{ marginBottom: '20px' }}>
@@ -65,25 +51,25 @@ const Accordion = ({ items }: any) => {
         </div>
       </Paper>
       {isActive && (
-        <Container sx={{ marginTop: '10px' }}>
+        <Container style={{ marginTop: '10px' }}>
           <TextInput
             label={t('key')}
             withAsterisk
             placeholder={t('your_key') as string}
-            sx={{ marginBottom: '5px' }}
+            style={{ marginBottom: '5px' }}
           />
           <TextInput
             label={t('secret')}
             withAsterisk
             type="password"
             placeholder={t('secret_key') as string}
-            sx={{ marginBottom: '5px' }}
+            style={{ marginBottom: '5px' }}
           />
           <TextInput
             label={t('verify_url')}
             withAsterisk
             placeholder={t('your_verification_url') as string}
-            sx={{ marginBottom: '5px' }}
+            style={{ marginBottom: '5px' }}
           />
         </Container>
       )}

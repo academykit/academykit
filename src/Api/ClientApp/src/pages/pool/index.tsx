@@ -1,33 +1,35 @@
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Box,
   Button,
   Container,
+  Drawer,
   Group,
-  Title,
   Loader,
   SimpleGrid,
-  Drawer,
   Space,
+  Title,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import errorType from '@utils/services/axiosError';
 import { useAddPool, usePools } from '@utils/services/poolService';
-import PoolCard from './Components/PoolCard';
-import * as Yup from 'yup';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import * as Yup from 'yup';
+import PoolCard from './Components/PoolCard';
 
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t('pool_name_required') as string),
+    name: Yup.string()
+      .max(100, t('name_length_validation') as string)
+      .required(t('pool_name_required') as string),
   });
 };
 
@@ -61,7 +63,7 @@ const MCQPool = ({
   return (
     <Container fluid>
       <Group
-        sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+        style={{ justifyContent: 'space-between', alignItems: 'center' }}
         mb={15}
       >
         <Title>{t('mcq_pools')}</Title>
@@ -72,7 +74,7 @@ const MCQPool = ({
         opened={opened}
         onClose={close}
         title={t('create_pool')}
-        overlayProps={{ opacity: 0.5, blur: 4 }}
+        overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
       >
         <Box>
           <form onSubmit={form.onSubmit(onSubmitForm)}>
@@ -84,7 +86,7 @@ const MCQPool = ({
               {...form.getInputProps('name')}
             />
             <Space h="md" />
-            <Group position="right">
+            <Group justify="flex-end">
               <Button type="submit" loading={isLoading}>
                 {t('create')}
               </Button>
@@ -98,17 +100,7 @@ const MCQPool = ({
       <Box mt={20}>
         {pools.isSuccess && (
           <>
-            <SimpleGrid
-              cols={1}
-              spacing={10}
-              breakpoints={[
-                { minWidth: 'sx', cols: 1 },
-                { minWidth: 'sm', cols: 2 },
-                { minWidth: 'md', cols: 3 },
-                { minWidth: 1280, cols: 3 },
-                { minWidth: 1780, cols: 4 },
-              ]}
-            >
+            <SimpleGrid spacing={10} cols={{ sx: 1, sm: 2, md: 3, lg: 4 }}>
               {pools.data.items.length >= 1 &&
                 pools.data?.items.map((x) => (
                   <PoolCard search={searchParams} pool={x} key={x.id} />

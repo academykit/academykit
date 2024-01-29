@@ -1,0 +1,15 @@
+/* AccordionLabel */
+.accordionLabel {
+  display: flex;
+}
+
+/* AccordionBody */
+.accordionBody {
+  max-width: 300px;
+  cursor: pointer;
+}
+
+/* AccordionActive */
+.accordionActive {
+  border-color: var(--mantine-color-brand-1);
+}

@@ -10,7 +10,6 @@ import {
   Flex,
   Group,
   Loader,
-  MultiSelect,
   Radio,
   Select,
   Text,
@@ -18,6 +17,7 @@ import {
 } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+import TagMultiSelectCreatable from '@pages/course/component/TagMultiSelectCreatable';
 import { IconPlus, IconTrash } from '@tabler/icons';
 import { QuestionType } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
@@ -26,7 +26,7 @@ import {
   IAddQuestionType,
   useAddQuestion,
 } from '@utils/services/questionService';
-import { useAddTag, useTags } from '@utils/services/tagService';
+import { ITag, useAddTag, useTags } from '@utils/services/tagService';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -123,7 +123,7 @@ const Create = () => {
 
   const { id } = useParams();
   const addQuestion = useAddQuestion(id as string, '');
-  const { mutate, data: addTagData, isSuccess } = useAddTag();
+  const { mutateAsync, data: addTagData, isSuccess } = useAddTag();
   const [isReset, setIsReset] = useState(false);
 
   const onSubmit = async (data: IAddQuestionType) => {
@@ -154,9 +154,10 @@ const Create = () => {
     }
   };
   const [searchParams] = useState('');
-  const [tagsList, setTagsList] = useState<{ value: string; label: string }[]>(
-    []
-  );
+  // const [tagsList, setTagsList] = useState<{ value: string; label: string }[]>(
+  //   []
+  // );
+  const [tagsLists, setTagsLists] = useState<ITag[]>([]);
   const tags = useTags(
     queryStringGenerator({
       search: searchParams,
@@ -166,16 +167,18 @@ const Create = () => {
 
   useEffect(() => {
     if (tags.isSuccess && tags.isFetched) {
-      setTagsList(tags.data.items.map((x) => ({ label: x.name, value: x.id })));
+      // setTagsList(tags.data.items.map((x) => ({ label: x.name, value: x.id })));
+      setTagsLists(tags.data.items.map((x) => x));
     }
   }, [tags.isSuccess]);
 
   useEffect(() => {
     if (isSuccess) {
-      setTagsList([
-        ...tagsList,
-        { label: addTagData.data.name, value: addTagData.data.id },
-      ]);
+      // setTagsList([
+      //   ...tagsList,
+      //   { label: addTagData.data.name, value: addTagData.data.id },
+      // ]);
+      setTagsLists([...tagsLists, addTagData.data]);
       form.setFieldValue('tags', [...form.values.tags, addTagData?.data?.id]);
     }
   }, [isSuccess]);
@@ -223,21 +226,21 @@ const Create = () => {
             </Box>
 
             {tags.isSuccess ? (
-              <MultiSelect
-                mt={15}
-                searchable
-                creatable
-                sx={{ maxWidth: '500px' }}
-                data={tagsList}
-                {...form.getInputProps('tags')}
-                getCreateLabel={(query) => `+ ${t('create')} ${query}`}
-                onCreate={(query) => {
-                  mutate(query);
-                  return null;
-                }}
-                size={'lg'}
-                label={t('tags')}
-                placeholder={t('select_tags') as string}
+              // <MultiSelect
+              //   mt={15}
+              //   searchable
+              //   style={{ maxWidth: '500px' }}
+              //   data={tagsList}
+              //   {...form.getInputProps('tags')}
+              //   size={'lg'}
+              //   label={t('tags')}
+              //   placeholder={t('select_tags') as string}
+              // />
+              <TagMultiSelectCreatable
+                data={tagsLists ?? []}
+                mutateAsync={mutateAsync}
+                form={form}
+                size="lg"
               />
             ) : (
               <Loader />

@@ -52,7 +52,7 @@ const SearchBar: React.FC<React.PropsWithChildren<Props>> = ({
           }
           placeholder={placeholder}
           {...form.getInputProps('search')}
-          icon={<IconSearch size={14} stroke={1.5} />}
+          leftSection={<IconSearch size={14} stroke={1.5} />}
         />
       </form>
     </div>

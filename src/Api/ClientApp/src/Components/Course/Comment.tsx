@@ -1,19 +1,19 @@
+import DeleteModal from '@components/Ui/DeleteModal';
 import useAuth from '@hooks/useAuth';
 import {
-  createStyles,
-  Text,
   Avatar,
-  Group,
-  Paper,
   Box,
   Button,
-  Transition,
+  Group,
+  Paper,
+  Text,
   Textarea,
+  Transition,
 } from '@mantine/core';
-import { UserRole } from '@utils/enums';
 import { useForm } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
+import { UserRole } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import {
   IComment,
@@ -22,39 +22,10 @@ import {
 } from '@utils/services/commentService';
 import { IUser } from '@utils/services/types';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import CommentReplies from './CommentReplies';
-import DeleteModal from '@components/Ui/DeleteModal';
-import { useTranslation } from 'react-i18next';
-
-const useStyles = createStyles((theme) => ({
-  body: {
-    paddingLeft: 54,
-    paddingTop: theme.spacing.sm,
-    fontSize: theme.fontSizes.sm,
-  },
-
-  content: {
-    '& > p:last-child': {
-      marginBottom: 0,
-    },
-  },
-  editor: {
-    backgroundColor:
-      theme.colorScheme === 'dark'
-        ? theme.colors.dark[1]
-        : theme.colors.gray[2],
-  },
-
-  replies: {
-    backgroundColor:
-      theme.colorScheme === 'dark'
-        ? theme.colors.dark[3]
-        : theme.colors.gray[1],
-
-    borderRadius: theme.radius.md,
-  },
-}));
+import classes from './styles/comment.module.css';
 
 const Comment = ({ comment }: { comment: IComment }) => {
   const auth = useAuth();
@@ -67,7 +38,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
       }
     } else {
       const role = auth?.auth?.role ?? UserRole.Trainee;
-      if (role < UserRole.Trainee) {
+      if (Number(role) < UserRole.Trainee) {
         return true;
       } else {
         if (auth?.auth?.id === user.id) return true;
@@ -82,7 +53,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
 
   const deleteComment = useDeleteComment(id as string);
   const editComment = useEditComment(id as string, comment.id);
-  const { classes } = useStyles();
+
   const onDelete = async () => {
     try {
       await deleteComment.mutateAsync({
@@ -163,7 +134,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
         />
         <div>
           <Text size="sm">{comment.user.fullName}</Text>
-          <Text size="xs" color="dimmed">
+          <Text size="xs" c="dimmed">
             {moment(comment.createdOn + 'Z').fromNow()}
           </Text>
         </div>
@@ -173,7 +144,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
           <Textarea
             mt={20}
             {...form.getInputProps('content')}
-            sx={{ minHeight: edit && '5rem' }}
+            style={{ minHeight: edit && '5rem' }}
             styles={{
               root: {
                 border: 'none',
@@ -186,7 +157,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
               size="sm"
               type="submit"
               disabled={!form.values.content.trim()}
-              sx={{ '&[data-disabled]': { pointerEvents: 'all' } }}
+              style={{ '&[data-disabled]': { pointerEvents: 'all' } }}
             >
               {t('save')}
             </Button>
@@ -207,15 +178,15 @@ const Comment = ({ comment }: { comment: IComment }) => {
           {comment?.content}
         </Text>
       )}
-      <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-        <Button variant="subtle" compact mx={4} onClick={() => setToggle()}>
+      <Box style={{ display: 'flex', justifyContent: 'end' }}>
+        <Button variant="subtle" mx={4} onClick={() => setToggle()}>
           {toggle
             ? t('hide_reply')
             : `${t('show_reply')}(${comment.repliesCount}) `}
         </Button>
 
         {!edit && showEdit(comment.user, true) && (
-          <Button variant="subtle" mx={4} compact onClick={() => setEdit()}>
+          <Button variant="subtle" mx={4} onClick={() => setEdit()}>
             {t('edit')}
           </Button>
         )}
@@ -224,8 +195,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
             loading={deleteComment.isLoading}
             variant="subtle"
             mx={4}
-            compact
-            color="red"
+            c="red"
             onClick={() => setDeleteConfirmation()}
           >
             {t('delete')}

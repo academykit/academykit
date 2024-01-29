@@ -40,7 +40,8 @@ namespace Lingtren.Api.Controllers
             IValidator<UserRequestModel> validator,
             IGeneralSettingService generalSettingService,
             IValidator<ChangeEmailRequestModel> changeEmailValidator,
-            IStringLocalizer<ExceptionLocalizer> localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
         {
             this.fileServerService = fileServerService;
             this.logger = logger;
@@ -58,7 +59,8 @@ namespace Lingtren.Api.Controllers
         /// <returns>The paginated search result.</returns>
         [HttpGet]
         public async Task<SearchResult<UserResponseModel>> SearchAsync(
-            [FromQuery] UserSearchCriteria searchCriteria)
+            [FromQuery] UserSearchCriteria searchCriteria
+        )
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
 
@@ -90,14 +92,17 @@ namespace Lingtren.Api.Controllers
 
             if (
                 (model.Role == UserRole.Admin || model.Role == UserRole.SuperAdmin)
-                && CurrentUser.Role != UserRole.SuperAdmin)
+                && CurrentUser.Role != UserRole.SuperAdmin
+            )
             {
                 logger.LogWarning(
                     "{CurrentUser.Role} cannot create user with role {model.Role}.",
                     CurrentUser.Role,
-                    model.Role);
+                    model.Role
+                );
                 throw new ForbiddenException(
-                    $"{CurrentUser.Role} cannot create user with role {model.Role}.");
+                    $"{CurrentUser.Role} cannot create user with role {model.Role}."
+                );
             }
 
             var currentTimeStamp = DateTime.UtcNow;
@@ -143,7 +148,9 @@ namespace Lingtren.Api.Controllers
                         password,
                         company.CompanyName,
                         company.CompanyContactNumber,
-                        null));
+                        null
+                    )
+            );
             return new UserResponseModel(response);
         }
 
@@ -167,7 +174,8 @@ namespace Lingtren.Api.Controllers
         [HttpGet("{userId}/{courseId}")]
         public async Task<List<UserResponseModel>> GetUsersForCourseEnrollment(
             Guid userId,
-            string courseId)
+            string courseId
+        )
         {
             return await userService
                 .GetUserForCourseEnrollment(userId, courseId)
@@ -181,7 +189,8 @@ namespace Lingtren.Api.Controllers
         /// <returns>List of trainer.</returns>
         [HttpGet("trainer")]
         public async Task<IList<TrainerResponseModel>> Trainer(
-            [FromQuery] TeacherSearchCriteria criteria) => await userService.GetTrainerAsync(CurrentUser.Id, criteria).ConfigureAwait(false);
+            [FromQuery] TeacherSearchCriteria criteria
+        ) => await userService.GetTrainerAsync(CurrentUser.Id, criteria).ConfigureAwait(false);
 
         /// <summary>
         /// import bulk user api.
@@ -211,19 +220,22 @@ namespace Lingtren.Api.Controllers
             if (
                 CurrentUser.Id != userId
                 && CurrentUser.Role != UserRole.SuperAdmin
-                && CurrentUser.Role != UserRole.Admin)
+                && CurrentUser.Role != UserRole.Admin
+            )
             {
                 logger.LogWarning(
                     "User with Id : {userId} and role :{role} is not allowed to update user.",
                     CurrentUser.Id,
-                    CurrentUser.Role.ToString());
+                    CurrentUser.Role.ToString()
+                );
                 throw new ForbiddenException(localizer.GetString("OnlySameUserOrAdmin"));
             }
 
             await validator
                 .ValidateAsync(
                     model,
-                    options => options.IncludeRuleSets("Update").ThrowOnFailures())
+                    options => options.IncludeRuleSets("Update").ThrowOnFailures()
+                )
                 .ConfigureAwait(false);
             var existing = await userService
                 .GetAsync(userId, CurrentUser.Id, includeAllProperties: false)
@@ -246,65 +258,21 @@ namespace Lingtren.Api.Controllers
             existing.FirstName = model.FirstName;
             existing.MiddleName = model.MiddleName;
             existing.LastName = model.LastName;
-            existing.Gender = model.Gender;
-            existing.BirthDateAD = model.BirthDateAD;
-            existing.BirthDateBS = model.BirthDateBS;
             existing.ImageUrl = model.ImageUrl;
-            existing.BloodGroup = model.BloodGroup;
-            existing.Nationality = model.Nationality;
-            existing.MaritalStatus = model.MaritalStatus;
             #endregion
             #region Official Info
             existing.MemberId = model.MemberId;
             existing.DepartmentId = model.DepartmentId;
             existing.Profession = model.Profession;
-            existing.JoinedDateBS = model.JoinedDateBS;
-            existing.JoinedDateAD = model.JoinedDateAD;
-            existing.EmploymentType = model.EmploymentType;
-            existing.BranchId = model.BranchId;
             #endregion
             #region Address
             #region Permanent
-            existing.PermanentCountry = model.PermanentCountry;
-            existing.PermanentState = model.PermanentState;
-            existing.PermanentDistrict = model.PermanentDistrict;
-            existing.PermanentCity = model.PermanentCity;
-            existing.PermanentMunicipality = model.PermanentMunicipality;
-            existing.PermanentWard = model.PermanentWard;
             existing.Address = model.Address; // permanent address of the Employee
-            #endregion
-            #region Current
-            existing.AddressIsSame = model.AddressIsSame;
-            existing.CurrentCountry = model.CurrentCountry;
-            existing.CurrentState = model.CurrentState;
-            existing.CurrentDistrict = model.CurrentDistrict;
-            existing.CurrentCity = model.CurrentCity;
-            existing.CurrentMunicipality = model.CurrentMunicipality;
-            existing.CurrentWard = model.CurrentWard;
-            existing.CurrentAddress = model.CurrentAddress;
             #endregion
             #endregion
             #region Contact Details
             existing.MobileNumber = model.MobileNumber; // primary mobile number
             existing.Email = model.Email; // official email
-            existing.PersonalEmail = model.PersonalEmail;
-            existing.MobileNumberSecondary = model.MobileNumberSecondary;
-            #endregion
-            #region Identification Details
-            existing.IdentityType = model.IdentityType;
-            existing.IdentityNumber = model.IdentityNumber;
-            existing.IdentityIssuedOn = model.IdentityIssuedOn;
-            existing.IdentityIssuedBy = model.IdentityIssuedBy;
-            #endregion
-            #region Family Details
-            existing.FatherName = model.FatherName;
-            existing.MotherName = model.MotherName;
-            existing.SpouseName = model.SpouseName;
-            existing.GrandFatherName = model.GrandFatherName;
-            existing.MemberPhone = model.MemberPhone;
-            existing.FamilyAddressIsSame = model.FamilyAddressIsSame;
-            existing.MemberPermanentAddress = model.MemberPermanentAddress;
-            existing.MemberCurrentAddress = model.MemberCurrentAddress;
             #endregion
             existing.Bio = model.Bio;
             existing.PublicUrls = model.PublicUrls;
@@ -315,7 +283,8 @@ namespace Lingtren.Api.Controllers
             {
                 if (
                     (model.Role == UserRole.Admin || model.Role == UserRole.SuperAdmin)
-                    && existing.Id != CurrentUser.Id)
+                    && existing.Id != CurrentUser.Id
+                )
                 {
                     IsSuperAdmin(CurrentUser.Role);
                 }
@@ -345,10 +314,12 @@ namespace Lingtren.Api.Controllers
             {
                 if (
                     imageKey.ToLower().Trim().Contains("/public/")
-                    && imageKey.IndexOf("/standalone/") != -1)
+                    && imageKey.IndexOf("/standalone/") != -1
+                )
                 {
                     imageKey = imageKey.Substring(
-                        imageKey.IndexOf("/standalone/") + "/standalone/".Length);
+                        imageKey.IndexOf("/standalone/") + "/standalone/".Length
+                    );
                 }
 
                 await fileServerService.RemoveFileAsync(imageKey).ConfigureAwait(false);
@@ -361,7 +332,8 @@ namespace Lingtren.Api.Controllers
             {
                 BackgroundJob.Enqueue<IHangfireJobService>(
                     job =>
-                        job.AccountUpdatedMailAsync(existing.FullName, model.Email, oldEmail, null));
+                        job.AccountUpdatedMailAsync(existing.FullName, model.Email, oldEmail, null)
+                );
                 BackgroundJob.Enqueue<IHangfireJobService>(
                     job =>
                         job.SendUserCreatedPasswordEmail(
@@ -370,7 +342,9 @@ namespace Lingtren.Api.Controllers
                             password,
                             company.CompanyName,
                             company.CompanyContactNumber,
-                            null));
+                            null
+                        )
+                );
             }
 
             return new UserResponseModel(savedEntity);
@@ -383,7 +357,8 @@ namespace Lingtren.Api.Controllers
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpPut("changeEmailRequest")]
         public async Task<ChangeEmailResponseModel> ChangeEmailRequestAsync(
-            ChangeEmailRequestModel model)
+            ChangeEmailRequestModel model
+        )
         {
             await changeEmailValidator
                 .ValidateAsync(model, options => options.ThrowOnFailures())
@@ -403,7 +378,8 @@ namespace Lingtren.Api.Controllers
         {
             await userService.ResendEmailAsync(userId, CurrentUser.Id).ConfigureAwait(false);
             return Ok(
-                new CommonResponseModel { Success = true, Message = "Email resend successfully." });
+                new CommonResponseModel { Success = true, Message = "Email resend successfully." }
+            );
         }
 
         /// <summary>
@@ -413,7 +389,8 @@ namespace Lingtren.Api.Controllers
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpPut("resendChangeEmailRequest")]
         public async Task<ChangeEmailResponseModel> ResendChangeEmailRequestAsync(
-            ResendChangeEmailRequestModel model)
+            ResendChangeEmailRequestModel model
+        )
         {
             CommonHelper.ValidateArgumentNotNullOrEmpty(model.Token, nameof(model.Token));
             return await userService
@@ -437,7 +414,8 @@ namespace Lingtren.Api.Controllers
                 {
                     Success = true,
                     Message = localizer.GetString("EmailChanged"),
-                });
+                }
+            );
         }
 
         /// <summary>
@@ -459,7 +437,8 @@ namespace Lingtren.Api.Controllers
                     MobileNumber = mobileNumber,
                     Role = "Trainer",
                     Designation = "Programmer",
-                });
+                }
+            );
             using var memoryStream = new MemoryStream();
             using var steamWriter = new StreamWriter(memoryStream);
             using (var csv = new CsvWriter(steamWriter, CultureInfo.InvariantCulture))

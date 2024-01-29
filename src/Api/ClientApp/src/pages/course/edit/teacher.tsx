@@ -1,24 +1,31 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import UserShortProfile from '@components/UserShortProfile';
+import withSearchPagination, {
+  IWithSearchPagination,
+} from '@hoc/useSearchPagination';
 import useAuth from '@hooks/useAuth';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Box,
   Button,
-  Container,
-  Group,
-  Title,
-  Transition,
   Card,
-  Text,
-  Select,
+  Container,
   Flex,
+  Group,
   Loader,
   ScrollArea,
+  Select,
+  Text,
+  Title,
+  Transition,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconTrash } from '@tabler/icons';
+import { TrainingTypeEnum } from '@utils/enums';
+import queryStringGenerator from '@utils/queryStringGenerator';
+import { useGetTrainers } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import {
   ICreateCourseTeacher,
@@ -30,13 +37,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import { useGetTrainers } from '@utils/services/adminService';
-import { TrainingTypeEnum } from '@utils/enums';
-import withSearchPagination, {
-  IWithSearchPagination,
-} from '@hoc/useSearchPagination';
-import queryStringGenerator from '@utils/queryStringGenerator';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -79,7 +79,7 @@ const TeacherCards = ({
       />
 
       <Card radius={'lg'} mb={10}>
-        <Group py={5} position="apart">
+        <Group py={5} justify="space-between">
           {user && (
             <UserShortProfile user={user} size={'md'} page="Trainings" />
           )}
@@ -151,7 +151,7 @@ const Teacher = ({
   );
   return (
     <Container fluid>
-      <Group sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+      <Group style={{ justifyContent: 'space-between', alignItems: 'center' }}>
         <Title>{t('trainers')}</Title>
         <Button onClick={() => toggleAddForm()}>
           {!showAddForm ? t('add_trainer') : t('cancel')}
@@ -166,12 +166,14 @@ const Teacher = ({
         {() => (
           <Box mt={10}>
             <form onSubmit={form.onSubmit(onSubmitForm)}>
-              <Group sx={{ alignItems: 'start' }}>
+              <Group style={{ alignItems: 'start' }}>
                 <Select
                   clearable
                   placeholder={t('enter_email_trainer') as string}
                   searchable
-                  nothingFound={isLoading ? 'Loading...' : 'No Trainers Found!'}
+                  nothingFoundMessage={
+                    isLoading ? 'Loading...' : 'No Trainers Found!'
+                  }
                   data={trainers?.map((e) => e.email) ?? []}
                   onSearchChange={setSearch}
                   searchValue={search}

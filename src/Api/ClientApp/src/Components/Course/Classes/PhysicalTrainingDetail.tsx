@@ -1,5 +1,5 @@
 import useAuth from '@hooks/useAuth';
-import { Button, Group, Title, Text } from '@mantine/core';
+import { Button, Group, Text, Title } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { DATE_FORMAT } from '@utils/constants';
 import { UserRole } from '@utils/enums';
@@ -51,7 +51,7 @@ const PhysicalTrainingDetail = ({
   };
 
   return (
-    <Group sx={{ flexDirection: 'column' }}>
+    <Group style={{ flexDirection: 'column' }}>
       <Title>{name}</Title>
       <Text>
         {t('start_date')}: {moment(startDate).format(DATE_FORMAT)}

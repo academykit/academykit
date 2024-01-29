@@ -1,4 +1,4 @@
-type BrandingThemeType = [
+export type BrandingThemeType = [
   string,
   string,
   string,

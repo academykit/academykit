@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import LessonVideoUpload from '@components/Ui/LessonVideoUpload';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Box,
   Button,
@@ -20,12 +22,10 @@ import {
   useUpdateLesson,
 } from '@utils/services/courseService';
 import { ILessonLecture, ILessonRecording } from '@utils/services/types';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import { useTranslation } from 'react-i18next';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -131,9 +131,9 @@ const AddLecture = ({
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Paper withBorder p="md">
           <Grid align="center" justify={'space-around'}>
-            <Grid.Col span={12} lg={8}>
+            <Grid.Col span={{ base: 12, lg: 8 }}>
               <CustomTextFieldWithAutoFocus
-                sx={{ width: '100%' }}
+                style={{ width: '100%' }}
                 label={isRecordedVideo ? t('recording_name') : t('video_name')}
                 placeholder={
                   isRecordedVideo
@@ -145,7 +145,7 @@ const AddLecture = ({
                 styles={{ error: { position: 'absolute' } }}
               />
             </Grid.Col>
-            <Tooltip multiline label={t('mandatory_tooltip')} width={220}>
+            <Tooltip multiline label={t('mandatory_tooltip')} w={220}>
               <Grid.Col span={4}>
                 {!isRecordedVideo && (
                   <Switch
@@ -187,7 +187,7 @@ const AddLecture = ({
             />
           </Box>
 
-          <Group position="left" mt="md">
+          <Group mt="md">
             <Button
               type="submit"
               loading={lesson.isLoading || updateLesson.isLoading}

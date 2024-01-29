@@ -1,0 +1,7 @@
+.option > label {
+  cursor: pointer;
+}
+
+.active {
+  outline: 2px solid var(--mantine-color-answer-active);
+}

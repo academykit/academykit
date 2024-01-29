@@ -119,7 +119,7 @@ const GeneralSettings = () => {
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Container
           size={450}
-          sx={{
+          style={{
             marginLeft: '0px',
           }}
         >
@@ -159,13 +159,17 @@ const GeneralSettings = () => {
             {...form.getInputProps('companyContactNumber')}
           />
           <ColorInput
+            mt={10}
             value={color}
             onChange={handleColorChange}
             placeholder="Pick color"
             label="Branding color"
             // defaultValue="#0E99AC"
             rightSection={
-              <ActionIcon onClick={() => handleColorChange('#0E99AC')}>
+              <ActionIcon
+                variant="subtle"
+                onClick={() => handleColorChange('#0E99AC')}
+              >
                 <IconRefresh size="1rem" />
               </ActionIcon>
             }

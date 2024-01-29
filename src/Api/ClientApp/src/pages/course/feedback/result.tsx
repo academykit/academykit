@@ -3,7 +3,6 @@ import {
   Button,
   Card,
   Container,
-  createStyles,
   Group,
   Loader,
   Rating,
@@ -11,24 +10,13 @@ import {
 } from '@mantine/core';
 import { FeedbackType } from '@utils/enums';
 import { useReAuth } from '@utils/services/authService';
-
 import { useGetUserFeedback } from '@utils/services/feedbackService';
+import cx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-
-const useStyle = createStyles((theme) => ({
-  option: {
-    '>label': {
-      cursor: 'pointer',
-    },
-  },
-  active: {
-    outline: `2px solid ${theme.colors[theme.primaryColor][1]}`,
-  },
-}));
+import classes from '../styles/radioType.module.css';
 
 const FeedbackResult = () => {
-  const { classes, cx } = useStyle();
   const { id, studentId } = useParams();
   const navigate = useNavigate();
   const auth = useReAuth();

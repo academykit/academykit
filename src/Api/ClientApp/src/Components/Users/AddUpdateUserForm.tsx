@@ -1,38 +1,19 @@
-import { useEffect } from 'react';
-import {
-  Group,
-  TextInput,
-  Switch,
-  Select,
-  Button,
-  Grid,
-  createStyles,
-} from '@mantine/core';
-import { UserRole, UserStatus } from '@utils/enums';
-import { useDepartmentSetting } from '@utils/services/adminService';
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import { Button, Grid, Group, Select, Switch, TextInput } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import * as Yup from 'yup';
+import { IconInfoCircle } from '@tabler/icons';
+import { PHONE_VALIDATION } from '@utils/constants';
+import { UserRole, UserStatus } from '@utils/enums';
+import queryStringGenerator from '@utils/queryStringGenerator';
+import { useDepartmentSetting } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import { IUserProfile } from '@utils/services/types';
-import queryStringGenerator from '@utils/queryStringGenerator';
-import { PHONE_VALIDATION } from '@utils/constants';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import { IconInfoCircle } from '@tabler/icons';
-
-const useStyles = createStyles(() => ({
-  departmentInfo: {
-    fontSize: '12px',
-    position: 'absolute',
-    marginTop: '5px',
-    display: 'flex',
-    alignItems: 'center',
-    columnGap: '5px',
-    lineHeight: '1px',
-  },
-}));
+import * as Yup from 'yup';
+import classes from './styles/userForm.module.css';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -81,7 +62,6 @@ const AddUpdateUserForm = ({
   item?: IUserProfile;
 }) => {
   const { t } = useTranslation();
-  const { classes } = useStyles();
   const form = useForm<IUserProfile>({
     initialValues: item,
     validate: yupResolver(schema()),
@@ -148,7 +128,7 @@ const AddUpdateUserForm = ({
   return (
     <form onSubmit={form.onSubmit(onSubmitForm)}>
       <Grid align={'center'}>
-        <Grid.Col xs={6} lg={4} mt={5}>
+        <Grid.Col span={{ xs: 6, lg: 4 }} mt={7}>
           <CustomTextFieldWithAutoFocus
             label={t('ID')}
             placeholder={t('user_id') as string}
@@ -156,7 +136,7 @@ const AddUpdateUserForm = ({
             name="memberId"
           />
         </Grid.Col>
-        <Grid.Col xs={6} lg={4}>
+        <Grid.Col span={{ xs: 6, lg: 4 }}>
           <TextInput
             styles={{ error: { position: 'absolute' } }}
             withAsterisk
@@ -166,14 +146,14 @@ const AddUpdateUserForm = ({
             {...form.getInputProps('firstName')}
           />
         </Grid.Col>
-        <Grid.Col xs={6} lg={4} mt={5}>
+        <Grid.Col span={{ xs: 6, lg: 4 }} mt={5}>
           <TextInput
             label={t('middlename')}
             placeholder={t('user_middlename') as string}
             {...form.getInputProps('middleName')}
           />
         </Grid.Col>
-        <Grid.Col xs={6} lg={4}>
+        <Grid.Col span={{ xs: 6, lg: 4 }}>
           <TextInput
             styles={{ error: { position: 'absolute' } }}
             withAsterisk
@@ -182,7 +162,7 @@ const AddUpdateUserForm = ({
             {...form.getInputProps('lastName')}
           />
         </Grid.Col>
-        <Grid.Col xs={6} lg={4}>
+        <Grid.Col span={{ xs: 6, lg: 4 }}>
           <TextInput
             styles={{ error: { position: 'absolute' } }}
             withAsterisk
@@ -192,7 +172,7 @@ const AddUpdateUserForm = ({
             {...form.getInputProps('email')}
           />
         </Grid.Col>
-        <Grid.Col xs={6} lg={4} mt={5}>
+        <Grid.Col span={{ xs: 6, lg: 4 }} mt={5}>
           <TextInput
             styles={{ error: { position: 'absolute' } }}
             label={t('mobilenumber')}
@@ -200,7 +180,7 @@ const AddUpdateUserForm = ({
             {...form.getInputProps('mobileNumber')}
           />
         </Grid.Col>
-        <Grid.Col xs={6} lg={4} mt={5}>
+        <Grid.Col span={{ xs: 6, lg: 4 }} mt={5}>
           <TextInput
             label={t('profession')}
             placeholder={t('user_profession') as string}
@@ -208,7 +188,7 @@ const AddUpdateUserForm = ({
           />
         </Grid.Col>
 
-        <Grid.Col xs={6} lg={4}>
+        <Grid.Col span={{ xs: 6, lg: 4 }}>
           <Select
             withAsterisk
             error={t('user_role_pick')}
@@ -228,12 +208,12 @@ const AddUpdateUserForm = ({
             {...form.getInputProps('role')}
           />
         </Grid.Col>
-        <Grid.Col xs={6} lg={4} mt={5}>
+        <Grid.Col span={{ xs: 6, lg: 4 }} mt={5}>
           <Select
             label={t('department')}
             placeholder={t('pick_department') as string}
             searchable
-            nothingFound={t('no_department')}
+            nothingFoundMessage={t('no_department')}
             data={
               department
                 ? department.items.map((x) => ({
@@ -253,7 +233,7 @@ const AddUpdateUserForm = ({
         </Grid.Col>
 
         {isEditing && item?.status !== UserStatus.Pending && (
-          <Grid.Col xs={6} lg={4}>
+          <Grid.Col span={{ xs: 6, lg: 4 }}>
             <Switch
               label={t('user_status')}
               {...form.getInputProps('isActive', { type: 'checkbox' })}
@@ -262,7 +242,7 @@ const AddUpdateUserForm = ({
         )}
       </Grid>
 
-      <Group position="right" mt="md">
+      <Group justify="flex-end" mt="md">
         <Button type="submit" loading={apiHooks.isLoading}>
           {t('submit')}
         </Button>

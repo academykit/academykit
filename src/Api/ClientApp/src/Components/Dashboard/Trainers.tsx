@@ -4,33 +4,33 @@ import {
   Paper,
   SimpleGrid,
   Text,
-  useMantineTheme,
+  useMantineColorScheme,
 } from '@mantine/core';
 import { IconActivity, IconCertificate, IconFileCheck } from '@tabler/icons';
 import {
   DashboardCourses,
   DashboardStats,
 } from '@utils/services/dashboardService';
+import { useTranslation } from 'react-i18next';
 import { StatsCard } from './StatsCard';
 import TrainingCards from './TrainingCards';
-import { useTranslation } from 'react-i18next';
 
 const TrainerCardDual = ({ dashboard }: { dashboard: DashboardStats }) => {
   const { t } = useTranslation();
-  const theme = useMantineTheme();
+  const { colorScheme } = useMantineColorScheme();
 
   return (
     <Paper
       withBorder
       p="md"
       radius={'md'}
-      style={{ color: theme.colorScheme == 'dark' ? 'white' : 'black' }}
+      style={{ color: colorScheme == 'dark' ? 'white' : 'black' }}
     >
-      <Group position="left" noWrap>
+      <Group wrap="nowrap">
         <IconCertificate size={26} stroke={1.5} />
         <Text size="md">{t('my_trainings')}</Text>
       </Group>
-      <Group position="apart" noWrap mt={10}>
+      <Group justify="space-between" wrap="nowrap" mt={10}>
         <Flex>
           <IconActivity size={26} stroke={1.5} />
           <Text ml={5} size="md">
@@ -44,7 +44,7 @@ const TrainerCardDual = ({ dashboard }: { dashboard: DashboardStats }) => {
           </Text>
         </Flex>
       </Group>
-      <Group position="apart" w={'80%'} m="auto">
+      <Group justify="space-between" w={'80%'} m="auto">
         <Text>{dashboard.totalActiveTrainings}</Text>
         <Text>{dashboard.totalCompletedTrainings}</Text>
       </Group>
@@ -60,7 +60,7 @@ const Trainers = ({
   dashboardCourses: DashboardCourses[];
 }) => {
   const { t } = useTranslation();
-  const theme = useMantineTheme();
+  const { colorScheme } = useMantineColorScheme();
 
   const incomingData = [
     {
@@ -69,7 +69,7 @@ const Trainers = ({
       icon: 'groups',
       signLabel: t('group'),
       pluLabel: t('groups'),
-      color: theme.colorScheme == 'dark' ? 'white' : 'black',
+      color: colorScheme == 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalEnrolledCourses',
@@ -77,26 +77,19 @@ const Trainers = ({
       icon: 'enrollment',
       signLabel: t('enrollment'),
       pluLabel: t('enrollments'),
-      color: theme.colorScheme == 'dark' ? 'white' : 'black',
+      color: colorScheme == 'dark' ? 'white' : 'black',
     },
   ];
   return (
     <div>
-      <SimpleGrid
-        mb={20}
-        cols={4}
-        breakpoints={[
-          { maxWidth: 'md', cols: 2 },
-          { maxWidth: 'xs', cols: 1 },
-        ]}
-      >
+      <SimpleGrid mb={20} cols={{ xs: 1, md: 2, lg: 3 }}>
         {dashboard &&
           incomingData.map((x) => (
             <StatsCard key={x.key} data={x} dashboard={dashboard} />
           ))}
         <TrainerCardDual dashboard={dashboard} />
       </SimpleGrid>
-      <Text size={'xl'} weight="bold">
+      <Text size={'xl'} fw="bold">
         {t('my_training')}
       </Text>
       {dashboardCourses.length > 0 ? (
@@ -108,15 +101,8 @@ const Trainers = ({
       )}
 
       <SimpleGrid
-        cols={1}
         spacing={10}
-        breakpoints={[
-          { minWidth: 'sx', cols: 1 },
-          { minWidth: 'sm', cols: 2 },
-          { minWidth: 'md', cols: 3 },
-          { minWidth: 1280, cols: 3 },
-          { minWidth: 1780, cols: 4 },
-        ]}
+        cols={{ base: 1, sm: 2, md: 3, 1280: 3, 1780: 4 }}
       >
         {dashboardCourses.length > 0 &&
           dashboardCourses.map((x) => <TrainingCards key={x.id} data={x} />)}

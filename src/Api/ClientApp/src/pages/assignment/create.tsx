@@ -1,25 +1,25 @@
-import { useState, useEffect } from 'react';
 import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import { Box, Button } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
+import { LessonType } from '@utils/enums';
 import {
   IAssignmentQuestion,
   useAssignmentQuestion,
 } from '@utils/services/assignmentService';
-import AssignmentItem from './Component/AssignmentItem';
-import EditAssignment from './Component/EditAssignment';
+import { useQuestionReorder } from '@utils/services/courseService';
+import { useEffect, useState } from 'react';
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+} from 'react-beautiful-dnd';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  Draggable,
-  Droppable,
-  DragDropContext,
-  DropResult,
-} from 'react-beautiful-dnd';
-import { useQuestionReorder } from '@utils/services/courseService';
-import { LessonType } from '@utils/enums';
+import AssignmentItem from './Component/AssignmentItem';
+import EditAssignment from './Component/EditAssignment';
 
 const CreateAssignment = ({ searchParams }: IWithSearchPagination) => {
   const [isEditing, setIsEditing] = useState(false);

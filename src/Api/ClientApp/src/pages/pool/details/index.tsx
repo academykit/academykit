@@ -1,8 +1,9 @@
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Box,
   Button,
   Container,
-  createStyles,
   Flex,
   Paper,
   Text,
@@ -16,10 +17,6 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-
-const useStyle = createStyles({});
 
 const schema = () => {
   const { t } = useTranslation();
@@ -35,7 +32,6 @@ const MCQDetails = () => {
   const [edit, setEdit] = useState(false);
   const { t } = useTranslation();
 
-  const { theme } = useStyle();
   const form = useForm({
     initialValues: {
       name: '',
@@ -85,7 +81,7 @@ const MCQDetails = () => {
         {!edit ? (
           <Paper withBorder p={10} mt={10}>
             <Flex direction="column">
-              <Text size="lg" weight={'bold'}>
+              <Text size="lg" fw={'bold'}>
                 {t('pool_name')}{' '}
               </Text>
               <Text>{pool?.data?.name}</Text>
@@ -95,7 +91,6 @@ const MCQDetails = () => {
           <Paper mt={20} p={20} withBorder>
             <Box>
               <CustomTextFieldWithAutoFocus
-                sx={{ maxWidth: theme.breakpoints.xs }}
                 name="name"
                 label={t('pool_name')}
                 placeholder={t('enter_pool_name') as string}

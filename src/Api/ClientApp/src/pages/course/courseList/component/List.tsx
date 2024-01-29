@@ -24,7 +24,7 @@ const CourseList = ({
   }
   return (
     <Group
-      sx={{
+      style={{
         justifyContent: 'space-around',
       }}
     >

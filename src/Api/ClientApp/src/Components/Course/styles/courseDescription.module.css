@@ -1,0 +1,93 @@
+.wrapper {
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.inner {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+@media (max-width: 48em) {
+  .inner {
+    flex-direction: column-reverse;
+  }
+}
+
+.content {
+  width: 60%;
+  margin-right: 80px;
+}
+
+@media (max-width: 75em) {
+  .content {
+    width: 50%;
+  }
+
+  @media (max-width: 48em) {
+    .content {
+      width: 100%;
+    }
+  }
+}
+
+.title {
+  color: var(--mantine-color-title);
+  font-family: 'Greycliff CF', var(--mantine-font-family);
+  font-size: 42px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+@media (max-width: 36em) {
+  .title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 36em) {
+  .control {
+    flex: 1;
+  }
+}
+
+.aside {
+  width: 40%;
+}
+@media (max-width: 75em) {
+  .aside {
+    width: 50%;
+  }
+}
+
+@media (max-width: 48em) {
+  .aside {
+    width: 100%;
+  }
+}
+
+.highlight {
+  position: relative;
+  background-color: pink;
+  border-radius: var(--mantine-radius-sm);
+  padding: 4px 12px;
+}
+
+.CourseContentSmall {
+  display: none;
+}
+@media (max-width: 48em) {
+  .CourseContentSmall {
+    display: block;
+  }
+}
+
+.CourseContentLarge {
+  display: block;
+}
+@media (max-width: 48em) {
+  .CourseContentLarge {
+    display: none;
+  }
+}

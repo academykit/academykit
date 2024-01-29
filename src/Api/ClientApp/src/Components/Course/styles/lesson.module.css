@@ -1,0 +1,4 @@
+.paper:hover {
+  background-color: var(--mantine-color-paper-hover);
+  transform: scale(1.02);
+}

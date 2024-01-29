@@ -1,21 +1,21 @@
 import { UseFormReturnType } from '@mantine/form';
 
-import { RichTextEditor, Link } from '@mantine/tiptap';
+import { Box, Text } from '@mantine/core';
+import { Link, RichTextEditor } from '@mantine/tiptap';
+import Mathematics from '@tiptap-pro/extension-mathematics';
+import Color from '@tiptap/extension-color';
+import Highlight from '@tiptap/extension-highlight';
+import Placeholder from '@tiptap/extension-placeholder';
+import SubScript from '@tiptap/extension-subscript';
+import Superscript from '@tiptap/extension-superscript';
+import TextAlign from '@tiptap/extension-text-align';
+import TextStyle from '@tiptap/extension-text-style';
+import Underline from '@tiptap/extension-underline';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import Placeholder from '@tiptap/extension-placeholder';
-import Highlight from '@tiptap/extension-highlight';
-import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
-import Superscript from '@tiptap/extension-superscript';
-import SubScript from '@tiptap/extension-subscript';
-import { Box, Sx, Text } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
-import { useMemo } from 'react';
-import Mathematics from '@tiptap-pro/extension-mathematics';
 import 'katex/dist/katex.min.css';
-import Color from '@tiptap/extension-color';
-import TextStyle from '@tiptap/extension-text-style';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 // import { YoutubeVideoControl } from './Controls/YoutubeVideoControl';
 
 type IProps = {
@@ -26,7 +26,7 @@ type IProps = {
   placeholder?: string;
   value?: string;
   error?: string;
-  sx?: Sx | (Sx | undefined)[] | undefined;
+  sx?: any[] | undefined;
 };
 const TextEditor = ({
   formContext,
@@ -87,7 +87,7 @@ const TextEditor = ({
   return (
     <Box>
       {/* {label && <label>{t(label)}</label>} */}
-      <RichTextEditor editor={editor} sx={sx}>
+      <RichTextEditor editor={editor} style={sx}>
         <RichTextEditor.Toolbar sticky stickyOffset={60}>
           <RichTextEditor.ControlsGroup>
             <RichTextEditor.Bold />
@@ -149,7 +149,7 @@ const TextEditor = ({
         </RichTextEditor.Toolbar>
         <RichTextEditor.Content />
       </RichTextEditor>
-      <Text color="red" size={13} mt={5}>
+      <Text c="red" size={'md'} mt={5}>
         {form ? form.errors[label ?? 'description'] : error}
       </Text>
     </Box>

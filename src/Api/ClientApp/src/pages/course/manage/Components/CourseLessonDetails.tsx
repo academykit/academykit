@@ -1,4 +1,5 @@
 import UserShortProfile from '@components/UserShortProfile';
+import { Table } from '@mantine/core';
 import { LessonStatDetails } from '@utils/services/manageCourseService';
 import StudentLessonDetails from './StudentDetails';
 import LessonStatusColor from './StudentDetails/LessonStatusColor';
@@ -11,22 +12,22 @@ const CourseLessonDetails = ({
   courseId: string;
 }) => {
   return (
-    <tr key={element.lessonId}>
-      <td>
+    <Table.Tr key={element.lessonId}>
+      <Table.Td>
         <UserShortProfile user={element.user} size="sm" />
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         <LessonStatusColor status={element} />
-      </td>
+      </Table.Td>
 
-      <td>
+      <Table.Td>
         <StudentLessonDetails
           studentInfo={element}
           courseId={courseId as string}
           studentId={element.user.id}
         />
-      </td>
-    </tr>
+      </Table.Td>
+    </Table.Tr>
   );
 };
 

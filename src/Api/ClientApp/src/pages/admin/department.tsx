@@ -2,25 +2,24 @@ import DeleteModal from '@components/Ui/DeleteModal';
 import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   ActionIcon,
   Badge,
   Box,
   Button,
+  Drawer,
   Flex,
-  createStyles,
   Group,
-  Modal,
   Paper,
   Switch,
   Table,
   Text,
   TextInput,
   Title,
-  Transition,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
-import { useToggle } from '@mantine/hooks';
+import { useDisclosure } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconPencil, IconTrash } from '@tabler/icons';
 import {
@@ -31,11 +30,10 @@ import {
 } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import { IUser } from '@utils/services/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import * as Yup from 'yup';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+
 interface IDepartment<T> {
   id: string;
   name: string;
@@ -55,30 +53,24 @@ const Department = ({
   searchComponent,
   filterComponent,
 }: IWithSearchPagination) => {
-  const useStyles = createStyles((theme) => ({
-    paper: {
-      [theme.fn.smallerThan('md')]: {
-        width: '100%',
-      },
-      [theme.fn.smallerThan('lg')]: {
-        width: '100%',
-      },
-      width: '50%',
-      marginBottom: '20px',
-    },
-  }));
+  const { t } = useTranslation();
+  const [opened, { open, close }] = useDisclosure(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editItem, setEditItem] = useState<IDepartment<IUser>>();
+  const getDepartment = useDepartmentSetting(searchParams);
+  const postDepartment = usePostDepartmentSetting();
+  const updateDepartment = useUpdateDepartmentSetting();
+  const deleteDepartment = useDeleteDepartmentSetting();
+
+  const form = useForm({
+    initialValues: { name: '', isActive: true },
+    validate: yupResolver(schema()),
+  });
+  useFormErrorHooks(form);
+
   const Rows = ({ item }: { item: IDepartment<IUser> }) => {
     const [opened, setOpened] = useState(false);
-    const [editModal, setEditModal] = useState(false);
 
-    const form = useForm({
-      initialValues: {
-        dName: item.name,
-        isDepartmentActive: item.isActive,
-      },
-    });
-    const updateDepartment = useUpdateDepartmentSetting(item.id);
-    const deleteDepartment = useDeleteDepartmentSetting();
     const handleDelete = async () => {
       try {
         await deleteDepartment.mutateAsync(item.id);
@@ -93,77 +85,7 @@ const Department = ({
       }
     };
     return (
-      <tr key={item.id}>
-        <Modal
-          opened={editModal}
-          onClose={() => {
-            form.reset();
-            setEditModal(false);
-          }}
-        >
-          <Box>
-            <form
-              onSubmit={form.onSubmit(async (values) => {
-                try {
-                  await updateDepartment.mutateAsync({
-                    id: item.id,
-                    name: values.dName,
-                    isActive: values.isDepartmentActive,
-                  });
-
-                  showNotification({
-                    message: t('update_department_success'),
-                  });
-                } catch (error) {
-                  const err = errorType(error);
-
-                  showNotification({
-                    title: t('error'),
-                    message: err,
-                    color: 'red',
-                  });
-                }
-              })}
-            >
-              <CustomTextFieldWithAutoFocus
-                label={t('department_name')}
-                name="departmentName"
-                withAsterisk
-                placeholder={t('department_name_placeholder') as string}
-                {...form.getInputProps('dName')}
-                mb={10}
-              />
-              <Switch
-                mt={'lg'}
-                sx={{ input: { cursor: 'pointer' } }}
-                checked={form.values.isDepartmentActive}
-                label={t('department_enabled')}
-                labelPosition="left"
-                onChange={(e) => {
-                  form.setFieldValue(
-                    'isDepartmentActive',
-                    e.currentTarget.checked
-                  );
-                }}
-              />
-
-              <Group mt={40}>
-                <Button type="submit">{t('submit')}</Button>
-
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    form.reset();
-                    setEditModal(false);
-                  }}
-                >
-                  {t('cancel')}
-                </Button>
-              </Group>
-            </form>
-          </Box>
-        </Modal>
-
+      <Table.Tr key={item.id}>
         {opened && (
           <DeleteModal
             title={`${t('sure_to_delete')} "${item?.name}" ${t('department?')}`}
@@ -173,23 +95,34 @@ const Department = ({
           />
         )}
 
-        <td>
-          <Group spacing="sm">
-            <Text size="sm" weight={500}>
+        <Table.Td>
+          <Group gap={'sm'}>
+            <Text size="sm" fw={500}>
               {item?.name}
             </Text>
           </Group>
-        </td>
-        <td style={{ textAlign: 'center' }}>
+        </Table.Td>
+        <Table.Td style={{ textAlign: 'center' }}>
           {item?.isActive ? (
-            <Badge color={'green'}>{t('active')}</Badge>
+            <Badge variant="light" color={'green'}>
+              {t('active')}
+            </Badge>
           ) : (
-            <Badge color={'red'}>{t('inactive')}</Badge>
+            <Badge variant="light" color={'red'}>
+              {t('inactive')}
+            </Badge>
           )}
-        </td>
-        <td>
-          <Group spacing={0} position="center">
-            <ActionIcon onClick={() => setEditModal(true)}>
+        </Table.Td>
+        <Table.Td>
+          <Group gap={0} justify="center">
+            <ActionIcon
+              onClick={() => {
+                opened ? close() : open();
+                setIsEditing(true);
+                setEditItem(item);
+              }}
+              variant="subtle"
+            >
               <IconPencil size={16} stroke={1.5} />
             </ActionIcon>
             <ActionIcon
@@ -197,102 +130,113 @@ const Department = ({
               onClick={() => {
                 setOpened(true);
               }}
+              variant="subtle"
             >
               <IconTrash size={16} stroke={1.5} />
             </ActionIcon>
           </Group>
-        </td>
-      </tr>
+        </Table.Td>
+      </Table.Tr>
     );
   };
 
-  const form = useForm({
-    initialValues: { name: '', isActive: true },
-    validate: yupResolver(schema()),
-  });
-  useFormErrorHooks(form);
-  const getDepartment = useDepartmentSetting(searchParams);
-  const postDepartment = usePostDepartmentSetting();
-
-  const [showAddForm, toggleAddForm] = useToggle();
-  const { classes } = useStyles();
-  const { t } = useTranslation();
+  useEffect(() => {
+    if (isEditing) {
+      form.setValues({
+        name: editItem?.name,
+        isActive: editItem?.isActive,
+      });
+    }
+  }, [isEditing]);
 
   return (
     <>
       <Group
-        sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+        style={{ justifyContent: 'space-between', alignItems: 'center' }}
         mb={15}
       >
         <Title>{t('departments')}</Title>
-        {!showAddForm && (
-          <Button onClick={() => toggleAddForm()}>{t('add_department')}</Button>
+        {!opened && (
+          <Button
+            onClick={() => {
+              open();
+              form.reset();
+            }}
+          >
+            {t('add_department')}
+          </Button>
         )}
       </Group>
 
-      <Transition
-        mounted={showAddForm}
-        transition={'slide-down'}
-        duration={200}
-        timingFunction="ease"
+      <Drawer
+        opened={opened}
+        onClose={() => {
+          close();
+          setIsEditing(false);
+          setEditItem(undefined);
+        }}
+        overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
       >
-        {() => (
-          <Paper
-            shadow={'sm'}
-            radius="md"
-            p="xl"
-            withBorder
-            className={classes.paper}
-          >
-            <Box mt={10}>
-              <form
-                onSubmit={form.onSubmit(async (values) => {
-                  try {
-                    await postDepartment.mutateAsync(values);
-                    form.reset();
-                    toggleAddForm();
-                    showNotification({
-                      message: t('add_department_success'),
-                    });
-                  } catch (error) {
-                    const err = errorType(error);
+        <form
+          onSubmit={form.onSubmit(async (values) => {
+            try {
+              if (isEditing) {
+                await updateDepartment.mutateAsync({
+                  id: editItem?.id as string,
+                  ...values,
+                });
+                form.reset();
+                showNotification({
+                  message: t('update_department_success'),
+                });
+              } else {
+                await postDepartment.mutateAsync(values);
+                form.reset();
+                showNotification({
+                  message: t('add_department_success'),
+                });
+              }
+            } catch (error) {
+              const err = errorType(error);
+              showNotification({
+                title: t('error'),
+                message: err,
+                color: 'red',
+              });
+            } finally {
+              close();
+              setIsEditing(false);
+            }
+          })}
+        >
+          <TextInput
+            label={t('department_name')}
+            name="departmentName"
+            withAsterisk
+            placeholder={t('department_name_placeholder') as string}
+            {...form.getInputProps('name')}
+            mb={10}
+          />
 
-                    showNotification({
-                      title: t('error'),
-                      message: err,
-                      color: 'red',
-                    });
-                  }
-                })}
-              >
-                <TextInput
-                  label={t('department_name')}
-                  name="departmentName"
-                  withAsterisk
-                  placeholder={t('department_name_placeholder') as string}
-                  {...form.getInputProps('name')}
-                  mb={10}
-                />
+          {isEditing && (
+            <Switch
+              mt={'lg'}
+              style={{ input: { cursor: 'pointer' } }}
+              checked={form.values.isActive}
+              label={t('department_enabled')}
+              labelPosition="left"
+              onChange={(e) => {
+                form.setFieldValue('isActive', e.currentTarget.checked);
+              }}
+            />
+          )}
 
-                <Group mt={20}>
-                  <Button type="submit">{t('submit')}</Button>
-                  {showAddForm && (
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        form.reset();
-                        toggleAddForm();
-                      }}
-                    >
-                      {t('cancel')}
-                    </Button>
-                  )}
-                </Group>
-              </form>
-            </Box>
-          </Paper>
-        )}
-      </Transition>
+          <Group mt={20}>
+            <Button type="submit">{t('submit')}</Button>
+          </Group>
+        </form>
+      </Drawer>
+
       <Flex mb={10}>
         {searchComponent(t('search_department') as string)}
         <Flex style={{ width: '210px' }}>
@@ -312,26 +256,26 @@ const Department = ({
           <Table
             striped
             highlightOnHover
-            withBorder
+            withTableBorder
             withColumnBorders
-            sx={{ marginTop: '10px' }}
+            style={{ marginTop: '10px' }}
           >
-            <thead>
-              <tr>
-                <th>{t('name')}</th>
-                <th>
-                  <Text align="center">{t('department_status')}</Text>
-                </th>
-                <th>
-                  <Text align="center">{t('actions')}</Text>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>{t('name')}</Table.Th>
+                <Table.Th>
+                  <Text ta="center">{t('department_status')}</Text>
+                </Table.Th>
+                <Table.Th>
+                  <Text ta="center">{t('actions')}</Text>
+                </Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
               {getDepartment.data?.items.map((item: any) => (
                 <Rows item={item} key={item.id} />
               ))}
-            </tbody>
+            </Table.Tbody>
           </Table>
         </Paper>
       ) : (

@@ -1,4 +1,4 @@
-import { Box, createStyles } from '@mantine/core';
+import { Box, useMantineTheme } from '@mantine/core';
 import Slider from 'rc-slider';
 import React, { FC } from 'react';
 
@@ -10,7 +10,6 @@ interface Props {
   onSeekStart?: (value: number) => void;
   onSeekComplete?: (value: number) => void;
 }
-const useStyle = createStyles(() => ({}));
 const SeekBar: FC<React.PropsWithChildren<Props>> = ({
   value,
   loadedValue,
@@ -19,7 +18,7 @@ const SeekBar: FC<React.PropsWithChildren<Props>> = ({
   onSeekStart,
   onSeekComplete,
 }) => {
-  const { theme } = useStyle();
+  const theme = useMantineTheme();
   return (
     <Box className={className}>
       <Slider
@@ -39,13 +38,11 @@ const SeekBar: FC<React.PropsWithChildren<Props>> = ({
           backgroundColor: theme.primaryColor[4],
           width: `${loadedValue ?? value}%`,
         }}
-        onChange={(value: number | number[]) => onSeek(value as number)}
-        onBeforeChange={(value: number | number[]) =>
-          onSeekStart && onSeekStart(value as number)
-        }
-        onAfterChange={(value: number | number[]) =>
-          onSeekComplete && onSeekComplete(value as number)
-        }
+        onChange={(value: number | number[]) => {
+          onSeek(value as number);
+          onSeekStart && onSeekStart(value as number);
+          onSeekComplete && onSeekComplete(value as number);
+        }}
       />
     </Box>
   );

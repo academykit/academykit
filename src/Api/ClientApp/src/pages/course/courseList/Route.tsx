@@ -58,10 +58,10 @@ const CourseListPageNav = () => {
     <Container fluid>
       <Box
         my={10}
-        sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+        style={{ justifyContent: 'space-between', alignItems: 'center' }}
       >
-        <Group position="apart">
-          <Title sx={{ flexGrow: 2 }}>{t('trainings')}</Title>
+        <Group justify="space-between">
+          <Title style={{ flexGrow: 2 }}>{t('trainings')}</Title>
           {role != UserRole.Trainee && (
             <Link to={RoutePath.courses.create}>
               <Button my={10} ml={5}>
@@ -73,14 +73,14 @@ const CourseListPageNav = () => {
         <Tabs
           my={20}
           value={location.pathname}
-          onTabChange={(value) => navigate(`${value}`)}
+          onChange={(value) => navigate(`${value}`)}
         >
           <Tabs.List>
             <Tabs.Tab value="/trainings/list">{t('all_trainings')}</Tabs.Tab>
             <Tabs.Tab value="/trainings/list/completed">
               {t('completed_trainings')}
             </Tabs.Tab>
-            {role <= UserRole.Admin && (
+            {Number(role) <= UserRole.Admin && (
               <Tabs.Tab value="/trainings/list/review">
                 {t('review_trainings')}
               </Tabs.Tab>

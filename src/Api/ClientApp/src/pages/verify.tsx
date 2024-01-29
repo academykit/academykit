@@ -29,7 +29,7 @@ const Verify = () => {
   return (
     <Container>
       <div style={{ marginTop: '150px' }}>
-        <Text mb={10} size={'xl'} weight="bold">
+        <Text mb={10} size={'xl'} fw="bold">
           {t('confirmation_sent')}
         </Text>
         <Text>{t('check_inbox')}</Text>

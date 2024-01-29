@@ -1,0 +1,18 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+@media (min-width: 62em) {
+  .card {
+    width: 400px;
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 48em) {
+  .card {
+    width: 100%;
+  }
+}

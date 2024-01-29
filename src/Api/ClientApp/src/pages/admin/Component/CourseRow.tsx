@@ -6,6 +6,7 @@ import {
   Button,
   Group,
   Modal,
+  Table,
   Text,
   Textarea,
   Tooltip,
@@ -15,7 +16,7 @@ import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconEdit, IconEye, IconFileCheck } from '@tabler/icons';
 import { color } from '@utils/constants';
-import { CourseStatus, UserRole, CourseUserStatus } from '@utils/enums';
+import { CourseStatus, CourseUserStatus, UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import errorType from '@utils/services/axiosError';
 import { ICourse, useCourseStatus } from '@utils/services/courseService';
@@ -47,8 +48,8 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
   };
 
   const canPreviewEdit =
-    auth?.auth?.role === UserRole.Admin ||
-    auth?.auth?.role === UserRole.SuperAdmin ||
+    Number(auth?.auth?.role) === UserRole.Admin ||
+    Number(auth?.auth?.role) === UserRole.SuperAdmin ||
     course.userStatus === CourseUserStatus.Author;
 
   const onPublish = async (message?: string) => {
@@ -74,8 +75,8 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
     togglePublished();
   };
   return (
-    <tr>
-      <td>
+    <Table.Tr>
+      <Table.Td>
         <Modal
           opened={confirmPublish}
           onClose={togglePublished}
@@ -116,28 +117,29 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
             </form>
           )}
         </Modal>
-        <Text maw={'300px'} sx={{ wordBreak: 'break-all' }}>
+        <Text maw={'300px'} style={{ wordBreak: 'break-all' }}>
           {course.name}
         </Text>
-      </td>
-      <td>{moment(course.createdOn).format('DD/MM/YY')}</td>
-      <td>
+      </Table.Td>
+      <Table.Td>{moment(course.createdOn).format('DD/MM/YY')}</Table.Td>
+      <Table.Td>
         <UserShortProfile size={'xs'} user={course.user} page="" />
-      </td>
+      </Table.Td>
 
-      <td>
-        <Badge color={color(course.status)}>
+      <Table.Td>
+        <Badge variant="light" color={color(course.status)}>
           {t(CourseStatus[course.status])}
         </Badge>
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         <Group>
           {canPreviewEdit && (
             <Tooltip label={t('preview')}>
               <ActionIcon
                 component={Link}
                 to={RoutePath.courses.description(course.slug).route}
-                color={'primary'}
+                variant="subtle"
+                color={'gray'}
               >
                 <IconEye />
               </ActionIcon>
@@ -146,6 +148,8 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
           {canPreviewEdit && (
             <Tooltip label={t('edit_course')}>
               <ActionIcon
+                variant="subtle"
+                color={'gray'}
                 component={Link}
                 to={RoutePath.manageCourse.edit(course.slug).route}
               >
@@ -155,14 +159,18 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
           )}
           {course.status === CourseStatus.Review && (
             <Tooltip label={t('publish_course')}>
-              <ActionIcon onClick={togglePublished} color={'green'}>
+              <ActionIcon
+                variant="subtle"
+                onClick={togglePublished}
+                color={'green'}
+              >
                 <IconFileCheck />
               </ActionIcon>
             </Tooltip>
           )}
         </Group>
-      </td>
-    </tr>
+      </Table.Td>
+    </Table.Tr>
   );
 };
 

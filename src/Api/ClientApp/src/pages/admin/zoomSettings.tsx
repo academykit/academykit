@@ -15,8 +15,8 @@ import {
   useZoomSetting,
 } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
-import { useEffect, useState } from 'react';
 import { TFunction } from 'i18next';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const mapData = {
@@ -43,7 +43,7 @@ const Row = ({
     <Box mt={10} ml={10}>
       {data && (
         <>
-          <Text fz="md" weight={'bold'}>
+          <Text fz="md" fw={'bold'}>
             {t(`${mapData[label as keyof typeof mapData]}`)}
           </Text>
           <Text fz="sm">{String(data)}</Text>
@@ -120,7 +120,7 @@ const ZoomSettings = () => {
         {!edit && (
           <Container
             size={450}
-            sx={{
+            style={{
               marginLeft: '0px',
             }}
           >
@@ -174,7 +174,7 @@ const ZoomSettings = () => {
               {...form.getInputProps('webhookVerification')}
             /> */}
             <Switch
-              sx={{ input: { cursor: 'pointer' } }}
+              style={{ input: { cursor: 'pointer' } }}
               checked={isChecked}
               label={t('zoom_recording_enabled')}
               labelPosition="left"

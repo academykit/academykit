@@ -1,9 +1,10 @@
+import TextViewer from '@components/Ui/RichTextViewer';
+import UserShortProfile from '@components/UserShortProfile';
 import {
   Box,
   Button,
   Card,
   Container,
-  createStyles,
   Grid,
   Group,
   Paper,
@@ -11,84 +12,23 @@ import {
   Text,
   Title,
   UnstyledButton,
+  useMantineTheme,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
+import { IconSquareRoundedX } from '@tabler/icons';
+import { IconCircleCheck } from '@tabler/icons-react';
 import {
   ILessonResultQuestionOption,
   ILessonStartQuestion,
 } from '@utils/services/examService';
-import SubmitResultHeader from './SubmitResultHeader';
-import TextViewer from '@components/Ui/RichTextViewer';
-import { IconSquareRoundedX } from '@tabler/icons';
-import { IconCircleCheck } from '@tabler/icons-react';
-import UserShortProfile from '@components/UserShortProfile';
 import { IUser } from '@utils/services/types';
+import cx from 'clsx';
 import moment from 'moment';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-const useStyle = createStyles((theme) => ({
-  option: {
-    '>label': {
-      cursor: 'pointer',
-    },
-  },
-  navigate: {
-    display: 'flex',
-    height: '50px',
-    width: '50px',
-    justifyContent: 'center',
-    alignItems: 'center',
-    cursor: 'pointer',
-  },
-  navigateWrapper: {
-    maxHeight: '80vh',
-    height: '100%',
-    overflowY: 'auto',
-    alignContent: 'start',
-    justifyContent: 'start',
-  },
-  buttonNav: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    position: 'fixed',
-    bottom: '0',
-    right: '0',
-    width: '100%',
-    zIndex: 100,
-  },
-  active: {
-    border: '2px solid ' + theme.colors[theme.primaryColor][1],
-  },
-  activeCircle: {
-    outline: `4px solid ${theme.colors[theme.primaryColor][1]}`,
-    transform: 'scale(1.08)',
-  },
-  unanswered: {
-    backgroundColor: theme.colors.orange[6],
-  },
-  wrong: {
-    border: `3px solid ${theme.colors.red[6]}`,
-  },
-  correct: {
-    border: `3px solid ${theme.colors.green[6]}`,
-  },
+import classes from '../../styles/submittedResult.module.css';
+import SubmitResultHeader from './SubmitResultHeader';
 
-  correctCircle: {
-    backgroundColor:
-      theme.colorScheme == 'dark'
-        ? theme.colors.green[8]
-        : theme.colors.green[5],
-  },
-  errorCircle: {
-    backgroundColor: theme.colors.red[5],
-  },
-  optionContainer: {
-    order: 1,
-  },
-  examContainer: {
-    order: 2,
-  },
-}));
 const SubmittedResultDetails = ({
   questions,
   duration,
@@ -107,15 +47,16 @@ const SubmittedResultDetails = ({
   submissionDate: string;
   user: IUser;
 }) => {
-  const { classes, theme, cx } = useStyle();
+  const theme = useMantineTheme();
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.md}px)`);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { t } = useTranslation();
+
   return (
     <Grid m={20}>
       <Grid.Col>
         <Paper radius={10} p={10}>
-          <Group position="apart">
+          <Group justify="space-between">
             <div>
               <Title>{name}</Title>
               <Text>{moment(submissionDate + 'Z').fromNow()}</Text>
@@ -129,26 +70,31 @@ const SubmittedResultDetails = ({
           </Group>
         </Paper>
       </Grid.Col>
-      <Grid.Col span={matches ? 9 : 12} className={classes.examContainer}>
+      <Grid.Col
+        span={matches ? 9 : 12}
+        style={{ maxWidth: '100%' }}
+        className={classes.examContainer}
+      >
         <ScrollArea>
           <Card p={4} my={10} shadow="lg" withBorder>
             <Box
               p={10}
               pb={20}
-              sx={{
+              style={{
                 flexDirection: 'column',
                 width: '100%',
                 justifyContent: 'start',
                 alignContent: 'start',
               }}
             >
-              <Group position="apart" align="center">
+              <Group justify="space-between" ta="center">
                 <h3>{questions[currentIndex]?.name}</h3>
               </Group>
               {questions[currentIndex]?.description && (
                 <TextViewer
                   key={currentIndex}
                   content={questions[currentIndex]?.description}
+                  styles={{ wordBreak: 'break-all' }}
                 />
               )}
             </Box>
@@ -229,13 +175,14 @@ const SubmittedResultDetails = ({
               onClick={() => {
                 setCurrentIndex(currentIndex - 1);
               }}
+              w={100}
             >
               {t('previous')}
             </Button>
           ) : (
             <div></div>
           )}
-          <Text>
+          <Text my={5}>
             {currentIndex + 1}/{questions.length}
           </Text>
           {currentIndex < questions.length - 1 ? (
@@ -243,6 +190,7 @@ const SubmittedResultDetails = ({
               onClick={() => {
                 setCurrentIndex((currentIndex) => currentIndex + 1);
               }}
+              w={100}
             >
               {t('next')}
             </Button>

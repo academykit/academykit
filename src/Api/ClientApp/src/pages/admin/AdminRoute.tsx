@@ -82,7 +82,7 @@ const MyTrainings = () => {
       <Tabs
         my={20}
         value={location.pathname}
-        onTabChange={(value) => navigate(`${value}`)}
+        onChange={(value) => navigate(`${value}`)}
       >
         <Tabs.List>
           <Tabs.Tab value="/settings/mycertificate">{t('internal')}</Tabs.Tab>

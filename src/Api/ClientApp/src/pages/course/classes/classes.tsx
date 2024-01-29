@@ -14,7 +14,6 @@ import {
   Grid,
   Loader,
   Tabs,
-  createStyles,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
@@ -29,9 +28,11 @@ import {
 } from '@utils/services/courseService';
 import { useWatchHistory } from '@utils/services/watchHistory';
 import { AxiosError } from 'axios';
+import cx from 'clsx';
 import { Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
+import classes from '../styles/classes.module.css';
 const VideoPlayer = lazyWithRetry(
   () => import('@components/VideoPlayer/VideoPlayer')
 );
@@ -39,55 +40,10 @@ const VideoPlayer = lazyWithRetry(
 const PdfViewer = lazyWithRetry(
   () => import('@components/Course/Classes/PdfViewer')
 );
-const useStyle = createStyles((theme) => ({
-  wrapper: {
-    [theme.fn.largerThan(theme.breakpoints.md)]: {},
-  },
-  videoSection: {
-    backgroundColor: 'black',
-    color: 'white',
-
-    [theme.fn.largerThan(theme.breakpoints.md)]: {
-      height: '70vh',
-      marginTop: '-8px',
-    },
-  },
-  section: {
-    background: theme.colorScheme == 'dark' ? theme.colors.dark[6] : 'white',
-    overflowY: 'auto',
-    [theme.fn.largerThan(theme.breakpoints.md)]: {
-      height: '70vh',
-    },
-  },
-  errorSection: {
-    display: 'flex',
-    flexDirection: 'column',
-    overflowY: 'hidden',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  assignmentSection: {
-    display: 'flex',
-    flexDirection: 'column',
-    overflowY: 'hidden',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  fileSection: {},
-  meetingSection: {
-    display: 'flex',
-    flexDirection: 'column',
-    overflowY: 'hidden',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-}));
 
 const Classes = () => {
   const navigate = useNavigate();
-  const { classes, theme, cx } = useStyle();
-
-  const matches = useMediaQuery(`(min-width: ${theme.breakpoints.md})`);
+  const matches = useMediaQuery(`(min-width: 62em)`);
   const params = useParams();
   const tab = params['*'];
   const { t } = useTranslation();
@@ -133,8 +89,8 @@ const Classes = () => {
   };
 
   if (
-    auth?.auth?.role !== UserRole.Admin &&
-    auth?.auth?.role !== UserRole.SuperAdmin &&
+    Number(auth?.auth?.role) !== UserRole.Admin &&
+    Number(auth?.auth?.role) !== UserRole.SuperAdmin &&
     data?.userStatus === CourseUserStatus.NotEnrolled
   ) {
     navigate('/404', { replace: true });
@@ -161,7 +117,7 @@ const Classes = () => {
             {courseLesson.isLoading && (
               <Box
                 className={classes.videoSection}
-                sx={{
+                style={{
                   display: 'flex',
                   overflowY: 'hidden',
                   justifyContent: 'center',
@@ -221,7 +177,7 @@ const Classes = () => {
             {courseLesson.data?.type === LessonType.LiveClass && (
               <Box
                 className={cx(classes.videoSection, classes.meetingSection)}
-                sx={{ overflowY: 'hidden' }}
+                style={{ overflowY: 'hidden' }}
               >
                 <Meetings data={courseLesson.data} />
               </Box>
@@ -229,7 +185,7 @@ const Classes = () => {
             {courseLesson.data?.type == LessonType.Exam && (
               <Box
                 className={classes.videoSection}
-                sx={{ overflowY: 'hidden' }}
+                style={{ overflowY: 'hidden' }}
               >
                 <ExamDetails
                   id={params.id as string}
@@ -296,18 +252,21 @@ const Classes = () => {
             defaultChecked={true}
             defaultValue={t('description')}
             value={tab}
-            onTabChange={(value) =>
+            onChange={(value) =>
               navigate(`${value}`, { preventScrollReset: true })
             }
           >
             <Tabs.List>
               <Tabs.Tab
                 value="description"
-                icon={<IconFileDescription size={14} />}
+                leftSection={<IconFileDescription size={14} />}
               >
                 {t('description')}
               </Tabs.Tab>
-              <Tabs.Tab value="comments" icon={<IconMessage size={14} />}>
+              <Tabs.Tab
+                value="comments"
+                leftSection={<IconMessage size={14} />}
+              >
                 {t('comments')}
               </Tabs.Tab>
             </Tabs.List>

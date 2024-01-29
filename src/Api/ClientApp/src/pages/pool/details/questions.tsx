@@ -26,7 +26,7 @@ import {
 } from '@utils/services/questionService';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const MCQQuestions = ({
   searchParams,
@@ -42,25 +42,25 @@ const MCQQuestions = ({
     <Container fluid>
       <Flex justify={'end'}>
         {searchComponent(t('search_for_questions') as string)}
-        <Button component={Link} ml={5} to="create">
+        <Button component={Link} ml={5} to="create" w={'12%'}>
           {t('add_question')}
         </Button>
       </Flex>
       <ScrollArea>
         {data && data.items && data.totalCount > 0 && (
           <Paper mt={10}>
-            <Table striped withBorder withColumnBorders highlightOnHover>
-              <thead>
-                <tr>
-                  <th>{t('name')}</th>
-                  <th>{t('tags')}</th>
-                  <th>{t('type')}</th>
-                  <th>
+            <Table striped withTableBorder withColumnBorders highlightOnHover>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>{t('name')}</Table.Th>
+                  <Table.Th>{t('tags')}</Table.Th>
+                  <Table.Th>{t('type')}</Table.Th>
+                  <Table.Th>
                     <Center>{t('actions')}</Center>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
+                  </Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
                 {data?.items?.map((x) => (
                   <QuestionRow
                     data={x}
@@ -71,7 +71,7 @@ const MCQQuestions = ({
                     t={t}
                   />
                 ))}
-              </tbody>
+              </Table.Tbody>
             </Table>
           </Paper>
         )}
@@ -122,7 +122,7 @@ const QuestionRow = ({
   };
 
   return (
-    <tr>
+    <Table.Tr>
       <DeleteModal
         title={t(`question_delete_confirmation`)}
         open={showDelete}
@@ -130,18 +130,18 @@ const QuestionRow = ({
         onConfirm={confirmDelete}
       />
 
-      <td>{data.name}</td>
-      <td>
+      <Table.Td>{data.name}</Table.Td>
+      <Table.Td>
         {data.tags.map((x) => (
           <Badge key={x.id} color={'green'} mx={2}>
             {' '}
             {x.tagName}
           </Badge>
         ))}
-      </td>
+      </Table.Td>
 
-      <td>{t(`${QuestionType[data.type]}`)}</td>
-      <td>
+      <Table.Td>{t(`${QuestionType[data.type]}`)}</Table.Td>
+      <Table.Td>
         <Center>
           <Button
             variant="subtle"
@@ -159,8 +159,8 @@ const QuestionRow = ({
             <IconTrash />
           </Button>
         </Center>
-      </td>
-    </tr>
+      </Table.Td>
+    </Table.Tr>
   );
 };
 

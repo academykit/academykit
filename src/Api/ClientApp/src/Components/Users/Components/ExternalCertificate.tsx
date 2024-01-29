@@ -1,26 +1,26 @@
 import {
   ActionIcon,
   Badge,
-  Image,
   Box,
+  Image,
   Paper,
   ScrollArea,
   Table,
+  Text,
   Title,
   Tooltip,
-  Text,
 } from '@mantine/core';
 import { IconDownload, IconEye } from '@tabler/icons';
+import { DATE_FORMAT } from '@utils/constants';
+import downloadImage from '@utils/downloadImage';
 import {
   GetExternalCertificate,
   useGetUserCertificate,
 } from '@utils/services/certificateService';
-import moment from 'moment';
-import { useParams } from 'react-router-dom';
-import downloadImage from '@utils/downloadImage';
 import { TFunction } from 'i18next';
+import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import { DATE_FORMAT } from '@utils/constants';
+import { useParams } from 'react-router-dom';
 
 const RowsExternal = ({
   item,
@@ -30,25 +30,25 @@ const RowsExternal = ({
   t: TFunction;
 }) => {
   return (
-    <tr key={item?.user?.id}>
-      <td>{item?.name}</td>
+    <Table.Tr key={item?.user?.id}>
+      <Table.Td>{item?.name}</Table.Td>
 
-      <td>
+      <Table.Td>
         {item?.status === 2 ? (
           <Badge color="cyan">{t('yes')}</Badge>
         ) : (
           <Badge color="cyan">{t('No')}</Badge>
         )}
-      </td>
-      <td>{moment(item?.startDate).format(DATE_FORMAT)}</td>
-      <td>{moment(item?.endDate).format(DATE_FORMAT)}</td>
-      <td>
+      </Table.Td>
+      <Table.Td>{moment(item?.startDate).format(DATE_FORMAT)}</Table.Td>
+      <Table.Td>{moment(item?.endDate).format(DATE_FORMAT)}</Table.Td>
+      <Table.Td>
         {item?.duration} {t('hour_s')}
-      </td>
-      <td>Rs.{item?.optionalCost}</td>
-      <td>{item?.institute}</td>
-      <td style={{ wordBreak: 'break-all' }}>{item.location}</td>
-      <td>
+      </Table.Td>
+      <Table.Td>Rs.{item?.optionalCost}</Table.Td>
+      <Table.Td>{item?.institute}</Table.Td>
+      <Table.Td style={{ wordBreak: 'break-all' }}>{item.location}</Table.Td>
+      <Table.Td>
         <Box style={{ width: 150, marginTop: 'auto', marginBottom: 'auto' }}>
           {item?.imageUrl ? (
             <div style={{ position: 'relative' }}>
@@ -56,7 +56,7 @@ const RowsExternal = ({
                 width={150}
                 height={100}
                 fit="contain"
-                sx={{ opacity: '0.5' }}
+                style={{ opacity: '0.5' }}
                 src={item?.imageUrl}
               />
               <div
@@ -76,12 +76,14 @@ const RowsExternal = ({
                   <ActionIcon
                     onClick={() => window.open(item?.imageUrl)}
                     mr={10}
+                    variant="subtle"
                   >
                     <IconEye color="black" />
                   </ActionIcon>
                 </Tooltip>
                 <Tooltip label={t('download_certificate')}>
                   <ActionIcon
+                    variant="subtle"
                     onClick={() =>
                       downloadImage(item?.imageUrl, item?.user?.fullName ?? '')
                     }
@@ -95,8 +97,8 @@ const RowsExternal = ({
             <Text>{t('no_certificate')}</Text>
           )}
         </Box>
-      </td>
-    </tr>
+      </Table.Td>
+    </Table.Tr>
   );
 };
 const ExternalCertificate = () => {
@@ -112,31 +114,31 @@ const ExternalCertificate = () => {
           <ScrollArea>
             <Paper mt={10}>
               <Table
-                sx={{ minWidth: 800 }}
+                style={{ minWidth: 800 }}
                 verticalSpacing="sm"
                 striped
                 highlightOnHover
-                withBorder
+                withTableBorder
                 withColumnBorders
               >
-                <thead>
-                  <tr>
-                    <th>{t('training_name')}</th>
-                    <th>{t('verified')}</th>
-                    <th>{t('start_date')}</th>
-                    <th>{t('end_date')}</th>
-                    <th>{t('duration')}</th>
-                    <th>{t('optional_cost')}</th>
-                    <th>{t('issued_by')}</th>
-                    <th>{t('issuer_location')}</th>
-                    <th>{t('external_certificate')}</th>
-                  </tr>
-                </thead>
-                <tbody>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>{t('training_name')}</Table.Th>
+                    <Table.Th>{t('verified')}</Table.Th>
+                    <Table.Th>{t('start_date')}</Table.Th>
+                    <Table.Th>{t('end_date')}</Table.Th>
+                    <Table.Th>{t('duration')}</Table.Th>
+                    <Table.Th>{t('optional_cost')}</Table.Th>
+                    <Table.Th>{t('issued_by')}</Table.Th>
+                    <Table.Th>{t('issuer_location')}</Table.Th>
+                    <Table.Th>{t('external_certificate')}</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
                   {externalCertificate?.data.map((x: any) => (
                     <RowsExternal key={x.id} item={x} t={t} />
                   ))}
-                </tbody>
+                </Table.Tbody>
               </Table>
             </Paper>
           </ScrollArea>

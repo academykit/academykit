@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
+import RichTextEditor from '@components/Ui/RichTextEditor/Index';
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
   Box,
   Button,
@@ -12,18 +14,16 @@ import {
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { LessonType } from '@utils/enums';
+import errorType from '@utils/services/axiosError';
 import {
   useCreateLesson,
   useUpdateLesson,
 } from '@utils/services/courseService';
 import { ILessonFeedback } from '@utils/services/types';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import errorType from '@utils/services/axiosError';
-import * as Yup from 'yup';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import * as Yup from 'yup';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -112,8 +112,8 @@ const AddFeedback = ({
     <React.Fragment>
       <form onSubmit={form.onSubmit(submitForm)}>
         <Paper withBorder p="md">
-          <Grid align={'center'} justify="space-around">
-            <Grid.Col span={12} lg={8}>
+          <Grid align={'center'}>
+            <Grid.Col span={{ base: 12, lg: 6 }}>
               <CustomTextFieldWithAutoFocus
                 withAsterisk
                 label={t('feedback_title')}
@@ -121,7 +121,7 @@ const AddFeedback = ({
                 {...form.getInputProps('name')}
               />
             </Grid.Col>
-            <Tooltip multiline label={t('mandatory_tooltip')} width={220}>
+            <Tooltip multiline label={t('mandatory_tooltip')} w={220}>
               <Grid.Col span={4}>
                 <Switch
                   label={t('is_mandatory')}
@@ -142,7 +142,7 @@ const AddFeedback = ({
               {...form.getInputProps('description')}
             />
           </Box>
-          <Group position="left" mt="md">
+          <Group mt="md">
             <Button
               type="submit"
               loading={lesson.isLoading || updateLesson.isLoading}

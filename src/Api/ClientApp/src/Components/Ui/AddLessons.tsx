@@ -1,15 +1,15 @@
-import { Badge, Button, Tooltip } from '@mantine/core';
-import React, { useState } from 'react';
-import { useSection } from '@context/SectionProvider';
-import AddLecture from '@components/Course/Lesson/AddLecture';
-import AddExam from '@components/Course/Lesson/AddExam';
 import AddAssignment from '@components/Course/Lesson/AddAssignment';
-import AddMeeting from '@components/Course/Lesson/AddMeeting';
-import AddFeedback from '@components/Course/Lesson/AddFeedback';
 import AddDocument from '@components/Course/Lesson/AddDocument';
-import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
+import AddExam from '@components/Course/Lesson/AddExam';
+import AddFeedback from '@components/Course/Lesson/AddFeedback';
+import AddLecture from '@components/Course/Lesson/AddLecture';
+import AddMeeting from '@components/Course/Lesson/AddMeeting';
 import AddPhysical from '@components/Course/Lesson/AddPhysical';
+import { useSection } from '@context/SectionProvider';
+import { Badge, Button, Tooltip } from '@mantine/core';
+import { TFunction } from 'i18next';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const LessonAddList = ({
   sectionId,
@@ -175,7 +175,7 @@ const AddLesson = ({ sectionId }: { sectionId: string }) => {
         <Tooltip
           position="right"
           multiline
-          width={220}
+          w={220}
           label={t('click_to_see_options')}
         >
           <Button

@@ -1,0 +1,90 @@
+/* Option */
+.option {
+  padding: 20px;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.option > label {
+  cursor: pointer;
+}
+
+/* Navigate */
+.navigate {
+  display: flex;
+  height: 50px;
+  width: 50px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* NavigateWrapper */
+.navigateWrapper {
+  max-height: 80vh;
+  height: 100%;
+  overflow-y: auto;
+  align-content: start;
+  justify-content: start;
+}
+
+/* ButtonNav */
+.buttonNav {
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  z-index: 100;
+  flex-direction: row;
+}
+
+/* Active */
+.active {
+  border: 2px solid var(--mantine-color-answer-active);
+}
+
+/* ActiveCircle */
+.activeCircle {
+  outline: 4px solid var(--mantine-color-answer-active);
+  transform: scale(1.08);
+}
+
+/* Unanswered */
+.unanswered {
+  background-color: var(--mantine-color-orange-6);
+}
+
+/* Wrong */
+.wrong {
+  border: 3px solid var(--mantine-color-red-6);
+}
+
+/* Correct */
+.correct {
+  border: 3px solid var(--mantine-color-green-6);
+}
+
+/* CorrectCircle */
+.correctCircle {
+  background-color: var(--mantine-color-correct-circle);
+}
+
+/* ErrorCircle */
+.errorCircle {
+  background-color: var(--mantine-color-red-5);
+}
+
+/* OptionContainer */
+.optionContainer {
+  order: 1;
+}
+
+/* ExamContainer */
+.examContainer {
+  order: 2;
+  z-index: 200;
+}

@@ -1,0 +1,10 @@
+/* DepartmentInfo */
+.departmentInfo {
+  font-size: 12px;
+  position: absolute;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  column-gap: 5px;
+  line-height: 1px;
+}

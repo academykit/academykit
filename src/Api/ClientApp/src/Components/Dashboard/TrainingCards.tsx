@@ -1,18 +1,17 @@
+import UserShortProfile from '@components/UserShortProfile';
 import useAuth from '@hooks/useAuth';
 import {
-  Card,
-  Text,
+  ActionIcon,
+  Anchor,
   Avatar,
+  Box,
+  Card,
+  Flex,
+  Group,
+  Image,
   Menu,
   Progress,
-  Group,
-  createStyles,
-  rem,
-  ActionIcon,
-  Image,
-  Flex,
-  Box,
-  Anchor,
+  Text,
 } from '@mantine/core';
 import {
   IconChevronRight,
@@ -24,29 +23,12 @@ import { UserRole } from '@utils/enums';
 import getCourseOgImageUrl from '@utils/getCourseOGImage';
 import { getInitials } from '@utils/getInitialName';
 import RoutePath from '@utils/routeConstants';
+import { useGeneralSetting } from '@utils/services/adminService';
 import { DashboardCourses } from '@utils/services/dashboardService';
 import { IUser } from '@utils/services/types';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import UserShortProfile from '@components/UserShortProfile';
-import { useGeneralSetting } from '@utils/services/adminService';
-
-const useStyle = createStyles((theme) => ({
-  card: {
-    transition: 'transform 150ms ease, box-shadow 150ms ease',
-    '&:hover': {
-      transform: 'scale(1.01)',
-      boxShadow: theme.shadows.md,
-    },
-  },
-  footer: {
-    padding: `${theme.spacing.xs} ${theme.spacing.lg}`,
-    marginTop: theme.spacing.sm,
-    borderTop: `${rem(1)} solid ${
-      theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
-    }`,
-  },
-}));
+import classes from './styles/trainingCard.module.css';
 
 const StudentAvatar = ({ data }: { data: IUser }) => {
   return (
@@ -61,15 +43,14 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
   const auth = useAuth();
   const role = auth?.auth?.role;
   const { t } = useTranslation();
-  const { classes } = useStyle();
   const generalSettings = useGeneralSetting();
   const companyName = generalSettings.data?.data.companyName;
   const companyLogo = generalSettings.data?.data.logoUrl;
 
   return (
     <Card withBorder radius={'md'} p={'sm'} className={classes.card}>
-      <Flex sx={{ justifyContent: 'space-between' }}>
-        <Box w="100">
+      <Flex style={{ justifyContent: 'space-between' }}>
+        <Box w="180">
           <Image
             src={getCourseOgImageUrl({
               author: data.user,
@@ -85,7 +66,8 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
           />
         </Box>
         <div>
-          {(role === UserRole.Admin || role === UserRole.SuperAdmin) && (
+          {(Number(role) === UserRole.Admin ||
+            Number(role) === UserRole.SuperAdmin) && (
             <Menu
               shadow="md"
               position="left"
@@ -95,14 +77,14 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
               width={200}
             >
               <Menu.Target>
-                <ActionIcon>
+                <ActionIcon variant="subtle">
                   <IconDotsVertical size="1rem" />
                 </ActionIcon>
               </Menu.Target>
               <Menu.Dropdown>
                 <Menu.Label>{t('manage')}</Menu.Label>
                 <Menu.Item
-                  icon={<IconSettings size={14} />}
+                  leftSection={<IconSettings size={14} />}
                   component={Link}
                   to={RoutePath.manageCourse.manage(data.slug).route}
                   rightSection={<IconChevronRight size={12} stroke={1.5} />}
@@ -110,7 +92,7 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
                   {t('statistics')}
                 </Menu.Item>
                 <Menu.Item
-                  icon={<IconGraph size={14} />}
+                  leftSection={<IconGraph size={14} />}
                   component={Link}
                   to={RoutePath.manageCourse.lessonsStat(data.slug).route}
                   rightSection={<IconChevronRight size={12} stroke={1.5} />}
@@ -128,11 +110,10 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
         lineClamp={1}
         size="lg"
         mt="md"
-        weight="bold"
       >
         {data.name}
       </Anchor>
-      {role === UserRole.Trainee && (
+      {Number(role) === UserRole.Trainee && (
         <div>
           <Text c="dimmed" fz="sm" mt="md">
             {t('progress')}
@@ -147,9 +128,9 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
       )}
 
       <Card.Section className={classes.footer}>
-        <Group position="apart" mt="xs">
+        <Group justify="space-between" mt="xs">
           <UserShortProfile user={data.user} size="xs" />
-          {role !== UserRole.Trainee && (
+          {Number(role) !== UserRole.Trainee && (
             <Avatar.Group spacing={'sm'}>
               {data.students?.length > 0 ? (
                 data.students.slice(0, 3).map((x) => {
@@ -160,7 +141,7 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
               )}
               {data.students?.length > 3 && (
                 <Avatar
-                  color="cyan"
+                  c="cyan"
                   radius="xl"
                   component={Link}
                   to={RoutePath.manageCourse.student(data.slug).route}

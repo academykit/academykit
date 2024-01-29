@@ -1,0 +1,20 @@
+.container {
+  position: relative;
+  height: 350px;
+}
+@media (min-width: 55em) {
+  .container {
+    height: 180px;
+  }
+}
+
+.inner {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media (min-width: 55em) {
+  .inner {
+    flex-wrap: nowrap;
+  }
+}

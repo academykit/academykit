@@ -46,14 +46,14 @@ const Comments = () => {
           placeholder={t('your_comment_here') as string}
           {...form.getInputProps('content')}
           mt={20}
-          sx={{ minHeight: '5rem' }}
+          style={{ minHeight: '5rem' }}
         />
         <Button
           loading={postComment.isLoading}
           type="submit"
           mb={'xs'}
           disabled={!form.values.content.trim()}
-          sx={{ '&[data-disabled]': { pointerEvents: 'all' } }}
+          style={{ '&[data-disabled]': { pointerEvents: 'all' } }}
         >
           {t('post')}
         </Button>

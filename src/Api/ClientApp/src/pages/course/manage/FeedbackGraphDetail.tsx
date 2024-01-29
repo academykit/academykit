@@ -2,9 +2,9 @@ import { Box } from '@mantine/core';
 import { FeedbackType } from '@utils/enums';
 import { useGetFeedbackGraph } from '@utils/services/feedbackService';
 import { useParams } from 'react-router-dom';
-import HorizontalBarGraph from './Components/HorizontalBarGraph';
-import RatingGraph from './Components/RatingGraph';
-import SubjectiveData from './Components/SubjectiveData';
+import HorizontalBarGraph from './Components/Graph/HorizontalBarGraph';
+import RatingGraph from './Components/Graph/RatingGraph';
+import SubjectiveData from './Components/Graph/SubjectiveData';
 
 const FeedbackGraphDetail = () => {
   const param = useParams();

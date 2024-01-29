@@ -1,4 +1,5 @@
-import { ActionIcon, Box, createStyles, Flex } from '@mantine/core';
+import { ActionIcon, Box, Flex } from '@mantine/core';
+import cx from 'clsx';
 import fscreen from 'fscreen';
 import 'rc-slider/assets/index.css';
 import React, { FC, useEffect, useRef, useState } from 'react';
@@ -7,7 +8,7 @@ import PlayerIcon from './controls/PlayerIcon';
 import RemainingTimeDisplay from './controls/RemaningTimeDisplay';
 import SeekBar from './controls/SeekBar';
 import VolumeControlBar from './controls/VolumeControlBar';
-
+import classes from './styles/player.module.css';
 interface Props extends ReactPlayerProps {
   url?: string;
   config?: Config;
@@ -25,38 +26,6 @@ interface Props extends ReactPlayerProps {
   >;
 }
 
-const useStyle = createStyles(() => ({
-  hidden: {
-    display: 'none',
-  },
-  seekWrapper: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    width: '100%',
-    alignItems: 'center',
-    padding: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
-
-    display: 'flex',
-    justifyContent: 'space-between',
-    backgroundColor: 'black',
-    opacity: '0.5',
-
-    '&>div': {
-      marginLeft: 20,
-    },
-  },
-  seek: {
-    display: 'flex',
-    flexGrow: 2,
-  },
-  volume: {
-    width: 100,
-  },
-}));
-
 const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
   url,
   config,
@@ -64,7 +33,6 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
   onEnded,
   setCurrentPlayerState,
 }) => {
-  const { classes, cx } = useStyle();
   const playerRef = useRef<ReactPlayer>(null);
   const [playing, setPlaying] = useState(false);
   const [controls] = useState(false);
@@ -206,7 +174,7 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
       onMouseLeave={() => {
         autoHideControls(true);
       }}
-      sx={{
+      style={{
         heightL: '100%',
         width: '100%',
         position: 'relative',
@@ -214,7 +182,7 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
     >
       <Flex
         direction={'column'}
-        sx={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%' }}
         onClick={() => {
           togglePlay();
         }}
@@ -265,7 +233,11 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
             [classes.hidden]: hideControls,
           })}
         >
-          <ActionIcon color="" onClick={() => setPlaying(!playing)}>
+          <ActionIcon
+            variant="subtle"
+            color=""
+            onClick={() => setPlaying(!playing)}
+          >
             {!playing ? <PlayerIcon.Play /> : <PlayerIcon.Pause />}
           </ActionIcon>
           <SeekBar
@@ -278,13 +250,18 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
           />
           <RemainingTimeDisplay duration={duration} played={played} />
           <Flex
-            sx={{
+            style={{
               justifyContent: 'center',
               alignItems: 'center',
               paddingRight: 8,
             }}
           >
-            <ActionIcon color={'white'} mx={5} onClick={toggleMute}>
+            <ActionIcon
+              variant="subtle"
+              color={'white'}
+              mx={5}
+              onClick={toggleMute}
+            >
               {muted ? <PlayerIcon.VolumeMuted /> : <PlayerIcon.Volume />}
             </ActionIcon>
             <VolumeControlBar
@@ -294,12 +271,22 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
             ></VolumeControlBar>
           </Flex>
           {ReactPlayer.canEnablePIP(url) && (
-            <ActionIcon mx={3} color={'white'} onClick={handleTogglePIP}>
+            <ActionIcon
+              variant="subtle"
+              mx={3}
+              color={'white'}
+              onClick={handleTogglePIP}
+            >
               {pip ? <PlayerIcon.PiPExit /> : <PlayerIcon.PiP />}
             </ActionIcon>
           )}
           {fscreen.fullscreenEnabled && (
-            <ActionIcon mx={3} color={'white'} onClick={toggleFullscreen}>
+            <ActionIcon
+              variant="subtle"
+              mx={3}
+              color={'white'}
+              onClick={toggleFullscreen}
+            >
               {inFullscreenMode ? (
                 <PlayerIcon.FullScreenExit />
               ) : (

@@ -16,7 +16,7 @@ const FeedbackDetails = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <Group sx={{ flexDirection: 'column' }}>
+    <Group style={{ flexDirection: 'column' }}>
       <Title>{name}</Title>
       {!hasFeedbackSubmitted ? (
         <Button component={Link} to={RoutePath.feedback.details(id).route}>

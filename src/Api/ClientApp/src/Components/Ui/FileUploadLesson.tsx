@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { FilePond, registerPlugin } from 'react-filepond';
-import 'filepond/dist/filepond.min.css';
+import { Box, Text } from '@mantine/core';
+import { UseFormReturnType } from '@mantine/form';
+import { FileAccess, uploadFile } from '@utils/services/fileService';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
-import { Box, Text } from '@mantine/core';
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginImageValidateSize from 'filepond-plugin-image-validate-size';
-import { FileAccess, uploadFile } from '@utils/services/fileService';
-import { UseFormReturnType } from '@mantine/form';
+import 'filepond/dist/filepond.min.css';
+import { useEffect, useState } from 'react';
+import { FilePond, registerPlugin } from 'react-filepond';
 import { useTranslation } from 'react-i18next';
 
 registerPlugin(
@@ -66,7 +66,7 @@ const FileUploadLesson = ({
   };
 
   return (
-    <Box sx={{ maxWidth: 470 }} pos="relative">
+    <Box style={{ maxWidth: 470 }} pos="relative">
       <FilePond
         instantUpload={true}
         files={files}
@@ -125,7 +125,7 @@ const FileUploadLesson = ({
         {...filePondProps}
       />
       {form.errors['documentUrl'] && (
-        <Text color={'red'} size={'xs'} pos="absolute" top={'100%'}>
+        <Text c={'red'} size={'xs'} pos="absolute" top={'100%'}>
           {form.errors['documentUrl']}
         </Text>
       )}

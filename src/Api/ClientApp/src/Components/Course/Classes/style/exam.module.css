@@ -1,0 +1,86 @@
+.option {
+  padding: 20px;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border-radius: 5px;
+  border: 1px solid gray;
+  margin-bottom: 15px;
+}
+
+.option > label {
+  cursor: pointer;
+}
+
+.navigate {
+  display: flex;
+  height: 50px;
+  width: 50px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.navigateWrapper {
+  border: 1px solid grey;
+  border-radius: 5px;
+  max-height: 80vh;
+  height: 100%;
+  overflow-y: auto;
+  align-content: flex-start;
+  justify-content: flex-start;
+}
+
+.buttonNav {
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+  flex-direction: row;
+}
+
+.active {
+  border: 3px solid var(--mantine-color-green-4);
+}
+
+.visited {
+  border: 2px solid var(--mantine-color-yellow-4);
+}
+
+.answered {
+  background-color: var(--mantine-color-answered);
+}
+
+.parentGrid {
+  flex-direction: row;
+}
+
+@media (max-width: 75em) {
+  .parentGrid {
+    flex-direction: column;
+  }
+}
+
+.optionsGridCol {
+  order: 2;
+}
+
+@media (max-width: 75em) {
+  .optionsGridCol {
+    order: 1;
+    max-width: 100%;
+  }
+}
+
+.questionGridCol {
+  order: 1;
+}
+
+@media (max-width: 75em) {
+  .navigate {
+    order: 2;
+  }
+}

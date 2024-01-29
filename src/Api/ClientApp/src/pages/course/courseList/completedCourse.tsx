@@ -6,8 +6,8 @@ import { Box, Container, Flex, Loader } from '@mantine/core';
 import { CourseStatus, UserRole } from '@utils/enums';
 import { useCourse } from '@utils/services/courseService';
 import { useEffect, useState } from 'react';
-import CourseList from './component/List';
 import { useTranslation } from 'react-i18next';
+import CourseList from './component/List';
 
 const CompletedCourseList = ({
   setInitialSearch,
@@ -41,7 +41,7 @@ const CompletedCourseList = ({
       <Container fluid>
         <Flex
           pb={20}
-          sx={{
+          style={{
             justifyContent: 'end',
             alignItems: 'center',
           }}

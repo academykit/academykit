@@ -1,12 +1,12 @@
+import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import { Button, Group, Paper, Space, TextInput } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import errorType from '@utils/services/axiosError';
 import { useAddGroup } from '@utils/services/groupService';
 import { useTranslation } from 'react-i18next';
-import * as Yup from 'yup';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import { useNavigate } from 'react-router-dom';
-import { Button, Group, Paper, Space, TextInput } from '@mantine/core';
+import * as Yup from 'yup';
 
 const schema = () => {
   const { t } = useTranslation();
@@ -60,7 +60,7 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
           {...form.getInputProps('name')}
         />
         <Space h="md" />
-        <Group position="right">
+        <Group justify="flex-end">
           <Button loading={isLoading} type="submit">
             {t('submit')}
           </Button>

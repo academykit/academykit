@@ -1,0 +1,53 @@
+/* Video Section */
+.videoSection {
+  background-color: black;
+  color: white;
+}
+
+.videoSection::before {
+  padding-bottom: 0px !important;
+}
+@media (min-width: 62em) {
+  .videoSection {
+    height: 70vh;
+    margin-top: -8px;
+  }
+}
+
+/* Section */
+.section {
+  background: var(--mantine-color-classes-section);
+  overflow-y: auto;
+}
+@media (min-width: 62em) {
+  .section {
+    height: 70vh;
+  }
+}
+
+/* Error Section */
+.errorSection {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Assignment Section */
+.assignmentSection {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Meeting Section */
+.meetingSection {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+  justify-content: center;
+  align-items: center;
+}

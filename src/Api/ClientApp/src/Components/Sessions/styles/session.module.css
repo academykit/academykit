@@ -1,0 +1,135 @@
+/* Wrapper */
+.wrapper {
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+/* Inner */
+.inner {
+  display: flex;
+  justify-content: space-between;
+  padding-top: var(--mantine-spacing-xl);
+  padding-bottom: calc(48em * 4);
+}
+
+@media (max-width: 48em) {
+  .inner {
+    flex-direction: column-reverse;
+  }
+}
+
+/* Content */
+.content {
+  width: 60%;
+  margin-right: calc(2rem * 3);
+}
+@media (max-width: 75em) {
+  .content {
+    width: 50%;
+  }
+}
+
+@media (max-width: 48em) {
+  .content {
+    width: 100%;
+  }
+}
+
+/* Title */
+.title {
+  color: pink;
+  font-family: 'Greycliff CF', var(--mantine-font-family);
+  font-size: 42px;
+  line-height: 1.2;
+  font-weight: 800;
+  position: relative;
+}
+@media (max-width: 36em) {
+  .title {
+    font-size: 28px;
+  }
+}
+
+.control {
+  flex: 0;
+}
+@media (max-width: 36em) {
+  .control {
+    flex: 1;
+  }
+}
+
+/* Aside */
+.aside {
+  width: 40%;
+}
+@media (max-width: 75em) {
+  .aside {
+    width: 50%;
+  }
+}
+
+@media (max-width: 36em) {
+  .aside {
+    width: 100%;
+  }
+}
+
+/* Highlight */
+.highlight {
+  position: relative;
+  background-color: var(--mantine-color-primary);
+  border-radius: var(--mantine-radius-sm);
+  padding: 4px 12px;
+}
+
+/* CourseContentSmall */
+.CourseContentSmall {
+  display: none;
+}
+@media (max-width: 36em) {
+  .CourseContentSmall {
+    display: block;
+  }
+}
+
+/* CourseContentLarge */
+.CourseContentLarge {
+  display: block;
+}
+@media (max-width: 36em) {
+  .CourseContentLarge {
+    display: none;
+  }
+}
+
+/* InnerContent */
+.innerContent {
+  display: flex;
+}
+
+/* BadgeWrapperLive */
+.BadgeWrapperLive {
+  position: absolute;
+  top: 5px;
+  color: red;
+}
+
+/* BadgeWrapperEnrolled */
+.BadgeWrapperEnrolled {
+  position: absolute;
+  top: 5px;
+  left: 25%;
+  margin-left: 5px;
+}
+@media (max-width: 75em) {
+  .BadgeWrapperEnrolled {
+    margin-left: 35px;
+  }
+}
+
+@media (max-width: 48em) {
+  .BadgeWrapperEnrolled {
+    margin-left: 30px;
+  }
+}

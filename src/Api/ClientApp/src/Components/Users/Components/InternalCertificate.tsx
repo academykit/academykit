@@ -2,6 +2,7 @@ import {
   ActionIcon,
   Anchor,
   Badge,
+  Box,
   CopyButton,
   Flex,
   Image,
@@ -11,7 +12,6 @@ import {
   Table,
   Title,
   Tooltip,
-  Box,
 } from '@mantine/core';
 import { IconCheck, IconDownload, IconEye } from '@tabler/icons';
 import { useProfileAuth } from '@utils/services/authService';
@@ -33,18 +33,18 @@ const RowsCompleted = ({
     window.open(item?.certificateUrl);
   };
   return (
-    <tr key={item?.user?.id}>
-      <td>{item?.courseName}</td>
+    <Table.Tr key={item?.user?.id}>
+      <Table.Td>{item?.courseName}</Table.Td>
 
-      <td>{item?.percentage}%</td>
-      <td>
+      <Table.Td>{item?.percentage}%</Table.Td>
+      <Table.Td>
         {item?.hasCertificateIssued ? (
           <Badge color="cyan">{t('yes')}</Badge>
         ) : (
           <Badge color="cyan">{t('no')}</Badge>
         )}
-      </td>
-      <td style={{ width: '19%', height: '100px' }}>
+      </Table.Td>
+      <Table.Td style={{ width: '19%', height: '100px' }}>
         <Modal
           opened={opened}
           size="xl"
@@ -59,7 +59,7 @@ const RowsCompleted = ({
               width={150}
               height={100}
               fit="contain"
-              // sx={{":hover"}}
+              // style={{":hover"}}
               src={item?.certificateUrl}
             />
           </Anchor>
@@ -83,7 +83,11 @@ const RowsCompleted = ({
                   withArrow
                   position="right"
                 >
-                  <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
+                  <ActionIcon
+                    variant="subtle"
+                    color={copied ? 'teal' : 'gray'}
+                    onClick={copy}
+                  >
                     {copied ? (
                       <IconCheck size={18} color="black" />
                     ) : (
@@ -93,13 +97,13 @@ const RowsCompleted = ({
                 </Tooltip>
               )}
             </CopyButton>
-            <ActionIcon onClick={() => handleDownload()}>
+            <ActionIcon variant="subtle" onClick={() => handleDownload()}>
               <IconDownload color="black" />
             </ActionIcon>
           </Flex>
         </div>
-      </td>
-    </tr>
+      </Table.Td>
+    </Table.Tr>
   );
 };
 
@@ -114,27 +118,27 @@ const InternalCertificate = () => {
         <ScrollArea>
           <Paper mt={10}>
             <Table
-              sx={{ minWidth: 800 }}
+              style={{ minWidth: 800 }}
               verticalSpacing="sm"
               striped
               highlightOnHover
-              withBorder
+              withTableBorder
               withColumnBorders
             >
-              <thead>
-                <tr>
-                  <th>{t('training_name')}</th>
-                  <th>{t('completion')}</th>
-                  <th>{t('is_issued')}</th>
-                  <th>{t('certificate_url')}</th>
-                </tr>
-              </thead>
-              <tbody>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>{t('training_name')}</Table.Th>
+                  <Table.Th>{t('completion')}</Table.Th>
+                  <Table.Th>{t('is_issued')}</Table.Th>
+                  <Table.Th>{t('certificate_url')}</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
                 {data?.certificates &&
                   data?.certificates.map((x: any) => (
                     <RowsCompleted key={x.userId} item={x} t={t} />
                   ))}
-              </tbody>
+              </Table.Tbody>
             </Table>
           </Paper>
         </ScrollArea>

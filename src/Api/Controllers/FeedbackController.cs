@@ -201,19 +201,6 @@ namespace Lingtren.Api.Controllers
                 .ConfigureAwait(false);
 
         /// <summary>
-        /// Get feedback submitted student list api.
-        /// </summary>
-        /// <param name="lessonIdentity">the lesson id or slug.</param>
-        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
-        [HttpGet("{lessonIdentity}/chart")]
-        public async Task<IList<FeedBackChartResponseModel>> GetLessonFeedBackData(
-            string lessonIdentity
-        ) =>
-            await feedbackService
-                .GetFeedbackChartData(lessonIdentity, CurrentUser.Id)
-                .ConfigureAwait(false);
-
-        /// <summary>
         /// feedback export api.
         /// </summary>
         /// <param name="lessonIdentity">the lesson id or slug. </param>
@@ -226,5 +213,18 @@ namespace Lingtren.Api.Controllers
                 .ConfigureAwait(false);
             return File(report, "text/csv", $"{lessonIdentity}.csv");
         }
+
+        /// <summary>
+        /// Get feedback submitted student list api.
+        /// </summary>
+        /// <param name="lessonIdentity">the lesson id or slug.</param>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        [HttpGet("{lessonIdentity}/chart")]
+        public async Task<IList<FeedBackChartResponseModel>> GetLessonFeedBackData(
+            string lessonIdentity
+        ) =>
+            await feedbackService
+                .GetFeedbackChartData(lessonIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
     }
 }

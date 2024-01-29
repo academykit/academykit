@@ -47,7 +47,7 @@ const TeacherCard = ({
         onConfirm={handleDelete}
       />
 
-      <Group py={5} position="apart">
+      <Group py={5} justify="space-between">
         <UserShortProfile
           size={'md'}
           user={{ ...teacher.user, role: teacher?.role }}

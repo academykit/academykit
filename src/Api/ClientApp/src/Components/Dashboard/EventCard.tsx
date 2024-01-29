@@ -71,17 +71,17 @@ const EventCard = ({ detail }: { detail: UpcomingEvents }) => {
           to={`/classes/${detail.courseSlug}/${detail.lessonSlug}/description`}
           bg={getTypeColor(detail.lessonType).color}
         >
-          <Text size="lg" weight="bolder" lineClamp={2} color="black">
+          <Text size="lg" fw="bolder" lineClamp={2} c="black">
             {detail.lessonName}
           </Text>
-          <Text size="sm" lineClamp={2} color="black">
+          <Text size="sm" lineClamp={2} c="black">
             {detail.courseName ?? 'Training Name'}
           </Text>
           <Group mt={'sm'}>
             <Badge color="blue" variant="outline">
               {t(`${LessonType[detail.lessonType]}`)}
             </Badge>
-            <Text size="sm" color="black">
+            <Text size="sm" c="black">
               {moment(detail.startDate).format('LL')}
             </Text>
           </Group>

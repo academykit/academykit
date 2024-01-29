@@ -10,6 +10,7 @@ import {
 import UserResults from '@pages/course/exam/Components/UserResults';
 import { useQueryClient } from '@tanstack/react-query';
 import { DATE_FORMAT } from '@utils/constants';
+import { CourseStatus } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import { useGetCourseLesson } from '@utils/services/courseService';
 import { api } from '@utils/services/service-api';
@@ -116,15 +117,17 @@ const ExamDetails = ({
     },
   });
 
-  const formattedTime = moment(exam?.startTime).format('HH:mm A');
+  const formattedStartTime = moment(exam?.startTime).format('HH:mm A');
+  const formattedEndTime = moment(exam?.endTime).format('HH:mm A');
 
   return (
     <Group
       p={10}
-      sx={{
+      style={{
         height: '70vh',
         justifyContent: 'center',
         alignItems: 'center',
+        overflow: 'scroll',
       }}
       pos={'relative'}
     >
@@ -137,28 +140,45 @@ const ExamDetails = ({
                 .fromNow()}`}</Text>
             </Box>
           )}
-          <Group sx={{ justifyContent: 'space-around', width: '100%' }}>
+          <Group style={{ justifyContent: 'space-around', width: '100%' }}>
             <Box>
               <Box w={350}>
-                <Title lineClamp={1} truncate align="justify" display={'block'}>
+                <Title
+                  ta="justify"
+                  display={'block'}
+                  style={{
+                    lineClamp: 1,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
                   {exam?.name}
                 </Title>
               </Box>
               {exam?.startTime && (
                 <Text>
-                  {t('start_date')}:{' '}
-                  {moment(exam?.startTime).format(DATE_FORMAT)}{' '}
-                </Text>
-              )}
-              {exam?.startTime && (
-                <Text>
-                  {t('start_time')}:{' '}
-                  {moment(formattedTime, 'hh:mm A')
+                  {t('active_from')}:{' '}
+                  {moment(exam?.startTime).format(DATE_FORMAT)} (
+                  {moment(formattedStartTime, 'hh:mm A')
                     .add(5, 'hours')
                     .add(45, 'minutes')
-                    .format('hh:mm A')}{' '}
+                    .format('hh:mm A')}
+                  )
                 </Text>
               )}
+              {exam?.endTime && (
+                <Text>
+                  {t('active_till')}:{' '}
+                  {moment(exam?.endTime).format(DATE_FORMAT)} (
+                  {moment(formattedEndTime, 'hh:mm A')
+                    .add(5, 'hours')
+                    .add(45, 'minutes')
+                    .format('hh:mm A')}
+                  )
+                </Text>
+              )}
+
               {exam?.duration ? (
                 <Text>
                   {t('duration')}: {exam?.duration / 60} minute(s){' '}
@@ -198,13 +218,9 @@ const ExamDetails = ({
               )}
             </Box>
             <div>
-              <Box sx={{ overflow: 'auto', maxHeight: '60vh' }} px={10}>
+              <Box style={{ overflow: 'auto', maxHeight: '60vh' }} px={10}>
                 {data.hasResult && (
-                  <MantineProvider
-                    theme={{
-                      colorScheme: 'dark',
-                    }}
-                  >
+                  <MantineProvider>
                     <UserResults
                       lessonId={exam?.slug}
                       studentId={userId}
@@ -218,17 +234,23 @@ const ExamDetails = ({
                 exam?.endTime + 'Z'
               ) ? (
                 <>
-                  {data.remainingAttempt > 0 ? (
-                    <Button
-                      mt={10}
-                      component={Link}
-                      to={RoutePath.exam?.details(exam?.slug).route}
-                      state={window.location.pathname}
-                    >
-                      {data.isTrainee ? t('start_exam') : t('view_exam')}
-                    </Button>
+                  {data.status != CourseStatus.Completed ? (
+                    <>
+                      {data.remainingAttempt > 0 ? (
+                        <Button
+                          mt={10}
+                          component={Link}
+                          to={RoutePath.exam?.details(exam?.slug).route}
+                          state={window.location.pathname}
+                        >
+                          {data.isTrainee ? t('start_exam') : t('view_exam')}
+                        </Button>
+                      ) : (
+                        <Text mt={15}>{t('attempt_exceeded')}</Text>
+                      )}
+                    </>
                   ) : (
-                    <Text mt={15}>{t('attempt_exceeded')}</Text>
+                    <Text mt={15}>{t('exam_course_completed')}</Text>
                   )}
                 </>
               ) : (

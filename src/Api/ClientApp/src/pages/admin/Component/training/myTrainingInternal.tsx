@@ -1,11 +1,11 @@
 import {
+  ActionIcon,
   Box,
   Card,
   Container,
   Flex,
   Image,
   Text,
-  ActionIcon,
   Tooltip,
 } from '@mantine/core';
 import { IconDownload, IconEye } from '@tabler/icons';
@@ -28,8 +28,8 @@ const MyTrainingInternal = () => {
           <Card key={i} withBorder mt={10}>
             <Flex justify={'space-between'}>
               <Box>
-                <Text weight={'bold'}>{x.courseName}</Text>
-                <Text weight={'bold'}>
+                <Text fw={'bold'}>{x.courseName}</Text>
+                <Text fw={'bold'}>
                   {t('certificate_issue_date')}{' '}
                   {moment(x.certificateIssuedDate).format(DATE_FORMAT)}
                 </Text>
@@ -67,12 +67,14 @@ const MyTrainingInternal = () => {
                         <ActionIcon
                           onClick={() => window.open(x.certificateUrl)}
                           mr={10}
+                          variant="subtle"
                         >
                           <IconEye color="black" />
                         </ActionIcon>
                       </Tooltip>
                       <Tooltip label={t('download_certificate')}>
                         <ActionIcon
+                          variant="subtle"
                           onClick={() => {
                             downloadImage(
                               x?.certificateUrl ?? '',

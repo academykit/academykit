@@ -1,9 +1,7 @@
 import Breadcrumb from '@components/Ui/BreadCrumb';
-import TextViewer from '@components/Ui/RichTextViewer';
 import {
   Anchor,
   Button,
-  Checkbox,
   Grid,
   Group,
   Loader,
@@ -11,11 +9,7 @@ import {
   Paper,
   Select,
   Text,
-  TransferList,
-  TransferListData,
-  TransferListItemComponent,
-  TransferListItemComponentProps,
-  createStyles,
+  useMantineTheme,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
@@ -33,51 +27,21 @@ import { IPaginated } from '@utils/services/types';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
+import TransferList from '../component/Transferlist';
 
 interface ISelectList {
   label: string;
   value: string;
 }
 
-interface IQuestionListData {
+export interface IQuestionListData {
   value: string;
   label: string;
   description: string;
 }
 
-const useStyle = createStyles({});
-
-const ItemComponent: TransferListItemComponent = ({
-  data,
-  selected,
-}: TransferListItemComponentProps) => (
-  <Group noWrap>
-    <Checkbox
-      checked={selected}
-      onChange={() => {}}
-      tabIndex={-1}
-      sx={{ pointerEvents: 'none' }}
-    />
-    <div style={{ flex: 1 }}>
-      <Text size="sm" weight={500}>
-        {data.label}
-      </Text>
-      {data && data?.description !== null && (
-        <Text lineClamp={3} sx={{ overflow: 'hidden' }}>
-          <TextViewer
-            content={data?.description}
-            sx={{
-              wordBreak: 'break-all',
-            }}
-          />
-        </Text>
-      )}
-    </div>
-  </Group>
-);
-
 const Questions = () => {
-  const { theme } = useStyle();
+  const theme = useMantineTheme();
   const params = useParams();
 
   const lessonSlug = params.lessonSlug && params.lessonSlug;
@@ -88,7 +52,7 @@ const Questions = () => {
   const [activePage, setPage] = useState(1);
   const { t } = useTranslation();
 
-  const [data, setData] = useState<TransferListData>([firstList, secondList]);
+  const [data, setData] = useState([firstList, secondList]);
   const [poolValue, setPoolValue] = useState<string | null>(null);
   const [tagValue, setTagValue] = useState<string | null>(null);
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.sm}px)`);
@@ -179,6 +143,7 @@ const Questions = () => {
       setData([data[0], i]);
     }
   }, [questionList.isSuccess]);
+
   const addQuestion = async () => {
     if (!data[1].length) {
       showNotification({
@@ -189,7 +154,7 @@ const Questions = () => {
     }
     try {
       const questionPoolQuestionIds: string[] = [];
-      data[1].map((e) => {
+      data[1].map((e: any) => {
         questionPoolQuestionIds.push(e.value);
       });
       await addQuestions.mutateAsync({
@@ -223,7 +188,7 @@ const Questions = () => {
               label={
                 <>
                   <Text>{t('mcq_pools')}</Text>
-                  <Text size={'0.810rem'} color="#909296">
+                  <Text size={'0.810rem'} c="#909296">
                     {t('question_pool_created')}
                     <Anchor href="/pools">
                       {t('question_pool_href')}
@@ -238,7 +203,7 @@ const Questions = () => {
               searchable
               clearable
               allowDeselect
-              nothingFound={t('no_options')}
+              nothingFoundMessage={t('no_options')}
               maxDropdownHeight={280}
               data={poolData}
               onChange={(e) => {
@@ -256,7 +221,7 @@ const Questions = () => {
                 searchable
                 clearable
                 allowDeselect
-                nothingFound="No Tags found!"
+                nothingFoundMessage="No Tags found!"
                 maxDropdownHeight={280}
                 data={questionTag}
                 onChange={setTagValue}
@@ -269,22 +234,7 @@ const Questions = () => {
           <Loader />
         ) : (
           <>
-            <TransferList
-              value={data}
-              onChange={setData}
-              searchPlaceholder={t('search_for_questions') as string}
-              nothingFound={
-                questionList.isLoading ? <Loader /> : t('no_question_found')
-              }
-              titles={[
-                t('questions_list'),
-                `${t('selected_questions')} (${data[1].length})`,
-              ]}
-              listHeight={600}
-              breakpoint="sm"
-              itemComponent={ItemComponent}
-              sx={{ height: '85%' }}
-            />
+            <TransferList data={data} setData={setData} />
 
             {questions.data && questions.data.totalPage > 1 && (
               <Pagination
@@ -296,7 +246,7 @@ const Questions = () => {
             )}
           </>
         )}
-        <Group position="left" mt={30}>
+        <Group mt={30}>
           <Button onClick={addQuestion}>{t('submit')}</Button>
           <Button
             variant="outline"

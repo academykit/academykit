@@ -1,62 +1,32 @@
-import {
-  ColorScheme,
-  ColorSchemeProvider,
-  MantineProvider,
-} from '@mantine/core';
-
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
-import AppRoutes from '@routes/AppRoutes';
-import { Notifications } from '@mantine/notifications';
-import { AuthProvider } from '@context/AuthProvider';
-import { BRANDING_SCHEME_KEY, COLOR_SCHEME_KEY } from '@utils/constants';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { LayoutProvider } from '@context/LayoutProvider';
 import ErrorBoundary from '@components/ErrorBoundry';
-import { BrowserRouter } from 'react-router-dom';
 import ScrollToTop from '@components/ScrollToTop';
-import './App.css';
-import { useTranslation } from 'react-i18next';
+import { AuthProvider } from '@context/AuthProvider';
+import BrandingProvider, {
+  defaultBranding,
+} from '@context/BrandingThemeContext';
 import FormProvider from '@context/FormContext';
-import BrandingProvider from '@context/BrandingThemeContext';
-import generateTints from '@utils/services/colorService';
+import { LayoutProvider } from '@context/LayoutProvider';
+import {
+  CSSVariablesResolver,
+  MantineProvider,
+  createTheme,
+} from '@mantine/core';
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
+import { Notifications } from '@mantine/notifications';
+import '@mantine/notifications/styles.css';
+import '@mantine/tiptap/styles.css';
+import AppRoutes from '@routes/AppRoutes';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { BRANDING_SCHEME_KEY } from '@utils/constants';
+import generateTints, { BrandingThemeType } from '@utils/services/colorService';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { BrowserRouter } from 'react-router-dom';
+import './App.css';
 
 const App = ({ queryClient }: { queryClient: QueryClient }) => {
-  const [colorScheme, setColorScheme] = useState<ColorScheme>(
-    (localStorage.getItem(COLOR_SCHEME_KEY) as 'light' | 'dark') ?? 'light'
-  );
-  const toggleColorScheme = (value?: ColorScheme) => {
-    const nextColorScheme =
-      value || (colorScheme === 'dark' ? 'light' : 'dark');
-    setColorScheme(nextColorScheme);
-    localStorage.setItem(COLOR_SCHEME_KEY, nextColorScheme);
-  };
-  type BrandingThemeType = [
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-  ];
-
-  const defaultBranding: BrandingThemeType = [
-    '#7AD1DD',
-    '#5FCCDB',
-    '#44CADC',
-    '#2AC9DE',
-    '#1AC2D9',
-    '#11B7CD',
-    '#09ADC3',
-    '#0E99AC',
-    '#128797',
-    '#147885',
-  ];
-
   const getBrandingTheme = () => {
     const storedValue = localStorage.getItem(BRANDING_SCHEME_KEY);
     return storedValue
@@ -80,134 +50,179 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
     i18n.changeLanguage(lang ?? 'en');
   }, [lang]);
 
-  return (
-    <ColorSchemeProvider
-      colorScheme={colorScheme}
-      toggleColorScheme={toggleColorScheme}
-    >
-      <BrowserRouter>
-        <ScrollToTop />
-        <MantineProvider
-          withGlobalStyles
-          withNormalizeCSS
-          theme={{
-            globalStyles: () => ({
-              '.global-astrick': {
-                color: '#e03131',
-                fontWeight: 'bold',
-                fontSize: '20px',
-                verticalAlign: 'middle',
-              },
-            }),
-            components: {
-              Anchor: {
-                styles: (theme) => ({
-                  root: {
-                    color: theme.colors.brand[7],
-                  },
-                }),
-              },
-              Popover: {
-                styles: (theme) => ({
-                  dropdown: {
-                    backgroundColor:
-                      theme.colorScheme === 'dark' ? '#25262B' : '#F2F4F4',
-                  },
-                }),
-              },
-              TextInput: {
-                styles: () => ({
-                  required: {
-                    fontWeight: 'bold',
-                    fontSize: '20px',
-                    verticalAlign: 'middle',
-                  },
-                }),
-              },
-              MultiSelect: {
-                styles: () => ({
-                  required: {
-                    fontWeight: 'bold',
-                    fontSize: '20px',
-                  },
-                }),
-              },
-              Select: {
-                styles: () => ({
-                  required: {
-                    fontWeight: 'bold',
-                    fontSize: '20px',
-                  },
-                }),
-              },
-              Textarea: {
-                styles: () => ({
-                  required: {
-                    fontWeight: 'bold',
-                    fontSize: '20px',
-                  },
-                }),
-              },
-              TimeInput: {
-                styles: () => ({
-                  required: {
-                    fontWeight: 'bold',
-                    fontSize: '20px',
-                  },
-                }),
-              },
-              DatePickerInput: {
-                styles: () => ({
-                  required: {
-                    fontWeight: 'bold',
-                    fontSize: '20px',
-                  },
-                }),
-              },
-              NumberInput: {
-                styles: () => ({
-                  required: {
-                    fontWeight: 'bold',
-                    fontSize: '20px',
-                  },
-                }),
-              },
-            },
-            colorScheme,
-            fontFamily: 'Poppins, sans-serif',
-            fontFamilyMonospace: 'Monaco, Courier, monospace',
-            headings: { fontFamily: 'Poppins, sans-serif' },
-            loader: 'dots',
+  const theme = createTheme({
+    components: {
+      Anchor: {
+        styles: (theme: any) => ({
+          root: {
+            color: theme.colors.brand[7],
+          },
+        }),
+      },
+      Popover: {
+        styles: () => ({
+          dropdown: {
+            backgroundColor:
+              localStorage.getItem('mantine-color-scheme-value') === 'dark'
+                ? '#25262B'
+                : '#F2F4F4',
+          },
+        }),
+      },
+      TextInput: {
+        styles: () => ({
+          required: {
+            fontWeight: 'bold',
+            fontSize: '20px',
+            verticalAlign: 'middle',
+          },
+        }),
+      },
+      MultiSelect: {
+        styles: () => ({
+          required: {
+            fontWeight: 'bold',
+            fontSize: '20px',
+          },
+        }),
+      },
+      Select: {
+        styles: () => ({
+          required: {
+            fontWeight: 'bold',
+            fontSize: '20px',
+          },
+        }),
+      },
+      Textarea: {
+        styles: () => ({
+          required: {
+            fontWeight: 'bold',
+            fontSize: '20px',
+          },
+        }),
+      },
+      TimeInput: {
+        styles: () => ({
+          required: {
+            fontWeight: 'bold',
+            fontSize: '20px',
+          },
+        }),
+      },
+      DatePickerInput: {
+        styles: () => ({
+          required: {
+            fontWeight: 'bold',
+            fontSize: '20px',
+          },
+        }),
+      },
+      MonthPickerInput: {
+        styles: () => ({
+          required: {
+            fontWeight: 'bold',
+            fontSize: '20px',
+          },
+        }),
+      },
+      NumberInput: {
+        styles: () => ({
+          required: {
+            fontWeight: 'bold',
+            fontSize: '20px',
+          },
+        }),
+      },
+    },
+    fontFamily: 'Poppins, sans-serif',
+    fontFamilyMonospace: 'Monaco, Courier, monospace',
+    headings: { fontFamily: 'Poppins, sans-serif' },
 
-            colors: {
-              brand: brandingThemeValue,
-            },
-            primaryColor: 'brand',
-          }}
-        >
-          <FormProvider>
-            <QueryClientProvider client={queryClient}>
-              <ErrorBoundary>
-                <AuthProvider>
-                  <LayoutProvider>
-                    <BrandingProvider
-                      brandingTheme={brandingTheme}
-                      brandingThemeValue={brandingThemeValue}
-                      setBrandingTheme={setBrandingTheme}
-                      setBrandingThemeValue={setBrandingThemeValue}
-                    >
-                      <AppRoutes />
-                    </BrandingProvider>
-                  </LayoutProvider>
-                </AuthProvider>
-                <ReactQueryDevtools initialIsOpen={false} />
-              </ErrorBoundary>
-            </QueryClientProvider>
-            <Notifications />
-          </FormProvider>
-        </MantineProvider>
-      </BrowserRouter>
-    </ColorSchemeProvider>
+    colors: {
+      brand: brandingThemeValue,
+    },
+    primaryColor: 'brand',
+    breakpoints: {
+      cmd: '1050px',
+      clg: '1280px',
+      cxl: '1780px',
+    },
+  });
+
+  const resolver: CSSVariablesResolver = (theme) => ({
+    variables: {
+      '--mantine-hero-height': theme.other.heroHeight,
+      '--mantine-color-answer-active': brandingTheme,
+    },
+    light: {
+      '--mantine-color-editor-bg': theme.colors.gray[2],
+      '--mantine-color-reply-bg': theme.colors.gray[1],
+      '--mantine-color-wrapper-bg': theme.colors.gray[4],
+      '--mantine-color-answered': '#09ADC3',
+      '--mantine-color-title': theme.black,
+      '--mantine-color-paper-hover': theme.colors.dark[2],
+      '--mantine-color-training-footer': theme.colors.gray[2],
+      '--mantine-color-user-icon': theme.colors.gray[4],
+      '--mantine-color-footer-border': theme.colors.gray[2],
+      '--mantine-color-error-label': theme.colors.gray[2],
+      '--mantine-color-pool-border': theme.colors.gray[2],
+      '--mantine-color-classes-section': 'white',
+      '--mantine-color-progress-section': theme.colors.teal[6],
+      '--mantine-color-progress-bar': theme.white,
+      '--mantine-color-drag': theme.colors.gray[3],
+      '--mantine-color-drop': theme.colors.gray[4],
+      '--mantine-color-correct-circle': theme.colors.green[5],
+      '--mantine-color-lesson-bg': theme.white,
+    },
+    dark: {
+      '--mantine-color-editor-bg': theme.colors.dark[1],
+      '--mantine-color-reply-bg': theme.colors.dark[3],
+      '--mantine-color-wrapper-bg': theme.colors.dark[4],
+      '--mantine-color-answered': '#128797',
+      '--mantine-color-title': theme.white,
+      '--mantine-color-paper-hover': theme.colors.gray[7],
+      '--mantine-color-training-footer': theme.colors.dark[4],
+      '--mantine-color-user-icon': theme.colors.dark[3],
+      '--mantine-color-footer-border': theme.colors.dark[5],
+      '--mantine-color-error-label': theme.colors.dark[4],
+      '--mantine-color-pool-border': theme.colors.dark[4],
+      '--mantine-color-classes-section': theme.colors.dark[6],
+      '--mantine-color-progress-section': theme.colors.teal[9],
+      '--mantine-color-progress-bar': theme.colors.dark[7],
+      '--mantine-color-drag': theme.colors.blue[1],
+      '--mantine-color-drop': theme.colors.blue[1],
+      '--mantine-color-correct-circle': theme.colors.green[8],
+      '--mantine-color-lesson-bg': theme.colors.dark[5],
+    },
+  });
+
+  return (
+    <BrowserRouter>
+      <ScrollToTop />
+      <MantineProvider theme={theme} cssVariablesResolver={resolver}>
+        <FormProvider>
+          <QueryClientProvider client={queryClient}>
+            <ErrorBoundary>
+              <AuthProvider>
+                <LayoutProvider>
+                  <BrandingProvider
+                    brandingTheme={brandingTheme}
+                    brandingThemeValue={brandingThemeValue}
+                    setBrandingTheme={setBrandingTheme}
+                    setBrandingThemeValue={setBrandingThemeValue}
+                  >
+                    <AppRoutes />
+                  </BrandingProvider>
+                </LayoutProvider>
+              </AuthProvider>
+              <ReactQueryDevtools initialIsOpen={false} />
+            </ErrorBoundary>
+          </QueryClientProvider>
+          <Notifications />
+        </FormProvider>
+      </MantineProvider>
+    </BrowserRouter>
   );
 };
 

@@ -3,7 +3,6 @@ import {
   Button,
   Card,
   Container,
-  createStyles,
   Divider,
   Group,
   Loader,
@@ -22,33 +21,9 @@ import {
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
+import classes from '../styles/dashboard.module.css';
 
-const useStyles = createStyles((theme) => ({
-  group: {
-    justifyContent: 'center',
-  },
-  right: {
-    width: '40%',
-    [theme.fn.smallerThan(theme.breakpoints.md)]: {
-      width: '100%',
-    },
-  },
-  left: {
-    width: '50%',
-    [theme.fn.smallerThan(theme.breakpoints.md)]: {
-      width: '100%',
-    },
-  },
-  center: {
-    ['@media (max-width : 527px)']: {
-      width: '100%',
-    },
-    width: '50%',
-    margin: 'auto',
-  },
-}));
 const Dashboard = () => {
-  const { classes } = useStyles();
   const { id } = useParams();
   const course = useCourseDescription(id as string);
   const courseStatus = useCourseStatus(id as string, '');
@@ -178,7 +153,7 @@ const Dashboard = () => {
         <Card
           shadow={'sm'}
           className={classes.center}
-          sx={{
+          style={{
             display: 'flex',
             alignItems: 'center',
             flexDirection: 'column',
@@ -203,7 +178,7 @@ const Dashboard = () => {
         <Card
           shadow={'sm'}
           className={classes.center}
-          sx={{
+          style={{
             display: 'flex',
             alignItems: 'center',
             flexDirection: 'column',

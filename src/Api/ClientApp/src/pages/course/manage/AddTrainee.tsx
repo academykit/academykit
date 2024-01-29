@@ -32,11 +32,11 @@ interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
 const SelectUserItem = forwardRef<HTMLDivElement, ItemProps>(
   ({ firstName, imageUrl, email, ...others }: ItemProps, ref) => (
     <div ref={ref} {...others}>
-      <Group noWrap>
+      <Group wrap="nowrap">
         <Avatar src={imageUrl} />
         <div>
           <Text>{firstName}</Text>
-          <Text size="xs" color="dimmed">
+          <Text size="xs" c="dimmed">
             {email}
           </Text>
         </div>
@@ -68,7 +68,6 @@ const AddTrainee = ({
     id as string,
     `Page=1&Size=10&EnrollmentStatus=3${search && `&search=${search}`}`
   );
-  console.log(nonTrainee?.data);
   const ref = useRef<HTMLInputElement>(null);
 
   const form = useForm<IAddTrainee>({
@@ -131,21 +130,19 @@ const AddTrainee = ({
           data={data}
           mb={10}
           label={t('email_address')}
-          itemComponent={SelectUserItem}
           withAsterisk
           name="email"
           size="md"
-          nothingFound={
+          nothingFoundMessage={
             nonTrainee.isLoading ? <Loader /> : <Box>{t('User Not found')}</Box>
           }
-          getCreateLabel={(query) => `+ Create ${query}`}
           onSearchChange={(d) => {
             setSearch(d);
           }}
           {...form.getInputProps('email')}
         />
 
-        <Group mt={'lg'} position="right">
+        <Group mt={'lg'} justify="flex-end">
           <Button mr={10} type="submit" size="md">
             {t('submit')}
           </Button>

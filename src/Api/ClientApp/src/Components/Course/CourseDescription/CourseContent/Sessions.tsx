@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import useAuth from '@hooks/useAuth';
-import { Box, Text, Title } from '@mantine/core';
+import { Accordion, Box, Text, Title } from '@mantine/core';
 import { CourseUserStatus, UserRole } from '@utils/enums';
 import { ISection } from '@utils/services/courseService';
-import Lesson from './Lesson';
 import { useTranslation } from 'react-i18next';
+import Lesson from './Lesson';
 
 const Sessions = ({
   section,
@@ -21,25 +22,46 @@ const Sessions = ({
   const canClickLessons =
     enrollmentStatus === CourseUserStatus.NotEnrolled &&
     auth?.auth &&
-    auth.auth?.role > UserRole.Admin;
+    Number(auth.auth?.role) > UserRole.Admin;
+
+  // automatic expand current section
+  // const getCurrentSectionName = () => {
+  //   const currentSection = section.lessons?.find(
+  //     (x) => x.slug === params.lessonId
+  //   );
+  //   return currentSection?.sectionId ?? '';
+  // };
 
   return (
     <Box>
-      <Title size={'h6'}>{section?.name}</Title>
-      <Text size={10} color={'dimmed'}>
-        {section.lessons?.length} {t('Lesson')}
-      </Text>
-      <Box
-        my={20}
-        mx={10}
-        sx={{
-          pointerEvents: canClickLessons ? 'none' : 'auto',
-        }}
-      >
-        {section.lessons?.map((x, i) => (
-          <Lesson key={x.id} lesson={x} index={i} courseSlug={courseSlug} />
-        ))}
-      </Box>
+      <Accordion>
+        <Accordion.Item value={section?.id}>
+          <Accordion.Control>
+            <Title size={'h6'}>{section?.name}</Title>
+            <Text size={'md'} c={'dimmed'}>
+              {section.lessons?.length} {t('Lesson')}
+            </Text>
+          </Accordion.Control>
+          <Accordion.Panel>
+            <Box
+              my={20}
+              mx={10}
+              style={{
+                pointerEvents: canClickLessons ? 'none' : 'auto',
+              }}
+            >
+              {section.lessons?.map((x, i) => (
+                <Lesson
+                  key={x.id}
+                  lesson={x}
+                  index={i}
+                  courseSlug={courseSlug}
+                />
+              ))}
+            </Box>
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
     </Box>
   );
 };

@@ -35,17 +35,17 @@ const GroupCourse = ({
       <Flex
         my={10}
         wrap={'wrap'}
-        sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+        style={{ justifyContent: 'space-between', alignItems: 'center' }}
       >
-        <Title sx={{ flexGrow: 2 }}>{t('trainings')}</Title>
+        <Title style={{ flexGrow: 2 }}>{t('trainings')}</Title>
         <Flex
-          sx={{
+          style={{
             justifyContent: 'end',
             alignItems: 'center',
           }}
         >
-          {auth?.auth && auth.auth?.role < UserRole.Trainee && (
-            <Group position="right" mb={10}>
+          {auth?.auth && Number(auth.auth?.role) < UserRole.Trainee && (
+            <Group justify="flex-end" mb={10}>
               <Link to={RoutePath.courses.create + `?group=${id}`}>
                 <Button>{t('add_new_training')}</Button>
               </Link>

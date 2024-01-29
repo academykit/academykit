@@ -1,11 +1,11 @@
+import { Table, Text } from '@mantine/core';
 import { LessonType, ReadableEnum } from '@utils/enums';
 import { IStudentInfoLesson } from '@utils/services/manageCourseService';
 import { useState } from 'react';
-import ManageCourseModal from './mangeCourseModal';
+import { useTranslation } from 'react-i18next';
 import StudentLessonDetails from './StudentDetails';
 import LessonStatusColor from './StudentDetails/LessonStatusColor';
-import { useTranslation } from 'react-i18next';
-import { Text } from '@mantine/core';
+import ManageCourseModal from './mangeCourseModal';
 
 const CourseStudentLessons = ({
   element,
@@ -20,28 +20,28 @@ const CourseStudentLessons = ({
   const { t } = useTranslation();
 
   return (
-    <tr key={element.lessonId}>
-      <td>
+    <Table.Tr key={element.lessonId}>
+      <Table.Td>
         <ManageCourseModal opened={opened} setOpened={setOpened} />
         <Text mah={'200px'}>{element.lessonName}</Text>
-      </td>
+      </Table.Td>
 
-      <td>
+      <Table.Td>
         <LessonStatusColor status={element} />
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         {ReadableEnum[
           LessonType[element.lessonType] as keyof typeof ReadableEnum
         ] ?? t(LessonType[element.lessonType])}
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         <StudentLessonDetails
           studentInfo={element}
           studentId={studentId}
           courseId={courseId}
         />
-      </td>
-    </tr>
+      </Table.Td>
+    </Table.Tr>
   );
 };
 

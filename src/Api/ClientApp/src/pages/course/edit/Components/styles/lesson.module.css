@@ -1,0 +1,26 @@
+/* Item */
+.item {
+  align-items: center;
+  margin-top: 10px;
+  border-radius: var(--mantine-radius-md);
+  border: 1px solid var(--mantine-color-gray-7);
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-xl);
+  background-color: var(--mantine-color-lesson-bg);
+  margin-bottom: var(--mantine-spacing-sm);
+}
+
+/* ItemDragging */
+.itemDragging {
+  box-shadow: var(--mantine-shadow-sm);
+}
+
+/* DragHandle */
+.dragHandle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--mantine-color-gray-6);
+  padding-left: var(--mantine-spacing-md);
+  padding-right: var(--mantine-spacing-md);
+}

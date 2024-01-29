@@ -1,12 +1,12 @@
-import { SimpleGrid, Text, useMantineTheme } from '@mantine/core';
+import { SimpleGrid, Text, useMantineColorScheme } from '@mantine/core';
 import {
   DashboardCourses,
   DashboardStats,
 } from '@utils/services/dashboardService';
 
+import { useTranslation } from 'react-i18next';
 import { StatsCard } from './StatsCard';
 import TrainingCards from './TrainingCards';
-import { useTranslation } from 'react-i18next';
 
 const Admin = ({
   dashboard,
@@ -16,7 +16,7 @@ const Admin = ({
   dashboardCourses: DashboardCourses[];
 }) => {
   const { t } = useTranslation();
-  const theme = useMantineTheme();
+  const { colorScheme } = useMantineColorScheme();
 
   const incomingData = [
     {
@@ -25,7 +25,7 @@ const Admin = ({
       icon: 'userEnrollment',
       signLabel: t('user'),
       pluLabel: t('users'),
-      color: theme.colorScheme == 'dark' ? 'white' : 'black',
+      color: colorScheme == 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalActiveUsers',
@@ -33,7 +33,7 @@ const Admin = ({
       icon: 'active',
       signLabel: t('user'),
       pluLabel: t('users'),
-      color: theme.colorScheme == 'dark' ? 'white' : 'black',
+      color: colorScheme == 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalGroups',
@@ -41,7 +41,7 @@ const Admin = ({
       icon: 'groups',
       signLabel: t('group'),
       pluLabel: t('groups'),
-      color: theme.colorScheme == 'dark' ? 'white' : 'black',
+      color: colorScheme == 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalTrainers',
@@ -49,7 +49,7 @@ const Admin = ({
       icon: 'trainers',
       signLabel: t('trainer'),
       pluLabel: t('trainers'),
-      color: theme.colorScheme == 'dark' ? 'white' : 'black',
+      color: colorScheme == 'dark' ? 'white' : 'black',
     },
     {
       key: 'totalTrainings',
@@ -57,26 +57,19 @@ const Admin = ({
       icon: 'trainings',
       signLabel: t('training'),
       pluLabel: t('trainings'),
-      color: theme.colorScheme == 'dark' ? 'white' : 'black',
+      color: colorScheme == 'dark' ? 'white' : 'black',
     },
   ];
 
   return (
     <div>
-      <SimpleGrid
-        mb={20}
-        cols={4}
-        breakpoints={[
-          { maxWidth: 'md', cols: 2 },
-          { maxWidth: 'xs', cols: 1 },
-        ]}
-      >
+      <SimpleGrid mb={20} cols={{ base: 1, md: 2, lg: 4 }}>
         {dashboard &&
           incomingData.map((x, idx) => (
             <StatsCard key={idx} data={x} dashboard={dashboard} />
           ))}
       </SimpleGrid>
-      <Text size={'xl'} weight="bold">
+      <Text size={'xl'} fw="bold">
         {t('my_trainings')}
       </Text>
 
@@ -88,17 +81,7 @@ const Admin = ({
         <Text c="dimmed">{t('no_trainings')}</Text>
       )}
 
-      <SimpleGrid
-        cols={1}
-        spacing={10}
-        breakpoints={[
-          { minWidth: 'sx', cols: 1 },
-          { minWidth: 'sm', cols: 2 },
-          { minWidth: 'md', cols: 3 },
-          { minWidth: 1280, cols: 3 },
-          { minWidth: 1780, cols: 4 },
-        ]}
-      >
+      <SimpleGrid spacing={10} cols={{ base: 1, sm: 2, md: 3, clg: 3, cxl: 4 }}>
         {dashboardCourses.length > 0 &&
           dashboardCourses.map((x) => <TrainingCards key={x.id} data={x} />)}
       </SimpleGrid>

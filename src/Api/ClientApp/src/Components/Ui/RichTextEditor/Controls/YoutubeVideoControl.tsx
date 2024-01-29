@@ -1,6 +1,5 @@
 import { RichTextEditor, useRichTextEditorContext } from '@mantine/tiptap';
 import { IconBrandYoutube } from '@tabler/icons';
-import React from 'react';
 
 export const YoutubeVideoControl = () => {
   const { editor } = useRichTextEditorContext();
@@ -12,7 +11,7 @@ export const YoutubeVideoControl = () => {
       onClick={() => {
         const url = window.prompt('Enter Youtube video URL');
         if (url) {
-          editor
+          editor!
             .chain()
             .focus()
             .insertContent({
