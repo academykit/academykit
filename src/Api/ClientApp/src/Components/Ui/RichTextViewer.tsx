@@ -1,9 +1,5 @@
-import { Styles, Sx } from '@mantine/core';
-import {
-  Link,
-  RichTextEditor,
-  RichTextEditorStylesNames,
-} from '@mantine/tiptap';
+import { MantineStyleProp } from '@mantine/core';
+import { Link, RichTextEditor } from '@mantine/tiptap';
 import Mathematics from '@tiptap-pro/extension-mathematics';
 import Color from '@tiptap/extension-color';
 import Highlight from '@tiptap/extension-highlight';
@@ -19,10 +15,10 @@ import 'katex/dist/katex.min.css';
 
 type IProps = {
   content: string;
-  styles?: Styles<RichTextEditorStylesNames, Record<string, any>> | undefined;
-  sx?: Sx | (Sx | undefined)[] | undefined;
+  styles?: any | undefined;
+  style?: MantineStyleProp;
 };
-const TextViewer = ({ content, styles, sx }: IProps) => {
+const TextViewer = ({ content, styles, style }: IProps) => {
   const editor = useEditor({
     editable: false,
     extensions: [
@@ -42,7 +38,7 @@ const TextViewer = ({ content, styles, sx }: IProps) => {
   });
 
   return (
-    <RichTextEditor styles={styles} editor={editor} style={sx}>
+    <RichTextEditor styles={styles} editor={editor} style={style}>
       <RichTextEditor.Content />
     </RichTextEditor>
   );

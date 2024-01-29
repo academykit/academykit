@@ -13,6 +13,7 @@ import {
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
+import TransferList from '@pages/course/component/TransferList';
 import errorType from '@utils/services/axiosError';
 import { usePools } from '@utils/services/poolService';
 import {
@@ -27,7 +28,6 @@ import { IPaginated } from '@utils/services/types';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import TransferList from '../component/Transferlist';
 
 interface ISelectList {
   label: string;
