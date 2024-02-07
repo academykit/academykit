@@ -14,6 +14,8 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Localization;
     using LinqKit;
+    using Microsoft.AspNetCore.Authorization;
+
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
 
@@ -300,6 +302,60 @@
             searchCriteria.CurrentUserId = CurrentUser.Id;
             return await courseService
                 .LessonStudentsReport(identity, lessonIdentity, searchCriteria)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Course Lesson Student's report api.
+        /// </summary>
+        /// <param name="identity"> the course id or slug.</param>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        [HttpGet("{identity}/lessonStatistics/{lessonIdentity}/summary")]
+        public async Task<ExamSummaryResponseModel> LessonDetailSummary(
+            string identity,
+            string lessonIdentity,
+            [FromQuery] BaseSearchCriteria searchCriteria
+        )
+        {
+            searchCriteria.CurrentUserId = CurrentUser.Id;
+            return await courseService
+                .ExamSummaryReport(identity, lessonIdentity, searchCriteria)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Course Lesson Student's report api.
+        /// </summary>
+        /// <param name="identity"> the course id or slug.</param>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        [HttpGet("{identity}/lessonStatistics/{lessonIdentity}/submission")]
+        public async Task<IList<ExamSubmissionResponseModel>> LessonDetailSubmission(
+            string identity,
+            string lessonIdentity,
+            [FromQuery] BaseSearchCriteria searchCriteria
+        )
+        {
+            searchCriteria.CurrentUserId = CurrentUser.Id;
+            return await courseService
+                .ExamSubmissionReport(identity, lessonIdentity, searchCriteria)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Course Lesson Student's assignment summary report api.
+        /// </summary>
+        /// <param name="identity"> the course id or slug.</param>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        [HttpGet("{identity}/lessonStatistics/{lessonIdentity}/AssignmentSummary")]
+        public async Task<AssignmentSummaryResponseModel> AssignmentDetailSummary(
+            string identity,
+            string lessonIdentity,
+            [FromQuery] BaseSearchCriteria searchCriteria
+        )
+        {
+            searchCriteria.CurrentUserId = CurrentUser.Id;
+            return await courseService
+                .AssignmentStudentsReport(identity, lessonIdentity, searchCriteria)
                 .ConfigureAwait(false);
         }
 

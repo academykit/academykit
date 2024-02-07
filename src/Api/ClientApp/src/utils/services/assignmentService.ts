@@ -265,3 +265,34 @@ export const useEditReview = (lessonId: string, userId: string) => {
       ]),
   });
 };
+
+export interface IAssignmentStatus {
+  totalAttend: number;
+  totalPass: number;
+  totalFail: number;
+  averageMarks: number;
+}
+
+export interface IAssignmentSummary {
+  weekStudents: IUser[];
+  topStudents: IUser[];
+  assignmentStatus: IAssignmentStatus;
+  mostWrongAnsQues: string[];
+}
+
+const getAssignmentSummary = (courseIdentity: string, lessonId: string) =>
+  httpClient.get<IAssignmentSummary>(
+    api.course.assignmentSummary(courseIdentity, lessonId)
+  );
+
+export const useGetAssignmentSummary = (
+  courseIdentity: string,
+  lessonId: string
+) =>
+  useQuery(
+    [api.course.assignmentSummary(courseIdentity, lessonId)],
+    () => getAssignmentSummary(courseIdentity, lessonId),
+    {
+      select: (data) => data.data,
+    }
+  );

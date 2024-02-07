@@ -122,11 +122,51 @@
         );
 
         /// <summary>
-        /// Handle to fetch student course statistics report
+        /// Handle to get lesson students assignment summary report
         /// </summary>
         /// <param name="identity">the course id or slug</param>
-        /// <param name="currentUserId">the current logged in user id</param>
-        /// <returns>the search result</returns>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the paginated data</returns>
+        Task<AssignmentSummaryResponseModel> AssignmentStudentsReport(
+            string identity,
+            string lessonIdentity,
+            BaseSearchCriteria criteria
+        );
+
+        /// <summary>
+        /// Handle to get lesson students report
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the paginated data</returns>
+        Task<ExamSummaryResponseModel> ExamSummaryReport(
+            string identity,
+            string lessonIdentity,
+            BaseSearchCriteria criteria
+        );
+
+        /// <summary>
+        /// Handle to get lesson students report
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the paginated data</returns>
+        Task<IList<ExamSubmissionResponseModel>> ExamSubmissionReport(
+            string identity,
+            string lessonIdentity,
+            BaseSearchCriteria criteria
+        );
+        
+        /// <summary>
+        /// Handle to get lesson students report
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the paginated data</returns>
         Task<SearchResult<StudentCourseStatisticsResponseModel>> StudentStatistics(
             string identity,
             Guid currentUserId,

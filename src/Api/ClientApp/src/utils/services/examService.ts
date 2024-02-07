@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { CourseUserStatus, QuestionType } from '@utils/enums';
+import { CourseStatus, CourseUserStatus, QuestionType } from '@utils/enums';
+import { IQuestion } from './questionService';
 import { api } from './service-api';
 import { httpClient } from './service-axios';
 import { IUser } from './types';
@@ -125,6 +126,71 @@ export const useGetOneExamResult = (
   useQuery(
     [api.exam.getOneExamResult(lessonId, questionSetSubmissionId)],
     () => getOneExamResult(lessonId, questionSetSubmissionId),
+    {
+      select: (data) => data.data,
+    }
+  );
+
+export interface IExamStatus {
+  totalAttend: number;
+  passStudents: number;
+  failStudents: number;
+  averageMarks: number;
+}
+
+export interface IExamSummary {
+  lessonId: string;
+  lessonName: string;
+  lessonStatus: number;
+  courseStatus: CourseStatus;
+  examStatus: IExamStatus;
+  mostWrongAnsQues: IQuestion[];
+  weekStudents: IUser[];
+  topStudents: IUser[];
+  totalMarks: { marks: number }[];
+}
+
+const getExamSummary = (courseIdentity: string, lessonId: string) =>
+  httpClient.get<IExamSummary>(
+    api.course.examSummary(courseIdentity, lessonId)
+  );
+
+export const useGetExamSummary = (courseIdentity: string, lessonId: string) =>
+  useQuery(
+    [api.course.examSummary(courseIdentity, lessonId)],
+    () => getExamSummary(courseIdentity, lessonId),
+    {
+      select: (data) => data.data,
+    }
+  );
+
+export interface IExamSubmission {
+  student: {
+    id: string;
+    fullName: string;
+    imageUrl: string | null;
+    email: string;
+    mobileNumber: string | null;
+    role: number;
+    departmentId: string | null;
+    departmentName: string | null;
+  };
+  totalMarks: number;
+  submissionDate: Date;
+}
+
+const getExamSubmission = (courseIdentity: string, lessonId: string) =>
+  httpClient.get<IExamSubmission[]>(
+    api.course.examSubmission(courseIdentity, lessonId)
+  );
+
+export const useGetExamSubmission = (
+  courseIdentity: string,
+  lessonId: string
+) =>
+  useQuery(
+    [api.course.examSubmission(courseIdentity, lessonId)],
+    () => getExamSubmission(courseIdentity, lessonId),
     {
       select: (data) => data.data,
     }

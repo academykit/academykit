@@ -78,6 +78,7 @@ const Rows = ({
               to={`${item.slug}`}
               state={{
                 lessonType: item.lessonType,
+                lessonName: item.name,
               }}
             >
               <IconEye />

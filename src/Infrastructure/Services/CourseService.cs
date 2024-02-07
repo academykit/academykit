@@ -1657,7 +1657,7 @@
                         {
                             hasAttended = true;
                         }
-
+                        
                         physicalLessonStatus.Add((userId, hasAttended));
                     }
                 }
@@ -1736,6 +1736,333 @@
                     ),
                 };
             return data.ToList().ToIPagedList(criteria.Page, criteria.Size);
+        }
+
+        /// <summary>
+        /// Handle to get lesson students report
+        /// </summary>
+        /// <param name="identity">the training id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the paginated data</returns>
+        public async Task<ExamSummaryResponseModel> ExamSummaryReport(
+            string identity,
+            string lessonIdentity,
+            BaseSearchCriteria criteria
+        ){
+            var course = await ValidateAndGetCourse(
+                    criteria.CurrentUserId,
+                    identity,
+                    validateForModify: true
+                )
+                .ConfigureAwait(false);
+
+            var lesson = await _unitOfWork
+                .GetRepository<Lesson>()
+                .GetFirstOrDefaultAsync(
+                    predicate: p =>
+                        p.CourseId == course.Id
+                        && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),
+                    include: src => src.Include(x => x.CourseEnrollments).ThenInclude(x => x.User)
+                )
+                .ConfigureAwait(false);
+
+            var examResult = await _unitOfWork
+                    .GetRepository<QuestionSetResult>()
+                    .GetAllAsync(predicate: p => p.QuestionSetId == lesson.QuestionSetId,
+                                 include: src => src.Include(x => x.User))
+                    .ConfigureAwait(false);  
+                              
+            var average=examResult.Average(ex=>ex.TotalMark);
+            var examRank=examResult.OrderByDescending(ex=>ex.TotalMark);
+            
+            var examStudent = examRank.Select(result => result.User).ToList();
+            
+            var weakStudent=new List<UserModel>();
+            var topStudent=new List<UserModel>();
+
+            var count=0;
+            foreach(var student in examStudent)
+            {
+                topStudent.Add(new UserModel(student));
+                if(++count == 6)
+                {
+                    break;
+                }
+            }
+
+            var marksList = new List<TotalMarks>();
+            foreach (var marks in examRank)
+            {
+                var mark = new TotalMarks
+                {
+                    Marks = marks.TotalMark
+                };
+                marksList.Add(mark); 
+            }
+
+            var lastThreeExamStudents = examStudent.TakeLast(3).ToList();
+            foreach(var student in lastThreeExamStudents)
+            {
+                weakStudent.Add(new UserModel(student));
+            }
+                        
+            var watchHistories = await _unitOfWork
+                .GetRepository<WatchHistory>()
+                .GetAllAsync(
+                    predicate: p => p.CourseId == course.Id && p.LessonId == lesson.Id)
+                .ConfigureAwait(false);
+            var totalAttendies=watchHistories.Count();
+
+            var totalPass=0;
+            var totalFail=0;
+            foreach(var history in watchHistories)
+            {
+                if(history.IsPassed==true)
+                {
+                    totalPass++;
+                }else
+                {
+                    totalFail++;
+                }
+            }
+
+            var submissionDate=await _unitOfWork
+                    .GetRepository<QuestionSetSubmission>()
+                    .GetAllAsync(predicate: p => p.QuestionSetId == lesson.QuestionSetId)
+                    .ConfigureAwait(false); 
+
+            var examSubmissionAnswer = await _unitOfWork
+                    .GetRepository<QuestionSetSubmissionAnswer>()
+                    .GetAllAsync(predicate: p => p.QuestionSetSubmission.QuestionSetId == lesson.QuestionSetId,
+                                 include: ques => ques.Include(x => x.QuestionSetQuestion))
+                    .ConfigureAwait(false); 
+
+            var wrongQuestion=new List<Guid>();
+            foreach(var std in examSubmissionAnswer)
+            {
+                if(std.IsCorrect==false)
+                {
+                    var questionPool = _unitOfWork.GetRepository<QuestionSetQuestion>()
+                        .GetFirstOrDefault(predicate: p => p.Id == std.QuestionSetQuestion.Id,
+                        include: pool => pool.Include(x => x.QuestionPoolQuestion));
+
+                    wrongQuestion.Add(questionPool.QuestionPoolQuestion.QuestionId);
+                }
+            }
+
+            var sameWrongQuestion=wrongQuestion.GroupBy(q=>q);
+            var orderedWrongQuestions=sameWrongQuestion.OrderByDescending(a=>a.Count());
+            var wrongQuestionIds=orderedWrongQuestions.SelectMany(x => x);
+            var distinctWrongQuestionId = wrongQuestionIds.Distinct().Take(3);
+            var listofMostWrongQues = new List<MostWrongAnsQues>();
+
+            foreach(var wrong in distinctWrongQuestionId)
+            {
+                var mostWrongQuestion = _unitOfWork
+                    .GetRepository<Question>()
+                    .GetFirstOrDefault(predicate: p => p.Id == wrong);
+                var MostWrongAnsQues = new MostWrongAnsQues()
+                {
+                    Name = mostWrongQuestion.Name
+                };
+                listofMostWrongQues.Add(MostWrongAnsQues);
+            }
+            
+            var data=new ExamSummaryResponseModel{
+                WeekStudents=weakStudent,
+                TopStudents=topStudent,
+                TotalMarks=marksList,
+                MostWrongAnsQues = listofMostWrongQues,
+
+                ExamStatus=new ExamStatus{
+                    TotalAttend=totalAttendies,
+                    PassStudents=totalPass,
+                    FailStudents=totalFail,
+                    AverageMarks=average
+                }    
+            };
+            return data;
+        }
+
+        /// <summary>
+        /// Handle to get lesson students report
+        /// </summary>
+        /// <param name="identity">the training id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the paginated data</returns>
+        public async Task<IList< ExamSubmissionResponseModel>> ExamSubmissionReport(
+            string identity,
+            string lessonIdentity,
+            BaseSearchCriteria criteria
+        ){
+            var course = await ValidateAndGetCourse(
+                    criteria.CurrentUserId,
+                    identity,
+                    validateForModify: true
+                )
+                .ConfigureAwait(false);
+
+            var lesson = await _unitOfWork
+                .GetRepository<Lesson>()
+                .GetFirstOrDefaultAsync(
+                    predicate: p =>
+                        p.CourseId == course.Id
+                        && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),
+                    include: src => src.Include(x => x.CourseEnrollments).ThenInclude(x => x.User)
+                )
+                .ConfigureAwait(false);
+
+            var submittedStudent=await _unitOfWork
+                    .GetRepository<QuestionSetSubmission>()
+                    .GetAllAsync(predicate: p => p.QuestionSetId == lesson.QuestionSetId,
+                                 include: u => u.Include(x => x.User))
+                    .ConfigureAwait(false);
+
+            var marksObtained=await _unitOfWork
+                    .GetRepository<QuestionSetResult>()
+                    .GetAllAsync(predicate: p => p.QuestionSetId == lesson.QuestionSetId)
+                    .ConfigureAwait(false);
+
+            var studentDetail=from std in submittedStudent join marks in marksObtained 
+                                        on std.UserId equals marks.UserId
+                                        into studentSubmissionDetail 
+                                        from m in studentSubmissionDetail 
+                                        select new ExamSubmissionResponseModel
+                                        {
+                                            Student=new UserModel(std.User),
+                                            TotalMarks=m.TotalMark,
+                                            SubmissionDate=std.UpdatedOn
+                                        };
+                              
+            
+            return studentDetail.ToList();
+        }
+
+        /// <summary>
+        /// Handle to get lesson students report for assignment
+        /// </summary>
+        /// <param name="identity">the training id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        public async Task<AssignmentSummaryResponseModel> AssignmentStudentsReport(
+            string identity,
+            string lessonIdentity,
+            BaseSearchCriteria criteria
+        )
+        {
+            var course = await ValidateAndGetCourse(
+                    criteria.CurrentUserId,
+                    identity,
+                    validateForModify: true
+                )
+                .ConfigureAwait(false);
+            var lesson = await _unitOfWork
+                .GetRepository<Lesson>()
+                .GetFirstOrDefaultAsync(
+                    predicate: p =>
+                        p.CourseId == course.Id
+                        && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),
+                    include: src => src.Include(x => x.CourseEnrollments).ThenInclude(x => x.User)
+                )
+                .ConfigureAwait(false);
+
+            var reviewedAssignment= await _unitOfWork
+                .GetRepository<AssignmentReview>()
+                .GetAllAsync(predicate:p => p.LessonId == lesson.Id,
+                             include:u => u.Include(x => x.User))
+                .ConfigureAwait(false);
+            
+            var AssignmentWatchHistory=await _unitOfWork
+                .GetRepository<WatchHistory>()
+                .GetAllAsync(predicate:p => p.LessonId == lesson.Id)
+                .ConfigureAwait(false);
+            
+            var totalPass=0;
+            var totalFail=0;
+            foreach(var wh in AssignmentWatchHistory)
+            {
+                if(wh.IsPassed == true)
+                {
+                    totalPass++;
+                }
+                else
+                {
+                    totalFail++;
+                }
+            }
+            
+            var totalAttendies=AssignmentWatchHistory.Count();
+            var assignRank=reviewedAssignment.OrderByDescending(x => x.Mark);
+            var averagemark=reviewedAssignment.Average(x => x.Mark);
+            var assignedStudents=assignRank.Select(x => x.User).ToList();
+
+            var topStudents=new List<UserModel>();
+            var weakStudents=new List<UserModel>();
+
+            var count=0;
+            foreach(var std in assignedStudents)
+            {
+                topStudents.Add(new UserModel(std));
+                if(++count==6)
+                {
+                    break;
+                }
+            }
+
+            var weakStd=assignedStudents.TakeLast(3).ToList();
+            foreach(var std in weakStd)
+            {
+                weakStudents.Add(new UserModel(std));
+            }
+
+            var assignmentSubmission=await _unitOfWork
+                .GetRepository<AssignmentSubmission>()
+                .GetAllAsync(predicate:p => p.LessonId == lesson.Id,
+                            include:a => a.Include(x => x.Assignment))
+                .ConfigureAwait(false);
+
+            var questionId=new List<Guid>();
+            foreach(var assign in assignmentSubmission)
+            {
+                if(assign.IsCorrect == false)
+                {
+                    if((int)assign.Assignment.Type == 1)
+                    {
+                        questionId.Add(assign.Assignment.Id);
+                    }
+                }
+            }
+
+            var sameWrongQuestion=questionId.GroupBy(q=>q);
+            var orderedWrongQuestions=sameWrongQuestion.OrderByDescending(a=>a.Count());
+            var wrongQuestionIds=orderedWrongQuestions.SelectMany(x => x);
+            var distinctWrongQuestionId = wrongQuestionIds.Distinct().Take(3);
+            var listofMostWrongQues = new List<string>();
+
+            foreach(var wrong in distinctWrongQuestionId)
+            {
+                var mostWrongQuestion = _unitOfWork
+                    .GetRepository<Assignment>()
+                    .GetFirstOrDefault(predicate: p => p.Id == wrong);
+                listofMostWrongQues.Add(mostWrongQuestion.Name);
+            }
+
+            var response=new AssignmentSummaryResponseModel
+            {
+                WeekStudents=weakStudents,
+                TopStudents=topStudents,
+                AssignmentStatus=new AssignmentStatus
+                {
+                    TotalAttend=totalAttendies,
+                    AverageMarks=averagemark,
+                    TotalPass=totalPass,
+                    TotalFail=totalFail
+                },
+                MostWrongAnsQues=listofMostWrongQues
+            };
+            return response;
         }
 
         /// <summary>

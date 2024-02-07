@@ -63,5 +63,6 @@
   "html.autoClosingTags": true,
   "javascript.autoClosingTags": true,
   "editor.minimap.maxColumn": 80,
-  "csharp.format.enable": true
+  "csharp.format.enable": true,
+  "editor.stickyScroll.enabled": true
 }

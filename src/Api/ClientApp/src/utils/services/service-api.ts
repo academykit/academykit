@@ -91,6 +91,15 @@ export const api = {
     lessonStatDetails: (id: string, lessonId: string, qs: string) =>
       `/api/course/${id}/lessonStatistics/${lessonId}?${qs}`,
 
+    examSummary: (id: string, lessonId: string) =>
+      `/api/course/${id}/lessonStatistics/${lessonId}/summary`,
+
+    examSubmission: (id: string, lessonId: string) =>
+      `/api/course/${id}/lessonStatistics/${lessonId}/submission`,
+
+    assignmentSummary: (id: string, lessonId: string) =>
+      `/api/course/${id}/lessonStatistics/${lessonId}/AssignmentSummary`,
+
     studentStat: (id: string) => `/api/course/${id}/studentStatistics`,
     studentStatDetails: (id: string, userId: string) =>
       `/api/course/${id}/studentStatistics/${userId}`,

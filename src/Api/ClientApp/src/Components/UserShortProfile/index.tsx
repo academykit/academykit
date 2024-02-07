@@ -33,7 +33,7 @@ const UserShortProfile: FC<Props> = ({
   return (
     <UnstyledButton
       component={Link}
-      to={`/userProfile/${id}/about`}
+      to={`/userProfile/${id}/certificate`}
       style={{ textDecoration: 'none' }}
     >
       <Flex direction={direction} gap={'md'} style={{ alignItems: 'center' }}>
