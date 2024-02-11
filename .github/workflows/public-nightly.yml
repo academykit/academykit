@@ -1,4 +1,4 @@
-name: "Nightly Release"
+name: "Public Nightly Release"
 on:
   push:
     branches: ["main"]
