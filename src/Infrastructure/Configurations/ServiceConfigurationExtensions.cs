@@ -103,6 +103,7 @@
             services.AddTransient<IAssessmentService, AssessmentService>();
             services.AddTransient<IAssessmentQuestionService, AssessmentQuestionService>();
             services.AddTransient<IAssessmentSubmissionService, AssessmentSubmissionService>();
+            services.AddTransient<IAIService, AIService>();
 
             #endregion Service DI
 
