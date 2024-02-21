@@ -120,7 +120,7 @@ namespace Lingtren.Infrastructure.Services
                         .GetRepository<GroupMember>()
                         .ExistsAsync(
                             predicate: p =>
-                                p.GroupId == new Guid("d3c343d8-adf8-45d4-afbe-e09c3285da24")
+                                p.GroupId == new Guid("7df8d749-6172-482b-b5a1-016fbe478795")
                                 && p.UserId == user.Id
                         )
                         .ConfigureAwait(false);
@@ -129,7 +129,7 @@ namespace Lingtren.Infrastructure.Services
                     {
                         _logger.LogWarning(
                             "Group with id: {id} already contains users. User Id: {userId}",
-                            new Guid("d3c343d8-adf8-45d4-afbe-e09c3285da24"), // Parameter for {id}
+                            new Guid("7df8d749-6172-482b-b5a1-016fbe478795"), // Parameter for {id}
                             user.Id // Parameter for {userId}
                         );
                         throw new ForbiddenException(
@@ -140,7 +140,7 @@ namespace Lingtren.Infrastructure.Services
                     var groupMember = new GroupMember
                     {
                         UserId = user.Id,
-                        GroupId = new Guid("d3c343d8-adf8-45d4-afbe-e09c3285da24"),
+                        GroupId = new Guid("7df8d749-6172-482b-b5a1-016fbe478795"),
                         IsActive = true,
                         CreatedBy = new Guid("30fcd978-f256-4733-840f-759181bc5e63"),
                         CreatedOn = DateTime.Now,
