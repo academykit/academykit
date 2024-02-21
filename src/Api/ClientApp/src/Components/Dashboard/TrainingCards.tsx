@@ -107,9 +107,10 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
       <Anchor
         component={Link}
         to={RoutePath.courses.description(data.slug).route}
-        lineClamp={1}
         size="lg"
         mt="md"
+        truncate="end"
+        maw={'100%'}
       >
         {data.name}
       </Anchor>

@@ -16,6 +16,9 @@
         public int Duration { get; set; }
         public bool IsUpdate { get; set; }
         public Guid LevelId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public bool IsUnlimitedEndDate { get; set; }
         public Level Level { get; set; }
         public User User { get; set; }
         public IList<Section> Sections { get; set; }
@@ -25,6 +28,9 @@
         public IList<WatchHistory> WatchHistories { get; set; }
         public IList<CourseEnrollment> CourseEnrollments { get; set; }
         public IList<Signature> Signatures { get; set; }
+        public IList<EligibilityCreation> EligibilityCreations { get; set; }
+
         public CourseCertificate CourseCertificate { get; set; }
+        public IList<TrainingEligibility> TrainingEligibilities { get; set; }
     }
 }

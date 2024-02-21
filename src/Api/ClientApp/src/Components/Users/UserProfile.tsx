@@ -1,5 +1,14 @@
 import TextViewer from '@components/Ui/RichTextViewer';
-import { Avatar, Box, Group, Paper, Tabs, Text } from '@mantine/core';
+import {
+  Avatar,
+  Badge,
+  Box,
+  Flex,
+  Group,
+  Paper,
+  Tabs,
+  Text,
+} from '@mantine/core';
 import { IconEdit, IconFileDescription, IconSchool } from '@tabler/icons';
 import { useProfileAuth } from '@utils/services/authService';
 import { useTranslation } from 'react-i18next';
@@ -44,9 +53,22 @@ const UserProfile = () => {
                 ''
               )}
             </Group>
-            {`${data?.profession ?? ''}`}
-            <br />
-            <Text>{data?.memberId}</Text>
+
+            {data?.profession && (
+              <Text mt={5}>{`${data?.profession ?? ''}`}</Text>
+            )}
+
+            {data?.memberId && <Text mt={5}>{data?.memberId}</Text>}
+
+            {data && data.skills && data?.skills.length > 0 && (
+              <Flex gap={10} mt={10} wrap={'wrap'}>
+                {data.skills.map((skill) => (
+                  <Badge variant="light" color="blue" key={skill.id}>
+                    {skill.skillName}
+                  </Badge>
+                ))}
+              </Flex>
+            )}
           </div>
         </div>
         <Paper shadow={'lg'} withBorder style={{ marginTop: '5px' }}>

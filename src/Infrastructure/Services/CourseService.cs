@@ -203,7 +203,8 @@
                 .Include(x => x.Level)
                 .Include(x => x.Group)
                 .Include(x => x.CourseTeachers)
-                .Include(x => x.CourseEnrollments);
+                .Include(x => x.CourseEnrollments)
+                .Include(x => x.TrainingEligibilities);
         }
 
         /// <summary>
@@ -353,8 +354,12 @@
                 existing.ThumbnailUrl = model.ThumbnailUrl;
                 existing.UpdatedBy = currentUserId;
                 existing.UpdatedOn = currentTimeStamp;
+                existing.StartDate = model.StartDate;
+                existing.EndDate = model.EndDate;
+                existing.IsUnlimitedEndDate = model.IsUnlimitedEndDate;
 
                 var newCourseTags = new List<CourseTag>();
+                var eligibilities = new List<TrainingEligibility>();
 
                 foreach (var tagId in model.TagIds)
                 {
@@ -372,9 +377,33 @@
                     );
                 }
 
+                foreach (var criteria in model.TrainingEligibilities)
+                {
+                    eligibilities.Add(
+                        new TrainingEligibility
+                        {
+                            Id = Guid.NewGuid(),
+                            EligibilityId = criteria.EligibilityId,
+                            TrainingEligibilityEnum = criteria.Eligibility,
+                            CourseId = existing.Id,
+                            CreatedOn = currentTimeStamp,
+                            CreatedBy = currentUserId,
+                            UpdatedOn = currentTimeStamp,
+                            UpdatedBy = currentUserId,
+                        }
+                    );
+                }
+
                 if (existing.CourseTags.Count > 0)
                 {
                     _unitOfWork.GetRepository<CourseTag>().Delete(existing.CourseTags);
+                }
+
+                if (existing.EligibilityCreations.Count > 0)
+                {
+                    _unitOfWork
+                        .GetRepository<EligibilityCreation>()
+                        .Delete(existing.EligibilityCreations);
                 }
 
                 if (newCourseTags.Count > 0)
@@ -990,6 +1019,126 @@
                         include: src => src.Include(x => x.Tag)
                     )
                     .ConfigureAwait(false);
+                var isEligible = true;
+                if (
+                    course.TrainingEligibilities.Any(
+                        ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Department
+                    )
+                )
+                {
+                    var eligibleIds = course.TrainingEligibilities
+                        .Where(
+                            ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Department
+                        )
+                        .Select(ec => ec.EligibilityId)
+                        .ToList();
+
+                    var eligibleDepartments = _unitOfWork
+                        .GetRepository<Department>()
+                        .GetAll()
+                        .Where(department => eligibleIds.Contains(department.Id))
+                        .Include(department => department.Users)
+                        .ToList();
+                    var departmentCheck = eligibleDepartments.Any(
+                        department => department.Users.Any(user => user.Id == currentUserId)
+                    );
+                    if (departmentCheck == true)
+                    {
+                        isEligible = true;
+                    }
+                    else
+                    {
+                        isEligible = false;
+                    }
+                }
+                else if (
+                    course.TrainingEligibilities.Any(
+                        ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Skills
+                    )
+                )
+                {
+                    var eligibleIds = course.TrainingEligibilities
+                        .Where(ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Skills)
+                        .Select(ec => ec.EligibilityId)
+                        .ToList();
+
+                    var eligibleSkills = _unitOfWork
+                        .GetRepository<Skills>()
+                        .GetAll()
+                        .Where(Skills => eligibleIds.Contains(Skills.Id))
+                        .Include(Skills => Skills.UserSkills)
+                        .ToList();
+                    var SkillsCheck = eligibleSkills.Any(
+                        Skills => Skills.UserSkills.Any(user => user.UserId == currentUserId)
+                    );
+                    if (SkillsCheck == true)
+                    {
+                        isEligible = true;
+                    }
+                    else
+                    {
+                        isEligible = false;
+                    }
+                }
+                else if (
+                    course.TrainingEligibilities.Any(
+                        ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Training
+                    )
+                )
+                {
+                    var eligibleIds = course.TrainingEligibilities
+                        .Where(
+                            ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Assessment
+                        )
+                        .Select(ec => ec.EligibilityId)
+                        .ToList();
+
+                    var eligibleAssessment = _unitOfWork
+                        .GetRepository<Assessment>()
+                        .GetAll()
+                        .Where(Assessment => eligibleIds.Contains(Assessment.Id))
+                        .ToList();
+                    var AssessmentCheck = eligibleAssessment.Any(
+                        Assessment =>
+                            Assessment.AssessmentResults.Any(user => user.Id == currentUserId)
+                    );
+                    if (AssessmentCheck == true)
+                    {
+                        isEligible = true;
+                    }
+                    else
+                    {
+                        isEligible = false;
+                    }
+                }
+                else if (
+                    course.TrainingEligibilities.Any(
+                        ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Training
+                    )
+                )
+                {
+                    var eligibleIds = course.TrainingEligibilities
+                        .Where(ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Training)
+                        .Select(ec => ec.EligibilityId)
+                        .ToList();
+
+                    var eligibleTraining = _unitOfWork
+                        .GetRepository<Course>()
+                        .GetAll()
+                        .Where(Training => eligibleIds.Contains(course.Id))
+                        .ToList();
+                    var TrainingCheck = eligibleTraining.Any(
+                        Training => Training.CourseEnrollments.Any(user => user.Id == currentUserId)
+                    );
+                    if (TrainingCheck == true)
+                    {
+                        isEligible = true;
+                    }
+                    else
+                    {
+                        isEligible = false;
+                    }
+                }
 
                 var response = new CourseResponseModel
                 {
@@ -1002,16 +1151,29 @@
                     Language = course.Language,
                     LevelId = course.LevelId,
                     GroupId = course.GroupId,
+                    StartDate = course.StartDate,
+                    EndDate = course.EndDate,
+                    IsUnlimitedEndDate = course.IsUnlimitedEndDate,
                     User = course.User != null ? new UserModel(course.User) : new UserModel(),
                     Status = course.Status,
                     UserStatus = GetUserCourseEnrollmentStatus(course, currentUserId),
                     Sections = new List<SectionResponseModel>(),
                     Tags = new List<CourseTagResponseModel>(),
+                    TrainingEligibilities = new List<TrainingEligibilityCriteriaResponseModel>(),
                     CreatedOn = course.CreatedOn,
+                    IsEligible = isEligible,
                 };
                 course.CourseTags
                     .ToList()
                     .ForEach(item => response.Tags.Add(new CourseTagResponseModel(item)));
+                course.TrainingEligibilities
+                    ?.ToList()
+                    .ForEach(
+                        item =>
+                            response.TrainingEligibilities.Add(
+                                new TrainingEligibilityCriteriaResponseModel(item)
+                            )
+                    );
 
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId)
                     .ConfigureAwait(false);
@@ -1657,7 +1819,7 @@
                         {
                             hasAttended = true;
                         }
-                        
+
                         physicalLessonStatus.Add((userId, hasAttended));
                     }
                 }
@@ -1749,7 +1911,8 @@
             string identity,
             string lessonIdentity,
             BaseSearchCriteria criteria
-        ){
+        )
+        {
             var course = await ValidateAndGetCourse(
                     criteria.CurrentUserId,
                     identity,
@@ -1768,24 +1931,26 @@
                 .ConfigureAwait(false);
 
             var examResult = await _unitOfWork
-                    .GetRepository<QuestionSetResult>()
-                    .GetAllAsync(predicate: p => p.QuestionSetId == lesson.QuestionSetId,
-                                 include: src => src.Include(x => x.User))
-                    .ConfigureAwait(false);  
-                              
-            var average=examResult.Average(ex=>ex.TotalMark);
-            var examRank=examResult.OrderByDescending(ex=>ex.TotalMark);
-            
-            var examStudent = examRank.Select(result => result.User).ToList();
-            
-            var weakStudent=new List<UserModel>();
-            var topStudent=new List<UserModel>();
+                .GetRepository<QuestionSetResult>()
+                .GetAllAsync(
+                    predicate: p => p.QuestionSetId == lesson.QuestionSetId,
+                    include: src => src.Include(x => x.User)
+                )
+                .ConfigureAwait(false);
 
-            var count=0;
-            foreach(var student in examStudent)
+            var average = examResult.Average(ex => ex.TotalMark);
+            var examRank = examResult.OrderByDescending(ex => ex.TotalMark);
+
+            var examStudent = examRank.Select(result => result.User).ToList();
+
+            var weakStudent = new List<UserModel>();
+            var topStudent = new List<UserModel>();
+
+            var count = 0;
+            foreach (var student in examStudent)
             {
                 topStudent.Add(new UserModel(student));
-                if(++count == 6)
+                if (++count == 6)
                 {
                     break;
                 }
@@ -1794,93 +1959,93 @@
             var marksList = new List<TotalMarks>();
             foreach (var marks in examRank)
             {
-                var mark = new TotalMarks
-                {
-                    Marks = marks.TotalMark
-                };
-                marksList.Add(mark); 
+                var mark = new TotalMarks { Marks = marks.TotalMark };
+                marksList.Add(mark);
             }
 
             var lastThreeExamStudents = examStudent.TakeLast(3).ToList();
-            foreach(var student in lastThreeExamStudents)
+            foreach (var student in lastThreeExamStudents)
             {
                 weakStudent.Add(new UserModel(student));
             }
-                        
+
             var watchHistories = await _unitOfWork
                 .GetRepository<WatchHistory>()
-                .GetAllAsync(
-                    predicate: p => p.CourseId == course.Id && p.LessonId == lesson.Id)
+                .GetAllAsync(predicate: p => p.CourseId == course.Id && p.LessonId == lesson.Id)
                 .ConfigureAwait(false);
-            var totalAttendies=watchHistories.Count();
+            var totalAttendies = watchHistories.Count();
 
-            var totalPass=0;
-            var totalFail=0;
-            foreach(var history in watchHistories)
+            var totalPass = 0;
+            var totalFail = 0;
+            foreach (var history in watchHistories)
             {
-                if(history.IsPassed==true)
+                if (history.IsPassed == true)
                 {
                     totalPass++;
-                }else
+                }
+                else
                 {
                     totalFail++;
                 }
             }
 
-            var submissionDate=await _unitOfWork
-                    .GetRepository<QuestionSetSubmission>()
-                    .GetAllAsync(predicate: p => p.QuestionSetId == lesson.QuestionSetId)
-                    .ConfigureAwait(false); 
+            var submissionDate = await _unitOfWork
+                .GetRepository<QuestionSetSubmission>()
+                .GetAllAsync(predicate: p => p.QuestionSetId == lesson.QuestionSetId)
+                .ConfigureAwait(false);
 
             var examSubmissionAnswer = await _unitOfWork
-                    .GetRepository<QuestionSetSubmissionAnswer>()
-                    .GetAllAsync(predicate: p => p.QuestionSetSubmission.QuestionSetId == lesson.QuestionSetId,
-                                 include: ques => ques.Include(x => x.QuestionSetQuestion))
-                    .ConfigureAwait(false); 
+                .GetRepository<QuestionSetSubmissionAnswer>()
+                .GetAllAsync(
+                    predicate: p => p.QuestionSetSubmission.QuestionSetId == lesson.QuestionSetId,
+                    include: ques => ques.Include(x => x.QuestionSetQuestion)
+                )
+                .ConfigureAwait(false);
 
-            var wrongQuestion=new List<Guid>();
-            foreach(var std in examSubmissionAnswer)
+            var wrongQuestion = new List<Guid>();
+            foreach (var std in examSubmissionAnswer)
             {
-                if(std.IsCorrect==false)
+                if (std.IsCorrect == false)
                 {
-                    var questionPool = _unitOfWork.GetRepository<QuestionSetQuestion>()
-                        .GetFirstOrDefault(predicate: p => p.Id == std.QuestionSetQuestion.Id,
-                        include: pool => pool.Include(x => x.QuestionPoolQuestion));
+                    var questionPool = _unitOfWork
+                        .GetRepository<QuestionSetQuestion>()
+                        .GetFirstOrDefault(
+                            predicate: p => p.Id == std.QuestionSetQuestion.Id,
+                            include: pool => pool.Include(x => x.QuestionPoolQuestion)
+                        );
 
                     wrongQuestion.Add(questionPool.QuestionPoolQuestion.QuestionId);
                 }
             }
 
-            var sameWrongQuestion=wrongQuestion.GroupBy(q=>q);
-            var orderedWrongQuestions=sameWrongQuestion.OrderByDescending(a=>a.Count());
-            var wrongQuestionIds=orderedWrongQuestions.SelectMany(x => x);
+            var sameWrongQuestion = wrongQuestion.GroupBy(q => q);
+            var orderedWrongQuestions = sameWrongQuestion.OrderByDescending(a => a.Count());
+            var wrongQuestionIds = orderedWrongQuestions.SelectMany(x => x);
             var distinctWrongQuestionId = wrongQuestionIds.Distinct().Take(3);
             var listofMostWrongQues = new List<MostWrongAnsQues>();
 
-            foreach(var wrong in distinctWrongQuestionId)
+            foreach (var wrong in distinctWrongQuestionId)
             {
                 var mostWrongQuestion = _unitOfWork
                     .GetRepository<Question>()
                     .GetFirstOrDefault(predicate: p => p.Id == wrong);
-                var MostWrongAnsQues = new MostWrongAnsQues()
-                {
-                    Name = mostWrongQuestion.Name
-                };
+                var MostWrongAnsQues = new MostWrongAnsQues() { Name = mostWrongQuestion.Name };
                 listofMostWrongQues.Add(MostWrongAnsQues);
             }
-            
-            var data=new ExamSummaryResponseModel{
-                WeekStudents=weakStudent,
-                TopStudents=topStudent,
-                TotalMarks=marksList,
-                MostWrongAnsQues = listofMostWrongQues,
 
-                ExamStatus=new ExamStatus{
-                    TotalAttend=totalAttendies,
-                    PassStudents=totalPass,
-                    FailStudents=totalFail,
-                    AverageMarks=average
-                }    
+            var data = new ExamSummaryResponseModel
+            {
+                WeekStudents = weakStudent,
+                TopStudents = topStudent,
+                TotalMarks = marksList,
+                MostWrongAnsQues = listofMostWrongQues,
+                ExamStatus = new ExamStatus
+                {
+                    TotalAttend = totalAttendies,
+                    PassStudents = totalPass,
+                    FailStudents = totalFail,
+                    AverageMarks = average
+                }
             };
             return data;
         }
@@ -1892,11 +2057,12 @@
         /// <param name="lessonIdentity">the lesson id or slug</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the paginated data</returns>
-        public async Task<IList< ExamSubmissionResponseModel>> ExamSubmissionReport(
+        public async Task<IList<ExamSubmissionResponseModel>> ExamSubmissionReport(
             string identity,
             string lessonIdentity,
             BaseSearchCriteria criteria
-        ){
+        )
+        {
             var course = await ValidateAndGetCourse(
                     criteria.CurrentUserId,
                     identity,
@@ -1914,29 +2080,32 @@
                 )
                 .ConfigureAwait(false);
 
-            var submittedStudent=await _unitOfWork
-                    .GetRepository<QuestionSetSubmission>()
-                    .GetAllAsync(predicate: p => p.QuestionSetId == lesson.QuestionSetId,
-                                 include: u => u.Include(x => x.User))
-                    .ConfigureAwait(false);
+            var submittedStudent = await _unitOfWork
+                .GetRepository<QuestionSetSubmission>()
+                .GetAllAsync(
+                    predicate: p => p.QuestionSetId == lesson.QuestionSetId,
+                    include: u => u.Include(x => x.User)
+                )
+                .ConfigureAwait(false);
 
-            var marksObtained=await _unitOfWork
-                    .GetRepository<QuestionSetResult>()
-                    .GetAllAsync(predicate: p => p.QuestionSetId == lesson.QuestionSetId)
-                    .ConfigureAwait(false);
+            var marksObtained = await _unitOfWork
+                .GetRepository<QuestionSetResult>()
+                .GetAllAsync(predicate: p => p.QuestionSetId == lesson.QuestionSetId)
+                .ConfigureAwait(false);
 
-            var studentDetail=from std in submittedStudent join marks in marksObtained 
-                                        on std.UserId equals marks.UserId
-                                        into studentSubmissionDetail 
-                                        from m in studentSubmissionDetail 
-                                        select new ExamSubmissionResponseModel
-                                        {
-                                            Student=new UserModel(std.User),
-                                            TotalMarks=m.TotalMark,
-                                            SubmissionDate=std.UpdatedOn
-                                        };
-                              
-            
+            var studentDetail =
+                from std in submittedStudent
+                join marks in marksObtained
+                    on std.UserId equals marks.UserId
+                    into studentSubmissionDetail
+                from m in studentSubmissionDetail
+                select new ExamSubmissionResponseModel
+                {
+                    Student = new UserModel(std.User),
+                    TotalMarks = m.TotalMark,
+                    SubmissionDate = std.UpdatedOn
+                };
+
             return studentDetail.ToList();
         }
 
@@ -1968,22 +2137,24 @@
                 )
                 .ConfigureAwait(false);
 
-            var reviewedAssignment= await _unitOfWork
+            var reviewedAssignment = await _unitOfWork
                 .GetRepository<AssignmentReview>()
-                .GetAllAsync(predicate:p => p.LessonId == lesson.Id,
-                             include:u => u.Include(x => x.User))
+                .GetAllAsync(
+                    predicate: p => p.LessonId == lesson.Id,
+                    include: u => u.Include(x => x.User)
+                )
                 .ConfigureAwait(false);
-            
-            var AssignmentWatchHistory=await _unitOfWork
+
+            var AssignmentWatchHistory = await _unitOfWork
                 .GetRepository<WatchHistory>()
-                .GetAllAsync(predicate:p => p.LessonId == lesson.Id)
+                .GetAllAsync(predicate: p => p.LessonId == lesson.Id)
                 .ConfigureAwait(false);
-            
-            var totalPass=0;
-            var totalFail=0;
-            foreach(var wh in AssignmentWatchHistory)
+
+            var totalPass = 0;
+            var totalFail = 0;
+            foreach (var wh in AssignmentWatchHistory)
             {
-                if(wh.IsPassed == true)
+                if (wh.IsPassed == true)
                 {
                     totalPass++;
                 }
@@ -1992,56 +2163,58 @@
                     totalFail++;
                 }
             }
-            
-            var totalAttendies=AssignmentWatchHistory.Count();
-            var assignRank=reviewedAssignment.OrderByDescending(x => x.Mark);
-            var averagemark=reviewedAssignment.Average(x => x.Mark);
-            var assignedStudents=assignRank.Select(x => x.User).ToList();
 
-            var topStudents=new List<UserModel>();
-            var weakStudents=new List<UserModel>();
+            var totalAttendies = AssignmentWatchHistory.Count();
+            var assignRank = reviewedAssignment.OrderByDescending(x => x.Mark);
+            var averagemark = reviewedAssignment.Average(x => x.Mark);
+            var assignedStudents = assignRank.Select(x => x.User).ToList();
 
-            var count=0;
-            foreach(var std in assignedStudents)
+            var topStudents = new List<UserModel>();
+            var weakStudents = new List<UserModel>();
+
+            var count = 0;
+            foreach (var std in assignedStudents)
             {
                 topStudents.Add(new UserModel(std));
-                if(++count==6)
+                if (++count == 6)
                 {
                     break;
                 }
             }
 
-            var weakStd=assignedStudents.TakeLast(3).ToList();
-            foreach(var std in weakStd)
+            var weakStd = assignedStudents.TakeLast(3).ToList();
+            foreach (var std in weakStd)
             {
                 weakStudents.Add(new UserModel(std));
             }
 
-            var assignmentSubmission=await _unitOfWork
+            var assignmentSubmission = await _unitOfWork
                 .GetRepository<AssignmentSubmission>()
-                .GetAllAsync(predicate:p => p.LessonId == lesson.Id,
-                            include:a => a.Include(x => x.Assignment))
+                .GetAllAsync(
+                    predicate: p => p.LessonId == lesson.Id,
+                    include: a => a.Include(x => x.Assignment)
+                )
                 .ConfigureAwait(false);
 
-            var questionId=new List<Guid>();
-            foreach(var assign in assignmentSubmission)
+            var questionId = new List<Guid>();
+            foreach (var assign in assignmentSubmission)
             {
-                if(assign.IsCorrect == false)
+                if (assign.IsCorrect == false)
                 {
-                    if((int)assign.Assignment.Type == 1)
+                    if ((int)assign.Assignment.Type == 1)
                     {
                         questionId.Add(assign.Assignment.Id);
                     }
                 }
             }
 
-            var sameWrongQuestion=questionId.GroupBy(q=>q);
-            var orderedWrongQuestions=sameWrongQuestion.OrderByDescending(a=>a.Count());
-            var wrongQuestionIds=orderedWrongQuestions.SelectMany(x => x);
+            var sameWrongQuestion = questionId.GroupBy(q => q);
+            var orderedWrongQuestions = sameWrongQuestion.OrderByDescending(a => a.Count());
+            var wrongQuestionIds = orderedWrongQuestions.SelectMany(x => x);
             var distinctWrongQuestionId = wrongQuestionIds.Distinct().Take(3);
             var listofMostWrongQues = new List<string>();
 
-            foreach(var wrong in distinctWrongQuestionId)
+            foreach (var wrong in distinctWrongQuestionId)
             {
                 var mostWrongQuestion = _unitOfWork
                     .GetRepository<Assignment>()
@@ -2049,20 +2222,77 @@
                 listofMostWrongQues.Add(mostWrongQuestion.Name);
             }
 
-            var response=new AssignmentSummaryResponseModel
+            var response = new AssignmentSummaryResponseModel
             {
-                WeekStudents=weakStudents,
-                TopStudents=topStudents,
-                AssignmentStatus=new AssignmentStatus
+                WeekStudents = weakStudents,
+                TopStudents = topStudents,
+                AssignmentStatus = new AssignmentStatus
                 {
-                    TotalAttend=totalAttendies,
-                    AverageMarks=averagemark,
-                    TotalPass=totalPass,
-                    TotalFail=totalFail
+                    TotalAttend = totalAttendies,
+                    AverageMarks = averagemark,
+                    TotalPass = totalPass,
+                    TotalFail = totalFail
                 },
-                MostWrongAnsQues=listofMostWrongQues
+                MostWrongAnsQues = listofMostWrongQues
             };
             return response;
+        }
+
+        public async Task<SearchResult<AssignmentSubmissionResponseModel>> AssignmentSubmissionStudentsReport(
+            string identity,
+            string lessonIdentity,
+            BaseSearchCriteria criteria
+        )
+        {
+            var course = await ValidateAndGetCourse(
+                    criteria.CurrentUserId,
+                    identity,
+                    validateForModify: true
+                )
+                .ConfigureAwait(false);
+
+            var lesson = await _unitOfWork
+                .GetRepository<Lesson>()
+                .GetFirstOrDefaultAsync(
+                    predicate: p =>
+                        p.CourseId == course.Id
+                        && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity),
+                    include: src => src.Include(x => x.CourseEnrollments).ThenInclude(x => x.User)
+                )
+                .ConfigureAwait(false);
+
+            var Students = await _unitOfWork
+                .GetRepository<AssignmentReview>()
+                .GetAllAsync(
+                    predicate: p => p.LessonId == lesson.Id,
+                    include: u => u.Include(x => x.User)
+                )
+                .ConfigureAwait(false);
+
+            var submissionDate = await _unitOfWork
+                .GetRepository<AssignmentSubmission>()
+                .GetAllAsync(
+                    predicate: p => p.LessonId == lesson.Id,
+                    include: u => u.Include(x => x.User)
+                )
+                .ConfigureAwait(false);
+
+            var uniqueDate=submissionDate.GroupBy(item => item.UserId).Select(group => group.First());
+
+            var studentDetail =
+                from std in Students
+                join date in uniqueDate
+                    on std.UserId equals date.UserId
+                    into studentSubmissionDetail
+                from m in studentSubmissionDetail
+                select new AssignmentSubmissionResponseModel
+                {
+                    Student = new UserModel(std.User),
+                    TotalMarks = std.Mark,
+                    SubmissionDate = m.UpdatedOn
+                };
+                
+            return studentDetail.ToList().ToIPagedList(criteria.Page, criteria.Size);
         }
 
         /// <summary>
@@ -3747,6 +3977,44 @@
                 )
                 .ConfigureAwait(false);
             return results;
+        }
+
+        public bool GetUserEligibilityStatus(Course course, Guid currentUserId)
+        {
+            var enrolled = _unitOfWork
+                .GetRepository<CourseEnrollment>()
+                .GetFirstOrDefault(
+                    predicate: p => p.UserId == currentUserId && course.Id == p.CourseId
+                );
+            if (enrolled != null)
+            {
+                return true;
+            }
+
+            // Fetch the department IDs that match the eligibility criteria
+            var eligibleDepartmentIds = course.TrainingEligibilities
+                .Select(eligibility => eligibility.EligibilityId)
+                .ToList(); // Materialize the query to execute it in memory
+
+            // Fetch the departments and filter them based on the eligibility criteria
+            var eligibleDepartments = _unitOfWork
+                .GetRepository<Department>()
+                .GetAll() // Or any other method to fetch departments
+                .Where(department => eligibleDepartmentIds.Contains(department.Id)) // Filter by eligible department IDs
+                .Include(department => department.Users) // Include users for each department
+                .ToList(); // Materialize the query to execute it in memory
+
+            // Check if the current user is in any of the eligible departments
+            var departmentCheck = eligibleDepartments.Any(
+                department => department.Users.Any(user => user.Id == currentUserId)
+            );
+
+            if (departmentCheck == true)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         #endregion Signature

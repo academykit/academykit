@@ -6,10 +6,12 @@
         public string ThumbnailUrl { get; set; }
         public string Description { get; set; }
         public decimal NegativeMarking { get; set; }
+
         /// <summary>
         /// Weightage of single question
         /// </summary>
         public decimal QuestionMarking { get; set; }
+
         /// <summary>
         /// Weightage for pass marked
         /// </summary>
@@ -18,5 +20,8 @@
         public int Duration { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
+        public int NoOfQuestion { get; set; }
+        public bool IsShuffle { get; set; }
+        public bool ShowAll { get; set; }
     }
 }

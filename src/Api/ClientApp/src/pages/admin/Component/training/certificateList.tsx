@@ -68,7 +68,7 @@ const CertificateCard = ({
         <Box>
           <Text fw={'bold'}>
             {item.name}
-            <Badge ml={20} c="cyan">
+            <Badge ml={20} c="cyan" variant="light">
               {CertificateStatus[item.status]}
             </Badge>
           </Text>
@@ -109,10 +109,15 @@ const CertificateCard = ({
                   display: 'flex',
                 }}
               >
-                <ActionIcon onClick={() => window.open(item.imageUrl)} mr={10}>
+                <ActionIcon
+                  variant="subtle"
+                  onClick={() => window.open(item.imageUrl)}
+                  mr={10}
+                >
                   <IconEye color="black" />
                 </ActionIcon>
                 <ActionIcon
+                  variant="subtle"
                   onClick={() =>
                     downloadImage(item.imageUrl, item.user.fullName ?? '')
                   }

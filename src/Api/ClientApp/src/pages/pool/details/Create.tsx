@@ -22,6 +22,7 @@ import { IconPlus, IconTrash } from '@tabler/icons';
 import { QuestionType } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import errorType from '@utils/services/axiosError';
+import { useOnePool, usePools } from '@utils/services/poolService';
 import {
   IAddQuestionType,
   useAddQuestion,
@@ -45,7 +46,9 @@ const schema = () => {
     type: Yup.string()
       .required(t('question_type_required') as string)
       .nullable(),
-
+    questionPoolId: Yup.string()
+      .trim()
+      .required(t('question_pool_required') as string),
     answers: Yup.array()
       .when(['type'], {
         is: QuestionType.MultipleChoice.toString(),
@@ -91,8 +94,18 @@ const schema = () => {
 };
 
 const Create = () => {
+  const params = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const questionPools = usePools(queryStringGenerator({ size: 10000 }));
+  const currentPool = useOnePool(params.id as string);
+
+  const questionPoolDropdown = questionPools.data?.items.map((question) => {
+    return {
+      value: question.id,
+      label: question.name,
+    };
+  });
 
   const form = useForm({
     initialValues: {
@@ -102,6 +115,7 @@ const Create = () => {
       tags: [],
       type: '1',
       answers: [{ option: '', isCorrect: false }],
+      questionPoolId: currentPool.data?.id as string,
     },
     validate: yupResolver(schema()),
     validateInputOnChange: true,
@@ -224,7 +238,6 @@ const Create = () => {
                 formContext={useFormContext}
               />
             </Box>
-
             {tags.isSuccess ? (
               // <MultiSelect
               //   mt={15}
@@ -256,10 +269,22 @@ const Create = () => {
             </Box>
 
             <Select
+              withAsterisk
+              allowDeselect={false}
+              readOnly
+              mt={20}
+              placeholder={t('select_pool') as string}
+              size={'lg'}
+              label={t('question_pool')}
+              data={questionPoolDropdown ?? []}
+              {...form.getInputProps('questionPoolId')}
+            />
+
+            <Select
+              withAsterisk
               mt={20}
               placeholder={t('select_question_type') as string}
               size={'lg'}
-              withAsterisk
               label={t('question_type')}
               {...form.getInputProps('type')}
               data={getQuestionType()}

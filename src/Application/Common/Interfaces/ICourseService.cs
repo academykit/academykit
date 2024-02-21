@@ -54,6 +54,15 @@
         CourseEnrollmentStatus GetUserCourseEnrollmentStatus(Course course, Guid currentUserId);
 
         /// <summary>
+        /// Handle to get user enrollment status
+        /// </summary>
+        /// <param name="course">the course id</param>
+        /// <param name="currentUserId">the current user id</param>
+        /// <param name="fetchMembers">the bool value for fetch members</param>
+        /// <returns></returns>
+        bool GetUserEligibilityStatus(Course course, Guid currentUserId);
+
+        /// <summary>
         /// Handle to get course detail
         /// </summary>
         /// <param name="identity">the course id or slug</param>
@@ -135,6 +144,19 @@
         );
 
         /// <summary>
+        /// Handle to get lesson students assignment summary report
+        /// </summary>
+        /// <param name="identity">the course id or slug</param>
+        /// <param name="lessonIdentity">the lesson id or slug</param>
+        /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
+        /// <returns>the paginated data</returns>
+        Task<SearchResult<AssignmentSubmissionResponseModel>> AssignmentSubmissionStudentsReport(
+            string identity,
+            string lessonIdentity,
+            BaseSearchCriteria criteria
+        );
+
+        /// <summary>
         /// Handle to get lesson students report
         /// </summary>
         /// <param name="identity">the course id or slug</param>
@@ -159,7 +181,7 @@
             string lessonIdentity,
             BaseSearchCriteria criteria
         );
-        
+
         /// <summary>
         /// Handle to get lesson students report
         /// </summary>

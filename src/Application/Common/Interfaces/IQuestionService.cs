@@ -2,7 +2,10 @@
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
+    using Lingtren.Application.Common.Models.ResponseModels;
+
     using Lingtren.Domain.Entities;
+
     public interface IQuestionService : IGenericService<Question, QuestionBaseSearchCriteria>
     {
         /// <summary>
@@ -22,7 +25,12 @@
         /// <param name="question">the instance of <see cref="QuestionRequestModel"/></param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
-        Task<Question> UpdateAsync(string poolIdentity, Guid questionId, QuestionRequestModel question, Guid currentUserId);
+        Task<Question> UpdateAsync(
+            string poolIdentity,
+            Guid questionId,
+            QuestionRequestModel question,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to delete question
@@ -32,5 +40,18 @@
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
         Task DeleteQuestionAsync(string poolIdentity, Guid questionId, Guid currentUserId);
+
+        /// <summary>
+        /// Handle to add question
+        /// /// </summary>
+        /// <param name="identity"> the question pool id or slug </param>
+        /// <param name="question"> the instance of <see cref="QuestionRequestModel"/></param>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the task complete </returns>
+        Task<QuestionSetAddQuestionRequestModel> BulkAddQuestions(
+            List<QuestionRequestModel> questions,
+            Guid currentUserId,
+            string identity
+        );
     }
 }

@@ -59,7 +59,10 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema id="root"
+    xmlns=""
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -394,32 +397,32 @@
     <value>パブリック URL の長さは 2000 文字以下である必要があります。</value>
   </data>
   <data name="FatherNameLength100" xml:space="preserve">
-  <value>父親の名前の長さは100文字以下でなければなりません。</value>
-</data>
-<data name="FatherNameRequired" xml:space="preserve">
-  <value>父親の名前は必須です。</value>
-</data>
-<data name="MotherNameLength100" xml:space="preserve">
-  <value>母親の名前の長さは100文字以下でなければなりません。</value>
-</data>
-<data name="MotherNameRequired" xml:space="preserve">
-  <value>母親の名前は必須です。</value>
-</data>
-<data name="SpouseNameLength100" xml:space="preserve">
-  <value>配偶者の名前の長さは100文字以下でなければなりません。</value>
-</data>
-<data name="SpouseNameRequired" xml:space="preserve">
-  <value>配偶者の名前は必須です。</value>
-</data>
-<data name="GrandfatherNameLength100" xml:space="preserve">
-  <value>祖父の名前の長さは100文字以下でなければなりません。</value>
-</data>
-<data name="GrandfatherNameRequired" xml:space="preserve">
-  <value>祖父の名前は必須です。</value>
-</data>
-<data name="GenderRequired" xml:space="preserve">
-  <value>性別は必須です。</value>
-</data>
+    <value>父親の名前の長さは100文字以下でなければなりません。</value>
+  </data>
+  <data name="FatherNameRequired" xml:space="preserve">
+    <value>父親の名前は必須です。</value>
+  </data>
+  <data name="MotherNameLength100" xml:space="preserve">
+    <value>母親の名前の長さは100文字以下でなければなりません。</value>
+  </data>
+  <data name="MotherNameRequired" xml:space="preserve">
+    <value>母親の名前は必須です。</value>
+  </data>
+  <data name="SpouseNameLength100" xml:space="preserve">
+    <value>配偶者の名前の長さは100文字以下でなければなりません。</value>
+  </data>
+  <data name="SpouseNameRequired" xml:space="preserve">
+    <value>配偶者の名前は必須です。</value>
+  </data>
+  <data name="GrandfatherNameLength100" xml:space="preserve">
+    <value>祖父の名前の長さは100文字以下でなければなりません。</value>
+  </data>
+  <data name="GrandfatherNameRequired" xml:space="preserve">
+    <value>祖父の名前は必須です。</value>
+  </data>
+  <data name="GenderRequired" xml:space="preserve">
+    <value>性別は必須です。</value>
+  </data>
   <data name="QuestionHint5000Length" xml:space="preserve">
     <value>質問のヒントの長さは 5000 文字以下である必要があります。</value>
   </data>
@@ -539,5 +542,8 @@
   </data>
   <data name="InvalidMobileNumber" xml:space="preserve">
     <value>携帯電話番号の形式が無効です。</value>
+  </data>
+  <data name="NoOfQuestionSelectionExceeds" xml:space="preserve">
+    <value>質問選択数が超過しました。</value>
   </data>
 </root>

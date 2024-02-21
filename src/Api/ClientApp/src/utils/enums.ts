@@ -32,6 +32,11 @@ export enum QuestionType {
   Subjective = 3,
 }
 
+export enum AssessmentType {
+  SingleChoice = 1,
+  MultipleChoice = 2,
+}
+
 export enum FeedbackType {
   SingleChoice = 1,
   MultipleChoice = 2,
@@ -58,6 +63,15 @@ export enum LessonType {
 }
 
 export enum CourseStatus {
+  Draft = 1,
+  Review = 2,
+  Published = 3,
+  Archived = 4,
+  Rejected = 5,
+  Completed = 6,
+}
+
+export enum AssessmentStatus {
   Draft = 1,
   Review = 2,
   Published = 3,
@@ -105,4 +119,30 @@ export enum SeverityType {
   Error = 2,
   Warning = 3,
   Debug = 4,
+}
+
+export enum MailType {
+  UserCreate = 1,
+  ResendEmail = 2,
+  ChangedEmail = 3,
+  TrainingChangeStatus = 4,
+  TrainingReview = 5,
+  TrainingEnrollment = 6,
+  TrainingReject = 7,
+  GroupMemberAdd = 8,
+  TrainingPublish = 9,
+  CertificateIssue = 10,
+  AddLesson = 11,
+}
+
+export enum SkillAssessmentRule {
+  IsGreaterThan = 1,
+  IsLessThan = 2,
+}
+
+export enum TrainingEligibilityEnum {
+  Department = 1,
+  Training = 2,
+  Skills = 3,
+  Assessment = 4,
 }

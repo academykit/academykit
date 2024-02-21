@@ -3,11 +3,10 @@ import withSearchPagination, {
 } from '@hoc/useSearchPagination';
 import useAuth from '@hooks/useAuth';
 import { Box, Container, Flex, Loader } from '@mantine/core';
-import { UserRole, CourseUserStatus } from '@utils/enums';
+import { CourseUserStatus, UserRole } from '@utils/enums';
 import { useCourse } from '@utils/services/courseService';
-
-import CourseList from './component/List';
 import { useTranslation } from 'react-i18next';
+import CourseList from './component/List';
 
 const CoursePage = ({
   filterComponent,
@@ -57,7 +56,7 @@ const CoursePage = ({
         ) : (
           <Box>{t('no_trainings_found')}</Box>
         ))}
-      {isLoading && <Loader />}
+      {isLoading && <Flex justify={'center'}>{<Loader mx={'auto'} />}</Flex>}
       {data && pagination(data.totalPage, data.items.length)}
     </Container>
   );

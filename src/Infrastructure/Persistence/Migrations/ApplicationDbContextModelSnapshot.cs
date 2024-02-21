@@ -19,6 +19,419 @@ namespace Infrastructure.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "7.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("Lingtren.Domain.Entities.Assessment", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<int>("AssessmentStatus")
+                        .HasColumnType("int")
+                        .HasColumnName("assessment_status");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnName("description");
+
+                    b.Property<int>("Duration")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("duration");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("end_date");
+
+                    b.Property<string>("Message")
+                        .HasMaxLength(500)
+                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnName("message");
+
+                    b.Property<int>("Retakes")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("retake");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(270)
+                        .HasColumnType("VARCHAR(270)")
+                        .HasColumnName("slug");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("start_date");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnName("title");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.Property<int>("Weightage")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("weightage");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.ToTable("Assessments");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.AssessmentOptions", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("AssessmentQuestionId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("assessment_question_id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<bool>("IsCorrect")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_correct");
+
+                    b.Property<string>("Option")
+                        .IsRequired()
+                        .HasMaxLength(5000)
+                        .HasColumnType("VARCHAR(5000)")
+                        .HasColumnName("option");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int")
+                        .HasColumnName("order");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssessmentQuestionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AssessmentOptions");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.AssessmentQuestion", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("AssessmentId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("assessment_id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(5000)
+                        .HasColumnType("varchar(5000)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Hints")
+                        .HasMaxLength(5000)
+                        .HasColumnType("varchar(5000)")
+                        .HasColumnName("hints");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(500)
+                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnName("name");
+
+                    b.Property<int>("Order")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("order");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int")
+                        .HasColumnName("type");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssessmentId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.ToTable("AssessmentQuestion");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.AssessmentResult", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("AssessmentId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("assessment_id");
+
+                    b.Property<string>("AssessmentSubmissionId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("assessment_submission_id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<decimal>("NegativeMark")
+                        .HasColumnType("decimal(20,4)")
+                        .HasColumnName("negative_mark");
+
+                    b.Property<decimal>("TotalMark")
+                        .HasColumnType("decimal(20,4)")
+                        .HasColumnName("total_mark");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssessmentId");
+
+                    b.HasIndex("AssessmentSubmissionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AssessmentResult");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.AssessmentSubmission", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("AssessmentId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("assessment_id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("end_time");
+
+                    b.Property<bool>("IsSubmissionError")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_submission_error");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("start_time");
+
+                    b.Property<string>("SubmissionErrorMessage")
+                        .HasMaxLength(250)
+                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnName("submission_error_message");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssessmentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AssessmentSubmission");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.AssessmentSubmissionAnswer", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("AssessmentQuestionId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("assessment_question_id");
+
+                    b.Property<string>("AssessmentSubmissionId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("assessment_submission_id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<bool>("IsCorrect")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_correct");
+
+                    b.Property<string>("SelectedAnswers")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("VARCHAR(150)")
+                        .HasColumnName("selected_answers");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssessmentQuestionId");
+
+                    b.HasIndex("AssessmentSubmissionId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.ToTable("AssessmentSubmissionAnswer");
+                });
+
             modelBuilder.Entity("Lingtren.Domain.Entities.Assignment", b =>
                 {
                     b.Property<string>("Id")
@@ -407,128 +820,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("AssignmentSubmissionAttachments");
                 });
 
-            modelBuilder.Entity("Lingtren.Domain.Entities.Branch", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(270)
-                        .HasColumnType("VARCHAR(270)")
-                        .HasColumnName("address");
-
-                    b.Property<string>("AreaBranch")
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
-                        .HasColumnName("area_branch");
-
-                    b.Property<string>("BranchCode")
-                        .IsRequired()
-                        .HasMaxLength(270)
-                        .HasColumnType("VARCHAR(270)")
-                        .HasColumnName("code");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("created_by");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("created_on");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("email");
-
-                    b.Property<string>("IpAddress")
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("ip_address");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false)
-                        .HasColumnName("is_active");
-
-                    b.Property<string>("Location")
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
-                        .HasColumnName("location");
-
-                    b.Property<string>("MobileNumber")
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("mobile_number");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("NameNepali")
-                        .HasMaxLength(270)
-                        .HasColumnType("VARCHAR(270)")
-                        .HasColumnName("nepaliname");
-
-                    b.Property<string>("Province")
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
-                        .HasColumnName("province");
-
-                    b.Property<string>("RegionalBranch")
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
-                        .HasColumnName("regional_branch");
-
-                    b.Property<string>("Remarks")
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
-                        .HasColumnName("remarks");
-
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasMaxLength(270)
-                        .HasColumnType("VARCHAR(270)")
-                        .HasColumnName("slug");
-
-                    b.Property<int>("SolId")
-                        .HasMaxLength(50)
-                        .HasColumnType("INT(50)")
-                        .HasColumnName("sol_id");
-
-                    b.Property<string>("UnderBranch")
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
-                        .HasColumnName("under_branch");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("updated_by");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("updated_on");
-
-                    b.Property<string>("ValleyType")
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
-                        .HasColumnName("valley_type");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Branch");
-                });
-
             modelBuilder.Entity("Lingtren.Domain.Entities.Certificate", b =>
                 {
                     b.Property<string>("Id")
@@ -738,10 +1029,20 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("duration");
 
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("end_date");
+
                     b.Property<string>("GroupId")
                         .HasMaxLength(50)
                         .HasColumnType("VARCHAR(50)")
                         .HasColumnName("group_id");
+
+                    b.Property<bool>("IsUnlimitedEndDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_unlimited_end_date");
 
                     b.Property<bool>("IsUpdate")
                         .ValueGeneratedOnAdd()
@@ -769,6 +1070,10 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(270)
                         .HasColumnType("VARCHAR(270)")
                         .HasColumnName("slug");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("start_date");
 
                     b.Property<int>("Status")
                         .HasColumnType("int")
@@ -1114,6 +1419,84 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("CreatedBy");
 
                     b.ToTable("Departments");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.EligibilityCreation", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("AssessmentId")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("assessment_id");
+
+                    b.Property<string>("CompletedAssessmentId")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("completed_assessment_id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<string>("DepartmentId")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("department_id");
+
+                    b.Property<string>("GroupId")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("group_id");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int")
+                        .HasColumnName("role");
+
+                    b.Property<string>("SkillId")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("skill_id");
+
+                    b.Property<string>("TrainingId")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("training_id");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssessmentId");
+
+                    b.HasIndex("CompletedAssessmentId");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("SkillId");
+
+                    b.HasIndex("TrainingId");
+
+                    b.ToTable("EligibilityCreations");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Feedback", b =>
@@ -2249,6 +2632,12 @@ namespace Infrastructure.Persistence.Migrations
                         .HasDefaultValue(false)
                         .HasColumnName("is_deleted");
 
+                    b.Property<bool>("IsShuffle")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_shuffle");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -2261,6 +2650,10 @@ namespace Infrastructure.Persistence.Migrations
                         .HasDefaultValue(0m)
                         .HasColumnName("negative_marking");
 
+                    b.Property<int>("NoOfQuestion")
+                        .HasColumnType("int")
+                        .HasColumnName("no_of_question");
+
                     b.Property<decimal>("PassingWeightage")
                         .HasColumnType("decimal(10,4)")
                         .HasColumnName("passing_weightage");
@@ -2268,6 +2661,12 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<decimal>("QuestionMarking")
                         .HasColumnType("decimal(10,4)")
                         .HasColumnName("question_marking");
+
+                    b.Property<bool>("ShowAll")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(true)
+                        .HasColumnName("show_all");
 
                     b.Property<string>("Slug")
                         .IsRequired()
@@ -2898,6 +3297,109 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Signature");
                 });
 
+            modelBuilder.Entity("Lingtren.Domain.Entities.Skills", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnName("remarks");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("SkillName")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Skills");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.SkillsCriteria", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("AssessmentId")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("assessment_id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<decimal>("Percentage")
+                        .HasColumnType("decimal(20,4)")
+                        .HasColumnName("percentage");
+
+                    b.Property<int>("SkillAssessmentRule")
+                        .HasColumnType("int")
+                        .HasColumnName("skill_assessment_rule");
+
+                    b.Property<string>("SkillId")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("skill_id");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssessmentId");
+
+                    b.HasIndex("SkillId");
+
+                    b.ToTable("SkillsCriteria");
+                });
+
             modelBuilder.Entity("Lingtren.Domain.Entities.Tag", b =>
                 {
                     b.Property<string>("Id")
@@ -2950,6 +3452,58 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Tags");
                 });
 
+            modelBuilder.Entity("Lingtren.Domain.Entities.TrainingEligibility", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CourseId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("course_id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<string>("EligibilityId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("eligibility_id");
+
+                    b.Property<string>("TrainingEligibilityEnum")
+                        .IsRequired()
+                        .HasMaxLength(270)
+                        .HasColumnType("VARCHAR(270)")
+                        .HasColumnName("training_eligibility_enum");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("TrainingEligibility");
+                });
+
             modelBuilder.Entity("Lingtren.Domain.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -2963,30 +3517,10 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(200)")
                         .HasColumnName("address");
 
-                    b.Property<bool>("AddressIsSame")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Bio")
                         .HasMaxLength(500)
                         .HasColumnType("VARCHAR(500)")
                         .HasColumnName("bio");
-
-                    b.Property<DateTime?>("BirthDateAD")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("birth_date_ad");
-
-                    b.Property<DateTime?>("BirthDateBS")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("birth_date_bs");
-
-                    b.Property<int?>("BloodGroup")
-                        .HasColumnType("int")
-                        .HasColumnName("blood_group");
-
-                    b.Property<string>("BranchId")
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("branch_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -2997,41 +3531,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("DATETIME")
                         .HasColumnName("created_on");
-
-                    b.Property<string>("CurrentAddress")
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
-                        .HasColumnName("current_address");
-
-                    b.Property<string>("CurrentCity")
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
-                        .HasColumnName("current_city");
-
-                    b.Property<string>("CurrentCountry")
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
-                        .HasColumnName("current_country");
-
-                    b.Property<string>("CurrentDistrict")
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
-                        .HasColumnName("current_district");
-
-                    b.Property<string>("CurrentMunicipality")
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
-                        .HasColumnName("current_municipality");
-
-                    b.Property<string>("CurrentState")
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
-                        .HasColumnName("current_state");
-
-                    b.Property<string>("CurrentWard")
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
-                        .HasColumnName("current_ward");
 
                     b.Property<string>("DepartmentId")
                         .HasMaxLength(50)
@@ -3044,34 +3543,11 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("email");
 
-                    b.Property<string>("EmploymentType")
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("employment_type");
-
-                    b.Property<bool>("FamilyAddressIsSame")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("family_address_same");
-
-                    b.Property<string>("FatherName")
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("father_name");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("first_name");
-
-                    b.Property<int?>("Gender")
-                        .HasColumnType("int")
-                        .HasColumnName("gender");
-
-                    b.Property<string>("GrandFatherName")
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("grandfather_name");
 
                     b.Property<string>("HashPassword")
                         .IsRequired()
@@ -3079,37 +3555,10 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("hash_password");
 
-                    b.Property<string>("IdentityIssuedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("identity_issued_by");
-
-                    b.Property<DateTime?>("IdentityIssuedOn")
-                        .HasMaxLength(100)
-                        .HasColumnType("DATE")
-                        .HasColumnName("identity_issued_on");
-
-                    b.Property<string>("IdentityNumber")
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("identity_number");
-
-                    b.Property<int?>("IdentityType")
-                        .HasColumnType("int")
-                        .HasColumnName("identity_type");
-
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(500)
                         .HasColumnType("VARCHAR(500)")
                         .HasColumnName("image_url");
-
-                    b.Property<DateTime?>("JoinedDateAD")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("joined_date_ad");
-
-                    b.Property<DateTime?>("JoinedDateBS")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("joined_date_bs");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -3117,28 +3566,9 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("last_name");
 
-                    b.Property<int?>("MaritalStatus")
-                        .HasColumnType("int")
-                        .HasColumnName("marital_status");
-
-                    b.Property<string>("MemberCurrentAddress")
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("member_current_address");
-
                     b.Property<string>("MemberId")
                         .HasColumnType("VARCHAR(50)")
                         .HasColumnName("member_id");
-
-                    b.Property<string>("MemberPermanentAddress")
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("member_permanent_address");
-
-                    b.Property<string>("MemberPhone")
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("member_phone");
 
                     b.Property<string>("MiddleName")
                         .HasMaxLength(100)
@@ -3149,22 +3579,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("VARCHAR(50)")
                         .HasColumnName("mobile_number");
-
-                    b.Property<string>("MobileNumberSecondary")
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("mobile_number_secondary");
-
-                    b.Property<string>("MotherName")
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("mother_name");
-
-                    b.Property<int?>("Nationality")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1)
-                        .HasColumnName("nationality");
 
                     b.Property<string>("PasswordChangeToken")
                         .HasMaxLength(500)
@@ -3179,41 +3593,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("PasswordResetTokenExpiry")
                         .HasColumnType("DATETIME")
                         .HasColumnName("password_reset_token_expiry");
-
-                    b.Property<string>("PermanentCity")
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
-                        .HasColumnName("permanent_city");
-
-                    b.Property<string>("PermanentCountry")
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
-                        .HasColumnName("permanent_country");
-
-                    b.Property<string>("PermanentDistrict")
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
-                        .HasColumnName("permanent_district");
-
-                    b.Property<string>("PermanentMunicipality")
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
-                        .HasColumnName("permanent_municipality");
-
-                    b.Property<string>("PermanentState")
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
-                        .HasColumnName("permanent_state");
-
-                    b.Property<string>("PermanentWard")
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
-                        .HasColumnName("permanent_ward");
-
-                    b.Property<string>("PersonalEmail")
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("personal_email");
 
                     b.Property<string>("Profession")
                         .HasMaxLength(250)
@@ -3230,11 +3609,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(4)
                         .HasColumnName("role");
-
-                    b.Property<string>("SpouseName")
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("spouse_name");
 
                     b.Property<int>("Status")
                         .ValueGeneratedOnAdd()
@@ -3253,140 +3627,46 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
-
                     b.HasIndex("DepartmentId");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Lingtren.Domain.Entities.UserEducation", b =>
+            modelBuilder.Entity("Lingtren.Domain.Entities.UserSkills", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("id");
+                        .HasColumnType("char(36)");
 
-                    b.Property<DateOnly>("CompletionDate")
-                        .HasColumnType("DATE")
-                        .HasColumnName("completion_date");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("created_by");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("created_on");
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Degree")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
-                        .HasColumnName("degree");
+                    b.Property<Guid>("SkillId")
+                        .HasColumnType("char(36)");
 
-                    b.Property<string>("InstitutionName")
-                        .IsRequired()
-                        .HasMaxLength(270)
-                        .HasColumnType("VARCHAR(270)")
-                        .HasColumnName("institution_name");
+                    b.Property<string>("SkillsId")
+                        .HasColumnType("VARCHAR(50)");
 
-                    b.Property<string>("Specialization")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
-                        .HasColumnName("specialization");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("updated_by");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("updated_on");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("user_id");
+                        .HasColumnType("VARCHAR(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserEducations");
-                });
-
-            modelBuilder.Entity("Lingtren.Domain.Entities.UserWorkExperience", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("id");
-
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasMaxLength(270)
-                        .HasColumnType("VARCHAR(270)")
-                        .HasColumnName("company_name");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("created_by");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("created_on");
-
-                    b.Property<DateOnly?>("EndDate")
-                        .IsRequired()
-                        .HasColumnType("DATE")
-                        .HasColumnName("end_date");
-
-                    b.Property<string>("JobDescription")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
-                        .HasColumnName("job_description");
-
-                    b.Property<string>("JobTitle")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
-                        .HasColumnName("job_title");
-
-                    b.Property<DateOnly>("JoinedDate")
-                        .HasColumnType("DATE")
-                        .HasColumnName("joined_date");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("updated_by");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("updated_on");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id");
+                    b.HasIndex("SkillsId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserWorkExperiences");
+                    b.ToTable("UserSkills");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.VideoQueue", b =>
@@ -3625,6 +3905,125 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("CreatedBy");
 
                     b.ToTable("ZoomSettings");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.Assessment", b =>
+                {
+                    b.HasOne("Lingtren.Domain.Entities.User", "User")
+                        .WithMany("Assessments")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.AssessmentOptions", b =>
+                {
+                    b.HasOne("Lingtren.Domain.Entities.AssessmentQuestion", "AssessmentQuestion")
+                        .WithMany("AssessmentOptions")
+                        .HasForeignKey("AssessmentQuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lingtren.Domain.Entities.User", "User")
+                        .WithMany("AssessmentOptions")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("AssessmentQuestion");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.AssessmentQuestion", b =>
+                {
+                    b.HasOne("Lingtren.Domain.Entities.Assessment", "Assessment")
+                        .WithMany("AssessmentQuestions")
+                        .HasForeignKey("AssessmentId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Lingtren.Domain.Entities.User", "User")
+                        .WithMany("AssessmentQuestions")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Assessment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.AssessmentResult", b =>
+                {
+                    b.HasOne("Lingtren.Domain.Entities.Assessment", "Assessment")
+                        .WithMany("AssessmentResults")
+                        .HasForeignKey("AssessmentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Lingtren.Domain.Entities.AssessmentSubmission", "AssessmentSubmission")
+                        .WithMany("AssessmentResults")
+                        .HasForeignKey("AssessmentSubmissionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Lingtren.Domain.Entities.User", "User")
+                        .WithMany("AssessmentResults")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Assessment");
+
+                    b.Navigation("AssessmentSubmission");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.AssessmentSubmission", b =>
+                {
+                    b.HasOne("Lingtren.Domain.Entities.Assessment", "Assessment")
+                        .WithMany("AssessmentSubmissions")
+                        .HasForeignKey("AssessmentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Lingtren.Domain.Entities.User", "User")
+                        .WithMany("AssessmentSubmissions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Assessment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.AssessmentSubmissionAnswer", b =>
+                {
+                    b.HasOne("Lingtren.Domain.Entities.AssessmentQuestion", "AssessmentQuestion")
+                        .WithMany("AssessmentSubmissionAnswers")
+                        .HasForeignKey("AssessmentQuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lingtren.Domain.Entities.AssessmentSubmission", "AssessmentSubmission")
+                        .WithMany("AssessmentSubmissionAnswers")
+                        .HasForeignKey("AssessmentSubmissionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Lingtren.Domain.Entities.User", "User")
+                        .WithMany("AssessmentSubmissionAnswers")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AssessmentQuestion");
+
+                    b.Navigation("AssessmentSubmission");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Assignment", b =>
@@ -3923,6 +4322,45 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.EligibilityCreation", b =>
+                {
+                    b.HasOne("Lingtren.Domain.Entities.Assessment", "Assessment")
+                        .WithMany("EligibilityCreations")
+                        .HasForeignKey("AssessmentId");
+
+                    b.HasOne("Lingtren.Domain.Entities.Assessment", "CompletedAssessment")
+                        .WithMany("EligibilityCreationsCompleted")
+                        .HasForeignKey("CompletedAssessmentId");
+
+                    b.HasOne("Lingtren.Domain.Entities.Department", "Department")
+                        .WithMany("EligibilityCreations")
+                        .HasForeignKey("DepartmentId");
+
+                    b.HasOne("Lingtren.Domain.Entities.Group", "Group")
+                        .WithMany("EligibilityCreations")
+                        .HasForeignKey("GroupId");
+
+                    b.HasOne("Lingtren.Domain.Entities.Skills", "Skills")
+                        .WithMany("EligibilityCreations")
+                        .HasForeignKey("SkillId");
+
+                    b.HasOne("Lingtren.Domain.Entities.Course", "Course")
+                        .WithMany("EligibilityCreations")
+                        .HasForeignKey("TrainingId");
+
+                    b.Navigation("Assessment");
+
+                    b.Navigation("CompletedAssessment");
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Skills");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Feedback", b =>
@@ -4450,6 +4888,22 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Lingtren.Domain.Entities.SkillsCriteria", b =>
+                {
+                    b.HasOne("Lingtren.Domain.Entities.Assessment", "Assessment")
+                        .WithMany("SkillsCriteria")
+                        .HasForeignKey("AssessmentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Lingtren.Domain.Entities.Skills", "SkillType")
+                        .WithMany("SkillsCriteria")
+                        .HasForeignKey("SkillId");
+
+                    b.Navigation("Assessment");
+
+                    b.Navigation("SkillType");
+                });
+
             modelBuilder.Entity("Lingtren.Domain.Entities.Tag", b =>
                 {
                     b.HasOne("Lingtren.Domain.Entities.User", "User")
@@ -4461,40 +4915,40 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Lingtren.Domain.Entities.TrainingEligibility", b =>
+                {
+                    b.HasOne("Lingtren.Domain.Entities.Course", "Course")
+                        .WithMany("TrainingEligibilities")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+                });
+
             modelBuilder.Entity("Lingtren.Domain.Entities.User", b =>
                 {
-                    b.HasOne("Lingtren.Domain.Entities.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId");
-
                     b.HasOne("Lingtren.Domain.Entities.Department", "Department")
                         .WithMany("Users")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.Navigation("Branch");
-
                     b.Navigation("Department");
                 });
 
-            modelBuilder.Entity("Lingtren.Domain.Entities.UserEducation", b =>
+            modelBuilder.Entity("Lingtren.Domain.Entities.UserSkills", b =>
                 {
+                    b.HasOne("Lingtren.Domain.Entities.Skills", "Skills")
+                        .WithMany("UserSkills")
+                        .HasForeignKey("SkillsId");
+
                     b.HasOne("Lingtren.Domain.Entities.User", "User")
-                        .WithMany("UserEducations")
+                        .WithMany("UserSkills")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Lingtren.Domain.Entities.UserWorkExperience", b =>
-                {
-                    b.HasOne("Lingtren.Domain.Entities.User", "User")
-                        .WithMany("WorkExperiences")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Skills");
 
                     b.Navigation("User");
                 });
@@ -4559,6 +5013,35 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Lingtren.Domain.Entities.Assessment", b =>
+                {
+                    b.Navigation("AssessmentQuestions");
+
+                    b.Navigation("AssessmentResults");
+
+                    b.Navigation("AssessmentSubmissions");
+
+                    b.Navigation("EligibilityCreations");
+
+                    b.Navigation("EligibilityCreationsCompleted");
+
+                    b.Navigation("SkillsCriteria");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.AssessmentQuestion", b =>
+                {
+                    b.Navigation("AssessmentOptions");
+
+                    b.Navigation("AssessmentSubmissionAnswers");
+                });
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.AssessmentSubmission", b =>
+                {
+                    b.Navigation("AssessmentResults");
+
+                    b.Navigation("AssessmentSubmissionAnswers");
+                });
+
             modelBuilder.Entity("Lingtren.Domain.Entities.Assignment", b =>
                 {
                     b.Navigation("AssignmentAttachments");
@@ -4588,17 +5071,23 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Navigation("CourseTeachers");
 
+                    b.Navigation("EligibilityCreations");
+
                     b.Navigation("Lessons");
 
                     b.Navigation("Sections");
 
                     b.Navigation("Signatures");
 
+                    b.Navigation("TrainingEligibilities");
+
                     b.Navigation("WatchHistories");
                 });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Department", b =>
                 {
+                    b.Navigation("EligibilityCreations");
+
                     b.Navigation("Users");
                 });
 
@@ -4612,6 +5101,8 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Lingtren.Domain.Entities.Group", b =>
                 {
                     b.Navigation("Courses");
+
+                    b.Navigation("EligibilityCreations");
 
                     b.Navigation("GroupFiles");
 
@@ -4691,6 +5182,15 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Lessons");
                 });
 
+            modelBuilder.Entity("Lingtren.Domain.Entities.Skills", b =>
+                {
+                    b.Navigation("EligibilityCreations");
+
+                    b.Navigation("SkillsCriteria");
+
+                    b.Navigation("UserSkills");
+                });
+
             modelBuilder.Entity("Lingtren.Domain.Entities.Tag", b =>
                 {
                     b.Navigation("CourseTags");
@@ -4698,6 +5198,18 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Lingtren.Domain.Entities.User", b =>
                 {
+                    b.Navigation("AssessmentOptions");
+
+                    b.Navigation("AssessmentQuestions");
+
+                    b.Navigation("AssessmentResults");
+
+                    b.Navigation("AssessmentSubmissionAnswers");
+
+                    b.Navigation("AssessmentSubmissions");
+
+                    b.Navigation("Assessments");
+
                     b.Navigation("AssignmentAttachments");
 
                     b.Navigation("AssignmentQuestionOptions");
@@ -4782,11 +5294,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Navigation("Tags");
 
-                    b.Navigation("UserEducations");
+                    b.Navigation("UserSkills");
 
                     b.Navigation("WatchHistories");
-
-                    b.Navigation("WorkExperiences");
 
                     b.Navigation("ZoomLicenses");
 

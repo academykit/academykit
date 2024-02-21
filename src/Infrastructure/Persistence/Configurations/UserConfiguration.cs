@@ -191,6 +191,11 @@
                 .HasForeignKey(x => x.CreatedBy)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
+                .HasMany(x => x.Assignments)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.CreatedBy)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder
                 .HasMany(x => x.CourseTeachers)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserId)
@@ -276,12 +281,27 @@
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
+                .HasMany(x => x.AssessmentResults)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder
                 .HasMany(x => x.QuestionSetSubmissions)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
+                .HasMany(x => x.AssessmentSubmissions)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder
                 .HasMany(x => x.QuestionSetSubmissionAnswers)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.CreatedBy)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder
+                .HasMany(x => x.AssessmentSubmissionAnswers)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.CreatedBy)
                 .OnDelete(DeleteBehavior.NoAction);
@@ -295,8 +315,9 @@
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
+
             builder
-                .HasMany(x => x.Assignments)
+                .HasMany(x => x.Assessments)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.CreatedBy)
                 .OnDelete(DeleteBehavior.NoAction);
@@ -356,6 +377,16 @@
                 .HasForeignKey(x => x.CreatedBy)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
+                .HasMany(x => x.AssessmentQuestions)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.CreatedBy)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder
+                .HasMany(x => x.AssignmentQuestionOptions)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.CreatedBy)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder
                 .HasMany(x => x.FeedbackSubmissions)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserId)
@@ -375,6 +406,7 @@
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.CreatedBy)
                 .OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.Skills).WithMany().UsingEntity<UserSkills>();
         }
     }
 }

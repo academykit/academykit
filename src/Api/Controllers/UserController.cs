@@ -278,6 +278,20 @@ namespace Lingtren.Api.Controllers
             existing.PublicUrls = model.PublicUrls;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = currentTimeStamp;
+            if (
+                oldRole == UserRole.Admin
+                && (model.Role == UserRole.Trainee || model.Role == UserRole.Trainer)
+            )
+            {
+                await userService.AddToDefaultGroup(userId, CurrentUser.Id);
+            }
+            else if (
+                (oldRole == UserRole.Trainee || oldRole == UserRole.Trainer)
+                && model.Role == UserRole.Admin
+            )
+            {
+                await userService.RemoveFromDefaultGroup(userId, CurrentUser.Id);
+            }
 
             if (CurrentUser.Role == UserRole.SuperAdmin || CurrentUser.Role == UserRole.Admin)
             {

@@ -8,6 +8,7 @@ import {
   Button,
   Center,
   Container,
+  Flex,
   Group,
   Image,
   Loader,
@@ -168,19 +169,32 @@ const CourseDescription = () => {
       <Container fluid>
         <div className={classes.inner}>
           <div className={classes.content}>
-            <Title className={classes.title}>
-              {course.data?.name}
-              <Badge ml={10}>
-                {t(`${CourseUserStatusValue[course?.data?.userStatus]}`)}
-              </Badge>
-              {auth?.auth && Number(auth?.auth?.role) <= UserRole.Admin && (
-                <>
-                  <Badge ml={10} color={color(course?.data?.status)}>
-                    {t(`${CourseStatus[course?.data?.status]}`)}
-                  </Badge>
-                </>
-              )}
-            </Title>
+            <Flex wrap={'wrap'} align={'baseline'}>
+              <Box maw={{ base: '100%', md: 300, lg: 500 }}>
+                <Title
+                  className={classes.title}
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {course.data?.name}
+                </Title>
+              </Box>
+              <>
+                <Badge ml={10}>
+                  {t(`${CourseUserStatusValue[course?.data?.userStatus]}`)}
+                </Badge>
+                {auth?.auth && Number(auth?.auth?.role) <= UserRole.Admin && (
+                  <>
+                    <Badge ml={10} color={color(course?.data?.status)}>
+                      {t(`${CourseStatus[course?.data?.status]}`)}
+                    </Badge>
+                  </>
+                )}
+              </>
+            </Flex>
 
             <Group my={4}>
               {course.data?.user && (
@@ -226,6 +240,7 @@ const CourseDescription = () => {
                     className={classes.control}
                     loading={enrollCourse.isLoading}
                     onClick={onEnroll}
+                    disabled={!course.data.isEligible}
                   >
                     {t('enroll_course')}
                   </Button>
@@ -300,7 +315,7 @@ const CourseDescription = () => {
               </Group>
             </Center>
 
-            <Box className={classes.CourseContentLarge}>
+            <Box className={classes.CourseContentLarge} maw={'90%'}>
               {course.data?.sections && (
                 <CourseContent
                   courseName={course.data?.name}

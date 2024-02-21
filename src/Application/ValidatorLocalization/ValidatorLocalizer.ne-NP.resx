@@ -59,7 +59,10 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema id="root"
+    xmlns=""
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -394,32 +397,32 @@
     <value>सार्वजनिक url लम्बाइ 2000 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
   <data name="FatherNameLength100" xml:space="preserve">
-  <value>पिताको नामको लम्बाइ १०० वा तदुन्ध भन्दा कम गर्नुपर्छ।</value>
-</data>
-<data name="FatherNameRequired" xml:space="preserve">
-  <value>पिताको नाम आवश्यक छ।</value>
-</data>
-<data name="MotherNameLength100" xml:space="preserve">
-  <value>आमाको नामको लम्बाइ १०० वा तदुन्ध भन्दा कम गर्नुपर्छ।</value>
-</data>
-<data name="MotherNameRequired" xml:space="preserve">
-  <value>आमाको नाम आवश्यक छ।</value>
-</data>
-<data name="SpouseNameLength100" xml:space="preserve">
-  <value>पति/पत्नि को नामको लम्बाइ १०० वा तदुन्ध भन्दा कम गर्नुपर्छ।</value>
-</data>
-<data name="SpouseNameRequired" xml:space="preserve">
-  <value>पति/पत्नि को नाम आवश्यक छ।</value>
-</data>
-<data name="GrandfatherNameLength100" xml:space="preserve">
-  <value>बाजेको नामको लम्बाइ १०० वा तदुन्ध भन्दा कम गर्नुपर्छ।</value>
-</data>
-<data name="GrandfatherNameRequired" xml:space="preserve">
-  <value>बाजेको नाम आवश्यक छ।</value>
-</data>
-<data name="GenderRequired" xml:space="preserve">
-  <value>लिङ्ग आवश्यक छ।</value>
-</data>
+    <value>पिताको नामको लम्बाइ १०० वा तदुन्ध भन्दा कम गर्नुपर्छ।</value>
+  </data>
+  <data name="FatherNameRequired" xml:space="preserve">
+    <value>पिताको नाम आवश्यक छ।</value>
+  </data>
+  <data name="MotherNameLength100" xml:space="preserve">
+    <value>आमाको नामको लम्बाइ १०० वा तदुन्ध भन्दा कम गर्नुपर्छ।</value>
+  </data>
+  <data name="MotherNameRequired" xml:space="preserve">
+    <value>आमाको नाम आवश्यक छ।</value>
+  </data>
+  <data name="SpouseNameLength100" xml:space="preserve">
+    <value>पति/पत्नि को नामको लम्बाइ १०० वा तदुन्ध भन्दा कम गर्नुपर्छ।</value>
+  </data>
+  <data name="SpouseNameRequired" xml:space="preserve">
+    <value>पति/पत्नि को नाम आवश्यक छ।</value>
+  </data>
+  <data name="GrandfatherNameLength100" xml:space="preserve">
+    <value>बाजेको नामको लम्बाइ १०० वा तदुन्ध भन्दा कम गर्नुपर्छ।</value>
+  </data>
+  <data name="GrandfatherNameRequired" xml:space="preserve">
+    <value>बाजेको नाम आवश्यक छ।</value>
+  </data>
+  <data name="GenderRequired" xml:space="preserve">
+    <value>लिङ्ग आवश्यक छ।</value>
+  </data>
   <data name="QuestionHint5000Length" xml:space="preserve">
     <value>प्रश्न संकेत लम्बाइ 5000 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
@@ -539,5 +542,8 @@
   </data>
   <data name="InvalidMobileNumber" xml:space="preserve">
     <value>अवैध मोबाइल नम्बर ढाँचा।</value>
+  </data>
+  <data name="NoOfQuestionSelectionExceeds" xml:space="preserve">
+    <value>प्रश्न चयनको सङ्ख्या बढी छ ।</value>
   </data>
 </root>

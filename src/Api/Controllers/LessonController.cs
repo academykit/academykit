@@ -32,7 +32,8 @@ namespace Lingtren.Api.Controllers
             IStringLocalizer<ExceptionLocalizer> localizer,
             IAssignmentService assignmentService,
             IQuestionSetService questionSetService,
-            IFeedbackService feedbackService)
+            IFeedbackService feedbackService
+        )
         {
             this.lessonService = lessonService;
             this.validator = validator;
@@ -47,11 +48,16 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <returns> the list of <see cref="LessonResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<SearchResult<LessonResponseModel>> SearchAsync(string identity, [FromQuery] LessonBaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<LessonResponseModel>> SearchAsync(
+            string identity,
+            [FromQuery] LessonBaseSearchCriteria searchCriteria
+        )
         {
             searchCriteria.CurrentUserId = CurrentUser.Id;
             searchCriteria.CourseIdentity = identity;
-            var searchResult = await lessonService.SearchAsync(searchCriteria).ConfigureAwait(false);
+            var searchResult = await lessonService
+                .SearchAsync(searchCriteria)
+                .ConfigureAwait(false);
 
             var response = new SearchResult<LessonResponseModel>
             {
@@ -62,8 +68,7 @@ namespace Lingtren.Api.Controllers
                 TotalPage = searchResult.TotalPage,
             };
 
-            searchResult.Items.ForEach(p =>
-                 response.Items.Add(new LessonResponseModel(p)));
+            searchResult.Items.ForEach(p => response.Items.Add(new LessonResponseModel(p)));
             return response;
         }
 
@@ -73,15 +78,22 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the instance of <see cref="LessonRequestModel" />. </param>
         /// <returns> the instance of <see cref="LessonRequestModel" /> .</returns>
         [HttpPost]
-        public async Task<LessonResponseModel> CreateAsync(string identity, LessonRequestModel model)
+        public async Task<LessonResponseModel> CreateAsync(
+            string identity,
+            LessonRequestModel model
+        )
         {
             if (model.Type == LessonType.Exam && model.QuestionSet?.AllowedRetake < 1)
             {
                 model.QuestionSet.AllowedRetake = 1;
             }
 
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var response = await lessonService.AddAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var response = await lessonService
+                .AddAsync(identity, model, CurrentUser.Id)
+                .ConfigureAwait(false);
             return new LessonResponseModel(response);
         }
 
@@ -91,9 +103,14 @@ namespace Lingtren.Api.Controllers
         /// <param name="lessonIdentity"> the department id or slug.</param>
         /// <returns> the instance of <see cref="LessonResponseModel" /> .</returns>
         [HttpGet("detail")]
-        public async Task<LessonResponseModel> GetDetail(string identity, [FromQuery] string lessonIdentity)
+        public async Task<LessonResponseModel> GetDetail(
+            string identity,
+            [FromQuery] string lessonIdentity
+        )
         {
-            return await lessonService.GetLessonAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
+            return await lessonService
+                .GetLessonAsync(identity, lessonIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -103,11 +120,46 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the instance of <see cref="LessonReorderRequestModel"/>.</param>
         /// <returns> the task complete. </returns>
         [HttpPut("reorder")]
-
-        public async Task<IActionResult> LessonReorder(string identity, LessonReorderRequestModel model)
+        public async Task<IActionResult> LessonReorder(
+            string identity,
+            LessonReorderRequestModel model
+        )
         {
             await lessonService.ReorderAsync(identity, model, CurrentUser.Id);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("LessonReorder") });
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("LessonReorder")
+                }
+            );
+        }
+
+        /// <summary>
+        /// /// update department api.
+        /// </summary>
+        /// <param name="identity"> id or slug. </param>
+        /// <param name="model"> the instance of <see cref="LessonRequestModel" />. </param>
+        /// <returns> the instance of <see cref="LessonResponseModel" /> .</returns>
+        [HttpPut("{lessonIdentity}")]
+        public async Task<LessonResponseModel> UpdateAsync(
+            string identity,
+            string lessonIdentity,
+            LessonRequestModel model
+        )
+        {
+            if (model.Type == LessonType.Exam && model.QuestionSet?.AllowedRetake < 1)
+            {
+                model.QuestionSet.AllowedRetake = 1;
+            }
+
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var response = await lessonService
+                .UpdateAsync(identity, lessonIdentity, model, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return new LessonResponseModel(response);
         }
 
         /// <summary>
@@ -116,17 +168,35 @@ namespace Lingtren.Api.Controllers
         /// <param name="identity"> id or slug. </param>
         /// <param name="model"> the instance of <see cref="LessonRequestModel" />. </param>
         /// <returns> the instance of <see cref="LessonResponseModel" /> .</returns>
-        [HttpPut("{lessonIdentity}")]
-        public async Task<LessonResponseModel> UpdateAsync(string identity, string lessonIdentity, LessonRequestModel model)
+        [HttpPut("{lessonIdentity}/updateShuffle")]
+        public async Task<QuestionSetResponseModel> UpdateShuffleAsync(
+            string identity,
+            string lessonIdentity,
+            QuestionSetRequestModel model
+        )
         {
-            if (model.Type == LessonType.Exam && model.QuestionSet?.AllowedRetake < 1)
-            {
-                model.QuestionSet.AllowedRetake = 1;
-            }
+            var response = await lessonService
+                .UpdateQuestionAsync(identity, lessonIdentity, model, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return new QuestionSetResponseModel(response);
+        }
 
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var response = await lessonService.UpdateAsync(identity, lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
-            return new LessonResponseModel(response);
+        /// <summary>
+        /// update department api.
+        /// </summary>
+        /// <param name="identity"> id or slug. </param>
+        /// <param name="model"> the instance of <see cref="LessonRequestModel" />. </param>
+        /// <returns> the instance of <see cref="LessonResponseModel" /> .</returns>
+        [HttpGet("{lessonIdentity}/GetShuffle")]
+        public async Task<QuestionSetResponseModel> GetShuffle(
+            string identity,
+            string lessonIdentity
+        )
+        {
+            var response = await lessonService
+                .GetQuestionAsync(identity, lessonIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return new QuestionSetResponseModel(response);
         }
 
         /// <summary>
@@ -138,8 +208,16 @@ namespace Lingtren.Api.Controllers
         [HttpDelete("{lessonIdentity}")]
         public async Task<IActionResult> DeleteAsync(string identity, string lessonIdentity)
         {
-            await lessonService.DeleteLessonAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("LessonRemoved") });
+            await lessonService
+                .DeleteLessonAsync(identity, lessonIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("LessonRemoved")
+                }
+            );
         }
 
         /// <summary>
@@ -151,7 +229,9 @@ namespace Lingtren.Api.Controllers
         [HttpGet("{lessonIdentity}/join")]
         public async Task<MeetingJoinResponseModel> Join(string identity, string lessonIdentity)
         {
-            var response = await lessonService.GetJoinMeetingAsync(identity, lessonIdentity, CurrentUser.Id).ConfigureAwait(false);
+            var response = await lessonService
+                .GetJoinMeetingAsync(identity, lessonIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
             return response;
         }
 
@@ -162,9 +242,15 @@ namespace Lingtren.Api.Controllers
         /// <param name="userId"> the user id. </param>
         /// <returns> the list of  <see cref="MeetingReportResponseModel" />. </returns>
         [HttpGet("{lessonidentity}/meetingreport/{userId}")]
-        public async Task<IList<MeetingReportResponseModel>> MeetingReport(string identity, string lessonidentity, string userId)
+        public async Task<IList<MeetingReportResponseModel>> MeetingReport(
+            string identity,
+            string lessonidentity,
+            string userId
+        )
         {
-            var report = await lessonService.GetMeetingReportAsync(identity, lessonidentity, userId, CurrentUser.Id).ConfigureAwait(false);
+            var report = await lessonService
+                .GetMeetingReportAsync(identity, lessonidentity, userId, CurrentUser.Id)
+                .ConfigureAwait(false);
             return report;
         }
 
@@ -175,22 +261,40 @@ namespace Lingtren.Api.Controllers
         /// <param name="ids">list of question ids in lesson.</param>
         /// <returns>task completed.</returns>
         [HttpPost("Reorder")]
-        public async Task<IActionResult> Reorder(string lessonIdentity, LessonType lessonType, List<Guid> ids)
+        public async Task<IActionResult> Reorder(
+            string lessonIdentity,
+            LessonType lessonType,
+            List<Guid> ids
+        )
         {
             switch (lessonType)
             {
                 case LessonType.Assignment:
-                    await assignmentService.ReorderAssignmentQuestionAsync(CurrentUser.Id, lessonIdentity, ids);
+                    await assignmentService.ReorderAssignmentQuestionAsync(
+                        CurrentUser.Id,
+                        lessonIdentity,
+                        ids
+                    );
                     break;
                 case LessonType.Exam:
-                    await questionSetService.ReorderQuestionsetQuestionsAsync(CurrentUser.Id, lessonIdentity, ids).ConfigureAwait(false);
+                    await questionSetService
+                        .ReorderQuestionsetQuestionsAsync(CurrentUser.Id, lessonIdentity, ids)
+                        .ConfigureAwait(false);
                     break;
                 case LessonType.Feedback:
-                    await feedbackService.ReorderFeedbackQuestionsAsync(CurrentUser.Id, lessonIdentity, ids).ConfigureAwait(false);
+                    await feedbackService
+                        .ReorderFeedbackQuestionsAsync(CurrentUser.Id, lessonIdentity, ids)
+                        .ConfigureAwait(false);
                     break;
             }
 
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("AssignmentUpdatedSuccessfully") });
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("AssignmentUpdatedSuccessfully")
+                }
+            );
         }
     }
 }

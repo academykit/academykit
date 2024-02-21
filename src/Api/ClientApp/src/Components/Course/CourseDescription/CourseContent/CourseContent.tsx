@@ -27,7 +27,14 @@ const CourseContent = ({
       <Group my={4} justify="space-between">
         {user && <UserShortProfile user={user} size={'md'} />}
       </Group>
-      <Title order={5}>
+      <Title
+        order={5}
+        style={{
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}
+      >
         {t('content_of')} {courseName}
       </Title>
       <Text size={'md'} c={'dimmed'}>

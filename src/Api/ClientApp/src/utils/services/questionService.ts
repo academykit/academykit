@@ -41,6 +41,9 @@ export interface IAddQuestionType {
     option: string;
     isCorrect: boolean;
   }[];
+  questionPoolId: string;
+  id?: string;
+  questionPoolQuestionId?: string;
 }
 const addQuestion = ({
   poolId,
@@ -49,7 +52,7 @@ const addQuestion = ({
   poolId: string;
   data: IAddQuestionType;
 }) => {
-  return httpClient.post(api.questions.list(poolId), {
+  return httpClient.post<IAddQuestionType>(api.questions.list(poolId), {
     ...data,
     type: Number(data.type),
   });
@@ -108,6 +111,7 @@ interface Question {
   id: string;
   questionSetQuestionId: string;
   questionPoolQuestionId: string;
+  questionPoolId: string;
   name: string;
   type: number;
   description: string;

@@ -26,6 +26,81 @@ const RoutePath = {
     },
   },
 
+  assessment: {
+    assessmentList: '/assessment/list',
+    base: '/assessment',
+    create: '/assessment/create',
+    description: function (id?: string) {
+      return {
+        signature: this.base + '/:id',
+        route: `${this.base}/${id}`,
+      };
+    },
+  },
+
+  manageAssessment: {
+    base: '/assessment/stat',
+    description: function (id?: string) {
+      return {
+        signature: this.base + '/:id',
+        route: `${this.base}/${id}`,
+      };
+    },
+    manage: function (id?: string) {
+      return {
+        signature: this.base + '/:id',
+        route: `${this.base}/${id}`,
+      };
+    },
+    edit: function (id?: string) {
+      return {
+        signature: this.description('').signature + '/edit',
+        route: `${this.description(id).route}/edit`,
+        routes: () => `${this.description(id).route}/edit`,
+      };
+    },
+    question: function (id?: string) {
+      return {
+        signature: this.base + '/:id/questions',
+        route: `${this.base}/${id}/questions`,
+      };
+    },
+    assessmentStat: function (id?: string) {
+      return {
+        signature: this.base + '/:id/statistics',
+        route: `${this.base}/${id}/statistics`,
+      };
+    },
+    setting: function (id?: string) {
+      return {
+        signature: this.base + '/:id/setting',
+        route: `${this.base}/${id}/setting`,
+      };
+    },
+  },
+
+  assessmentExam: {
+    base: '/assessment/exam',
+    details: function (id?: string) {
+      return {
+        signature: '/assessment/exam/:id',
+        route: `/assessment/exam/${id}`,
+      };
+    },
+    result: function (id?: string) {
+      return {
+        signature: '/assessment/exam/:id/result',
+        route: `/assessment/exam/${id}/result`,
+      };
+    },
+    resultOne: function (id?: string, submissionId?: string) {
+      return {
+        signature: '/assessment/exam/:id/result/:submissionId',
+        route: `/assessment/exam/${id}/result/${submissionId}`,
+      };
+    },
+  },
+
   manageCourse: {
     base: '/trainings/stat',
     description: function (id?: string) {
@@ -127,6 +202,9 @@ const RoutePath = {
     department: function () {
       return this.base + '/department';
     },
+    skill: function () {
+      return this.base + '/skill';
+    },
     hangfire: function () {
       return (
         (isDevelopment
@@ -139,6 +217,9 @@ const RoutePath = {
     },
     courses: function () {
       return this.base + '/courses';
+    },
+    mail: function () {
+      return this.base + '/mail-notification';
     },
   },
   profile: '/settings/account',
@@ -258,6 +339,9 @@ const RoutePath = {
         route: `/feedback/${id}/result/${studentId}`,
       };
     },
+  },
+  knowledge: {
+    base: 'knowledge-base',
   },
 };
 

@@ -17,6 +17,8 @@ export const routeGroupAdmin = [
   { route: '/settings/fileStorage', group: 'admin' },
   { route: '/settings/level', group: 'admin' },
   { route: '/settings/department', group: 'admin' },
+  { route: '/settings/skill', group: 'admin' },
+  { route: '/settings/mail-notification', group: 'admin' },
 
   { route: '/settings/courses', group: 'reviews' },
   { route: '/settings/certificate', group: 'reviews' },

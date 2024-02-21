@@ -1,7 +1,12 @@
 .filepond--file-info .filepond--file-info-sub {
-    display: none;
-  }
-  
-  .filepond--file-status-sub {
-    visibility: hidden;
-  }
+  display: none;
+}
+
+.filepond--file-status-sub {
+  visibility: hidden;
+}
+
+.global-astrick {
+  color: #fa5252;
+  font-size: 24px;
+}

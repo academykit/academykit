@@ -1,28 +1,30 @@
-import LoginPage from '@pages/auth/loginPage';
-import { Route, Routes, Navigate } from 'react-router-dom';
-import RoutePath from '@utils/routeConstants';
-import ConfirmToken from '@pages/auth/confirmToken';
-import NotFound from '@pages/404';
-import ServerError from '@pages/500';
-import RequireAuth from '@components/Auth/RequireAuth';
 import NotRequiredAuth from '@components/Auth/NotRequireAuth';
-import { Suspense } from 'react';
+import RequireAuth from '@components/Auth/RequireAuth';
+import Layout from '@components/Layout/Layout';
+import PrivacyLayout from '@components/Layout/PrivacyLayout';
+import ChangeEmail from '@components/Users/ChangeEmail';
+import ZoomMettingMessage from '@components/ZoomMeeting';
+import NavProvider from '@context/NavContext';
+import { Loader } from '@mantine/core';
 import UnAuthorize from '@pages/401';
 import Forbidden from '@pages/403';
-import { Loader } from '@mantine/core';
-import Verify from '@pages/verify';
-import ChangeEmail from '@components/Users/ChangeEmail';
-import TeacherRouteGuard from './TeacherRoute';
-import ZoomMettingMessage from '@components/ZoomMeeting';
-import Layout from '@components/Layout/Layout';
-import AdminAuthRoute from './AdminRoute';
-import lazyWithRetry from '@utils/lazyImportWithReload';
-import PrivacyPage from '@pages/privacy';
+import NotFound from '@pages/404';
+import ServerError from '@pages/500';
 import AboutPage from '@pages/about';
-import TermsPage from '@pages/terms';
-import PrivacyLayout from '@components/Layout/PrivacyLayout';
-import NavProvider from '@context/NavContext';
+import AssessmentLayout from '@pages/assessment/AssessmentLayout';
+import ConfirmToken from '@pages/auth/confirmToken';
+import LoginPage from '@pages/auth/loginPage';
 import TeamsRoute from '@pages/groups/details/Route';
+import PrivacyPage from '@pages/privacy';
+import TermsPage from '@pages/terms';
+import Verify from '@pages/verify';
+import lazyWithRetry from '@utils/lazyImportWithReload';
+import RoutePath from '@utils/routeConstants';
+import { Suspense } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import AdminAuthRoute from './AdminRoute';
+import TeacherRouteGuard from './TeacherRoute';
+
 const MyFeedback = lazyWithRetry(
   () => import('@pages/course/feedback/myfeedback')
 );
@@ -51,7 +53,16 @@ const MCQPoolRoute = lazyWithRetry(() => import('@pages/pool/details/Route'));
 const CourseListRoute = lazyWithRetry(
   () => import('@pages/course/courseList/Route')
 );
+const AssessmentListRoute = lazyWithRetry(
+  () => import('@pages/assessment/AssessmentRoute')
+);
+const AssessmentExam = lazyWithRetry(
+  () => import('@pages/assessment/AssessmentExam')
+);
 const CourseRoute = lazyWithRetry(() => import('@pages/course/edit/Route'));
+const AssessmentDetailRoutes = lazyWithRetry(
+  () => import('@pages/assessment/Assessment Details/AssessmentDetailRoutes')
+);
 const UserInfo = lazyWithRetry(() => import('@components/Users/UserInfo'));
 const UserProfile = lazyWithRetry(
   () => import('@components/Users/UserProfile')
@@ -65,6 +76,9 @@ const AdminRoute = lazyWithRetry(() => import('@pages/admin/AdminRoute'));
 
 const LessonExam = lazyWithRetry(() => import('@pages/course/exam'));
 const ExamResult = lazyWithRetry(() => import('@pages/course/exam/result'));
+const AssessmentResult = lazyWithRetry(
+  () => import('@pages/assessment/Result/AssessmentResult')
+);
 
 const MeetingRoute = lazyWithRetry(
   () => import('@components/Course/Meetings/Route')
@@ -72,9 +86,16 @@ const MeetingRoute = lazyWithRetry(
 const CourseDescriptionPage = lazyWithRetry(
   () => import('@pages/course/courseDescription')
 );
+const AssessmentDescription = lazyWithRetry(
+  () => import('@pages/assessment/AssessmentDescription')
+);
+const CreateAssessment = lazyWithRetry(
+  () => import('@pages/assessment/CreateAssessment')
+);
 
 const AssignmentPage = lazyWithRetry(() => import('@pages/course/assignment'));
 const FeedbackPage = lazyWithRetry(() => import('@pages/course/feedback'));
+const KnowledgeBase = lazyWithRetry(() => import('@pages/AI'));
 
 const AppRoutes = () => {
   return (
@@ -122,6 +143,42 @@ const MainRoutes = () => {
           path={RoutePath.courses.courseList + '*'}
           element={<CourseListRoute />}
         />
+        <Route element={<AssessmentLayout />}>
+          <Route
+            path={RoutePath.assessment.assessmentList + '*'}
+            element={<AssessmentListRoute />}
+          />
+        </Route>
+        <Route
+          path={RoutePath.assessment.description().signature}
+          element={<AssessmentDescription />}
+        />
+
+        <Route element={<TeacherRouteGuard />}>
+          <Route
+            path={RoutePath.assessment.create}
+            element={<CreateAssessment />}
+          />
+          <Route
+            path={RoutePath.manageAssessment.description().signature + '/*'}
+            element={
+              <NavProvider>
+                <AssessmentDetailRoutes />
+              </NavProvider>
+            }
+          />
+        </Route>
+
+        <Route
+          path={RoutePath.assessmentExam.details().signature}
+          element={<AssessmentExam />}
+        />
+
+        <Route
+          path={RoutePath.assessmentExam.resultOne().signature}
+          element={<AssessmentResult />}
+        />
+
         {/* <Route
           path={"/user/certificate" + `/:id`}
           element={<MyTrainingExternal />}
@@ -220,6 +277,7 @@ const MainRoutes = () => {
           path={RoutePath.feedback.result().signature}
           element={<FeedbackResult />}
         />
+        <Route path={RoutePath.knowledge.base} element={<KnowledgeBase />} />
         <Route path={'*'} element={<NotFound />} />
       </Routes>
     </Suspense>

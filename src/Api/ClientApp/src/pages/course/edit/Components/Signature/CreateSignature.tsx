@@ -138,7 +138,7 @@ const CreateSignature = ({
               {...form.getInputProps(`designation`)}
             />
           </Group>
-          <Text size={'sm'}>
+          <Text size={'md'}>
             {t('signature')}{' '}
             <sup style={{ verticalAlign: 'bottom' }} className="global-astrick">
               {' '}

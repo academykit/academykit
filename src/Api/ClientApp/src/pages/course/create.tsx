@@ -6,16 +6,38 @@ import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
 import useAuth from '@hooks/useAuth';
 import useCustomForm from '@hooks/useCustomForm';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import { Box, Button, Group, Loader, Select, Text } from '@mantine/core';
+import {
+  Accordion,
+  ActionIcon,
+  Box,
+  Button,
+  Checkbox,
+  Flex,
+  Group,
+  Loader,
+  Select,
+  Text,
+} from '@mantine/core';
+import { DatePickerInput } from '@mantine/dates';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+import { IconPlus, IconTrash } from '@tabler/icons';
+import { TrainingEligibilityEnum } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import RoutePath from '@utils/routeConstants';
+import { useDepartmentSetting } from '@utils/services/adminService';
+import { useAssessments } from '@utils/services/assessmentService';
 import errorType from '@utils/services/axiosError';
-import { useCreateCourse } from '@utils/services/courseService';
+import {
+  IBaseTrainingEligibility,
+  useCourse,
+  useCreateCourse,
+} from '@utils/services/courseService';
 import { useAddGroup, useGroups } from '@utils/services/groupService';
 import { useLevels } from '@utils/services/levelService';
+import { useSkills } from '@utils/services/skillService';
 import { ITag, useAddTag, useTags } from '@utils/services/tagService';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -30,6 +52,10 @@ interface FormValues {
   description: string;
   tags: string[];
   language: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  isUnlimitedEndDate: boolean;
+  trainingEligibilities: IBaseTrainingEligibility[];
 }
 const schema = () => {
   const { t } = useTranslation();
@@ -42,6 +68,17 @@ const schema = () => {
     groups: Yup.string()
       .nullable()
       .required(t('group_required') as string),
+    startDate: Yup.string()
+      .required(t('start_date_required') as string)
+      .typeError(t('start_date_required') as string),
+    isUnlimitedEndDate: Yup.boolean(),
+    endDate: Yup.string().when('isUnlimitedEndDate', {
+      is: false,
+      then: Yup.string()
+        .required(t('end_date_required') as string)
+        .typeError(t('end_date_required') as string),
+      otherwise: Yup.string().nullable(),
+    }),
   });
 };
 
@@ -50,14 +87,17 @@ export const [FormProvider, useFormContext, useForm] =
 
 const CreateCoursePage = () => {
   const cForm = useCustomForm();
+  const getDepartments = useDepartmentSetting(
+    queryStringGenerator({ size: 1000 })
+  );
+  const skillData = useSkills(queryStringGenerator({ size: 1000 }));
+  const getAssessments = useAssessments(queryStringGenerator({ size: 1000 }));
+  const getTrainings = useCourse(queryStringGenerator({ size: 1000 }));
   const [searchParamGroup] = useState('');
   const { t } = useTranslation();
   const groupAdd = useAddGroup();
   const auth = useAuth();
-  const [language] = useState([
-    { value: '1', label: 'English' },
-    { value: '2', label: 'Nepali' },
-  ]);
+  const [language] = useState([{ value: '1', label: 'English' }]);
 
   const groups = useGroups(
     queryStringGenerator({
@@ -88,10 +128,51 @@ const CreateCoursePage = () => {
       description: '',
       tags: [],
       language: '1',
+      startDate: null,
+      endDate: null,
+      isUnlimitedEndDate: false,
+      trainingEligibilities: [],
     },
     validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
+
+  const getDepartmentDropdown = () => {
+    return getDepartments.data?.items.map((x) => ({
+      value: x.id,
+      label: x.name,
+    }));
+  };
+
+  const getSkillDropdown = () => {
+    return skillData.data?.items.map((skill) => ({
+      value: skill.id,
+      label: skill.skillName,
+    }));
+  };
+
+  const getAssessmentDropdown = () => {
+    return getAssessments.data?.items.map((assessment) => ({
+      value: assessment.id,
+      label: assessment.title,
+    }));
+  };
+
+  const getTrainingDropdown = () => {
+    return getTrainings.data?.items.map((training) => ({
+      value: training.id,
+      label: training.name,
+    }));
+  };
+
+  const getEligibilityType = () => {
+    return Object.entries(TrainingEligibilityEnum)
+      .splice(0, Object.entries(TrainingEligibilityEnum).length / 2)
+      .map(([key, value]) => ({
+        value: key,
+        label: t(value.toString()),
+      }));
+  };
 
   const [searchParam] = useState('');
 
@@ -137,6 +218,21 @@ const CreateCoursePage = () => {
         language: parseInt(data.language),
         name: data.title.trim().split(/ +/).join(' '),
         thumbnailUrl: data.thumbnail,
+        startDate: moment(data.startDate)
+          .add(5, 'hour')
+          .add(45, 'minute')
+          .toISOString(),
+        endDate: moment(data.endDate)
+          .add(5, 'hour')
+          .add(45, 'minute')
+          .toISOString(),
+        isUnlimitedEndDate: data.isUnlimitedEndDate,
+        trainingEligibilities: data.trainingEligibilities.map((eligibility) => {
+          return {
+            eligibility: Number(eligibility.eligibility),
+            eligibilityId: eligibility.eligibilityId,
+          };
+        }),
       });
       form.reset();
       showNotification({
@@ -152,6 +248,13 @@ const CreateCoursePage = () => {
       });
     }
   };
+
+  // set endDate as null if unlimited endDate is checked
+  useEffect(() => {
+    if (form.values.isUnlimitedEndDate) {
+      form.setFieldValue('endDate', null);
+    }
+  }, [form.values.isUnlimitedEndDate]);
 
   return (
     <div>
@@ -235,6 +338,35 @@ const CreateCoursePage = () => {
               />
             </Group>
 
+            <Group grow mt={20}>
+              <DatePickerInput
+                withAsterisk
+                minDate={new Date()}
+                label={t('start_date')}
+                placeholder={t('pick_date') as string}
+                size="lg"
+                {...form.getInputProps('startDate')}
+              />
+
+              <DatePickerInput
+                minDate={form.values.startDate ?? new Date()}
+                withAsterisk={!form.values.isUnlimitedEndDate}
+                disabled={form.values.isUnlimitedEndDate}
+                label={t('end_date')}
+                placeholder={t('pick_date') as string}
+                size="lg"
+                {...form.getInputProps('endDate')}
+              />
+            </Group>
+            <Group grow mt={20}>
+              <Checkbox
+                label="Unlimited end date"
+                {...form.getInputProps('isUnlimitedEndDate', {
+                  type: 'checkbox',
+                })}
+              />
+            </Group>
+
             <Box mt={20}>
               <Text>{t('description')}</Text>
               <RichTextEditor
@@ -242,6 +374,125 @@ const CreateCoursePage = () => {
                 formContext={useFormContext}
               />
             </Box>
+
+            <Accordion defaultValue="Eligibility" mt={10}>
+              <Accordion.Item value="Eligibility">
+                <Accordion.Control>
+                  {t('eligibility_criteria')}
+                </Accordion.Control>
+                <Accordion.Panel>
+                  {form.values.trainingEligibilities.length < 1 && (
+                    <Button
+                      onClick={() => {
+                        form.insertListItem(
+                          'trainingEligibilities',
+                          { eligibility: 0, eligibilityId: '' },
+                          0
+                        );
+                      }}
+                    >
+                      {t('add_eligibility_criteria')}
+                    </Button>
+                  )}
+
+                  {form.values.trainingEligibilities.map(
+                    (_eligibility, index) => (
+                      <Flex gap={10} key={index} align={'flex-end'} mb={10}>
+                        <Select
+                          withAsterisk
+                          allowDeselect={false}
+                          label={t('eligibility_type')}
+                          placeholder={t('pick_value') as string}
+                          data={getEligibilityType() ?? []}
+                          {...form.getInputProps(
+                            `trainingEligibilities.${index}.eligibility`
+                          )}
+                        />
+                        {form.values.trainingEligibilities[index].eligibility ==
+                          TrainingEligibilityEnum.Department && (
+                          <Select
+                            withAsterisk
+                            allowDeselect={false}
+                            label={t('department')}
+                            placeholder={t('pick_value') as string}
+                            data={getDepartmentDropdown() ?? []}
+                            {...form.getInputProps(
+                              `trainingEligibilities.${index}.eligibilityId`
+                            )}
+                          />
+                        )}
+
+                        {form.values.trainingEligibilities[index].eligibility ==
+                          TrainingEligibilityEnum.Training && (
+                          <Select
+                            withAsterisk
+                            allowDeselect={false}
+                            label={t('training')}
+                            placeholder={t('pick_value') as string}
+                            data={getTrainingDropdown() ?? []}
+                            {...form.getInputProps(
+                              `trainingEligibilities.${index}.eligibilityId`
+                            )}
+                          />
+                        )}
+
+                        {form.values.trainingEligibilities[index].eligibility ==
+                          TrainingEligibilityEnum.Skills && (
+                          <Select
+                            withAsterisk
+                            allowDeselect={false}
+                            label={t('skills')}
+                            placeholder={t('pick_value') as string}
+                            data={getSkillDropdown() ?? []}
+                            {...form.getInputProps(
+                              `trainingEligibilities.${index}.eligibilityId`
+                            )}
+                          />
+                        )}
+
+                        {form.values.trainingEligibilities[index].eligibility ==
+                          TrainingEligibilityEnum.Assessment && (
+                          <Select
+                            withAsterisk
+                            allowDeselect={false}
+                            label={t('assessment')}
+                            placeholder={t('pick_value') as string}
+                            data={getAssessmentDropdown() ?? []}
+                            {...form.getInputProps(
+                              `trainingEligibilities.${index}.eligibilityId`
+                            )}
+                          />
+                        )}
+
+                        <ActionIcon
+                          variant="subtle"
+                          onClick={() => {
+                            form.insertListItem(
+                              'trainingEligibilities',
+                              { eligibility: 0, eligibilityId: '' },
+                              index + 1
+                            );
+                          }}
+                        >
+                          <IconPlus />
+                        </ActionIcon>
+
+                        <ActionIcon
+                          variant="subtle"
+                          c={'red'}
+                          onClick={() => {
+                            form.removeListItem('trainingEligibilities', index);
+                          }}
+                        >
+                          <IconTrash />
+                        </ActionIcon>
+                      </Flex>
+                    )
+                  )}
+                </Accordion.Panel>
+              </Accordion.Item>
+            </Accordion>
+
             <Box mt={20}>
               <Button
                 disabled={!cForm?.isReady}

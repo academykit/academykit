@@ -1,4 +1,3 @@
-import LanguageSelector from '@components/Ui/LanguageSelector';
 import { Anchor, Center, Container, Divider, Group, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
@@ -31,7 +30,7 @@ export function AppFooter({ name }: { name: string }) {
           </Anchor>
         </Group>
         <Group gap={0} justify="flex-end" wrap={'nowrap'}>
-          <LanguageSelector />
+          {/* <LanguageSelector /> */}
           <ColorSchemeToggle size="lg" />
         </Group>
       </Container>

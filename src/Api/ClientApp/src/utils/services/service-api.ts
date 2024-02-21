@@ -51,6 +51,9 @@ export const api = {
       `/api/user/trainer?${search}&LessonType=${lessonType}&Identity=${id}`,
     getLogs: (query: string) => `/api/ServerLog/logs?${query}`,
     getSingleLog: (id: string) => `/api/ServerLog/${id}`,
+    getMailNotification: `/api/mailNotification`,
+    updateMailNotification: (id: string) => `/api/mailNotification/${id}`,
+    testEmail: (id: string) => `/api/mailNotification/${id}/checkSendEmail`,
   },
   groups: {
     list: '/api/Group',
@@ -100,6 +103,9 @@ export const api = {
     assignmentSummary: (id: string, lessonId: string) =>
       `/api/course/${id}/lessonStatistics/${lessonId}/AssignmentSummary`,
 
+    assignmentSubmission: (id: string, lessonId: string, qs: string) =>
+      `/api/course/${id}/lessonStatistics/${lessonId}/AssignmentSubmission?${qs}`,
+
     studentStat: (id: string) => `/api/course/${id}/studentStatistics`,
     studentStatDetails: (id: string, userId: string) =>
       `/api/course/${id}/studentStatistics/${userId}`,
@@ -124,6 +130,10 @@ export const api = {
     getCertificateDetails: (courseId: string) =>
       `/api/course/${courseId}/certificate/detail`,
     getManageStat: (id: string) => `/api/course/${id}/statistics`,
+    getShuffle: (trainingSlug: string, lessonSlug: string) =>
+      `/api/course/${trainingSlug}/lesson/${lessonSlug}/getShuffle`,
+    shuffle: (trainingSlug: string, lessonSlug: string) =>
+      `/api/course/${trainingSlug}/lesson/${lessonSlug}/updateShuffle`,
   },
   section: {
     common: '/api/section',
@@ -271,5 +281,31 @@ export const api = {
     updateStatus: (id?: string) => `/api/certificate/${id}/verify`,
     update: (id?: string) => `/api/certificate/${id}/external`,
     internal: `/api/certificate/internal`,
+  },
+  skill: {
+    list: '/api/skills',
+    update: (skillId: string) => `/api/skills/${skillId}`,
+  },
+  assessment: {
+    list: '/api/assessment',
+    getSingle: (id: string) => `/api/assessment/${id}`,
+    update: (id: string) => `/api/assessment/${id}`,
+    updateStatus: `/api/assessment/status`,
+    getResults: (id: string) => `/api/assessmentExam/${id}/getResults`,
+    getStudentResult: (assessmentId: string, userId: string) =>
+      `/api/assessmentExam/${assessmentId}/getStudentResults/${userId}`,
+    getOneAssessmentResult: (
+      assessmentId: string,
+      assessmentSubmissionId: string
+    ) =>
+      `/api/assessmentExam/${assessmentId}/getResultDetail/${assessmentSubmissionId}/detail`,
+  },
+  assessmentQuestion: {
+    list: '/api/assessmentQuestion',
+    getSingle: (id: string) => `/api/assessmentQuestion/${id}`,
+    update: (id: string) => `/api/assessmentQuestion/${id}`,
+    getExam: (id: string) => `/api/assessmentQuestion/${id}/examQuestion`,
+    submitExam: (assessmentId: string) =>
+      `/api/assessmentExam/${assessmentId}/AnswerSubmission`,
   },
 };

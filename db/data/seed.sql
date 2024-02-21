@@ -21,6 +21,9 @@ VALUES ('30fcd978-f256-4733-840f-759181bc5e63', 'ABC', NULL, 'XYZ', 'ADDRESS', '
 INSERT INTO SMTPSettings (Id, Mail_Port, Mail_Server, Password, Reply_To, Sender_Email, Sender_Name, User_Name, UseSSL, Created_By, Created_On, Updated_By, Updated_On)
 VALUES ('d3c343d8-adf8-45d4-afbe-e09c3285da24', 123, 'email-smtp.ap-south-1.amazonaws.com', 'password', 'support@vurilo.com', 'noreply@vurilo.com', 'Vurilo', 'username', true, '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004');
 
+-- Insert Group data
+INSERT INTO `Groups` (Id, slug, name, is_active, Created_By, Created_On, Updated_By, Updated_On) VALUES ('d3c343d8-adf8-45d4-afbe-e09c3285da24', 'default-group', 'Default Group', true, '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004');
+
 -- Insert ZoomSettings data
 INSERT INTO ZoomSettings (Id, Sdk_Key, Sdk_Secret, OAuth_Account_Id, OAuth_Client_Id, OAuth_Client_Secret, Is_Recording_Enabled, Created_By, Created_On, Updated_By, Updated_On)
 VALUES ('f41a902f-fabd-4749-ac28-91137f685cb8', 'sdk key value', 'sdk secret value', 'OAuth account id', 'OAuth client id', 'OAuth client secret', false, '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004');

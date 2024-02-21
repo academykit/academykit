@@ -90,17 +90,30 @@ const AdminNav = () => {
       role: UserRole.Admin,
       group: 'admin',
     },
+    {
+      label: t('skills'),
+      to: RoutePath.settings.skill(),
+      role: UserRole.Admin,
+      group: 'admin',
+    },
+    // {
+    //   label: t('mail-notification'),
+    //   to: RoutePath.settings.mail(),
+    //   role: UserRole.Admin,
+    //   group: 'admin',
+    //   icon: <IconMailCode size={14} />,
+    // },
     // {
     //   label: t('log'),
     //   to: RoutePath.settings.log(),
     //   role: UserRole.Admin,
     // },
-    {
-      label: t('trainings'),
-      to: RoutePath.settings.courses(),
-      role: UserRole.Admin,
-      group: 'reviews',
-    },
+    // {
+    //   label: t('trainings'),
+    //   to: RoutePath.settings.courses(),
+    //   role: UserRole.Admin,
+    //   group: 'reviews',
+    // },
     {
       label: t('certificates'),
       to: RoutePath.settings.userCertificate(),

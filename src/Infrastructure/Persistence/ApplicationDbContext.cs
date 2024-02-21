@@ -56,6 +56,11 @@
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Logs> Logs { get; set; }
         public DbSet<PhysicalLessonReview> PhysicalLessonReviews { get; set; }
+        public DbSet<Skills> Skills { get; set; }
+        public DbSet<Assessment> Assessments { get; set; }
+        public DbSet<SkillsCriteria> SkillsCriteria { get; set; }
+        public DbSet<UserSkills> UserSkills { get; set; }
+        public DbSet<EligibilityCreation> EligibilityCreations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

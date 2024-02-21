@@ -5,13 +5,14 @@ import {
   Grid,
   Group,
   Loader,
+  Modal,
   Pagination,
   Paper,
   Select,
   Text,
   useMantineTheme,
 } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import TransferList from '@pages/course/component/TransferList';
 import errorType from '@utils/services/axiosError';
@@ -28,6 +29,7 @@ import { IPaginated } from '@utils/services/types';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
+import QuestionForm from './components/QuestionForm';
 
 interface ISelectList {
   label: string;
@@ -43,7 +45,7 @@ export interface IQuestionListData {
 const Questions = () => {
   const theme = useMantineTheme();
   const params = useParams();
-
+  const [opened, { open, close }] = useDisclosure(false);
   const lessonSlug = params.lessonSlug && params.lessonSlug;
   const questionList = useQuestionSetQuestions(lessonSlug as string);
 
@@ -178,6 +180,9 @@ const Questions = () => {
 
   return (
     <div>
+      <Modal opened={opened} onClose={close} size="auto">
+        <QuestionForm closeModal={close} setTransferListData={setData} />
+      </Modal>
       <Breadcrumb hide={3} />
       <Paper p={10} withBorder>
         <Grid mb={10}>
@@ -212,8 +217,8 @@ const Questions = () => {
               }}
             />
           </Grid.Col>
-          {poolValue && (
-            <Grid.Col mt={21} span={matches ? 3 : 6}>
+          <Grid.Col mt={21} span={matches ? 3 : 6}>
+            {poolValue && (
               <Select
                 size="md"
                 label="Tags"
@@ -226,15 +231,15 @@ const Questions = () => {
                 data={questionTag}
                 onChange={setTagValue}
               />
-            </Grid.Col>
-          )}
+            )}
+          </Grid.Col>
         </Grid>
 
         {questions.fetchStatus !== 'idle' && questions.isLoading ? (
           <Loader />
         ) : (
           <>
-            <TransferList data={data} setData={setData} />
+            <TransferList data={data} setData={setData} openModal={open} />
 
             {questions.data && questions.data.totalPage > 1 && (
               <Pagination

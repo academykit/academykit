@@ -2,6 +2,7 @@ import useAuth from '@hooks/useAuth';
 import { NavLink, ThemeIcon } from '@mantine/core';
 import {
   IconCertificate,
+  IconClipboardText,
   IconDashboard,
   IconListDetails,
   IconSettings,
@@ -168,6 +169,14 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
       role: UserRole.Trainee,
     },
     {
+      icon: <IconClipboardText size={16} />,
+      color: 'cyan',
+      label: 'assessments',
+      href: '/assessment/list',
+      replace: true,
+      role: UserRole.Trainee,
+    },
+    {
       icon: <IconListDetails size={16} />,
       color: 'violet',
       label: 'mcq_pools',
@@ -175,7 +184,14 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
       replace: true,
       role: UserRole.Trainer,
     },
-
+    // {
+    //   icon: <IconRobot size={16} />,
+    //   color: 'orange',
+    //   label: 'knowledge_base',
+    //   href: '/knowledge-base',
+    //   replace: true,
+    //   role: UserRole.Trainer,
+    // },
     {
       icon: <IconSettings size={16} />,
       color: 'teal',
@@ -193,7 +209,11 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
               : '/settings/general',
           role: UserRole.Admin,
         },
-        { label: 'reviews', href: '/settings/courses', role: UserRole.Admin },
+        {
+          label: 'reviews',
+          href: '/settings/certificate',
+          role: UserRole.Admin,
+        },
         {
           label: 'system',
           href:

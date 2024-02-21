@@ -1,6 +1,8 @@
 ﻿namespace Lingtren.Application.Common.Models.ResponseModels
 {
     using Lingtren.Application.Common.Dtos;
+    using Lingtren.Application.Common.Models.RequestModels;
+
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
 
@@ -20,12 +22,26 @@
         public string LevelName { get; set; }
         public CourseEnrollmentStatus? UserStatus { get; set; }
         public DateTime CreatedOn { get; set; }
+        public DateTime? StartDate { get; set; }
+
+        public DateTime? EndDate { get; set; }
+
+        public bool IsUnlimitedEndDate { get; set; }
+
         public UserModel User { get; set; }
         public IList<CourseTagResponseModel> Tags { get; set; }
         public IList<SectionResponseModel> Sections { get; set; }
         public decimal? Percentage { get; set; }
+        public bool IsEligible { get; set; }
 
-        public CourseResponseModel(Course model, CourseEnrollmentStatus? userStatus, bool fetchSection = false)
+        public IList<TrainingEligibilityCriteriaResponseModel> TrainingEligibilities { get; set; }
+
+        public CourseResponseModel(
+            Course model,
+            CourseEnrollmentStatus? userStatus,
+            bool isEligible = false,
+            bool fetchSection = false
+        )
         {
             Id = model.Id;
             Slug = model.Slug;
@@ -41,19 +57,35 @@
             LevelName = model.Level?.Name;
             UserStatus = userStatus;
             CreatedOn = model.CreatedOn;
+            StartDate = model.StartDate;
+            EndDate = model.EndDate;
+            IsUnlimitedEndDate = model.IsUnlimitedEndDate;
+            IsEligible = isEligible;
             Tags = new List<CourseTagResponseModel>();
             Sections = new List<SectionResponseModel>();
             User = model.User != null ? new UserModel(model.User) : new UserModel();
+            TrainingEligibilities = new List<TrainingEligibilityCriteriaResponseModel>(); // Initialize TrainingEligibilities
+
             model.CourseTags.ToList().ForEach(item => Tags.Add(new CourseTagResponseModel(item)));
             if (fetchSection)
             {
-                model.Sections.ToList().ForEach(item => Sections.Add(new SectionResponseModel(item, fetchLesson: true)));
+                model.Sections
+                    .ToList()
+                    .ForEach(
+                        item => Sections.Add(new SectionResponseModel(item, fetchLesson: true))
+                    );
             }
+            model.TrainingEligibilities
+                .ToList()
+                .ForEach(
+                    item =>
+                        TrainingEligibilities.Add(
+                            new TrainingEligibilityCriteriaResponseModel(item)
+                        )
+                );
         }
 
-        public CourseResponseModel()
-        {
-        }
+        public CourseResponseModel() { }
     }
 
     public class CourseTagResponseModel
@@ -61,11 +93,27 @@
         public Guid Id { get; set; }
         public Guid TagId { get; set; }
         public string TagName { get; set; }
+
         public CourseTagResponseModel(CourseTag courseTag)
         {
             Id = courseTag.Id;
             TagId = courseTag.TagId;
             TagName = courseTag.Tag?.Name;
+        }
+    }
+
+    public class TrainingEligibilityCriteriaResponseModel
+    {
+        public Guid Id { get; set; }
+
+        public TrainingEligibilityEnum Eligibility { get; set; }
+        public Guid? EligibilityId { get; set; }
+
+        public TrainingEligibilityCriteriaResponseModel(TrainingEligibility model)
+        {
+            Id = model.Id;
+            Eligibility = model.TrainingEligibilityEnum;
+            EligibilityId = model.EligibilityId;
         }
     }
 }

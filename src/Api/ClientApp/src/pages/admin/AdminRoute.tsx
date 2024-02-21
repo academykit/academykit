@@ -18,8 +18,9 @@ import CertificateList from './Component/training/certificateList';
 import MyTrainingInternal from './Component/training/myTrainingInternal';
 import Account from './account';
 
-const AdminCourseList = lazyWithRetry(() => import('./course'));
+// const AdminCourseList = lazyWithRetry(() => import('./course'));
 const Department = lazyWithRetry(() => import('./department'));
+const Skills = lazyWithRetry(() => import('./Skills'));
 const FileStorage = lazyWithRetry(() => import('./fileStorage'));
 const GeneralSettings = lazyWithRetry(() => import('./generalSettings'));
 const Level = lazyWithRetry(() => import('./level'));
@@ -28,6 +29,7 @@ const SMTP = lazyWithRetry(() => import('./smtp'));
 const ZoomLicense = lazyWithRetry(() => import('./zoomLicense'));
 const ZoomSettings = lazyWithRetry(() => import('./zoomSettings'));
 const Log = lazyWithRetry(() => import('./log'));
+const MailNotification = lazyWithRetry(() => import('./MailNotification'));
 
 const AdminRoute = () => {
   return (
@@ -55,10 +57,12 @@ const AdminRoutesChild = () => {
         <Route element={<AdminAuthRoute />}>
           <Route path={'/level'} element={<Level />} />
           <Route path={'/department'} element={<Department />} />
+          <Route path={'/skill'} element={<Skills />} />
           <Route path={'/log'} element={<Log />} />
-          <Route path={'/courses'} element={<AdminCourseList />} />
+          {/* <Route path={'/courses'} element={<AdminCourseList />} /> */}
           <Route path={'/certificate'} element={<CertificateList />} />
           <Route path={'/zoomLicense'} element={<ZoomLicense />} />
+          <Route path={'/mail-notification'} element={<MailNotification />} />
           <Route path="*" element={<Navigate to={RoutePath[404]} replace />} />
         </Route>
         <Route element={<SuperAdminRoute />}>

@@ -17,6 +17,7 @@
         /// Weightage of single question
         /// </summary>
         public decimal QuestionMarking { get; set; }
+
         /// <summary>
         /// Weightage for pass marked
         /// </summary>
@@ -27,6 +28,9 @@
         public DateTime? EndTime { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
+        public int NoOfQuestion { get; set; }
+        public bool IsShuffle { get; set; }
+        public bool ShowAll { get; set; }
 
         public QuestionSetResponseModel(QuestionSet model)
         {
@@ -46,6 +50,9 @@
             User = model.User != null ? new UserModel(model.User) : new UserModel();
             TotalMarks = model.QuestionSetQuestions?.Count * model.QuestionMarking ?? 0;
             TotalQuestions = model.QuestionSetQuestions?.Count ?? 0;
+            IsShuffle = model.IsShuffle;
+            ShowAll = model.ShowAll;
+            NoOfQuestion = model.NoOfQuestion;
         }
     }
 }

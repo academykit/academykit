@@ -229,6 +229,12 @@ const CourseCardHorizontal = ({
               to={RoutePath.courses.description(course.slug).route}
               size="lg"
               fw="bold"
+              maw={{ base: '100%', md: 400, lg: 600 }}
+              style={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
             >
               {course.name}
             </Anchor>

@@ -24,7 +24,11 @@
         /// <param name="lessonIdentity">the lesson id or slug</param>
         /// <param name="currentUserId">the current logged in user</param>
         /// <returns>the instance of <see cref="LessonResponseModel"/></returns>
-        Task<LessonResponseModel> GetLessonAsync(string identity, string lessonIdentity, Guid currentUserId);
+        Task<LessonResponseModel> GetLessonAsync(
+            string identity,
+            string lessonIdentity,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to delete lesson
@@ -51,17 +55,26 @@
         /// <param name="lessonIdentity">the lesson identity</param>
         /// <param name="currentUserId">the current logged in user</param>
         /// <returns></returns>
-        Task<MeetingJoinResponseModel> GetJoinMeetingAsync(string identity, string lessonIdentity, Guid currentUserId);
+        Task<MeetingJoinResponseModel> GetJoinMeetingAsync(
+            string identity,
+            string lessonIdentity,
+            Guid currentUserId
+        );
 
         /// <summary>
-        /// Handle to get meeting report 
-        /// </summary>
+        /// Handle to get meeting report
+        /// /// </summary>
         /// <param name="identity"> the lesson identity </param>
         /// <param name="userId"> the user id </param>
         /// <param name="lessonIdentity">the lesson identity</param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the list of <see cref="MeetingReportResponseModel" /> .</returns>
-        Task<IList<MeetingReportResponseModel>> GetMeetingReportAsync(string identity, string lessonIdentity, string userId, Guid currentUserId);
+        Task<IList<MeetingReportResponseModel>> GetMeetingReportAsync(
+            string identity,
+            string lessonIdentity,
+            string userId,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to update lesson
@@ -71,6 +84,24 @@
         /// <param name="model">the instance of <see cref="LessonRequestModel"/></param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
-        Task<Lesson> UpdateAsync(string identity, string lessonIdentity, LessonRequestModel model, Guid currentUserId);
+        Task<Lesson> UpdateAsync(
+            string identity,
+            string lessonIdentity,
+            LessonRequestModel model,
+            Guid currentUserId
+        );
+
+        Task<QuestionSet> UpdateQuestionAsync(
+            string identity,
+            string lessonIdentity,
+            QuestionSetRequestModel model,
+            Guid currentUserId
+        );
+
+        Task<QuestionSet> GetQuestionAsync(
+            string identity,
+            string lessonIdentity,
+            Guid currentUserId
+        );
     }
 }

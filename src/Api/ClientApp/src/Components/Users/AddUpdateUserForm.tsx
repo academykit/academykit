@@ -191,6 +191,7 @@ const AddUpdateUserForm = ({
         <Grid.Col span={{ xs: 6, lg: 4 }}>
           <Select
             withAsterisk
+            allowDeselect={false}
             error={t('user_role_pick')}
             label={t('user_role')}
             placeholder={t('user_role_pick') as string}

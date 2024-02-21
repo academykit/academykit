@@ -11,5 +11,6 @@
         public User User { get; set; }
         public IList<Course> Courses { get; set; }
         public IList<GroupFile> GroupFiles { get; set; }
+        public IList<EligibilityCreation> EligibilityCreations { get; set; }
     }
 }

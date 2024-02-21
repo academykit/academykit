@@ -1,4 +1,3 @@
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
@@ -8,10 +7,12 @@ import {
   Button,
   Container,
   Drawer,
+  FocusTrap,
   Group,
   Loader,
   SimpleGrid,
   Space,
+  TextInput,
   Title,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
@@ -78,13 +79,15 @@ const MCQPool = ({
       >
         <Box>
           <form onSubmit={form.onSubmit(onSubmitForm)}>
-            <CustomTextFieldWithAutoFocus
-              label={t('pool_name')}
-              placeholder={t('enter_pool_name') as string}
-              name="name"
-              withAsterisk
-              {...form.getInputProps('name')}
-            />
+            <FocusTrap active={true}>
+              <TextInput
+                data-autofocus
+                label={t('pool_name')}
+                placeholder={t('enter_pool_name') as string}
+                withAsterisk
+                {...form.getInputProps('name')}
+              />
+            </FocusTrap>
             <Space h="md" />
             <Group justify="flex-end">
               <Button type="submit" loading={isLoading}>

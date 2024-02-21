@@ -1,5 +1,12 @@
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import { Button, Group, Paper, Space, TextInput } from '@mantine/core';
+import {
+  Button,
+  FocusTrap,
+  Group,
+  Paper,
+  Space,
+  TextInput,
+} from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import errorType from '@utils/services/axiosError';
@@ -50,15 +57,17 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
   return (
     <Paper>
       <form onSubmit={form.onSubmit(({ name }) => onSubmitForm(name))}>
-        <TextInput
-          autoComplete="off"
-          mb={10}
-          label={t('group_name')}
-          placeholder={t('your_group_name') as string}
-          withAsterisk
-          name="name"
-          {...form.getInputProps('name')}
-        />
+        <FocusTrap active={true}>
+          <TextInput
+            data-autofocus
+            autoComplete="off"
+            mb={10}
+            label={t('group_name')}
+            placeholder={t('your_group_name') as string}
+            withAsterisk
+            {...form.getInputProps('name')}
+          />
+        </FocusTrap>
         <Space h="md" />
         <Group justify="flex-end">
           <Button loading={isLoading} type="submit">

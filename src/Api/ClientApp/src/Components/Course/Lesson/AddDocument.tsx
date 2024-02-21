@@ -146,7 +146,7 @@ const AddDocument = ({
               </Grid.Col>
             </Tooltip>
           </Grid>
-          <Text size={'sm'} mt={10}>
+          <Text size={'md'} mt={10}>
             {t('file')} <span className="global-astrick"> *</span>
           </Text>
           <FileUploadLesson

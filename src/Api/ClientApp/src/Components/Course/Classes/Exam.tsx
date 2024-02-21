@@ -222,7 +222,7 @@ const Exam = ({
                 )}
             </Container>
           </Box>
-          <Card p={4} px={20} className={classes.buttonNav}>
+          <Card p={20} className={classes.buttonNav}>
             {currentIndex !== 0 ? (
               <Button
                 my={5}

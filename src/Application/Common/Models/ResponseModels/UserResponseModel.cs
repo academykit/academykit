@@ -25,6 +25,9 @@
             new List<CourseCertificateIssuedResponseModel>();
         public IList<ExternalCertificateResponseModel> ExternalCertificates { get; set; } =
             new List<ExternalCertificateResponseModel>();
+        public List<SkillsUserResponseModel> Skills { get; set; } =
+            new List<SkillsUserResponseModel>();
+
         public string MemberId { get; set; }
         #region Address
         #region Permanent
@@ -60,10 +63,35 @@
             DepartmentId = user.DepartmentId;
             DepartmentName = user.Department?.Name;
             MemberId = user.MemberId;
+            Skills = user.UserSkills
+                ?.Select(
+                    sk =>
+                        new SkillsUserResponseModel
+                        {
+                            Id = sk.SkillId,
+                            SkillName = sk.Skills?.SkillName
+                        }
+                )
+                .ToList();
+
             #region Address
             #endregion
         }
 
         public UserResponseModel() { }
+
+        public class SkillsUserResponseModel
+        {
+            public Guid Id { get; set; }
+            public string SkillName { get; set; }
+
+            public SkillsUserResponseModel(Skills model)
+            {
+                Id = model.Id;
+                SkillName = model.SkillName;
+            }
+
+            public SkillsUserResponseModel() { }
+        }
     }
 }

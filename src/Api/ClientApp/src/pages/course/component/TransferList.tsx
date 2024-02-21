@@ -8,7 +8,11 @@ import {
   TextInput,
   useCombobox,
 } from '@mantine/core';
-import { IconChevronRight, IconChevronsRight } from '@tabler/icons-react';
+import {
+  IconChevronRight,
+  IconChevronsRight,
+  IconPlus,
+} from '@tabler/icons-react';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IQuestionListData } from '../question';
@@ -19,6 +23,7 @@ interface RenderListProps {
   onTransfer(options: IQuestionListData[]): void;
   onTransferAll(): void;
   type: 'forward' | 'backward';
+  openModal?: () => void;
 }
 
 function RenderList({
@@ -26,6 +31,7 @@ function RenderList({
   onTransfer,
   type,
   onTransferAll,
+  openModal,
 }: RenderListProps) {
   const combobox = useCombobox();
   const [value, setValue] = useState<IQuestionListData[]>([]);
@@ -86,6 +92,19 @@ function RenderList({
       <Combobox store={combobox} onOptionSubmit={handleValueSelect}>
         <Combobox.EventsTarget>
           <Group wrap="nowrap" gap={0} className={classes.controls}>
+            {type == 'backward' && (
+              <ActionIcon
+                variant="default"
+                size={36}
+                className={classes.addControl}
+                onClick={() => {
+                  // open modal
+                  openModal && openModal();
+                }}
+              >
+                <IconPlus className={classes.icon} />
+              </ActionIcon>
+            )}
             <TextInput
               placeholder={t('search_for_questions') as string}
               classNames={{ input: classes.input }}
@@ -140,8 +159,9 @@ function RenderList({
 interface IProps {
   data: any;
   setData: Dispatch<SetStateAction<any[]>>;
+  openModal: () => void;
 }
-export default function TransferList({ data, setData }: IProps) {
+export default function TransferList({ data, setData, openModal }: IProps) {
   // transfer selected items to the opposite container
   const handleTransfer = (
     transferFrom: number,
@@ -188,6 +208,7 @@ export default function TransferList({ data, setData }: IProps) {
         options={data[1]}
         onTransfer={(options) => handleTransfer(1, options)}
         onTransferAll={() => handleTransferAll(1)}
+        openModal={openModal}
       />
     </div>
   );

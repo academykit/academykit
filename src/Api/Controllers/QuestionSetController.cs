@@ -18,7 +18,10 @@ namespace Lingtren.Api.Controllers
         private readonly IQuestionSetService questionSetService;
         private readonly IStringLocalizer<ExceptionLocalizer> localizer;
 
-        public QuestionSetController(IQuestionSetService questionSetService, IStringLocalizer<ExceptionLocalizer> localizer)
+        public QuestionSetController(
+            IQuestionSetService questionSetService,
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
         {
             this.questionSetService = questionSetService;
             this.localizer = localizer;
@@ -33,12 +36,17 @@ namespace Lingtren.Api.Controllers
         [AllowAnonymous]
         public async Task<QuestionSetResponseModel> Get(string identity)
         {
-            var model = await questionSetService.GetByIdOrSlugAsync(identity, CurrentUser?.Id).ConfigureAwait(false);
+            var model = await questionSetService
+                .GetByIdOrSlugAsync(identity, CurrentUser?.Id)
+                .ConfigureAwait(false);
             return new QuestionSetResponseModel(model);
         }
 
         [HttpPost("{identity}/AddQuestion")]
-        public async Task<IActionResult> AddQuestion(string identity, QuestionSetAddQuestionRequestModel model)
+        public async Task<IActionResult> AddQuestion(
+            string identity,
+            QuestionSetAddQuestionRequestModel model
+        )
         {
             if (model.QuestionPoolQuestionIds.Count == 0)
             {
@@ -55,8 +63,8 @@ namespace Lingtren.Api.Controllers
         /// <param name="identity"> the question id or  slug.</param>
         /// <returns>the instance of <see cref="QuestionResponseModel"/>.</returns>
         [HttpGet("{identity}/questions")]
-        public async Task<IList<QuestionResponseModel>> GetQuestions(string identity)
-                    => await questionSetService.GetQuestions(identity, CurrentUser.Id).ConfigureAwait(false);
+        public async Task<IList<QuestionResponseModel>> GetQuestions(string identity) =>
+            await questionSetService.GetQuestions(identity, CurrentUser.Id).ConfigureAwait(false);
 
         /// <summary>
         /// Handle to set start time.
@@ -64,7 +72,8 @@ namespace Lingtren.Api.Controllers
         /// <param name="identity"></param>
         /// <returns>the instance of <see cref="QuestionSetSubmissionResponseModel"/>.</returns>
         [HttpPost("{identity}/startExam")]
-        public async Task<QuestionSetSubmissionResponseModel> StartExam(string identity) => await questionSetService.StartExam(identity, CurrentUser.Id).ConfigureAwait(false);
+        public async Task<QuestionSetSubmissionResponseModel> StartExam(string identity) =>
+            await questionSetService.StartExam(identity, CurrentUser.Id).ConfigureAwait(false);
 
         /// <summary>
         /// Answer Submission.
@@ -74,9 +83,15 @@ namespace Lingtren.Api.Controllers
         /// <param name="answers">the list of answer.</param>
         /// <returns>the instance of <see cref="AssignmentResponseModel"/>.</returns>
         [HttpPost("{identity}/submission/{questionSetSubmissionId}")]
-        public async Task<IActionResult> AnswerSubmission(string identity, Guid questionSetSubmissionId, IList<AnswerSubmissionRequestModel> answers)
+        public async Task<IActionResult> AnswerSubmission(
+            string identity,
+            Guid questionSetSubmissionId,
+            IList<AnswerSubmissionRequestModel> answers
+        )
         {
-            await questionSetService.AnswerSubmission(identity, questionSetSubmissionId, answers, CurrentUser.Id).ConfigureAwait(false);
+            await questionSetService
+                .AnswerSubmission(identity, questionSetSubmissionId, answers, CurrentUser.Id)
+                .ConfigureAwait(false);
             return Ok(new { statusCode = 200, message = localizer.GetString("QuestionSetAnswer") });
         }
     }

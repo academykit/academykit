@@ -108,7 +108,7 @@ const NavOutlet = ({
                       return (
                         <Menu.Item
                           key={x.label}
-                          leftSection={<IconSettings size={14} />}
+                          leftSection={x.icon ?? <IconSettings size={14} />}
                           component={Link}
                           to={x.to}
                         >

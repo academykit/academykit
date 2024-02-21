@@ -106,6 +106,7 @@ const MCQDetails = () => {
                   form.reset();
                 }}
                 ml={10}
+                mt={20}
               >
                 {t('cancel')}
               </Button>

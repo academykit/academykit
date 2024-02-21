@@ -1,5 +1,5 @@
 import Breadcrumb from '@components/Ui/BreadCrumb';
-import { Box, Button, Flex, Loader, Text, Title } from '@mantine/core';
+import { Box, Button, Flex, Loader, Paper, Text, Title } from '@mantine/core';
 import { IconChevronLeft } from '@tabler/icons';
 import { LessonType } from '@utils/enums';
 import { useQuestionReorder } from '@utils/services/courseService';
@@ -17,6 +17,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import PreviewQuestionCard from './PreviewQuestionCard';
+import Shuffle from './components/Shuffle';
 
 const PreviewQuestion = () => {
   const navigate = useNavigate();
@@ -86,6 +87,10 @@ const PreviewQuestion = () => {
           {t('edit_questions')}
         </Button>
       </Flex>
+
+      <Paper p={'md'} withBorder mx={20}>
+        <Shuffle />
+      </Paper>
 
       {questions.isSuccess ? (
         <Box p={20}>

@@ -6,19 +6,38 @@ import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
 import useAuth from '@hooks/useAuth';
 import useCustomForm from '@hooks/useCustomForm';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import { Box, Button, Group, Loader, Select, Text } from '@mantine/core';
+import {
+  Accordion,
+  ActionIcon,
+  Box,
+  Button,
+  Checkbox,
+  Flex,
+  Group,
+  Loader,
+  Select,
+  Text,
+} from '@mantine/core';
+import { DatePickerInput } from '@mantine/dates';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+import { IconPlus, IconTrash } from '@tabler/icons';
+import { TrainingEligibilityEnum } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import RoutePath from '@utils/routeConstants';
+import { useDepartmentSetting } from '@utils/services/adminService';
+import { useAssessments } from '@utils/services/assessmentService';
 import errorType from '@utils/services/axiosError';
 import {
+  useCourse,
   useCourseDescription,
   useUpdateCourse,
 } from '@utils/services/courseService';
 import { useAddGroup, useGroups } from '@utils/services/groupService';
 import { useLevels } from '@utils/services/levelService';
+import { useSkills } from '@utils/services/skillService';
 import { ITag, useAddTag, useTags } from '@utils/services/tagService';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -33,6 +52,13 @@ interface FormValues {
   description: string;
   tags: string[];
   language: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  isUnlimitedEndDate: boolean;
+  trainingEligibilities: {
+    eligibility: string;
+    eligibilityId: string;
+  }[];
 }
 
 const schema = () => {
@@ -43,15 +69,34 @@ const schema = () => {
       .max(250, t('course_title_must_be_less_than_100') as string),
     level: Yup.string().required(t('level_required') as string),
     groups: Yup.string().required(t('group_required') as string),
+    startDate: Yup.string()
+      .required(t('start_date_required') as string)
+      .typeError(t('start_date_required') as string),
+    isUnlimitedEndDate: Yup.boolean(),
+    endDate: Yup.string().when('isUnlimitedEndDate', {
+      is: false,
+      then: Yup.string()
+        .required(t('end_date_required') as string)
+        .typeError(t('end_date_required') as string),
+      otherwise: Yup.string().nullable(),
+    }),
   });
 };
 
 export const [FormProvider, useFormContext, useForm] =
   createFormContext<FormValues>();
 const EditCourse = () => {
+  const slug = useParams();
   const [viewMode, setViewMode] = useState(true);
   const cForm = useCustomForm();
   const { t } = useTranslation();
+  const getDepartments = useDepartmentSetting(
+    queryStringGenerator({ size: 1000 })
+  );
+  const skillData = useSkills(queryStringGenerator({ size: 1000 }));
+  const getAssessments = useAssessments(queryStringGenerator({ size: 1000 }));
+  const getTrainings = useCourse(queryStringGenerator({ size: 1000 }));
+
   const form = useForm({
     initialValues: {
       thumbnail: '',
@@ -61,6 +106,10 @@ const EditCourse = () => {
       description: '',
       tags: [],
       language: '1',
+      startDate: null,
+      endDate: null,
+      isUnlimitedEndDate: false,
+      trainingEligibilities: [],
     },
     validate: yupResolver(schema()),
   });
@@ -73,10 +122,7 @@ const EditCourse = () => {
 
   const label = useLevels();
   const { data: addTagData, isSuccess, mutateAsync: mutAsync } = useAddTag();
-  const [language] = useState([
-    { value: '1', label: 'English' },
-    { value: '2', label: 'Nepali' },
-  ]);
+  const [language] = useState([{ value: '1', label: 'English' }]);
 
   const tags = useTags(
     queryStringGenerator({
@@ -92,12 +138,48 @@ const EditCourse = () => {
     })
   );
 
-  const slug = useParams();
   const {
     data: courseSingleData,
     isSuccess: courseIsSuccess,
     refetch,
   } = useCourseDescription(slug.id as string);
+
+  const getDepartmentDropdown = () => {
+    return getDepartments.data?.items.map((x) => ({
+      value: x.id,
+      label: x.name,
+    }));
+  };
+
+  const getSkillDropdown = () => {
+    return skillData.data?.items.map((skill) => ({
+      value: skill.id,
+      label: skill.skillName,
+    }));
+  };
+
+  const getAssessmentDropdown = () => {
+    return getAssessments.data?.items.map((assessment) => ({
+      value: assessment.id,
+      label: assessment.title,
+    }));
+  };
+
+  const getTrainingDropdown = () => {
+    return getTrainings.data?.items.map((training) => ({
+      value: training.id,
+      label: training.name,
+    }));
+  };
+
+  const getEligibilityType = () => {
+    return Object.entries(TrainingEligibilityEnum)
+      .splice(0, Object.entries(TrainingEligibilityEnum).length / 2)
+      .map(([key, value]) => ({
+        value: key,
+        label: t(value.toString()),
+      }));
+  };
 
   const [tagsLists, setTagsLists] = useState<ITag[]>([]);
 
@@ -137,11 +219,25 @@ const EditCourse = () => {
 
   useEffect(() => {
     if (courseIsSuccess) {
+      const eligibility =
+        courseSingleData.trainingEligibilities &&
+        courseSingleData.trainingEligibilities.map((x) => {
+          return {
+            eligibility: x.eligibility.toString(),
+            eligibilityId: x.eligibilityId,
+          };
+        });
       form.setValues({
         thumbnail: courseSingleData.thumbnailUrl,
         title: courseSingleData.name,
         description: courseSingleData.description,
         language: courseSingleData.language.toString(),
+        isUnlimitedEndDate: courseSingleData.isUnlimitedEndDate,
+        startDate: moment(courseSingleData.startDate).toDate(),
+        endDate: courseSingleData.endDate
+          ? moment(courseSingleData.endDate).toDate()
+          : null,
+        trainingEligibilities: eligibility ?? [],
       });
     }
   }, [courseIsSuccess]);
@@ -160,6 +256,23 @@ const EditCourse = () => {
         duration: 0,
         levelId: values.level,
         tagIds: values.tags,
+        startDate: moment(values.startDate)
+          .add(5, 'hour')
+          .add(45, 'minute')
+          .toISOString(),
+        endDate: moment(values.endDate)
+          .add(5, 'hour')
+          .add(45, 'minute')
+          .toISOString(),
+        isUnlimitedEndDate: values.isUnlimitedEndDate,
+        trainingEligibilities: values.trainingEligibilities.map(
+          (eligibility) => {
+            return {
+              eligibility: Number(eligibility.eligibility),
+              eligibilityId: eligibility.eligibilityId,
+            };
+          }
+        ),
       });
       refetch();
       navigator(RoutePath.manageCourse.lessons(slug.id).route);
@@ -175,6 +288,13 @@ const EditCourse = () => {
       });
     }
   };
+
+  // set endDate as null if unlimited endDate is checked
+  useEffect(() => {
+    if (form.values.isUnlimitedEndDate) {
+      form.setFieldValue('endDate', null);
+    }
+  }, [form.values.isUnlimitedEndDate]);
 
   return (
     <div>
@@ -264,6 +384,37 @@ const EditCourse = () => {
                 {...form.getInputProps('language')}
               />
             </Group>
+
+            <Group grow mt={20}>
+              <DatePickerInput
+                readOnly={viewMode}
+                withAsterisk
+                label={t('start_date')}
+                placeholder={t('pick_date') as string}
+                size="lg"
+                {...form.getInputProps('startDate')}
+              />
+
+              <DatePickerInput
+                withAsterisk={!form.values.isUnlimitedEndDate}
+                readOnly={viewMode}
+                disabled={form.values.isUnlimitedEndDate}
+                label={t('end_date')}
+                placeholder={t('pick_date') as string}
+                size="lg"
+                {...form.getInputProps('endDate')}
+              />
+            </Group>
+            <Group grow mt={20}>
+              <Checkbox
+                disabled={viewMode}
+                label="Unlimited end date"
+                {...form.getInputProps('isUnlimitedEndDate', {
+                  type: 'checkbox',
+                })}
+              />
+            </Group>
+
             <Box mt={20}>
               <Text>{t('description')}</Text>
               {!viewMode && (
@@ -276,6 +427,138 @@ const EditCourse = () => {
                 <TextViewer content={courseSingleData?.description as string} />
               )}
             </Box>
+
+            <Accordion defaultValue="Eligibility" mt={10}>
+              <Accordion.Item value="Eligibility">
+                <Accordion.Control>
+                  {t('eligibility_criteria')}
+                </Accordion.Control>
+                <Accordion.Panel>
+                  {form.values.trainingEligibilities.length < 1 && (
+                    <Button
+                      disabled={viewMode}
+                      onClick={() => {
+                        form.insertListItem(
+                          'trainingEligibilities',
+                          { eligibility: 0, eligibilityId: '' },
+                          0
+                        );
+                      }}
+                    >
+                      {t('add_eligibility_criteria')}
+                    </Button>
+                  )}
+
+                  {form.values.trainingEligibilities.map(
+                    (_eligibility, index) => (
+                      <Flex gap={10} key={index} align={'flex-end'} mb={10}>
+                        <Select
+                          disabled={viewMode}
+                          withAsterisk
+                          allowDeselect={false}
+                          label={t('eligibility_type')}
+                          placeholder={t('pick_value') as string}
+                          data={getEligibilityType() ?? []}
+                          {...form.getInputProps(
+                            `trainingEligibilities.${index}.eligibility`
+                          )}
+                        />
+                        {form.values.trainingEligibilities[index].eligibility ==
+                          TrainingEligibilityEnum.Department.toString() && (
+                          <Select
+                            disabled={viewMode}
+                            withAsterisk
+                            allowDeselect={false}
+                            label={t('department')}
+                            placeholder={t('pick_value') as string}
+                            data={getDepartmentDropdown() ?? []}
+                            {...form.getInputProps(
+                              `trainingEligibilities.${index}.eligibilityId`
+                            )}
+                          />
+                        )}
+
+                        {form.values.trainingEligibilities[index].eligibility ==
+                          TrainingEligibilityEnum.Training.toString() && (
+                          <Select
+                            disabled={viewMode}
+                            withAsterisk
+                            allowDeselect={false}
+                            label={t('training')}
+                            placeholder={t('pick_value') as string}
+                            data={getTrainingDropdown() ?? []}
+                            {...form.getInputProps(
+                              `trainingEligibilities.${index}.eligibilityId`
+                            )}
+                          />
+                        )}
+
+                        {form.values.trainingEligibilities[index].eligibility ==
+                          TrainingEligibilityEnum.Skills.toString() && (
+                          <Select
+                            disabled={viewMode}
+                            withAsterisk
+                            allowDeselect={false}
+                            label={t('skills')}
+                            placeholder={t('pick_value') as string}
+                            data={getSkillDropdown() ?? []}
+                            {...form.getInputProps(
+                              `trainingEligibilities.${index}.eligibilityId`
+                            )}
+                          />
+                        )}
+
+                        {form.values.trainingEligibilities[index].eligibility ==
+                          TrainingEligibilityEnum.Assessment.toString() && (
+                          <Select
+                            disabled={viewMode}
+                            withAsterisk
+                            allowDeselect={false}
+                            label={t('assessment')}
+                            placeholder={t('pick_value') as string}
+                            data={getAssessmentDropdown() ?? []}
+                            {...form.getInputProps(
+                              `trainingEligibilities.${index}.eligibilityId`
+                            )}
+                          />
+                        )}
+
+                        {!viewMode && (
+                          <ActionIcon
+                            variant="subtle"
+                            onClick={() => {
+                              form.insertListItem(
+                                'trainingEligibilities',
+                                { eligibility: 0, eligibilityId: '' },
+                                index + 1
+                              );
+                            }}
+                          >
+                            <IconPlus />
+                          </ActionIcon>
+                        )}
+
+                        {!viewMode && (
+                          <ActionIcon
+                            variant="subtle"
+                            c={'red'}
+                            onClick={() => {
+                              form.removeListItem(
+                                'trainingEligibilities',
+                                index
+                              );
+                            }}
+                          >
+                            <IconTrash />
+                          </ActionIcon>
+                        )}
+                      </Flex>
+                    )
+                  )}
+                </Accordion.Panel>
+              </Accordion.Item>
+            </Accordion>
+
             <Box mt={20}>
               {viewMode && (
                 <Button size="lg" onClick={() => setViewMode(false)}>

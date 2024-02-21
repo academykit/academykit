@@ -33,13 +33,20 @@
 
 .buttonNav {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   position: fixed;
   bottom: 0;
   right: 0;
-  width: 100%;
-  z-index: 1000;
-  flex-direction: row;
+  left: 209px;
+  z-index: 9;
+}
+
+@media (max-width: 48em) {
+  .buttonNav {
+    width: 100%;
+    left: 0;
+  }
 }
 
 .active {

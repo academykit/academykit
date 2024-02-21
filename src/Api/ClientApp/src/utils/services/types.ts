@@ -2,6 +2,11 @@ import { UserRole, UserStatus } from '@utils/enums';
 import { ILessons } from './courseService';
 import { ICertificateList } from './manageCourseService';
 
+export interface ISkill {
+  id: string;
+  skillName: string;
+}
+
 export interface IUser {
   id: string;
   fullName?: string;
@@ -26,6 +31,7 @@ export interface IUserProfile extends IUser {
   role: UserRole;
   status: UserStatus;
   certificates: ICertificateList[];
+  skills: ISkill[];
 }
 
 export interface IAddUser {

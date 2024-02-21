@@ -1,11 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { EFileStorageType } from '@utils/enums';
+import { EFileStorageType, MailType } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import axios from 'axios';
 import errorType from './axiosError';
 import { api } from './service-api';
 import { httpClient } from './service-axios';
 import { IAddUser, IPaginated, IUser, IUserProfile } from './types';
+
+export interface IMailNotification {
+  id: string;
+  mailName: string;
+  mailSubject: string;
+  mailMessage: string;
+  mailType: MailType;
+  isActive: boolean;
+}
 
 export interface IDepartmentSetting {
   id: string;
@@ -673,4 +682,113 @@ export const useGetSingleLog = (id: string) => {
   return useQuery(['log' + id], () => getSingleLog(id), {
     select: (data) => data.data,
   });
+};
+
+// -----------------Mail Notification-------------------
+
+const getMailNotification = async (search: string) =>
+  httpClient.get<IPaginated<IMailNotification>>(
+    api.adminUser.getMailNotification + `?${search}`
+  );
+
+export const useMailNotification = (search: string) => {
+  return useQuery(
+    [api.adminUser.getMailNotification, search],
+    () => getMailNotification(search),
+    {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      select: (data) => data.data,
+    }
+  );
+};
+
+type IPostMailNotification = Omit<IMailNotification, 'id'>;
+const updateMailNotificationDetail = ({
+  id,
+  data,
+}: {
+  id: string;
+  data: IPostMailNotification;
+}) => httpClient.put(api.adminUser.updateMailNotification(id), data);
+
+export const useUpdateMailNotification = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ['update' + api.adminUser.getMailNotification],
+    updateMailNotificationDetail,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([api.adminUser.getMailNotification]);
+      },
+    }
+  );
+};
+
+export const usePostMailNotification = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ['post' + api.adminUser.getMailNotification],
+    (data: IPostMailNotification) => {
+      return httpClient.post<IMailNotification>(
+        api.adminUser.getMailNotification,
+        data
+      );
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([api.adminUser.getMailNotification]);
+      },
+    }
+  );
+};
+
+const getMailPreview = async (id: string) =>
+  httpClient.get<string>(api.adminUser.updateMailNotification(id));
+
+export const useMailPreview = (id: string) => {
+  return useQuery(
+    [api.adminUser.updateMailNotification(id)],
+    () => getMailPreview(id),
+    {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      select: (data) => data.data,
+      enabled: false,
+    }
+  );
+};
+
+// interface ITestEmail {
+//   emailAddress: string;
+// }
+const testEmail = async ({ id, data }: { id: string; data: any }) =>
+  httpClient.patch(api.adminUser.testEmail(id), data);
+
+export const useTestEmail = () => {
+  const queryClient = useQueryClient();
+  return useMutation(['test' + api.adminUser.testEmail], testEmail, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([api.adminUser.testEmail]);
+    },
+  });
+};
+
+const deleteMailNotification = async (id: string) =>
+  httpClient.delete(api.adminUser.updateMailNotification(id));
+
+export const useDeleteMailNotification = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    [api.adminUser.getMailNotification],
+    deleteMailNotification,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([api.adminUser.getMailNotification]);
+      },
+      onError: (err) => {
+        return errorType(err);
+      },
+    }
+  );
 };

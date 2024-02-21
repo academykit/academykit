@@ -22,6 +22,7 @@ import { IconPlus, IconTrash } from '@tabler/icons';
 import { QuestionType } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import errorType from '@utils/services/axiosError';
+import { usePools } from '@utils/services/poolService';
 import {
   IAddQuestionType,
   useEditQuestion,
@@ -43,7 +44,6 @@ const schema = () => {
       .required(t('question_title_required') as string),
 
     answers: Yup.array()
-
       .when(['type'], {
         is: QuestionType.MultipleChoice.toString(),
         then: Yup.array()
@@ -97,6 +97,14 @@ const EditQuestion = () => {
   //   []
   // );
   const [tagsLists, setTagsLists] = useState<ITag[]>([]);
+  const questionPools = usePools(queryStringGenerator({ size: 10000 }));
+
+  const questionPoolDropdown = questionPools.data?.items.map((question) => {
+    return {
+      value: question.id,
+      label: question.name,
+    };
+  });
 
   const form = useForm({
     initialValues: {
@@ -106,6 +114,7 @@ const EditQuestion = () => {
       tags: [],
       type: '',
       answers: [{ option: '', isCorrect: false }],
+      questionPoolId: '',
     },
     validate: yupResolver(schema()),
   });
@@ -179,6 +188,7 @@ const EditQuestion = () => {
         type: getQuestion.data.type.toString(),
         answers: answers,
         tags: data,
+        questionPoolId: getQuestion.data.questionPoolId,
       });
 
       setTimeout(() => {
@@ -270,6 +280,18 @@ const EditQuestion = () => {
                 formContext={useFormContext}
               />
             </Box>
+
+            <Select
+              withAsterisk
+              allowDeselect={false}
+              mt={20}
+              placeholder={t('select_pool') as string}
+              size={'lg'}
+              label={t('question_pool')}
+              data={questionPoolDropdown ?? []}
+              {...form.getInputProps('questionPoolId')}
+            />
+
             <Select
               mt={20}
               placeholder={t('select_question_type') as string}
@@ -279,6 +301,7 @@ const EditQuestion = () => {
               data={getQuestionType()}
               {...form.getInputProps('type')}
             ></Select>
+
             {(form.values.type === QuestionType.MultipleChoice.toString() ||
               form.values.type === QuestionType.SingleChoice.toString()) && (
               <Box>

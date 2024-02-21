@@ -1,0 +1,90 @@
+.option {
+  padding: 20px;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border-radius: 5px;
+  border: 1px solid gray;
+  margin-bottom: 15px;
+}
+
+.option > label {
+  cursor: pointer;
+}
+
+.navigate {
+  display: flex;
+  height: 50px;
+  width: 50px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.navigateWrapper {
+  border: 1px solid grey;
+  border-radius: 5px;
+  max-height: 80vh;
+  height: 100%;
+  overflow-y: auto;
+  align-content: flex-start;
+  justify-content: flex-start;
+}
+
+.buttonNav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 209px;
+  z-index: 9;
+}
+
+/* priority to the current question */
+.active {
+  border: 3px solid var(--mantine-color-green-4) !important;
+}
+
+.visited {
+  border: 2px solid var(--mantine-color-yellow-4);
+}
+
+.answered {
+  background-color: var(--mantine-color-answered);
+}
+
+.parentGrid {
+  flex-direction: row;
+}
+
+.optionsGridCol {
+  order: 2;
+}
+
+.questionGridCol {
+  order: 1;
+}
+
+@media (max-width: 48em) {
+  .buttonNav {
+    width: 100%;
+    left: 0;
+  }
+}
+
+@media (max-width: 75em) {
+  .parentGrid {
+    flex-direction: column;
+  }
+
+  .optionsGridCol {
+    order: 1;
+    max-width: 100%;
+  }
+
+  .navigate {
+    order: 2;
+  }
+}

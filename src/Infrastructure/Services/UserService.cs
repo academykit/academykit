@@ -114,6 +114,42 @@ namespace Lingtren.Infrastructure.Services
                 user.Status = UserStatus.Active;
                 user.UpdatedBy = user.Id;
                 user.UpdatedOn = currentTimeStamp;
+                if (user.Role == UserRole.Trainee || user.Role == UserRole.Trainer)
+                {
+                    var existUsers = await _unitOfWork
+                        .GetRepository<GroupMember>()
+                        .ExistsAsync(
+                            predicate: p =>
+                                p.GroupId == new Guid("d3c343d8-adf8-45d4-afbe-e09c3285da24")
+                                && p.UserId == user.Id
+                        )
+                        .ConfigureAwait(false);
+
+                    if (existUsers)
+                    {
+                        _logger.LogWarning(
+                            "Group with id: {id} already contains users. User Id: {userId}",
+                            new Guid("d3c343d8-adf8-45d4-afbe-e09c3285da24"), // Parameter for {id}
+                            user.Id // Parameter for {userId}
+                        );
+                        throw new ForbiddenException(
+                            _localizer.GetString("GroupContainsUsersCannotAdd")
+                        );
+                    }
+
+                    var groupMember = new GroupMember
+                    {
+                        UserId = user.Id,
+                        GroupId = new Guid("d3c343d8-adf8-45d4-afbe-e09c3285da24"),
+                        IsActive = true,
+                        CreatedBy = new Guid("30fcd978-f256-4733-840f-759181bc5e63"),
+                        CreatedOn = DateTime.Now,
+                    };
+                    await _unitOfWork
+                        .GetRepository<GroupMember>()
+                        .InsertAsync(groupMember)
+                        .ConfigureAwait(false);
+                }
 
                 _unitOfWork.GetRepository<User>().Update(user);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -1258,7 +1294,10 @@ namespace Lingtren.Infrastructure.Services
             IQueryable<User> query
         )
         {
-            return query.Include(x => x.Department);
+            return query
+                .Include(x => x.Department)
+                .Include(x => x.UserSkills)
+                .ThenInclude(x => x.Skills);
         }
         #endregion Protected Methods
 
@@ -1416,7 +1455,10 @@ namespace Lingtren.Infrastructure.Services
                     .GetRepository<User>()
                     .GetFirstOrDefaultAsync(
                         predicate: p => p.Id == userId,
-                        include: src => src.Include(x => x.Department)
+                        include: src =>
+                            src.Include(x => x.Department)
+                                .Include(x => x.UserSkills)
+                                .ThenInclude(x => x.Skills)
                     )
                     .ConfigureAwait(false);
 
@@ -1776,6 +1818,55 @@ namespace Lingtren.Infrastructure.Services
                 );
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
+        }
+
+        public async Task AddToDefaultGroup(Guid userId, Guid CurrentUserId)
+        {
+            var existUsers = await _unitOfWork
+                .GetRepository<GroupMember>()
+                .ExistsAsync(
+                    predicate: p =>
+                        p.GroupId == new Guid("d3c343d8-adf8-45d4-afbe-e09c3285da24")
+                        && p.UserId == userId
+                )
+                .ConfigureAwait(false);
+
+            if (existUsers)
+            {
+                _logger.LogWarning(
+                    "Group with id: {id} already contains users. User Id: {userId}",
+                    new Guid("d3c343d8-adf8-45d4-afbe-e09c3285da24"), // Parameter for {id}
+                    userId // Parameter for {userId}
+                );
+                throw new ForbiddenException(_localizer.GetString("GroupContainsUsersCannotAdd"));
+            }
+
+            var groupMember = new GroupMember
+            {
+                UserId = userId,
+                GroupId = new Guid("d3c343d8-adf8-45d4-afbe-e09c3285da24"),
+                IsActive = true,
+                CreatedBy = CurrentUserId,
+                CreatedOn = DateTime.Now,
+            };
+            await _unitOfWork
+                .GetRepository<GroupMember>()
+                .InsertAsync(groupMember)
+                .ConfigureAwait(false);
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        public async Task RemoveFromDefaultGroup(Guid userId, Guid CurrentUserId)
+        {
+            var existmember = await _unitOfWork
+                .GetRepository<GroupMember>()
+                .GetFirstOrDefaultAsync(predicate: p => p.UserId == userId)
+                .ConfigureAwait(false);
+            if (existmember != null)
+            {
+                _unitOfWork.GetRepository<GroupMember>().Delete(existmember.Id);
+            }
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

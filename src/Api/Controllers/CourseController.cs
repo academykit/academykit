@@ -58,7 +58,7 @@
             }
 
             var searchResult = await courseService
-                .SearchAsync(searchCriteria)
+                .SearchAsync(searchCriteria, true)
                 .ConfigureAwait(false);
 
             var response = new SearchResult<CourseResponseModel>
@@ -80,7 +80,8 @@
                                     p,
                                     searchCriteria.CurrentUserId
                                 )
-                                : searchCriteria.EnrollmentStatus.FirstOrDefault()
+                                : searchCriteria.EnrollmentStatus.FirstOrDefault(),
+                            courseService.GetUserEligibilityStatus(p, searchCriteria.CurrentUserId)
                         )
                     )
             );
@@ -115,8 +116,12 @@
                 CreatedBy = CurrentUser.Id,
                 UpdatedOn = currentTimeStamp,
                 UpdatedBy = CurrentUser.Id,
+                StartDate = model.StartDate,
+                EndDate = model.EndDate,
+                IsUnlimitedEndDate = model.IsUnlimitedEndDate,
                 CourseTags = new List<CourseTag>(),
                 CourseTeachers = new List<CourseTeacher>(),
+                TrainingEligibilities = new List<TrainingEligibility>(),
             };
             foreach (var tagId in model.TagIds)
             {
@@ -146,6 +151,21 @@
                     UpdatedBy = CurrentUser.Id,
                 }
             );
+
+            foreach (var criteria in model.TrainingEligibilities)
+            {
+                entity.TrainingEligibilities.Add(
+                    new TrainingEligibility
+                    {
+                        Id = Guid.NewGuid(),
+                        CourseId = entity.Id,
+                        EligibilityId = criteria.EligibilityId,
+                        TrainingEligibilityEnum = criteria.Eligibility,
+                        CreatedBy = CurrentUser.Id,
+                        CreatedOn = currentTimeStamp
+                    }
+                );
+            }
 
             var response = await courseService.CreateAsync(entity).ConfigureAwait(false);
             return new CourseResponseModel(response, null);
@@ -360,6 +380,25 @@
         }
 
         /// <summary>
+        /// Course Lesson Student's assignment summary report api.
+        /// </summary>
+        /// <param name="identity"> the course id or slug.</param>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        [HttpGet("{identity}/lessonStatistics/{lessonIdentity}/AssignmentSubmission")]
+        public async Task<SearchResult<AssignmentSubmissionResponseModel>> AssignmentDetailSubmission(
+            string identity,
+            string lessonIdentity,
+            [FromQuery] BaseSearchCriteria searchCriteria
+        )
+        {
+            searchCriteria.CurrentUserId = CurrentUser.Id;
+            return await courseService
+                .AssignmentSubmissionStudentsReport(identity, lessonIdentity, searchCriteria)
+                .ConfigureAwait(false);
+        }
+        
+
+        /// <summary>
         /// Course student statistics api.
         /// </summary>
         /// <param name="identity"> the course id or slug.</param>
@@ -417,6 +456,34 @@
             var response = new List<ExamResultExportModel>();
 
             searchResult.ForEach(p => response.Add(new ExamResultExportModel(p)));
+
+            using var memoryStream = new MemoryStream();
+            using var steamWriter = new StreamWriter(memoryStream);
+            using (var csv = new CsvWriter(steamWriter, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(response);
+                csv.Flush();
+            }
+
+            return File(memoryStream.ToArray(), "text/csv", "Results.csv");
+        }
+
+        /// <summary>
+        /// User course api.
+        /// </summary>
+        /// <param name="userId">the requested user id.</param>
+        /// <param name="lessonId">the instance of <see cref="BaseSearchCriteria"/>.</param>
+        /// <returns>the search result of <see cref="CourseResponseModel"/>.</returns>
+        [HttpGet("{identity}/lessonStatistics/{lessonIdentity}/exportSubmission")]
+        public async Task<IActionResult> ExportSubmission(string lessonIdentity)
+        {
+            var searchResult = await courseService
+                .GetResultsExportAsync(lessonIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
+
+            var response = new List<ExamResultExportSubmissionModel>();
+
+            searchResult.ForEach(p => response.Add(new ExamResultExportSubmissionModel(p)));
 
             using var memoryStream = new MemoryStream();
             using var steamWriter = new StreamWriter(memoryStream);

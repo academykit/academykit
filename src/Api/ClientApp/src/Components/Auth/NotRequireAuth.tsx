@@ -1,4 +1,3 @@
-import LanguageSelector from '@components/Ui/LanguageSelector';
 import { Text } from '@mantine/core';
 import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -31,7 +30,7 @@ const NotRequiredAuth = () => {
             </Text>
           </div>
           <div style={{ position: 'fixed', bottom: '10px', right: '10px' }}>
-            <LanguageSelector />
+            {/* <LanguageSelector /> */}
           </div>
         </>
       )}

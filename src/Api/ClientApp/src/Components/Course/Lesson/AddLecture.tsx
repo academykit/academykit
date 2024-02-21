@@ -161,7 +161,7 @@ const AddLecture = ({
               </Grid.Col>
             </Tooltip>
           </Grid>
-          <Text size={'sm'} mt={10}>
+          <Text size={'md'} mt={10}>
             {isRecordedVideo ? t('recordings') : t('video')}
 
             <span className="global-astrick"> *</span>

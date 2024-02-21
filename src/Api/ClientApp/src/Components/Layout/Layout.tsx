@@ -99,6 +99,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
               justifyContent: 'space-between',
               width: '100%',
               alignItems: 'center',
+              padding: '8px 16px 0 16px',
             }}
           >
             <Box>{layout.examPageTitle}</Box>

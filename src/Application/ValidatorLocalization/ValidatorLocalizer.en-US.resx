@@ -59,7 +59,10 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema id="root"
+    xmlns=""
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -402,7 +405,7 @@
   <data name="MotherNameRequired" xml:space="preserve">
     <value>Mother name is required.</value>
   </data>
-   <data name="SpouseNameLength100" xml:space="preserve">
+  <data name="SpouseNameLength100" xml:space="preserve">
     <value>Spouse name length must be less than or equal to 100 characters.</value>
   </data>
   <data name="SpouseNameRequired" xml:space="preserve">
@@ -539,5 +542,11 @@
   </data>
   <data name="InvalidMobileNumber" xml:space="preserve">
     <value>Invalid mobile number format.</value>
+  </data>
+  <data name="NoOfQuestionSelectionExceeds" xml:space="preserve">
+    <value>Number Of Question Selection Exceeds.</value>
+  </data>
+  <data name="AssessmentCannotBeDeleted" xml:space="preserve">
+    <value>Assessment Conatins Submission so Cannot be Deleted</value>
   </data>
 </root>

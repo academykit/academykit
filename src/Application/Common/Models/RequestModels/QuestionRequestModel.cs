@@ -9,8 +9,11 @@
         public QuestionTypeEnum Type { get; set; }
         public IList<Guid> Tags { get; set; }
         public string Description { get; set; }
+
+        public Guid QuestionPoolId { get; set; }
         public IList<QuestionOptionRequestModel> Answers { get; set; }
     }
+
     public class QuestionOptionRequestModel
     {
         public string Option { get; set; }

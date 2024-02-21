@@ -135,6 +135,11 @@ export const useDeleteCourseTeacher = (searchParams: string) => {
   );
 };
 
+export interface IBaseTrainingEligibility {
+  eligibility: number;
+  eligibilityId: string;
+}
+
 interface ICreateCourse {
   name: string;
   thumbnailUrl: string;
@@ -144,6 +149,10 @@ interface ICreateCourse {
   duration?: number;
   levelId: string;
   tagIds: string[];
+  startDate: string;
+  endDate: string;
+  isUnlimitedEndDate: boolean;
+  trainingEligibilities: IBaseTrainingEligibility[];
 }
 
 const createCourse = async (course: ICreateCourse) =>
@@ -163,6 +172,11 @@ export const useCreateCourse = () => {
 
 export interface IFullCourse extends ICourse {
   sections: ISection[];
+  startDate: string;
+  endDate: string;
+  isUnlimitedEndDate: boolean;
+  trainingEligibilities: IBaseTrainingEligibility[];
+  isEligible: boolean;
 }
 const getCourseDescription = async (id: string) =>
   await httpClient.get<IFullCourse>(api.course.detail(id));
@@ -731,6 +745,57 @@ export const useGetTrainee = (courseId: string, query: string) => {
     () => getTrainee(courseId, query),
     {
       select: (data) => data.data,
+    }
+  );
+};
+
+export interface IUpdateShuffle {
+  noOfQuestion: number;
+  isShuffle: boolean;
+  showAll: boolean;
+}
+
+const getShuffleDetails = (trainingSlug: string, lessonSlug: string) => {
+  return httpClient.get<IUpdateShuffle>(
+    api.course.getShuffle(trainingSlug, lessonSlug)
+  );
+};
+
+export const useGetShuffleDetails = (
+  trainingSlug: string,
+  lessonSlug: string
+) => {
+  return useQuery(
+    [api.course.getShuffle(trainingSlug, lessonSlug)],
+    () => getShuffleDetails(trainingSlug, lessonSlug),
+    {
+      select: (data) => data.data,
+    }
+  );
+};
+
+const updateShuffleDetails = ({
+  trainingSlug,
+  lessonSlug,
+  data,
+}: {
+  trainingSlug: string;
+  lessonSlug: string;
+  data: IUpdateShuffle;
+}) => {
+  return httpClient.put(api.course.shuffle(trainingSlug, lessonSlug), data);
+};
+
+export const useUpdateShuffle = (trainingSlug: string, lessonSlug: string) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    [api.course.getShuffle(trainingSlug, lessonSlug)],
+    updateShuffleDetails,
+    {
+      onSuccess: () =>
+        queryClient.invalidateQueries([
+          api.course.getShuffle(trainingSlug, lessonSlug),
+        ]),
     }
   );
 };

@@ -1542,9 +1542,120 @@
             existingLesson.QuestionSet.Duration = model.QuestionSet.Duration * 60; //convert duration from minutes to seconds;
             existingLesson.QuestionSet.UpdatedBy = existingLesson.UpdatedBy;
             existingLesson.QuestionSet.UpdatedOn = existingLesson.UpdatedOn;
+            existingLesson.QuestionSet.IsShuffle = model.QuestionSet.IsShuffle;
+            existingLesson.QuestionSet.ShowAll = model.QuestionSet.ShowAll;
+            existingLesson.QuestionSet.NoOfQuestion = model.QuestionSet.NoOfQuestion;
 
             _unitOfWork.GetRepository<QuestionSet>().Update(existingLesson.QuestionSet);
             await Task.FromResult(0);
+        }
+
+        public async Task<QuestionSet> UpdateQuestionAsync(
+            string identity,
+            string lessonIdentity,
+            QuestionSetRequestModel model,
+            Guid currentUserId
+        )
+        {
+            var course = await ValidateAndGetCourse(
+                    currentUserId,
+                    identity,
+                    validateForModify: true
+                )
+                .ConfigureAwait(false);
+            if (course == null)
+            {
+                _logger.LogWarning(
+                    "Training with identity: {identity} not found for user with :{id}.",
+                    identity,
+                    currentUserId
+                );
+                throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
+            }
+
+            if (course.Status == CourseStatus.Completed)
+            {
+                throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
+            }
+
+            var existing = await _unitOfWork
+                .GetRepository<Lesson>()
+                .GetFirstOrDefaultAsync(
+                    predicate: p => (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity)
+                )
+                .ConfigureAwait(false);
+            if (existing == null)
+            {
+                _logger.LogWarning(
+                    "Lesson with identity: {identity} not found for user with id: {id} and training with id: {courseId}",
+                    lessonIdentity,
+                    currentUserId,
+                    course.Id
+                );
+                throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
+            }
+            var existingQuestionSet = await _unitOfWork
+                .GetRepository<QuestionSet>()
+                .GetFirstOrDefaultAsync(predicate: p => p.Id == existing.QuestionSetId)
+                .ConfigureAwait(false);
+
+            existingQuestionSet.IsShuffle = model.IsShuffle;
+            existingQuestionSet.ShowAll = model.ShowAll;
+            existingQuestionSet.NoOfQuestion = model.NoOfQuestion;
+
+            _unitOfWork.GetRepository<QuestionSet>().Update(existingQuestionSet);
+            await _unitOfWork.SaveChangesAsync();
+            return existingQuestionSet;
+        }
+
+        public async Task<QuestionSet> GetQuestionAsync(
+            string identity,
+            string lessonIdentity,
+            Guid currentUserId
+        )
+        {
+            var course = await ValidateAndGetCourse(
+                    currentUserId,
+                    identity,
+                    validateForModify: true
+                )
+                .ConfigureAwait(false);
+            if (course == null)
+            {
+                _logger.LogWarning(
+                    "Training with identity: {identity} not found for user with :{id}.",
+                    identity,
+                    currentUserId
+                );
+                throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
+            }
+
+            if (course.Status == CourseStatus.Completed)
+            {
+                throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
+            }
+
+            var existing = await _unitOfWork
+                .GetRepository<Lesson>()
+                .GetFirstOrDefaultAsync(
+                    predicate: p => (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity)
+                )
+                .ConfigureAwait(false);
+            if (existing == null)
+            {
+                _logger.LogWarning(
+                    "Lesson with identity: {identity} not found for user with id: {id} and training with id: {courseId}",
+                    lessonIdentity,
+                    currentUserId,
+                    course.Id
+                );
+                throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
+            }
+            var existingQuestionSet = await _unitOfWork
+                .GetRepository<QuestionSet>()
+                .GetFirstOrDefaultAsync(predicate: p => p.Id == existing.QuestionSetId)
+                .ConfigureAwait(false);
+            return existingQuestionSet;
         }
 
         /// <summary>

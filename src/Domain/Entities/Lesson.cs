@@ -2,6 +2,7 @@
 {
     using Lingtren.Domain.Common;
     using Lingtren.Domain.Enums;
+
     public class Lesson : AuditableEntity
     {
         public string Slug { get; set; }
@@ -25,6 +26,7 @@
         public Guid? QuestionSetId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+
         public QuestionSet QuestionSet { get; set; }
         public User User { get; set; }
         public string VideoKey { get; set; }

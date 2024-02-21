@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QuestionType } from '@utils/enums';
 import { api } from './service-api';
 import { httpClient } from './service-axios';
-import { IUser } from './types';
+import { IPaginated, IUser } from './types';
 
 interface IAssignmentAttachment {
   assignmentId: string;
@@ -292,6 +292,43 @@ export const useGetAssignmentSummary = (
   useQuery(
     [api.course.assignmentSummary(courseIdentity, lessonId)],
     () => getAssignmentSummary(courseIdentity, lessonId),
+    {
+      select: (data) => data.data,
+    }
+  );
+
+export interface IAssignmentSubmission {
+  student: {
+    id: string;
+    fullName: string;
+    imageUrl: string | null;
+    email: string;
+    mobileNumber: string | null;
+    role: number;
+    departmentId: string | null;
+    departmentName: string | null;
+  };
+  totalMarks: number;
+  submissionDate: Date;
+}
+
+const getAssignmentSubmission = async (
+  courseIdentity: string,
+  lessonId: string,
+  search: string
+) =>
+  await httpClient.get<IPaginated<IAssignmentSubmission>>(
+    api.course.assignmentSubmission(courseIdentity, lessonId, search)
+  );
+
+export const useGetAssignmentSubmission = (
+  courseIdentity: string,
+  lessonId: string,
+  search: string
+) =>
+  useQuery(
+    [api.course.assignmentSubmission(courseIdentity, lessonId, search)],
+    () => getAssignmentSubmission(courseIdentity, lessonId, search),
     {
       select: (data) => data.data,
     }

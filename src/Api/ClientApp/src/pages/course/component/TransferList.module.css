@@ -49,6 +49,11 @@
   }
 }
 
+.addControl {
+  border-radius: 0;
+  border-top-right-radius: var(--mantine-radius-md);
+}
+
 .icon {
   width: rem(18px);
   height: rem(18px);

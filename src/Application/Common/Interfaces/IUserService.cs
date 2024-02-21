@@ -73,7 +73,9 @@
         /// </summary>
         /// <param name="model">the instance of <see cref="VerifyResetTokenModel"/></param>
         /// <returns> the instance of <see cref="VerificationTokenResponseModel"/></returns>
-        Task<VerificationTokenResponseModel> VerifyPasswordResetTokenAsync(VerifyResetTokenModel model);
+        Task<VerificationTokenResponseModel> VerifyPasswordResetTokenAsync(
+            VerifyResetTokenModel model
+        );
 
         /// <summary>
         /// Handle to generate random password
@@ -95,7 +97,10 @@
         /// </summary>
         /// <param name="model">the instance of <see cref="ChangeEmailRequestModel"/></param>
         /// <returns>the instance of <see cref="ChangeEmailResponseModel"/></returns>
-        Task<ChangeEmailResponseModel> ChangeEmailRequestAsync(ChangeEmailRequestModel model, Guid currentUserId);
+        Task<ChangeEmailResponseModel> ChangeEmailRequestAsync(
+            ChangeEmailRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to resend email async
@@ -127,12 +132,15 @@
         Task<UserResponseModel> GetDetailAsync(Guid userId);
 
         /// <summary>
-        /// Handle to get trainer 
+        /// Handle to get trainer
         /// </summary>
         /// <param name="currentUserId"> the current user id </param>
         /// <param name="criteria"> the instance of <see cref="TeacherSearchCriteria"></see></param>
         /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
-        Task<IList<TrainerResponseModel>> GetTrainerAsync(Guid currentUserId, TeacherSearchCriteria criteria);
+        Task<IList<TrainerResponseModel>> GetTrainerAsync(
+            Guid currentUserId,
+            TeacherSearchCriteria criteria
+        );
 
         /// <summary>
         /// Handle to import the user
@@ -156,5 +164,7 @@
         /// <param name="currentUserId">Current userId</param>
         /// <returns>Task completed</returns>
         Task RemoveRefreshTokenAsync(Guid currentUserId);
+        Task AddToDefaultGroup(Guid userId, Guid CurrentUserId);
+        Task RemoveFromDefaultGroup(Guid userId, Guid CurrentUserId);
     }
 }
