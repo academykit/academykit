@@ -16,6 +16,7 @@ import {
   Checkbox,
   Flex,
   Group,
+  Input,
   Loader,
   Popover,
   Select,
@@ -32,6 +33,7 @@ import { TrainingEligibilityEnum } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import RoutePath from '@utils/routeConstants';
 import { useDepartmentSetting } from '@utils/services/adminService';
+import { useTrainingSuggestion } from '@utils/services/aiService';
 import { useAssessments } from '@utils/services/assessmentService';
 import errorType from '@utils/services/axiosError';
 import {
@@ -92,6 +94,8 @@ export const [FormProvider, useFormContext, useForm] =
   createFormContext<FormValues>();
 
 const CreateCoursePage = () => {
+  const aiSuggestion = useTrainingSuggestion();
+  console.log(aiSuggestion.data);
   const cForm = useCustomForm();
   const getDepartments = useDepartmentSetting(
     queryStringGenerator({ size: 1000 })
@@ -262,7 +266,10 @@ const CreateCoursePage = () => {
     }
   }, [form.values.isUnlimitedEndDate]);
 
-  const acceptAIAnswer = () => {};
+  const acceptAIAnswer = () => {
+    form.setFieldValue('title', aiSuggestion.data?.title ?? '');
+    form.setFieldValue('description', aiSuggestion.data?.description ?? '');
+  };
 
   return (
     <div>
@@ -279,7 +286,7 @@ const CreateCoursePage = () => {
               <Text>{t('powered_by_ai')}</Text>
 
               <Popover
-                width={300}
+                width={400}
                 trapFocus
                 position="bottom"
                 withArrow
@@ -292,25 +299,52 @@ const CreateCoursePage = () => {
                 </Popover.Target>
                 <Popover.Dropdown>
                   <TextInput
-                    label={t('title')}
+                    readOnly
+                    label={
+                      <Flex align={'center'} gap={3}>
+                        <Input.Label>{t('title')}</Input.Label>
+                        <Copy
+                          value={aiSuggestion.data?.title ?? ''}
+                          disabled={aiSuggestion.isLoading}
+                        />
+                      </Flex>
+                    }
                     placeholder={t('ai_title_suggestion') as string}
-                    rightSection={<Copy value="ai-title" />}
+                    rightSection={
+                      aiSuggestion.isLoading && <Loader size={16} />
+                    }
+                    value={aiSuggestion.data?.title}
                   />
 
                   <Textarea
                     readOnly
-                    rightSection={<Copy value="ai-description" />}
+                    rightSection={
+                      aiSuggestion.isLoading && <Loader size={16} />
+                    }
                     mt={10}
-                    label={t('description')}
+                    label={
+                      <Flex align={'center'} gap={3}>
+                        <Input.Label>{t('description')}</Input.Label>
+                        <Copy
+                          value={aiSuggestion.data?.description ?? ''}
+                          disabled={aiSuggestion.isLoading}
+                        />
+                      </Flex>
+                    }
                     placeholder={t('ai_description_suggestion') as string}
                     autosize
                     minRows={2}
                     maxRows={4}
+                    value={aiSuggestion.data?.description}
                   />
 
                   <Group gap="xs" mt={10}>
                     <Tooltip label={t('regenerate_suggestion')}>
-                      <ActionIcon variant="transparent" c={'gray'}>
+                      <ActionIcon
+                        variant="transparent"
+                        c={'gray'}
+                        disabled={aiSuggestion.isLoading}
+                      >
                         <IconReload size={18} />
                       </ActionIcon>
                     </Tooltip>
@@ -320,6 +354,7 @@ const CreateCoursePage = () => {
                         variant="transparent"
                         c={'gray'}
                         onClick={() => acceptAIAnswer()}
+                        disabled={aiSuggestion.isLoading}
                       >
                         <IconThumbUp size={18} />
                       </ActionIcon>
