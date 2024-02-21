@@ -868,6 +868,11 @@
       "AWS_VideoBucket": "भिडियो संग्रह"
     }
   },
+  "powered_by_ai": "AI द्वारा संचालित",
+  "regenerate_suggestion": "सुझाव पुनः उत्पन्न गर्नुहोस्",
+  "accept_answer": "उत्तर स्वीकृत गर्नुहोस्",
+  "ai_title_suggestion": "AI शीर्षक सुझाव",
+  "ai_description_suggestion": "AI विवरण सुझाव",
   "not_eligible": "पात्र हुँदैन",
   "eligibility_type": "पात्रता प्रकार",
   "total_retake_assessment": "पुनः परीक्षण अनुमति गरिएको कुल",

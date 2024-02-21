@@ -1,4 +1,6 @@
+import AIStar from '@components/Icons/AIStar';
 import Breadcrumb from '@components/Ui/BreadCrumb';
+import Copy from '@components/Ui/Copy';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import GroupCreatableSelect from '@components/Ui/GroupCreatableSelect';
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
@@ -15,13 +17,17 @@ import {
   Flex,
   Group,
   Loader,
+  Popover,
   Select,
   Text,
+  TextInput,
+  Textarea,
+  Tooltip,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { IconPlus, IconTrash } from '@tabler/icons';
+import { IconPlus, IconReload, IconThumbUp, IconTrash } from '@tabler/icons';
 import { TrainingEligibilityEnum } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import RoutePath from '@utils/routeConstants';
@@ -256,6 +262,8 @@ const CreateCoursePage = () => {
     }
   }, [form.values.isUnlimitedEndDate]);
 
+  const acceptAIAnswer = () => {};
+
   return (
     <div>
       <Breadcrumb />
@@ -266,6 +274,61 @@ const CreateCoursePage = () => {
               formContext={useFormContext}
               label={t('thumbnail') as string}
             />
+
+            <Flex gap={5} align={'center'}>
+              <Text>{t('powered_by_ai')}</Text>
+
+              <Popover
+                width={300}
+                trapFocus
+                position="bottom"
+                withArrow
+                shadow="md"
+              >
+                <Popover.Target>
+                  <ActionIcon variant="subtle" c={'gray'}>
+                    <AIStar fontSize={18} />
+                  </ActionIcon>
+                </Popover.Target>
+                <Popover.Dropdown>
+                  <TextInput
+                    label={t('title')}
+                    placeholder={t('ai_title_suggestion') as string}
+                    rightSection={<Copy value="ai-title" />}
+                  />
+
+                  <Textarea
+                    readOnly
+                    rightSection={<Copy value="ai-description" />}
+                    mt={10}
+                    label={t('description')}
+                    placeholder={t('ai_description_suggestion') as string}
+                    autosize
+                    minRows={2}
+                    maxRows={4}
+                  />
+
+                  <Group gap="xs" mt={10}>
+                    <Tooltip label={t('regenerate_suggestion')}>
+                      <ActionIcon variant="transparent" c={'gray'}>
+                        <IconReload size={18} />
+                      </ActionIcon>
+                    </Tooltip>
+
+                    <Tooltip label={t('accept_answer')}>
+                      <ActionIcon
+                        variant="transparent"
+                        c={'gray'}
+                        onClick={() => acceptAIAnswer()}
+                      >
+                        <IconThumbUp size={18} />
+                      </ActionIcon>
+                    </Tooltip>
+                  </Group>
+                </Popover.Dropdown>
+              </Popover>
+            </Flex>
+
             <Group mt={10} grow>
               <CustomTextFieldWithAutoFocus
                 placeholder={t('title_course') as string}

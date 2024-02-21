@@ -865,6 +865,11 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "powered_by_ai": "Powered by AI",
+  "regenerate_suggestion": "Regenerate Suggestion",
+  "accept_answer": "Accept Answer",
+  "ai_title_suggestion": "AI Title Suggestion",
+  "ai_description_suggestion": "AI Description Suggestion",
   "question_updated_success": "Question updated successfully.",
   "delete_question_success": "Question deleted successfully.",
   "not_eligible": "Not Eligible",
