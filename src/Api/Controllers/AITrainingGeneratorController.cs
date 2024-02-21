@@ -6,11 +6,11 @@ using OpenAI.Interfaces;
 using OpenAI.ObjectModels;
 using OpenAI.ObjectModels.RequestModels;
 using OpenAI.Utilities.FunctionCalling;
-using static Lingtren.Api.Controllers.AITrainingGeneratiorController.FunctionCallingTestHelpers;
+using static Lingtren.Api.Controllers.AITrainingGeneratorController.FunctionCallingTestHelpers;
 
 namespace Lingtren.Api.Controllers
 {
-    public class AITrainingGeneratiorController : BaseApiController
+    public class AITrainingGeneratorController : BaseApiController
     {
         [HttpGet()]
         public async Task<AiResponseMode> Get()
