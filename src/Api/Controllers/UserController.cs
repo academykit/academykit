@@ -29,6 +29,7 @@ namespace Lingtren.Api.Controllers
         private readonly IFileServerService fileServerService;
         private readonly IUserService userService;
         private readonly IGeneralSettingService generalSettingService;
+        private readonly IDepartmentService departmentService;
         private readonly IValidator<UserRequestModel> validator;
         private readonly IValidator<ChangeEmailRequestModel> changeEmailValidator;
         private readonly IStringLocalizer<ExceptionLocalizer> localizer;
@@ -40,7 +41,8 @@ namespace Lingtren.Api.Controllers
             IValidator<UserRequestModel> validator,
             IGeneralSettingService generalSettingService,
             IValidator<ChangeEmailRequestModel> changeEmailValidator,
-            IStringLocalizer<ExceptionLocalizer> localizer
+            IStringLocalizer<ExceptionLocalizer> localizer,
+            IDepartmentService departmentService
         )
         {
             this.fileServerService = fileServerService;
@@ -50,6 +52,7 @@ namespace Lingtren.Api.Controllers
             this.changeEmailValidator = changeEmailValidator;
             this.generalSettingService = generalSettingService;
             this.localizer = localizer;
+            this.departmentService = departmentService;
         }
 
         /// <summary>
@@ -252,6 +255,10 @@ namespace Lingtren.Api.Controllers
                 oldEmail = existing.Email;
             }
 
+            var existingDepartment = await departmentService
+                .GetByIdOrSlugAsync(model.DepartmentId.ToString(), CurrentUser.Id, false)
+                .ConfigureAwait(false);
+
             var imageKey = existing.ImageUrl;
             existing.Id = existing.Id;
             #region Basic
@@ -262,6 +269,7 @@ namespace Lingtren.Api.Controllers
             #endregion
             #region Official Info
             existing.MemberId = model.MemberId;
+            existing.Department = existingDepartment;
             existing.DepartmentId = model.DepartmentId;
             existing.Profession = model.Profession;
             #endregion
