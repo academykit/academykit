@@ -67,7 +67,7 @@
                 {
                     ChatMessage.FromSystem("You are a helpful assistant."),
                     ChatMessage.FromUser(
-                        $"Give me Training Title and its Description. These are some of the existing training Title for my organization: {jsondata}"
+                        $"Give me Training Title and its Description. And every time generate a new title and description. These are some of the existing training Title for my organization: {jsondata}"
                     )
                 };
             }
