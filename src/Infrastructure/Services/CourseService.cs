@@ -400,12 +400,13 @@
                 }
 
                 if (
-                    existing.EligibilityCreations != null && existing.EligibilityCreations.Count > 0
+                    existing.TrainingEligibilities != null
+                    && existing.TrainingEligibilities.Count > 0
                 )
                 {
                     _unitOfWork
-                        .GetRepository<EligibilityCreation>()
-                        .Delete(existing.EligibilityCreations);
+                        .GetRepository<TrainingEligibility>()
+                        .Delete(existing.TrainingEligibilities);
                 }
                 if (eligibilities.Count > 0)
                 {
