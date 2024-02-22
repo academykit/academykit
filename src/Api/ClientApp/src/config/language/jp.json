@@ -868,6 +868,10 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "update_ai_setup_success": "AIセットアップが正常に更新されました。",
+  "ai_key": "AIキー",
+  "enter_ai_key": "AIキーを入力してください",
+  "ai_setup": "AIセットアップ",
   "powered_by_ai": "AIによって動作",
   "regenerate_suggestion": "提案を再生成",
   "accept_answer": "回答を受け入れる",

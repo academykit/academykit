@@ -865,6 +865,10 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "update_ai_setup_success": "AI setup updated successfully.",
+  "ai_key": "AI Key",
+  "enter_ai_key": "Please enter your AI key",
+  "ai_setup": "AI Setup",
   "powered_by_ai": "Powered by AI",
   "regenerate_suggestion": "Regenerate Suggestion",
   "accept_answer": "Accept Answer",

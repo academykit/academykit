@@ -310,5 +310,6 @@ export const api = {
   },
   ai: {
     trainingSuggest: `/api/AITrainingGenerator`,
+    aiMasterSetup: `/api/AIKey`,
   },
 };
