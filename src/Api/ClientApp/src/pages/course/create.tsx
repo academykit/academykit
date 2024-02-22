@@ -95,7 +95,6 @@ export const [FormProvider, useFormContext, useForm] =
 
 const CreateCoursePage = () => {
   const aiSuggestion = useTrainingSuggestion();
-  console.log(aiSuggestion.data);
   const cForm = useCustomForm();
   const getDepartments = useDepartmentSetting(
     queryStringGenerator({ size: 1000 })
@@ -344,6 +343,7 @@ const CreateCoursePage = () => {
                         variant="transparent"
                         c={'gray'}
                         disabled={aiSuggestion.isLoading}
+                        onClick={() => aiSuggestion.refetch()}
                       >
                         <IconReload size={18} />
                       </ActionIcon>
