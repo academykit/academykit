@@ -48,17 +48,29 @@
 
             var jsondata = JsonConvert.SerializeObject(trainingList);
 
-            var req = new ChatCompletionCreateRequest
+            var req = new ChatCompletionCreateRequest();
+            if (trainingList.Count == 0)
             {
-                Tools = FunctionCallingHelper.GetToolDefinitions<Training>(),
-                Messages = new List<ChatMessage>
+                req.Tools = FunctionCallingHelper.GetToolDefinitions<Training>();
+                req.Messages = new List<ChatMessage>
                 {
                     ChatMessage.FromSystem("You are a helpful assistant."),
                     ChatMessage.FromUser(
-                        $"Give me Training Title and its Description as i have the training Title for my organization as {jsondata}"
+                        $"Give me Training Title and its Description. There are no existing training Title for my organization. So suggest me some training Title and Description relating to it."
                     )
-                }
-            };
+                };
+            }
+            else
+            {
+                req.Tools = FunctionCallingHelper.GetToolDefinitions<Training>();
+                req.Messages = new List<ChatMessage>
+                {
+                    ChatMessage.FromSystem("You are a helpful assistant."),
+                    ChatMessage.FromUser(
+                        $"Give me Training Title and its Description. These are some of the existing training Title for my organization: {jsondata}"
+                    )
+                };
+            }
             do
             {
                 var reply = await openAIService.ChatCompletion.CreateCompletion(
