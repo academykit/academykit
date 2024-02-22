@@ -1,3 +1,4 @@
+import TitleAndDescriptionSuggestion from '@components/Ui/AI/TitleAndDescriptionSuggestion';
 import Breadcrumb from '@components/Ui/BreadCrumb';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import GroupCreatableSelect from '@components/Ui/GroupCreatableSelect';
@@ -26,6 +27,7 @@ import { TrainingEligibilityEnum } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import RoutePath from '@utils/routeConstants';
 import { useDepartmentSetting } from '@utils/services/adminService';
+import { useAIMaster, useTrainingSuggestion } from '@utils/services/aiService';
 import { useAssessments } from '@utils/services/assessmentService';
 import errorType from '@utils/services/axiosError';
 import {
@@ -86,6 +88,8 @@ export const [FormProvider, useFormContext, useForm] =
   createFormContext<FormValues>();
 
 const CreateCoursePage = () => {
+  const aiSuggestion = useTrainingSuggestion();
+  const aiStatus = useAIMaster();
   const cForm = useCustomForm();
   const getDepartments = useDepartmentSetting(
     queryStringGenerator({ size: 1000 })
@@ -256,6 +260,11 @@ const CreateCoursePage = () => {
     }
   }, [form.values.isUnlimitedEndDate]);
 
+  const acceptAIAnswer = () => {
+    form.setFieldValue('title', aiSuggestion.data?.title ?? '');
+    form.setFieldValue('description', aiSuggestion.data?.description ?? '');
+  };
+
   return (
     <div>
       <Breadcrumb />
@@ -266,6 +275,23 @@ const CreateCoursePage = () => {
               formContext={useFormContext}
               label={t('thumbnail') as string}
             />
+
+            {aiStatus.data?.isActive &&
+              aiStatus.data.key !== null &&
+              aiStatus.data.key !== '' && (
+                <TitleAndDescriptionSuggestion
+                  title={aiSuggestion.data?.title}
+                  description={aiSuggestion.data?.description}
+                  isLoading={
+                    aiSuggestion.isLoading ||
+                    aiSuggestion.isFetching ||
+                    aiSuggestion.isRefetching
+                  }
+                  refetch={() => aiSuggestion.refetch()}
+                  acceptAnswer={() => acceptAIAnswer()}
+                />
+              )}
+
             <Group mt={10} grow>
               <CustomTextFieldWithAutoFocus
                 placeholder={t('title_course') as string}

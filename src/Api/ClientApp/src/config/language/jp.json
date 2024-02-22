@@ -868,6 +868,15 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "update_ai_setup_success": "AIセットアップが正常に更新されました。",
+  "ai_key": "AIキー",
+  "enter_ai_key": "AIキーを入力してください",
+  "ai_setup": "AIセットアップ",
+  "powered_by_ai": "AIによって動作",
+  "regenerate_suggestion": "提案を再生成",
+  "accept_answer": "回答を受け入れる",
+  "ai_title_suggestion": "AIタイトルの提案",
+  "ai_description_suggestion": "AI説明の提案",
   "not_eligible": "資格なし",
   "eligibility_type": "適格性の種類",
   "total_retake_assessment": "पुनः परीक्षण अनुमति गरिएको कुल",

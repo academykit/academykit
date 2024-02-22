@@ -61,6 +61,7 @@
         public DbSet<SkillsCriteria> SkillsCriteria { get; set; }
         public DbSet<UserSkills> UserSkills { get; set; }
         public DbSet<EligibilityCreation> EligibilityCreations { get; set; }
+        public DbSet<AIKey> AIKeys { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

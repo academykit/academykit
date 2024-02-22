@@ -308,4 +308,8 @@ export const api = {
     submitExam: (assessmentId: string) =>
       `/api/assessmentExam/${assessmentId}/AnswerSubmission`,
   },
+  ai: {
+    trainingSuggest: `/api/AITrainingGenerator`,
+    aiMasterSetup: `/api/AIKey`,
+  },
 };

@@ -199,6 +199,9 @@ const RoutePath = {
     fileStorage: function () {
       return this.base + '/fileStorage';
     },
+    ai: function () {
+      return this.base + '/ai-setup';
+    },
     department: function () {
       return this.base + '/department';
     },
