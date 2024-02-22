@@ -36,7 +36,7 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="searchCriteria">The group search criteria.</param>
         /// <returns>The paginated search result.</returns>
-        [HttpGet()]
+        [HttpGet]
         public async Task<AiKeyResponseModel> GetAiKey()
         {
             IsSuperAdmin(CurrentUser.Role);
@@ -48,77 +48,49 @@ namespace Lingtren.Api.Controllers
         }
 
         /// <summary>
-        /// Ai Key create api.
-        /// </summary>
-        /// <param name="model"> the instance of <see cref="AiKeyRequestModel" /> .</param>
-        /// <returns> the instance of <see cref="AiKeyResponseModel" /> .</returns>
-        [HttpPost]
-        public async Task<AiKeyResponseModel> Create(AiKeyRequestModel model)
-        {
-            IsSuperAdminOrAdmin(CurrentUser.Role);
-            var currentTimeStamp = DateTime.UtcNow;
-            await validator
-                .ValidateAsync(model, options => options.ThrowOnFailures())
-                .ConfigureAwait(false);
-
-            var entity = new AIKey()
-            {
-                Id = Guid.NewGuid(),
-                Key = model.Key,
-                IsActive = true,
-                CreatedBy = CurrentUser.Id,
-                CreatedOn = currentTimeStamp,
-            };
-            var response = await aiKeyService.CreateAsync(entity, false).ConfigureAwait(false);
-            return new AiKeyResponseModel(response);
-        }
-
-        /// <summary>
         /// update group.
         /// </summary>
         /// <param name="groupId"> the group id.</param>
         /// <param name="model"> the  instance of <see cref="AiKeyRequestModel" /> .</param>
         /// <returns> the instance of <see cref="AiKeyResponseModel" /> .</returns>
-        [HttpPut("{identity}")]
-        public async Task<AiKeyResponseModel> UpdateGroup(string identity, AiKeyRequestModel model)
+        [HttpPut]
+        public async Task<AiKeyResponseModel> UpdateGroup(AiKeyRequestModel model)
         {
+            var currentTimeStamp = DateTime.UtcNow;
+
             IsSuperAdminOrAdmin(CurrentUser.Role);
             await validator
                 .ValidateAsync(model, options => options.ThrowOnFailures())
                 .ConfigureAwait(false);
             var existing = await aiKeyService
-                .GetByIdOrSlugAsync(identity, CurrentUser.Id)
+                .GetFirstOrDefaultAsync(CurrentUser.Id, false)
                 .ConfigureAwait(false);
-            var currentTimeStamp = DateTime.UtcNow;
-
-            existing.Id = existing.Id;
-            existing.Key = model.Key;
-            existing.IsActive = model.IsActive;
-            existing.UpdatedBy = CurrentUser.Id;
-            existing.UpdatedOn = currentTimeStamp;
-
-            var savedEntity = await aiKeyService.UpdateAsync(existing, false).ConfigureAwait(false);
-            return new AiKeyResponseModel(savedEntity);
-        }
-
-        /// <summary>
-        /// delete department api.
-        /// </summary>
-        /// <param name="identity"> id or slug. </param>
-        /// <returns> the task complete. </returns>
-        [HttpDelete("{identity}")]
-        public async Task<IActionResult> DeleteAsync(string identity)
-        {
-            IsSuperAdminOrAdmin(CurrentUser.Role);
-
-            await aiKeyService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(
-                new CommonResponseModel()
+            if (existing == null)
+            {
+                var entity = new AIKey()
                 {
-                    Success = true,
-                    Message = localizer.GetString("AiKeyRemoved")
-                }
-            );
+                    Id = Guid.NewGuid(),
+                    Key = model.Key,
+                    IsActive = true,
+                    CreatedBy = CurrentUser.Id,
+                    CreatedOn = currentTimeStamp,
+                };
+                var response = await aiKeyService.CreateAsync(entity, false).ConfigureAwait(false);
+                return new AiKeyResponseModel(response);
+            }
+            else
+            {
+                existing.Id = existing.Id;
+                existing.Key = model.Key;
+                existing.IsActive = model.IsActive;
+                existing.UpdatedBy = CurrentUser.Id;
+                existing.UpdatedOn = currentTimeStamp;
+
+                var savedEntity = await aiKeyService
+                    .UpdateAsync(existing, false)
+                    .ConfigureAwait(false);
+                return new AiKeyResponseModel(savedEntity);
+            }
         }
     }
 }

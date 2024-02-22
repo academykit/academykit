@@ -18,7 +18,7 @@ namespace Lingtren.Api.Controllers
             this.aiKeyService = aiKeyService;
         }
 
-        [HttpGet()]
+        [HttpGet]
         public async Task<AiResponseModel> Get()
         {
             var builder = new ConfigurationBuilder().AddUserSecrets<Program>();
