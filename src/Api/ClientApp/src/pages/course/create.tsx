@@ -1,4 +1,4 @@
-import TrainingAndDescriptionSuggestion from '@components/Ui/AI/TrainingAndDescriptionSuggestion';
+import TitleAndDescriptionSuggestion from '@components/Ui/AI/TitleAndDescriptionSuggestion';
 import Breadcrumb from '@components/Ui/BreadCrumb';
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import GroupCreatableSelect from '@components/Ui/GroupCreatableSelect';
@@ -275,7 +275,7 @@ const CreateCoursePage = () => {
               label={t('thumbnail') as string}
             />
 
-            <TrainingAndDescriptionSuggestion
+            <TitleAndDescriptionSuggestion
               title={aiSuggestion.data?.title}
               description={aiSuggestion.data?.description}
               isLoading={

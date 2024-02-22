@@ -23,7 +23,7 @@ interface IAIProps {
   acceptAnswer: () => void;
 }
 
-const TrainingAndDescriptionSuggestion = ({
+const TitleAndDescriptionSuggestion = ({
   title,
   description,
   isLoading,
@@ -100,4 +100,4 @@ const TrainingAndDescriptionSuggestion = ({
   );
 };
 
-export default TrainingAndDescriptionSuggestion;
+export default TitleAndDescriptionSuggestion;
