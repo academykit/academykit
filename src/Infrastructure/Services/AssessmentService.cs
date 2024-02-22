@@ -266,7 +266,9 @@ namespace Lingtren.Infrastructure.Services
                     .ConfigureAwait(false);
                 model.EligibilityCreationRequestModels.ForEach(i =>
                 {
-                    existingAssessment.EligibilityCreations.Add(
+                    if(i.SkillId != null || i.Role!=0 || i.GroupId != null || i.DepartmentId != null || i.AssessmentId != null || i.TrainingId != null)
+                    {
+                        existingAssessment.EligibilityCreations.Add(
                         new EligibilityCreation()
                         {
                             Id = Guid.NewGuid(),
@@ -283,6 +285,7 @@ namespace Lingtren.Infrastructure.Services
                             AssessmentId = existingAssessment.Id,
                         }
                     );
+                    }
                 });
 
                 await _unitOfWork
@@ -529,9 +532,12 @@ namespace Lingtren.Infrastructure.Services
 
         public async Task<bool> GetUserEligibilityStatus(Assessment Entity, Guid currentUserId)
         {
-            var isEligible = true;
+            var isEligibleNew = true;
+            var isEligibleOld = true;
+            var count = 0;
             foreach (var item in Entity.EligibilityCreations)
             {
+                count = count+1;
                 var isEligibleDepartment = true;
                 var isEligibleSkills = true;
                 var isEligibleTraining = true;
@@ -656,21 +662,28 @@ namespace Lingtren.Infrastructure.Services
 
                 if (
                     isEligibleDepartment
-                    & isEligibleSkills
-                    & isEligibleTraining
-                    & isEligibleGroup
-                    & isEligibleAssessment
+                    && isEligibleSkills
+                    && isEligibleTraining
+                    && isEligibleGroup
+                    && isEligibleAssessment
                 )
                 {
-                    isEligible = true;
+                    isEligibleOld = true;
                 }
                 else
                 {
-                    isEligible = false;
+                    isEligibleOld = false;
                 }
+
+                if(count == 1)
+                {
+                    isEligibleNew = isEligibleOld;
+                }
+
+                isEligibleNew = isEligibleNew || isEligibleOld;
             }
 
-            return isEligible;
+            return isEligibleNew;
         }
     }
 }
