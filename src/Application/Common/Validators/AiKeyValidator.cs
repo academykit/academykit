@@ -7,14 +7,6 @@
 
     public class AiKeyValidator : AbstractValidator<AiKeyRequestModel>
     {
-        public AiKeyValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
-        {
-            RuleFor(x => x.Key)
-                .NotEmpty()
-                .NotNull()
-                .WithMessage(context => stringLocalizer.GetString("KeyIsRequired"))
-                .MaximumLength(500)
-                .WithMessage(context => stringLocalizer.GetString("KeyLength500"));
-        }
+        public AiKeyValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer) { }
     }
 }

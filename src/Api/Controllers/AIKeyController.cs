@@ -4,7 +4,6 @@
 
 namespace Lingtren.Api.Controllers
 {
-    using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
@@ -17,18 +16,10 @@ namespace Lingtren.Api.Controllers
     public class AIKeyController : BaseApiController
     {
         private readonly IAiKeyService aiKeyService;
-        private readonly IValidator<AiKeyRequestModel> validator;
-        private readonly IStringLocalizer<ExceptionLocalizer> localizer;
 
-        public AIKeyController(
-            IAiKeyService aiKeyService,
-            IValidator<AiKeyRequestModel> validator,
-            IStringLocalizer<ExceptionLocalizer> localizer
-        )
+        public AIKeyController(IAiKeyService aiKeyService)
         {
             this.aiKeyService = aiKeyService;
-            this.validator = validator;
-            this.localizer = localizer;
         }
 
         /// <summary>
@@ -59,9 +50,6 @@ namespace Lingtren.Api.Controllers
             var currentTimeStamp = DateTime.UtcNow;
 
             IsSuperAdminOrAdmin(CurrentUser.Role);
-            await validator
-                .ValidateAsync(model, options => options.ThrowOnFailures())
-                .ConfigureAwait(false);
             var existing = await aiKeyService
                 .GetFirstOrDefaultAsync(CurrentUser.Id, false)
                 .ConfigureAwait(false);
@@ -70,7 +58,7 @@ namespace Lingtren.Api.Controllers
                 var entity = new AIKey()
                 {
                     Id = Guid.NewGuid(),
-                    Key = model.Key,
+                    Key = model.Key == null ? "" : model.Key,
                     IsActive = true,
                     CreatedBy = CurrentUser.Id,
                     CreatedOn = currentTimeStamp,
@@ -81,7 +69,7 @@ namespace Lingtren.Api.Controllers
             else
             {
                 existing.Id = existing.Id;
-                existing.Key = model.Key;
+                existing.Key = model.Key == null ? "" : model.Key;
                 existing.IsActive = model.IsActive;
                 existing.UpdatedBy = CurrentUser.Id;
                 existing.UpdatedOn = currentTimeStamp;

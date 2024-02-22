@@ -27,7 +27,7 @@ namespace Lingtren.Api.Controllers
                 .ConfigureAwait(false);
             IConfiguration configuration = builder.Build();
             var serviceCollection = new ServiceCollection();
-            if (ExistingKey.Key == null && ExistingKey.IsActive == false)
+            if (ExistingKey.Key == null || ExistingKey.IsActive == false)
             {
                 throw new ForbiddenException($"doesn't Contains key");
             }

@@ -184,7 +184,6 @@
                 IValidator<AssessmentQuestionRequestModel>,
                 AssessmentQuestionValidator
             >();
-            services.AddSingleton<IValidator<AiKeyRequestModel>, AiKeyValidator>();
 
             #endregion Validator DI
 
