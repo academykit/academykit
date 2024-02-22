@@ -425,7 +425,6 @@ const CreateCoursePage = () => {
                     (_eligibility, index) => (
                       <Flex gap={10} key={index} align={'flex-end'} mb={10}>
                         <Select
-                          withAsterisk
                           allowDeselect={false}
                           label={t('eligibility_type')}
                           placeholder={t('pick_value') as string}
@@ -437,7 +436,6 @@ const CreateCoursePage = () => {
                         {form.values.trainingEligibilities[index].eligibility ==
                           TrainingEligibilityEnum.Department && (
                           <Select
-                            withAsterisk
                             allowDeselect={false}
                             label={t('department')}
                             placeholder={t('pick_value') as string}
