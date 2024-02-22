@@ -1,7 +1,17 @@
-import { ActionIcon, CopyButton, Tooltip, rem } from '@mantine/core';
+import {
+  ActionIcon,
+  ActionIconProps,
+  CopyButton,
+  Tooltip,
+  rem,
+} from '@mantine/core';
 import { IconCheck, IconCopy } from '@tabler/icons';
 
-const Copy = ({ value }: { value: string }) => {
+interface IProps extends ActionIconProps {
+  value: string;
+}
+
+const Copy = ({ value, disabled }: IProps) => {
   return (
     <>
       <CopyButton value={value} timeout={2000}>
@@ -15,6 +25,7 @@ const Copy = ({ value }: { value: string }) => {
               color={copied ? 'teal' : 'gray'}
               variant="subtle"
               onClick={copy}
+              disabled={disabled}
             >
               {copied ? (
                 <IconCheck style={{ width: rem(16) }} />
