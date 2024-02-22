@@ -16,7 +16,7 @@ namespace Lingtren.Api.Controllers
         }
 
         [HttpGet()]
-        public async Task<AiResponseMode> Get()
+        public async Task<AiResponseModel> Get()
         {
             var builder = new ConfigurationBuilder().AddUserSecrets<Program>();
 

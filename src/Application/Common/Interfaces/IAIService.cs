@@ -13,6 +13,6 @@
         /// </summary>
         /// <param name="file"> the instance of <see cref="MediaRequestModel" /> .</param>
         /// <returns> the instance of <see cref="MediaFileDto" /> . </returns>
-        Task<AiResponseMode> ExerciseFunctionCalling(IOpenAIService openAIService);
+        Task<AiResponseModel> ExerciseFunctionCalling(IOpenAIService openAIService);
     }
 }

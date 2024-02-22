@@ -14,7 +14,6 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Localization;
-    using LinqKit;
 
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;

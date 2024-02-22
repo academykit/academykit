@@ -29,10 +29,10 @@
         )
             : base(unitOfWork, logger, localizer) { }
 
-        public async Task<AiResponseMode> ExerciseFunctionCalling(IOpenAIService openAIService)
+        public async Task<AiResponseModel> ExerciseFunctionCalling(IOpenAIService openAIService)
         {
             var training = new Training();
-            var responseAI = new AiResponseMode();
+            var responseAI = new AiResponseModel();
             var getTraining = await _unitOfWork
                 .GetRepository<Course>()
                 .GetAllAsync()

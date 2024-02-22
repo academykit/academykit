@@ -104,6 +104,7 @@
             services.AddTransient<IAssessmentQuestionService, AssessmentQuestionService>();
             services.AddTransient<IAssessmentSubmissionService, AssessmentSubmissionService>();
             services.AddTransient<IAIService, AIService>();
+            services.AddTransient<IAiKeyService, AiKeyService>();
 
             #endregion Service DI
 
@@ -183,6 +184,7 @@
                 IValidator<AssessmentQuestionRequestModel>,
                 AssessmentQuestionValidator
             >();
+            services.AddSingleton<IValidator<AiKeyRequestModel>, AiKeyValidator>();
 
             #endregion Validator DI
 
