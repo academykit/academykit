@@ -31,7 +31,7 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
                 .Property(x => x.Description)
                 .HasColumnName("description")
                 .HasColumnType("VARCHAR(500)")
-                .HasMaxLength(500)
+                .HasMaxLength(2000)
                 .IsRequired(false);
 
             builder
