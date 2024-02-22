@@ -36,7 +36,7 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <param name="searchCriteria">The group search criteria.</param>
         /// <returns>The paginated search result.</returns>
-        [HttpGet("AiKey")]
+        [HttpGet()]
         public async Task<AiKeyResponseModel> GetAiKey()
         {
             IsSuperAdmin(CurrentUser.Role);

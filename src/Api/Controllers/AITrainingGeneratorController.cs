@@ -22,13 +22,16 @@ namespace Lingtren.Api.Controllers
         public async Task<AiResponseModel> Get()
         {
             var builder = new ConfigurationBuilder().AddUserSecrets<Program>();
-            var ExistingKey = await aiKeyService.GetFirstOrDefaultAsync().ConfigureAwait(false);
+            var ExistingKey = await aiKeyService
+                .GetFirstOrDefaultAsync(CurrentUser.Id, false)
+                .ConfigureAwait(false);
             IConfiguration configuration = builder.Build();
             var serviceCollection = new ServiceCollection();
             if (ExistingKey.Key == null && ExistingKey.IsActive == false)
             {
                 throw new ForbiddenException($"doesn't Contains key");
             }
+
             serviceCollection.AddScoped(_ => configuration);
 
             serviceCollection.AddOpenAIService(settings =>
