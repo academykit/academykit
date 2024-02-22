@@ -37,7 +37,7 @@ const AssessmentQuestionList = ({
         <AssessmentQuestionForm onCancel={() => setAddQuestion()} />
       )}
 
-      <Button onClick={() => setAddQuestion()} mt={10}>
+      <Button disabled={addQuestion} onClick={() => setAddQuestion()} mt={10}>
         {t('add_assessment_question')}
       </Button>
       <Button ml={10} variant="outline" onClick={() => navigate(-1)} mt={10}>
