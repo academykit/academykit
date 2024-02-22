@@ -379,7 +379,9 @@
 
                 foreach (var criteria in model.TrainingEligibilities)
                 {
-                    eligibilities.Add(
+                    if(criteria.Eligibility != 0)
+                    {
+                        eligibilities.Add(
                         new TrainingEligibility
                         {
                             Id = Guid.NewGuid(),
@@ -392,6 +394,7 @@
                             UpdatedBy = currentUserId,
                         }
                     );
+                    }
                 }
 
                 if (existing.CourseTags.Count > 0)

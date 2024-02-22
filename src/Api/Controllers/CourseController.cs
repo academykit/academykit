@@ -154,17 +154,20 @@
 
             foreach (var criteria in model.TrainingEligibilities)
             {
-                entity.TrainingEligibilities.Add(
-                    new TrainingEligibility
-                    {
-                        Id = Guid.NewGuid(),
-                        CourseId = entity.Id,
-                        EligibilityId = criteria.EligibilityId,
-                        TrainingEligibilityEnum = criteria.Eligibility,
-                        CreatedBy = CurrentUser.Id,
-                        CreatedOn = currentTimeStamp
-                    }
-                );
+                if(criteria.Eligibility != 0)
+                {
+                    entity.TrainingEligibilities.Add(
+                        new TrainingEligibility
+                        {
+                            Id = Guid.NewGuid(),
+                            CourseId = entity.Id,
+                            EligibilityId = criteria.EligibilityId,
+                            TrainingEligibilityEnum = criteria.Eligibility,
+                            CreatedBy = CurrentUser.Id,
+                            CreatedOn = currentTimeStamp
+                        }
+                    );
+                }
             }
 
             var response = await courseService.CreateAsync(entity).ConfigureAwait(false);
