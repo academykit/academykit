@@ -399,11 +399,20 @@
                     _unitOfWork.GetRepository<CourseTag>().Delete(existing.CourseTags);
                 }
 
-                if (existing.EligibilityCreations.Count > 0)
+                if (
+                    existing.EligibilityCreations != null && existing.EligibilityCreations.Count > 0
+                )
                 {
                     _unitOfWork
                         .GetRepository<EligibilityCreation>()
                         .Delete(existing.EligibilityCreations);
+                }
+                if (eligibilities.Count > 0)
+                {
+                    await _unitOfWork
+                        .GetRepository<TrainingEligibility>()
+                        .InsertAsync(eligibilities)
+                        .ConfigureAwait(false);
                 }
 
                 if (newCourseTags.Count > 0)
@@ -2238,7 +2247,9 @@
             return response;
         }
 
-        public async Task<SearchResult<AssignmentSubmissionResponseModel>> AssignmentSubmissionStudentsReport(
+        public async Task<
+            SearchResult<AssignmentSubmissionResponseModel>
+        > AssignmentSubmissionStudentsReport(
             string identity,
             string lessonIdentity,
             BaseSearchCriteria criteria
@@ -2277,7 +2288,9 @@
                 )
                 .ConfigureAwait(false);
 
-            var uniqueDate=submissionDate.GroupBy(item => item.UserId).Select(group => group.First());
+            var uniqueDate = submissionDate
+                .GroupBy(item => item.UserId)
+                .Select(group => group.First());
 
             var studentDetail =
                 from std in Students
@@ -2291,7 +2304,7 @@
                     TotalMarks = std.Mark,
                     SubmissionDate = m.UpdatedOn
                 };
-                
+
             return studentDetail.ToList().ToIPagedList(criteria.Page, criteria.Size);
         }
 

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240221104458_IncreasedDescriptionLength")]
-    partial class IncreasedDescriptionLength
+    [Migration("20240222095400_AddDescriptionLength")]
+    partial class AddDescriptionLength
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,6 +21,50 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("Lingtren.Domain.Entities.AIKey", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_on");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(270)
+                        .HasColumnType("VARCHAR(270)")
+                        .HasColumnName("key");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_on");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AIKeys");
+                });
 
             modelBuilder.Entity("Lingtren.Domain.Entities.Assessment", b =>
                 {

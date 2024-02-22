@@ -5,7 +5,7 @@
 namespace Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class IncreasedDescriptionLength : Migration
+    public partial class AddDescriptionLength : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
