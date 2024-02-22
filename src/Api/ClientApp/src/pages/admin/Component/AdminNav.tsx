@@ -8,7 +8,7 @@ import {
   IconUserCircle,
   IconVideo,
 } from '@tabler/icons';
-import { IconMailCog } from '@tabler/icons-react';
+import { IconBrandOpenai, IconMailCog } from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import { useTranslation } from 'react-i18next';
@@ -77,6 +77,13 @@ const AdminNav = () => {
       role: UserRole.SuperAdmin,
       group: 'admin',
       icon: <IconServerCog size={14} />,
+    },
+    {
+      label: t('ai_setup'),
+      to: RoutePath.settings.ai(),
+      role: UserRole.SuperAdmin,
+      group: 'admin',
+      icon: <IconBrandOpenai size={14} />,
     },
     {
       label: t('levels'),
