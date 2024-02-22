@@ -56,7 +56,6 @@ const TitleAndDescriptionSuggestion = ({
 
           <Textarea
             readOnly
-            rightSection={isLoading && <Loader size={16} />}
             mt={10}
             label={
               <Flex align={'center'} gap={3}>
