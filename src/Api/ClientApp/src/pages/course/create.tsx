@@ -27,7 +27,7 @@ import { TrainingEligibilityEnum } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import RoutePath from '@utils/routeConstants';
 import { useDepartmentSetting } from '@utils/services/adminService';
-import { useTrainingSuggestion } from '@utils/services/aiService';
+import { useAIMaster, useTrainingSuggestion } from '@utils/services/aiService';
 import { useAssessments } from '@utils/services/assessmentService';
 import errorType from '@utils/services/axiosError';
 import {
@@ -89,6 +89,7 @@ export const [FormProvider, useFormContext, useForm] =
 
 const CreateCoursePage = () => {
   const aiSuggestion = useTrainingSuggestion();
+  const aiStatus = useAIMaster();
   const cForm = useCustomForm();
   const getDepartments = useDepartmentSetting(
     queryStringGenerator({ size: 1000 })
@@ -275,17 +276,21 @@ const CreateCoursePage = () => {
               label={t('thumbnail') as string}
             />
 
-            <TitleAndDescriptionSuggestion
-              title={aiSuggestion.data?.title}
-              description={aiSuggestion.data?.description}
-              isLoading={
-                aiSuggestion.isLoading ||
-                aiSuggestion.isFetching ||
-                aiSuggestion.isRefetching
-              }
-              refetch={() => aiSuggestion.refetch()}
-              acceptAnswer={() => acceptAIAnswer()}
-            />
+            {aiStatus.data?.isActive &&
+              aiStatus.data.key !== null &&
+              aiStatus.data.key !== '' && (
+                <TitleAndDescriptionSuggestion
+                  title={aiSuggestion.data?.title}
+                  description={aiSuggestion.data?.description}
+                  isLoading={
+                    aiSuggestion.isLoading ||
+                    aiSuggestion.isFetching ||
+                    aiSuggestion.isRefetching
+                  }
+                  refetch={() => aiSuggestion.refetch()}
+                  acceptAnswer={() => acceptAIAnswer()}
+                />
+              )}
 
             <Group mt={10} grow>
               <CustomTextFieldWithAutoFocus
