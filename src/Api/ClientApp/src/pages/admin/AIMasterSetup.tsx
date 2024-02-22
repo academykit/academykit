@@ -4,6 +4,7 @@ import { showNotification } from '@mantine/notifications';
 import { useAIMaster, useUpdateAISetup } from '@utils/services/aiService';
 import errorType from '@utils/services/axiosError';
 import { t } from 'i18next';
+import { useEffect } from 'react';
 
 const AIMasterSetup = () => {
   const formData = useAIMaster();
@@ -11,10 +12,17 @@ const AIMasterSetup = () => {
 
   const form = useForm({
     initialValues: {
-      key: formData.data?.key ?? '',
-      isActive: formData.data?.isActive ?? false,
+      key: '',
+      isActive: false,
     },
   });
+
+  useEffect(() => {
+    form.setValues({
+      key: formData.data?.key ?? '',
+      isActive: formData.data?.isActive ?? false,
+    });
+  }, [formData.isSuccess]);
 
   const handleSubmit = async (values: typeof form.values) => {
     try {
@@ -43,6 +51,7 @@ const AIMasterSetup = () => {
           }}
         >
           <TextInput
+            autoFocus
             mb={10}
             label={t('ai_key')}
             placeholder={t('enter_ai_key') as string}
