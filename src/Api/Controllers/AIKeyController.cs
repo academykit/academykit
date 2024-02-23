@@ -30,7 +30,7 @@ namespace Lingtren.Api.Controllers
         [HttpGet]
         public async Task<AiKeyResponseModel> GetAiKey()
         {
-            IsSuperAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
             var model = await aiKeyService
                 .GetFirstOrDefaultAsync(CurrentUser.Id, false)
@@ -49,7 +49,7 @@ namespace Lingtren.Api.Controllers
         {
             var currentTimeStamp = DateTime.UtcNow;
 
-            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
+            IsSuperAdmin(CurrentUser.Role);
             var existing = await aiKeyService
                 .GetFirstOrDefaultAsync(CurrentUser.Id, false)
                 .ConfigureAwait(false);
