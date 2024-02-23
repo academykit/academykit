@@ -192,6 +192,8 @@
                     {
                         UserId = assessmentResult.UserId,
                         SkillId = (Guid)item.SkillId,
+                        CreatedBy = currentUserId,
+                        CreatedOn = DateTime.Now,
                     };
 
                     await _unitOfWork.GetRepository<UserSkills>().InsertAsync(userSkill); // Add the new userSkill to the context

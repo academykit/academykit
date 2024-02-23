@@ -379,7 +379,9 @@
 
                 foreach (var criteria in model.TrainingEligibilities)
                 {
-                    eligibilities.Add(
+                    if(criteria.Eligibility != 0)
+                    {
+                        eligibilities.Add(
                         new TrainingEligibility
                         {
                             Id = Guid.NewGuid(),
@@ -392,6 +394,7 @@
                             UpdatedBy = currentUserId,
                         }
                     );
+                    }
                 }
 
                 if (existing.CourseTags.Count > 0)
@@ -399,11 +402,21 @@
                     _unitOfWork.GetRepository<CourseTag>().Delete(existing.CourseTags);
                 }
 
-                if (existing.EligibilityCreations.Count > 0)
+                if (
+                    existing.TrainingEligibilities != null
+                    && existing.TrainingEligibilities.Count > 0
+                )
                 {
                     _unitOfWork
-                        .GetRepository<EligibilityCreation>()
-                        .Delete(existing.EligibilityCreations);
+                        .GetRepository<TrainingEligibility>()
+                        .Delete(existing.TrainingEligibilities);
+                }
+                if (eligibilities.Count > 0)
+                {
+                    await _unitOfWork
+                        .GetRepository<TrainingEligibility>()
+                        .InsertAsync(eligibilities)
+                        .ConfigureAwait(false);
                 }
 
                 if (newCourseTags.Count > 0)
@@ -2238,7 +2251,9 @@
             return response;
         }
 
-        public async Task<SearchResult<AssignmentSubmissionResponseModel>> AssignmentSubmissionStudentsReport(
+        public async Task<
+            SearchResult<AssignmentSubmissionResponseModel>
+        > AssignmentSubmissionStudentsReport(
             string identity,
             string lessonIdentity,
             BaseSearchCriteria criteria
@@ -2277,7 +2292,9 @@
                 )
                 .ConfigureAwait(false);
 
-            var uniqueDate=submissionDate.GroupBy(item => item.UserId).Select(group => group.First());
+            var uniqueDate = submissionDate
+                .GroupBy(item => item.UserId)
+                .Select(group => group.First());
 
             var studentDetail =
                 from std in Students
@@ -2291,7 +2308,7 @@
                     TotalMarks = std.Mark,
                     SubmissionDate = m.UpdatedOn
                 };
-                
+
             return studentDetail.ToList().ToIPagedList(criteria.Page, criteria.Size);
         }
 

@@ -4,6 +4,8 @@
 
 namespace Lingtren.Api.Controllers
 {
+    using DocumentFormat.OpenXml.Drawing.Charts;
+
     using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
@@ -56,6 +58,7 @@ namespace Lingtren.Api.Controllers
                 .GetByIdOrSlugAsync(identity, CurrentUser.Id, false)
                 .ConfigureAwait(false);
             searchCriteria.AssessmentIdentity = existingAssessment.Id;
+            searchCriteria.SortBy = "Order";
             var searchResult = await assessmentQuestionService
                 .SearchAsync(searchCriteria, true)
                 .ConfigureAwait(false);

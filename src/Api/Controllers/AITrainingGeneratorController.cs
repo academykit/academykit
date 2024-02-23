@@ -19,30 +19,41 @@ namespace Lingtren.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<AiResponseModel> Get()
+        public async Task<IActionResult> Get()
         {
-            var builder = new ConfigurationBuilder().AddUserSecrets<Program>();
-            var ExistingKey = await aiKeyService
-                .GetFirstOrDefaultAsync(CurrentUser.Id, false)
-                .ConfigureAwait(false);
-            IConfiguration configuration = builder.Build();
-            var serviceCollection = new ServiceCollection();
-            if (ExistingKey.Key == null || ExistingKey.IsActive == false)
+            try
             {
-                throw new ForbiddenException($"doesn't Contains key");
+                var builder = new ConfigurationBuilder().AddUserSecrets<Program>();
+                var ExistingKey = await aiKeyService
+                    .GetFirstOrDefaultAsync(CurrentUser.Id, false)
+                    .ConfigureAwait(false);
+                IConfiguration configuration = builder.Build();
+                var serviceCollection = new ServiceCollection();
+                if (ExistingKey.Key == null || ExistingKey.IsActive == false)
+                {
+                    throw new ForbiddenException($"Key is missing or inactive");
+                }
+
+                serviceCollection.AddScoped(_ => configuration);
+
+                serviceCollection.AddOpenAIService(settings =>
+                {
+                    settings.ApiKey = ExistingKey.Key;
+                });
+                var serviceProvider = serviceCollection.BuildServiceProvider();
+                var sdk = serviceProvider.GetRequiredService<IOpenAIService>();
+
+                var dataResponse = await _aIService.ExerciseFunctionCalling(sdk);
+                return Ok(dataResponse); // Assuming successful response should be 200 OK
             }
-
-            serviceCollection.AddScoped(_ => configuration);
-
-            serviceCollection.AddOpenAIService(settings =>
+            catch (ForbiddenException ex)
             {
-                settings.ApiKey = ExistingKey.Key;
-            });
-            var serviceProvider = serviceCollection.BuildServiceProvider();
-            var sdk = serviceProvider.GetRequiredService<IOpenAIService>();
-
-            var dataResponse = await _aIService.ExerciseFunctionCalling(sdk);
-            return dataResponse;
+                return StatusCode(403, ex.Message); // 403 Forbidden status code
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while processing the request."); // 500 Internal Server Error status code
+            }
         }
     }
 }

@@ -254,11 +254,14 @@ namespace Lingtren.Api.Controllers
                 isEmailChanged = true;
                 oldEmail = existing.Email;
             }
-
-            var existingDepartment = await departmentService
-                .GetByIdOrSlugAsync(model.DepartmentId.ToString(), CurrentUser.Id, false)
-                .ConfigureAwait(false);
-
+            if(model.DepartmentId != null)
+            {
+                var existingDepartment = await departmentService
+                    .GetByIdOrSlugAsync(model.DepartmentId.ToString(), CurrentUser.Id, false)
+                    .ConfigureAwait(false);
+            
+            existing.Department = existingDepartment;
+            }
             var imageKey = existing.ImageUrl;
             existing.Id = existing.Id;
             #region Basic
@@ -269,7 +272,6 @@ namespace Lingtren.Api.Controllers
             #endregion
             #region Official Info
             existing.MemberId = model.MemberId;
-            existing.Department = existingDepartment;
             existing.DepartmentId = model.DepartmentId;
             existing.Profession = model.Profession;
             #endregion
@@ -331,7 +333,7 @@ namespace Lingtren.Api.Controllers
                 await userService.RemoveRefreshTokenAsync(existing.Id);
             }
 
-            var savedEntity = await userService.UpdateAsync(existing).ConfigureAwait(false);
+            var savedEntity = await userService.UpdateAsync(existing,false).ConfigureAwait(false);
             if (imageKey != model.ImageUrl && !string.IsNullOrWhiteSpace(imageKey))
             {
                 if (

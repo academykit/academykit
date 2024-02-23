@@ -151,14 +151,18 @@ const Exam = ({
       <Modal
         opened={examSubmission.isSuccess}
         onClose={() => {
-          navigate(RoutePath.assessment.description(params.id as string).route);
+          navigate(
+            RoutePath.assessment.description(params.id as string).route,
+            { replace: true }
+          );
         }}
         title={t('submission_success')}
       >
         <Button
           onClick={() => {
             navigate(
-              RoutePath.assessment.description(params.id as string).route
+              RoutePath.assessment.description(params.id as string).route,
+              { replace: true }
             );
           }}
         >

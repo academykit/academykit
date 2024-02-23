@@ -167,7 +167,7 @@ const Skills = ({
           title={t('users')}
         >
           <ScrollArea.Autosize mah={300} maw={400} mx="auto">
-            {item.userModel.map((user, index) => (
+            {item.userModel?.map((user, index) => (
               <SkillUser key={index} user={user} />
             ))}
           </ScrollArea.Autosize>
@@ -337,7 +337,9 @@ const Skills = ({
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                {skillData.data && skillData.data?.totalCount > 0 ? (
+                {skillData.data &&
+                skillData.data.items &&
+                skillData.data?.totalCount > 0 ? (
                   skillData.data?.items.map((item: any) => (
                     <Rows item={item} key={item.id} />
                   ))

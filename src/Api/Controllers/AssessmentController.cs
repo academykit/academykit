@@ -182,7 +182,9 @@ namespace Lingtren.Api.Controllers
             }
             foreach (var item in model.EligibilityCreationRequestModels)
             {
-                entity.EligibilityCreations.Add(
+                if(item.SkillId != null || item.Role!=0 || item.GroupId != null || item.DepartmentId != null || item.AssessmentId != null || item.TrainingId != null)
+                {
+                    entity.EligibilityCreations.Add(
                     new EligibilityCreation
                     {
                         Id = Guid.NewGuid(),
@@ -199,6 +201,7 @@ namespace Lingtren.Api.Controllers
                         UpdatedBy = CurrentUser.Id,
                     }
                 );
+                }
             }
             var response = await assessmentService.CreateAsync(entity).ConfigureAwait(false);
             return new AssessmentResponseModel(response);
