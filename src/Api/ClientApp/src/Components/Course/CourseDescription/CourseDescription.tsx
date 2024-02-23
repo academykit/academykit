@@ -183,9 +183,15 @@ const CourseDescription = () => {
                 </Title>
               </Box>
               <>
-                <Badge ml={10}>
-                  {t(`${CourseUserStatusValue[course?.data?.userStatus]}`)}
-                </Badge>
+                {auth?.auth &&
+                auth?.auth?.role <= UserRole.Admin &&
+                course?.data?.userStatus !== CourseUserStatus.Author ? (
+                  <></>
+                ) : (
+                  <Badge ml={10}>
+                    {t(`${CourseUserStatusValue[course?.data?.userStatus]}`)}
+                  </Badge>
+                )}
                 {auth?.auth && Number(auth?.auth?.role) <= UserRole.Admin && (
                   <>
                     <Badge ml={10} color={color(course?.data?.status)}>
