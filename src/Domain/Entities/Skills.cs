@@ -8,6 +8,7 @@ namespace Lingtren.Domain.Entities
         public bool IsActive { get; set; }
         public string Description { get; set; }
         public IList<UserSkills> UserSkills { get; }
+        public IList<User> Users { get; }
         public IList<EligibilityCreation> EligibilityCreations { get; set; }
         public IList<SkillsCriteria> SkillsCriteria { get; set; }
     }

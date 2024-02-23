@@ -49,7 +49,7 @@ namespace Lingtren.Api.Controllers
         {
             var currentTimeStamp = DateTime.UtcNow;
 
-            IsSuperAdminOrAdmin(CurrentUser.Role);
+            IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             var existing = await aiKeyService
                 .GetFirstOrDefaultAsync(CurrentUser.Id, false)
                 .ConfigureAwait(false);

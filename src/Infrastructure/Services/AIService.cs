@@ -130,13 +130,13 @@
         public class Training
         {
             [FunctionDescription("Title of the training")]
-            public string GetTitle(string title)
+            public static string GetTitle(string title)
             {
                 return title;
             }
 
             [FunctionDescription("Description of the training")]
-            public string GetDescription(string description)
+            public static string GetDescription(string description)
             {
                 return description;
             }
