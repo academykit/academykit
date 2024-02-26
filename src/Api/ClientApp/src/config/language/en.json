@@ -865,6 +865,17 @@
       "AWS_VideoBucket": "Video Bucket"
     }
   },
+  "most_wrong_answered_questions": "Most Wrong Answered Questions",
+  "weak_students": "Weak Students",
+  "average": "Average",
+  "total_failed": "Total Failed",
+  "total_passed": "Total Passed",
+  "total_attendees": "Total Attendees",
+  "summary": "Summary",
+  "submission": "Submission",
+  "s_no": "S.No",
+  "trainee_name": "Trainee Name",
+  "submitted_date": "Submitted Date",
   "update_ai_setup_success": "AI setup updated successfully.",
   "ai_key": "AI Key",
   "enter_ai_key": "Please enter your AI key",

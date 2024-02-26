@@ -2,7 +2,7 @@ namespace Lingtren.Application.Common.Interfaces
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
-
+    using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
 
     public interface IAssessmentService : IGenericService<Assessment, AssessmentBaseSearchCriteria>
@@ -24,6 +24,6 @@ namespace Lingtren.Application.Common.Interfaces
             string identity,
             Guid currentUserId
         );
-        Task<bool> GetUserEligibilityStatus(Assessment Entity, Guid currentUserId);
+        Task<(bool,IEnumerable<EligibilityCreationResponseModel>)> GetUserEligibilityStatus(Assessment Entity, Guid currentUserId);
     }
 }

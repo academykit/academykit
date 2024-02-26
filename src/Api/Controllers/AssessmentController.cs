@@ -76,7 +76,9 @@ namespace Lingtren.Api.Controllers
                     item,
                     CurrentUser.Id
                 );
-                response.Items.Add(new AssessmentResponseModel(item, eligibilityStatus));
+                var assestmentResponseModel = new AssessmentResponseModel(item, eligibilityStatus.Item1);
+                assestmentResponseModel.EligibilityCreationRequestModels = eligibilityStatus.Item2.ToList();
+                response.Items.Add(assestmentResponseModel);
             }
 
             return response;
@@ -116,19 +118,24 @@ namespace Lingtren.Api.Controllers
             (var completed, var remainingAttempts) = await assessmentService
                 .GetAssessmentCriteria(existingAssessment, identity, CurrentUser.Id)
                 .ConfigureAwait(false);
+
             var Eligibility = await assessmentService.GetUserEligibilityStatus(
                 existingAssessment,
                 CurrentUser.Id
             );
             var existingQuestion = existingAssessment.AssessmentQuestions.Count();
 
-            return new AssessmentResponseModel(
+            var response = new AssessmentResponseModel(
                 existingAssessment,
-                Eligibility,
+                Eligibility.Item1,
                 existingQuestion,
                 completed,
                 remainingAttempts
             );
+
+            response.EligibilityCreationRequestModels = Eligibility.Item2.ToList();
+
+            return response;
         }
 
         /// <summary>
