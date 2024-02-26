@@ -7,6 +7,7 @@ using Lingtren.Application.Common.Dtos;
 using Lingtren.Application.Common.Exceptions;
 using Lingtren.Application.Common.Interfaces;
 using Lingtren.Application.Common.Models.RequestModels;
+using Lingtren.Application.Common.Models.ResponseModels;
 using Lingtren.Domain.Entities;
 using Lingtren.Domain.Enums;
 using Lingtren.Infrastructure.Common;
@@ -530,13 +531,33 @@ namespace Lingtren.Infrastructure.Services
             return (hasCompleted, RemainingAttempts);
         }
 
-        public async Task<bool> GetUserEligibilityStatus(Assessment Entity, Guid currentUserId)
+        public async Task<(bool, IEnumerable<EligibilityCreationResponseModel>)> GetUserEligibilityStatus(Assessment Entity, Guid currentUserId)
         {
             var isEligibleNew = true;
             var isEligibleOld = true;
             var count = 0;
+            
+            var eligibilities = new List<EligibilityCreationResponseModel>();
+
             foreach (var item in Entity.EligibilityCreations)
             {
+
+                var eligibilityCreationResponseModel = new EligibilityCreationResponseModel()
+                {
+                    Id = item.Id,
+                    Role = item.Role,
+                    SkillId = item.SkillId,
+                    SkillName = item.Skills?.SkillName,
+                    AssessmentId = item.CompletedAssessmentId,
+                    AssessmentName = item.CompletedAssessment?.Title,
+                    DepartmentId = item.DepartmentId,
+                    DepartmentName = item.Department?.Name,
+                    TrainingId = item.TrainingId,
+                    TrainingName = item.Course?.Name,
+                    GroupId = item.GroupId,
+                    GroupName = item.Group?.Name
+                };
+
                 count = count+1;
                 var isEligibleDepartment = true;
                 var isEligibleSkills = true;
@@ -552,6 +573,7 @@ namespace Lingtren.Infrastructure.Services
                         );
                     if (existingSkill != null)
                     {
+                        eligibilityCreationResponseModel.IsEligible = true;
                         isEligibleSkills = true;
                     }
                     else
@@ -612,7 +634,7 @@ namespace Lingtren.Infrastructure.Services
                             include: src => src.Include(x => x.GroupMembers)
                         );
                     var isCurrentUserPresent = existingGroup.GroupMembers.Any(
-                        member => member.UserId == currentUserId
+                        member => member.UserId == currentUserId && member.IsActive
                     );
 
                     if (isCurrentUserPresent == true)
@@ -638,6 +660,7 @@ namespace Lingtren.Infrastructure.Services
                     );
                     if (isCurrentUserPresent == true)
                     {
+
                         isEligibleAssessment = true;
                     }
                     else
@@ -646,19 +669,23 @@ namespace Lingtren.Infrastructure.Services
                     }
                 }
 
-                var existingUser = await _unitOfWork
+                if(item.Role > 0)
+                {
+                    var existingUser = await _unitOfWork
                     .GetRepository<User>()
                     .GetFirstOrDefaultAsync(
                         predicate: p => p.Id == currentUserId && p.Role == item.Role
                     );
-                if (existingUser != null)
-                {
-                    isEligibleAssessment = true;
+                    if (existingUser != null)
+                    {
+                        isEligibleAssessment = true;
+                    }
+                    else
+                    {
+                        isEligibleAssessment = false;
+                    }
                 }
-                else
-                {
-                    isEligibleAssessment = false;
-                }
+                
 
                 if (
                     isEligibleDepartment
@@ -674,16 +701,18 @@ namespace Lingtren.Infrastructure.Services
                 {
                     isEligibleOld = false;
                 }
-
+                eligibilityCreationResponseModel.IsEligible = isEligibleOld;
                 if(count == 1)
                 {
                     isEligibleNew = isEligibleOld;
                 }
 
                 isEligibleNew = isEligibleNew || isEligibleOld;
+
+                eligibilities.Add(eligibilityCreationResponseModel);
             }
 
-            return isEligibleNew;
+            return (isEligibleNew, eligibilities);
         }
     }
 }
