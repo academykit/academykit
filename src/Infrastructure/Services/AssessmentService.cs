@@ -536,6 +536,7 @@ namespace Lingtren.Infrastructure.Services
             var isEligibleNew = true;
             var isEligibleOld = true;
             var count = 0;
+
             
             var eligibilities = new List<EligibilityCreationResponseModel>();
 
@@ -557,6 +558,7 @@ namespace Lingtren.Infrastructure.Services
                     GroupId = item.GroupId,
                     GroupName = item.Group?.Name
                 };
+
 
                 count = count+1;
                 var isEligibleDepartment = true;
@@ -701,7 +703,9 @@ namespace Lingtren.Infrastructure.Services
                 {
                     isEligibleOld = false;
                 }
+
                 eligibilityCreationResponseModel.IsEligible = isEligibleOld;
+
                 if(count == 1)
                 {
                     isEligibleNew = isEligibleOld;
@@ -709,10 +713,12 @@ namespace Lingtren.Infrastructure.Services
 
                 isEligibleNew = isEligibleNew || isEligibleOld;
 
+
                 eligibilities.Add(eligibilityCreationResponseModel);
             }
 
             return (isEligibleNew, eligibilities);
+
         }
 
         
