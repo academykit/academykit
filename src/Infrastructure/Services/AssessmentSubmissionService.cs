@@ -658,5 +658,76 @@
                     : new ServiceException(_localizer.GetString("ErrorGettingResult"));
             }
         }
+
+        public async Task<IList<AssessmentResultExportModel>> GetResultsExportAsync(
+            string identity,
+            Guid currentUserId
+        )
+        {
+            var assessment = await _unitOfWork
+                    .GetRepository<Assessment>()
+                    .GetFirstOrDefaultAsync(
+                        predicate: p => p.Id.ToString() == identity || p.Slug == identity
+                    )
+                    .ConfigureAwait(false);
+
+                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId)
+                    .ConfigureAwait(false);
+
+                var predicate = PredicateBuilder.New<AssessmentResult>(true);
+                predicate = predicate.And(p => p.AssessmentId == assessment.Id);
+
+                if (assessment.CreatedBy != currentUserId && !isSuperAdminOrAdmin)
+                {
+                    predicate = predicate.And(p => p.UserId == currentUserId);
+                }
+
+                var query = await _unitOfWork
+                    .GetRepository<AssessmentResult>()
+                    .GetAllAsync(predicate: predicate, include: src => src.Include(x => x.User))
+                    .ConfigureAwait(false);
+
+                var result = query
+                    .GroupBy(x => x.UserId)
+                    .Select(
+                        x =>
+                            new AssessmentResult
+                            {
+                                Id = x.FirstOrDefault(
+                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
+                                ).Id,
+                                AssessmentId = assessment.Id,
+                                UserId = x.FirstOrDefault(
+                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
+                                ).UserId,
+                                TotalMark = x.FirstOrDefault(
+                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
+                                ).TotalMark,
+                                NegativeMark = x.FirstOrDefault(
+                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
+                                ).NegativeMark,
+                                User = x.FirstOrDefault(
+                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
+                                ).User,
+                                CreatedOn = x.Max(a => a.CreatedOn),
+                            }
+                    )
+                    .ToList();
+                var response = new List<AssessmentResultExportModel>();
+                result.ForEach(
+                    res =>response.Add(
+                            new AssessmentResultExportModel
+                            {
+                                TotalMarks =
+                                    (res.TotalMark - res.NegativeMark) > 0
+                                        ? (res.TotalMark - res.NegativeMark)
+                                        : 0,
+                                StudentName=res.User?.FullName
+                            }
+                        )
+                        
+                );
+                return response;
+        }
     }
 }

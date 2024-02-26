@@ -995,6 +995,56 @@
             response.Add(data);
         }
 
+        public async Task<IList<AssignmentResultExportModel>> GetResultsExportAsync(
+            string lessonIdentity,
+            Guid currentUserId
+        )
+        {
+            await IsSuperAdminOrAdminOrTrainer(currentUserId);
+
+            var lesson = await _unitOfWork
+                .GetRepository<Lesson>()
+                .GetFirstOrDefaultAsync(
+                    predicate: p => p.Slug == lessonIdentity
+                )
+                .ConfigureAwait(false);
+
+            var Students = await _unitOfWork
+                .GetRepository<AssignmentReview>()
+                .GetAllAsync(
+                    predicate: p => p.LessonId == lesson.Id,
+                    include: u => u.Include(x => x.User)
+                )
+                .ConfigureAwait(false);
+
+            var submissionDate = await _unitOfWork
+                .GetRepository<AssignmentSubmission>()
+                .GetAllAsync(
+                    predicate: p => p.LessonId == lesson.Id,
+                    include: u => u.Include(x => x.User)
+                )
+                .ConfigureAwait(false);
+
+            var uniqueDate = submissionDate
+                .GroupBy(item => item.UserId)
+                .Select(group => group.First());
+
+            var studentDetail =
+                from std in Students
+                join date in uniqueDate
+                    on std.UserId equals date.UserId
+                    into studentSubmissionDetail
+                from m in studentSubmissionDetail
+                select new AssignmentResultExportModel
+                {
+                    StudentName = std.User.FullName,
+                    TotalMarks = std.Mark,
+                    SubmissionDate = m.UpdatedOn
+                };
+
+            return studentDetail.ToList();
+        }
+
         #endregion Private Methods
 
     }

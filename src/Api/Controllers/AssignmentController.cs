@@ -4,6 +4,10 @@
 
 namespace Lingtren.Api.Controllers
 {
+    using System.Globalization;
+
+    using CsvHelper;
+
     using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
@@ -218,6 +222,24 @@ namespace Lingtren.Api.Controllers
         {
             await assignmentService.DeleteReviewAsync(lessonIdentity, id, CurrentUser.Id).ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("AssignmentReviewDeleted") });
+        }
+
+        [HttpGet("{lessonIdentity}/AssignmentExport")]
+        public async Task<IActionResult> Export(string lessonIdentity)
+        {
+            var response = await assignmentService
+                .GetResultsExportAsync(lessonIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
+
+            using var memoryStream = new MemoryStream();
+            using var steamWriter = new StreamWriter(memoryStream);
+            using (var csv = new CsvWriter(steamWriter, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(response);
+                csv.Flush();
+            }
+
+            return File(memoryStream.ToArray(), "text/csv", "Results.csv");
         }
     }
 }

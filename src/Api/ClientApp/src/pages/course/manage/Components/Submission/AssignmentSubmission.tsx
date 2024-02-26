@@ -1,8 +1,10 @@
 import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
-import { Box, Paper, Table } from '@mantine/core';
+import { Box, Button, Group, Paper, Table } from '@mantine/core';
+import { IconTableExport } from '@tabler/icons';
 import { useGetAssignmentSubmission } from '@utils/services/assignmentService';
+import { downloadCSVFile } from '@utils/services/fileService';
 import { t } from 'i18next';
 import moment from 'moment';
 import { useParams } from 'react-router-dom';
@@ -28,8 +30,20 @@ const AssignmentSubmission = ({
     return <div>Error fetching data</div>;
   }
 
+  const exportUserCSVSubmission = `/api/assignment/${params.lessonId}/AssignmentExport`;
   return (
     <>
+      <Group justify="flex-end" my="md">
+        <Button
+          rightSection={<IconTableExport size={18} />}
+          variant="outline"
+          onClick={() =>
+            downloadCSVFile(exportUserCSVSubmission, 'lessonAssignmentStats')
+          }
+        >
+          {t('export')}
+        </Button>
+      </Group>
       <Paper>
         <Box mb={'sm'}>{searchComponent('Search Student')}</Box>
         <Table striped withTableBorder withColumnBorders highlightOnHover>

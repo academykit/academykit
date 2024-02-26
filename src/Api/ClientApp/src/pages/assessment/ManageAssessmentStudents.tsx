@@ -3,11 +3,13 @@ import UserShortProfile from '@components/UserShortProfile';
 import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
+import useAuth from '@hooks/useAuth';
 import {
   Box,
   Button,
   Center,
   Flex,
+  Group,
   Modal,
   Paper,
   ScrollArea,
@@ -15,11 +17,12 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
-import { IconEye } from '@tabler/icons';
+import { IconEye, IconTableExport } from '@tabler/icons';
 import {
   IAssessmentResult,
   useGetAllResults,
 } from '@utils/services/assessmentService';
+import { downloadCSVFile } from '@utils/services/fileService';
 import { t } from 'i18next';
 import { useParams } from 'react-router-dom';
 import ResultTable from './component/ResultTable';
@@ -68,8 +71,10 @@ const ManageAssessmentStudents = ({
   pagination,
 }: IWithSearchPagination) => {
   const params = useParams();
+  const user = useAuth();
   const getStudentResults = useGetAllResults(params.id as string);
 
+  const exportUserCSVSubmission = `/api/assessmentExam/${params.id}/GetStudentResults/${user?.auth?.id}/Export`;
   return (
     <>
       <Flex>
@@ -77,6 +82,17 @@ const ManageAssessmentStudents = ({
           {searchComponent(t('search_trainees') as string)}
         </Box>
       </Flex>
+      <Group justify="flex-end" my="md">
+        <Button
+          rightSection={<IconTableExport size={18} />}
+          variant="outline"
+          onClick={() =>
+            downloadCSVFile(exportUserCSVSubmission, 'AssessmentStats')
+          }
+        >
+          {t('export')}
+        </Button>
+      </Group>
       <Paper mt={10}>
         <ScrollArea>
           <Table
