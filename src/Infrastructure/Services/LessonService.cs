@@ -1607,11 +1607,7 @@
                 .GetRepository<QuestionSet>()
                 .GetFirstOrDefaultAsync(predicate: p => p.Id == existing.QuestionSetId)
                 .ConfigureAwait(false);
-            if (
-                existingQuestionSet.IsShuffle == false
-                && existingQuestionSet.NoOfQuestion == 0
-                && existingQuestionSet.ShowAll == false
-            )
+            if (model.IsShuffle == false && model.NoOfQuestion == 0 && model.ShowAll == false)
             {
                 throw new ForbiddenException("Field Is  Required For Shuffling");
             }
