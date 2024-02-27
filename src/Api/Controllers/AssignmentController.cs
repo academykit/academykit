@@ -241,5 +241,25 @@ namespace Lingtren.Api.Controllers
 
             return File(memoryStream.ToArray(), "text/csv", "Results.csv");
         }
+
+
+        [HttpGet("{lessonIdentity}/AssignmentIndividualExport")]
+        public async Task<IActionResult> ExportIndividual(string lessonIdentity)
+        {
+            var response = await assignmentService
+                .GetIndividualResultsExportAsync(lessonIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
+
+            using var memoryStream = new MemoryStream();
+            using var steamWriter = new StreamWriter(memoryStream);
+            using (var csv = new CsvWriter(steamWriter, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(response);
+                csv.Flush();
+            }
+
+            return File(memoryStream.ToArray(), "text/csv", "Results.csv");
+        }
+
     }
 }
