@@ -105,6 +105,7 @@
             services.AddTransient<IAssessmentSubmissionService, AssessmentSubmissionService>();
             services.AddTransient<IAIService, AIService>();
             services.AddTransient<IAiKeyService, AiKeyService>();
+            services.AddTransient<IMailNotificationService, MailNotificationService>();
 
             #endregion Service DI
 
@@ -132,6 +133,10 @@
                 GeneralSettingValidator
             >();
             services.AddSingleton<IValidator<DepartmentRequestModel>, DepartmentValidator>();
+            services.AddSingleton<
+                IValidator<MailNotificationRequestModel>,
+                MailNotificationValidator
+            >();
             services.AddSingleton<IValidator<ZoomLicenseRequestModel>, ZoomLicenseValidator>();
             services.AddSingleton<IValidator<SectionRequestModel>, SectionValidator>();
             services.AddSingleton<IValidator<CourseStatusRequestModel>, CourseStatusValidator>();
