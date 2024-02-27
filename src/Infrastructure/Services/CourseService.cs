@@ -3967,7 +3967,7 @@
                 : new CourseCertificateResponseModel(courseCertificate);
         }
 
-        public async Task<IList<QuestionSetResult>> GetResultsExportAsync(
+        public async Task<IList<ExamSubmissionResultExportModel>> GetResultsExportAsync(
             string lessonIdentity,
             Guid currentUserId
         )
@@ -3977,23 +3977,39 @@
             var lesson = await _unitOfWork
                 .GetRepository<Lesson>()
                 .GetFirstOrDefaultAsync(
-                    predicate: p => p.Slug == lessonIdentity && p.Type == LessonType.Exam
+                    predicate: p =>
+                        p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity,
+                    include: src => src.Include(x => x.CourseEnrollments).ThenInclude(x => x.User)
                 )
                 .ConfigureAwait(false);
 
-            var results = await _unitOfWork
-                .GetRepository<QuestionSetResult>()
+            var submittedStudent = await _unitOfWork
+                .GetRepository<QuestionSetSubmission>()
                 .GetAllAsync(
-                    predicate: p => p.QuestionSet.Lesson.Id == lesson.Id,
-                    include: src =>
-                        src.Include(x => x.User)
-                            .Include(x => x.QuestionSet)
-                            .ThenInclude(x => x.Lesson)
-                            .ThenInclude(x => x.Course)
-                            .ThenInclude(x => x.WatchHistories)
+                    predicate: p => p.QuestionSetId == lesson.QuestionSetId,
+                    include: u => u.Include(x => x.User)
                 )
                 .ConfigureAwait(false);
-            return results;
+
+            var marksObtained = await _unitOfWork
+                .GetRepository<QuestionSetResult>()
+                .GetAllAsync(predicate: p => p.QuestionSetId == lesson.QuestionSetId)
+                .ConfigureAwait(false);
+
+            var studentDetail =
+                from std in submittedStudent
+                join marks in marksObtained
+                    on std.UserId equals marks.UserId
+                    into studentSubmissionDetail
+                from m in studentSubmissionDetail
+                select new ExamSubmissionResultExportModel
+                {
+                    StudentName = std.User.FullName,
+                    TotalMarks = m.TotalMark,
+                    SubmissionDate = std.UpdatedOn
+                };
+
+            return studentDetail.ToList();
         }
 
         public bool GetUserEligibilityStatus(Course course, Guid currentUserId)

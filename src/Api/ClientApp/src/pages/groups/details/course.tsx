@@ -56,7 +56,8 @@ const GroupCourse = ({
 
       {searchComponent(t('search_group_trainings') as string)}
       <Flex wrap="wrap" mt={15}>
-        {data?.items &&
+        {data &&
+          data?.items &&
           (data.totalCount > 0 ? (
             data.items.map((x) => (
               <div key={x.id}>
