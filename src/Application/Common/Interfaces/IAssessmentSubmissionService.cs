@@ -37,5 +37,10 @@
             Guid assessmentSubmissionId,
             Guid currentUserId
         );
+
+        Task<IList<AssessmentResultExportModel>> GetResultsExportAsync(
+            string identity,
+            Guid currentUserId
+        );
     }
 }

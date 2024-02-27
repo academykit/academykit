@@ -80,5 +80,10 @@
         /// <param name="ids">list of assignment question id</param>
         /// <returns>Task completed</returns>
         Task ReorderAssignmentQuestionAsync(Guid currentUserId, string lessonIdentity, IList<Guid> ids);
+
+        Task<IList<AssignmentResultExportModel>> GetResultsExportAsync(
+            string lessonIdentity,
+            Guid currentUserId
+        );
     }
 }

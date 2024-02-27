@@ -354,7 +354,7 @@
             BaseSearchCriteria criteria
         );
 
-        Task<IList<QuestionSetResult>> GetResultsExportAsync(
+        Task<IList<ExamSubmissionResultExportModel>> GetResultsExportAsync(
             string lessonIdentity,
             Guid currentUserId
         );

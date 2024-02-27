@@ -452,13 +452,9 @@
         [HttpGet("{identity}/lessonStatistics/{lessonIdentity}/export")]
         public async Task<IActionResult> Export(string lessonIdentity)
         {
-            var searchResult = await courseService
+            var response = await courseService
                 .GetResultsExportAsync(lessonIdentity, CurrentUser.Id)
                 .ConfigureAwait(false);
-
-            var response = new List<ExamResultExportModel>();
-
-            searchResult.ForEach(p => response.Add(new ExamResultExportModel(p)));
 
             using var memoryStream = new MemoryStream();
             using var steamWriter = new StreamWriter(memoryStream);
@@ -480,13 +476,9 @@
         [HttpGet("{identity}/lessonStatistics/{lessonIdentity}/exportSubmission")]
         public async Task<IActionResult> ExportSubmission(string lessonIdentity)
         {
-            var searchResult = await courseService
+            var response = await courseService
                 .GetResultsExportAsync(lessonIdentity, CurrentUser.Id)
                 .ConfigureAwait(false);
-
-            var response = new List<ExamResultExportSubmissionModel>();
-
-            searchResult.ForEach(p => response.Add(new ExamResultExportSubmissionModel(p)));
 
             using var memoryStream = new MemoryStream();
             using var steamWriter = new StreamWriter(memoryStream);

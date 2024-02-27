@@ -66,7 +66,10 @@
             User = model.User != null ? new UserModel(model.User) : new UserModel();
             TrainingEligibilities = new List<TrainingEligibilityCriteriaResponseModel>(); // Initialize TrainingEligibilities
 
-            model.CourseTags.ToList().ForEach(item => Tags.Add(new CourseTagResponseModel(item)));
+            if(model.CourseTags != null)
+            {
+                model.CourseTags.ToList().ForEach(item => Tags.Add(new CourseTagResponseModel(item)));
+            }
             if (fetchSection)
             {
                 model.Sections
@@ -75,7 +78,9 @@
                         item => Sections.Add(new SectionResponseModel(item, fetchLesson: true))
                     );
             }
-            model.TrainingEligibilities
+            if(model.TrainingEligibilities != null)
+            {
+                model.TrainingEligibilities
                 .ToList()
                 .ForEach(
                     item =>
@@ -83,6 +88,7 @@
                             new TrainingEligibilityCriteriaResponseModel(item)
                         )
                 );
+            }
         }
 
         public CourseResponseModel() { }

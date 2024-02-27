@@ -4,12 +4,16 @@
 
 namespace Lingtren.Api.Controllers
 {
+    using System.Globalization;
+
+    using CsvHelper;
+
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Infrastructure.Localization;
-
+    using Lingtren.Infrastructure.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
 
@@ -81,5 +85,27 @@ namespace Lingtren.Api.Controllers
             await assessmentSubmissionService
                 .GetResultDetail(identity, assessmentSubmissionId, CurrentUser.Id)
                 .ConfigureAwait(false);
+
+        
+        [HttpGet("{identity}/GetStudentResults/{userId}/Export")]
+        public async Task<IActionResult> ExportStudentResults(
+            string identity,
+            Guid userId
+        ) 
+        {
+            var response = await assessmentSubmissionService
+                .GetResultsExportAsync(identity,userId)
+                .ConfigureAwait(false);
+
+            using var memoryStream = new MemoryStream();
+            using var steamWriter = new StreamWriter(memoryStream);
+            using (var csv = new CsvWriter(steamWriter, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(response);
+                csv.Flush();
+            }
+
+            return File(memoryStream.ToArray(), "text/csv", "Results.csv");
+        }
     }
 }

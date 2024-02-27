@@ -1530,6 +1530,15 @@
                 }
             }
 
+            if (
+                model.QuestionSet.IsShuffle == false
+                && model.QuestionSet.NoOfQuestion == 0
+                && model.QuestionSet.ShowAll == false
+            )
+            {
+                throw new ForbiddenException("Field Is  Required For Shuffling");
+            }
+
             existingLesson.QuestionSet.Name = existingLesson.Name;
             existingLesson.QuestionSet.ThumbnailUrl = existingLesson.ThumbnailUrl;
             existingLesson.QuestionSet.Description = model.QuestionSet.Description;
@@ -1598,6 +1607,10 @@
                 .GetRepository<QuestionSet>()
                 .GetFirstOrDefaultAsync(predicate: p => p.Id == existing.QuestionSetId)
                 .ConfigureAwait(false);
+            if (model.IsShuffle == false && model.NoOfQuestion == 0 && model.ShowAll == false)
+            {
+                throw new ForbiddenException("Field Is  Required For Shuffling");
+            }
 
             existingQuestionSet.IsShuffle = model.IsShuffle;
             existingQuestionSet.ShowAll = model.ShowAll;
