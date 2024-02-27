@@ -888,7 +888,7 @@
   "question_updated_success": "Question updated successfully.",
   "delete_question_success": "Question deleted successfully.",
   "not_eligible": "Not Eligible",
-  "eligibility_type": "Eligibility type",
+  "eligibility_type": "Eligibility Type",
   "total_retake_assessment": "Total allowed retakes",
   "delete_assessment_success": "Assessment deleted successfully.",
   "delete_assessment_confirmation": "Are you sure you want to delete this assessment?",
