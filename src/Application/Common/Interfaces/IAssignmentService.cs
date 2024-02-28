@@ -85,5 +85,18 @@
             string lessonIdentity,
             Guid currentUserId
         );
+
+        /// <summary>
+        /// Handle to send assignment individual records
+        /// </summary>
+        /// <param name="lessonIdentity">current user id</param>
+        /// <param name="currentUserId">lesson identity</param>
+        /// <returns></returns>
+
+        Task<IList<AssignmentIndividualExportModel>> GetIndividualResultsExportAsync(
+            string lessonIdentity,
+            Guid currentUserId
+        );
+
     }
 }

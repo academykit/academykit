@@ -2,6 +2,8 @@
 {
     using System.Linq;
     using System.Linq.Expressions;
+    using Hangfire.Storage;
+
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -1044,6 +1046,44 @@
 
             return studentDetail.ToList();
         }
+
+
+        public async Task<IList<AssignmentIndividualExportModel>> GetIndividualResultsExportAsync(
+            string lessonIdentity,
+            Guid currentUserId
+        )
+        {
+            await IsSuperAdminOrAdminOrTrainer(currentUserId);
+
+            var lesson= await _unitOfWork
+                    .GetRepository<Lesson>()
+                    .GetFirstOrDefaultAsync(
+                        predicate: p => p.Slug == lessonIdentity
+                    )
+                    .ConfigureAwait(false);
+
+            var IndividualStudents= await _unitOfWork
+                    .GetRepository<WatchHistory>()
+                    .GetAllAsync(
+                        predicate: p => p.LessonId == lesson.Id,
+                        include: u => u.Include(u => u.User)
+                    )
+                    .ConfigureAwait(false);
+
+            var studentList=new List<AssignmentIndividualExportModel>();
+            foreach(var std in IndividualStudents)
+            {
+                studentList.Add(
+                    new AssignmentIndividualExportModel{
+                        StudentName=std.User.FullName,
+                        Status=std.IsPassed? "Pass" : "Fail"
+                    }
+                );
+            }
+
+            return studentList;
+        }
+
 
         #endregion Private Methods
 

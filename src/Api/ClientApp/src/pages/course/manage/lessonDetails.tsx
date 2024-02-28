@@ -107,6 +107,7 @@ const LessonDetails = ({
   };
 
   const exportUserCSV = `/api/course/${id}/lessonStatistics/${lessonId}/export`;
+  const exportIndividualCSV = `/api/assignment/${lessonId}/AssignmentIndividualExport`;
 
   return (
     <>
@@ -199,6 +200,20 @@ const LessonDetails = ({
             </Group>
           )}
           <Paper>
+            <Group justify="flex-end" my="md">
+              <Button
+                rightSection={<IconTableExport size={18} />}
+                variant="outline"
+                onClick={() =>
+                  downloadCSVFile(
+                    exportIndividualCSV,
+                    'AssignmentIndividualStats'
+                  )
+                }
+              >
+                {t('export')}
+              </Button>
+            </Group>
             <Box mb={'sm'}>{searchComponent('Search Student')}</Box>
             {lessonDetails.data && lessonDetails.data?.items.length > 0 ? (
               <Table striped withTableBorder withColumnBorders highlightOnHover>

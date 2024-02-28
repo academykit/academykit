@@ -11,7 +11,6 @@ import {
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { IconX } from '@tabler/icons';
 import { useDepartmentSetting } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import {
@@ -147,6 +146,7 @@ const AddMember = ({
       });
     }
   };
+
   return (
     <>
       <Box>
@@ -168,22 +168,11 @@ const AddMember = ({
               }
             }}
             value={departmentId}
-            rightSection={
+            clearable
+            onClear={() => {
               // controlled the clearable event
-              departmentId ? (
-                <IconX
-                  size={18}
-                  style={{
-                    display: 'block',
-                    opacity: 0.5,
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => {
-                    setDepartmentId('');
-                  }}
-                />
-              ) : null
-            }
+              setDepartmentId('');
+            }}
           ></Select>
           <MultiSelect
             tabIndex={0}
