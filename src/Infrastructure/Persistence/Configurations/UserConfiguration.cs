@@ -406,7 +406,7 @@
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.CreatedBy)
                 .OnDelete(DeleteBehavior.NoAction);
-            builder.HasMany(x => x.Skills).WithMany(x => x.Users).UsingEntity<UserSkills>();
+                
         }
     }
 }

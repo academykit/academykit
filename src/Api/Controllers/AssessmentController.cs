@@ -56,6 +56,8 @@ namespace Lingtren.Api.Controllers
             {
                 searchCriteria.CurrentUserId = CurrentUser.Id;
             }
+            searchCriteria.SortBy = "CreatedOn";
+            searchCriteria.SortType = SortType.Descending;
 
             var searchResult = await assessmentService
                 .SearchAsync(searchCriteria)
@@ -76,8 +78,12 @@ namespace Lingtren.Api.Controllers
                     item,
                     CurrentUser.Id
                 );
-                var assestmentResponseModel = new AssessmentResponseModel(item, eligibilityStatus.Item1);
-                assestmentResponseModel.EligibilityCreationRequestModels = eligibilityStatus.Item2.ToList();
+                var assestmentResponseModel = new AssessmentResponseModel(
+                    item,
+                    eligibilityStatus.Item1
+                );
+                assestmentResponseModel.EligibilityCreationRequestModels =
+                    eligibilityStatus.Item2.ToList();
                 response.Items.Add(assestmentResponseModel);
             }
 
@@ -189,25 +195,32 @@ namespace Lingtren.Api.Controllers
             }
             foreach (var item in model.EligibilityCreationRequestModels)
             {
-                if(item.SkillId != null || item.Role!=0 || item.GroupId != null || item.DepartmentId != null || item.AssessmentId != null || item.TrainingId != null)
+                if (
+                    item.SkillId != null
+                    || item.Role != 0
+                    || item.GroupId != null
+                    || item.DepartmentId != null
+                    || item.AssessmentId != null
+                    || item.TrainingId != null
+                )
                 {
                     entity.EligibilityCreations.Add(
-                    new EligibilityCreation
-                    {
-                        Id = Guid.NewGuid(),
-                        AssessmentId = entity.Id,
-                        SkillId = item.SkillId,
-                        GroupId = item.GroupId,
-                        TrainingId = item.TrainingId,
-                        DepartmentId = item.DepartmentId,
-                        CompletedAssessmentId = item.AssessmentId,
-                        Role = item.Role,
-                        CreatedOn = currentTimeStamp,
-                        CreatedBy = CurrentUser.Id,
-                        UpdatedOn = currentTimeStamp,
-                        UpdatedBy = CurrentUser.Id,
-                    }
-                );
+                        new EligibilityCreation
+                        {
+                            Id = Guid.NewGuid(),
+                            AssessmentId = entity.Id,
+                            SkillId = item.SkillId,
+                            GroupId = item.GroupId,
+                            TrainingId = item.TrainingId,
+                            DepartmentId = item.DepartmentId,
+                            CompletedAssessmentId = item.AssessmentId,
+                            Role = item.Role,
+                            CreatedOn = currentTimeStamp,
+                            CreatedBy = CurrentUser.Id,
+                            UpdatedOn = currentTimeStamp,
+                            UpdatedBy = CurrentUser.Id,
+                        }
+                    );
                 }
             }
             var response = await assessmentService.CreateAsync(entity).ConfigureAwait(false);

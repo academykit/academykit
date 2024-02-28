@@ -54,9 +54,9 @@
                 req.Tools = FunctionCallingHelper.GetToolDefinitions<Training>();
                 req.Messages = new List<ChatMessage>
                 {
-                    ChatMessage.FromSystem("You are a helpful assistant."),
+                    ChatMessage.FromSystem("You are a training content specialist."),
                     ChatMessage.FromUser(
-                        $"Give me Training Title and its Description. There are no existing training Title for my organization. So suggest me some training Title and Description relating to it."
+                        $"Your main role is to assist users in developing training materials. When given a topic, you will suggest creative and engaging titles for the training sessions, along with concise, informative descriptions that outline the objectives and content of the training. There are no existing training Title for my organization. So suggest me some training Title and Description in about 500 words relating to it."
                     )
                 };
             }
@@ -65,9 +65,9 @@
                 req.Tools = FunctionCallingHelper.GetToolDefinitions<Training>();
                 req.Messages = new List<ChatMessage>
                 {
-                    ChatMessage.FromSystem("You are a helpful assistant."),
+                    ChatMessage.FromSystem("You are a training content specialist."),
                     ChatMessage.FromUser(
-                        $"Give me Training Title and its Description. And every time generate a new title and description. These are some of the existing training Title for my organization: {jsondata}"
+                        $"Your main role is to assist users in developing training materials. When given a topic, you will suggest creative and engaging titles for the training sessions, along with concise, informative descriptions that outline the objectives and content of the training. These are some of the existing training Title for my organization: {jsondata}"
                     )
                 };
             }

@@ -868,6 +868,7 @@
       "AWS_VideoBucket": "ビデオバケット"
     }
   },
+  "field_required": "フィールドは必須です",
   "update_ai_setup_success": "AIセットアップが正常に更新されました。",
   "ai_key": "AIキー",
   "enter_ai_key": "AIキーを入力してください",

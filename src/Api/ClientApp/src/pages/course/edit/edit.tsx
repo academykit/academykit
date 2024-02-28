@@ -20,6 +20,7 @@ import {
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { createFormContext, yupResolver } from '@mantine/form';
+import { useScrollIntoView } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconPlus, IconTrash } from '@tabler/icons';
 import { TrainingEligibilityEnum } from '@utils/enums';
@@ -80,6 +81,11 @@ const schema = () => {
         .typeError(t('end_date_required') as string),
       otherwise: Yup.string().nullable(),
     }),
+    trainingEligibilities: Yup.array().of(
+      Yup.object().shape({
+        eligibilityId: Yup.string().required(t('field_required') as string),
+      })
+    ),
   });
 };
 
@@ -96,6 +102,10 @@ const EditCourse = () => {
   const skillData = useSkills(queryStringGenerator({ size: 1000 }));
   const getAssessments = useAssessments(queryStringGenerator({ size: 1000 }));
   const getTrainings = useCourse(queryStringGenerator({ size: 1000 }));
+  const { scrollIntoView: scrollToTop, targetRef: refBasic } =
+    useScrollIntoView<HTMLDivElement>({
+      offset: 60,
+    });
 
   const form = useForm({
     initialValues: {
@@ -296,10 +306,25 @@ const EditCourse = () => {
     }
   }, [form.values.isUnlimitedEndDate]);
 
+  // scroll to error section
+  const handleError = (errors: typeof form.errors) => {
+    if (
+      errors.title ||
+      errors.level ||
+      errors.groups ||
+      errors.startDate ||
+      errors.endDate
+    ) {
+      scrollToTop({
+        alignment: 'center',
+      });
+    }
+  };
+
   return (
     <div>
       <FormProvider form={form}>
-        <form onSubmit={form.onSubmit(submitHandler)}>
+        <form onSubmit={form.onSubmit(submitHandler, handleError)}>
           <Box mt={20}>
             <ThumbnailEditor
               formContext={useFormContext}
@@ -307,7 +332,7 @@ const EditCourse = () => {
               label={t('thumbnail') as string}
               disabled={viewMode}
             />
-            <Group mt={10} grow>
+            <Group mt={10} grow ref={refBasic}>
               <DynamicAutoFocusTextField
                 isViewMode={viewMode}
                 readOnly={viewMode}
@@ -465,6 +490,7 @@ const EditCourse = () => {
                         {form.values.trainingEligibilities[index].eligibility ==
                           TrainingEligibilityEnum.Department.toString() && (
                           <Select
+                            withAsterisk
                             disabled={viewMode}
                             allowDeselect={false}
                             label={t('department')}

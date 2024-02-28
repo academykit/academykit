@@ -868,6 +868,7 @@
       "AWS_VideoBucket": "भिडियो संग्रह"
     }
   },
+  "field_required": "क्षेत्र आवश्यक छ",
   "update_ai_setup_success": "AI सेटअप सफलतापूर्वक अपडेट गरियो।",
   "ai_key": "AI कुञ्जी",
   "enter_ai_key": "कृपया आफ्नो AI कुञ्जी प्रविष्ट गर्नुहोस्",

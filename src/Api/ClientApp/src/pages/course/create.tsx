@@ -21,6 +21,7 @@ import {
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { createFormContext, yupResolver } from '@mantine/form';
+import { useScrollIntoView } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconPlus, IconTrash } from '@tabler/icons';
 import { TrainingEligibilityEnum } from '@utils/enums';
@@ -81,6 +82,11 @@ const schema = () => {
         .typeError(t('end_date_required') as string),
       otherwise: Yup.string().nullable(),
     }),
+    trainingEligibilities: Yup.array().of(
+      Yup.object().shape({
+        eligibilityId: Yup.string().required(t('field_required') as string),
+      })
+    ),
   });
 };
 
@@ -102,6 +108,10 @@ const CreateCoursePage = () => {
   const groupAdd = useAddGroup();
   const auth = useAuth();
   const [language] = useState([{ value: '1', label: 'English' }]);
+  const { scrollIntoView: scrollToTop, targetRef: refBasic } =
+    useScrollIntoView<HTMLDivElement>({
+      offset: 60,
+    });
 
   const groups = useGroups(
     queryStringGenerator({
@@ -265,11 +275,26 @@ const CreateCoursePage = () => {
     form.setFieldValue('description', aiSuggestion.data?.description ?? '');
   };
 
+  // scroll to error section
+  const handleError = (errors: typeof form.errors) => {
+    if (
+      errors.title ||
+      errors.level ||
+      errors.groups ||
+      errors.startDate ||
+      errors.endDate
+    ) {
+      scrollToTop({
+        alignment: 'center',
+      });
+    }
+  };
+
   return (
     <div>
       <Breadcrumb />
       <FormProvider form={form}>
-        <form onSubmit={form.onSubmit(submitHandler)}>
+        <form onSubmit={form.onSubmit(submitHandler, handleError)}>
           <Box mt={20}>
             <ThumbnailEditor
               formContext={useFormContext}
@@ -292,7 +317,7 @@ const CreateCoursePage = () => {
                 />
               )}
 
-            <Group mt={10} grow>
+            <Group mt={10} grow ref={refBasic}>
               <CustomTextFieldWithAutoFocus
                 placeholder={t('title_course') as string}
                 label={t('title')}
@@ -436,6 +461,7 @@ const CreateCoursePage = () => {
                         {form.values.trainingEligibilities[index].eligibility ==
                           TrainingEligibilityEnum.Department && (
                           <Select
+                            withAsterisk
                             allowDeselect={false}
                             label={t('department')}
                             placeholder={t('pick_value') as string}

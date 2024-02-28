@@ -617,7 +617,7 @@ namespace Lingtren.Infrastructure.Services
                 var tokenExpiry = DateTime.UtcNow.AddMinutes(5);
                 user.PasswordResetToken = token;
                 user.PasswordResetTokenExpiry = tokenExpiry;
-                user.Status = UserStatus.Active;
+                // user.Status = UserStatus.Active;
                 _unitOfWork.GetRepository<User>().Update(user);
                 var companyName = await _unitOfWork
                     .GetRepository<GeneralSetting>()
