@@ -62,6 +62,7 @@
         public DbSet<UserSkills> UserSkills { get; set; }
         public DbSet<EligibilityCreation> EligibilityCreations { get; set; }
         public DbSet<AIKey> AIKeys { get; set; }
+        public DbSet<MailNotification> MailNotifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

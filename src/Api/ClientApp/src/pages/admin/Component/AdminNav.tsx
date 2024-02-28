@@ -8,7 +8,11 @@ import {
   IconUserCircle,
   IconVideo,
 } from '@tabler/icons';
-import { IconBrandOpenai, IconMailCog } from '@tabler/icons-react';
+import {
+  IconBrandOpenai,
+  IconMailCode,
+  IconMailCog,
+} from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import { useTranslation } from 'react-i18next';
@@ -103,13 +107,13 @@ const AdminNav = () => {
       role: UserRole.Admin,
       group: 'admin',
     },
-    // {
-    //   label: t('mail-notification'),
-    //   to: RoutePath.settings.mail(),
-    //   role: UserRole.Admin,
-    //   group: 'admin',
-    //   icon: <IconMailCode size={14} />,
-    // },
+    {
+      label: t('mail-notification'),
+      to: RoutePath.settings.mail(),
+      role: UserRole.Admin,
+      group: 'admin',
+      icon: <IconMailCode size={14} />,
+    },
     // {
     //   label: t('log'),
     //   to: RoutePath.settings.log(),

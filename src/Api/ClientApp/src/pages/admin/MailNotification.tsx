@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import DeleteModal from '@components/Ui/DeleteModal';
 import EmptyRow from '@components/Ui/EmptyRow';
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
@@ -496,23 +495,23 @@ const MailNotification = ({
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                {/* {getMailNotification.data &&
+                {getMailNotification.data &&
                 getMailNotification.data.totalCount > 0 ? (
                   getMailNotification.data?.items.map((item) => (
                     <Rows key={item.id} item={item} />
                   ))
-                ) : ( */}
-                <EmptyRow colspan={4} message="no_email_notifications" />
-                {/* )} */}
+                ) : (
+                  <EmptyRow colspan={4} message="no_email_notifications" />
+                )}
               </Table.Tbody>
             </Table>
           </ScrollArea>
 
-          {/* {getMailNotification.data &&
+          {getMailNotification.data &&
             pagination(
               getMailNotification.data?.totalPage,
               getMailNotification.data?.items.length
-            )} */}
+            )}
         </Paper>
       </section>
     </>
