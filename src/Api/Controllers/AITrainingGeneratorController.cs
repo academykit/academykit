@@ -43,7 +43,10 @@ namespace Lingtren.Api.Controllers
                 var serviceProvider = serviceCollection.BuildServiceProvider();
                 var sdk = serviceProvider.GetRequiredService<IOpenAIService>();
 
-                var dataResponse = await _aIService.ExerciseFunctionCalling(sdk);
+                var dataResponse = await _aIService.ExerciseFunctionCalling(
+                    sdk,
+                    ExistingKey.AiModel
+                );
                 return Ok(dataResponse); // Assuming successful response should be 200 OK
             }
             catch (ForbiddenException ex)

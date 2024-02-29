@@ -62,6 +62,7 @@ namespace Lingtren.Api.Controllers
                     IsActive = true,
                     CreatedBy = CurrentUser.Id,
                     CreatedOn = currentTimeStamp,
+                    AiModel = model.AiModel
                 };
                 var response = await aiKeyService.CreateAsync(entity, false).ConfigureAwait(false);
                 return new AiKeyResponseModel(response);
@@ -73,6 +74,7 @@ namespace Lingtren.Api.Controllers
                 existing.IsActive = model.IsActive;
                 existing.UpdatedBy = CurrentUser.Id;
                 existing.UpdatedOn = currentTimeStamp;
+                existing.AiModel = model.AiModel;
 
                 var savedEntity = await aiKeyService
                     .UpdateAsync(existing, false)

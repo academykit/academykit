@@ -7,6 +7,8 @@
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
+    using Lingtren.Domain.Enums;
+
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Localization;
     using Microsoft.Extensions.Localization;
@@ -29,7 +31,10 @@
         )
             : base(unitOfWork, logger, localizer) { }
 
-        public async Task<AiResponseModel> ExerciseFunctionCalling(IOpenAIService openAIService)
+        public async Task<AiResponseModel> ExerciseFunctionCalling(
+            IOpenAIService openAIService,
+            AiModelEnum aiModelEnum
+        )
         {
             var training = new Training();
             var responseAI = new AiResponseModel();
@@ -38,6 +43,59 @@
                 .GetAllAsync()
                 .ConfigureAwait(false);
             var trainingList = new List<object>();
+            var aimode = "";
+
+            switch (aiModelEnum)
+            {
+                case AiModelEnum.ChatGpt3_5Turbo:
+                    aimode = "gpt-3.5-turbo";
+                    break;
+                case AiModelEnum.Gpt_3_5_Turbo:
+                    aimode = "gpt-3.5-turbo";
+                    break;
+                case AiModelEnum.Gpt_3_5_Turbo_16k:
+                    aimode = "gpt-3.5-turbo-16k";
+                    break;
+                case AiModelEnum.ChatGpt3_5Turbo0301:
+                    aimode = "gpt-3.5-turbo-0301";
+                    break;
+                case AiModelEnum.Gpt_3_5_Turbo_0301:
+                    aimode = "gpt-3.5-turbo-0301";
+                    break;
+                case AiModelEnum.Gpt_3_5_Turbo_0613:
+                    aimode = "gpt-3.5-turbo-0613";
+                    break;
+                case AiModelEnum.Gpt_3_5_Turbo_1106:
+                    aimode = "gpt-3.5-turbo-1106";
+                    break;
+                case AiModelEnum.Gpt_3_5_Turbo_16k_0613:
+                    aimode = "gpt-3.5-turbo-16k-0613";
+                    break;
+                case AiModelEnum.Gpt_3_5_Turbo_Instruct:
+                    aimode = "gpt-3.5-turbo-instruct";
+                    break;
+                case AiModelEnum.WhisperV1:
+                    aimode = "whisper-v1";
+                    break;
+                case AiModelEnum.Dall_e_2:
+                    aimode = "dall-e-2";
+                    break;
+                case AiModelEnum.Dall_e_3:
+                    aimode = "dall-e-3";
+                    break;
+                case AiModelEnum.Tts_1:
+                    aimode = "tts-1";
+                    break;
+                case AiModelEnum.Tts_1_hd:
+                    aimode = "tts-1-hd";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(
+                        nameof(aiModelEnum),
+                        aiModelEnum,
+                        "Unhandled AI model enum value"
+                    );
+            }
 
             foreach (var item in getTraining)
             {
@@ -73,10 +131,7 @@
             }
             do
             {
-                var reply = await openAIService.ChatCompletion.CreateCompletion(
-                    req,
-                    Models.ChatGpt3_5Turbo
-                );
+                var reply = await openAIService.ChatCompletion.CreateCompletion(req, aimode);
 
                 if (!reply.Successful)
                 {

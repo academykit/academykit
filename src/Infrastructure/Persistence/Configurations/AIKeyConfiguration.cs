@@ -22,6 +22,8 @@
                 .HasMaxLength(270)
                 .IsRequired(true);
 
+            builder.Property(x => x.AiModel).HasColumnName("ai_model");
+
             builder.Property(x => x.IsActive).HasColumnName("is_active").HasDefaultValue(true);
 
             builder

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from './service-api';
 import { httpClient } from './service-axios';
+import { AiModelEnum } from '@utils/enums';
 
 interface ITrainingSuggest {
   title: string;
@@ -10,6 +11,7 @@ interface ITrainingSuggest {
 interface IMasterSetup {
   key: string | null;
   isActive: boolean;
+  aiModel: AiModelEnum;
 }
 
 const getTrainingSuggestion = async () =>
