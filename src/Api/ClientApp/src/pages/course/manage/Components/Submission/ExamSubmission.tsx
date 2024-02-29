@@ -39,7 +39,7 @@ const ExamSubmission = ({
           rightSection={<IconTableExport size={18} />}
           variant="outline"
           onClick={() =>
-            downloadCSVFile(exportUserCSVSubmission, 'lessonStats')
+            downloadCSVFile(exportUserCSVSubmission, 'lessonStatsSubmission')
           }
         >
           {t('export')}

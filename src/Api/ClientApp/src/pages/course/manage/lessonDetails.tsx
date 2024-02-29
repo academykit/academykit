@@ -199,7 +199,8 @@ const LessonDetails = ({
               </Button>
             </Group>
           )}
-          <Paper>
+          {lessonDetails.data?.items[0]?.lessonType ===
+            LessonType.Assignment && (
             <Group justify="flex-end" my="md">
               <Button
                 rightSection={<IconTableExport size={18} />}
@@ -214,6 +215,8 @@ const LessonDetails = ({
                 {t('export')}
               </Button>
             </Group>
+          )}
+          <Paper>
             <Box mb={'sm'}>{searchComponent('Search Student')}</Box>
             {lessonDetails.data && lessonDetails.data?.items.length > 0 ? (
               <Table striped withTableBorder withColumnBorders highlightOnHover>
