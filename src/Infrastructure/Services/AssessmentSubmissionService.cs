@@ -177,27 +177,30 @@
                 .GetAllAsync(predicate: p => p.UserId == currentUserId)
                 .ConfigureAwait(false);
 
+            var greater=(decimal)0;
             foreach (var item in existingSkills)
             {
                 // Check if the skill already exists for the user
                 var skillExists = existingUserSkills.Any(us => us.SkillId == item.SkillId);
-
                 if (
                     item.SkillAssessmentRule == SkillAssessmentRule.IsGreaterThan
                     && totalMarksObtained >= item.Percentage
                     && !skillExists // Check if the skill does not already exist for the user
                 )
                 {
-                    var userSkill = new UserSkills
+                    if(item.Percentage > greater)
                     {
-                        UserId = assessmentResult.UserId,
-                        SkillId = (Guid)item.SkillId,
-                        CreatedBy = currentUserId,
-                        CreatedOn = DateTime.Now,
-                    };
-
-                    await _unitOfWork.GetRepository<UserSkills>().InsertAsync(userSkill); // Add the new userSkill to the context
-                }
+                        greater=item.Percentage;
+                        var userSkill = new UserSkills
+                        {
+                            UserId = assessmentResult.UserId,
+                            SkillId = (Guid)item.SkillId,
+                            CreatedBy = currentUserId,
+                            CreatedOn = DateTime.Now,
+                        };
+                        await _unitOfWork.GetRepository<UserSkills>().InsertAsync(userSkill); // Add the new userSkill to the context
+                    }
+                }    
             }
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
