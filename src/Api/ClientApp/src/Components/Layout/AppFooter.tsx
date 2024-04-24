@@ -1,6 +1,6 @@
-import { Anchor, Center, Container, Divider, Group, Text } from '@mantine/core';
+import { Anchor, Center, Container, Group, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { ColorSchemeToggle } from './ColorSchemeToggle';
 import classes from './styles/footer.module.css';
 
@@ -16,7 +16,7 @@ export function AppFooter({ name }: { name: string }) {
         <Text c="dimmed" size="xs">
           {t('copyright')} © {new Date().getFullYear()} {name}.
         </Text>
-        <Group>
+        {/* <Group>
           <Anchor size={'xs'} component={Link} to="/privacy" c={'dimmed'}>
             {t('privacy')}
           </Anchor>
@@ -28,7 +28,7 @@ export function AppFooter({ name }: { name: string }) {
           <Anchor size={'xs'} component={Link} to="/about" c={'dimmed'}>
             {t('about_us')}
           </Anchor>
-        </Group>
+        </Group> */}
         <Group gap={0} justify="flex-end" wrap={'nowrap'}>
           {/* <LanguageSelector /> */}
           <ColorSchemeToggle size="lg" />
@@ -42,11 +42,11 @@ export function AppFooter({ name }: { name: string }) {
           {t('powered_by')}
         </Text>
         <Anchor
-          href={'https://www.vurilo.com/'}
+          href={'https://www.sursatech.com/'}
           style={{ textDecoration: 'none' }}
         >
           <Text size={'xs'} c={'dimmed'}>
-            Vurilo
+            Sursatech
           </Text>
         </Anchor>
       </Center>

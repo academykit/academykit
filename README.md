@@ -1,4 +1,4 @@
-## Vurilo StandAlone
+## Academykit LMS
 
 ## Technologies
 
