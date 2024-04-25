@@ -66,7 +66,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
     icon: <IconInfoSquare size={16} />,
     color: 'blue',
     label: 'help',
-    href: 'https://vurilo-69.mintlify.app/introduction',
+    href: 'https://docs.academykit.co/',
     replace: true,
     role: UserRole.Trainee,
     target: '_blank',

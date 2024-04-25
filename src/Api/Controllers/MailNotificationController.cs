@@ -158,10 +158,8 @@ namespace Lingtren.Api.Controllers
                 .GetFirstOrDefaultAsync()
                 .ConfigureAwait(false);
 
-            var html = $"This is a Template Email for {getExistingMail.Name}";
-            html += $"<br><br>Which has the subject {getExistingMail.Subject}";
-            html += $"<br><br>And has the message {getExistingMail.Message}";
-            html += $"<br><br>And has the signature<br> {company.EmailSignature}";
+            var html = $"<br><br>{getExistingMail.Message}";
+            // html += $"<br> {company.EmailSignature}";
 
             return Content(html, "text/html");
         }
