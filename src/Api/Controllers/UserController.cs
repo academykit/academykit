@@ -254,13 +254,13 @@ namespace Lingtren.Api.Controllers
                 isEmailChanged = true;
                 oldEmail = existing.Email;
             }
-            if(model.DepartmentId != null)
+            if (model.DepartmentId != null)
             {
                 var existingDepartment = await departmentService
                     .GetByIdOrSlugAsync(model.DepartmentId.ToString(), CurrentUser.Id, false)
                     .ConfigureAwait(false);
-            
-            existing.Department = existingDepartment;
+
+                existing.Department = existingDepartment;
             }
             var imageKey = existing.ImageUrl;
             existing.Id = existing.Id;
@@ -333,7 +333,7 @@ namespace Lingtren.Api.Controllers
                 await userService.RemoveRefreshTokenAsync(existing.Id);
             }
 
-            var savedEntity = await userService.UpdateAsync(existing,false).ConfigureAwait(false);
+            var savedEntity = await userService.UpdateAsync(existing, false).ConfigureAwait(false);
             if (imageKey != model.ImageUrl && !string.IsNullOrWhiteSpace(imageKey))
             {
                 if (
@@ -457,7 +457,7 @@ namespace Lingtren.Api.Controllers
                     FirstName = "Adam",
                     MiddleName = string.Empty,
                     LastName = "Max",
-                    Email = "bijay@vurilo.com",
+                    Email = "hello@academykit.co",
                     MobileNumber = mobileNumber,
                     Role = "Trainer",
                     Designation = "Programmer",

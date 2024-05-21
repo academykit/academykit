@@ -15,11 +15,11 @@ SET SQL_SAFE_UPDATES = 1;
 
 -- Insert User data
 INSERT INTO Users (id, first_name, middle_name, last_name, address, email, mobile_number, created_by, created_on, updated_by, updated_on, STATUS, hash_password, ROLE)
-VALUES ('30fcd978-f256-4733-840f-759181bc5e63', 'ABC', NULL, 'XYZ', 'ADDRESS', 'vuriloapp@gmail.com', '1234567890', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', 1, '+gURQgHBT1zJz5AljZhAMyaNRFQBVorq5HIlEmhf+ZQ=:BBLvXedGXzdz0ZlypoKQxQ==', 1);
+VALUES ('30fcd978-f256-4733-840f-759181bc5e63', 'Superadmin', NULL, 'User', 'ADDRESS', 'academykit@yopmail.com', '1234567890', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', 1, '+gURQgHBT1zJz5AljZhAMyaNRFQBVorq5HIlEmhf+ZQ=:BBLvXedGXzdz0ZlypoKQxQ==', 1);
 
 -- Insert SMTPSetting data
 INSERT INTO SMTPSettings (Id, Mail_Port, Mail_Server, Password, Reply_To, Sender_Email, Sender_Name, User_Name, UseSSL, Created_By, Created_On, Updated_By, Updated_On)
-VALUES ('d3c343d8-adf8-45d4-afbe-e09c3285da24', 123, 'email-smtp.ap-south-1.amazonaws.com', 'password', 'support@vurilo.com', 'noreply@vurilo.com', 'Vurilo', 'username', true, '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004');
+VALUES ('d3c343d8-adf8-45d4-afbe-e09c3285da24', 123, 'email-smtp.ap-south-1.amazonaws.com', 'password', 'hello@academykit.co', 'noreply@academykit.co', 'AcademyKit', 'username', true, '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004');
 
 -- Insert Group data
 INSERT INTO `Groups` (Id, slug, name, is_active, Created_By, Created_On, Updated_By, Updated_On) VALUES ('d3c343d8-adf8-45d4-afbe-e09c3285da24', 'default-group', 'Default Group', true, '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004');
