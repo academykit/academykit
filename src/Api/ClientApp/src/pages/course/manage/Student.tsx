@@ -95,7 +95,7 @@ const Rows = ({
       <Table.Td>
         <Anchor
           component={Link}
-          to={`${RoutePath.userProfile}/${item.userId}/about`}
+          to={`${RoutePath.userProfile}/${item.userId}`}
           size="sm"
           style={{ display: 'flex' }}
         >
