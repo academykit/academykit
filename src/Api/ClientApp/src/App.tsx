@@ -36,19 +36,6 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
       : defaultBranding;
   };
 
-  useEffect(() => {
-    // Set the description tag
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'This is the new description');
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'description';
-      meta.content = 'This is the new description';
-      document.head.appendChild(meta);
-    }
-  }, []);
-
   const [brandingTheme, setBrandingTheme] = useState(
     localStorage.getItem(BRANDING_SCHEME_KEY) ?? '#0E99AC'
   );
