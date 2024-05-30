@@ -2,6 +2,8 @@ name: "Public Nightly Release"
 on:
   push:
     branches: ["main"]
+    tags:
+      - 'v*.*.*' # publish on version tags, updates 'latest' tag
 
 jobs:
   release-nightly:
@@ -9,18 +11,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: academykit/academy
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
       - name: Login to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_SECRET }}
       - name: Build and push the image to Docker Hub
-        env:
-          DOCKER_IMAGE: ${{ secrets.DOCKER_IMAGE_NAME }}
-          IMAGE_TAG: latest
-        run: |
-          # Build a docker container and push it to Docker Hub 
-          docker build -t $DOCKER_IMAGE:$IMAGE_TAG .
-          echo "Pushing image to Docker Hub..."
-          docker push $DOCKER_IMAGE:$IMAGE_TAG
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
