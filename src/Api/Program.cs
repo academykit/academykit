@@ -3,12 +3,12 @@
 // </copyright>
 
 using System.Globalization;
+using Asp.Versioning;
 using Hangfire;
 using Hangfire.Dashboard;
 using Lingtren.Infrastructure.Configurations;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,8 +18,7 @@ builder.Services.AddApiVersioning(options =>
     options.ReportApiVersions = true;
     options.DefaultApiVersion = new ApiVersion(1, 0);
     options.AssumeDefaultVersionWhenUnspecified = true;
-});
-builder.Services.AddVersionedApiExplorer(options =>
+}).AddApiExplorer(options =>
 {
     options.GroupNameFormat = "'v'VVV";
     options.SubstituteApiVersionInUrl = true;

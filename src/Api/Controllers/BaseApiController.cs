@@ -4,6 +4,7 @@
 
 namespace Lingtren.Api.Controllers
 {
+    using Asp.Versioning;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Domain.Enums;

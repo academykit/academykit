@@ -1,7 +1,7 @@
 ﻿namespace Lingtren.Infrastructure.Configurations
 {
+    using Asp.Versioning.ApiExplorer;
     using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Mvc.ApiExplorer;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OpenApi.Models;
     using Swashbuckle.AspNetCore.SwaggerUI;
