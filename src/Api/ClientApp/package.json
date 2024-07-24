@@ -43,7 +43,7 @@
     "@tiptap/pm": "^2.0.3",
     "@tiptap/react": "^2.0.3",
     "@tiptap/starter-kit": "^2.0.3",
-    "axios": "^0.27.2",
+    "axios": "^0.28.0",
     "chart.js": "^4.4.1",
     "file-loader": "^6.2.0",
     "filepond": "^4.30.4",
