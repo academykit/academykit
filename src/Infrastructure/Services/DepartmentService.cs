@@ -165,8 +165,8 @@
         {
             var departmentExist = await _unitOfWork
                 .GetRepository<Department>()
-                .ExistsAsync(
-                    predicate: p => p.Id != entity.Id && p.Name.ToLower() == entity.Name.ToLower()
+                .ExistsAsync(predicate: p =>
+                    p.Id != entity.Id && p.Name.ToLower() == entity.Name.ToLower()
                 )
                 .ConfigureAwait(false);
             if (departmentExist)
@@ -198,24 +198,23 @@
                 .ConfigureAwait(false);
 
             var predicate = PredicateBuilder.New<User>(true);
-            predicate = predicate.And(
-                p => p.DepartmentId == department.Id && p.Status == UserStatus.Active
+            predicate = predicate.And(p =>
+                p.DepartmentId == department.Id && p.Status == UserStatus.Active
             );
 
             if (!string.IsNullOrWhiteSpace(searchCriteria.Search))
             {
                 var search = searchCriteria.Search.ToLower().Trim();
-                predicate = predicate.And(
-                    x =>
-                        (
-                            (x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim()
-                            + " "
-                            + x.LastName.Trim()
-                        )
-                            .Trim()
-                            .Contains(search)
-                        || x.Email.ToLower().Trim().Contains(search)
-                        || x.MobileNumber.ToLower().Trim().Contains(search)
+                predicate = predicate.And(x =>
+                    (
+                        (x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim()
+                        + " "
+                        + x.LastName.Trim()
+                    )
+                        .Trim()
+                        .Contains(search)
+                    || x.Email.ToLower().Trim().Contains(search)
+                    || x.MobileNumber.ToLower().Trim().Contains(search)
                 );
             }
 
@@ -269,11 +268,10 @@
                         .ConfigureAwait(false);
                     var resopnse = new List<UserResponseModel>();
                     foreach (
-                        var departmentUser in department.SelectMany(
-                            x =>
-                                x.Users.Where(
-                                    x => x.Role != UserRole.Admin && x.Role != UserRole.SuperAdmin
-                                )
+                        var departmentUser in department.SelectMany(x =>
+                            x.Users.Where(x =>
+                                x.Role != UserRole.Admin && x.Role != UserRole.SuperAdmin
+                            )
                         )
                     )
                     {

@@ -9,6 +9,7 @@ namespace Lingtren.Application.Common.Models.RequestModels
         public FeedbackTypeEnum Type { get; set; }
         public IList<FeedbackQuestionOptionRequestModel> Answers { get; set; }
     }
+
     public class FeedbackQuestionOptionRequestModel
     {
         public string Option { get; set; }

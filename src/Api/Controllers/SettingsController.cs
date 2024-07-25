@@ -37,7 +37,8 @@ namespace Lingtren.Api.Controllers
             IValidator<GeneralSettingRequestModel> generalSettingValidator,
             IValidator<ZoomSettingRequestModel> zoomSettingValidator,
             IStringLocalizer<ExceptionLocalizer> localizer,
-            IValidator<SMTPSettingRequestModel> smtpSettingValidator)
+            IValidator<SMTPSettingRequestModel> smtpSettingValidator
+        )
         {
             this.logger = logger;
             this.generalSettingService = generalSettingService;
@@ -69,13 +70,18 @@ namespace Lingtren.Api.Controllers
         [AllowAnonymous]
         public async Task<CompanyResponseModel> Company()
         {
-            var response = await generalSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
+            var response = await generalSettingService
+                .GetFirstOrDefaultAsync()
+                .ConfigureAwait(false);
             return new CompanyResponseModel
             {
                 Name = response.CompanyName,
                 ImageUrl = response.LogoUrl,
                 CustomConfiguration = response.CustomConfiguration,
-                AppVersion = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
+                AppVersion = Assembly
+                    .GetEntryAssembly()
+                    ?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                    ?.InformationalVersion,
             };
         }
 
@@ -86,12 +92,19 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the  instance of <see cref="GeneralSettingRequestModel" /> .</param>
         /// <returns> the instance of <see cref="GeneralSettingResponseModel" /> .</returns>
         [HttpPut("{id}")]
-        public async Task<GeneralSettingResponseModel> UpdateGeneralSettings(Guid id, GeneralSettingRequestModel model)
+        public async Task<GeneralSettingResponseModel> UpdateGeneralSettings(
+            Guid id,
+            GeneralSettingRequestModel model
+        )
         {
             IsSuperAdmin(CurrentUser.Role);
 
-            await generalSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await generalSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
+            await generalSettingValidator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var existing = await generalSettingService
+                .GetAsync(id, CurrentUser.Id)
+                .ConfigureAwait(false);
 
             if (existing == null)
             {
@@ -113,13 +126,20 @@ namespace Lingtren.Api.Controllers
             existing.UpdatedOn = currentTimeStamp;
             existing.CustomConfiguration = model.CustomConfiguration;
 
-            var savedEntity = await generalSettingService.UpdateAsync(existing).ConfigureAwait(false);
+            var savedEntity = await generalSettingService
+                .UpdateAsync(existing)
+                .ConfigureAwait(false);
 
             if (logoUrlKey != model.LogoUrl && !string.IsNullOrWhiteSpace(logoUrlKey))
             {
-                if (logoUrlKey.ToLower().Trim().Contains("/public/") && logoUrlKey.IndexOf("/standalone/") != -1)
+                if (
+                    logoUrlKey.ToLower().Trim().Contains("/public/")
+                    && logoUrlKey.IndexOf("/standalone/") != -1
+                )
                 {
-                    logoUrlKey = logoUrlKey.Substring(logoUrlKey.IndexOf("/standalone/") + "/standalone/".Length);
+                    logoUrlKey = logoUrlKey.Substring(
+                        logoUrlKey.IndexOf("/standalone/") + "/standalone/".Length
+                    );
                 }
 
                 await fileServerService.RemoveFileAsync(logoUrlKey).ConfigureAwait(false);
@@ -148,12 +168,19 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the  instance of <see cref="ZoomSettingRequestModel" /> .</param>
         /// <returns> the instance of <see cref="ZoomSettingResponseModel" /> .</returns>
         [HttpPut("zoom/{id}")]
-        public async Task<ZoomSettingResponseModel> UpdateZoomSetting(Guid id, ZoomSettingRequestModel model)
+        public async Task<ZoomSettingResponseModel> UpdateZoomSetting(
+            Guid id,
+            ZoomSettingRequestModel model
+        )
         {
             IsSuperAdmin(CurrentUser.Role);
 
-            await zoomSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await zoomSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
+            await zoomSettingValidator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var existing = await zoomSettingService
+                .GetAsync(id, CurrentUser.Id)
+                .ConfigureAwait(false);
 
             if (existing == null)
             {
@@ -197,12 +224,19 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the  instance of <see cref="SMTPSettingRequestModel" /> .</param>
         /// <returns> the instance of <see cref="SMTPSettingResponseModel" /> .</returns>
         [HttpPut("smtp/{id}")]
-        public async Task<SMTPSettingResponseModel> UpdateSMTPSetting(Guid id, SMTPSettingRequestModel model)
+        public async Task<SMTPSettingResponseModel> UpdateSMTPSetting(
+            Guid id,
+            SMTPSettingRequestModel model
+        )
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
 
-            await smtpSettingValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var existing = await smtpSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
+            await smtpSettingValidator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var existing = await smtpSettingService
+                .GetAsync(id, CurrentUser.Id)
+                .ConfigureAwait(false);
 
             if (existing == null)
             {

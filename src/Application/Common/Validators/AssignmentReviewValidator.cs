@@ -9,8 +9,13 @@
     {
         public AssignmentReviewValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.UserId).NotEmpty().NotNull().WithMessage(context => stringLocalizer.GetString("UserIDrequired"));
-            RuleFor(x => x.Review).MaximumLength(500).WithMessage(context => stringLocalizer.GetString("InvalidReviewLength"));
+            RuleFor(x => x.UserId)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage(context => stringLocalizer.GetString("UserIDrequired"));
+            RuleFor(x => x.Review)
+                .MaximumLength(500)
+                .WithMessage(context => stringLocalizer.GetString("InvalidReviewLength"));
         }
     }
 }

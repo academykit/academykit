@@ -3,8 +3,7 @@
     public class CourseTeacherSearchCriteria : BaseSearchCriteria
     {
         public string CourseIdentity { get; set; }
-        public CourseTeacherSearchCriteria()
-        {
-        }
+
+        public CourseTeacherSearchCriteria() { }
     }
 }

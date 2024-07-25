@@ -23,11 +23,13 @@
         public IList<AssignmentSubmissionAttachmentResponseModel> AssignmentSubmissionAttachments { get; set; }
         public IList<AssignmentQuestionOptionResponseModel> AssignmentQuestionOptions { get; set; }
 
-        public AssignmentResponseModel()
-        {
-        }
+        public AssignmentResponseModel() { }
 
-        public AssignmentResponseModel(Assignment assignment, bool showHints = false, bool showCorrect = false)
+        public AssignmentResponseModel(
+            Assignment assignment,
+            bool showHints = false,
+            bool showCorrect = false
+        )
         {
             Id = assignment.Id;
             LessonId = assignment.LessonId;
@@ -42,13 +44,26 @@
             AssignmentAttachments = new List<AssignmentAttachmentResponseModel>();
             if (assignment.Type == QuestionTypeEnum.Subjective)
             {
-                assignment.AssignmentAttachments?.ToList().ForEach(item => AssignmentAttachments.Add(new AssignmentAttachmentResponseModel(item)));
+                assignment
+                    .AssignmentAttachments?.ToList()
+                    .ForEach(item =>
+                        AssignmentAttachments.Add(new AssignmentAttachmentResponseModel(item))
+                    );
             }
 
             AssignmentQuestionOptions = new List<AssignmentQuestionOptionResponseModel>();
-            if (assignment.Type == QuestionTypeEnum.SingleChoice || assignment.Type == QuestionTypeEnum.MultipleChoice)
+            if (
+                assignment.Type == QuestionTypeEnum.SingleChoice
+                || assignment.Type == QuestionTypeEnum.MultipleChoice
+            )
             {
-                assignment.AssignmentQuestionOptions?.ToList().ForEach(item => AssignmentQuestionOptions.Add(new AssignmentQuestionOptionResponseModel(item, showCorrect)));
+                assignment
+                    .AssignmentQuestionOptions?.ToList()
+                    .ForEach(item =>
+                        AssignmentQuestionOptions.Add(
+                            new AssignmentQuestionOptionResponseModel(item, showCorrect)
+                        )
+                    );
             }
         }
     }

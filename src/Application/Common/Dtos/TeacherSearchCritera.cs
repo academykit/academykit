@@ -1,5 +1,4 @@
-﻿
-using Lingtren.Domain.Enums;
+﻿using Lingtren.Domain.Enums;
 
 namespace Lingtren.Application.Common.Dtos
 {
@@ -11,7 +10,7 @@ namespace Lingtren.Application.Common.Dtos
         public string Identity { get; set; }
 
         /// <summary>
-        ///specify type of enum 
+        ///specify type of enum
         /// </summary>
         public TrainingTypeEnum LessonType { get; set; }
     }

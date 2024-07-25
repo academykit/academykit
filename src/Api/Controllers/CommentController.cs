@@ -20,7 +20,8 @@
         public CommentController(
             ICommentService commentService,
             IValidator<CommentRequestModel> validator,
-            IStringLocalizer<ExceptionLocalizer> localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
         {
             this.commentService = commentService;
             this.validator = validator;
@@ -32,7 +33,10 @@
         /// </summary>
         /// <returns> the list of <see cref="CommentResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<SearchResult<CommentResponseModel>> SearchAsync(string identity, [FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<CommentResponseModel>> SearchAsync(
+            string identity,
+            [FromQuery] BaseSearchCriteria searchCriteria
+        )
         {
             searchCriteria.CurrentUserId = CurrentUser.Id;
             return await commentService.SearchAsync(identity, searchCriteria).ConfigureAwait(false);
@@ -44,10 +48,17 @@
         /// <param name="model"> the instance of <see cref="DepartmentRequestModel" />. </param>
         /// <returns> the instance of <see cref="DepartmentRequestModel" /> .</returns>
         [HttpPost]
-        public async Task<CommentResponseModel> CreateAsync(string identity, CommentRequestModel model)
+        public async Task<CommentResponseModel> CreateAsync(
+            string identity,
+            CommentRequestModel model
+        )
         {
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            return await commentService.CreateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            return await commentService
+                .CreateAsync(identity, model, CurrentUser.Id)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -56,10 +67,18 @@
         /// <param name="model"> the instance of <see cref="DepartmentRequestModel" />. </param>
         /// <returns> the instance of <see cref="DepartmentRequestModel" /> .</returns>
         [HttpPut("{id}")]
-        public async Task<CommentResponseModel> UpdateAsync(string identity, Guid id, CommentRequestModel model)
+        public async Task<CommentResponseModel> UpdateAsync(
+            string identity,
+            Guid id,
+            CommentRequestModel model
+        )
         {
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            return await commentService.UpdateAsync(identity, id, model, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            return await commentService
+                .UpdateAsync(identity, id, model, CurrentUser.Id)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -71,7 +90,13 @@
         public async Task<IActionResult> DeleteAsync(string identity, Guid id)
         {
             await commentService.DeleteAsync(identity, id, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("CommentRemoved") });
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("CommentRemoved")
+                }
+            );
         }
 
         /// <summary>
@@ -79,10 +104,16 @@
         /// </summary>
         /// <returns> the list of <see cref="CommentResponseModel" /> .</returns>
         [HttpGet("{id}")]
-        public async Task<SearchResult<CommentReplyResponseModel>> SearchReplyAsync(string identity, Guid id, [FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<CommentReplyResponseModel>> SearchReplyAsync(
+            string identity,
+            Guid id,
+            [FromQuery] BaseSearchCriteria searchCriteria
+        )
         {
             searchCriteria.CurrentUserId = CurrentUser.Id;
-            return await commentService.SearchReplyAsync(identity, id, searchCriteria).ConfigureAwait(false);
+            return await commentService
+                .SearchReplyAsync(identity, id, searchCriteria)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -91,10 +122,18 @@
         /// <param name="identity"> the department id or slug.</param>
         /// <returns> the instance of <see cref="DepartmentResponseModel" /> .</returns>
         [HttpPost("{id}/CommentReply")]
-        public async Task<CommentReplyResponseModel> CreateReplyAsync(string identity, Guid id, CommentRequestModel model)
+        public async Task<CommentReplyResponseModel> CreateReplyAsync(
+            string identity,
+            Guid id,
+            CommentRequestModel model
+        )
         {
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            return await commentService.CreateReplyAsync(identity, id, model, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            return await commentService
+                .CreateReplyAsync(identity, id, model, CurrentUser.Id)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -103,10 +142,19 @@
         /// <param name="model"> the instance of <see cref="DepartmentRequestModel" />. </param>
         /// <returns> the instance of <see cref="DepartmentRequestModel" /> .</returns>
         [HttpPut("{id}/CommentReply/{replyId}")]
-        public async Task<CommentReplyResponseModel> UpdateReplyAsync(string identity, Guid id, Guid replyId, CommentRequestModel model)
+        public async Task<CommentReplyResponseModel> UpdateReplyAsync(
+            string identity,
+            Guid id,
+            Guid replyId,
+            CommentRequestModel model
+        )
         {
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            return await commentService.UpdateReplyAsync(identity, id, replyId, model, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            return await commentService
+                .UpdateReplyAsync(identity, id, replyId, model, CurrentUser.Id)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -118,8 +166,16 @@
         [HttpDelete("{id}/CommentReply/{replyId}")]
         public async Task<IActionResult> DeleteReplyAsync(string identity, Guid id, Guid replyId)
         {
-            await commentService.DeleteReplyAsync(identity, id, replyId, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("CommentReplyRemoved") });
+            await commentService
+                .DeleteReplyAsync(identity, id, replyId, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("CommentReplyRemoved")
+                }
+            );
         }
     }
 }

@@ -30,8 +30,6 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="AuditableEntity"/> class.
         /// </summary>
-        protected AuditableEntity()
-        {
-        }
+        protected AuditableEntity() { }
     }
 }

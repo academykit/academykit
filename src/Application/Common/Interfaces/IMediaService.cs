@@ -26,7 +26,10 @@
         /// <param name="model"> the instance of <see cref="StorageSetting" /> . </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the instance of <see cref="StorageSettingResponseModel" /> .</returns>
-        Task<StorageSettingResponseModel> StorageUpdateSettingAsync(StorageSettingRequestModel model, Guid currentUserId);
+        Task<StorageSettingResponseModel> StorageUpdateSettingAsync(
+            StorageSettingRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to get storage setting
@@ -41,7 +44,11 @@
         /// <param name="fileUrl"> the file url </param>
         /// <param name="downloadToken"> the download token </param>
         /// <returns> the instance of <see cref="VideoModel"/></returns>
-        Task<VideoModel> UploadRecordingFileAsync(string fileUrl, string downloadToken, int fileSize);
+        Task<VideoModel> UploadRecordingFileAsync(
+            string fileUrl,
+            string downloadToken,
+            int fileSize
+        );
 
         /// <summary>
         /// Handle to get file

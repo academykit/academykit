@@ -97,9 +97,8 @@ namespace Lingtren.Infrastructure.Services
         {
             var skillsExist = await _unitOfWork
                 .GetRepository<Skills>()
-                .ExistsAsync(
-                    predicate: p =>
-                        p.Id != entity.Id && p.SkillName.ToLower() == entity.SkillName.ToLower()
+                .ExistsAsync(predicate: p =>
+                    p.Id != entity.Id && p.SkillName.ToLower() == entity.SkillName.ToLower()
                 )
                 .ConfigureAwait(false);
             if (skillsExist)

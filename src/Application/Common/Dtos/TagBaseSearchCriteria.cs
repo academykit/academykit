@@ -10,7 +10,7 @@ namespace Lingtren.Application.Common.Dtos
         public string Idenitiy { get; set; }
 
         /// <summary>
-        /// type of training 
+        /// type of training
         /// </summary>
         public TrainingTypeEnum TrainingType { get; set; }
     }

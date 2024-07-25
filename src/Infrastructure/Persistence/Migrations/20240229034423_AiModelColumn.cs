@@ -15,15 +15,14 @@ namespace Infrastructure.Persistence.Migrations
                 table: "AIKeys",
                 type: "int",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "ai_model",
-                table: "AIKeys");
+            migrationBuilder.DropColumn(name: "ai_model", table: "AIKeys");
         }
     }
 }

@@ -406,7 +406,6 @@
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.CreatedBy)
                 .OnDelete(DeleteBehavior.NoAction);
-                
         }
     }
 }

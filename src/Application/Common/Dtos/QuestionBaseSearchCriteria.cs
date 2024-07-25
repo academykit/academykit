@@ -1,5 +1,4 @@
-﻿
-namespace Lingtren.Application.Common.Dtos
+﻿namespace Lingtren.Application.Common.Dtos
 {
     using Lingtren.Domain.Enums;
 
@@ -8,8 +7,7 @@ namespace Lingtren.Application.Common.Dtos
         public string PoolIdentity { get; set; }
         public IList<Guid> Tags { get; set; }
         public QuestionTypeEnum? Type { get; set; }
-        public QuestionBaseSearchCriteria()
-        {
-        }
+
+        public QuestionBaseSearchCriteria() { }
     }
 }

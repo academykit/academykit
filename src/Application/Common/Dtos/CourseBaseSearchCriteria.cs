@@ -12,6 +12,7 @@ namespace Lingtren.Application.Common.Dtos
         public CourseStatus? Status { get; set; }
         public Guid UserId { get; set; }
     }
+
     /// <summary>
     /// Represent the enrollment type of a user on current course
     /// </summary>

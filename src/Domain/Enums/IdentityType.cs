@@ -7,6 +7,5 @@ namespace Lingtren.Domain.Enums
         DrivingLicense = 3,
         NationalIdentityCard = 4,
         VoterCard = 5,
-
     }
 }

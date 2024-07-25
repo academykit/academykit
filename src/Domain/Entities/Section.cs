@@ -2,6 +2,7 @@
 {
     using Lingtren.Domain.Common;
     using Lingtren.Domain.Enums;
+
     public class Section : AuditableEntity
     {
         public string Slug { get; set; }

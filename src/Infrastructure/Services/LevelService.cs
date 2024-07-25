@@ -13,12 +13,15 @@
     using Lingtren.Infrastructure.Localization;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
+
     public class LevelService : BaseGenericService<Level, BaseSearchCriteria>, ILevelService
     {
-        public LevelService(IUnitOfWork unitOfWork, ILogger<LevelService> logger,
-        IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
-        {
-        }
+        public LevelService(
+            IUnitOfWork unitOfWork,
+            ILogger<LevelService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
+            : base(unitOfWork, logger, localizer) { }
 
         /// <summary>
         /// Handle to create the level
@@ -37,9 +40,17 @@
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
 
-                var slug = CommonHelper.GetEntityTitleSlug<Level>(_unitOfWork, (slug) => q => q.Slug == slug, levelName);
-                var level = await _unitOfWork.GetRepository<Level>().GetFirstOrDefaultAsync(predicate: x => x.Name.ToLower() == levelName.ToLower()
-                          && x.IsActive).ConfigureAwait(false);
+                var slug = CommonHelper.GetEntityTitleSlug<Level>(
+                    _unitOfWork,
+                    (slug) => q => q.Slug == slug,
+                    levelName
+                );
+                var level = await _unitOfWork
+                    .GetRepository<Level>()
+                    .GetFirstOrDefaultAsync(predicate: x =>
+                        x.Name.ToLower() == levelName.ToLower() && x.IsActive
+                    )
+                    .ConfigureAwait(false);
                 if (level != default)
                 {
                     throw new ForbiddenException(_localizer.GetString("LevelAlreadyExist"));
@@ -61,7 +72,9 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to create level.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("LevelCreateError"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("LevelCreateError"));
             }
         }
 
@@ -83,15 +96,22 @@
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
 
-                var levels = await _unitOfWork.GetRepository<Level>().GetAllAsync(predicate: x => x.IsActive).ConfigureAwait(false);
+                var levels = await _unitOfWork
+                    .GetRepository<Level>()
+                    .GetAllAsync(predicate: x => x.IsActive)
+                    .ConfigureAwait(false);
 
-                var level = levels.FirstOrDefault(x => x.Id.ToString() == identity || x.Slug.Equals(identity));
+                var level = levels.FirstOrDefault(x =>
+                    x.Id.ToString() == identity || x.Slug.Equals(identity)
+                );
                 if (level == null)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("LevelNotFound"));
                 }
 
-                var levelNameExist = levels.Any(x => x.Id != level.Id && x.Name.ToLower() == levelName.ToLower());
+                var levelNameExist = levels.Any(x =>
+                    x.Id != level.Id && x.Name.ToLower() == levelName.ToLower()
+                );
                 if (levelNameExist)
                 {
                     throw new ForbiddenException(_localizer.GetString("LevelNameAlreadyExist"));
@@ -107,7 +127,9 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to update level");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("LevelUpdate"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("LevelUpdate"));
             }
         }
 
@@ -127,8 +149,12 @@
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
 
-                var level = await _unitOfWork.GetRepository<Level>().GetFirstOrDefaultAsync(predicate: x => x.Id.ToString() == identity ||
-                x.Slug.Equals(identity)).ConfigureAwait(false);
+                var level = await _unitOfWork
+                    .GetRepository<Level>()
+                    .GetFirstOrDefaultAsync(predicate: x =>
+                        x.Id.ToString() == identity || x.Slug.Equals(identity)
+                    )
+                    .ConfigureAwait(false);
                 if (level == default)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("TagNotFound"));
@@ -144,7 +170,9 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to delete level.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("DeleteLevelError"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("DeleteLevelError"));
             }
         }
 
@@ -156,13 +184,18 @@
         {
             try
             {
-                var levels = await _unitOfWork.GetRepository<Level>().GetAllAsync(predicate: x => x.IsActive).ConfigureAwait(false);
+                var levels = await _unitOfWork
+                    .GetRepository<Level>()
+                    .GetAllAsync(predicate: x => x.IsActive)
+                    .ConfigureAwait(false);
                 return levels;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to fetch levels.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("FetchLevelError"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("FetchLevelError"));
             }
         }
 

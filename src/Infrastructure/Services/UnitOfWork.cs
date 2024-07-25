@@ -40,7 +40,8 @@
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns>An instance of type inherited from <see cref="IRepository{TEntity}"/> interface.</returns>
-        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
+        public IRepository<TEntity> GetRepository<TEntity>()
+            where TEntity : class
         {
             repositories ??= new Dictionary<Type, object>();
 

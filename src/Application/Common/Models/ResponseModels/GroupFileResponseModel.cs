@@ -13,9 +13,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
 
-        public GroupFileResponseModel()
-        {
-        }
+        public GroupFileResponseModel() { }
 
         public GroupFileResponseModel(GroupFile groupFile)
         {

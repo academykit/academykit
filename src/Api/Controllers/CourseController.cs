@@ -1,9 +1,7 @@
 ﻿namespace Lingtren.Api.Controllers
 {
     using System.Globalization;
-
     using CsvHelper;
-
     using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
@@ -15,7 +13,6 @@
     using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Authorization;
-
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
 
@@ -70,20 +67,19 @@
                 TotalPage = searchResult.TotalPage,
             };
 
-            searchResult.Items.ForEach(
-                p =>
-                    response.Items.Add(
-                        new CourseResponseModel(
-                            p,
-                            searchCriteria.EnrollmentStatus == null
-                                ? courseService.GetUserCourseEnrollmentStatus(
-                                    p,
-                                    searchCriteria.CurrentUserId
-                                )
-                                : searchCriteria.EnrollmentStatus.FirstOrDefault(),
-                            courseService.GetUserEligibilityStatus(p, searchCriteria.CurrentUserId)
-                        )
+            searchResult.Items.ForEach(p =>
+                response.Items.Add(
+                    new CourseResponseModel(
+                        p,
+                        searchCriteria.EnrollmentStatus == null
+                            ? courseService.GetUserCourseEnrollmentStatus(
+                                p,
+                                searchCriteria.CurrentUserId
+                            )
+                            : searchCriteria.EnrollmentStatus.FirstOrDefault(),
+                        courseService.GetUserEligibilityStatus(p, searchCriteria.CurrentUserId)
                     )
+                )
             );
             return response;
         }
@@ -154,7 +150,7 @@
 
             foreach (var criteria in model.TrainingEligibilities)
             {
-                if(criteria.Eligibility != 0)
+                if (criteria.Eligibility != 0)
                 {
                     entity.TrainingEligibilities.Add(
                         new TrainingEligibility
@@ -388,7 +384,9 @@
         /// <param name="identity"> the course id or slug.</param>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpGet("{identity}/lessonStatistics/{lessonIdentity}/AssignmentSubmission")]
-        public async Task<SearchResult<AssignmentSubmissionResponseModel>> AssignmentDetailSubmission(
+        public async Task<
+            SearchResult<AssignmentSubmissionResponseModel>
+        > AssignmentDetailSubmission(
             string identity,
             string lessonIdentity,
             [FromQuery] BaseSearchCriteria searchCriteria
@@ -399,7 +397,6 @@
                 .AssignmentSubmissionStudentsReport(identity, lessonIdentity, searchCriteria)
                 .ConfigureAwait(false);
         }
-        
 
         /// <summary>
         /// Course student statistics api.

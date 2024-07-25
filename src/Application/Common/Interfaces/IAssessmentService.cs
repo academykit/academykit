@@ -24,6 +24,9 @@ namespace Lingtren.Application.Common.Interfaces
             string identity,
             Guid currentUserId
         );
-        Task<(bool,IEnumerable<EligibilityCreationResponseModel>)> GetUserEligibilityStatus(Assessment Entity, Guid currentUserId);
+        Task<(bool, IEnumerable<EligibilityCreationResponseModel>)> GetUserEligibilityStatus(
+            Assessment Entity,
+            Guid currentUserId
+        );
     }
 }

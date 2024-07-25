@@ -6,7 +6,6 @@
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
-
     using Lingtren.Domain.Entities;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Localization;
@@ -42,20 +41,19 @@
         {
             var questionPool = _unitOfWork
                 .GetRepository<QuestionPool>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p =>
-                        p.Id.ToString() == criteria.PoolIdentity || p.Slug == criteria.PoolIdentity
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.Id.ToString() == criteria.PoolIdentity || p.Slug == criteria.PoolIdentity
                 )
                 .Result;
 
-            predicate = predicate.And(
-                p => p.QuestionPoolQuestions.Any(x => x.QuestionPoolId == questionPool.Id)
+            predicate = predicate.And(p =>
+                p.QuestionPoolQuestions.Any(x => x.QuestionPoolId == questionPool.Id)
             );
 
             if (criteria.Tags?.Count > 0)
             {
-                predicate = predicate.And(
-                    p => p.QuestionTags.Any(x => criteria.Tags.Contains(x.TagId))
+                predicate = predicate.And(p =>
+                    p.QuestionTags.Any(x => criteria.Tags.Contains(x.TagId))
                 );
             }
 
@@ -69,16 +67,15 @@
                 var search = criteria.Search.ToLower().Trim();
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
 
-                predicate = predicate.And(
-                    x =>
-                        x.Name.ToLower().Trim().Contains(search)
-                        || (
-                            (x.User.FirstName.Trim() + " " + x.User.MiddleName.Trim()).Trim()
-                            + " "
-                            + x.User.LastName.Trim()
-                        )
-                            .Trim()
-                            .Contains(search)
+                predicate = predicate.And(x =>
+                    x.Name.ToLower().Trim().Contains(search)
+                    || (
+                        (x.User.FirstName.Trim() + " " + x.User.MiddleName.Trim()).Trim()
+                        + " "
+                        + x.User.LastName.Trim()
+                    )
+                        .Trim()
+                        .Contains(search)
                 );
             }
 
@@ -317,9 +314,8 @@
 
                 var questionPoolQuestion = await _unitOfWork
                     .GetRepository<QuestionPoolQuestion>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p =>
-                            p.QuestionId == existing.Id && p.QuestionPoolId == questionPool.Id
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.QuestionId == existing.Id && p.QuestionPoolId == questionPool.Id
                     )
                     .ConfigureAwait(false);
                 if (questionPoolQuestion != null)
@@ -454,10 +450,9 @@
             {
                 var questionPool = await _unitOfWork
                     .GetRepository<QuestionPool>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: x =>
-                            (x.Id.ToString() == poolIdentity || x.Slug.Equals(poolIdentity))
-                            && !x.IsDeleted
+                    .GetFirstOrDefaultAsync(predicate: x =>
+                        (x.Id.ToString() == poolIdentity || x.Slug.Equals(poolIdentity))
+                        && !x.IsDeleted
                     )
                     .ConfigureAwait(false);
                 if (questionPool == null)
@@ -497,16 +492,15 @@
 
                 var questionPoolQuestion = await _unitOfWork
                     .GetRepository<QuestionPoolQuestion>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p =>
-                            p.QuestionPoolId == questionPool.Id && p.QuestionId == existing.Id
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.QuestionPoolId == questionPool.Id && p.QuestionId == existing.Id
                     )
                     .ConfigureAwait(false);
 
                 var checkQuestionSetQuestionExist = await _unitOfWork
                     .GetRepository<QuestionSetQuestion>()
-                    .ExistsAsync(
-                        predicate: p => p.QuestionPoolQuestionId == questionPoolQuestion.Id
+                    .ExistsAsync(predicate: p =>
+                        p.QuestionPoolQuestionId == questionPoolQuestion.Id
                     )
                     .ConfigureAwait(false);
 
@@ -597,8 +591,8 @@
                     CreatedOn = currentTimeStamp,
                     UpdatedBy = currentUserId,
                     UpdatedOn = currentTimeStamp,
-                    QuestionOptions = question.Answers
-                        .Select(
+                    QuestionOptions = question
+                        .Answers.Select(
                             (answer, i) =>
                                 new QuestionOption
                                 {
@@ -644,26 +638,20 @@
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
             var responseModels = entities
-                .Select(
-                    entity =>
-                        new AddQuestionResponseModel
+                .Select(entity => new AddQuestionResponseModel
+                {
+                    Name = entity.Name,
+                    Type = entity.Type,
+                    Description = entity.Description,
+                    Hints = entity.Hints,
+                    Answers = entity
+                        .QuestionOptions.Select(option => new QuestionOptionResponseModel
                         {
-                            Name = entity.Name,
-                            Type = entity.Type,
-                            Description = entity.Description,
-                            Hints = entity.Hints,
-                            Answers = entity.QuestionOptions
-                                .Select(
-                                    option =>
-                                        new QuestionOptionResponseModel
-                                        {
-                                            Option = option.Option,
-                                            IsCorrect = option.IsCorrect
-                                        }
-                                )
-                                .ToList()
-                        }
-                )
+                            Option = option.Option,
+                            IsCorrect = option.IsCorrect
+                        })
+                        .ToList()
+                })
                 .ToList();
 
             return QuestionPoolQuestionIds;

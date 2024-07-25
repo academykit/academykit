@@ -2,6 +2,7 @@
 {
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
+
     public class LessonResponseModel
     {
         public Guid Id { get; set; }
@@ -68,12 +69,12 @@
             EndDate = model.EndDate;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
             Meeting = model.Meeting == null ? null : new MeetingResponseModel(model.Meeting);
-            QuestionSet = model.QuestionSet == null ? null : new QuestionSetResponseModel(model.QuestionSet);
+            QuestionSet =
+                model.QuestionSet == null ? null : new QuestionSetResponseModel(model.QuestionSet);
             ZoomId = model.Meeting != null ? model.Meeting.MeetingNumber.ToString() : null;
             Password = model.Meeting != null ? model.Meeting.Passcode : null;
         }
-        public LessonResponseModel()
-        {
-        }
+
+        public LessonResponseModel() { }
     }
 }

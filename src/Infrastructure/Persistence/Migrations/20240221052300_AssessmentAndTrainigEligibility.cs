@@ -87,67 +87,42 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Assessments",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            slug = table
-                                .Column<string>(
-                                    type: "VARCHAR(270)",
-                                    maxLength: 270,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            title = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            description = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            retake = table.Column<int>(
-                                type: "int",
-                                nullable: false,
-                                defaultValue: 0
-                            ),
-                            assessment_status = table.Column<int>(type: "int", nullable: false),
-                            start_date = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            end_date = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            duration = table.Column<int>(
-                                type: "int",
-                                nullable: false,
-                                defaultValue: 0
-                            ),
-                            weightage = table.Column<int>(
-                                type: "int",
-                                nullable: false,
-                                defaultValue: 0
-                            ),
-                            message = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        slug = table
+                            .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        title = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        description = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        retake = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                        assessment_status = table.Column<int>(type: "int", nullable: false),
+                        start_date = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        end_date = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        duration = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                        weightage = table.Column<int>(
+                            type: "int",
+                            nullable: false,
+                            defaultValue: 0
+                        ),
+                        message = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Assessments", x => x.id);
@@ -164,40 +139,31 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Skills",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_active = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: true
-                            ),
-                            remarks = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: true
+                        ),
+                        remarks = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Skills", x => x.id);
@@ -208,34 +174,29 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "TrainingEligibility",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            course_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            eligibility_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            training_eligibility_enum = table
-                                .Column<string>(
-                                    type: "VARCHAR(270)",
-                                    maxLength: 270,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        course_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        eligibility_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        training_eligibility_enum = table
+                            .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_TrainingEligibility", x => x.id);
@@ -253,56 +214,39 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "AssessmentQuestion",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            assessment_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            description = table
-                                .Column<string>(
-                                    type: "varchar(5000)",
-                                    maxLength: 5000,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            hints = table
-                                .Column<string>(
-                                    type: "varchar(5000)",
-                                    maxLength: 5000,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            order = table.Column<int>(
-                                type: "int",
-                                nullable: false,
-                                defaultValue: 0
-                            ),
-                            is_active = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            type = table.Column<int>(type: "int", nullable: false),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        description = table
+                            .Column<string>(type: "varchar(5000)", maxLength: 5000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        hints = table
+                            .Column<string>(type: "varchar(5000)", maxLength: 5000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        order = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        type = table.Column<int>(type: "int", nullable: false),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_AssessmentQuestion", x => x.id);
@@ -325,41 +269,36 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "AssessmentSubmission",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            assessment_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            start_time = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            end_time = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            is_submission_error = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            submission_error_message = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        start_time = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        end_time = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        is_submission_error = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        submission_error_message = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_AssessmentSubmission", x => x.id);
@@ -382,40 +321,39 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "EligibilityCreations",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            role = table.Column<int>(type: "int", nullable: false),
-                            skill_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            training_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            department_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            group_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            completed_assessment_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            assessment_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        role = table.Column<int>(type: "int", nullable: false),
+                        skill_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        training_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        department_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        group_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        completed_assessment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_EligibilityCreations", x => x.id);
@@ -462,32 +400,28 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "SkillsCriteria",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            skill_assessment_rule = table.Column<int>(type: "int", nullable: false),
-                            percentage = table.Column<decimal>(
-                                type: "decimal(20,4)",
-                                nullable: false
-                            ),
-                            skill_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            assessment_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        skill_assessment_rule = table.Column<int>(type: "int", nullable: false),
+                        percentage = table.Column<decimal>(type: "decimal(20,4)", nullable: false),
+                        skill_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_SkillsCriteria", x => x.id);
@@ -511,41 +445,37 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "UserSkills",
-                    columns: table =>
-                        new
-                        {
-                            Id = table.Column<Guid>(
-                                type: "char(36)",
-                                nullable: false,
-                                collation: "ascii_general_ci"
-                            ),
-                            SkillId = table.Column<Guid>(
-                                type: "char(36)",
-                                nullable: false,
-                                collation: "ascii_general_ci"
-                            ),
-                            UserId = table
-                                .Column<string>(type: "VARCHAR(50)", nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            SkillsId = table
-                                .Column<string>(type: "VARCHAR(50)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            CreatedBy = table.Column<Guid>(
-                                type: "char(36)",
-                                nullable: false,
-                                collation: "ascii_general_ci"
-                            ),
-                            CreatedOn = table.Column<DateTime>(
-                                type: "datetime(6)",
-                                nullable: false
-                            ),
-                            UpdatedBy = table.Column<Guid>(
-                                type: "char(36)",
-                                nullable: true,
-                                collation: "ascii_general_ci"
-                            ),
-                            UpdatedOn = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        Id = table.Column<Guid>(
+                            type: "char(36)",
+                            nullable: false,
+                            collation: "ascii_general_ci"
+                        ),
+                        SkillId = table.Column<Guid>(
+                            type: "char(36)",
+                            nullable: false,
+                            collation: "ascii_general_ci"
+                        ),
+                        UserId = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        SkillsId = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        CreatedBy = table.Column<Guid>(
+                            type: "char(36)",
+                            nullable: false,
+                            collation: "ascii_general_ci"
+                        ),
+                        CreatedOn = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                        UpdatedBy = table.Column<Guid>(
+                            type: "char(36)",
+                            nullable: true,
+                            collation: "ascii_general_ci"
+                        ),
+                        UpdatedOn = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_UserSkills", x => x.Id);
@@ -569,40 +499,35 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "AssessmentOptions",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            assessment_question_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            option = table
-                                .Column<string>(
-                                    type: "VARCHAR(5000)",
-                                    maxLength: 5000,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            order = table.Column<int>(type: "int", nullable: false),
-                            UserId = table
-                                .Column<string>(type: "VARCHAR(50)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_correct = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_question_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        option = table
+                            .Column<string>(type: "VARCHAR(5000)", maxLength: 5000, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        order = table.Column<int>(type: "int", nullable: false),
+                        UserId = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_correct = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_AssessmentOptions", x => x.id);
@@ -626,38 +551,34 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "AssessmentResult",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            assessment_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            assessment_submission_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            total_mark = table.Column<decimal>(
-                                type: "decimal(20,4)",
-                                nullable: false
-                            ),
-                            negative_mark = table.Column<decimal>(
-                                type: "decimal(20,4)",
-                                nullable: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_submission_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        total_mark = table.Column<decimal>(type: "decimal(20,4)", nullable: false),
+                        negative_mark = table.Column<decimal>(
+                            type: "decimal(20,4)",
+                            nullable: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_AssessmentResult", x => x.id);
@@ -686,39 +607,34 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "AssessmentSubmissionAnswer",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            assessment_submission_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            assessment_question_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            selected_answers = table
-                                .Column<string>(
-                                    type: "VARCHAR(150)",
-                                    maxLength: 150,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_correct = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_submission_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_question_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        selected_answers = table
+                            .Column<string>(type: "VARCHAR(150)", maxLength: 150, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_correct = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_AssessmentSubmissionAnswer", x => x.id);

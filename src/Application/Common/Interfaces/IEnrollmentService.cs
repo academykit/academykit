@@ -14,13 +14,19 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="courseIdentity">course id or slug</param>
         /// <returns>Task completed</returns>
         /// <exception cref="EntityNotFoundException"></exception>
-        Task<string> EnrollUserAsync(IList<string> emailOrMobileNumber, Guid currentUserId, string courseIdentity);
+        Task<string> EnrollUserAsync(
+            IList<string> emailOrMobileNumber,
+            Guid currentUserId,
+            string courseIdentity
+        );
 
         /// <summary>
         /// get filtered user list for course
         /// </summary>
         /// <param name="criteria">enrolled user search criteria</param>
         /// <returns>Task completed</returns>
-        Task<SearchResult<UserResponseModel>> CourseUserSearchAsync(EnrollmentBaseSearchCriteria criteria);
+        Task<SearchResult<UserResponseModel>> CourseUserSearchAsync(
+            EnrollmentBaseSearchCriteria criteria
+        );
     }
 }

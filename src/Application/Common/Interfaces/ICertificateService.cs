@@ -8,21 +8,28 @@
     public interface ICertificateService
     {
         /// <summary>
-        /// Handle to save external certificate 
+        /// Handle to save external certificate
         /// </summary>
         /// <param name="model"> the instance of <see cref="CertificateRequestModel" /> .</param>
         /// <param name="currentUserId"> the user id </param>
         /// <returns> the instance of <see cref="CertificateResponseModel" /> .</returns>
-        Task<CertificateResponseModel> SaveExternalCertificateAsync(CertificateRequestModel model, Guid currentUserId);
+        Task<CertificateResponseModel> SaveExternalCertificateAsync(
+            CertificateRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
-        /// Handle to update the external certificate 
+        /// Handle to update the external certificate
         /// </summary>
         /// <param name="identity"> certificate id or slug </param>
         /// <param name="model"> the instance of <see cref="CertificateRequestModel" /> .</param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns></returns>
-        Task<CertificateResponseModel> UpdateExternalCertificateAsync(Guid identity, CertificateRequestModel model, Guid currentUserId);
+        Task<CertificateResponseModel> UpdateExternalCertificateAsync(
+            Guid identity,
+            CertificateRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to delete the external certificate async
@@ -40,7 +47,7 @@
         Task<IList<CertificateResponseModel>> GetExternalCertificateAsync(Guid currentUserId);
 
         /// <summary>
-        /// Handle to get certificate details 
+        /// Handle to get certificate details
         /// </summary>
         /// <param name="identity"> the id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
@@ -69,7 +76,10 @@
         /// <param name="criteria"> the instance of <see cref="CertificateBaseSearchCriteria" /> .</param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the list of <see cref="CertificateResponseModel" /> .</returns>
-        Task<SearchResult<CertificateResponseModel>> GetReviewCertificatesAsync(CertificateBaseSearchCriteria criteria, Guid currentUserId);
+        Task<SearchResult<CertificateResponseModel>> GetReviewCertificatesAsync(
+            CertificateBaseSearchCriteria criteria,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to get internal certificate

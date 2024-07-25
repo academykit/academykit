@@ -47,10 +47,10 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             NoOfQuestion = existingQuestion;
             AssessmentStatus = model.AssessmentStatus;
             SkillsCriteriaRequestModels = new List<SkillsCriteriaResponseModel>();
-            model.SkillsCriteria
-                .ToList()
-                .ForEach(
-                    item => SkillsCriteriaRequestModels.Add(new SkillsCriteriaResponseModel(item))
+            model
+                .SkillsCriteria.ToList()
+                .ForEach(item =>
+                    SkillsCriteriaRequestModels.Add(new SkillsCriteriaResponseModel(item))
                 );
             IsEligible = isEligible;
             User = model.User != null ? new UserModel(model.User) : new UserModel();

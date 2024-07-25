@@ -10,8 +10,14 @@ namespace Lingtren.Application.Common.Validators
     {
         public SettingValueValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.Value).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("ValueCannotBeNullOrEmpty"));
-            RuleFor(x => x.Key).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("KeyCannotBeNull"));
+            RuleFor(x => x.Value)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage(context => stringLocalizer.GetString("ValueCannotBeNullOrEmpty"));
+            RuleFor(x => x.Key)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage(context => stringLocalizer.GetString("KeyCannotBeNull"));
         }
     }
 }

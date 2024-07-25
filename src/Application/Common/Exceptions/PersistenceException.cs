@@ -16,7 +16,8 @@
         /// </summary>
         ///
         /// <param name="message">The message that describes the error.</param>
-        public PersistenceException(string message) : base(message) { }
+        public PersistenceException(string message)
+            : base(message) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PersistenceException"/> class
@@ -30,7 +31,8 @@
         /// The exception that is the cause of the current exception, or a null reference if no inner exception is
         /// specified.
         /// </param>
-        public PersistenceException(string message, Exception innerException) : base(message, innerException) { }
+        public PersistenceException(string message, Exception innerException)
+            : base(message, innerException) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PersistenceException"/> class with serialized data.
@@ -42,6 +44,7 @@
         /// <param name="context">
         /// The <see cref="StreamingContext"/> that contains contextual information about the source or destination.
         /// </param>
-        protected PersistenceException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        protected PersistenceException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
     }
 }

@@ -10,6 +10,5 @@ namespace Lingtren.Domain.Enums
         ABNegative = 6,
         OPositive = 7,
         ONegative = 8,
-
     }
 }

@@ -9,7 +9,12 @@
     {
         public GroupValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.Name).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("NameRequired")).MaximumLength(250).WithMessage(context => stringLocalizer.GetString("NameLengthError"));
+            RuleFor(x => x.Name)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage(context => stringLocalizer.GetString("NameRequired"))
+                .MaximumLength(250)
+                .WithMessage(context => stringLocalizer.GetString("NameLengthError"));
         }
     }
 }

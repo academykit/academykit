@@ -24,7 +24,9 @@ namespace Lingtren.Api.Controllers
         /// <param name="criteria"> the instance of <see cref="LogBaseSearchCriteria"/>.</param>
         /// <returns> the instance of <see cref="ServerLogsResponseModel"/>.</returns>
         [HttpGet("logs")]
-        public async Task<SearchResult<ServerLogsResponseModel>> Logs([FromQuery] LogBaseSearchCriteria criteria) => await logService.GetServerLogsAsync(criteria, CurrentUser.Id).ConfigureAwait(false);
+        public async Task<SearchResult<ServerLogsResponseModel>> Logs(
+            [FromQuery] LogBaseSearchCriteria criteria
+        ) => await logService.GetServerLogsAsync(criteria, CurrentUser.Id).ConfigureAwait(false);
 
         /// <summary>
         /// get log details api.
@@ -32,6 +34,7 @@ namespace Lingtren.Api.Controllers
         /// <param name="logId"> the log id. </param>
         /// <returns> the instance of <see cref="ServerLogsResponseModel"/>.</returns>
         [HttpGet("{logId}")]
-        public async Task<ServerLogsResponseModel> Log(Guid logId) => await logService.GetLogDetailAsync(logId, CurrentUser.Id).ConfigureAwait(false);
+        public async Task<ServerLogsResponseModel> Log(Guid logId) =>
+            await logService.GetLogDetailAsync(logId, CurrentUser.Id).ConfigureAwait(false);
     }
 }

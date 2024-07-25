@@ -22,7 +22,9 @@ namespace Lingtren.Api.Controllers
 
         public WebhookController(
             IZoomSettingService zoomSettingService,
-        IWebhookService webhookService, ILogger<WebhookController> logger)
+            IWebhookService webhookService,
+            ILogger<WebhookController> logger
+        )
         {
             this.zoomSettingService = zoomSettingService;
             this.webhookService = webhookService;
@@ -60,7 +62,9 @@ namespace Lingtren.Api.Controllers
                     return Ok(response);
                 }
 
-                BackgroundJob.Enqueue<IWebhookService>(job => job.UploadZoomRecordingAsync(model, null));
+                BackgroundJob.Enqueue<IWebhookService>(job =>
+                    job.UploadZoomRecordingAsync(model, null)
+                );
             }
 
             return Ok();

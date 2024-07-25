@@ -9,8 +9,14 @@
     {
         public LoginValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.Email).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("EmailRequired"));
-            RuleFor(x => x.Password).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("PasswordRequired"));
+            RuleFor(x => x.Email)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage(context => stringLocalizer.GetString("EmailRequired"));
+            RuleFor(x => x.Password)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage(context => stringLocalizer.GetString("PasswordRequired"));
         }
     }
 }

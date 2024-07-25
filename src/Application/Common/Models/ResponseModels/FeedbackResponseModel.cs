@@ -1,4 +1,5 @@
 ﻿using Lingtren.Domain.Entities;
+
 namespace Lingtren.Application.Common.Models.ResponseModels
 {
     using Lingtren.Domain.Enums;
@@ -20,9 +21,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public IList<FeedbackQuestionOptionResponseModel> FeedbackQuestionOptions { get; set; }
         public bool IsTrainee { get; set; }
 
-        public FeedbackResponseModel()
-        {
-        }
+        public FeedbackResponseModel() { }
 
         public FeedbackResponseModel(Feedback feedback)
         {
@@ -35,9 +34,16 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             Type = feedback.Type;
             User = feedback.User != null ? new UserModel(feedback.User) : new UserModel();
             FeedbackQuestionOptions = new List<FeedbackQuestionOptionResponseModel>();
-            if (feedback.Type == FeedbackTypeEnum.SingleChoice || feedback.Type == FeedbackTypeEnum.MultipleChoice)
+            if (
+                feedback.Type == FeedbackTypeEnum.SingleChoice
+                || feedback.Type == FeedbackTypeEnum.MultipleChoice
+            )
             {
-                feedback.FeedbackQuestionOptions?.ToList().ForEach(item => FeedbackQuestionOptions.Add(new FeedbackQuestionOptionResponseModel(item)));
+                feedback
+                    .FeedbackQuestionOptions?.ToList()
+                    .ForEach(item =>
+                        FeedbackQuestionOptions.Add(new FeedbackQuestionOptionResponseModel(item))
+                    );
             }
         }
     }

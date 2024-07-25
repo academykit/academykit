@@ -14,6 +14,7 @@
         public string ReplyTo { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
+
         public SMTPSettingResponseModel(SMTPSetting model)
         {
             Id = model.Id;

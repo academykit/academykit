@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Domain.Entities
 {
     using Lingtren.Domain.Common;
+
     public class Level : AuditableEntity
     {
         public string Slug { get; set; }

@@ -14,8 +14,7 @@ namespace Lingtren.Api.Controllers
     {
         private readonly IQuestionSetService questionSetService;
 
-        public QuestionSetResultController(
-            IQuestionSetService questionSetService)
+        public QuestionSetResultController(IQuestionSetService questionSetService)
         {
             this.questionSetService = questionSetService;
         }
@@ -26,8 +25,13 @@ namespace Lingtren.Api.Controllers
         /// <param name="identity"the question set id or slug></param>
         /// <returns>the list of <see cref="QuestionSetResultResponseModel"/>.</returns>
         [HttpGet]
-        public async Task<SearchResult<QuestionSetResultResponseModel>> GetResults([FromQuery] BaseSearchCriteria searchCriteria, string identity)
-                                => await questionSetService.GetResults(searchCriteria, identity, CurrentUser.Id).ConfigureAwait(false);
+        public async Task<SearchResult<QuestionSetResultResponseModel>> GetResults(
+            [FromQuery] BaseSearchCriteria searchCriteria,
+            string identity
+        ) =>
+            await questionSetService
+                .GetResults(searchCriteria, identity, CurrentUser.Id)
+                .ConfigureAwait(false);
 
         /// <summary>
         /// get particular user results.
@@ -35,8 +39,13 @@ namespace Lingtren.Api.Controllers
         /// <param name="identity"the question set id or slug></param>
         /// <returns>the list of <see cref="QuestionSetResultResponseModel"/>.</returns>
         [HttpGet("{userId}")]
-        public async Task<StudentResultResponseModel> GetStudentResults(string identity, Guid userId)
-                                => await questionSetService.GetStudentResult(identity, userId, CurrentUser.Id).ConfigureAwait(false);
+        public async Task<StudentResultResponseModel> GetStudentResults(
+            string identity,
+            Guid userId
+        ) =>
+            await questionSetService
+                .GetStudentResult(identity, userId, CurrentUser.Id)
+                .ConfigureAwait(false);
 
         /// <summary>
         /// get result detail api.
@@ -45,6 +54,12 @@ namespace Lingtren.Api.Controllers
         /// <param name="questionSetSubmissionId">the question set submission id.</param>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpGet("{questionSetSubmissionId}/detail")]
-        public async Task<QuestionSetUserResultResponseModel> GetResultDetail(string identity, Guid questionSetSubmissionId) => await questionSetService.GetResultDetail(identity, questionSetSubmissionId, CurrentUser.Id).ConfigureAwait(false);
+        public async Task<QuestionSetUserResultResponseModel> GetResultDetail(
+            string identity,
+            Guid questionSetSubmissionId
+        ) =>
+            await questionSetService
+                .GetResultDetail(identity, questionSetSubmissionId, CurrentUser.Id)
+                .ConfigureAwait(false);
     }
 }

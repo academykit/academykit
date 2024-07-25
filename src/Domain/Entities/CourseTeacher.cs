@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Domain.Entities
 {
     using Lingtren.Domain.Common;
+
     public class CourseTeacher : AuditableEntity
     {
         public Guid UserId { get; set; }

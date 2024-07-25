@@ -26,7 +26,9 @@ namespace Lingtren.Api.Controllers
         [HttpGet]
         public async Task<DashboardResponseModel> Get()
         {
-            return await courseService.GetDashboardStats(CurrentUser.Id, CurrentUser.Role).ConfigureAwait(false);
+            return await courseService
+                .GetDashboardStats(CurrentUser.Id, CurrentUser.Role)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -34,9 +36,13 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <returns> the list of <see cref="" /> .</returns>
         [HttpGet("course")]
-        public async Task<SearchResult<DashboardCourseResponseModel>> GetCourses([FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<DashboardCourseResponseModel>> GetCourses(
+            [FromQuery] BaseSearchCriteria searchCriteria
+        )
         {
-            return await courseService.GetDashboardCourses(CurrentUser.Id, CurrentUser.Role, searchCriteria).ConfigureAwait(false);
+            return await courseService
+                .GetDashboardCourses(CurrentUser.Id, CurrentUser.Role, searchCriteria)
+                .ConfigureAwait(false);
         }
 
         /// <summary>

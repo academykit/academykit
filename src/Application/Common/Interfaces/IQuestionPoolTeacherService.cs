@@ -4,7 +4,8 @@
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
 
-    public interface IQuestionPoolTeacherService : IGenericService<QuestionPoolTeacher, QuestionPoolTeacherBaseSearchCriteria>
+    public interface IQuestionPoolTeacherService
+        : IGenericService<QuestionPoolTeacher, QuestionPoolTeacherBaseSearchCriteria>
     {
         /// <summary>
         /// Handle to assign role

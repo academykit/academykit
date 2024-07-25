@@ -11,6 +11,7 @@
         public AssignmentReviewResponseModel AssignmentReview { get; set; }
         public IList<AssignmentResponseModel> Assignments { get; set; }
     }
+
     public class AssignmentReviewResponseModel
     {
         public Guid Id { get; set; }

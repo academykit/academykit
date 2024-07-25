@@ -11,7 +11,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public IList<MostWrongAnsQues> MostWrongAnsQues { get; set; }
         public IList<UserModel> WeekStudents { get; set; }
         public IList<UserModel> TopStudents { get; set; }
-        public IList<TotalMarks> TotalMarks {get; set;}
+        public IList<TotalMarks> TotalMarks { get; set; }
 
         public ExamSummaryResponseModel() { }
     }
@@ -31,7 +31,6 @@ namespace Lingtren.Application.Common.Models.ResponseModels
 
     public class TotalMarks
     {
-        public decimal Marks {get; set;}
+        public decimal Marks { get; set; }
     }
 }
-

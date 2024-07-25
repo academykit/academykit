@@ -8,16 +8,16 @@ namespace Lingtren.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<UserSkills> builder)
         {
-            builder.HasKey(us => new { us.SkillId,us.UserId});
+            builder.HasKey(us => new { us.SkillId, us.UserId });
             builder
-                  .HasOne(us => us.User)
-                  .WithMany(us => us.UserSkills)
-                  .HasForeignKey(us => us.UserId);
-            
-            builder     
-                  .HasOne(us => us.Skills)
-                  .WithMany(us => us.UserSkills)
-                  .HasForeignKey(us => us.SkillId);
+                .HasOne(us => us.User)
+                .WithMany(us => us.UserSkills)
+                .HasForeignKey(us => us.UserId);
+
+            builder
+                .HasOne(us => us.Skills)
+                .WithMany(us => us.UserSkills)
+                .HasForeignKey(us => us.SkillId);
         }
     }
 }

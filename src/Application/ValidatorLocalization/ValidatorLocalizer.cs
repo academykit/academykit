@@ -1,7 +1,4 @@
 ﻿namespace Lingtren.Application.ValidatorLocalization
 {
-    public class ValidatorLocalizer
-    {
-
-    }
+    public class ValidatorLocalizer { }
 }

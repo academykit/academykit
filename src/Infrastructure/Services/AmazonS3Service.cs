@@ -16,11 +16,12 @@
 
     public class AmazonS3Service : BaseService, IAmazonS3Service
     {
-        public AmazonS3Service(IUnitOfWork unitOfWork, ILogger<AmazonS3Service>
-        logger, IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
-        {
-
-        }
+        public AmazonS3Service(
+            IUnitOfWork unitOfWork,
+            ILogger<AmazonS3Service> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
+            : base(unitOfWork, logger, localizer) { }
 
         /// <summary>
         /// Handle to upload file to s3 bucket
@@ -33,7 +34,11 @@
             {
                 // need to work on region end point
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
-                var client = new AmazonS3Client(credentails.AccessKey, credentails.SecretKey, Amazon.RegionEndpoint.APSouth1);
+                var client = new AmazonS3Client(
+                    credentails.AccessKey,
+                    credentails.SecretKey,
+                    Amazon.RegionEndpoint.APSouth1
+                );
                 var fileName = string.Concat(model.File.FileName.Where(c => !char.IsWhiteSpace(c)));
                 var extension = Path.GetExtension(fileName);
                 fileName = $"{Guid.NewGuid()}_{fileName}";
@@ -49,15 +54,22 @@
                     Key = fileName,
                     ContentType = model.File.ContentType,
                     InputStream = model.File.OpenReadStream(),
-                    BucketName = model.Type == MediaType.Private ? credentails.FileBucket : credentails.VideoBucket
+                    BucketName =
+                        model.Type == MediaType.Private
+                            ? credentails.FileBucket
+                            : credentails.VideoBucket
                 };
                 await transferUtility.UploadAsync(request);
-                return model.Type == MediaType.Private ? fileName : $"{credentails.CloudFront}/{fileName}";
+                return model.Type == MediaType.Private
+                    ? fileName
+                    : $"{credentails.CloudFront}/{fileName}";
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to save file in s3 bucket.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("S3BucketSave"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("S3BucketSave"));
             }
         }
 
@@ -71,7 +83,11 @@
             try
             {
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
-                var client = new AmazonS3Client(credentails.AccessKey, credentails.SecretKey, Amazon.RegionEndpoint.APSouth1);
+                var client = new AmazonS3Client(
+                    credentails.AccessKey,
+                    credentails.SecretKey,
+                    Amazon.RegionEndpoint.APSouth1
+                );
                 var request = new GetPreSignedUrlRequest
                 {
                     Key = key,
@@ -82,8 +98,13 @@
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to get s3 pre-signed file url.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("S3PreSigned"));
+                _logger.LogError(
+                    ex,
+                    "An error occurred while trying to get s3 pre-signed file url."
+                );
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("S3PreSigned"));
             }
         }
 
@@ -97,7 +118,11 @@
             try
             {
                 var credentails = await GetCredentialAsync().ConfigureAwait(false);
-                var client = new AmazonS3Client(credentails.AccessKey, credentails.SecretKey, Amazon.RegionEndpoint.APSouth1);
+                var client = new AmazonS3Client(
+                    credentails.AccessKey,
+                    credentails.SecretKey,
+                    Amazon.RegionEndpoint.APSouth1
+                );
                 var transferUtility = new TransferUtility(client);
                 var request = new TransferUtilityUploadRequest
                 {
@@ -110,8 +135,13 @@
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to save recording file in s3 bucket.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("RecordingFileinS3BucketSave"));
+                _logger.LogError(
+                    ex,
+                    "An error occurred while trying to save recording file in s3 bucket."
+                );
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("RecordingFileinS3BucketSave"));
             }
         }
 
@@ -125,7 +155,10 @@
         {
             try
             {
-                var settings = await _unitOfWork.GetRepository<Setting>().GetAllAsync(predicate: x => x.Key.StartsWith("AWS")).ConfigureAwait(false);
+                var settings = await _unitOfWork
+                    .GetRepository<Setting>()
+                    .GetAllAsync(predicate: x => x.Key.StartsWith("AWS"))
+                    .ConfigureAwait(false);
                 var accessKey = settings.FirstOrDefault(x => x.Key == "AWS_AccessKey")?.Value;
                 if (string.IsNullOrEmpty(accessKey))
                 {
@@ -138,10 +171,14 @@
                     throw new EntityNotFoundException(_localizer.GetString("AwsSecretKeyNotFound"));
                 }
 
-                var regionEndPoint = settings.FirstOrDefault(x => x.Key == "AWS_RegionEndpoint")?.Value;
+                var regionEndPoint = settings
+                    .FirstOrDefault(x => x.Key == "AWS_RegionEndpoint")
+                    ?.Value;
                 if (string.IsNullOrEmpty(regionEndPoint))
                 {
-                    throw new EntityNotFoundException(_localizer.GetString("AwsRegionEndPointNotFound"));
+                    throw new EntityNotFoundException(
+                        _localizer.GetString("AwsRegionEndPointNotFound")
+                    );
                 }
 
                 var fileBucket = settings.FirstOrDefault(x => x.Key == "AWS_FileBucket")?.Value;
@@ -159,8 +196,15 @@
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while attempting to get the aws credential.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredGettingAWsCredential"));
+                _logger.LogError(
+                    ex,
+                    "An error occurred while attempting to get the aws credential."
+                );
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(
+                        _localizer.GetString("ErrorOccurredGettingAWsCredential")
+                    );
             }
         }
 

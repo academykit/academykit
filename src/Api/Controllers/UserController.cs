@@ -143,16 +143,15 @@ namespace Lingtren.Api.Controllers
             var company = await generalSettingService
                 .GetFirstOrDefaultAsync()
                 .ConfigureAwait(false);
-            BackgroundJob.Enqueue<IHangfireJobService>(
-                job =>
-                    job.SendUserCreatedPasswordEmail(
-                        entity.Email,
-                        entity.FirstName,
-                        password,
-                        company.CompanyName,
-                        company.CompanyContactNumber,
-                        null
-                    )
+            BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                job.SendUserCreatedPasswordEmail(
+                    entity.Email,
+                    entity.FirstName,
+                    password,
+                    company.CompanyName,
+                    company.CompanyContactNumber,
+                    null
+                )
             );
             return new UserResponseModel(response);
         }
@@ -354,20 +353,18 @@ namespace Lingtren.Api.Controllers
                 .ConfigureAwait(false);
             if (password != null)
             {
-                BackgroundJob.Enqueue<IHangfireJobService>(
-                    job =>
-                        job.AccountUpdatedMailAsync(existing.FullName, model.Email, oldEmail, null)
+                BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                    job.AccountUpdatedMailAsync(existing.FullName, model.Email, oldEmail, null)
                 );
-                BackgroundJob.Enqueue<IHangfireJobService>(
-                    job =>
-                        job.SendUserCreatedPasswordEmail(
-                            existing.Email,
-                            existing.FullName,
-                            password,
-                            company.CompanyName,
-                            company.CompanyContactNumber,
-                            null
-                        )
+                BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                    job.SendUserCreatedPasswordEmail(
+                        existing.Email,
+                        existing.FullName,
+                        password,
+                        company.CompanyName,
+                        company.CompanyContactNumber,
+                        null
+                    )
                 );
             }
 

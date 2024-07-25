@@ -27,12 +27,13 @@
         /// <summary>
         /// Represents the JSON serializer settings.
         /// </summary>
-        private static readonly JsonSerializerSettings SerializerSettings = new()
-        {
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            DateFormatString = "MM/dd/yyyy HH:mm:ss",
-            DateTimeZoneHandling = DateTimeZoneHandling.Utc
-        };
+        private static readonly JsonSerializerSettings SerializerSettings =
+            new()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                DateFormatString = "MM/dd/yyyy HH:mm:ss",
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+            };
 
         /// <summary>
         /// Checks whether the given search criteria is <c>null</c> or incorrect.
@@ -54,8 +55,10 @@
 
             if (criteria.Page > 0 && criteria.Size < 1)
             {
-                throw new ArgumentException("Page size should be positive, if page number is positive.",
-                    nameof(criteria));
+                throw new ArgumentException(
+                    "Page size should be positive, if page number is positive.",
+                    nameof(criteria)
+                );
             }
         }
 
@@ -85,7 +88,9 @@
         {
             if (entity == null)
             {
-                throw new EntityNotFoundException($"{typeof(T).Name} with Id='{entityId}' was not found.");
+                throw new EntityNotFoundException(
+                    $"{typeof(T).Name} with Id='{entityId}' was not found."
+                );
             }
         }
 
@@ -184,7 +189,11 @@
         /// <param name="colName">The column name.</param>
         /// <returns>The new IQueryable with applied ordering.</returns>
         /// <remarks>Thrown exceptions will be propagated.</remarks>
-        private static IQueryable<T> OrderbyFromColumnName<T>(IQueryable<T> source, string orderName, string colName)
+        private static IQueryable<T> OrderbyFromColumnName<T>(
+            IQueryable<T> source,
+            string orderName,
+            string colName
+        )
         {
             var props = colName.Split('.');
             var type = typeof(T);
@@ -192,8 +201,8 @@
             Expression expr = arg;
             foreach (var prop in props)
             {
-                var pi = type.GetPublicProperties().FirstOrDefault(
-                    p => p.Name.Equals(prop, StringComparison.OrdinalIgnoreCase));
+                var pi = type.GetPublicProperties()
+                    .FirstOrDefault(p => p.Name.Equals(prop, StringComparison.OrdinalIgnoreCase));
                 if (pi == null)
                 {
                     throw new ServiceException($"'{colName}' is not a valid SortBy value.");
@@ -205,8 +214,13 @@
 
             var delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
             var lambda = Expression.Lambda(delegateType, expr, arg);
-            var resultExp = Expression.Call(typeof(Queryable),
-                orderName, new[] { typeof(T), type }, source.Expression, lambda);
+            var resultExp = Expression.Call(
+                typeof(Queryable),
+                orderName,
+                new[] { typeof(T), type },
+                source.Expression,
+                lambda
+            );
             return source.Provider.CreateQuery<T>(resultExp);
         }
 
@@ -222,7 +236,9 @@
                 return type.GetProperties();
             }
 
-            return (new Type[] { type }).Concat(type.GetInterfaces()).SelectMany(i => i.GetProperties());
+            return (new Type[] { type })
+                .Concat(type.GetInterfaces())
+                .SelectMany(i => i.GetProperties());
         }
 
         /// <summary>
@@ -246,8 +262,7 @@
         /// <param name="ordering">The order column name.</param>
         /// <returns>The new Queryable with applied OrderByDescending.</returns>
         /// <remarks>Thrown exceptions will be propagated.</remarks>
-        public static IQueryable<T> OrderByDescending<T>(this IQueryable<T> source,
-            string ordering)
+        public static IQueryable<T> OrderByDescending<T>(this IQueryable<T> source, string ordering)
         {
             return OrderbyFromColumnName(source, "OrderByDescending", ordering);
         }
@@ -297,8 +312,13 @@
         /// <param name="checkIfExists">The function to check if the slug already exist or not</param>
         /// <param name="name">The initial title to generate slug from.</param>
         /// <param name="counter">The initial value of slug index</param>
-        public static string GetEntityTitleSlug<TEntity>(IUnitOfWork unitOfWork,
-        Func<string, Expression<Func<TEntity, bool>>> checkIfExists, string name, int counter = 0) where TEntity : class
+        public static string GetEntityTitleSlug<TEntity>(
+            IUnitOfWork unitOfWork,
+            Func<string, Expression<Func<TEntity, bool>>> checkIfExists,
+            string name,
+            int counter = 0
+        )
+            where TEntity : class
         {
             var title = name;
             if (counter != 0)
@@ -326,8 +346,13 @@
         /// <param name="checkIfExists">The function to check if the slug already exist or not</param>
         /// <param name="name">The initial title to generate slug from.</param>
         /// <param name="counter">The initial value of slug index</param>
-        public static async Task<string> GetEntityTitleSlugAsync<TEntity>(IUnitOfWork unitOfWork,
-        Func<string, Expression<Func<TEntity, bool>>> checkIfExists, string name, int counter = 0) where TEntity : class
+        public static async Task<string> GetEntityTitleSlugAsync<TEntity>(
+            IUnitOfWork unitOfWork,
+            Func<string, Expression<Func<TEntity, bool>>> checkIfExists,
+            string name,
+            int counter = 0
+        )
+            where TEntity : class
         {
             var title = name;
             if (counter != 0)
@@ -341,39 +366,40 @@
             if (exists)
             {
                 counter++;
-                return await GetEntityTitleSlugAsync(unitOfWork, checkIfExists, name, counter).ConfigureAwait(false);
+                return await GetEntityTitleSlugAsync(unitOfWork, checkIfExists, name, counter)
+                    .ConfigureAwait(false);
             }
 
             return slug;
         }
 
-        // T is a generic class  
+        // T is a generic class
         public static DataTable ConvertToDataTable<T>(List<T> models)
         {
-            // creating a data table instance and typed it as our incoming model   
-            // as I make it generic, if you want, you can make it the model typed you want.  
+            // creating a data table instance and typed it as our incoming model
+            // as I make it generic, if you want, you can make it the model typed you want.
             DataTable dataTable = new(typeof(T).Name);
 
-            //Get all the properties of that model  
+            //Get all the properties of that model
             var Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-            // Loop through all the properties              
-            // Adding Column name to our data-table  
+            // Loop through all the properties
+            // Adding Column name to our data-table
             foreach (var prop in Props)
             {
-                //Setting column names as Property names    
+                //Setting column names as Property names
                 dataTable.Columns.Add(prop.Name);
             }
-            // Adding Row and its value to our dataTable  
+            // Adding Row and its value to our dataTable
             foreach (var item in models)
             {
                 var values = new object[Props.Length];
                 for (var i = 0; i < Props.Length; i++)
                 {
-                    //inserting property values to datatable rows    
+                    //inserting property values to datatable rows
                     values[i] = Props[i].GetValue(item, null);
                 }
-                // Finally add value to datatable    
+                // Finally add value to datatable
                 dataTable.Rows.Add(values);
             }
 
@@ -387,9 +413,10 @@
         /// <returns>bool</returns>
         public static bool ValidateEmailFormat(string email)
         {
-            var emailPattern = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
-                          @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
-                             @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+            var emailPattern =
+                @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}"
+                + @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\"
+                + @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
             return Regex.IsMatch(email, emailPattern);
         }
     }

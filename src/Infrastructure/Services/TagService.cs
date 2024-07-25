@@ -16,11 +16,12 @@
 
     public class TagService : BaseGenericService<Tag, TagBaseSearchCriteria>, ITagService
     {
-        public TagService(IUnitOfWork unitOfWork, ILogger<TagService> logger,
-        IStringLocalizer<ExceptionLocalizer> localizer)
-        : base(unitOfWork, logger, localizer)
-        {
-        }
+        public TagService(
+            IUnitOfWork unitOfWork,
+            ILogger<TagService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
+            : base(unitOfWork, logger, localizer) { }
 
         /// <summary>
         /// Handle to create the tag
@@ -33,9 +34,17 @@
             try
             {
                 var tagName = name.TrimStart().TrimEnd();
-                var slug = CommonHelper.GetEntityTitleSlug<Tag>(_unitOfWork, (slug) => q => q.Slug == slug, tagName);
-                var tag = await _unitOfWork.GetRepository<Tag>().GetFirstOrDefaultAsync(predicate: x => x.Name.ToLower() == tagName.ToLower()
-                          && x.IsActive).ConfigureAwait(false);
+                var slug = CommonHelper.GetEntityTitleSlug<Tag>(
+                    _unitOfWork,
+                    (slug) => q => q.Slug == slug,
+                    tagName
+                );
+                var tag = await _unitOfWork
+                    .GetRepository<Tag>()
+                    .GetFirstOrDefaultAsync(predicate: x =>
+                        x.Name.ToLower() == tagName.ToLower() && x.IsActive
+                    )
+                    .ConfigureAwait(false);
                 if (tag != default)
                 {
                     return tag;
@@ -57,7 +66,9 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to create tag.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("CreateTagError"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("CreateTagError"));
             }
         }
 
@@ -71,14 +82,21 @@
         {
             try
             {
-                var tag = await _unitOfWork.GetRepository<Tag>().GetFirstOrDefaultAsync(predicate: x => x.Id.ToString() == identity ||
-                x.Slug.Equals(identity)).ConfigureAwait(false);
+                var tag = await _unitOfWork
+                    .GetRepository<Tag>()
+                    .GetFirstOrDefaultAsync(predicate: x =>
+                        x.Id.ToString() == identity || x.Slug.Equals(identity)
+                    )
+                    .ConfigureAwait(false);
                 if (tag == default)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("TagNotFound"));
                 }
 
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: x => x.Id == currentUserId).ConfigureAwait(false);
+                var user = await _unitOfWork
+                    .GetRepository<User>()
+                    .GetFirstOrDefaultAsync(predicate: x => x.Id == currentUserId)
+                    .ConfigureAwait(false);
                 if (user == null)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
@@ -90,7 +108,7 @@
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
 
-                // to do check tag exist on other services 
+                // to do check tag exist on other services
 
                 tag.IsActive = false;
                 tag.UpdatedBy = currentUserId;
@@ -102,7 +120,9 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to delete tag.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("DeleteTagError"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("DeleteTagError"));
             }
         }
 
@@ -118,15 +138,22 @@
             try
             {
                 var tagName = name.TrimStart().TrimEnd();
-                var tags = await _unitOfWork.GetRepository<Tag>().GetAllAsync(predicate: x => x.IsActive).ConfigureAwait(false);
+                var tags = await _unitOfWork
+                    .GetRepository<Tag>()
+                    .GetAllAsync(predicate: x => x.IsActive)
+                    .ConfigureAwait(false);
 
-                var tag = tags.FirstOrDefault(x => x.Id.ToString() == identity || x.Slug.Equals(identity));
+                var tag = tags.FirstOrDefault(x =>
+                    x.Id.ToString() == identity || x.Slug.Equals(identity)
+                );
                 if (tag == null)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("TagNotFound"));
                 }
 
-                var tagNameExist = tags.Any(x => x.Id != tag.Id && x.Name.ToLower() == tagName.ToLower());
+                var tagNameExist = tags.Any(x =>
+                    x.Id != tag.Id && x.Name.ToLower() == tagName.ToLower()
+                );
                 if (tagNameExist)
                 {
                     throw new ForbiddenException(_localizer.GetString("TagAlreadyExist"));
@@ -142,7 +169,9 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to update tag.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UpdateTagError"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("UpdateTagError"));
             }
         }
 
@@ -154,14 +183,18 @@
         /// <param name="predicate">The predicate.</param>
         /// <param name="criteria">The search criteria.</param>
         /// <returns>The updated predicate with applied filters.</returns>
-        protected override Expression<Func<Tag, bool>> ConstructQueryConditions(Expression<Func<Tag, bool>> predicate, TagBaseSearchCriteria criteria)
+        protected override Expression<Func<Tag, bool>> ConstructQueryConditions(
+            Expression<Func<Tag, bool>> predicate,
+            TagBaseSearchCriteria criteria
+        )
         {
-
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search)
-                 || x.User.FirstName.ToLower().Trim().Contains(search));
+                predicate = predicate.And(x =>
+                    x.Name.ToLower().Trim().Contains(search)
+                    || x.User.FirstName.ToLower().Trim().Contains(search)
+                );
             }
 
             if (!string.IsNullOrWhiteSpace(criteria.Idenitiy))
@@ -169,12 +202,28 @@
                 switch (criteria.TrainingType)
                 {
                     case TrainingTypeEnum.Course:
-                        predicate = predicate.And(x => x.CourseTags.Any(x => x.Course.Id.ToString() == criteria.Idenitiy.Trim() || x.Course.Slug.ToLower() == criteria.Idenitiy.ToLower().Trim()));
+                        predicate = predicate.And(x =>
+                            x.CourseTags.Any(x =>
+                                x.Course.Id.ToString() == criteria.Idenitiy.Trim()
+                                || x.Course.Slug.ToLower() == criteria.Idenitiy.ToLower().Trim()
+                            )
+                        );
                         break;
                     case TrainingTypeEnum.QuestionPool:
-                        var questionTags = _unitOfWork.GetRepository<QuestionTag>().GetAll(predicate: p => p.Question.QuestionPoolQuestions.Any(x => x.QuestionPool.Slug.ToLower() == criteria.Idenitiy.ToLower().Trim() ||
-                        x.QuestionPool.Id.ToString() == criteria.Idenitiy.ToString().Trim())).ToList();
-                        predicate = predicate.And(x => questionTags.Select(x => x.TagId).Contains(x.Id));
+                        var questionTags = _unitOfWork
+                            .GetRepository<QuestionTag>()
+                            .GetAll(predicate: p =>
+                                p.Question.QuestionPoolQuestions.Any(x =>
+                                    x.QuestionPool.Slug.ToLower()
+                                        == criteria.Idenitiy.ToLower().Trim()
+                                    || x.QuestionPool.Id.ToString()
+                                        == criteria.Idenitiy.ToString().Trim()
+                                )
+                            )
+                            .ToList();
+                        predicate = predicate.And(x =>
+                            questionTags.Select(x => x.TagId).Contains(x.Id)
+                        );
                         break;
                 }
             }
@@ -190,7 +239,11 @@
         /// </remarks>
         protected override async Task CreatePreHookAsync(Tag entity)
         {
-            entity.Slug = CommonHelper.GetEntityTitleSlug<Tag>(_unitOfWork, (slug) => q => q.Slug == slug, entity.Name);
+            entity.Slug = CommonHelper.GetEntityTitleSlug<Tag>(
+                _unitOfWork,
+                (slug) => q => q.Slug == slug,
+                entity.Name
+            );
             await Task.FromResult(0);
         }
 

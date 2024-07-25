@@ -19,13 +19,14 @@ namespace Lingtren.Api.Common
         /// <summary>
         /// Represents the JSON serialize settings.
         /// </summary>
-        public static readonly JsonSerializerSettings SerializerSettings = new()
-        {
-            ContractResolver = new CamelCasePropertyNamesContractResolver(),
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            DateFormatString = "MM/dd/yyyy HH:mm:ss",
-            DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-        };
+        public static readonly JsonSerializerSettings SerializerSettings =
+            new()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                DateFormatString = "MM/dd/yyyy HH:mm:ss",
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+            };
 
         /// <summary>
         /// Serializes the specified value.
@@ -62,7 +63,14 @@ namespace Lingtren.Api.Common
             var mobileNumber = claimsPrincipal.GetClaim("mobile_number", isRequired: false);
             var role = claimsPrincipal.GetClaim(ClaimTypes.Role, isRequired: true);
 
-            return new CurrentUser { Id = Guid.Parse(userId), Name = userName, Email = email, MobileNumber = mobileNumber, Role = Enum.Parse<UserRole>(role) };
+            return new CurrentUser
+            {
+                Id = Guid.Parse(userId),
+                Name = userName,
+                Email = email,
+                MobileNumber = mobileNumber,
+                Role = Enum.Parse<UserRole>(role)
+            };
         }
 
         /// <summary>
@@ -72,7 +80,11 @@ namespace Lingtren.Api.Common
         /// <param name="claimType">Type of the claim.</param>
         /// <param name="isRequired">if set to <c>true</c> [is required].</param>
         /// <returns>The claim value.</returns>
-        public static string GetClaim(this ClaimsPrincipal claimsPrincipal, string claimType, bool isRequired = false)
+        public static string GetClaim(
+            this ClaimsPrincipal claimsPrincipal,
+            string claimType,
+            bool isRequired = false
+        )
         {
             var claim = FindClaim(claimsPrincipal, claimType, isRequired);
             return claim?.Value;
@@ -86,7 +98,11 @@ namespace Lingtren.Api.Common
         /// <param name="claimType">Type of the claim.</param>
         /// <param name="isRequired">if set to <c>true</c> [is required].</param>
         /// <returns>Claim object value.</returns>
-        public static T GetClaim<T>(this ClaimsPrincipal claimsPrincipal, string claimType, bool isRequired = false)
+        public static T GetClaim<T>(
+            this ClaimsPrincipal claimsPrincipal,
+            string claimType,
+            bool isRequired = false
+        )
         {
             var claim = FindClaim(claimsPrincipal, claimType, isRequired);
             if (claim == null)
@@ -104,7 +120,11 @@ namespace Lingtren.Api.Common
         /// <param name="claimType">Type of the claim.</param>
         /// <param name="isRequired">if set to <c>true</c> [is required].</param>
         /// <returns>Found claim.</returns>
-        private static Claim FindClaim(ClaimsPrincipal claimsPrincipal, string claimType, bool isRequired)
+        private static Claim FindClaim(
+            ClaimsPrincipal claimsPrincipal,
+            string claimType,
+            bool isRequired
+        )
         {
             var claim = claimsPrincipal.Claims.FirstOrDefault(x => x.Type == claimType);
             if (claim == null && isRequired)

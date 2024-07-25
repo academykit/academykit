@@ -13,7 +13,10 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public int Order { get; set; }
         public UserModel User { get; set; }
 
-        public AssignmentQuestionOptionResponseModel(AssignmentQuestionOption model, bool showCorrect = false)
+        public AssignmentQuestionOptionResponseModel(
+            AssignmentQuestionOption model,
+            bool showCorrect = false
+        )
         {
             Id = model.Id;
             AssignmentId = model.AssignmentId;
@@ -23,8 +26,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             Order = model.Order;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
-        public AssignmentQuestionOptionResponseModel()
-        {
-        }
+
+        public AssignmentQuestionOptionResponseModel() { }
     }
 }

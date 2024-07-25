@@ -5,7 +5,8 @@ using Lingtren.Domain.Entities;
 
 namespace Lingtren.Infrastructure.Services
 {
-    public interface IPhysicalLessonServices : IGenericService<PhysicalLessonReview, BaseSearchCriteria>
+    public interface IPhysicalLessonServices
+        : IGenericService<PhysicalLessonReview, BaseSearchCriteria>
     {
         /// <summary>
         /// Insetrs or updates physical lesson stats

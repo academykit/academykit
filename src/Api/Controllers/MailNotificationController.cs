@@ -12,7 +12,6 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
-
     using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
@@ -62,8 +61,8 @@ namespace Lingtren.Api.Controllers
                 TotalPage = searchResult.TotalPage,
             };
 
-            searchResult.Items.ForEach(
-                p => response.Items.Add(new MailNotificationResponseModel(p))
+            searchResult.Items.ForEach(p =>
+                response.Items.Add(new MailNotificationResponseModel(p))
             );
 
             return response;

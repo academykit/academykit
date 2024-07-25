@@ -10,6 +10,7 @@
         public int Capacity { get; set; }
         public bool IsActive { get; set; }
         public UserModel User { get; set; }
+
         public ZoomLicenseResponseModel(ZoomLicense model)
         {
             Id = model.Id;
@@ -19,8 +20,7 @@
             IsActive = model.IsActive;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
-        public ZoomLicenseResponseModel()
-        {
-        }
+
+        public ZoomLicenseResponseModel() { }
     }
 }

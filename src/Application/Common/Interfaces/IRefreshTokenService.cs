@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Application.Common.Interfaces
 {
     using Lingtren.Domain.Entities;
+
     public interface IRefreshTokenService
     {
         /// <summary>

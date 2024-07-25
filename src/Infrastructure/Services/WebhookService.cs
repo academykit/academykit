@@ -18,10 +18,14 @@
     public class WebhookService : BaseService, IWebhookService
     {
         private readonly IMediaService _mediaService;
-        public WebhookService(IUnitOfWork unitOfWork,
-        ILogger<WebhookService> logger, IMediaService mediaService,
-        IStringLocalizer<ExceptionLocalizer> localizer)
-         : base(unitOfWork, logger, localizer)
+
+        public WebhookService(
+            IUnitOfWork unitOfWork,
+            ILogger<WebhookService> logger,
+            IMediaService mediaService,
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
+            : base(unitOfWork, logger, localizer)
         {
             _mediaService = mediaService;
         }
@@ -33,7 +37,10 @@
         /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
         /// <returns> the task complete </returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task UploadZoomRecordingAsync(ZoomRecordPayloadDto dto, PerformContext context = null)
+        public async Task UploadZoomRecordingAsync(
+            ZoomRecordPayloadDto dto,
+            PerformContext context = null
+        )
         {
             try
             {
@@ -56,8 +63,13 @@
                     return;
                 }
 
-                var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.MeetingNumber ==
-                            dto.Payload.Object.Id, include: source => source.Include(x => x.Lesson)).ConfigureAwait(false);
+                var meeting = await _unitOfWork
+                    .GetRepository<Meeting>()
+                    .GetFirstOrDefaultAsync(
+                        predicate: p => p.MeetingNumber == dto.Payload.Object.Id,
+                        include: source => source.Include(x => x.Lesson)
+                    )
+                    .ConfigureAwait(false);
                 if (meeting == null)
                 {
                     _logger.LogWarning("Meeting not found.");
@@ -70,14 +82,22 @@
                     return;
                 }
 
-                var recordingFile = dto.Payload.Object.Recording_files.Where(x => x.File_type.Equals("MP4")).
-                                    OrderBy(x => Convert.ToDateTime(x.Recording_start)).ToList();
+                var recordingFile = dto
+                    .Payload.Object.Recording_files.Where(x => x.File_type.Equals("MP4"))
+                    .OrderBy(x => Convert.ToDateTime(x.Recording_start))
+                    .ToList();
                 var lessons = new List<Lesson>();
                 var recordingFileDtos = new List<RecordingFileDto>();
                 var order = 1;
                 foreach (var file in recordingFile)
                 {
-                    var videoModel = await _mediaService.UploadRecordingFileAsync(file.Download_url, dto.Download_token, file.File_size).ConfigureAwait(true);
+                    var videoModel = await _mediaService
+                        .UploadRecordingFileAsync(
+                            file.Download_url,
+                            dto.Download_token,
+                            file.File_size
+                        )
+                        .ConfigureAwait(true);
                     var recording = new RecordingFileDto
                     {
                         Name = $"{meeting.Lesson.Name} Part {order}",
@@ -91,9 +111,13 @@
 
                 if (recordingFileDtos.Count > 1)
                 {
-                    var sectionLessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.SectionId ==
-                                         meeting.Lesson.SectionId).ConfigureAwait(false);
-                    var lessonOrderList = sectionLessons.Where(x => x.Order > meeting.Lesson.Order).ToList();
+                    var sectionLessons = await _unitOfWork
+                        .GetRepository<Lesson>()
+                        .GetAllAsync(predicate: p => p.SectionId == meeting.Lesson.SectionId)
+                        .ConfigureAwait(false);
+                    var lessonOrderList = sectionLessons
+                        .Where(x => x.Order > meeting.Lesson.Order)
+                        .ToList();
                     if (lessonOrderList.Count != default)
                     {
                         var reoderNo = recordingFileDtos.Count - 1;
@@ -116,7 +140,11 @@
                     var recordings = recordingFileDtos.OrderBy(x => x.Order).ToList();
                     foreach (var fileDto in recordings)
                     {
-                        var slug = CommonHelper.GetEntityTitleSlug<Lesson>(_unitOfWork, (slug) => q => q.Slug == slug, fileDto.Name);
+                        var slug = CommonHelper.GetEntityTitleSlug<Lesson>(
+                            _unitOfWork,
+                            (slug) => q => q.Slug == slug,
+                            fileDto.Name
+                        );
                         var lesson = new Lesson
                         {
                             Id = Guid.NewGuid(),
@@ -146,7 +174,10 @@
                     }
 
                     _unitOfWork.GetRepository<Lesson>().Update(meeting.Lesson);
-                    await _unitOfWork.GetRepository<Lesson>().InsertAsync(lessons).ConfigureAwait(false);
+                    await _unitOfWork
+                        .GetRepository<Lesson>()
+                        .InsertAsync(lessons)
+                        .ConfigureAwait(false);
                 }
                 else
                 {
@@ -158,7 +189,10 @@
                 }
 
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                BackgroundJob.Schedule<IZoomLicenseService>(x => x.DeleteZoomMeetingRecordingAsync(dto.Payload.Object.Id, null), TimeSpan.FromMinutes(2880));
+                BackgroundJob.Schedule<IZoomLicenseService>(
+                    x => x.DeleteZoomMeetingRecordingAsync(dto.Payload.Object.Id, null),
+                    TimeSpan.FromMinutes(2880)
+                );
             }
             catch (Exception ex)
             {
@@ -178,8 +212,13 @@
             {
                 _logger.LogError("Participant join meeting.");
                 _logger.LogInformation($" account id : {model.Payload.Account_Id}");
-                var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.MeetingNumber.ToString() ==
-                          model.Payload.Object.Id, include: source => source.Include(x => x.Lesson)).ConfigureAwait(false);
+                var meeting = await _unitOfWork
+                    .GetRepository<Meeting>()
+                    .GetFirstOrDefaultAsync(
+                        predicate: p => p.MeetingNumber.ToString() == model.Payload.Object.Id,
+                        include: source => source.Include(x => x.Lesson)
+                    )
+                    .ConfigureAwait(false);
 
                 if (meeting == default)
                 {
@@ -187,25 +226,44 @@
                     return;
                 }
 
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p =>
-                             p.Id.ToString() == model.Payload.Object.Participant.Customer_Key).ConfigureAwait(false);
+                var user = await _unitOfWork
+                    .GetRepository<User>()
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id.ToString() == model.Payload.Object.Participant.Customer_Key
+                    )
+                    .ConfigureAwait(false);
 
                 if (user == default)
                 {
-                    _logger.LogWarning("User with id : {id} not found.", model.Payload.Object.Participant.Customer_Key);
+                    _logger.LogWarning(
+                        "User with id : {id} not found.",
+                        model.Payload.Object.Participant.Customer_Key
+                    );
                     return;
                 }
 
-                var student = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == meeting.Lesson.CourseId && p.UserId == user.Id &&
-                               p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled).ConfigureAwait(false);
+                var student = await _unitOfWork
+                    .GetRepository<CourseEnrollment>()
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.CourseId == meeting.Lesson.CourseId
+                        && p.UserId == user.Id
+                        && p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled
+                    )
+                    .ConfigureAwait(false);
 
                 if (student == null)
                 {
                     return;
                 }
 
-                var watchHistory = await _unitOfWork.GetRepository<WatchHistory>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == meeting.Lesson.CourseId &&
-                p.LessonId == meeting.Lesson.Id && p.UserId == user.Id).ConfigureAwait(false);
+                var watchHistory = await _unitOfWork
+                    .GetRepository<WatchHistory>()
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.CourseId == meeting.Lesson.CourseId
+                        && p.LessonId == meeting.Lesson.Id
+                        && p.UserId == user.Id
+                    )
+                    .ConfigureAwait(false);
                 if (watchHistory == null)
                 {
                     var entity = new WatchHistory
@@ -219,7 +277,10 @@
                         CreatedBy = user.Id,
                         CreatedOn = DateTime.UtcNow,
                     };
-                    await _unitOfWork.GetRepository<WatchHistory>().InsertAsync(entity).ConfigureAwait(false);
+                    await _unitOfWork
+                        .GetRepository<WatchHistory>()
+                        .InsertAsync(entity)
+                        .ConfigureAwait(false);
                 }
 
                 var nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
@@ -229,16 +290,29 @@
                     MeetingId = meeting.Id,
                     UserId = user.Id,
                     StartTime = DateTime.Parse(model.Payload.Object.Start_Time),
-                    JoinTime = TimeZoneInfo.ConvertTime(DateTime.Parse(model.Payload.Object.Participant.Join_Time), nepalTimeZone),
+                    JoinTime = TimeZoneInfo.ConvertTime(
+                        DateTime.Parse(model.Payload.Object.Participant.Join_Time),
+                        nepalTimeZone
+                    ),
                     CreatedOn = DateTime.UtcNow
                 };
-                await _unitOfWork.GetRepository<MeetingReport>().InsertAsync(meetingReport).ConfigureAwait(false);
+                await _unitOfWork
+                    .GetRepository<MeetingReport>()
+                    .InsertAsync(meetingReport)
+                    .ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to save participant session join record.");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to save participant session join record.");
+                _logger.LogError(
+                    ex,
+                    "An error occurred while trying to save participant session join record."
+                );
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(
+                        "An error occurred while trying to save participant session join record."
+                    );
             }
         }
 
@@ -251,8 +325,13 @@
         {
             try
             {
-                var meeting = await _unitOfWork.GetRepository<Meeting>().GetFirstOrDefaultAsync(predicate: p => p.MeetingNumber.ToString() ==
-                         model.Payload.Object.Id, include: source => source.Include(x => x.Lesson)).ConfigureAwait(false);
+                var meeting = await _unitOfWork
+                    .GetRepository<Meeting>()
+                    .GetFirstOrDefaultAsync(
+                        predicate: p => p.MeetingNumber.ToString() == model.Payload.Object.Id,
+                        include: source => source.Include(x => x.Lesson)
+                    )
+                    .ConfigureAwait(false);
 
                 if (meeting == default)
                 {
@@ -260,17 +339,30 @@
                     return;
                 }
 
-                var user = await _unitOfWork.GetRepository<User>().GetFirstOrDefaultAsync(predicate: p =>
-                             p.Id.ToString() == model.Payload.Object.Participant.Customer_Key).ConfigureAwait(false);
+                var user = await _unitOfWork
+                    .GetRepository<User>()
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id.ToString() == model.Payload.Object.Participant.Customer_Key
+                    )
+                    .ConfigureAwait(false);
 
                 if (user == default)
                 {
-                    _logger.LogWarning("User with id : {id} not found.", model.Payload.Object.Participant.Customer_Key);
+                    _logger.LogWarning(
+                        "User with id : {id} not found.",
+                        model.Payload.Object.Participant.Customer_Key
+                    );
                     return;
                 }
 
-                var student = await _unitOfWork.GetRepository<CourseEnrollment>().GetFirstOrDefaultAsync(predicate: p => p.CourseId == meeting.Lesson.CourseId && p.UserId == user.Id &&
-                              p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled).ConfigureAwait(false);
+                var student = await _unitOfWork
+                    .GetRepository<CourseEnrollment>()
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.CourseId == meeting.Lesson.CourseId
+                        && p.UserId == user.Id
+                        && p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled
+                    )
+                    .ConfigureAwait(false);
 
                 if (student == null)
                 {
@@ -278,19 +370,30 @@
                 }
 
                 var nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
-                var report = await _unitOfWork.GetRepository<MeetingReport>().GetFirstOrDefaultAsync(
-                    predicate: p => p.UserId == user.Id && p.MeetingId == meeting.Id
-                            && p.StartTime == DateTime.Parse(model.Payload.Object.Start_Time)
-                            && p.LeftTime == default).ConfigureAwait(false);
+                var report = await _unitOfWork
+                    .GetRepository<MeetingReport>()
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.UserId == user.Id
+                        && p.MeetingId == meeting.Id
+                        && p.StartTime == DateTime.Parse(model.Payload.Object.Start_Time)
+                        && p.LeftTime == default
+                    )
+                    .ConfigureAwait(false);
 
                 if (report == default)
                 {
-                    _logger.LogWarning("Meeting Report not found for user with id : {userId} and meeting with id : {id}.",
-                                        user.Id, meeting.Id);
+                    _logger.LogWarning(
+                        "Meeting Report not found for user with id : {userId} and meeting with id : {id}.",
+                        user.Id,
+                        meeting.Id
+                    );
                     return;
                 }
 
-                var LeftTime = TimeZoneInfo.ConvertTime(DateTime.Parse(model.Payload.Object.Participant.Leave_Time), nepalTimeZone);
+                var LeftTime = TimeZoneInfo.ConvertTime(
+                    DateTime.Parse(model.Payload.Object.Participant.Leave_Time),
+                    nepalTimeZone
+                );
                 report.Duration = LeftTime.Subtract(report.JoinTime);
                 report.LeftTime = LeftTime;
                 report.UpdatedOn = DateTime.UtcNow;
@@ -299,8 +402,15 @@
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to save participant left record");
-                throw ex is ServiceException ? ex : new ServiceException("An error occurred while trying to save participant left record");
+                _logger.LogError(
+                    ex,
+                    "An error occurred while trying to save participant left record"
+                );
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(
+                        "An error occurred while trying to save participant left record"
+                    );
             }
         }
     }

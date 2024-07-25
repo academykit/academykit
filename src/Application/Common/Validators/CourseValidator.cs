@@ -36,13 +36,10 @@
         public CourseDateValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
             RuleFor(x => x)
-                .Must(
-                    x =>
-                        x.IsUnlimitedEndDate == true
-                            ? x.StartDate != default
-                            : x.StartDate != default
-                                && x.EndDate != default
-                                && x.EndDate > x.StartDate
+                .Must(x =>
+                    x.IsUnlimitedEndDate == true
+                        ? x.StartDate != default
+                        : x.StartDate != default && x.EndDate != default && x.EndDate > x.StartDate
                 )
                 .WithMessage(context => stringLocalizer.GetString("EnddateMustBeGreater"));
         }

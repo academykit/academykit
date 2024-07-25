@@ -166,8 +166,8 @@
             CommonHelper.ValidateArgumentNotNullOrEmpty(courseIdentity, nameof(courseIdentity));
             var predicate = PredicateBuilder.New<Course>(true);
 
-            predicate = predicate.And(
-                x => x.Id.ToString() == courseIdentity || x.Slug == courseIdentity
+            predicate = predicate.And(x =>
+                x.Id.ToString() == courseIdentity || x.Slug == courseIdentity
             );
 
             var course = await _unitOfWork
@@ -243,15 +243,11 @@
 
             var isCourseMember = await _unitOfWork
                 .GetRepository<Group>()
-                .ExistsAsync(
-                    predicate: p =>
-                        p.Courses.Any(x => x.Id == course.Id)
-                        && p.GroupMembers.Any(
-                            x =>
-                                x.GroupId == course.GroupId
-                                && x.UserId == currentUserId
-                                && x.IsActive
-                        )
+                .ExistsAsync(predicate: p =>
+                    p.Courses.Any(x => x.Id == course.Id)
+                    && p.GroupMembers.Any(x =>
+                        x.GroupId == course.GroupId && x.UserId == currentUserId && x.IsActive
+                    )
                 )
                 .ConfigureAwait(false);
 
@@ -262,8 +258,8 @@
         {
             var isGroupMember = await _unitOfWork
                 .GetRepository<GroupMember>()
-                .ExistsAsync(
-                    predicate: p => p.GroupId == groupId && p.UserId == currentUserId && p.IsActive
+                .ExistsAsync(predicate: p =>
+                    p.GroupId == groupId && p.UserId == currentUserId && p.IsActive
                 )
                 .ConfigureAwait(false);
             return await Task.FromResult(isGroupMember);
@@ -288,8 +284,8 @@
             );
             var predicate = PredicateBuilder.New<QuestionPool>(true);
 
-            predicate = predicate.And(
-                x => x.Id.ToString() == questionPoolIdentity || x.Slug == questionPoolIdentity
+            predicate = predicate.And(x =>
+                x.Id.ToString() == questionPoolIdentity || x.Slug == questionPoolIdentity
             );
 
             var questionPool = await _unitOfWork
@@ -330,11 +326,10 @@
         {
             var user = await _unitOfWork
                 .GetRepository<User>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p =>
-                        p.Id == currentUserId
-                        && p.Status == UserStatus.Active
-                        && p.Role == UserRole.SuperAdmin
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.Id == currentUserId
+                    && p.Status == UserStatus.Active
+                    && p.Role == UserRole.SuperAdmin
                 )
                 .ConfigureAwait(false);
 
@@ -345,11 +340,10 @@
         {
             var user = await _unitOfWork
                 .GetRepository<User>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p =>
-                        p.Id == currentUserId
-                        && p.Status == UserStatus.Active
-                        && (p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin)
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.Id == currentUserId
+                    && p.Status == UserStatus.Active
+                    && (p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin)
                 )
                 .ConfigureAwait(false);
             return user != null;
@@ -359,15 +353,14 @@
         {
             var user = await _unitOfWork
                 .GetRepository<User>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p =>
-                        p.Id == currentUserId
-                        && p.Status == UserStatus.Active
-                        && (
-                            p.Role == UserRole.SuperAdmin
-                            || p.Role == UserRole.Admin
-                            || p.Role == UserRole.Trainer
-                        )
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.Id == currentUserId
+                    && p.Status == UserStatus.Active
+                    && (
+                        p.Role == UserRole.SuperAdmin
+                        || p.Role == UserRole.Admin
+                        || p.Role == UserRole.Trainer
+                    )
                 )
                 .ConfigureAwait(false);
             return user != null;
@@ -377,11 +370,10 @@
         {
             var user = await _unitOfWork
                 .GetRepository<User>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p =>
-                        p.Id == currentUserId
-                        && p.Status == UserStatus.Active
-                        && p.Role == UserRole.Trainer
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.Id == currentUserId
+                    && p.Status == UserStatus.Active
+                    && p.Role == UserRole.Trainer
                 )
                 .ConfigureAwait(false);
             return user != null;
@@ -457,18 +449,14 @@
             {
                 var totalLessonCount = await _unitOfWork
                     .GetRepository<Lesson>()
-                    .CountAsync(
-                        predicate: p =>
-                            p.CourseId == courseId
-                            && !p.IsDeleted
-                            && p.Status == CourseStatus.Published
+                    .CountAsync(predicate: p =>
+                        p.CourseId == courseId && !p.IsDeleted && p.Status == CourseStatus.Published
                     )
                     .ConfigureAwait(false);
                 var completedLessonCount = await _unitOfWork
                     .GetRepository<WatchHistory>()
-                    .CountAsync(
-                        predicate: p =>
-                            p.CourseId == courseId && p.UserId == currentUserId && p.IsCompleted
+                    .CountAsync(predicate: p =>
+                        p.CourseId == courseId && p.UserId == currentUserId && p.IsCompleted
                     )
                     .ConfigureAwait(false);
                 var percentage =
@@ -513,14 +501,13 @@
 
             var courseEnrollment = await _unitOfWork
                 .GetRepository<CourseEnrollment>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p =>
-                        p.CourseId == courseId
-                        && p.UserId == currentUserId
-                        && (
-                            p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
-                            || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
-                        )
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.CourseId == courseId
+                    && p.UserId == currentUserId
+                    && (
+                        p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                        || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
+                    )
                 )
                 .ConfigureAwait(false);
 

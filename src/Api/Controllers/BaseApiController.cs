@@ -16,7 +16,6 @@ namespace Lingtren.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
-
     // [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class BaseApiController : ControllerBase
@@ -26,9 +25,7 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         private CurrentUser currentUser;
 
-        protected BaseApiController()
-        {
-        }
+        protected BaseApiController() { }
 
         /// <summary>
         /// Gets the current user.

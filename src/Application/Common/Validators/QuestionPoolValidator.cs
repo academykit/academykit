@@ -9,7 +9,12 @@
     {
         public QuestionPoolValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.Name).NotEmpty().NotNull().WithMessage(context => stringLocalizer.GetString("QuestionPoolNameRequired")).MaximumLength(100).WithMessage(context => stringLocalizer.GetString("NameLengthError"));
+            RuleFor(x => x.Name)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage(context => stringLocalizer.GetString("QuestionPoolNameRequired"))
+                .MaximumLength(100)
+                .WithMessage(context => stringLocalizer.GetString("NameLengthError"));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Application.Common.Models.ResponseModels
 {
     using Lingtren.Domain.Entities;
+
     public class CourseTeacherResponseModel
     {
         public Guid Id { get; set; }

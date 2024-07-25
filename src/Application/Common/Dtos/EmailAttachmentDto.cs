@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Application.Common.Dtos
 {
     using MimeKit;
+
     public class EmailAttachmentDto
     {
         public string FileName { get; set; }

@@ -14,7 +14,11 @@
         /// <param name="model">the instance of <see cref="QuestionSetAddQuestionRequestModel"/></param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
-        Task AddQuestionsAsync(string identity, QuestionSetAddQuestionRequestModel model, Guid currentUserId);
+        Task AddQuestionsAsync(
+            string identity,
+            QuestionSetAddQuestionRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to get question list
@@ -39,7 +43,12 @@
         /// <param name="questionSetSubmissionId">the question set submission</param>
         /// <param name="answers">the list of <see cref="AnswerSubmissionRequestModel" /></param>
         /// <param name="currentUserId">the current user id</param>
-        Task AnswerSubmission(string identity, Guid questionSetSubmissionId, IList<AnswerSubmissionRequestModel> answers, Guid currentUserId);
+        Task AnswerSubmission(
+            string identity,
+            Guid questionSetSubmissionId,
+            IList<AnswerSubmissionRequestModel> answers,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handles to fetch result of a particular question set
@@ -47,7 +56,11 @@
         /// <param name="identity">the question set id or slug </param>
         /// <param name="currentUserId"></param>
         /// <returns>the instance of <see cref="QuestionSetResultResponseModel"</returns>
-        Task<SearchResult<QuestionSetResultResponseModel>> GetResults(BaseSearchCriteria searchCriteria, string identity, Guid currentUserId);
+        Task<SearchResult<QuestionSetResultResponseModel>> GetResults(
+            BaseSearchCriteria searchCriteria,
+            string identity,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handles to fetch result of a particular student result
@@ -56,7 +69,11 @@
         /// <param name="userId">the student user id </param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns>the instance of <see cref="StudentResultResponseModel"</returns>
-        Task<StudentResultResponseModel> GetStudentResult(string identity, Guid userId, Guid currentUserId);
+        Task<StudentResultResponseModel> GetStudentResult(
+            string identity,
+            Guid userId,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Get result detail of question set submission
@@ -65,7 +82,11 @@
         /// <param name="questionSetSubmissionId">the question set submission id</param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns>the instance of <see cref="QuestionSetUserResultResponseModel"</returns>
-        Task<QuestionSetUserResultResponseModel> GetResultDetail(string identity, Guid questionSetSubmissionId, Guid currentUserId);
+        Task<QuestionSetUserResultResponseModel> GetResultDetail(
+            string identity,
+            Guid questionSetSubmissionId,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handel to reorder questionset question
@@ -75,6 +96,10 @@
         /// <param name="ids">list of question set question id</param>
         /// <returns>Task completed</returns>
 
-        Task ReorderQuestionsetQuestionsAsync(Guid currentUserId, string lessonIdentity, List<Guid> ids);
+        Task ReorderQuestionsetQuestionsAsync(
+            Guid currentUserId,
+            string lessonIdentity,
+            List<Guid> ids
+        );
     }
 }

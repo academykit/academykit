@@ -10,11 +10,12 @@
 
     public class RefreshTokenService : BaseService, IRefreshTokenService
     {
-        public RefreshTokenService(IUnitOfWork unitOfWork,
+        public RefreshTokenService(
+            IUnitOfWork unitOfWork,
             ILogger<RefreshTokenService> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
-        {
-        }
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
+            : base(unitOfWork, logger, localizer) { }
 
         /// <summary>
         /// Get refresh token by user id
@@ -25,12 +26,20 @@
         {
             try
             {
-                return await _unitOfWork.GetRepository<RefreshToken>().GetAllAsync(predicate: p => p.UserId == userId && p.IsActive).ConfigureAwait(false);
+                return await _unitOfWork
+                    .GetRepository<RefreshToken>()
+                    .GetAllAsync(predicate: p => p.UserId == userId && p.IsActive)
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while attempting to fetch refresh token by user id.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("FetchRefreshTokenError"));
+                _logger.LogError(
+                    ex,
+                    "An error occurred while attempting to fetch refresh token by user id."
+                );
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("FetchRefreshTokenError"));
             }
         }
 
@@ -43,12 +52,20 @@
         {
             try
             {
-                return await _unitOfWork.GetRepository<RefreshToken>().GetFirstOrDefaultAsync(predicate: p => p.Token == token).ConfigureAwait(false);
+                return await _unitOfWork
+                    .GetRepository<RefreshToken>()
+                    .GetFirstOrDefaultAsync(predicate: p => p.Token == token)
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while attempting to fetch refresh token by value.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("RefreshTokenValueError"));
+                _logger.LogError(
+                    ex,
+                    "An error occurred while attempting to fetch refresh token by value."
+                );
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("RefreshTokenValueError"));
             }
         }
 
@@ -61,13 +78,18 @@
         {
             try
             {
-                await _unitOfWork.GetRepository<RefreshToken>().InsertAsync(token).ConfigureAwait(false);
+                await _unitOfWork
+                    .GetRepository<RefreshToken>()
+                    .InsertAsync(token)
+                    .ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to update refresh token.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UpdateRefershTokenError"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("UpdateRefershTokenError"));
             }
         }
 
@@ -86,7 +108,9 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to update refresh token.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UpdateRefershTokenError"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("UpdateRefershTokenError"));
             }
         }
 
@@ -105,7 +129,9 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to update refresh token.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("UpdateRefershTokenError"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("UpdateRefershTokenError"));
             }
         }
     }

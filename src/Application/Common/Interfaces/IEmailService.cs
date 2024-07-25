@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Application.Common.Interfaces
 {
     using Lingtren.Application.Common.Dtos;
+
     public interface IEmailService
     {
         /// <summary>
@@ -18,7 +19,12 @@
         /// <param name="resetToken">the reset token</param>
         /// <param name="companyName"> the company name </param>
         /// <returns></returns>
-        Task SendForgetPasswordEmail(string emailAddress, string firstName, string resetToken, string companyName);
+        Task SendForgetPasswordEmail(
+            string emailAddress,
+            string firstName,
+            string resetToken,
+            string companyName
+        );
 
         /// <summary>
         /// Email for account created and password
@@ -29,6 +35,12 @@
         /// <param name="expiredTime">the login password of the receiver</param>
         /// <param name="companyName"> the company name </param>
         /// <returns></returns>
-        Task SendChangePasswordMailAsync(string email, string firstName, string token, int expiredTime, string companyName);
+        Task SendChangePasswordMailAsync(
+            string email,
+            string firstName,
+            string token,
+            int expiredTime,
+            string companyName
+        );
     }
 }

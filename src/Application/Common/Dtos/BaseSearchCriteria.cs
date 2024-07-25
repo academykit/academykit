@@ -48,8 +48,6 @@ namespace Lingtren.Application.Common.Dtos
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseSearchCriteria"/> class.
         /// </summary>
-        public BaseSearchCriteria()
-        {
-        }
+        public BaseSearchCriteria() { }
     }
 }

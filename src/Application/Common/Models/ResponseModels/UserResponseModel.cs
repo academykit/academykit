@@ -63,15 +63,12 @@
             DepartmentId = user.DepartmentId;
             DepartmentName = user.Department?.Name;
             MemberId = user.MemberId;
-            Skills = user.UserSkills
-                ?.Select(
-                    sk =>
-                        new SkillsUserResponseModel
-                        {
-                            Id = sk.SkillId,
-                            SkillName = sk.Skills?.SkillName
-                        }
-                )
+            Skills = user
+                .UserSkills?.Select(sk => new SkillsUserResponseModel
+                {
+                    Id = sk.SkillId,
+                    SkillName = sk.Skills?.SkillName
+                })
                 .ToList();
 
             #region Address

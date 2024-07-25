@@ -10,7 +10,9 @@
         public static WebApplication MigrateDatabase(this WebApplication webApp)
         {
             using (var scope = webApp.Services.CreateScope())
-            using (var appContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>())
+            using (
+                var appContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>()
+            )
             {
                 try
                 {

@@ -27,7 +27,8 @@ namespace Lingtren.Api.Controllers
             IZoomLicenseService zoomLicenseService,
             IValidator<LiveClassLicenseRequestModel> validator1,
             IValidator<ZoomLicenseRequestModel> validator,
-            IStringLocalizer<ExceptionLocalizer> localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
         {
             this.zoomLicenseService = zoomLicenseService;
             this.validator = validator;
@@ -40,10 +41,14 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <returns> the list of <see cref="ZoomLicenseResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<SearchResult<ZoomLicenseResponseModel>> SearchAsync([FromQuery] ZoomLicenseBaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<ZoomLicenseResponseModel>> SearchAsync(
+            [FromQuery] ZoomLicenseBaseSearchCriteria searchCriteria
+        )
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
-            var searchResult = await zoomLicenseService.SearchAsync(searchCriteria).ConfigureAwait(false);
+            var searchResult = await zoomLicenseService
+                .SearchAsync(searchCriteria)
+                .ConfigureAwait(false);
 
             var response = new SearchResult<ZoomLicenseResponseModel>
             {
@@ -54,8 +59,7 @@ namespace Lingtren.Api.Controllers
                 TotalPage = searchResult.TotalPage,
             };
 
-            searchResult.Items.ForEach(p =>
-                 response.Items.Add(new ZoomLicenseResponseModel(p)));
+            searchResult.Items.ForEach(p => response.Items.Add(new ZoomLicenseResponseModel(p)));
             return response;
         }
 
@@ -81,12 +85,16 @@ namespace Lingtren.Api.Controllers
         public async Task<ZoomLicenseResponseModel> CreateAsync(ZoomLicenseRequestModel model)
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var response = await zoomLicenseService.CreateZoomLicenseAsync(model, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var response = await zoomLicenseService
+                .CreateZoomLicenseAsync(model, CurrentUser.Id)
+                .ConfigureAwait(false);
             return new ZoomLicenseResponseModel(response);
         }
 
-        /// 
+        ///
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns><summary>
         /// <summary>
         /// update zoomLicense api
@@ -95,11 +103,18 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the instance of <see cref="ZoomLicenseRequestModel" />. </param>
         /// <returns> the instance of <see cref="ZoomLicenseResponseModel" /> .</returns>
         [HttpPut("{id}")]
-        public async Task<ZoomLicenseResponseModel> UpdateAsync(Guid id, ZoomLicenseRequestModel model)
+        public async Task<ZoomLicenseResponseModel> UpdateAsync(
+            Guid id,
+            ZoomLicenseRequestModel model
+        )
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var response = await zoomLicenseService.UpdateZoomLicenseAsync(id, model, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var response = await zoomLicenseService
+                .UpdateZoomLicenseAsync(id, model, CurrentUser.Id)
+                .ConfigureAwait(false);
             return new ZoomLicenseResponseModel(response);
         }
 
@@ -113,8 +128,16 @@ namespace Lingtren.Api.Controllers
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
 
-            await zoomLicenseService.DeleteAsync(id.ToString(), CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("ZoomLicense") });
+            await zoomLicenseService
+                .DeleteAsync(id.ToString(), CurrentUser.Id)
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("ZoomLicense")
+                }
+            );
         }
 
         /// <summary>
@@ -128,7 +151,9 @@ namespace Lingtren.Api.Controllers
         {
             IsSuperAdminOrAdmin(CurrentUser.Role);
 
-            var existing = await zoomLicenseService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
+            var existing = await zoomLicenseService
+                .GetAsync(id, CurrentUser.Id)
+                .ConfigureAwait(false);
 
             existing.Id = existing.Id;
             existing.IsActive = enabled;
@@ -142,16 +167,22 @@ namespace Lingtren.Api.Controllers
         /// <summary>
         /// Gets Active LicenseId.
         /// </summary>
-        /// 
+        ///
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns><param name="zoomLicenseIdRequestModel">the instance of <see cref="LiveClassLicenseRequestModel"></param>.
         /// <returns>the instance of <see cref="ZoomLicenseResponseModel"/></returns>
         /// <exception cref="ForbiddenException"></exception>
         [HttpGet("Active")]
-        public async Task<List<ZoomLicenseResponseModel>> Active([FromQuery] LiveClassLicenseRequestModel model)
+        public async Task<List<ZoomLicenseResponseModel>> Active(
+            [FromQuery] LiveClassLicenseRequestModel model
+        )
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
-            await validator1.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var zoomLicenses = await zoomLicenseService.GetActiveLicensesAsync(model).ConfigureAwait(false);
+            await validator1
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var zoomLicenses = await zoomLicenseService
+                .GetActiveLicensesAsync(model)
+                .ConfigureAwait(false);
             return zoomLicenses.ToList();
         }
     }

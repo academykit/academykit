@@ -10,6 +10,7 @@
         public bool IsActive { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
+
         public DepartmentResponseModel(Department model)
         {
             Id = model.Id;

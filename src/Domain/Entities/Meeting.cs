@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Domain.Entities
 {
     using Lingtren.Domain.Common;
+
     public class Meeting : AuditableEntity
     {
         public long? MeetingNumber { get; set; }

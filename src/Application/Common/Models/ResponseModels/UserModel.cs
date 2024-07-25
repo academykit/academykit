@@ -2,6 +2,7 @@
 {
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
+
     public class UserModel
     {
         public Guid Id { get; set; }
@@ -27,8 +28,6 @@
             DepartmentId = user.Department?.Id.ToString();
         }
 
-        public UserModel()
-        {
-        }
+        public UserModel() { }
     }
 }

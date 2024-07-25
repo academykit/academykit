@@ -12,7 +12,6 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Common;
     using Lingtren.Infrastructure.Helpers;
-
     using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
@@ -47,10 +46,8 @@
         {
             var lesson = _unitOfWork
                 .GetRepository<Lesson>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p =>
-                        p.Id.ToString() == criteria.LessonIdentity
-                        || p.Slug == criteria.LessonIdentity
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.Id.ToString() == criteria.LessonIdentity || p.Slug == criteria.LessonIdentity
                 )
                 .Result;
 
@@ -235,9 +232,8 @@
             {
                 var lesson = await _unitOfWork
                     .GetRepository<Lesson>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p =>
-                            p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity
                     )
                     .ConfigureAwait(false);
                 if (lesson == null)
@@ -281,16 +277,15 @@
 
                 var response = new List<FeedbackSubmissionStudentResponseModel>();
 
-                users.ForEach(
-                    x =>
-                        response.Add(
-                            new FeedbackSubmissionStudentResponseModel
-                            {
-                                User = new UserModel(x),
-                                LessonId = lesson.Id,
-                                LessonSlug = lesson.Slug
-                            }
-                        )
+                users.ForEach(x =>
+                    response.Add(
+                        new FeedbackSubmissionStudentResponseModel
+                        {
+                            User = new UserModel(x),
+                            LessonId = lesson.Id,
+                            LessonSlug = lesson.Slug
+                        }
+                    )
                 );
                 return response;
             }
@@ -402,9 +397,8 @@
             {
                 var lesson = await _unitOfWork
                     .GetRepository<Lesson>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p =>
-                            p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity
                     )
                     .ConfigureAwait(false);
                 if (lesson == null)
@@ -491,9 +485,8 @@
 
                 var feebackSubmissionExists = await _unitOfWork
                     .GetRepository<FeedbackSubmission>()
-                    .ExistsAsync(
-                        predicate: p =>
-                            feedbackIds.Contains(p.FeedbackId) && p.UserId == currentUserId
+                    .ExistsAsync(predicate: p =>
+                        feedbackIds.Contains(p.FeedbackId) && p.UserId == currentUserId
                     )
                     .ConfigureAwait(false);
 
@@ -509,8 +502,8 @@
 
                 var watchHistory = await _unitOfWork
                     .GetRepository<WatchHistory>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.LessonId == lesson.Id && p.UserId == currentUserId
                     )
                     .ConfigureAwait(false);
 
@@ -584,9 +577,8 @@
             {
                 var lesson = await _unitOfWork
                     .GetRepository<Lesson>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p =>
-                            p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity
                     )
                     .ConfigureAwait(false);
 
@@ -653,8 +645,8 @@
                 {
                     builder.Append(i);
                     builder.Append(",");
-                    var submissionDate = feedbackSubmissions.FirstOrDefault(
-                        x => x.UserId == user.Id
+                    var submissionDate = feedbackSubmissions.FirstOrDefault(x =>
+                        x.UserId == user.Id
                     );
                     builder.Append(submissionDate?.CreatedOn.ToString("MM/dd/yyyy"));
                     builder.Append(",");
@@ -671,8 +663,8 @@
                         var feedBack = feedback.FirstOrDefault(x => x.Name == qustion);
                         if (feedback != null)
                         {
-                            var feedbackanswer = feedbackSubmissions.FirstOrDefault(
-                                x => x.FeedbackId == feedBack.Id && x.UserId == user.Id
+                            var feedbackanswer = feedbackSubmissions.FirstOrDefault(x =>
+                                x.FeedbackId == feedBack.Id && x.UserId == user.Id
                             );
                             if (feedbackanswer != default)
                             {
@@ -700,10 +692,9 @@
                                 if (feedBack.Type == FeedbackTypeEnum.SingleChoice)
                                 {
                                     var singleAnswer =
-                                        feedBack.FeedbackQuestionOptions.FirstOrDefault(
-                                            x =>
-                                                x.Id.ToString()
-                                                == feedbackanswer.SelectedOption.ToString()
+                                        feedBack.FeedbackQuestionOptions.FirstOrDefault(x =>
+                                            x.Id.ToString()
+                                            == feedbackanswer.SelectedOption.ToString()
                                         );
                                     if (singleAnswer != null)
                                     {
@@ -725,8 +716,10 @@
                                     var choices = new List<string>();
                                     foreach (var opt in options)
                                     {
-                                        var optAnswer = feedBack.FeedbackQuestionOptions
-                                            .FirstOrDefault(x => x.Id.ToString() == opt)
+                                        var optAnswer = feedBack
+                                            .FeedbackQuestionOptions.FirstOrDefault(x =>
+                                                x.Id.ToString() == opt
+                                            )
                                             ?.Option;
                                         if (!string.IsNullOrEmpty(optAnswer))
                                         {
@@ -828,10 +821,9 @@
         {
             var lesson = await _unitOfWork
                 .GetRepository<Lesson>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p =>
-                        p.Id.ToString() == searchCriteria.LessonIdentity
-                        || p.Slug == searchCriteria.LessonIdentity
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.Id.ToString() == searchCriteria.LessonIdentity
+                    || p.Slug == searchCriteria.LessonIdentity
                 )
                 .ConfigureAwait(false);
 
@@ -862,8 +854,8 @@
                 )
                 .ConfigureAwait(false);
 
-            var isTeacher = course.CourseTeachers.Any(
-                x => x.UserId == searchCriteria.CurrentUserId
+            var isTeacher = course.CourseTeachers.Any(x =>
+                x.UserId == searchCriteria.CurrentUserId
             );
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(searchCriteria.CurrentUserId)
                 .ConfigureAwait(false);
@@ -940,25 +932,21 @@
                 var selectedAnsIds = !string.IsNullOrWhiteSpace(userFeedback?.SelectedOption)
                     ? userFeedback?.SelectedOption.Split(",").Select(Guid.Parse).ToList()
                     : new List<Guid>();
-                item.FeedbackQuestionOptions
-                    ?.OrderBy(x => x.Order)
+                item.FeedbackQuestionOptions?.OrderBy(x => x.Order)
                     .ToList()
-                    .ForEach(
-                        x =>
-                            data.FeedbackQuestionOptions.Add(
-                                new FeedbackQuestionOptionResponseModel()
-                                {
-                                    Id = x.Id,
-                                    FeedbackId = x.FeedbackId,
-                                    FeedbackName = x.Feedback?.Name,
-                                    Option = x.Option,
-                                    IsSelected =
-                                        userFeedback != null
-                                            ? selectedAnsIds?.Contains(x.Id)
-                                            : null,
-                                    Order = x.Order,
-                                }
-                            )
+                    .ForEach(x =>
+                        data.FeedbackQuestionOptions.Add(
+                            new FeedbackQuestionOptionResponseModel()
+                            {
+                                Id = x.Id,
+                                FeedbackId = x.FeedbackId,
+                                FeedbackName = x.Feedback?.Name,
+                                Option = x.Option,
+                                IsSelected =
+                                    userFeedback != null ? selectedAnsIds?.Contains(x.Id) : null,
+                                Order = x.Order,
+                            }
+                        )
                     );
             }
 
@@ -984,10 +972,9 @@
             {
                 var lesson = await _unitOfWork
                     .GetRepository<Lesson>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p =>
-                            p.Id.ToString() == lessonIdentiy
-                            || p.Slug.ToLower() == lessonIdentiy.ToLower()
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id.ToString() == lessonIdentiy
+                        || p.Slug.ToLower() == lessonIdentiy.ToLower()
                     )
                     .ConfigureAwait(false);
                 if (lesson == default)
@@ -1044,8 +1031,8 @@
         {
             var lesson = await _unitOfWork
                 .GetRepository<Lesson>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p => p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity
                 )
                 .ConfigureAwait(false);
 
@@ -1194,8 +1181,7 @@
                     var optionDictionary =
                         new Dictionary<Guid, FeedBackChartOptionsResponseModel>();
 
-                    item.FeedbackQuestionOptions
-                        ?.OrderBy(x => x.Order)
+                    item.FeedbackQuestionOptions?.OrderBy(x => x.Order)
                         .ToList()
                         .ForEach(x =>
                         {

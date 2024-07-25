@@ -5,9 +5,7 @@
 namespace Lingtren.Api.Controllers
 {
     using System.Globalization;
-
     using CsvHelper;
-
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Interfaces;
@@ -86,15 +84,11 @@ namespace Lingtren.Api.Controllers
                 .GetResultDetail(identity, assessmentSubmissionId, CurrentUser.Id)
                 .ConfigureAwait(false);
 
-        
         [HttpGet("{identity}/GetStudentResults/{userId}/Export")]
-        public async Task<IActionResult> ExportStudentResults(
-            string identity,
-            Guid userId
-        ) 
+        public async Task<IActionResult> ExportStudentResults(string identity, Guid userId)
         {
             var response = await assessmentSubmissionService
-                .GetResultsExportAsync(identity,userId)
+                .GetResultsExportAsync(identity, userId)
                 .ConfigureAwait(false);
 
             using var memoryStream = new MemoryStream();

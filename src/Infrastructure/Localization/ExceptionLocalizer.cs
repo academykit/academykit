@@ -1,6 +1,4 @@
 ﻿namespace Lingtren.Infrastructure.Localization
 {
-    public class ExceptionLocalizer
-    {
-    }
+    public class ExceptionLocalizer { }
 }

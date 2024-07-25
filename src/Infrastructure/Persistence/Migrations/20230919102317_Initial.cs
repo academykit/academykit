@@ -19,39 +19,34 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Logs",
-                    columns: table =>
-                        new
-                        {
-                            Id = table
-                                .Column<int>(type: "int", nullable: false)
-                                .Annotation(
-                                    "MySql:ValueGenerationStrategy",
-                                    MySqlValueGenerationStrategy.IdentityColumn
-                                ),
-                            MachineName = table
-                                .Column<string>(type: "VARCHAR(200)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            Level = table
-                                .Column<string>(
-                                    type: "VARCHAR(200)",
-                                    maxLength: 200,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            Logged = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            Message = table
-                                .Column<string>(type: "VARCHAR(4000)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            Logger = table
-                                .Column<string>(type: "VARCHAR(400)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            Properties = table
-                                .Column<string>(type: "VARCHAR(1000)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            Exception = table
-                                .Column<string>(type: "VARCHAR(5000)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4")
-                        },
+                    columns: table => new
+                    {
+                        Id = table
+                            .Column<int>(type: "int", nullable: false)
+                            .Annotation(
+                                "MySql:ValueGenerationStrategy",
+                                MySqlValueGenerationStrategy.IdentityColumn
+                            ),
+                        MachineName = table
+                            .Column<string>(type: "VARCHAR(200)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        Level = table
+                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        Logged = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        Message = table
+                            .Column<string>(type: "VARCHAR(4000)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        Logger = table
+                            .Column<string>(type: "VARCHAR(400)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        Properties = table
+                            .Column<string>(type: "VARCHAR(1000)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        Exception = table
+                            .Column<string>(type: "VARCHAR(5000)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4")
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Logs", x => x.Id);
@@ -62,24 +57,15 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Settings",
-                    columns: table =>
-                        new
-                        {
-                            key = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            value = table
-                                .Column<string>(
-                                    type: "VARCHAR(200)",
-                                    maxLength: 200,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4")
-                        },
+                    columns: table => new
+                    {
+                        key = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        value = table
+                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4")
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Settings", x => x.key);
@@ -90,46 +76,33 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "AssignmentAttachments",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            assignment_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            file_url = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            order = table.Column<int>(
-                                type: "int",
-                                nullable: false,
-                                defaultValue: 0
-                            ),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            mime_type = table
-                                .Column<string>(type: "VARCHAR(50)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assignment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        file_url = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        order = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                        name = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        mime_type = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_AssignmentAttachments", x => x.id);
@@ -140,37 +113,32 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "AssignmentQuestionOptions",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            assignment_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            option = table
-                                .Column<string>(
-                                    type: "VARCHAR(5000)",
-                                    maxLength: 5000,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_correct = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            order = table.Column<int>(type: "int", nullable: false),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assignment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        option = table
+                            .Column<string>(type: "VARCHAR(5000)", maxLength: 5000, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_correct = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        order = table.Column<int>(type: "int", nullable: false),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_AssignmentQuestionOptions", x => x.id);
@@ -181,40 +149,35 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "AssignmentReviews",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            lesson_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            mark = table.Column<decimal>(type: "decimal(20,4)", nullable: false),
-                            review = table
-                                .Column<string>(
-                                    type: "varchar(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_deleted = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        lesson_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        mark = table.Column<decimal>(type: "decimal(20,4)", nullable: false),
+                        review = table
+                            .Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_deleted = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_AssignmentReviews", x => x.id);
@@ -225,56 +188,39 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Assignments",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            lesson_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            description = table
-                                .Column<string>(
-                                    type: "VARCHAR(5000)",
-                                    maxLength: 5000,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            hints = table
-                                .Column<string>(
-                                    type: "VARCHAR(5000)",
-                                    maxLength: 5000,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            order = table.Column<int>(
-                                type: "int",
-                                nullable: false,
-                                defaultValue: 0
-                            ),
-                            is_active = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            type = table.Column<int>(type: "int", nullable: false),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        lesson_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        description = table
+                            .Column<string>(type: "VARCHAR(5000)", maxLength: 5000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        hints = table
+                            .Column<string>(type: "VARCHAR(5000)", maxLength: 5000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        order = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        type = table.Column<int>(type: "int", nullable: false),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Assignments", x => x.id);
@@ -285,41 +231,32 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "AssignmentSubmissionAttachments",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            assignment_submission_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            mime_type = table
-                                .Column<string>(type: "VARCHAR(50)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            file_url = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assignment_submission_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        mime_type = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        file_url = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_AssignmentSubmissionAttachments", x => x.id);
@@ -330,49 +267,40 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "AssignmentSubmissions",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            lesson_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            assignment_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_correct = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            selected_option = table
-                                .Column<string>(
-                                    type: "VARCHAR(300)",
-                                    maxLength: 300,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            answer = table
-                                .Column<string>(
-                                    type: "VARCHAR(5000)",
-                                    maxLength: 5000,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        lesson_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assignment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_correct = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        selected_option = table
+                            .Column<string>(type: "VARCHAR(300)", maxLength: 300, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        answer = table
+                            .Column<string>(type: "VARCHAR(5000)", maxLength: 5000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_AssignmentSubmissions", x => x.id);
@@ -389,46 +317,41 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Certificates",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(200)",
-                                    maxLength: 200,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            start_date = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            end_date = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            image_url = table
-                                .Column<string>(type: "VARCHAR(200)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            location = table
-                                .Column<string>(type: "VARCHAR(100)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            institute = table
-                                .Column<string>(type: "VARCHAR(100)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            duration = table.Column<int>(type: "int", nullable: true),
-                            status = table.Column<int>(type: "int", nullable: false),
-                            optional_cost = table.Column<decimal>(
-                                type: "DECIMAL(10,2)",
-                                nullable: false,
-                                defaultValue: 0m
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        start_date = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        end_date = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        image_url = table
+                            .Column<string>(type: "VARCHAR(200)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        location = table
+                            .Column<string>(type: "VARCHAR(100)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        institute = table
+                            .Column<string>(type: "VARCHAR(100)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        duration = table.Column<int>(type: "int", nullable: true),
+                        status = table.Column<int>(type: "int", nullable: false),
+                        optional_cost = table.Column<decimal>(
+                            type: "DECIMAL(10,2)",
+                            nullable: false,
+                            defaultValue: 0m
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Certificates", x => x.id);
@@ -439,36 +362,31 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "CommentReplies",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            comment_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            content = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_deleted = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        comment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        content = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_deleted = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_CommentReplies", x => x.id);
@@ -479,36 +397,31 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Comments",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            course_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            content = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_deleted = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        course_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        content = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_deleted = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Comments", x => x.id);
@@ -519,42 +432,34 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "CourseCertificate",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            title = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            course_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            event_start_date = table.Column<DateTime>(
-                                type: "DATETIME",
-                                nullable: false
-                            ),
-                            event_end_date = table.Column<DateTime>(
-                                type: "DATETIME",
-                                nullable: false
-                            ),
-                            sample_url = table
-                                .Column<string>(type: "VARCHAR(500)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        title = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        course_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        event_start_date = table.Column<DateTime>(
+                            type: "DATETIME",
+                            nullable: false
+                        ),
+                        event_end_date = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        sample_url = table
+                            .Column<string>(type: "VARCHAR(500)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_CourseCertificate", x => x.id);
@@ -565,75 +470,60 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "CourseEnrollments",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            current_lesson_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            current_lesson_watched = table.Column<int>(
-                                type: "int",
-                                nullable: false
-                            ),
-                            percentage = table.Column<int>(
-                                type: "int",
-                                nullable: false,
-                                defaultValue: 0
-                            ),
-                            status = table.Column<int>(type: "int", nullable: false),
-                            activity_reason = table
-                                .Column<string>(
-                                    type: "VARCHAR(1000)",
-                                    maxLength: 1000,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            course_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            enrollment_date = table.Column<DateTime>(
-                                type: "DATETIME",
-                                nullable: false
-                            ),
-                            is_deleted = table.Column<ulong>(
-                                type: "BIT",
-                                nullable: false,
-                                defaultValue: 0ul
-                            ),
-                            deleted_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            deleted_on = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                            has_certificate_issued = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: true
-                            ),
-                            certificate_url = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            certificate_issued_date = table.Column<DateTime>(
-                                type: "DATETIME",
-                                nullable: true
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        current_lesson_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        current_lesson_watched = table.Column<int>(type: "int", nullable: false),
+                        percentage = table.Column<int>(
+                            type: "int",
+                            nullable: false,
+                            defaultValue: 0
+                        ),
+                        status = table.Column<int>(type: "int", nullable: false),
+                        activity_reason = table
+                            .Column<string>(type: "VARCHAR(1000)", maxLength: 1000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        course_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        enrollment_date = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        is_deleted = table.Column<ulong>(
+                            type: "BIT",
+                            nullable: false,
+                            defaultValue: 0ul
+                        ),
+                        deleted_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        deleted_on = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                        has_certificate_issued = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: true
+                        ),
+                        certificate_url = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        certificate_issued_date = table.Column<DateTime>(
+                            type: "DATETIME",
+                            nullable: true
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_CourseEnrollments", x => x.id);
@@ -644,63 +534,46 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Courses",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            slug = table
-                                .Column<string>(
-                                    type: "VARCHAR(270)",
-                                    maxLength: 270,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            description = table
-                                .Column<string>(
-                                    type: "VARCHAR(5000)",
-                                    maxLength: 5000,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            group_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            status = table.Column<int>(type: "int", nullable: false),
-                            language = table.Column<int>(type: "int", nullable: false),
-                            thumbnail_url = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            duration = table.Column<int>(type: "int", nullable: false),
-                            is_update = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            level_id = table
-                                .Column<string>(type: "VARCHAR(50)", nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        slug = table
+                            .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        description = table
+                            .Column<string>(type: "VARCHAR(5000)", maxLength: 5000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        group_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        status = table.Column<int>(type: "int", nullable: false),
+                        language = table.Column<int>(type: "int", nullable: false),
+                        thumbnail_url = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        duration = table.Column<int>(type: "int", nullable: false),
+                        is_update = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        level_id = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Courses", x => x.id);
@@ -711,27 +584,26 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "CourseTags",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            tag_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            course_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        tag_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        course_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_CourseTags", x => x.id);
@@ -748,27 +620,26 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "CourseTeachers",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            course_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        course_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_CourseTeachers", x => x.id);
@@ -785,40 +656,31 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Departments",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            slug = table
-                                .Column<string>(
-                                    type: "VARCHAR(270)",
-                                    maxLength: 270,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_active = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        slug = table
+                            .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Departments", x => x.id);
@@ -829,120 +691,71 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Users",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            member_id = table
-                                .Column<string>(type: "VARCHAR(50)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            first_name = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            middle_name = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            last_name = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            email = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            mobile_number = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            role = table.Column<int>(type: "int", nullable: false, defaultValue: 4),
-                            profession = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            address = table
-                                .Column<string>(
-                                    type: "VARCHAR(200)",
-                                    maxLength: 200,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            bio = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            hash_password = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            public_urls = table
-                                .Column<string>(
-                                    type: "VARCHAR(2000)",
-                                    maxLength: 2000,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            status = table.Column<int>(
-                                type: "int",
-                                nullable: false,
-                                defaultValue: 1
-                            ),
-                            password_reset_token = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            image_url = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            password_reset_token_expiry = table.Column<DateTime>(
-                                type: "DATETIME",
-                                nullable: true
-                            ),
-                            password_change_token = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            department_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        member_id = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        first_name = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        middle_name = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        last_name = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        email = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        mobile_number = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        role = table.Column<int>(type: "int", nullable: false, defaultValue: 4),
+                        profession = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        address = table
+                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        bio = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        hash_password = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        public_urls = table
+                            .Column<string>(type: "VARCHAR(2000)", maxLength: 2000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        status = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
+                        password_reset_token = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        image_url = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        password_reset_token_expiry = table.Column<DateTime>(
+                            type: "DATETIME",
+                            nullable: true
+                        ),
+                        password_change_token = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        department_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Users", x => x.id);
@@ -959,55 +772,38 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "GeneralSettings",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            logo_url = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            company_name = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            company_address = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            company_contact_number = table
-                                .Column<string>(type: "VARCHAR(30)", maxLength: 30, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            email_signature = table
-                                .Column<string>(
-                                    type: "VARCHAR(1000)",
-                                    maxLength: 1000,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            custom_configuration = table
-                                .Column<string>(type: "VARCHAR(5000)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        logo_url = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        company_name = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        company_address = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        company_contact_number = table
+                            .Column<string>(type: "VARCHAR(30)", maxLength: 30, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        email_signature = table
+                            .Column<string>(type: "VARCHAR(1000)", maxLength: 1000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        custom_configuration = table
+                            .Column<string>(type: "VARCHAR(5000)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_GeneralSettings", x => x.id);
@@ -1024,40 +820,31 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Groups",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            slug = table
-                                .Column<string>(
-                                    type: "VARCHAR(270)",
-                                    maxLength: 270,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_active = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        slug = table
+                            .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Groups", x => x.id);
@@ -1074,40 +861,31 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Levels",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            slug = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_active = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        slug = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Levels", x => x.id);
@@ -1124,40 +902,31 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "QuestionPools",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            slug = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_deleted = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        slug = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_deleted = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_QuestionPools", x => x.id);
@@ -1174,43 +943,30 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Questions",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "varchar(500)",
-                                    maxLength: 500,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            type = table.Column<int>(type: "int", nullable: false, defaultValue: 2),
-                            description = table
-                                .Column<string>(
-                                    type: "varchar(5000)",
-                                    maxLength: 5000,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            hints = table
-                                .Column<string>(
-                                    type: "varchar(5000)",
-                                    maxLength: 5000,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        type = table.Column<int>(type: "int", nullable: false, defaultValue: 2),
+                        description = table
+                            .Column<string>(type: "varchar(5000)", maxLength: 5000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        hints = table
+                            .Column<string>(type: "varchar(5000)", maxLength: 5000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Questions", x => x.id);
@@ -1227,75 +983,58 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "QuestionSets",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "varchar(500)",
-                                    maxLength: 500,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            slug = table
-                                .Column<string>(
-                                    type: "VARCHAR(520)",
-                                    maxLength: 520,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            thumbnail_url = table
-                                .Column<string>(
-                                    type: "varchar(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            description = table
-                                .Column<string>(
-                                    type: "varchar(5000)",
-                                    maxLength: 5000,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            negative_marking = table.Column<decimal>(
-                                type: "decimal(10,4)",
-                                nullable: false,
-                                defaultValue: 0m
-                            ),
-                            question_marking = table.Column<decimal>(
-                                type: "decimal(10,4)",
-                                nullable: false
-                            ),
-                            passing_weightage = table.Column<decimal>(
-                                type: "decimal(10,4)",
-                                nullable: false
-                            ),
-                            allowed_retake = table.Column<int>(
-                                type: "int",
-                                nullable: false,
-                                defaultValue: 1
-                            ),
-                            duration = table.Column<int>(type: "int", nullable: false),
-                            start_time = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                            end_time = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                            is_deleted = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        slug = table
+                            .Column<string>(type: "VARCHAR(520)", maxLength: 520, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        thumbnail_url = table
+                            .Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        description = table
+                            .Column<string>(type: "varchar(5000)", maxLength: 5000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        negative_marking = table.Column<decimal>(
+                            type: "decimal(10,4)",
+                            nullable: false,
+                            defaultValue: 0m
+                        ),
+                        question_marking = table.Column<decimal>(
+                            type: "decimal(10,4)",
+                            nullable: false
+                        ),
+                        passing_weightage = table.Column<decimal>(
+                            type: "decimal(10,4)",
+                            nullable: false
+                        ),
+                        allowed_retake = table.Column<int>(
+                            type: "int",
+                            nullable: false,
+                            defaultValue: 1
+                        ),
+                        duration = table.Column<int>(type: "int", nullable: false),
+                        start_time = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                        end_time = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                        is_deleted = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_QuestionSets", x => x.id);
@@ -1312,51 +1051,38 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "RefreshTokens",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            token = table
-                                .Column<string>(
-                                    type: "VARCHAR(200)",
-                                    maxLength: 200,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            login_at = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            device_id = table
-                                .Column<string>(
-                                    type: "VARCHAR(200)",
-                                    maxLength: 200,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            location = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_active = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        token = table
+                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        login_at = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        device_id = table
+                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        location = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_RefreshTokens", x => x.id);
@@ -1373,53 +1099,40 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Sections",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            slug = table
-                                .Column<string>(
-                                    type: "VARCHAR(270)",
-                                    maxLength: 270,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            description = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            course_id = table
-                                .Column<string>(type: "VARCHAR(50)", nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            order = table.Column<int>(type: "int", nullable: false),
-                            duration = table.Column<int>(type: "int", nullable: false),
-                            is_deleted = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            status = table.Column<int>(type: "int", nullable: false),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        slug = table
+                            .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        description = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        course_id = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        order = table.Column<int>(type: "int", nullable: false),
+                        duration = table.Column<int>(type: "int", nullable: false),
+                        is_deleted = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        status = table.Column<int>(type: "int", nullable: false),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Sections", x => x.id);
@@ -1442,37 +1155,32 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Signature",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            course_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            full_name = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            designation = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            file_url = table
-                                .Column<string>(
-                                    type: "VARCHAR(200)",
-                                    maxLength: 200,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        course_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        full_name = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        designation = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        file_url = table
+                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Signature", x => x.id);
@@ -1496,65 +1204,40 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "SMTPSettings",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            mail_server = table
-                                .Column<string>(
-                                    type: "VARCHAR(200)",
-                                    maxLength: 200,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            mail_port = table.Column<int>(type: "int", nullable: false),
-                            sender_name = table
-                                .Column<string>(
-                                    type: "VARCHAR(200)",
-                                    maxLength: 200,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            sender_email = table
-                                .Column<string>(
-                                    type: "VARCHAR(200)",
-                                    maxLength: 200,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_name = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            password = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            reply_to = table
-                                .Column<string>(
-                                    type: "VARCHAR(200)",
-                                    maxLength: 200,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            UseSSL = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        mail_server = table
+                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        mail_port = table.Column<int>(type: "int", nullable: false),
+                        sender_name = table
+                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        sender_email = table
+                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_name = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        password = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        reply_to = table
+                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        UseSSL = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_SMTPSettings", x => x.id);
@@ -1571,40 +1254,31 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Tags",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            slug = table
-                                .Column<string>(
-                                    type: "VARCHAR(270)",
-                                    maxLength: 270,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_active = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        slug = table
+                            .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Tags", x => x.id);
@@ -1621,33 +1295,32 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "ZoomLicenses",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            license_email = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            host_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            capacity = table.Column<int>(type: "int", nullable: false),
-                            is_active = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: true
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        license_email = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        host_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        capacity = table.Column<int>(type: "int", nullable: false),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: true
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_ZoomLicenses", x => x.id);
@@ -1664,68 +1337,43 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "ZoomSettings",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            sdk_key = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            sdk_secret = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            webhook_secret = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            oauth_account_id = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            oauth_client_id = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            oauth_client_secret = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_recording_enabled = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        sdk_key = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        sdk_secret = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        webhook_secret = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        oauth_account_id = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        oauth_client_id = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        oauth_client_secret = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_recording_enabled = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_ZoomSettings", x => x.id);
@@ -1742,46 +1390,33 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "GroupFiles",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            GroupId = table
-                                .Column<string>(type: "VARCHAR(50)", nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(200)",
-                                    maxLength: 200,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            Size = table.Column<double>(type: "double", nullable: false),
-                            url = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            mime_type = table
-                                .Column<string>(
-                                    type: "VARCHAR(200)",
-                                    maxLength: 200,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        GroupId = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        Size = table.Column<double>(type: "double", nullable: false),
+                        url = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        mime_type = table
+                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_GroupFiles", x => x.id);
@@ -1804,32 +1439,31 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "GroupMembers",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            group_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_active = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        group_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_GroupMembers", x => x.id);
@@ -1853,28 +1487,27 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "QuestionPoolTeachers",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            question_pool_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            role = table.Column<int>(type: "int", nullable: false, defaultValue: 2),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        question_pool_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        role = table.Column<int>(type: "int", nullable: false, defaultValue: 2),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_QuestionPoolTeachers", x => x.id);
@@ -1898,37 +1531,32 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "QuestionOptions",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            option = table
-                                .Column<string>(
-                                    type: "varchar(5000)",
-                                    maxLength: 5000,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            order = table.Column<int>(type: "int", nullable: false),
-                            question_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_correct = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        option = table
+                            .Column<string>(type: "varchar(5000)", maxLength: 5000, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        order = table.Column<int>(type: "int", nullable: false),
+                        question_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_correct = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_QuestionOptions", x => x.id);
@@ -1951,32 +1579,27 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "QuestionPoolQuestions",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            question_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            question_pool_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            order = table.Column<int>(
-                                type: "int",
-                                nullable: false,
-                                defaultValue: 0
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        question_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        question_pool_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        order = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_QuestionPoolQuestions", x => x.id);
@@ -2005,41 +1628,36 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "QuestionSetSubmissions",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            question_set_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            start_time = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            end_time = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            is_submission_error = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            submission_error_message = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        question_set_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        start_time = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        end_time = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        is_submission_error = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        submission_error_message = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_QuestionSetSubmissions", x => x.id);
@@ -2062,27 +1680,26 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "QuestionTags",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            tag_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            question_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        tag_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        question_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_QuestionTags", x => x.id);
@@ -2113,30 +1730,29 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Meetings",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            meeting_number = table.Column<long>(type: "bigint", nullable: true),
-                            passcode = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            zoom_license_id = table
-                                .Column<string>(type: "VARCHAR(50)", nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            duration = table.Column<int>(type: "int", nullable: false),
-                            start_date = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        meeting_number = table.Column<long>(type: "bigint", nullable: true),
+                        passcode = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        zoom_license_id = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        duration = table.Column<int>(type: "int", nullable: false),
+                        start_date = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Meetings", x => x.id);
@@ -2159,31 +1775,30 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "QuestionSetQuestions",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            question_set_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            question_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            order = table.Column<int>(type: "int", nullable: false),
-                            question_pool_question_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        question_set_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        question_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        order = table.Column<int>(type: "int", nullable: false),
+                        question_pool_question_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_QuestionSetQuestions", x => x.id);
@@ -2218,38 +1833,34 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "QuestionSetResults",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            question_set_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            question_set_submission_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            total_mark = table.Column<decimal>(
-                                type: "decimal(20,4)",
-                                nullable: false
-                            ),
-                            negative_mark = table.Column<decimal>(
-                                type: "decimal(20,4)",
-                                nullable: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        question_set_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        question_set_submission_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        total_mark = table.Column<decimal>(type: "decimal(20,4)", nullable: false),
+                        negative_mark = table.Column<decimal>(
+                            type: "decimal(20,4)",
+                            nullable: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_QuestionSetResults", x => x.id);
@@ -2278,98 +1889,69 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Lessons",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            slug = table
-                                .Column<string>(
-                                    type: "VARCHAR(270)",
-                                    maxLength: 270,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            description = table
-                                .Column<string>(
-                                    type: "VARCHAR(5000)",
-                                    maxLength: 5000,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            video_url = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            thumbnail_url = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            document_url = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            order = table.Column<int>(type: "int", nullable: false),
-                            duration = table.Column<int>(type: "int", nullable: false),
-                            is_mandatory = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            type = table.Column<int>(type: "int", nullable: false),
-                            is_deleted = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            status = table.Column<int>(type: "int", nullable: false),
-                            course_id = table
-                                .Column<string>(type: "VARCHAR(50)", nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            section_id = table
-                                .Column<string>(type: "VARCHAR(50)", nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            meeting_id = table
-                                .Column<string>(type: "VARCHAR(50)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            question_set_id = table
-                                .Column<string>(type: "VARCHAR(50)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            start_date = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                            end_date = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                            video_key = table
-                                .Column<string>(
-                                    type: "VARCHAR(100)",
-                                    maxLength: 100,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        slug = table
+                            .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        description = table
+                            .Column<string>(type: "VARCHAR(5000)", maxLength: 5000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        video_url = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        thumbnail_url = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        document_url = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        order = table.Column<int>(type: "int", nullable: false),
+                        duration = table.Column<int>(type: "int", nullable: false),
+                        is_mandatory = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        type = table.Column<int>(type: "int", nullable: false),
+                        is_deleted = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        status = table.Column<int>(type: "int", nullable: false),
+                        course_id = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        section_id = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        meeting_id = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        question_set_id = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        start_date = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                        end_date = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                        video_key = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Lessons", x => x.id);
@@ -2410,25 +1992,24 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "MeetingReports",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            meeting_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            start_time = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            join_time = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            left_time = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                            duration = table.Column<TimeSpan>(type: "time(6)", nullable: true),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        meeting_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        start_time = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        join_time = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        left_time = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                        duration = table.Column<TimeSpan>(type: "time(6)", nullable: true),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_MeetingReports", x => x.id);
@@ -2451,39 +2032,34 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "QuestionSetSubmissionAnswers",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            question_set_submission_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            question_set_question_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            selected_answers = table
-                                .Column<string>(
-                                    type: "VARCHAR(150)",
-                                    maxLength: 150,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_correct = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        question_set_submission_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        question_set_question_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        selected_answers = table
+                            .Column<string>(type: "VARCHAR(150)", maxLength: 150, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_correct = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_QuestionSetSubmissionAnswers", x => x.id);
@@ -2513,42 +2089,33 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "Feedbacks",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            lesson_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            name = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            order = table.Column<int>(
-                                type: "int",
-                                nullable: false,
-                                defaultValue: 0
-                            ),
-                            is_active = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            type = table.Column<int>(type: "int", nullable: false),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        lesson_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        order = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        type = table.Column<int>(type: "int", nullable: false),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Feedbacks", x => x.id);
@@ -2572,40 +2139,39 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "PhysicalLessonReviews",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            lesson_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            review_message = table
-                                .Column<string>(type: "VARCHAR(500)", nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            hasAttended = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            is_reviewed = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        lesson_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        review_message = table
+                            .Column<string>(type: "VARCHAR(500)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        hasAttended = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        is_reviewed = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_PhysicalLessonReviews", x => x.id);
@@ -2629,26 +2195,21 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "VideoQueue",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            lesson_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            video_url = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            status = table.Column<int>(type: "int", nullable: false),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        lesson_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        video_url = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        status = table.Column<int>(type: "int", nullable: false),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_VideoQueue", x => x.id);
@@ -2666,40 +2227,39 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "WatchHistories",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            course_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            lesson_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_completed = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            is_passed = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: false
-                            ),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        course_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        lesson_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_completed = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        is_passed = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_WatchHistories", x => x.id);
@@ -2729,32 +2289,27 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "FeedbackQuestionOptions",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            feedback_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            option = table
-                                .Column<string>(
-                                    type: "VARCHAR(5000)",
-                                    maxLength: 5000,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            order = table.Column<int>(type: "int", nullable: false),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        feedback_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        option = table
+                            .Column<string>(type: "VARCHAR(5000)", maxLength: 5000, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        order = table.Column<int>(type: "int", nullable: false),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_FeedbackQuestionOptions", x => x.id);
@@ -2777,45 +2332,36 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "FeedbackSubmissions",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            lesson_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            feedback_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            user_id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            selected_option = table
-                                .Column<string>(
-                                    type: "VARCHAR(300)",
-                                    maxLength: 300,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            answer = table
-                                .Column<string>(
-                                    type: "VARCHAR(5000)",
-                                    maxLength: 5000,
-                                    nullable: true
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            rating = table.Column<int>(type: "int", nullable: true),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        lesson_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        feedback_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        selected_option = table
+                            .Column<string>(type: "VARCHAR(300)", maxLength: 300, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        answer = table
+                            .Column<string>(type: "VARCHAR(5000)", maxLength: 5000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        rating = table.Column<int>(type: "int", nullable: true),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_FeedbackSubmissions", x => x.id);

@@ -9,6 +9,7 @@
         public string GroupName { get; set; }
         public bool IsActive { get; set; }
         public UserModel User { get; set; }
+
         public GroupMemberResponseModel(GroupMember model)
         {
             Id = model.Id;

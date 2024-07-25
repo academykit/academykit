@@ -29,9 +29,14 @@ namespace Api.Controllers
         /// <param name="courseIdentity">Course id or slug.</param>
         /// <returns>Task completed.</returns>
         [HttpPost("Enrollment")]
-        public async Task<IActionResult> EnrollUser(IList<string> emailOrMobileNumber, string courseIdentity)
+        public async Task<IActionResult> EnrollUser(
+            IList<string> emailOrMobileNumber,
+            string courseIdentity
+        )
         {
-            var message = await enrollmentService.EnrollUserAsync(emailOrMobileNumber, CurrentUser.Id, courseIdentity).ConfigureAwait(false);
+            var message = await enrollmentService
+                .EnrollUserAsync(emailOrMobileNumber, CurrentUser.Id, courseIdentity)
+                .ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = message });
         }
 
@@ -41,10 +46,14 @@ namespace Api.Controllers
         /// <param name="searchCriteria"></param>
         /// <returns>List of user.</returns>
         [HttpGet("User")]
-        public async Task<SearchResult<UserResponseModel>> SearchUser([FromQuery] EnrollmentBaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<UserResponseModel>> SearchUser(
+            [FromQuery] EnrollmentBaseSearchCriteria searchCriteria
+        )
         {
             searchCriteria.CurrentUserId = CurrentUser.Id;
-            var result = await enrollmentService.CourseUserSearchAsync(searchCriteria).ConfigureAwait(false);
+            var result = await enrollmentService
+                .CourseUserSearchAsync(searchCriteria)
+                .ConfigureAwait(false);
             return result;
         }
     }

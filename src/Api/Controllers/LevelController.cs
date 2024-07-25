@@ -15,9 +15,7 @@ namespace Lingtren.Api.Controllers
         private readonly ILevelService levelService;
         private readonly IValidator<LevelRequestModel> validator;
 
-        public LevelController(
-            ILevelService levelService,
-            IValidator<LevelRequestModel> validator)
+        public LevelController(ILevelService levelService, IValidator<LevelRequestModel> validator)
         {
             this.levelService = levelService;
             this.validator = validator;
@@ -42,8 +40,12 @@ namespace Lingtren.Api.Controllers
         [HttpPost]
         public async Task<LevelResponseModel> CreateLevel(LevelRequestModel model)
         {
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var response = await levelService.CreateLevelAsync(model.Name, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var response = await levelService
+                .CreateLevelAsync(model.Name, CurrentUser.Id)
+                .ConfigureAwait(false);
             return new LevelResponseModel(response);
         }
 
@@ -56,8 +58,12 @@ namespace Lingtren.Api.Controllers
         [HttpPut("{identity}")]
         public async Task<LevelResponseModel> UpdateLevel(string identity, LevelRequestModel model)
         {
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var response = await levelService.UpdateLevelAsync(identity, model.Name, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var response = await levelService
+                .UpdateLevelAsync(identity, model.Name, CurrentUser.Id)
+                .ConfigureAwait(false);
             return new LevelResponseModel(response);
         }
 

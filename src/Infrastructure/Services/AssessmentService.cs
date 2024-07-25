@@ -127,8 +127,8 @@ namespace Lingtren.Infrastructure.Services
         {
             var assessmentExist = await _unitOfWork
                 .GetRepository<Assessment>()
-                .ExistsAsync(
-                    predicate: p => p.Id != entity.Id && p.Title.ToLower() == entity.Title.ToLower()
+                .ExistsAsync(predicate: p =>
+                    p.Id != entity.Id && p.Title.ToLower() == entity.Title.ToLower()
                 )
                 .ConfigureAwait(false);
             if (assessmentExist)
@@ -173,8 +173,8 @@ namespace Lingtren.Infrastructure.Services
 
             if (criteria.AssessmentStatus.HasValue)
             {
-                predicate = predicate.And(
-                    p => p.AssessmentStatus.Equals(criteria.AssessmentStatus.Value)
+                predicate = predicate.And(p =>
+                    p.AssessmentStatus.Equals(criteria.AssessmentStatus.Value)
                 );
             }
 
@@ -188,10 +188,9 @@ namespace Lingtren.Infrastructure.Services
                 }
                 else
                 {
-                    return predicate.And(
-                        x =>
-                            x.AssessmentStatus == AssessmentStatus.Published
-                            || x.CreatedBy == criteria.CurrentUserId
+                    return predicate.And(x =>
+                        x.AssessmentStatus == AssessmentStatus.Published
+                        || x.CreatedBy == criteria.CurrentUserId
                     );
                 }
             }
@@ -395,23 +394,22 @@ namespace Lingtren.Infrastructure.Services
                 if (isSuperAdminOrAdminAccess && model.Status == AssessmentStatus.Rejected)
                 {
                     // send mail to trainer if assessment is rejected
-                    BackgroundJob.Enqueue<IHangfireJobService>(
-                        job => job.SendAssessmentRejectMailAsync(existingAssessment.Id, null)
+                    BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                        job.SendAssessmentRejectMailAsync(existingAssessment.Id, null)
                     );
                 }
                 else if (isSuperAdminOrAdminAccess && model.Status == AssessmentStatus.Published)
                 {
                     // send mail to trainer if assessment is accepted
-                    BackgroundJob.Enqueue<IHangfireJobService>(
-                        job => job.SendAssessmentAcceptMailAsync(existingAssessment.Id, null)
+                    BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                        job.SendAssessmentAcceptMailAsync(existingAssessment.Id, null)
                     );
                 }
                 else if (!isSuperAdminOrAdminAccess && model.Status == AssessmentStatus.Review)
                 {
                     // send mail to admin/super admin if assessment is sent for review by trainer
-                    BackgroundJob.Enqueue<IHangfireJobService>(
-                        job =>
-                            job.SendAssessmentReviewMailAsync(existingAssessment.Id, newUsers, null)
+                    BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                        job.SendAssessmentReviewMailAsync(existingAssessment.Id, newUsers, null)
                     );
                 }
 
@@ -432,10 +430,8 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var assessment = await _unitOfWork
                         .GetRepository<Assessment>()
-                        .GetFirstOrDefaultAsync(
-                            predicate: p =>
-                                p.Id.ToString() == assessmentIdentity
-                                || p.Slug == assessmentIdentity
+                        .GetFirstOrDefaultAsync(predicate: p =>
+                            p.Id.ToString() == assessmentIdentity || p.Slug == assessmentIdentity
                         )
                         .ConfigureAwait(false);
                     if (assessment == null)
@@ -504,11 +500,10 @@ namespace Lingtren.Infrastructure.Services
             else
             {
                 var submissionCount =
-                    assessment.AssessmentSubmissions?.Count(
-                        sub =>
-                            sub.AssessmentId == assessment.Id
-                            && sub.UserId == currentUserId
-                            && sub.EndTime != default
+                    assessment.AssessmentSubmissions?.Count(sub =>
+                        sub.AssessmentId == assessment.Id
+                        && sub.UserId == currentUserId
+                        && sub.EndTime != default
                     ) ?? 0;
                 if (Retakes == 0 && submissionCount == 0)
                 {
@@ -577,8 +572,8 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var existingSkill = await _unitOfWork
                         .GetRepository<UserSkills>()
-                        .GetFirstOrDefaultAsync(
-                            predicate: p => p.SkillId == item.SkillId && p.UserId == currentUserId
+                        .GetFirstOrDefaultAsync(predicate: p =>
+                            p.SkillId == item.SkillId && p.UserId == currentUserId
                         );
                     if (existingSkill != null)
                     {
@@ -599,8 +594,8 @@ namespace Lingtren.Infrastructure.Services
                             predicate: p => p.Id == item.DepartmentId,
                             include: src => src.Include(x => x.Users)
                         );
-                    var isCurrentUserPresent = existingDepartment.Users.Any(
-                        member => member.Id == currentUserId
+                    var isCurrentUserPresent = existingDepartment.Users.Any(member =>
+                        member.Id == currentUserId
                     );
 
                     if (existingDepartment != null)
@@ -621,8 +616,8 @@ namespace Lingtren.Infrastructure.Services
                             predicate: p => p.Id == item.TrainingId,
                             include: src => src.Include(x => x.CourseEnrollments)
                         );
-                    var isCurrentUserPresent = existingCourse.CourseEnrollments.Any(
-                        member => member.UserId == currentUserId
+                    var isCurrentUserPresent = existingCourse.CourseEnrollments.Any(member =>
+                        member.UserId == currentUserId
                     );
                     if (isCurrentUserPresent == true)
                     {
@@ -642,8 +637,8 @@ namespace Lingtren.Infrastructure.Services
                             predicate: p => p.Id == item.GroupId,
                             include: src => src.Include(x => x.GroupMembers)
                         );
-                    var isCurrentUserPresent = existingGroup.GroupMembers.Any(
-                        member => member.UserId == currentUserId && member.IsActive
+                    var isCurrentUserPresent = existingGroup.GroupMembers.Any(member =>
+                        member.UserId == currentUserId && member.IsActive
                     );
 
                     if (isCurrentUserPresent == true)
@@ -664,8 +659,8 @@ namespace Lingtren.Infrastructure.Services
                             predicate: p => p.Id == item.CompletedAssessmentId,
                             include: src => src.Include(x => x.AssessmentResults)
                         );
-                    var isCurrentUserPresent = existingAssessment.AssessmentResults.Any(
-                        member => member.UserId == currentUserId
+                    var isCurrentUserPresent = existingAssessment.AssessmentResults.Any(member =>
+                        member.UserId == currentUserId
                     );
                     if (isCurrentUserPresent == true)
                     {
@@ -681,8 +676,8 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var existingUser = await _unitOfWork
                         .GetRepository<User>()
-                        .GetFirstOrDefaultAsync(
-                            predicate: p => p.Id == currentUserId && p.Role == item.Role
+                        .GetFirstOrDefaultAsync(predicate: p =>
+                            p.Id == currentUserId && p.Role == item.Role
                         );
                     if (existingUser != null)
                     {

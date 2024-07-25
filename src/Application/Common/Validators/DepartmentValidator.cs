@@ -9,7 +9,12 @@
     {
         public DepartmentValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.Name).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("DepartmentIdRequired")).MaximumLength(250).WithMessage(context => stringLocalizer.GetString("NameLength250"));
+            RuleFor(x => x.Name)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage(context => stringLocalizer.GetString("DepartmentIdRequired"))
+                .MaximumLength(250)
+                .WithMessage(context => stringLocalizer.GetString("NameLength250"));
         }
     }
 }

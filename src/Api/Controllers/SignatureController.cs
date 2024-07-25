@@ -23,7 +23,8 @@ namespace Lingtren.Api.Controllers
         public SignatureController(
             ICourseService courseService,
             IValidator<SignatureRequestModel> validator,
-            IStringLocalizer<ExceptionLocalizer> localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
         {
             this.courseService = courseService;
             this.validator = validator;
@@ -37,7 +38,9 @@ namespace Lingtren.Api.Controllers
         [HttpGet]
         public async Task<IList<SignatureResponseModel>> SearchAsync(string identity)
         {
-            return await courseService.GetAllSignatureAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            return await courseService
+                .GetAllSignatureAsync(identity, CurrentUser.Id)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -47,10 +50,17 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the instance of <see cref="SignatureRequestModel" />. </param>
         /// <returns> the instance of <see cref="SignatureResponseModel" /> .</returns>
         [HttpPost]
-        public async Task<SignatureResponseModel> CreateAsync(string identity, SignatureRequestModel model)
+        public async Task<SignatureResponseModel> CreateAsync(
+            string identity,
+            SignatureRequestModel model
+        )
         {
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            return await courseService.InsertSignatureAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            return await courseService
+                .InsertSignatureAsync(identity, model, CurrentUser.Id)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -61,10 +71,18 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the instance of <see cref="SignatureRequestModel" />. </param>
         /// <returns> the instance of <see cref="SignatureResponseModel" /> .</returns>
         [HttpPut("{id}")]
-        public async Task<SignatureResponseModel> UpdateAsync(string identity, Guid id, SignatureRequestModel model)
+        public async Task<SignatureResponseModel> UpdateAsync(
+            string identity,
+            Guid id,
+            SignatureRequestModel model
+        )
         {
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            return await courseService.UpdateSignatureAsync(identity, id, model, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            return await courseService
+                .UpdateSignatureAsync(identity, id, model, CurrentUser.Id)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -75,8 +93,16 @@ namespace Lingtren.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(string identity, Guid id)
         {
-            await courseService.DeleteSignatureAsync(identity, id, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("SignatureRemoved") });
+            await courseService
+                .DeleteSignatureAsync(identity, id, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("SignatureRemoved")
+                }
+            );
         }
     }
 }

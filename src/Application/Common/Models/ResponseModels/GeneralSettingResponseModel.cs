@@ -13,6 +13,7 @@
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
         public string CustomConfiguration { get; set; }
+
         public GeneralSettingResponseModel(GeneralSetting model)
         {
             Id = model.Id;

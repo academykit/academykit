@@ -1,7 +1,6 @@
 ﻿namespace Lingtren.Application.Common.Models.ResponseModels
 {
     using global::Application.Common.Models.ResponseModels;
-
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
 
@@ -34,31 +33,30 @@
             Name = question.Name;
             Type = question.Type;
             Description = question.Description;
-            QuestionPoolId = question.QuestionPoolQuestions
-                .Select(x => x.QuestionPoolId)
+            QuestionPoolId = question
+                .QuestionPoolQuestions.Select(x => x.QuestionPoolId)
                 .FirstOrDefault();
             Hints = showHints ? question.Hints : null;
             QuestionOptions = new List<QuestionOptionResponseModel>();
             Tags = new List<QuestionTagResponseModel>();
             User = question.User != null ? new UserModel(question.User) : new UserModel();
-            question.QuestionTags
-                ?.ToList()
+            question
+                .QuestionTags?.ToList()
                 .ForEach(item => Tags.Add(new QuestionTagResponseModel(item)));
             if (question.QuestionOptions?.Count > 0)
             {
-                question.QuestionOptions
-                    .ToList()
-                    .ForEach(
-                        x =>
-                            QuestionOptions.Add(
-                                new QuestionOptionResponseModel
-                                {
-                                    Id = x.Id,
-                                    Option = x.Option,
-                                    IsCorrect = showCorrectAnswer ? x.IsCorrect : null,
-                                    Order = x.Order
-                                }
-                            )
+                question
+                    .QuestionOptions.ToList()
+                    .ForEach(x =>
+                        QuestionOptions.Add(
+                            new QuestionOptionResponseModel
+                            {
+                                Id = x.Id,
+                                Option = x.Option,
+                                IsCorrect = showCorrectAnswer ? x.IsCorrect : null,
+                                Order = x.Order
+                            }
+                        )
                     );
             }
         }

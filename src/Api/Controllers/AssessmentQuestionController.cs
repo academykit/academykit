@@ -5,7 +5,6 @@
 namespace Lingtren.Api.Controllers
 {
     using DocumentFormat.OpenXml.Drawing.Charts;
-
     using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
@@ -17,7 +16,6 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Infrastructure.Helpers;
     using Lingtren.Infrastructure.Localization;
     using LinqKit;
-
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
 
@@ -72,8 +70,8 @@ namespace Lingtren.Api.Controllers
                 TotalPage = searchResult.TotalPage,
             };
 
-            searchResult.Items.ForEach(
-                p => response.Items.Add(new AssessmentQuestionResponseModel(p))
+            searchResult.Items.ForEach(p =>
+                response.Items.Add(new AssessmentQuestionResponseModel(p))
             );
 
             return response;

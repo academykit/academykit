@@ -9,8 +9,14 @@
     {
         public QuestionPoolTeacherValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.QuestionPoolIdentity).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("QuestionpoolIdRequired"));
-            RuleFor(x => x.Email).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("EmailRequired"));
+            RuleFor(x => x.QuestionPoolIdentity)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage(context => stringLocalizer.GetString("QuestionpoolIdRequired"));
+            RuleFor(x => x.Email)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage(context => stringLocalizer.GetString("EmailRequired"));
         }
     }
 }

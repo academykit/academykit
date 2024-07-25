@@ -7,14 +7,12 @@ namespace Lingtren.Api.Controllers
     using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;
-
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Localization;
-
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
 

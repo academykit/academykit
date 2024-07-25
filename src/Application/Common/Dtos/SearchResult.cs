@@ -42,8 +42,6 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchResult{T}"/> class.
         /// </summary>
-        public SearchResult()
-        {
-        }
+        public SearchResult() { }
     }
 }

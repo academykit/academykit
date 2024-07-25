@@ -6,6 +6,5 @@ namespace Lingtren.Domain.Enums
         Indian = 2,
         Japanese = 3,
         Chinese = 4,
-
     }
 }

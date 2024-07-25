@@ -16,7 +16,11 @@
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
         /// <exception cref="ForbiddenException"></exception>
-        Task<GroupAddMemberResponseModel> AddMemberAsync(string identity, AddGroupMemberRequestModel model, Guid currentUserId);
+        Task<GroupAddMemberResponseModel> AddMemberAsync(
+            string identity,
+            AddGroupMemberRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to change group member status
@@ -69,7 +73,10 @@
         /// <param name="identity">the group id or slug</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the search result of <see cref="UserModel"/></returns>
-        Task<SearchResult<UserModel>> GetNonGroupMembers(string identity, GroupBaseSearchCriteria criteria);
+        Task<SearchResult<UserModel>> GetNonGroupMembers(
+            string identity,
+            GroupBaseSearchCriteria criteria
+        );
 
         /// <summary>
         /// Handle to get group members by department id
@@ -78,6 +85,10 @@
         /// <param name="departmentId">the department id</param>
         /// <param name="id">The current user id</param>
         /// <returns></returns>
-        Task<GroupAddMemberResponseModel> AddMembersByDepartment(string identity, string departmentId, Guid currentUserId);
+        Task<GroupAddMemberResponseModel> AddMembersByDepartment(
+            string identity,
+            string departmentId,
+            Guid currentUserId
+        );
     }
 }

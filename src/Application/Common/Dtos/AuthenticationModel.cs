@@ -1,5 +1,4 @@
-﻿
-namespace Lingtren.Application.Common.Dtos
+﻿namespace Lingtren.Application.Common.Dtos
 {
     using Lingtren.Domain.Enums;
 

@@ -8,6 +8,7 @@
         public bool HasExceededAttempt { get; set; }
         public DateTime EndDate { get; set; }
     }
+
     public class QuestionSetResultDetailModel
     {
         public Guid QuestionSetSubmissionId { get; set; }

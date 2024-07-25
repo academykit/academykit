@@ -15,12 +15,16 @@
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
 
-    public class SectionService : BaseGenericService<Section, SectionBaseSearchCriteria>, ISectionService
+    public class SectionService
+        : BaseGenericService<Section, SectionBaseSearchCriteria>,
+            ISectionService
     {
-        public SectionService(IUnitOfWork unitOfWork, ILogger<SectionService> logger,
-        IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
-        {
-        }
+        public SectionService(
+            IUnitOfWork unitOfWork,
+            ILogger<SectionService> logger,
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
+            : base(unitOfWork, logger, localizer) { }
 
         #region Protected Region
 
@@ -30,7 +34,10 @@
         /// <param name="predicate">The predicate.</param>
         /// <param name="criteria">The search criteria.</param>
         /// <returns>The updated predicate with applied filters.</returns>
-        protected override Expression<Func<Section, bool>> ConstructQueryConditions(Expression<Func<Section, bool>> predicate, SectionBaseSearchCriteria criteria)
+        protected override Expression<Func<Section, bool>> ConstructQueryConditions(
+            Expression<Func<Section, bool>> predicate,
+            SectionBaseSearchCriteria criteria
+        )
         {
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
@@ -46,10 +53,13 @@
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>The updated query.</returns>
-        protected override IIncludableQueryable<Section, object> IncludeNavigationProperties(IQueryable<Section> query)
+        protected override IIncludableQueryable<Section, object> IncludeNavigationProperties(
+            IQueryable<Section> query
+        )
         {
             return query.Include(x => x.User);
         }
+
         /// <summary>
         /// Handel to populate live session retrieved entity
         /// </summary>
@@ -57,7 +67,10 @@
         /// <returns></returns>
         protected override async Task PopulateRetrievedEntity(Section entity)
         {
-            var lessons = await _unitOfWork.GetRepository<Lesson>().GetAllAsync(predicate: p => p.SectionId == entity.Id).ConfigureAwait(false);
+            var lessons = await _unitOfWork
+                .GetRepository<Lesson>()
+                .GetAllAsync(predicate: p => p.SectionId == entity.Id)
+                .ConfigureAwait(false);
             entity.Lessons = lessons;
         }
 
@@ -72,7 +85,11 @@
             await CheckDuplicateNameAsync(entity).ConfigureAwait(false);
             var order = await LastSectionOrder(entity).ConfigureAwait(false);
             entity.Order = order;
-            entity.Slug = CommonHelper.GetEntityTitleSlug<Section>(_unitOfWork, (slug) => q => q.Slug == slug, entity.Name);
+            entity.Slug = CommonHelper.GetEntityTitleSlug<Section>(
+                _unitOfWork,
+                (slug) => q => q.Slug == slug,
+                entity.Name
+            );
             await Task.FromResult(0);
         }
 
@@ -107,17 +124,33 @@
         /// <param name="sectionIdentity"> the section id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
-        public async Task DeleteSectionAsync(string identity, string sectionIdentity, Guid currentUserId)
+        public async Task DeleteSectionAsync(
+            string identity,
+            string sectionIdentity,
+            Guid currentUserId
+        )
         {
             try
             {
-                var course = await ValidateAndGetCourse(currentUserId, identity).ConfigureAwait(false);
-                var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
-                    predicate: x => !x.IsDeleted && x.CourseId == course.Id && (x.Id.ToString() == sectionIdentity || x.Slug.Equals(sectionIdentity)),
-                    include: s => s.Include(x => x.Lessons).Include(x => x.Course)).ConfigureAwait(false);
+                var course = await ValidateAndGetCourse(currentUserId, identity)
+                    .ConfigureAwait(false);
+                var section = await _unitOfWork
+                    .GetRepository<Section>()
+                    .GetFirstOrDefaultAsync(
+                        predicate: x =>
+                            !x.IsDeleted
+                            && x.CourseId == course.Id
+                            && (
+                                x.Id.ToString() == sectionIdentity || x.Slug.Equals(sectionIdentity)
+                            ),
+                        include: s => s.Include(x => x.Lessons).Include(x => x.Course)
+                    )
+                    .ConfigureAwait(false);
                 if (course.Status == CourseStatus.Completed)
                 {
-                    throw new InvalidOperationException(_localizer.GetString("CompletedCourseIssue"));
+                    throw new InvalidOperationException(
+                        _localizer.GetString("CompletedCourseIssue")
+                    );
                 }
 
                 if (section == null)
@@ -127,13 +160,19 @@
 
                 if (section.Status == CourseStatus.Published)
                 {
-                    _logger.LogWarning("Section with id: {sectionId} is in published status.", section.Id);
+                    _logger.LogWarning(
+                        "Section with id: {sectionId} is in published status.",
+                        section.Id
+                    );
                     throw new ForbiddenException(_localizer.GetString("TrainingSectionPublished"));
                 }
 
                 if (section.Lessons.Any(x => !x.IsDeleted))
                 {
-                    _logger.LogWarning("Section with id: {sectionId} consist lessons for delete.", section.Id);
+                    _logger.LogWarning(
+                        "Section with id: {sectionId} consist lessons for delete.",
+                        section.Id
+                    );
                     throw new ForbiddenException(_localizer.GetString("TrainingSectionLesson"));
                     ;
                 }
@@ -163,16 +202,26 @@
         {
             try
             {
-                var course = await ValidateAndGetCourse(currentUserId, identity, validateForModify: true).ConfigureAwait(false);
+                var course = await ValidateAndGetCourse(
+                        currentUserId,
+                        identity,
+                        validateForModify: true
+                    )
+                    .ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("ReorderAsync(): Training with identity : {identity} not found for user with id :{userId}.", identity, currentUserId);
+                    _logger.LogWarning(
+                        "ReorderAsync(): Training with identity : {identity} not found for user with id :{userId}.",
+                        identity,
+                        currentUserId
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
-                var sections = await _unitOfWork.GetRepository<Section>().GetAllAsync(
-                    predicate: p => p.CourseId == course.Id && ids.Contains(p.Id)
-                    ).ConfigureAwait(false);
+                var sections = await _unitOfWork
+                    .GetRepository<Section>()
+                    .GetAllAsync(predicate: p => p.CourseId == course.Id && ids.Contains(p.Id))
+                    .ConfigureAwait(false);
 
                 var order = 1;
                 var currentTimeStamp = DateTime.UtcNow;
@@ -199,7 +248,9 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while attempting to reorder the lessons");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("LessonReorderError"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("LessonReorderError"));
             }
         }
 
@@ -212,11 +263,22 @@
         /// <exception cref="ServiceException"></exception>
         private async Task CheckDuplicateNameAsync(Section entity)
         {
-            var sectionExist = await _unitOfWork.GetRepository<Section>().ExistsAsync(
-                predicate: p => p.Id != entity.Id && p.CourseId == entity.CourseId && p.Name.ToLower() == entity.Name.ToLower() && !p.IsDeleted).ConfigureAwait(false);
+            var sectionExist = await _unitOfWork
+                .GetRepository<Section>()
+                .ExistsAsync(predicate: p =>
+                    p.Id != entity.Id
+                    && p.CourseId == entity.CourseId
+                    && p.Name.ToLower() == entity.Name.ToLower()
+                    && !p.IsDeleted
+                )
+                .ConfigureAwait(false);
             if (sectionExist)
             {
-                _logger.LogWarning("Duplicate section name : {name} is found for the section with id : {id}.", entity.Name, entity.Id);
+                _logger.LogWarning(
+                    "Duplicate section name : {name} is found for the section with id : {id}.",
+                    entity.Name,
+                    entity.Id
+                );
                 throw new ServiceException(_localizer.GetString("DuplicateSectionNameFound"));
             }
         }
@@ -228,9 +290,13 @@
         /// <returns> the int value </returns>
         private async Task<int> LastSectionOrder(Section entity)
         {
-            var section = await _unitOfWork.GetRepository<Section>().GetFirstOrDefaultAsync(
-                predicate: x => x.CourseId == entity.CourseId && !x.IsDeleted,
-                orderBy: x => x.OrderByDescending(x => x.Order)).ConfigureAwait(false);
+            var section = await _unitOfWork
+                .GetRepository<Section>()
+                .GetFirstOrDefaultAsync(
+                    predicate: x => x.CourseId == entity.CourseId && !x.IsDeleted,
+                    orderBy: x => x.OrderByDescending(x => x.Order)
+                )
+                .ConfigureAwait(false);
             return section != null ? section.Order + 1 : 1;
         }
 

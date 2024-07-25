@@ -21,7 +21,11 @@ namespace Api.Controllers
         private readonly IStringLocalizer<ExceptionLocalizer> localizer;
         private readonly IValidator<PhysicalLessonReviewRequestModel> validator;
 
-        public PhysicalLessonController(IStringLocalizer<ExceptionLocalizer> localizer, IPhysicalLessonServices physicsLessonServices, IValidator<PhysicalLessonReviewRequestModel> validator)
+        public PhysicalLessonController(
+            IStringLocalizer<ExceptionLocalizer> localizer,
+            IPhysicalLessonServices physicsLessonServices,
+            IValidator<PhysicalLessonReviewRequestModel> validator
+        )
         {
             this.physicsLessonServices = physicsLessonServices;
             this.localizer = localizer;
@@ -36,8 +40,16 @@ namespace Api.Controllers
         [HttpPost("Attendance")]
         public async Task<IActionResult> Attendance(string idenity)
         {
-            await physicsLessonServices.PhysicalLessonAttendanceAsync(idenity, CurrentUser.Id.ToString()).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("SuccessfulAttendance") });
+            await physicsLessonServices
+                .PhysicalLessonAttendanceAsync(idenity, CurrentUser.Id.ToString())
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("SuccessfulAttendance")
+                }
+            );
         }
 
         /// <summary>
@@ -48,9 +60,19 @@ namespace Api.Controllers
         [HttpPost("Review")]
         public async Task<IActionResult> Review(PhysicalLessonReviewRequestModel model)
         {
-            await validator.ValidateAsync(model, option => option.ThrowOnFailures()).ConfigureAwait(false);
-            await physicsLessonServices.PhysicalLessonReviewAsync(model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("SuccessfullyReviewed") });
+            await validator
+                .ValidateAsync(model, option => option.ThrowOnFailures())
+                .ConfigureAwait(false);
+            await physicsLessonServices
+                .PhysicalLessonReviewAsync(model, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("SuccessfullyReviewed")
+                }
+            );
         }
     }
 }

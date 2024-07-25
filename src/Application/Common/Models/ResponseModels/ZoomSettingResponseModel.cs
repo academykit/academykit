@@ -14,6 +14,7 @@
         public bool IsRecordingEnabled { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
+
         public ZoomSettingResponseModel(ZoomSetting model)
         {
             Id = model.Id;

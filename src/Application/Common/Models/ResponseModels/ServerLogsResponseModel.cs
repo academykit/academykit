@@ -9,10 +9,8 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public SeverityType Type { get; set; }
         public string TimeStamp { get; set; }
         public string Message { get; set; }
-        public ServerLogsResponseModel()
-        {
 
-        }
+        public ServerLogsResponseModel() { }
 
         public ServerLogsResponseModel(Logs log)
         {

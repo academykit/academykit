@@ -2,7 +2,7 @@
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Domain.Entities;
-    public interface IGroupMemberService : IGenericService<GroupMember, GroupMemberBaseSearchCriteria>
-    {
-    }
+
+    public interface IGroupMemberService
+        : IGenericService<GroupMember, GroupMemberBaseSearchCriteria> { }
 }

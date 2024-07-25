@@ -10,7 +10,8 @@
     /// Defines the interface for generic repository
     /// </summary>
     /// <typeparam name="TEntity"> the type of entity </typeparam>
-    public interface IRepository<TEntity> where TEntity : class
+    public interface IRepository<TEntity>
+        where TEntity : class
     {
         /// <summary>
         /// Changes the table name. This require the tables in the same database.
@@ -31,10 +32,13 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="SearchResult{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>This method default no-tracking query.</remarks>
-        SearchResult<TEntity> GetPagedList(BaseSearchCriteria criteria, Expression<Func<TEntity, bool>> predicate = null,
-                                         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                         bool disableTracking = true,
-                                         bool ignoreQueryFilters = false);
+        SearchResult<TEntity> GetPagedList(
+            BaseSearchCriteria criteria,
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false
+        );
 
         /// <summary>
         /// Gets the <see cref="SearchResult{TEntity}"/> based on a predicate, order by delegate and page information. This method default no-tracking query.
@@ -49,11 +53,14 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="SearchResult{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>This method default no-tracking query.</remarks>
-        Task<SearchResult<TEntity>> GetPagedListAsync(BaseSearchCriteria criteria, Expression<Func<TEntity, bool>> predicate = null,
-                                                    Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                                    bool disableTracking = true,
-                                                    CancellationToken cancellationToken = default,
-                                                    bool ignoreQueryFilters = false);
+        Task<SearchResult<TEntity>> GetPagedListAsync(
+            BaseSearchCriteria criteria,
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            CancellationToken cancellationToken = default,
+            bool ignoreQueryFilters = false
+        );
 
         /// <summary>
         /// Gets the <see cref="SearchResult{TResult}"/> based on a predicate, order by delegate and page information. This method default no-tracking query.
@@ -66,11 +73,15 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TResult}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>This method default no-tracking query.</remarks>
-        SearchResult<TResult> GetPagedList<TResult>(BaseSearchCriteria criteria, Expression<Func<TEntity, TResult>> selector,
-                                                  Expression<Func<TEntity, bool>> predicate = null,
-                                                  Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                                  bool disableTracking = true,
-                                                  bool ignoreQueryFilters = false) where TResult : class;
+        SearchResult<TResult> GetPagedList<TResult>(
+            BaseSearchCriteria criteria,
+            Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false
+        )
+            where TResult : class;
 
         /// <summary>
         /// Gets the <see cref="SearchResult{TEntity}"/> based on a predicate, order by delegate and page information. This method default no-tracking query.
@@ -86,12 +97,16 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="SearchResult{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>This method default no-tracking query.</remarks>
-        Task<SearchResult<TResult>> GetPagedListAsync<TResult>(BaseSearchCriteria criteria, Expression<Func<TEntity, TResult>> selector,
-                                                             Expression<Func<TEntity, bool>> predicate = null,
-                                                             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                                             bool disableTracking = true,
-                                                             CancellationToken cancellationToken = default,
-                                                             bool ignoreQueryFilters = false) where TResult : class;
+        Task<SearchResult<TResult>> GetPagedListAsync<TResult>(
+            BaseSearchCriteria criteria,
+            Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            CancellationToken cancellationToken = default,
+            bool ignoreQueryFilters = false
+        )
+            where TResult : class;
 
         /// <summary>
         /// Gets the first or default entity based on a predicate, order by delegate and include delegate. This method defaults to a read-only, no-tracking query.
@@ -103,11 +118,13 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>This method defaults to a read-only, no-tracking query.</remarks>
-        TEntity GetFirstOrDefault(Expression<Func<TEntity, bool>> predicate = null,
-                                  Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-                                  Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                  bool disableTracking = true,
-                                  bool ignoreQueryFilters = false);
+        TEntity GetFirstOrDefault(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false
+        );
 
         /// <summary>
         /// Gets the first or default entity based on a predicate, order by delegate and include delegate. This method defaults to a read-only, no-tracking query.
@@ -120,12 +137,14 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>This method defaults to a read-only, no-tracking query.</remarks>
-        TResult GetFirstOrDefault<TResult>(Expression<Func<TEntity, TResult>> selector,
-                                           Expression<Func<TEntity, bool>> predicate = null,
-                                           Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-                                           Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                           bool disableTracking = true,
-                                           bool ignoreQueryFilters = false);
+        TResult GetFirstOrDefault<TResult>(
+            Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false
+        );
 
         /// <summary>
         /// Gets the first or default entity based on a predicate, order by delegate and include delegate. This method defaults to a read-only, no-tracking query.
@@ -138,12 +157,14 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>Ex: This method defaults to a read-only, no-tracking query.</remarks>
-        Task<TResult> GetFirstOrDefaultAsync<TResult>(Expression<Func<TEntity, TResult>> selector,
+        Task<TResult> GetFirstOrDefaultAsync<TResult>(
+            Expression<Func<TEntity, TResult>> selector,
             Expression<Func<TEntity, bool>> predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
             bool disableTracking = true,
-            bool ignoreQueryFilters = false);
+            bool ignoreQueryFilters = false
+        );
 
         /// <summary>
         /// Gets the first or default entity based on a predicate, order by delegate and include delegate. This method defaults to a read-only, no-tracking query.
@@ -155,11 +176,13 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>Ex: This method defaults to a read-only, no-tracking query. </remarks>
-        Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate = null,
+        Task<TEntity> GetFirstOrDefaultAsync(
+            Expression<Func<TEntity, bool>> predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
             bool disableTracking = true,
-            bool ignoreQueryFilters = false);
+            bool ignoreQueryFilters = false
+        );
 
         /// <summary>
         /// Uses raw SQL queries to fetch the specified <typeparamref name="TEntity" /> data.
@@ -207,11 +230,13 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>Ex: This method defaults to a read-only, no-tracking query.</remarks>
-        IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate = null,
-                                                  Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-                                                  Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                                  bool disableTracking = true,
-                                                  bool ignoreQueryFilters = false);
+        IQueryable<TEntity> GetAll(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false
+        );
 
         /// <summary>
         /// Gets all entities. This method is not recommended
@@ -224,12 +249,14 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>Ex: This method defaults to a read-only, no-tracking query.</remarks>
-        IQueryable<TResult> GetAll<TResult>(Expression<Func<TEntity, TResult>> selector,
+        IQueryable<TResult> GetAll<TResult>(
+            Expression<Func<TEntity, TResult>> selector,
             Expression<Func<TEntity, bool>> predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
             bool disableTracking = true,
-            bool ignoreQueryFilters = false);
+            bool ignoreQueryFilters = false
+        );
 
         /// <summary>
         /// Gets all entities. This method is not recommended
@@ -247,11 +274,13 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>Ex: This method defaults to a read-only, no-tracking query.</remarks>
-        Task<IList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null,
-                                                  Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-                                                  Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                                  bool disableTracking = true,
-                                                  bool ignoreQueryFilters = false);
+        Task<IList<TEntity>> GetAllAsync(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false
+        );
 
         /// <summary>
         /// Gets all entities. This method is not recommended
@@ -264,12 +293,14 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>Ex: This method defaults to a read-only, no-tracking query.</remarks>
-        Task<IList<TResult>> GetAllAsync<TResult>(Expression<Func<TEntity, TResult>> selector,
+        Task<IList<TResult>> GetAllAsync<TResult>(
+            Expression<Func<TEntity, TResult>> selector,
             Expression<Func<TEntity, bool>> predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
             bool disableTracking = true,
-            bool ignoreQueryFilters = false);
+            bool ignoreQueryFilters = false
+        );
 
         /// <summary>
         /// Gets the count based on a predicate.
@@ -305,7 +336,10 @@
         /// <param name="predicate"></param>
         /// <param name="selector"></param>
         /// <returns>decimal</returns>
-        T Max<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null);
+        T Max<T>(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, T>> selector = null
+        );
 
         /// <summary>
         /// Gets the async max based on a predicate.
@@ -313,7 +347,10 @@
         /// <param name="predicate"></param>
         /// <param name="selector"></param>
         /// <returns>decimal</returns>
-        Task<T> MaxAsync<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null);
+        Task<T> MaxAsync<T>(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, T>> selector = null
+        );
 
         /// <summary>
         /// Gets the min based on a predicate.
@@ -321,7 +358,10 @@
         /// <param name="predicate"></param>
         /// <param name="selector"></param>
         /// <returns>decimal</returns>
-        T Min<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null);
+        T Min<T>(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, T>> selector = null
+        );
 
         /// <summary>
         /// Gets the async min based on a predicate.
@@ -329,7 +369,10 @@
         /// <param name="predicate"></param>
         /// <param name="selector"></param>
         /// <returns>decimal</returns>
-        Task<T> MinAsync<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null);
+        Task<T> MinAsync<T>(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, T>> selector = null
+        );
 
         /// <summary>
         /// Gets the average based on a predicate.
@@ -337,7 +380,10 @@
         /// <param name="predicate"></param>
         /// <param name="selector"></param>
         /// <returns>decimal</returns>
-        decimal Average(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null);
+        decimal Average(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, decimal>> selector = null
+        );
 
         /// <summary>
         /// Gets the async average based on a predicate.
@@ -345,7 +391,10 @@
         /// <param name="predicate"></param>
         ///  <param name="selector"></param>
         /// <returns>decimal</returns>
-        Task<decimal> AverageAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null);
+        Task<decimal> AverageAsync(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, decimal>> selector = null
+        );
 
         /// <summary>
         /// Gets the sum based on a predicate.
@@ -353,7 +402,10 @@
         /// <param name="predicate"></param>
         ///  <param name="selector"></param>
         /// <returns>decimal</returns>
-        decimal Sum(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null);
+        decimal Sum(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, decimal>> selector = null
+        );
 
         /// <summary>
         /// Gets the async sum based on a predicate.
@@ -361,7 +413,10 @@
         /// <param name="predicate"></param>
         ///  <param name="selector"></param>
         /// <returns>decimal</returns>
-        Task<decimal> SumAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null);
+        Task<decimal> SumAsync(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, decimal>> selector = null
+        );
 
         /// <summary>
         /// Gets the Exists record based on a predicate.
@@ -369,6 +424,7 @@
         /// <param name="predicate"></param>
         /// <returns></returns>
         bool Exists(Expression<Func<TEntity, bool>> predicate = null);
+
         /// <summary>
         /// Gets the Async Exists record based on a predicate.
         /// </summary>
@@ -400,7 +456,10 @@
         /// <param name="entity">The entity to insert.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous insert operation.</returns>
-        ValueTask<EntityEntry<TEntity>> InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
+        ValueTask<EntityEntry<TEntity>> InsertAsync(
+            TEntity entity,
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Inserts a range of entities asynchronously.
@@ -415,7 +474,10 @@
         /// <param name="entities">The entities to insert.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous insert operation.</returns>
-        Task InsertAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+        Task InsertAsync(
+            IEnumerable<TEntity> entities,
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Updates the specified entity.

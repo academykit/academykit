@@ -1,10 +1,10 @@
 namespace Lingtren.Application.Common.Validators
 {
     using FluentValidation;
+    using Ganss.Xss;
     using Lingtren.Application.Common.Models.RequestModels;
     using Lingtren.Application.ValidatorLocalization;
     using Microsoft.Extensions.Localization;
-    using Ganss.Xss;
 
     public class MailNotificationValidator : AbstractValidator<MailNotificationRequestModel>
     {

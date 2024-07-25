@@ -144,8 +144,8 @@ namespace Lingtren.Infrastructure.Services
 
             if (criteria.MailType.HasValue)
             {
-                predicate = predicate.And(
-                    p => p.MailType == criteria.MailType && p.IsActive == true
+                predicate = predicate.And(p =>
+                    p.MailType == criteria.MailType && p.IsActive == true
                 );
             }
 

@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Domain.Entities
 {
     using Lingtren.Domain.Common;
+
     public class ZoomSetting : AuditableEntity
     {
         public string SdkKey { get; set; }

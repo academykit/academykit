@@ -14,44 +14,35 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder
                 .CreateTable(
                     name: "MailNotifications",
-                    columns: table =>
-                        new
-                        {
-                            id = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            mail_name = table
-                                .Column<string>(
-                                    type: "VARCHAR(250)",
-                                    maxLength: 250,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            mail_subject = table
-                                .Column<string>(
-                                    type: "VARCHAR(500)",
-                                    maxLength: 500,
-                                    nullable: false
-                                )
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            mail_message = table
-                                .Column<string>(type: "TEXT", nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            is_active = table.Column<bool>(
-                                type: "tinyint(1)",
-                                nullable: false,
-                                defaultValue: true
-                            ),
-                            mail_type = table.Column<int>(type: "int", nullable: false),
-                            created_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                            updated_by = table
-                                .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                                .Annotation("MySql:CharSet", "utf8mb4"),
-                            updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                        },
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        mail_name = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        mail_subject = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        mail_message = table
+                            .Column<string>(type: "TEXT", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: true
+                        ),
+                        mail_type = table.Column<int>(type: "int", nullable: false),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_MailNotifications", x => x.id);

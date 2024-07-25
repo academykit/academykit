@@ -62,8 +62,8 @@
 
                 var users = await _unitOfWork
                     .GetRepository<User>()
-                    .GetAllAsync(
-                        predicate: p => p.Role == UserRole.Admin || p.Role == UserRole.SuperAdmin
+                    .GetAllAsync(predicate: p =>
+                        p.Role == UserRole.Admin || p.Role == UserRole.SuperAdmin
                     )
                     .ConfigureAwait(false);
                 if (users.Count == default)
@@ -840,10 +840,9 @@
                         predicate: p => p.Id == assessmentId,
                         include: source =>
                             source
-                                .Where(
-                                    x =>
-                                        x.User.Role == UserRole.SuperAdmin
-                                        || x.User.Role == UserRole.Admin
+                                .Where(x =>
+                                    x.User.Role == UserRole.SuperAdmin
+                                    || x.User.Role == UserRole.Admin
                                 )
                                 .Include(x => x.User)
                     )
@@ -854,8 +853,8 @@
                 }
 
                 // all admins and super admin
-                var users = user.Where(
-                    x => x.Role == UserRole.SuperAdmin || x.Role == UserRole.Admin
+                var users = user.Where(x =>
+                    x.Role == UserRole.SuperAdmin || x.Role == UserRole.Admin
                 );
 
                 var settings = await _unitOfWork

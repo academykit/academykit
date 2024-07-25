@@ -11,7 +11,10 @@ namespace Lingtren.Application.Common.Interfaces
         /// <param name="criteria"> the instance of <see cref="LogBaseSearchCriteria"/></param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the list of <see cref="ServerLogsResponseModel"/></returns>
-        Task<SearchResult<ServerLogsResponseModel>> GetServerLogsAsync(LogBaseSearchCriteria criteria, Guid currentUserId);
+        Task<SearchResult<ServerLogsResponseModel>> GetServerLogsAsync(
+            LogBaseSearchCriteria criteria,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to get log details async

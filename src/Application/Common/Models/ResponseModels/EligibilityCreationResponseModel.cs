@@ -18,6 +18,5 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public Guid? GroupId { get; set; }
         public string GroupName { get; set; }
         public bool IsEligible { get; set; }
-
     }
 }

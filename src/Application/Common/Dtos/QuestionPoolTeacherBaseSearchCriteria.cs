@@ -4,8 +4,6 @@
     {
         public string QuestionPoolIdentity { get; set; }
 
-        public QuestionPoolTeacherBaseSearchCriteria()
-        {
-        }
+        public QuestionPoolTeacherBaseSearchCriteria() { }
     }
 }

@@ -42,13 +42,12 @@ namespace Lingtren.Application.Common.Models.ResponseModels
                 || assessmentQuestion.Type == AssessmentTypeEnum.MultipleChoice
             )
             {
-                assessmentQuestion.AssessmentOptions
-                    ?.ToList()
-                    .ForEach(
-                        item =>
-                            assessmentQuestionOptions.Add(
-                                new AssessmentQuestionOptionResponseModel(item)
-                            )
+                assessmentQuestion
+                    .AssessmentOptions?.ToList()
+                    .ForEach(item =>
+                        assessmentQuestionOptions.Add(
+                            new AssessmentQuestionOptionResponseModel(item)
+                        )
                     );
             }
         }

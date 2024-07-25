@@ -17,15 +17,17 @@
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
 
-    public class QuestionPoolService : BaseGenericService<QuestionPool, BaseSearchCriteria>, IQuestionPoolService
+    public class QuestionPoolService
+        : BaseGenericService<QuestionPool, BaseSearchCriteria>,
+            IQuestionPoolService
     {
         public QuestionPoolService(
             IUnitOfWork unitOfWork,
             ILogger<QuestionPoolService> logger,
             IStringLocalizer<ExceptionLocalizer> localizer
-            ) : base(unitOfWork, logger, localizer)
-        {
-        }
+        )
+            : base(unitOfWork, logger, localizer) { }
+
         #region Protected Methods
         /// <summary>
         /// This is called before entity is saved to DB.
@@ -36,8 +38,15 @@
         protected override async Task CreatePreHookAsync(QuestionPool entity)
         {
             await CheckDuplicateQuestionPoolNameAsync(entity).ConfigureAwait(false);
-            entity.Slug = CommonHelper.GetEntityTitleSlug<QuestionPool>(_unitOfWork, (slug) => q => q.Slug == slug, entity.Name);
-            await _unitOfWork.GetRepository<QuestionPoolTeacher>().InsertAsync(entity.QuestionPoolTeachers).ConfigureAwait(false);
+            entity.Slug = CommonHelper.GetEntityTitleSlug<QuestionPool>(
+                _unitOfWork,
+                (slug) => q => q.Slug == slug,
+                entity.Name
+            );
+            await _unitOfWork
+                .GetRepository<QuestionPoolTeacher>()
+                .InsertAsync(entity.QuestionPoolTeachers)
+                .ConfigureAwait(false);
             await Task.FromResult(0);
         }
 
@@ -47,7 +56,10 @@
         /// <remarks>Override in child services to update navigation properties.</remarks>
         /// <param name="existing">The existing entity.</param>
         /// <param name="newEntity">The new entity.</param>
-        protected override async Task UpdateEntityFieldsAsync(QuestionPool existing, QuestionPool newEntity)
+        protected override async Task UpdateEntityFieldsAsync(
+            QuestionPool existing,
+            QuestionPool newEntity
+        )
         {
             await CheckDuplicateQuestionPoolNameAsync(newEntity).ConfigureAwait(false);
             _unitOfWork.GetRepository<QuestionPool>().Update(newEntity);
@@ -59,7 +71,10 @@
         /// <param name="predicate">The predicate.</param>
         /// <param name="criteria">The search criteria.</param>
         /// <returns>The updated predicate with applied filters.</returns>
-        protected override Expression<Func<QuestionPool, bool>> ConstructQueryConditions(Expression<Func<QuestionPool, bool>> predicate, BaseSearchCriteria criteria)
+        protected override Expression<Func<QuestionPool, bool>> ConstructQueryConditions(
+            Expression<Func<QuestionPool, bool>> predicate,
+            BaseSearchCriteria criteria
+        )
         {
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
@@ -67,7 +82,10 @@
                 predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search));
             }
 
-            return predicate.And(p => p.CreatedBy == criteria.CurrentUserId || p.QuestionPoolTeachers.Any(x => x.UserId == criteria.CurrentUserId));
+            return predicate.And(p =>
+                p.CreatedBy == criteria.CurrentUserId
+                || p.QuestionPoolTeachers.Any(x => x.UserId == criteria.CurrentUserId)
+            );
         }
 
         /// <summary>
@@ -88,9 +106,14 @@
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>The updated query.</returns>
-        protected override IIncludableQueryable<QuestionPool, object> IncludeNavigationProperties(IQueryable<QuestionPool> query)
+        protected override IIncludableQueryable<QuestionPool, object> IncludeNavigationProperties(
+            IQueryable<QuestionPool> query
+        )
         {
-            return query.Include(x => x.User).Include(x => x.QuestionPoolTeachers).Include(x => x.QuestionPoolQuestions);
+            return query
+                .Include(x => x.User)
+                .Include(x => x.QuestionPoolTeachers)
+                .Include(x => x.QuestionPoolQuestions);
         }
 
         /// <summary>
@@ -98,7 +121,9 @@
         /// </summary>
         /// <param name="slug">The slug</param>
         /// <returns>The expression to filter by slug or slug</returns>
-        protected override Expression<Func<QuestionPool, bool>> PredicateForIdOrSlug(string identity)
+        protected override Expression<Func<QuestionPool, bool>> PredicateForIdOrSlug(
+            string identity
+        )
         {
             return p => p.Id.ToString() == identity || p.Slug == identity;
         }
@@ -113,23 +138,49 @@
         {
             await ExecuteAsync(async () =>
             {
-                var questionPool = await _unitOfWork.GetRepository<QuestionPool>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == identity || p.Slug == identity).ConfigureAwait(false);
+                var questionPool = await _unitOfWork
+                    .GetRepository<QuestionPool>()
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id.ToString() == identity || p.Slug == identity
+                    )
+                    .ConfigureAwait(false);
 
-                var questionPoolQuestions = await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetAllAsync(
-                predicate: p => p.QuestionPoolId == questionPool.Id
-                ).ConfigureAwait(false);
+                var questionPoolQuestions = await _unitOfWork
+                    .GetRepository<QuestionPoolQuestion>()
+                    .GetAllAsync(predicate: p => p.QuestionPoolId == questionPool.Id)
+                    .ConfigureAwait(false);
 
-                var questionsetsubmission = await _unitOfWork.GetRepository<QuestionSetSubmission>().GetAllAsync(predicate: p => p.QuestionSet.QuestionSetQuestions.Any(x => x.QuestionPoolQuestionId.
-                Equals(questionPoolQuestions.Select(x => x.QuestionId)))).ConfigureAwait(false);
+                var questionsetsubmission = await _unitOfWork
+                    .GetRepository<QuestionSetSubmission>()
+                    .GetAllAsync(predicate: p =>
+                        p.QuestionSet.QuestionSetQuestions.Any(x =>
+                            x.QuestionPoolQuestionId.Equals(
+                                questionPoolQuestions.Select(x => x.QuestionId)
+                            )
+                        )
+                    )
+                    .ConfigureAwait(false);
 
-                if (questionPoolQuestions.Count() != 0 && questionsetsubmission.Count() != 0 && questionsetsubmission.Any(x => x.QuestionSetResults.Count != 0))
+                if (
+                    questionPoolQuestions.Count() != 0
+                    && questionsetsubmission.Count() != 0
+                    && questionsetsubmission.Any(x => x.QuestionSetResults.Count != 0)
+                )
                 {
-                    _logger.LogWarning("Question pool with id: {poolId} contains questions. So, it cannot be deleted.", identity);
-                    throw new ForbiddenException(_localizer.GetString("QuestionPoolContainQuestion"));
+                    _logger.LogWarning(
+                        "Question pool with id: {poolId} contains questions. So, it cannot be deleted.",
+                        identity
+                    );
+                    throw new ForbiddenException(
+                        _localizer.GetString("QuestionPoolContainQuestion")
+                    );
                 }
 
                 var ids = questionPoolQuestions.Select(x => x.Id).ToList();
-                var questionsetquestions = await _unitOfWork.GetRepository<QuestionSetQuestion>().GetAllAsync(predicate: p => ids.Contains(p.QuestionPoolQuestionId.Value)).ConfigureAwait(false);
+                var questionsetquestions = await _unitOfWork
+                    .GetRepository<QuestionSetQuestion>()
+                    .GetAllAsync(predicate: p => ids.Contains(p.QuestionPoolQuestionId.Value))
+                    .ConfigureAwait(false);
 
                 foreach (var questionsetquestion in questionsetquestions)
                 {
@@ -162,11 +213,21 @@
         /// <exception cref="ServiceException"></exception>
         private async Task CheckDuplicateQuestionPoolNameAsync(QuestionPool entity)
         {
-            var QuestionPoolExist = await _unitOfWork.GetRepository<QuestionPool>().ExistsAsync(
-                predicate: p => p.Id != entity.Id && p.Name.ToLower() == entity.Name.ToLower() && p.CreatedBy == entity.CreatedBy).ConfigureAwait(false);
+            var QuestionPoolExist = await _unitOfWork
+                .GetRepository<QuestionPool>()
+                .ExistsAsync(predicate: p =>
+                    p.Id != entity.Id
+                    && p.Name.ToLower() == entity.Name.ToLower()
+                    && p.CreatedBy == entity.CreatedBy
+                )
+                .ConfigureAwait(false);
             if (QuestionPoolExist)
             {
-                _logger.LogWarning("Duplicate QuestionPool name : {name} is found for the QuestionPool with id : {id}.", entity.Name, entity.Id);
+                _logger.LogWarning(
+                    "Duplicate QuestionPool name : {name} is found for the QuestionPool with id : {id}.",
+                    entity.Name,
+                    entity.Id
+                );
                 throw new ServiceException(_localizer.GetString("DuplicateQuestionPoolName"));
             }
         }
@@ -178,12 +239,23 @@
         /// <param name="poolIdentity">the question pool id or slug</param>
         /// <param name="questionId">the question id</param>
         /// <returns>the instance of <see cref="QuestionPoolQuestion"/></returns>
-        public async Task<QuestionPoolQuestion> GetQuestionPoolQuestion(string poolIdentity, Guid questionId)
+        public async Task<QuestionPoolQuestion> GetQuestionPoolQuestion(
+            string poolIdentity,
+            Guid questionId
+        )
         {
-            var questionPool = await _unitOfWork.GetRepository<QuestionPool>().GetFirstOrDefaultAsync(
-                predicate: p => p.Id.ToString() == poolIdentity || p.Slug == poolIdentity).ConfigureAwait(false);
-            return await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetFirstOrDefaultAsync(
-                predicate: p => p.QuestionPoolId == questionPool.Id && p.QuestionId == questionId).ConfigureAwait(false);
+            var questionPool = await _unitOfWork
+                .GetRepository<QuestionPool>()
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.Id.ToString() == poolIdentity || p.Slug == poolIdentity
+                )
+                .ConfigureAwait(false);
+            return await _unitOfWork
+                .GetRepository<QuestionPoolQuestion>()
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.QuestionPoolId == questionPool.Id && p.QuestionId == questionId
+                )
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -195,28 +267,45 @@
         /// <returns>task completed</returns>
         /// <exception cref="ForbiddenException"></exception>
         /// <exception cref="EntityNotFoundException"></exception>
-        public async Task QuestionPoolQuestionReorderAsync(Guid currentUserId, string identity, IList<Guid> ids)
+        public async Task QuestionPoolQuestionReorderAsync(
+            Guid currentUserId,
+            string identity,
+            IList<Guid> ids
+        )
         {
             await ExecuteAsync(async () =>
             {
-                var hasAccess = await IsSuperAdminOrAdminOrTrainerOfTraining(currentUserId, identity, TrainingTypeEnum.QuestionPool);
+                var hasAccess = await IsSuperAdminOrAdminOrTrainerOfTraining(
+                    currentUserId,
+                    identity,
+                    TrainingTypeEnum.QuestionPool
+                );
                 if (!hasAccess)
                 {
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
 
-                var questionPoolQuestions = await _unitOfWork.GetRepository<QuestionPoolQuestion>().GetAllAsync(predicate: p => p.QuestionPool.Id.ToString() == identity
-                || p.QuestionPool.Slug.ToLower().Trim() == identity.ToLower().Trim()).ConfigureAwait(false);
+                var questionPoolQuestions = await _unitOfWork
+                    .GetRepository<QuestionPoolQuestion>()
+                    .GetAllAsync(predicate: p =>
+                        p.QuestionPool.Id.ToString() == identity
+                        || p.QuestionPool.Slug.ToLower().Trim() == identity.ToLower().Trim()
+                    )
+                    .ConfigureAwait(false);
                 if (questionPoolQuestions == null)
                 {
-                    throw new EntityNotFoundException(_localizer.GetString("QuestionPoolQuestionNotFound"));
+                    throw new EntityNotFoundException(
+                        _localizer.GetString("QuestionPoolQuestionNotFound")
+                    );
                 }
 
                 var order = 0;
                 var questionToUpdate = new List<QuestionPoolQuestion>();
                 foreach (var id in ids)
                 {
-                    var questionPoolQuestion = questionPoolQuestions.FirstOrDefault(x => x.QuestionId == id);
+                    var questionPoolQuestion = questionPoolQuestions.FirstOrDefault(x =>
+                        x.QuestionId == id
+                    );
                     if (questionPoolQuestion != default)
                     {
                         questionPoolQuestion.Order = order;

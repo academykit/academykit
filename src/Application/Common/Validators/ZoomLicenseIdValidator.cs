@@ -9,8 +9,16 @@ namespace Lingtren.Application.Common.Validators
     {
         public ZoomLicenseIdValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.StartDateTime).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("EventStartDateRequired")).Must(BeValidDateFormat).WithMessage(context => stringLocalizer.GetString("StartDateFormat"));
-            RuleFor(x => x.Duration).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("DurationRequired"));
+            RuleFor(x => x.StartDateTime)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage(context => stringLocalizer.GetString("EventStartDateRequired"))
+                .Must(BeValidDateFormat)
+                .WithMessage(context => stringLocalizer.GetString("StartDateFormat"));
+            RuleFor(x => x.Duration)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage(context => stringLocalizer.GetString("DurationRequired"));
         }
 
         public static bool BeValidDateFormat(DateTime startDateTime)

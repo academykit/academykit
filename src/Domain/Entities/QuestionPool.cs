@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Domain.Entities
 {
     using Lingtren.Domain.Common;
+
     public class QuestionPool : AuditableEntity
     {
         public string Name { get; set; }

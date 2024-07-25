@@ -2,6 +2,7 @@
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Domain.Entities;
+
     public interface ILevelService : IGenericService<Level, BaseSearchCriteria>
     {
         /// <summary>

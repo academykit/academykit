@@ -11,6 +11,7 @@
         public int Duration { get; set; }
         public DateTime? StartDate { get; set; }
         public UserModel User { get; set; }
+
         public MeetingResponseModel(Meeting model, bool showPasscode = false)
         {
             Id = model.Id;

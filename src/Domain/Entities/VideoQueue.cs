@@ -1,6 +1,7 @@
 ﻿namespace Lingtren.Domain.Entities
 {
     using Lingtren.Domain.Enums;
+
     public class VideoQueue
     {
         public Guid Id { get; set; }
