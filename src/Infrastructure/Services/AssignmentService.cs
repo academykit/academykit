@@ -526,7 +526,7 @@
                 if (lesson.Type != LessonType.Assignment)
                 {
                     _logger.LogWarning(
-                        "Lesson type not matched for assignment submission for lesson with id: {id} and user.",
+                        "Lesson type not matched for assignment submission for lesson with and user."
                     );
                     throw new ForbiddenException(
                         _localizer.GetString("InvalidLessonAssignmentType")

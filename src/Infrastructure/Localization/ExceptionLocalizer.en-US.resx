@@ -22,8 +22,10 @@
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
         <value>[base64 mime encoded serialized .NET Framework object]</value>
     </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing"
+  mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework
+  object]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -115,10 +117,12 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TrainingRemoved" xml:space="preserve">
     <value>Training removed successfully.</value>
@@ -303,7 +307,7 @@
   <data name="LessonNotpublished" xml:space="preserve">
     <value>Lesson not published.</value>
   </data>
-  <data name="QuestionpoolModifynotallowed" xml:space="preserve">
+  <data name="QuestionPoolModifyNotAllowed" xml:space="preserve">
     <value>You are not allowed to modify this question pool.</value>
   </data>
   <data name="RecordingFileinS3BucketSave" xml:space="preserve">
@@ -333,7 +337,7 @@
   <data name="TrainerNotAllowedDepartmentUser" xml:space="preserve">
     <value>Trainee are not allowed to see department user.</value>
   </data>
-  <data name="Trainingaccessnotallowed" xml:space="preserve">
+  <data name="TrainingAccessNotAllowed" xml:space="preserve">
     <value>You are not allowed to access this training.</value>
   </data>
   <data name="TrainingAuthorAdded" xml:space="preserve">
@@ -345,7 +349,7 @@
   <data name="TrainingCompletePercentage" xml:space="preserve">
     <value>An error occurred while trying to calculate training completed percentage.</value>
   </data>
-  <data name="TrainingModifynotallowed" xml:space="preserve">
+  <data name="TrainingModifyNotAllowed" xml:space="preserve">
     <value>You are not allowed to modify this training.</value>
   </data>
   <data name="TrainingTrainerCannotSubmitFeedback" xml:space="preserve">

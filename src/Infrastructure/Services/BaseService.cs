@@ -225,10 +225,10 @@
                     return course;
                 }
 
-                throw new ForbiddenException(_localizer.GetString("Trainingaccessnotallowed"));
+                throw new ForbiddenException(_localizer.GetString("TrainingAccessNotAllowed"));
             }
 
-            throw new ForbiddenException(_localizer.GetString("TrainingModifynotallowed"));
+            throw new ForbiddenException(_localizer.GetString("TrainingModifyNotAllowed"));
         }
 
         protected async Task<bool> ValidateUserCanAccessGroupCourse(
@@ -307,7 +307,7 @@
                 return questionPool;
             }
 
-            throw new ForbiddenException(_localizer.GetString("QuestionpoolModifynotallowed"));
+            throw new ForbiddenException(_localizer.GetString("QuestionPoolModifyNotAllowed"));
         }
 
         protected async Task<IList<Guid>> GetUserGroupIds(Guid userId)
@@ -380,20 +380,20 @@
         }
 
         /// <summary>
-        /// to get valid user for course and questionpool authority
+        /// to get valid user for course and questionPool authority
         /// </summary>
-        /// <param name="currentuserId">Current userId</param>
+        /// <param name="currentUserId">Current userId</param>
         /// <param name="identity">Training Identity</param>
         /// <param name="trainingType">the instance of<see cref="TrainingTypeEnum"/></param>
         /// <returns>bool</returns>
         protected async Task<bool> IsSuperAdminOrAdminOrTrainerOfTraining(
-            Guid currentuserId,
+            Guid currentUserId,
             string identity,
             TrainingTypeEnum trainingType
         )
         {
             var isValidUser = false;
-            var IsAdimOrSuperAdmin = await IsSuperAdminOrAdmin(currentuserId);
+            var IsAdminOrSuperAdmin = await IsSuperAdminOrAdmin(currentUserId);
             switch (trainingType)
             {
                 case TrainingTypeEnum.Course:
@@ -410,18 +410,18 @@
                     }
 
                     isValidUser =
-                        course.CourseTeachers.Any(x => x.UserId == currentuserId)
-                        || course.CreatedBy == currentuserId;
+                        course.CourseTeachers.Any(x => x.UserId == currentUserId)
+                        || course.CreatedBy == currentUserId;
                     break;
                 case TrainingTypeEnum.QuestionPool:
-                    var questionpool = await _unitOfWork
+                    var questionPool = await _unitOfWork
                         .GetRepository<QuestionPool>()
                         .GetFirstOrDefaultAsync(
                             predicate: p => p.Id.ToString() == identity || p.Slug == identity,
                             include: src => src.Include(x => x.QuestionPoolTeachers)
                         )
                         .ConfigureAwait(false);
-                    if (questionpool == default)
+                    if (questionPool == default)
                     {
                         throw new EntityNotFoundException(
                             _localizer.GetString("QuestionPoolNotFound")
@@ -429,12 +429,12 @@
                     }
 
                     isValidUser =
-                        questionpool.QuestionPoolTeachers.Any(x => x.UserId == currentuserId)
-                        || questionpool.CreatedBy == currentuserId;
+                        questionPool.QuestionPoolTeachers.Any(x => x.UserId == currentUserId)
+                        || questionPool.CreatedBy == currentUserId;
                     break;
             }
 
-            return isValidUser || IsAdimOrSuperAdmin;
+            return isValidUser || IsAdminOrSuperAdmin;
         }
 
         /// <summary>
