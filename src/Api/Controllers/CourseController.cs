@@ -12,7 +12,6 @@
     using Lingtren.Domain.Enums;
     using Lingtren.Infrastructure.Localization;
     using LinqKit;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
 

@@ -1,7 +1,3 @@
-// <copyright file="DepartmentController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
 namespace Lingtren.Api.Controllers
 {
     using FluentValidation;

@@ -1,8 +1,4 @@
-﻿// <copyright file="UserController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace Lingtren.Api.Controllers
 {
     using System.Globalization;
     using CsvHelper;

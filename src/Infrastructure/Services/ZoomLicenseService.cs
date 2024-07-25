@@ -466,7 +466,7 @@
         )
         {
             var tokenString = await GetOAuthAccessToken().ConfigureAwait(false);
-            if (!existingMeetingId.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(existingMeetingId))
             {
                 var id = (long)Convert.ToInt64(existingMeetingId);
                 var clientDelete = new RestClient($"{zoomAPIPath}/meetings/{id}");

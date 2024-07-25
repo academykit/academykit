@@ -1,6 +1,5 @@
 namespace Lingtren.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Domain.Entities;
     using Lingtren.Domain.Enums;
 
     public class EligibilityCreationResponseModel

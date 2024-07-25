@@ -16,7 +16,7 @@ namespace Lingtren.Infrastructure.Services
             string company
         )
         {
-            using var browserFetcher = new BrowserFetcher();
+            var browserFetcher = new BrowserFetcher();
             await browserFetcher.DownloadAsync();
             var options = new LaunchOptions
             {
@@ -49,7 +49,7 @@ namespace Lingtren.Infrastructure.Services
             GeneralSetting company
         )
         {
-            using var browserFetcher = new BrowserFetcher();
+            var browserFetcher = new BrowserFetcher();
             await browserFetcher.DownloadAsync();
             var options = new LaunchOptions
             {

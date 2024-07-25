@@ -1,8 +1,4 @@
-﻿// <copyright file="Program.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-using System.Globalization;
+﻿using System.Globalization;
 using Asp.Versioning;
 using Hangfire;
 using Hangfire.Dashboard;

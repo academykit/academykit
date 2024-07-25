@@ -1,8 +1,4 @@
-﻿// <copyright file="CommonResponseModel.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Common
+﻿namespace Lingtren.Api.Common
 {
     public class CommonResponseModel
     {

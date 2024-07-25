@@ -2,7 +2,6 @@
 {
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
 
     public interface IQuestionService : IGenericService<Question, QuestionBaseSearchCriteria>

@@ -3415,7 +3415,7 @@
                 if (courseCertificate == default)
                 {
                     _logger.LogWarning(
-                        "cannot Created Signature without Certificate in lesson :",
+                        "Cannot Created Signature without Certificate in lesson : {identity}",
                         identity
                     );
                     throw new ForbiddenException(

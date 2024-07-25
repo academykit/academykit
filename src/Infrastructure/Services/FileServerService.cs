@@ -70,8 +70,8 @@
             catch (Exception ex)
             {
                 _logger.LogError(
-                    "An error occurred while attempting to upload file to the server.",
-                    ex
+                    ex,
+                    "An error occurred while attempting to upload file to the server."
                 );
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
@@ -107,8 +107,8 @@
             catch (Exception ex)
             {
                 _logger.LogError(
-                    "An error occurred while attempting to upload file to the server.",
-                    ex
+                    ex,
+                    "An error occurred while attempting to upload file to the server."
                 );
                 throw ex is ServiceException
                     ? ex
@@ -139,7 +139,7 @@
             }
             catch (Exception ex)
             {
-                _logger.LogError("An error occurred while getting file presigned url.", ex);
+                _logger.LogError(ex, "An error occurred while getting file presigned url.");
                 throw ex is ServiceException
                     ? ex
                     : new ServiceException(_localizer.GetString("FilePresignedUrlError"));

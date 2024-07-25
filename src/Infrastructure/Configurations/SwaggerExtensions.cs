@@ -16,7 +16,7 @@
                     "v1",
                     new OpenApiInfo
                     {
-                        Title = "Vurilo",
+                        Title = "Academy Kit",
                         Version = "v1",
                         Description = "Rest api for Learning"
                     }
@@ -25,7 +25,7 @@
                     "v2",
                     new OpenApiInfo
                     {
-                        Title = "Vurilo",
+                        Title = "Academy Kit",
                         Version = "v2",
                         Description = "Rest api for Learning"
                     }

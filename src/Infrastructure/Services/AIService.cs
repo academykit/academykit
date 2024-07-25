@@ -2,7 +2,6 @@
 {
     using System.Globalization;
     using System.Threading.Tasks;
-    using AngleSharp.Svg.Dom;
     using Lingtren.Application.Common.Interfaces;
     using Lingtren.Application.Common.Models.ResponseModels;
     using Lingtren.Domain.Entities;
@@ -13,7 +12,6 @@
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using OpenAI.Interfaces;
-    using OpenAI.ObjectModels;
     using OpenAI.ObjectModels.RequestModels;
     using OpenAI.Utilities.FunctionCalling;
 

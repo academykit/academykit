@@ -2,7 +2,6 @@
 {
     using System.Linq;
     using System.Linq.Expressions;
-    using Hangfire.Storage;
     using Lingtren.Application.Common.Dtos;
     using Lingtren.Application.Common.Exceptions;
     using Lingtren.Application.Common.Interfaces;
@@ -337,21 +336,11 @@
                     .ConfigureAwait(false);
                 if (lesson == null)
                 {
-                    _logger.LogWarning(
-                        "Lesson with identity: {identity} not found for user with id: {id}.",
-                        lessonIdentity,
-                        currentUserId
-                    );
                     throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
 
                 if (lesson.Type != LessonType.Assignment)
                 {
-                    _logger.LogWarning(
-                        "Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}.",
-                        lesson.Id,
-                        currentUserId
-                    );
                     throw new ForbiddenException(
                         _localizer.GetString("InvalidLessonAssignmentType")
                     );
@@ -359,11 +348,6 @@
 
                 if (lesson.Status != CourseStatus.Published)
                 {
-                    _logger.LogWarning(
-                        "Lesson with id: {id} not published for user with id: {userId}.",
-                        lesson.Id,
-                        currentUserId
-                    );
                     throw new EntityNotFoundException(_localizer.GetString("LessonNotpublished"));
                 }
 
@@ -535,20 +519,14 @@
                     .ConfigureAwait(false);
                 if (lesson == null)
                 {
-                    _logger.LogWarning(
-                        "Lesson with identity: {identity} not found for user with id: {id}.",
-                        lessonIdentity,
-                        currentUserId
-                    );
+                    _logger.LogWarning("Lesson with identity not found for user");
                     throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
 
                 if (lesson.Type != LessonType.Assignment)
                 {
                     _logger.LogWarning(
-                        "Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}.",
-                        lesson.Id,
-                        currentUserId
+                        "Lesson type not matched for assignment submission for lesson with id: {id} and user.",
                     );
                     throw new ForbiddenException(
                         _localizer.GetString("InvalidLessonAssignmentType")
@@ -689,11 +667,6 @@
 
             if (lesson.Type != LessonType.Assignment)
             {
-                _logger.LogWarning(
-                    "Lesson type not matched for assignment fetch for lesson with id: {id} and user with id: {userId}",
-                    lesson.Id,
-                    searchCriteria.CurrentUserId
-                );
                 throw new ForbiddenException(_localizer.GetString("InvalidLessonAssignmentType"));
             }
 
@@ -811,11 +784,6 @@
 
                 if (lesson.Type != LessonType.Assignment)
                 {
-                    _logger.LogWarning(
-                        "Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}.",
-                        lesson.Id,
-                        currentUserId
-                    );
                     throw new ForbiddenException(
                         _localizer.GetString("InvalidLessonAssignmentType")
                     );
@@ -925,11 +893,6 @@
 
                 if (lesson.Type != LessonType.Assignment)
                 {
-                    _logger.LogWarning(
-                        "Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}.",
-                        lesson.Id,
-                        currentUserId
-                    );
                     throw new ForbiddenException(
                         _localizer.GetString("InvalidLessonAssignmentType")
                     );
@@ -1072,12 +1035,6 @@
                     .ConfigureAwait(false);
                 if (assignmentReview == null)
                 {
-                    _logger.LogWarning(
-                        "Assignment review with id: {id} not found for user with id: {userId} and lesson with id: {lessonId}.",
-                        id,
-                        currentUserId,
-                        lesson.Id
-                    );
                     throw new EntityNotFoundException(
                         _localizer.GetString("AssignmentReviewNotFound")
                     );

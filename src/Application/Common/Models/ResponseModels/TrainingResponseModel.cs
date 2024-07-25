@@ -1,5 +1,4 @@
 using Lingtren.Domain.Entities;
-using Lingtren.Domain.Enums;
 
 namespace Lingtren.Application.Common.Models.ResponseModels
 {

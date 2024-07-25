@@ -2,7 +2,6 @@ using System.Data;
 using System.Linq.Expressions;
 using System.Text;
 using Hangfire;
-using Infrastructure.Persistence.Migrations;
 using Lingtren.Application.Common.Dtos;
 using Lingtren.Application.Common.Exceptions;
 using Lingtren.Application.Common.Interfaces;
@@ -19,7 +18,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Asn1.Esf;
 
 namespace Lingtren.Infrastructure.Services
 {

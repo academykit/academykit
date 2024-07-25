@@ -1,8 +1,4 @@
-﻿// <copyright file="PhysicalLessonController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Api.Controllers
+﻿namespace Api.Controllers
 {
     using FluentValidation;
     using Lingtren.Api.Common;

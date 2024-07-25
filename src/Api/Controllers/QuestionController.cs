@@ -1,8 +1,4 @@
-﻿// <copyright file="QuestionController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace Lingtren.Api.Controllers
 {
     using ClosedXML.Excel;
     using FluentValidation;
@@ -15,7 +11,6 @@ namespace Lingtren.Api.Controllers
     using Lingtren.Infrastructure.Helpers;
     using Lingtren.Infrastructure.Localization;
     using LinqKit;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
 

@@ -1,8 +1,4 @@
-﻿// <copyright file="QuestionPoolTeacherController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace Lingtren.Api.Controllers
 {
     using FluentValidation;
     using Lingtren.Api.Common;
@@ -102,11 +98,7 @@ namespace Lingtren.Api.Controllers
 
             if (user == null)
             {
-                logger.LogWarning(
-                    "User with email: {email} not found while adding user in pool creator with poolId: {poolId}.",
-                    model.Email,
-                    questionPool.Id
-                );
+                logger.LogWarning("User with email not found while adding user in pool creator.");
                 throw new EntityNotFoundException(localizer.GetString("UserNotFound"));
             }
 
@@ -158,9 +150,7 @@ namespace Lingtren.Api.Controllers
             if (!statusExists)
             {
                 logger.LogWarning(
-                    "Invalid question pool teacher role : {role} requested for role change by the user with id : {userId}",
-                    role,
-                    CurrentUser.Id
+                    "Invalid question pool teacher role requested for role change by the user"
                 );
                 throw new ForbiddenException(localizer.GetString("InvalidQuestionPoolTeacherRole"));
             }

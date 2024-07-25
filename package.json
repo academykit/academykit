@@ -1,7 +1,8 @@
 {
   "scripts": {
     "clean": "rimraf node_modules && rimraf src/Api/ClientApp/node_modules && dotnet clean",
-    "format": "dotnet csharpier ."
+    "format": "dotnet csharpier .",
+    "format:check": "dotnet csharpier --check ."
   },
   "devDependencies": {
     "@swc/cli": "^0.1.62",

@@ -18,7 +18,6 @@
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using Org.BouncyCastle.Math.EC.Rfc7748;
 
     public class FeedbackService
         : BaseGenericService<Feedback, FeedbackBaseSearchCriteria>,

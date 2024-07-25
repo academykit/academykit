@@ -113,9 +113,7 @@
 
                     var defaultEx = new ApiError
                     {
-                        // TODO: replace with generic message after APIs refactor are done and stable
                         Message = exception.InnerException?.Message ?? exception.Message
-                        // Message = "Something is not right at our side. Please, call one of our developer at developer@sursatech.com"
                     };
 
                     if (!isNotDevelopment)

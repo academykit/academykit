@@ -1,10 +1,5 @@
-﻿// <copyright file="FeedbackController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace Lingtren.Api.Controllers
 {
-    using DocumentFormat.OpenXml.Drawing.Charts;
     using FluentValidation;
     using Lingtren.Api.Common;
     using Lingtren.Application.Common.Dtos;

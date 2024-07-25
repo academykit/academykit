@@ -34,8 +34,8 @@ const Verify = () => {
         </Text>
         <Text>{t('check_inbox')}</Text>
         <Text>
-          {t('email_vurilo')}
-          <a href="mailto:hello@academykit.co">{t('email_address_vurilo')}</a>
+          {t('support_email_message')}
+          <a href="mailto:hello@academykit.co">hello@academykit.co</a>
         </Text>
         <Text mt={10}>{t('valid_five_minutes')}</Text>
         <Button mt={20} loading={resendEmail.isLoading} onClick={handleClick}>
