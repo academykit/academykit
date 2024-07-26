@@ -465,7 +465,10 @@
                 var group = await GetByIdOrSlugAsync(identity).ConfigureAwait(false);
                 if (group == null)
                 {
-                    _logger.LogWarning("Group not found with identity : {identity}.", identity);
+                    _logger.LogWarning(
+                        "Group not found with identity : {identity}.",
+                        identity.SanitizeForLogger()
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("GroupNotFound"));
                 }
 
