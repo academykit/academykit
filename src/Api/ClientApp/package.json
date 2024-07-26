@@ -43,7 +43,7 @@
     "@tiptap/pm": "^2.0.3",
     "@tiptap/react": "^2.0.3",
     "@tiptap/starter-kit": "^2.0.3",
-    "axios": "^0.27.2",
+    "axios": "^0.28.0",
     "chart.js": "^4.4.1",
     "file-loader": "^6.2.0",
     "filepond": "^4.30.4",
@@ -59,7 +59,7 @@
     "http-proxy-middleware": "^2.0.6",
     "i18next": "^22.5.0",
     "immer": "^9.0.16",
-    "katex": "^0.16.8",
+    "katex": "^0.16.10",
     "moment": "^2.29.4",
     "path": "^0.12.7",
     "pdfjs-dist": "3.1.81",
@@ -104,7 +104,7 @@
     "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.0.0",
     "typescript": "^4.8.4",
-    "vite": "^3.2.0",
+    "vite": "^3.2.10",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-mkcert": "^1.10.1"
   }
