@@ -1,7 +1,7 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Domain.Enums;
 
     public class StorageSettingResponseModel
     {

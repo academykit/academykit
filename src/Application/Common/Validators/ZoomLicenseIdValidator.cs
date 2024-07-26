@@ -1,16 +1,24 @@
-﻿using FluentValidation;
-using Lingtren.Application.Common.Models.RequestModels;
-using Lingtren.Application.ValidatorLocalization;
+﻿using AcademyKit.Application.Common.Models.RequestModels;
+using AcademyKit.Application.ValidatorLocalization;
+using FluentValidation;
 using Microsoft.Extensions.Localization;
 
-namespace Lingtren.Application.Common.Validators
+namespace AcademyKit.Application.Common.Validators
 {
     public class ZoomLicenseIdValidator : AbstractValidator<LiveClassLicenseRequestModel>
     {
         public ZoomLicenseIdValidator(IStringLocalizer<ValidatorLocalizer> stringLocalizer)
         {
-            RuleFor(x => x.StartDateTime).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("EventStartDateRequired")).Must(BeValidDateFormat).WithMessage(context => stringLocalizer.GetString("StartDateFormat"));
-            RuleFor(x => x.Duration).NotNull().NotEmpty().WithMessage(context => stringLocalizer.GetString("DurationRequired"));
+            RuleFor(x => x.StartDateTime)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage(context => stringLocalizer.GetString("EventStartDateRequired"))
+                .Must(BeValidDateFormat)
+                .WithMessage(context => stringLocalizer.GetString("StartDateFormat"));
+            RuleFor(x => x.Duration)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage(context => stringLocalizer.GetString("DurationRequired"));
         }
 
         public static bool BeValidDateFormat(DateTime startDateTime)

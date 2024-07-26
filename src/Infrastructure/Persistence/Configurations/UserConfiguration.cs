@@ -1,7 +1,7 @@
-﻿namespace Lingtren.Infrastructure.Persistence.Configurations
+﻿namespace AcademyKit.Infrastructure.Persistence.Configurations
 {
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -406,7 +406,6 @@
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.CreatedBy)
                 .OnDelete(DeleteBehavior.NoAction);
-                
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace Lingtren.Domain.Enums
+namespace AcademyKit.Domain.Enums
 {
     public enum Nationality
     {
@@ -6,6 +6,5 @@ namespace Lingtren.Domain.Enums
         Indian = 2,
         Japanese = 3,
         Chinese = 4,
-
     }
 }

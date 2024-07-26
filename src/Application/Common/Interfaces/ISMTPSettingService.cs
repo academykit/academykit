@@ -1,8 +1,7 @@
-﻿namespace Lingtren.Application.Common.Interfaces
+﻿namespace AcademyKit.Application.Common.Interfaces
 {
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Domain.Entities;
-    public interface ISMTPSettingService : IGenericService<SMTPSetting, BaseSearchCriteria>
-    {
-    }
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Domain.Entities;
+
+    public interface ISMTPSettingService : IGenericService<SMTPSetting, BaseSearchCriteria> { }
 }

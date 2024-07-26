@@ -1,6 +1,7 @@
-﻿namespace Lingtren.Domain.Entities
+﻿namespace AcademyKit.Domain.Entities
 {
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Domain.Enums;
+
     public class VideoQueue
     {
         public Guid Id { get; set; }

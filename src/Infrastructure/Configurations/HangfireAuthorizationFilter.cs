@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 
-namespace Lingtren.Infrastructure.Configurations
+namespace AcademyKit.Infrastructure.Configurations
 {
     public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
     {
@@ -54,17 +54,23 @@ namespace Lingtren.Infrastructure.Configurations
             {
                 SecurityToken validatedToken = null;
                 var hand = new JwtSecurityTokenHandler();
-                var claims = hand.ValidateToken(access_token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero,
-                    ValidIssuer = configuration.GetValue<string>("JWT:Issuer"),
-                    ValidAudience = configuration.GetValue<string>("JWT:Audience"),
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("JWT:Key") ?? ""))
-                }, out validatedToken);
+                var claims = hand.ValidateToken(
+                    access_token,
+                    new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero,
+                        ValidIssuer = configuration.GetValue<string>("JWT:Issuer"),
+                        ValidAudience = configuration.GetValue<string>("JWT:Audience"),
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(configuration.GetValue<string>("JWT:Key") ?? "")
+                        )
+                    },
+                    out validatedToken
+                );
 
                 // check if user claims contains the role of either Admin or SuperAdmin
                 if (!claims.IsInRole("Admin") && !claims.IsInRole("SuperAdmin"))
@@ -80,12 +86,14 @@ namespace Lingtren.Infrastructure.Configurations
 
             if (setCookie && httpContext != null)
             {
-                httpContext.Response.Cookies.Append(HangFireCookieName,
-                access_token,
-                new CookieOptions()
-                {
-                    Expires = DateTime.Now.AddMinutes(CookieExpirationMinutes)
-                });
+                httpContext.Response.Cookies.Append(
+                    HangFireCookieName,
+                    access_token,
+                    new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddMinutes(CookieExpirationMinutes)
+                    }
+                );
             }
 
             return true;

@@ -1,7 +1,8 @@
-﻿namespace Lingtren.Application.Common.Interfaces
+﻿namespace AcademyKit.Application.Common.Interfaces
 {
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Domain.Entities;
+
     public interface ITagService : IGenericService<Tag, TagBaseSearchCriteria>
     {
         /// <summary>

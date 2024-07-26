@@ -1,25 +1,18 @@
-﻿namespace Lingtren.Infrastructure.Services
+﻿namespace AcademyKit.Infrastructure.Services
 {
     using System.Globalization;
-
     using System.Threading.Tasks;
-    using AngleSharp.Svg.Dom;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
-
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Localization;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Localization;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
-
     using OpenAI.Interfaces;
-    using OpenAI.ObjectModels;
-
     using OpenAI.ObjectModels.RequestModels;
-
     using OpenAI.Utilities.FunctionCalling;
 
     public class AIService : BaseService, IAIService

@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
     public class StudentResultResponseModel
     {
@@ -8,6 +8,7 @@
         public bool HasExceededAttempt { get; set; }
         public DateTime EndDate { get; set; }
     }
+
     public class QuestionSetResultDetailModel
     {
         public Guid QuestionSetSubmissionId { get; set; }

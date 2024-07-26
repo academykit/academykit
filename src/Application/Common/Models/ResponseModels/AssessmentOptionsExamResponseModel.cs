@@ -1,7 +1,5 @@
-namespace Lingtren.Application.Common.Models.ResponseModels
+namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Domain.Entities;
-
     public class AssessmentOptionsExamResponseModel
     {
         public Guid OptionId { get; set; }

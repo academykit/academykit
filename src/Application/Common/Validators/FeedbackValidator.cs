@@ -1,9 +1,9 @@
-﻿namespace Lingtren.Application.Common.Validators
+﻿namespace AcademyKit.Application.Common.Validators
 {
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.ValidatorLocalization;
+    using AcademyKit.Domain.Enums;
     using FluentValidation;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.ValidatorLocalization;
-    using Lingtren.Domain.Enums;
     using Microsoft.Extensions.Localization;
 
     public class FeedbackValidator : AbstractValidator<FeedbackRequestModel>
@@ -29,25 +29,22 @@
             RuleFor(x => x.Answers)
                 .NotNull()
                 .WithMessage(context => stringLocalizer.GetString("OptionIsRequired"))
-                .When(
-                    x =>
-                        x.Type == FeedbackTypeEnum.SingleChoice
-                        || x.Type == FeedbackTypeEnum.MultipleChoice
+                .When(x =>
+                    x.Type == FeedbackTypeEnum.SingleChoice
+                    || x.Type == FeedbackTypeEnum.MultipleChoice
                 );
             RuleFor(x => x.Answers)
                 .Must(x => x.Count >= 2)
                 .WithMessage(context => stringLocalizer.GetString("OptionMoreThanOne"))
-                .When(
-                    x =>
-                        x.Type == FeedbackTypeEnum.SingleChoice
-                        || x.Type == FeedbackTypeEnum.MultipleChoice
+                .When(x =>
+                    x.Type == FeedbackTypeEnum.SingleChoice
+                    || x.Type == FeedbackTypeEnum.MultipleChoice
                 );
             RuleForEach(x => x.Answers)
                 .SetValidator(new FeedbackQuestionOptionValidator(stringLocalizer))
-                .When(
-                    x =>
-                        x.Type == FeedbackTypeEnum.SingleChoice
-                        || x.Type == FeedbackTypeEnum.MultipleChoice
+                .When(x =>
+                    x.Type == FeedbackTypeEnum.SingleChoice
+                    || x.Type == FeedbackTypeEnum.MultipleChoice
                 );
         }
     }

@@ -1,7 +1,5 @@
-﻿namespace Lingtren.Application.Common.Exceptions
+﻿namespace AcademyKit.Application.Common.Exceptions
 {
-    using System.Runtime.Serialization;
-    [Serializable]
     public class EntityNotFoundException : PersistenceException
     {
         /// <summary>
@@ -15,7 +13,8 @@
         /// </summary>
         ///
         /// <param name="message">The message that describes the error.</param>
-        public EntityNotFoundException(string message) : base(message) { }
+        public EntityNotFoundException(string message)
+            : base(message) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EntityNotFoundException"/> class
@@ -29,18 +28,7 @@
         /// The exception that is the cause of the current exception, or a null reference if no inner exception is
         /// specified.
         /// </param>
-        public EntityNotFoundException(string message, Exception innerException) : base(message, innerException) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EntityNotFoundException"/> class with serialized data.
-        /// </summary>
-        ///
-        /// <param name="info">
-        /// The <see cref="SerializationInfo"/> that holds the serialized object data about the exception being thrown.
-        /// </param>
-        /// <param name="context">
-        /// The <see cref="StreamingContext"/> that contains contextual information about the source or destination.
-        /// </param>
-        protected EntityNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        public EntityNotFoundException(string message, Exception innerException)
+            : base(message, innerException) { }
     }
 }

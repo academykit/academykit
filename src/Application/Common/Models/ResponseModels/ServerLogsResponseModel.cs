@@ -1,7 +1,7 @@
-﻿using Lingtren.Domain.Entities;
-using Lingtren.Domain.Enums;
+﻿using AcademyKit.Domain.Entities;
+using AcademyKit.Domain.Enums;
 
-namespace Lingtren.Application.Common.Models.ResponseModels
+namespace AcademyKit.Application.Common.Models.ResponseModels
 {
     public class ServerLogsResponseModel
     {
@@ -9,10 +9,8 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public SeverityType Type { get; set; }
         public string TimeStamp { get; set; }
         public string Message { get; set; }
-        public ServerLogsResponseModel()
-        {
 
-        }
+        public ServerLogsResponseModel() { }
 
         public ServerLogsResponseModel(Logs log)
         {

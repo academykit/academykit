@@ -1,10 +1,8 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Models.RequestModels;
-
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
 
     public class CourseResponseModel
     {
@@ -66,28 +64,29 @@
             User = model.User != null ? new UserModel(model.User) : new UserModel();
             TrainingEligibilities = new List<TrainingEligibilityCriteriaResponseModel>(); // Initialize TrainingEligibilities
 
-            if(model.CourseTags != null)
+            if (model.CourseTags != null)
             {
-                model.CourseTags.ToList().ForEach(item => Tags.Add(new CourseTagResponseModel(item)));
+                model
+                    .CourseTags.ToList()
+                    .ForEach(item => Tags.Add(new CourseTagResponseModel(item)));
             }
             if (fetchSection)
             {
-                model.Sections
-                    .ToList()
-                    .ForEach(
-                        item => Sections.Add(new SectionResponseModel(item, fetchLesson: true))
+                model
+                    .Sections.ToList()
+                    .ForEach(item =>
+                        Sections.Add(new SectionResponseModel(item, fetchLesson: true))
                     );
             }
-            if(model.TrainingEligibilities != null)
+            if (model.TrainingEligibilities != null)
             {
-                model.TrainingEligibilities
-                .ToList()
-                .ForEach(
-                    item =>
+                model
+                    .TrainingEligibilities.ToList()
+                    .ForEach(item =>
                         TrainingEligibilities.Add(
                             new TrainingEligibilityCriteriaResponseModel(item)
                         )
-                );
+                    );
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Lingtren.Application.Common.Helpers
+namespace AcademyKit.Application.Common.Helpers
 {
     /// <summary>
     /// This class is the helper class for this project.

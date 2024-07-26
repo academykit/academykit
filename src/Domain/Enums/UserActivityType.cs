@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Domain.Enums
+﻿namespace AcademyKit.Domain.Enums
 {
     public enum UserActivityType
     {

@@ -116,14 +116,14 @@ const LessonStatusColor = ({
               <Badge color="red">{t('not_submitted')}</Badge>
             )
           : isAssignmentReviewed
-          ? !isAssignmentReviewed &&
-            type == LessonType.Assignment && (
-              <Badge color="green">{t('reviewed')}</Badge>
-            )
-          : !isAssignmentReviewed &&
-            type == LessonType.Assignment && (
-              <Badge color="orange">{t('in_review')}</Badge>
-            )}
+            ? !isAssignmentReviewed &&
+              type == LessonType.Assignment && (
+                <Badge color="green">{t('reviewed')}</Badge>
+              )
+            : !isAssignmentReviewed &&
+              type == LessonType.Assignment && (
+                <Badge color="orange">{t('in_review')}</Badge>
+              )}
 
         {isCompleted ? (
           <Badge color={'green'}>{t('completed')}</Badge>

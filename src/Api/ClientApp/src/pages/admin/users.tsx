@@ -119,19 +119,6 @@ const UsersList = ({
                 </Box>
               </Tabs.Panel>
               <Tabs.Panel value="import">
-                {/* <Text my={10} size="sm">
-                  CSV file format should be similar to sample CSV. Please
-                  <Anchor
-                    href="https://vurilo-desktop-app.s3.ap-south-1.amazonaws.com/bulkimportsample.csv"
-                    style={{
-                      textDecoration: 'underline',
-                    }}
-                    mx={5}
-                  >
-                    click here
-                  </Anchor>
-                  to download sample CSV.
-                </Text> */}
                 <Text my={10} size="sm">
                   {t('csv_format')} {t('please')}{' '}
                   <span

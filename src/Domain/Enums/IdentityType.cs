@@ -1,4 +1,4 @@
-namespace Lingtren.Domain.Enums
+namespace AcademyKit.Domain.Enums
 {
     public enum IdentityType
     {
@@ -7,6 +7,5 @@ namespace Lingtren.Domain.Enums
         DrivingLicense = 3,
         NationalIdentityCard = 4,
         VoterCard = 5,
-
     }
 }

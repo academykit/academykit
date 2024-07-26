@@ -7,7 +7,7 @@ echo "🛠 cleaning the solution"
 dotnet dev-certs https --trust
 
 echo "restoring the solution file"
-dotnet restore lingtren.sln
+dotnet restore AcademyKit.sln
 
 echo "installing dotnet tools"
 dotnet tool restore

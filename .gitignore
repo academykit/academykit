@@ -485,9 +485,9 @@ $RECYCLE.BIN/
 !.vscode/extensions.json
 
 /.vs/*
-.vs/lingtren/DesignTimeBuild/.dtbcache.v2
-.vs/lingtren/v17/.suo
+.vs/academykit/DesignTimeBuild/.dtbcache.v2
+.vs/academykit/v17/.suo
 *.v2
-.vs/lingtren/config/applicationhost.config
-.vs/lingtren/DesignTimeBuild/.dtbcache.v2
-.vs/lingtren/v17/.suo
+.vs/academykit/config/applicationhost.config
+.vs/academykit/DesignTimeBuild/.dtbcache.v2
+.vs/academykit/v17/.suo

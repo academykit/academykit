@@ -1,7 +1,7 @@
-﻿using Lingtren.Domain.Entities;
-using Lingtren.Domain.Enums;
+﻿using AcademyKit.Domain.Entities;
+using AcademyKit.Domain.Enums;
 
-namespace Lingtren.Application.Common.Models.ResponseModels
+namespace AcademyKit.Application.Common.Models.ResponseModels
 {
     public class CertificateResponseModel
     {
@@ -16,10 +16,8 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public CertificateStatus Status { get; set; }
         public UserModel User { get; set; }
         public decimal? OptionalCost { get; set; }
-        public CertificateResponseModel()
-        {
 
-        }
+        public CertificateResponseModel() { }
 
         public CertificateResponseModel(Certificate certificate)
         {

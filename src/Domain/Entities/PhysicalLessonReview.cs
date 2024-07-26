@@ -1,6 +1,6 @@
-﻿using Lingtren.Domain.Common;
+﻿using AcademyKit.Domain.Common;
 
-namespace Lingtren.Domain.Entities
+namespace AcademyKit.Domain.Entities
 {
     public class PhysicalLessonReview : AuditableEntity
     {

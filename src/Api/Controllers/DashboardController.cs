@@ -1,13 +1,9 @@
-﻿// <copyright file="DashboardController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
     using Microsoft.AspNetCore.Mvc;
 
     public class DashboardController : BaseApiController
@@ -26,7 +22,9 @@ namespace Lingtren.Api.Controllers
         [HttpGet]
         public async Task<DashboardResponseModel> Get()
         {
-            return await courseService.GetDashboardStats(CurrentUser.Id, CurrentUser.Role).ConfigureAwait(false);
+            return await courseService
+                .GetDashboardStats(CurrentUser.Id, CurrentUser.Role)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -34,9 +32,13 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <returns> the list of <see cref="" /> .</returns>
         [HttpGet("course")]
-        public async Task<SearchResult<DashboardCourseResponseModel>> GetCourses([FromQuery] BaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<DashboardCourseResponseModel>> GetCourses(
+            [FromQuery] BaseSearchCriteria searchCriteria
+        )
         {
-            return await courseService.GetDashboardCourses(CurrentUser.Id, CurrentUser.Role, searchCriteria).ConfigureAwait(false);
+            return await courseService
+                .GetDashboardCourses(CurrentUser.Id, CurrentUser.Role, searchCriteria)
+                .ConfigureAwait(false);
         }
 
         /// <summary>

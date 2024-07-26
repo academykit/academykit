@@ -1,4 +1,4 @@
-namespace Lingtren.Domain.Enums
+namespace AcademyKit.Domain.Enums
 {
     public enum BloodGroup
     {
@@ -10,6 +10,5 @@ namespace Lingtren.Domain.Enums
         ABNegative = 6,
         OPositive = 7,
         ONegative = 8,
-
     }
 }

@@ -1,6 +1,7 @@
-﻿namespace Lingtren.Application.Common.Models.RequestModels
+﻿namespace AcademyKit.Application.Common.Models.RequestModels
 {
     using System.ComponentModel.DataAnnotations;
+
     public class LevelRequestModel
     {
         [Required]

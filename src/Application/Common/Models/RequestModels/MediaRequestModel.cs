@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Application.Common.Models.RequestModels
+﻿namespace AcademyKit.Application.Common.Models.RequestModels
 {
-    using Lingtren.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Dtos;
     using Microsoft.AspNetCore.Http;
 
     public class MediaRequestModel

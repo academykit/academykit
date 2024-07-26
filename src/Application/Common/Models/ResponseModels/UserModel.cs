@@ -1,7 +1,8 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
+
     public class UserModel
     {
         public Guid Id { get; set; }
@@ -27,8 +28,6 @@
             DepartmentId = user.Department?.Id.ToString();
         }
 
-        public UserModel()
-        {
-        }
+        public UserModel() { }
     }
 }

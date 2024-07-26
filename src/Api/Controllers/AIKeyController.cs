@@ -1,17 +1,11 @@
-﻿// <copyright file="GroupController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
-    using Lingtren.Api.Common;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Infrastructure.Localization;
+    using AcademyKit.Api.Common;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Localization;
 
     public class AIKeyController : BaseApiController
     {

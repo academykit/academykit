@@ -1,8 +1,8 @@
-﻿using Lingtren.Domain.Entities;
+﻿using AcademyKit.Domain.Entities;
 
-namespace Lingtren.Application.Common.Models.ResponseModels
+namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Domain.Enums;
 
     public class AssessmentQuestionResponseModel
     {
@@ -42,13 +42,12 @@ namespace Lingtren.Application.Common.Models.ResponseModels
                 || assessmentQuestion.Type == AssessmentTypeEnum.MultipleChoice
             )
             {
-                assessmentQuestion.AssessmentOptions
-                    ?.ToList()
-                    .ForEach(
-                        item =>
-                            assessmentQuestionOptions.Add(
-                                new AssessmentQuestionOptionResponseModel(item)
-                            )
+                assessmentQuestion
+                    .AssessmentOptions?.ToList()
+                    .ForEach(item =>
+                        assessmentQuestionOptions.Add(
+                            new AssessmentQuestionOptionResponseModel(item)
+                        )
                     );
             }
         }

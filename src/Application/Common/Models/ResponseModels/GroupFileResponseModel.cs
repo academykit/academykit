@@ -1,6 +1,6 @@
-﻿using Lingtren.Domain.Entities;
+﻿using AcademyKit.Domain.Entities;
 
-namespace Lingtren.Application.Common.Models.ResponseModels
+namespace AcademyKit.Application.Common.Models.ResponseModels
 {
     public class GroupFileResponseModel
     {
@@ -13,9 +13,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
 
-        public GroupFileResponseModel()
-        {
-        }
+        public GroupFileResponseModel() { }
 
         public GroupFileResponseModel(GroupFile groupFile)
         {

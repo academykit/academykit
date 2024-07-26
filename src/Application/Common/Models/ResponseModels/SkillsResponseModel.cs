@@ -1,6 +1,6 @@
-namespace Lingtren.Application.Common.Models.ResponseModels
+namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Domain.Entities;
 
     public class SkillsResponseModel
     {
@@ -23,11 +23,12 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             IsActive = model.IsActive;
             Description = model.Description;
             UserModel =
-                model.UserSkills
-                    ?.Select(
-                        option =>
-                            new UserModel { FullName = option.User.FullName, Id = option.UserId }
-                    )
+                model
+                    .UserSkills?.Select(option => new UserModel
+                    {
+                        FullName = option.User.FullName,
+                        Id = option.UserId
+                    })
                     .ToList() ?? new List<UserModel>();
         }
     }

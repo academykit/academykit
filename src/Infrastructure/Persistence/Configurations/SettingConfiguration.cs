@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Infrastructure.Persistence.Configurations
+﻿namespace AcademyKit.Infrastructure.Persistence.Configurations
 {
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Domain.Entities;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,8 +9,18 @@
         public void Configure(EntityTypeBuilder<Setting> builder)
         {
             builder.HasKey(x => x.Key);
-            builder.Property(x => x.Key).HasColumnName("key").HasColumnType("VARCHAR(100)").HasMaxLength(100).IsRequired();
-            builder.Property(x => x.Value).HasColumnName("value").HasColumnType("VARCHAR(200)").HasMaxLength(200).IsRequired(false);
+            builder
+                .Property(x => x.Key)
+                .HasColumnName("key")
+                .HasColumnType("VARCHAR(100)")
+                .HasMaxLength(100)
+                .IsRequired();
+            builder
+                .Property(x => x.Value)
+                .HasColumnName("value")
+                .HasColumnType("VARCHAR(200)")
+                .HasMaxLength(200)
+                .IsRequired(false);
         }
     }
 }

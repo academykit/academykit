@@ -105,8 +105,8 @@ const Classes = () => {
   }
 
   // finding the latest incomplete lesson i.e., current lesson
-  const currentLesson = data?.sections.map(
-    (section) => section.lessons?.find((lesson) => !lesson.isCompleted)
+  const currentLesson = data?.sections.map((section) =>
+    section.lessons?.find((lesson) => !lesson.isCompleted)
   );
 
   return (

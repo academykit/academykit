@@ -1,16 +1,16 @@
-﻿namespace Lingtren.Infrastructure.Services
+﻿namespace AcademyKit.Infrastructure.Services
 {
     using System;
     using System.Text;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Localization;
     using Hangfire;
     using Hangfire.Server;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Localization;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Localization;
@@ -62,8 +62,8 @@
 
                 var users = await _unitOfWork
                     .GetRepository<User>()
-                    .GetAllAsync(
-                        predicate: p => p.Role == UserRole.Admin || p.Role == UserRole.SuperAdmin
+                    .GetAllAsync(predicate: p =>
+                        p.Role == UserRole.Admin || p.Role == UserRole.SuperAdmin
                     )
                     .ConfigureAwait(false);
                 if (users.Count == default)
@@ -840,10 +840,9 @@
                         predicate: p => p.Id == assessmentId,
                         include: source =>
                             source
-                                .Where(
-                                    x =>
-                                        x.User.Role == UserRole.SuperAdmin
-                                        || x.User.Role == UserRole.Admin
+                                .Where(x =>
+                                    x.User.Role == UserRole.SuperAdmin
+                                    || x.User.Role == UserRole.Admin
                                 )
                                 .Include(x => x.User)
                     )
@@ -854,8 +853,8 @@
                 }
 
                 // all admins and super admin
-                var users = user.Where(
-                    x => x.Role == UserRole.SuperAdmin || x.Role == UserRole.Admin
+                var users = user.Where(x =>
+                    x.Role == UserRole.SuperAdmin || x.Role == UserRole.Admin
                 );
 
                 var settings = await _unitOfWork

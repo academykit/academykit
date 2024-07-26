@@ -1,7 +1,7 @@
-﻿namespace Lingtren.Application.Common.Interfaces
+﻿namespace AcademyKit.Application.Common.Interfaces
 {
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Domain.Common;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Domain.Common;
 
     /// <summary>
     /// This service interface defines methods to manage <typeparamref name="T"/> entities.
@@ -78,7 +78,11 @@
         /// <exception cref="ServiceException">
         /// If any other errors occur while performing this operation.
         /// </exception>
-        Task<T> GetByIdOrSlugAsync(string identity, Guid? currentUserId = null, bool includeProperties = true);
+        Task<T> GetByIdOrSlugAsync(
+            string identity,
+            Guid? currentUserId = null,
+            bool includeProperties = true
+        );
 
         /// <summary>
         /// Deletes entity with the given Id.

@@ -1,7 +1,4 @@
-﻿namespace Lingtren.Application.Common.Dtos
+﻿namespace AcademyKit.Application.Common.Dtos
 {
-    public class CertificateSearchCriteria : BaseSearchCriteria
-    {
-
-    }
+    public class CertificateSearchCriteria : BaseSearchCriteria { }
 }

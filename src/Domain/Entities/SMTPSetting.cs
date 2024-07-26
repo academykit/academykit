@@ -1,6 +1,7 @@
-﻿namespace Lingtren.Domain.Entities
+﻿namespace AcademyKit.Domain.Entities
 {
-    using Lingtren.Domain.Common;
+    using AcademyKit.Domain.Common;
+
     public class SMTPSetting : AuditableEntity
     {
         public string MailServer { get; set; }

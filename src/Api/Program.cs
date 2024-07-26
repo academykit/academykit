@@ -1,28 +1,26 @@
-﻿// <copyright file="Program.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-using System.Globalization;
+﻿using System.Globalization;
+using AcademyKit.Infrastructure.Configurations;
 using Asp.Versioning;
 using Hangfire;
 using Hangfire.Dashboard;
-using Lingtren.Infrastructure.Configurations;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using PuppeteerSharp;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddApiVersioning(options =>
-{
-    options.ReportApiVersions = true;
-    options.DefaultApiVersion = new ApiVersion(1, 0);
-    options.AssumeDefaultVersionWhenUnspecified = true;
-}).AddApiExplorer(options =>
-{
-    options.GroupNameFormat = "'v'VVV";
-    options.SubstituteApiVersionInUrl = true;
-});
+builder
+    .Services.AddApiVersioning(options =>
+    {
+        options.ReportApiVersions = true;
+        options.DefaultApiVersion = new ApiVersion(1, 0);
+        options.AssumeDefaultVersionWhenUnspecified = true;
+    })
+    .AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'VVV";
+        options.SubstituteApiVersionInUrl = true;
+    });
 
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
@@ -36,11 +34,8 @@ builder.Services.AddRequestLocalization(x =>
     x.SupportedUICultures = new List<CultureInfo> { new("ne-NP"), new("en-US"), new("ja-JP") };
 });
 builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment);
-builder.Services.AddCors(
-    options =>
-        options.AddDefaultPolicy(
-            builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
-        )
+builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod())
 );
 
 builder.Services.AddAuthorization();
@@ -75,12 +70,11 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-app.UseCors(
-    x =>
-        x.AllowAnyMethod()
-            .AllowAnyHeader()
-            .SetIsOriginAllowed(_ => true) // allow any origin
-            .AllowCredentials()
+app.UseCors(x =>
+    x.AllowAnyMethod()
+        .AllowAnyHeader()
+        .SetIsOriginAllowed(_ => true) // allow any origin
+        .AllowCredentials()
 );
 
 app.UseHangfireDashboard(

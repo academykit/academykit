@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Infrastructure.Services
+﻿namespace AcademyKit.Infrastructure.Services
 {
     using System;
     using System.Collections.Generic;
@@ -6,10 +6,10 @@
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Threading.Tasks;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Helpers;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Helpers;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.ChangeTracking;
     using Microsoft.EntityFrameworkCore.Metadata;
@@ -19,7 +19,8 @@
     /// Represents a default generic repository implements the <see cref="IRepository{TEntity}"/> interface.
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity>
+        where TEntity : class
     {
         protected readonly DbContext _dbContext;
         protected readonly DbSet<TEntity> _dbSet;
@@ -43,7 +44,9 @@
         /// </remarks>
         public virtual void ChangeTable(string table)
         {
-            if (_dbContext.Model.FindEntityType(typeof(TEntity)) is IConventionEntityType relational)
+            if (
+                _dbContext.Model.FindEntityType(typeof(TEntity)) is IConventionEntityType relational
+            )
             {
                 relational.SetTableName(table);
             }
@@ -71,7 +74,10 @@
         public IQueryable<TEntity> GetAll(
             Expression<Func<TEntity, bool>> predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null, bool disableTracking = true, bool ignoreQueryFilters = false)
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false
+        )
         {
             IQueryable<TEntity> query = _dbSet;
 
@@ -116,10 +122,14 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>Ex: This method defaults to a read-only, no-tracking query.</remarks>
-        public IQueryable<TResult> GetAll<TResult>(Expression<Func<TEntity, TResult>> selector,
+        public IQueryable<TResult> GetAll<TResult>(
+            Expression<Func<TEntity, TResult>> selector,
             Expression<Func<TEntity, bool>> predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null, bool disableTracking = true, bool ignoreQueryFilters = false)
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false
+        )
         {
             IQueryable<TEntity> query = _dbSet;
 
@@ -163,10 +173,13 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="SearchResult{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>This method default no-tracking query.</remarks>
-        public virtual SearchResult<TEntity> GetPagedList(BaseSearchCriteria criteria, Expression<Func<TEntity, bool>> predicate = null,
-                                                Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                                bool disableTracking = true,
-                                                bool ignoreQueryFilters = false)
+        public virtual SearchResult<TEntity> GetPagedList(
+            BaseSearchCriteria criteria,
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false
+        )
         {
             IQueryable<TEntity> query = _dbSet;
 
@@ -192,7 +205,8 @@
 
             if (criteria.SortBy != null)
             {
-                query = criteria.SortType == SortType.Ascending
+                query =
+                    criteria.SortType == SortType.Ascending
                         ? query.OrderBy(criteria.SortBy)
                         : query.OrderByDescending(criteria.SortBy);
             }
@@ -213,11 +227,14 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>This method default no-tracking query.</remarks>
-        public virtual Task<SearchResult<TEntity>> GetPagedListAsync(BaseSearchCriteria criteria, Expression<Func<TEntity, bool>> predicate = null,
-                                                           Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                                           bool disableTracking = true,
-                                                           CancellationToken cancellationToken = default,
-                                                           bool ignoreQueryFilters = false)
+        public virtual Task<SearchResult<TEntity>> GetPagedListAsync(
+            BaseSearchCriteria criteria,
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            CancellationToken cancellationToken = default,
+            bool ignoreQueryFilters = false
+        )
         {
             IQueryable<TEntity> query = _dbSet;
 
@@ -243,7 +260,8 @@
 
             if (criteria.SortBy != null)
             {
-                query = criteria.SortType == SortType.Ascending
+                query =
+                    criteria.SortType == SortType.Ascending
                         ? query.OrderBy(criteria.SortBy)
                         : query.OrderByDescending(criteria.SortBy);
             }
@@ -262,11 +280,14 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="SearchResult{TResult}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>This method default no-tracking query.</remarks>
-        public virtual SearchResult<TResult> GetPagedList<TResult>(BaseSearchCriteria criteria, Expression<Func<TEntity, TResult>> selector,
-                                                         Expression<Func<TEntity, bool>> predicate = null,
-                                                         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                                         bool disableTracking = true,
-                                                         bool ignoreQueryFilters = false)
+        public virtual SearchResult<TResult> GetPagedList<TResult>(
+            BaseSearchCriteria criteria,
+            Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false
+        )
             where TResult : class
         {
             IQueryable<TEntity> query = _dbSet;
@@ -293,7 +314,8 @@
 
             if (criteria.SortBy != null)
             {
-                query = criteria.SortType == SortType.Ascending
+                query =
+                    criteria.SortType == SortType.Ascending
                         ? query.OrderBy(criteria.SortBy)
                         : query.OrderByDescending(criteria.SortBy);
             }
@@ -315,12 +337,15 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>This method default no-tracking query.</remarks>
-        public virtual Task<SearchResult<TResult>> GetPagedListAsync<TResult>(BaseSearchCriteria criteria, Expression<Func<TEntity, TResult>> selector,
-                                                                    Expression<Func<TEntity, bool>> predicate = null,
-                                                                    Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                                                    bool disableTracking = true,
-                                                                    CancellationToken cancellationToken = default,
-                                                                    bool ignoreQueryFilters = false)
+        public virtual Task<SearchResult<TResult>> GetPagedListAsync<TResult>(
+            BaseSearchCriteria criteria,
+            Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            CancellationToken cancellationToken = default,
+            bool ignoreQueryFilters = false
+        )
             where TResult : class
         {
             IQueryable<TEntity> query = _dbSet;
@@ -347,12 +372,15 @@
 
             if (criteria.SortBy != null)
             {
-                query = criteria.SortType == SortType.Ascending
+                query =
+                    criteria.SortType == SortType.Ascending
                         ? query.OrderBy(criteria.SortBy)
                         : query.OrderByDescending(criteria.SortBy);
             }
 
-            return query.Select(selector).ToPagedListAsync(criteria.Page, criteria.Size, cancellationToken);
+            return query
+                .Select(selector)
+                .ToPagedListAsync(criteria.Page, criteria.Size, cancellationToken);
         }
 
         /// <summary>
@@ -365,11 +393,13 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>This method default no-tracking query.</remarks>
-        public virtual TEntity GetFirstOrDefault(Expression<Func<TEntity, bool>> predicate = null,
-                                         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-                                         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                         bool disableTracking = true,
-                                         bool ignoreQueryFilters = false)
+        public virtual TEntity GetFirstOrDefault(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false
+        )
         {
             IQueryable<TEntity> query = _dbSet;
 
@@ -404,11 +434,13 @@
         }
 
         /// <inheritdoc />
-        public virtual async Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate = null,
+        public virtual async Task<TEntity> GetFirstOrDefaultAsync(
+            Expression<Func<TEntity, bool>> predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
             bool disableTracking = true,
-            bool ignoreQueryFilters = false)
+            bool ignoreQueryFilters = false
+        )
         {
             IQueryable<TEntity> query = _dbSet;
 
@@ -453,12 +485,14 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>This method default no-tracking query.</remarks>
-        public virtual TResult GetFirstOrDefault<TResult>(Expression<Func<TEntity, TResult>> selector,
-                                                  Expression<Func<TEntity, bool>> predicate = null,
-                                                  Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-                                                  Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                                  bool disableTracking = true,
-                                                  bool ignoreQueryFilters = false)
+        public virtual TResult GetFirstOrDefault<TResult>(
+            Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false
+        )
         {
             IQueryable<TEntity> query = _dbSet;
 
@@ -493,11 +527,14 @@
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResult> GetFirstOrDefaultAsync<TResult>(Expression<Func<TEntity, TResult>> selector,
-                                                  Expression<Func<TEntity, bool>> predicate = null,
-                                                  Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-                                                  Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                                  bool disableTracking = true, bool ignoreQueryFilters = false)
+        public virtual async Task<TResult> GetFirstOrDefaultAsync<TResult>(
+            Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false
+        )
         {
             IQueryable<TEntity> query = _dbSet;
 
@@ -537,7 +574,8 @@
         /// <param name="sql">The raw SQL.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns>An <see cref="IQueryable{TEntity}" /> that contains elements that satisfy the condition specified by raw SQL.</returns>
-        public virtual IQueryable<TEntity> FromSql(string sql, params object[] parameters) => _dbSet.FromSqlRaw(sql, parameters);
+        public virtual IQueryable<TEntity> FromSql(string sql, params object[] parameters) =>
+            _dbSet.FromSqlRaw(sql, parameters);
 
         /// <summary>
         /// Finds an entity with the given primary key values. If found, is attached to the context and returned. If no entity is found, then null is returned.
@@ -551,7 +589,8 @@
         /// </summary>
         /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
         /// <returns>A <see cref="Task{TEntity}" /> that represents the asynchronous insert operation.</returns>
-        public virtual ValueTask<TEntity> FindAsync(params object[] keyValues) => _dbSet.FindAsync(keyValues);
+        public virtual ValueTask<TEntity> FindAsync(params object[] keyValues) =>
+            _dbSet.FindAsync(keyValues);
 
         /// <summary>
         /// Finds an entity with the given primary key values. If found, is attached to the context and returned. If no entity is found, then null is returned.
@@ -559,7 +598,10 @@
         /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A <see cref="Task{TEntity}"/> that represents the asynchronous find operation. The task result contains the found entity or null.</returns>
-        public virtual ValueTask<TEntity> FindAsync(object[] keyValues, CancellationToken cancellationToken) => _dbSet.FindAsync(keyValues, cancellationToken);
+        public virtual ValueTask<TEntity> FindAsync(
+            object[] keyValues,
+            CancellationToken cancellationToken
+        ) => _dbSet.FindAsync(keyValues, cancellationToken);
 
         /// <summary>
         /// Gets the count based on a predicate.
@@ -617,7 +659,9 @@
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public virtual async Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate = null)
+        public virtual async Task<long> LongCountAsync(
+            Expression<Func<TEntity, bool>> predicate = null
+        )
         {
             if (predicate == null)
             {
@@ -635,7 +679,10 @@
         /// <param name="predicate"></param>
         /// <param name="selector"></param>
         /// <returns>decimal</returns>
-        public virtual T Max<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null)
+        public virtual T Max<T>(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, T>> selector = null
+        )
         {
             if (predicate == null)
             {
@@ -653,7 +700,10 @@
         /// <param name="predicate"></param>
         /// <param name="selector"></param>
         /// <returns>decimal</returns>
-        public virtual async Task<T> MaxAsync<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null)
+        public virtual async Task<T> MaxAsync<T>(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, T>> selector = null
+        )
         {
             if (predicate == null)
             {
@@ -671,7 +721,10 @@
         /// <param name="predicate"></param>
         /// <param name="selector"></param>
         /// <returns>decimal</returns>
-        public virtual T Min<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null)
+        public virtual T Min<T>(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, T>> selector = null
+        )
         {
             if (predicate == null)
             {
@@ -689,7 +742,10 @@
         /// <param name="predicate"></param>
         /// <param name="selector"></param>
         /// <returns>decimal</returns>
-        public virtual async Task<T> MinAsync<T>(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, T>> selector = null)
+        public virtual async Task<T> MinAsync<T>(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, T>> selector = null
+        )
         {
             if (predicate == null)
             {
@@ -707,7 +763,10 @@
         /// <param name="predicate"></param>
         /// <param name="selector"></param>
         /// <returns>decimal</returns>
-        public virtual decimal Average(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null)
+        public virtual decimal Average(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, decimal>> selector = null
+        )
         {
             if (predicate == null)
             {
@@ -725,7 +784,10 @@
         /// <param name="predicate"></param>
         /// <param name="selector"></param>
         /// <returns>decimal</returns>
-        public virtual async Task<decimal> AverageAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null)
+        public virtual async Task<decimal> AverageAsync(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, decimal>> selector = null
+        )
         {
             if (predicate == null)
             {
@@ -743,7 +805,10 @@
         /// <param name="predicate"></param>
         /// <param name="selector"></param>
         /// <returns>decimal</returns>
-        public virtual decimal Sum(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null)
+        public virtual decimal Sum(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, decimal>> selector = null
+        )
         {
             if (predicate == null)
             {
@@ -761,7 +826,10 @@
         /// <param name="predicate"></param>
         /// <param name="selector"></param>
         /// <returns>decimal</returns>
-        public virtual async Task<decimal> SumAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, decimal>> selector = null)
+        public virtual async Task<decimal> SumAsync(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Expression<Func<TEntity, decimal>> selector = null
+        )
         {
             if (predicate == null)
             {
@@ -789,6 +857,7 @@
                 return _dbSet.Any(predicate);
             }
         }
+
         /// <summary>
         /// Gets the async exists based on a predicate.
         /// </summary>
@@ -805,6 +874,7 @@
                 return await _dbSet.AnyAsync(predicate);
             }
         }
+
         /// <summary>
         /// Inserts a new entity synchronously.
         /// </summary>
@@ -832,7 +902,10 @@
         /// <param name="entity">The entity to insert.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous insert operation.</returns>
-        public virtual ValueTask<EntityEntry<TEntity>> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public virtual ValueTask<EntityEntry<TEntity>> InsertAsync(
+            TEntity entity,
+            CancellationToken cancellationToken = default
+        )
         {
             return _dbSet.AddAsync(entity, cancellationToken);
         }
@@ -842,7 +915,8 @@
         /// </summary>
         /// <param name="entities">The entities to insert.</param>
         /// <returns>A <see cref="Task" /> that represents the asynchronous insert operation.</returns>
-        public virtual Task InsertAsync(params TEntity[] entities) => _dbSet.AddRangeAsync(entities);
+        public virtual Task InsertAsync(params TEntity[] entities) =>
+            _dbSet.AddRangeAsync(entities);
 
         /// <summary>
         /// Inserts a range of entities asynchronously.
@@ -850,7 +924,10 @@
         /// <param name="entities">The entities to insert.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous insert operation.</returns>
-        public virtual Task InsertAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default) => _dbSet.AddRangeAsync(entities, cancellationToken);
+        public virtual Task InsertAsync(
+            IEnumerable<TEntity> entities,
+            CancellationToken cancellationToken = default
+        ) => _dbSet.AddRangeAsync(entities, cancellationToken);
 
         /// <summary>
         /// Updates the specified entity.
@@ -887,7 +964,10 @@
         {
             // using a stub entity to mark for deletion
             var typeInfo = typeof(TEntity).GetTypeInfo();
-            var key = _dbContext.Model?.FindEntityType(typeInfo)?.FindPrimaryKey()?.Properties?.FirstOrDefault();
+            var key = _dbContext
+                .Model?.FindEntityType(typeInfo)
+                ?.FindPrimaryKey()
+                ?.Properties?.FirstOrDefault();
             var property = typeInfo.GetProperty(key?.Name);
             if (property != null)
             {
@@ -936,10 +1016,13 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>Ex: This method defaults to a read-only, no-tracking query.</remarks>
-        public async Task<IList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null,
+        public async Task<IList<TEntity>> GetAllAsync(
+            Expression<Func<TEntity, bool>> predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-            bool disableTracking = true, bool ignoreQueryFilters = false)
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false
+        )
         {
             IQueryable<TEntity> query = _dbSet;
 
@@ -984,11 +1067,14 @@
         /// <param name="ignoreQueryFilters">Ignore query filters</param>
         /// <returns>An <see cref="IPagedList{TEntity}"/> that contains elements that satisfy the condition specified by <paramref name="predicate"/>.</returns>
         /// <remarks>Ex: This method defaults to a read-only, no-tracking query.</remarks>
-        public async Task<IList<TResult>> GetAllAsync<TResult>(Expression<Func<TEntity, TResult>> selector,
+        public async Task<IList<TResult>> GetAllAsync<TResult>(
+            Expression<Func<TEntity, TResult>> selector,
             Expression<Func<TEntity, bool>> predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-            bool disableTracking = true, bool ignoreQueryFilters = false)
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false
+        )
         {
             IQueryable<TEntity> query = _dbSet;
 

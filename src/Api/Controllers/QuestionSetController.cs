@@ -1,14 +1,10 @@
-﻿// <copyright file="QuestionSetController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Infrastructure.Localization;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Infrastructure.Localization;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;

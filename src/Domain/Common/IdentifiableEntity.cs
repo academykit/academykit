@@ -1,6 +1,7 @@
-﻿namespace Lingtren.Domain.Common
+﻿namespace AcademyKit.Domain.Common
 {
     using System;
+
     /// <summary>
     /// IdentifiableEntity
     /// </summary>
@@ -14,8 +15,6 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentifiableEntity"/> class.
         /// </summary>
-        public IdentifiableEntity()
-        {
-        }
+        public IdentifiableEntity() { }
     }
 }

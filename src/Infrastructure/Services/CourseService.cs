@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Infrastructure.Services
+﻿namespace AcademyKit.Infrastructure.Services
 {
     using System;
     using System.Collections.Immutable;
@@ -6,18 +6,18 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Text;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Helpers;
+    using AcademyKit.Infrastructure.Localization;
     using AngleSharp.Text;
     using Application.Common.Dtos;
     using Application.Common.Models.ResponseModels;
     using Hangfire;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Helpers;
-    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
@@ -113,29 +113,27 @@
                     switch (enrollmentStatus)
                     {
                         case CourseEnrollmentStatus.Enrolled:
-                            enrollmentStatusPredicate = enrollmentStatusPredicate.And(
-                                p =>
-                                    p.CourseEnrollments.Any(e => e.UserId == criteria.CurrentUserId)
+                            enrollmentStatusPredicate = enrollmentStatusPredicate.And(p =>
+                                p.CourseEnrollments.Any(e => e.UserId == criteria.CurrentUserId)
                             );
                             break;
                         case CourseEnrollmentStatus.NotEnrolled:
                             enrollmentStatusPredicate = enrollmentStatusPredicate
-                                .And(
-                                    p =>
-                                        !p.CourseEnrollments.Any(
-                                            e => e.UserId == criteria.CurrentUserId
-                                        )
+                                .And(p =>
+                                    !p.CourseEnrollments.Any(e =>
+                                        e.UserId == criteria.CurrentUserId
+                                    )
                                 )
                                 .And(p => p.CreatedBy != criteria.CurrentUserId);
                             break;
                         case CourseEnrollmentStatus.Author:
-                            enrollmentStatusPredicate = enrollmentStatusPredicate.And(
-                                p => p.CreatedBy == criteria.CurrentUserId
+                            enrollmentStatusPredicate = enrollmentStatusPredicate.And(p =>
+                                p.CreatedBy == criteria.CurrentUserId
                             );
                             break;
                         case CourseEnrollmentStatus.Teacher:
-                            enrollmentStatusPredicate = enrollmentStatusPredicate.And(
-                                p => p.CourseTeachers.Any(e => e.UserId == criteria.CurrentUserId)
+                            enrollmentStatusPredicate = enrollmentStatusPredicate.And(p =>
+                                p.CourseTeachers.Any(e => e.UserId == criteria.CurrentUserId)
                             );
                             break;
                         default:
@@ -154,23 +152,22 @@
 
             Expression<Func<Course, bool>> groupPredicate = PredicateBuilder.New<Course>();
             var groupIds = GetUserGroupIds(criteria.CurrentUserId).Result;
-            groupPredicate = PredicateBuilder.New<Course>(
-                x => x.GroupId.HasValue && groupIds.Contains(x.GroupId ?? Guid.Empty)
+            groupPredicate = PredicateBuilder.New<Course>(x =>
+                x.GroupId.HasValue && groupIds.Contains(x.GroupId ?? Guid.Empty)
             );
             groupPredicate = groupPredicate.And(predicate);
             predicate = predicate.And(x => !x.GroupId.HasValue).Or(groupPredicate);
-            return predicate.And(
-                x =>
-                    x.CreatedBy == criteria.CurrentUserId
-                    || x.CourseTeachers.Any(p => p.UserId == criteria.CurrentUserId)
-                    || (
-                        x.CreatedBy != criteria.CurrentUserId
-                        && (
-                            x.IsUpdate
-                            || x.Status.Equals(CourseStatus.Published)
-                            || x.Status.Equals(CourseStatus.Completed)
-                        )
+            return predicate.And(x =>
+                x.CreatedBy == criteria.CurrentUserId
+                || x.CourseTeachers.Any(p => p.UserId == criteria.CurrentUserId)
+                || (
+                    x.CreatedBy != criteria.CurrentUserId
+                    && (
+                        x.IsUpdate
+                        || x.Status.Equals(CourseStatus.Published)
+                        || x.Status.Equals(CourseStatus.Completed)
                     )
+                )
             );
         }
 
@@ -379,21 +376,21 @@
 
                 foreach (var criteria in model.TrainingEligibilities)
                 {
-                    if(criteria.Eligibility != 0)
+                    if (criteria.Eligibility != 0)
                     {
                         eligibilities.Add(
-                        new TrainingEligibility
-                        {
-                            Id = Guid.NewGuid(),
-                            EligibilityId = criteria.EligibilityId,
-                            TrainingEligibilityEnum = criteria.Eligibility,
-                            CourseId = existing.Id,
-                            CreatedOn = currentTimeStamp,
-                            CreatedBy = currentUserId,
-                            UpdatedOn = currentTimeStamp,
-                            UpdatedBy = currentUserId,
-                        }
-                    );
+                            new TrainingEligibility
+                            {
+                                Id = Guid.NewGuid(),
+                                EligibilityId = criteria.EligibilityId,
+                                TrainingEligibilityEnum = criteria.Eligibility,
+                                CourseId = existing.Id,
+                                CreatedOn = currentTimeStamp,
+                                CreatedBy = currentUserId,
+                                UpdatedOn = currentTimeStamp,
+                                UpdatedBy = currentUserId,
+                            }
+                        );
                     }
                 }
 
@@ -624,8 +621,8 @@
 
                 if (model.Status == CourseStatus.Review && !isSuperAdminOrAdminAccess)
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(
-                        job => job.SendCourseReviewMailAsync(course.Name, null)
+                    BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                        job.SendCourseReviewMailAsync(course.Name, null)
                     );
                 }
 
@@ -633,28 +630,27 @@
                 {
                     if (course.CourseEnrollments.Count == default)
                     {
-                        BackgroundJob.Enqueue<IHangfireJobService>(
-                            job =>
-                                job.GroupCoursePublishedMailAsync(
-                                    course.GroupId.Value,
-                                    course.Name,
-                                    course.Slug,
-                                    null
-                                )
+                        BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                            job.GroupCoursePublishedMailAsync(
+                                course.GroupId.Value,
+                                course.Name,
+                                course.Slug,
+                                null
+                            )
                         );
                     }
                     else
                     {
-                        BackgroundJob.Enqueue<IHangfireJobService>(
-                            job => job.SendLessonAddedMailAsync(course.Name, course.Slug, null)
+                        BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                            job.SendLessonAddedMailAsync(course.Name, course.Slug, null)
                         );
                     }
                 }
 
                 if (model.Status == CourseStatus.Rejected)
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(
-                        job => job.CourseRejectedMailAsync(course.Id, model.Message, null)
+                    BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                        job.CourseRejectedMailAsync(course.Id, model.Message, null)
                     );
                 }
 
@@ -743,15 +739,14 @@
 
                 var existCourseEnrollment = await _unitOfWork
                     .GetRepository<CourseEnrollment>()
-                    .ExistsAsync(
-                        p =>
-                            p.CourseId == course.Id
-                            && p.UserId == userId
-                            && !p.IsDeleted
-                            && (
-                                p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
-                                || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
-                            )
+                    .ExistsAsync(p =>
+                        p.CourseId == course.Id
+                        && p.UserId == userId
+                        && !p.IsDeleted
+                        && (
+                            p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                            || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
+                        )
                     )
                     .ConfigureAwait(false);
 
@@ -786,15 +781,14 @@
                     )
                 )
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(
-                        job =>
-                            job.SendCourseEnrollmentMailAsync(
-                                user.FullName,
-                                user.Email,
-                                course.Id,
-                                course.Name,
-                                null
-                            )
+                    BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                        job.SendCourseEnrollmentMailAsync(
+                            user.FullName,
+                            user.Email,
+                            course.Id,
+                            course.Name,
+                            null
+                        )
                     );
                 }
 
@@ -894,11 +888,11 @@
 
                 if (assignments.Count > 0)
                 {
-                    var assignmentQuestionOptions = assignments.SelectMany(
-                        x => x.AssignmentQuestionOptions
+                    var assignmentQuestionOptions = assignments.SelectMany(x =>
+                        x.AssignmentQuestionOptions
                     );
-                    var assignmentAttachments = assignments.SelectMany(
-                        x => x.AssignmentAttachments
+                    var assignmentAttachments = assignments.SelectMany(x =>
+                        x.AssignmentAttachments
                     );
 
                     _unitOfWork
@@ -966,8 +960,8 @@
                 return CourseEnrollmentStatus.Teacher;
             }
 
-            var enrolledMember = course.CourseEnrollments?.FirstOrDefault(
-                p => p.UserId == currentUserId && !p.IsDeleted
+            var enrolledMember = course.CourseEnrollments?.FirstOrDefault(p =>
+                p.UserId == currentUserId && !p.IsDeleted
             );
 
             if (enrolledMember != null)
@@ -1034,14 +1028,14 @@
                     .ConfigureAwait(false);
                 var isEligible = true;
                 if (
-                    course.TrainingEligibilities.Any(
-                        ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Department
+                    course.TrainingEligibilities.Any(ec =>
+                        ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Department
                     )
                 )
                 {
-                    var eligibleIds = course.TrainingEligibilities
-                        .Where(
-                            ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Department
+                    var eligibleIds = course
+                        .TrainingEligibilities.Where(ec =>
+                            ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Department
                         )
                         .Select(ec => ec.EligibilityId)
                         .ToList();
@@ -1052,8 +1046,8 @@
                         .Where(department => eligibleIds.Contains(department.Id))
                         .Include(department => department.Users)
                         .ToList();
-                    var departmentCheck = eligibleDepartments.Any(
-                        department => department.Users.Any(user => user.Id == currentUserId)
+                    var departmentCheck = eligibleDepartments.Any(department =>
+                        department.Users.Any(user => user.Id == currentUserId)
                     );
                     if (departmentCheck == true)
                     {
@@ -1065,13 +1059,15 @@
                     }
                 }
                 else if (
-                    course.TrainingEligibilities.Any(
-                        ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Skills
+                    course.TrainingEligibilities.Any(ec =>
+                        ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Skills
                     )
                 )
                 {
-                    var eligibleIds = course.TrainingEligibilities
-                        .Where(ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Skills)
+                    var eligibleIds = course
+                        .TrainingEligibilities.Where(ec =>
+                            ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Skills
+                        )
                         .Select(ec => ec.EligibilityId)
                         .ToList();
 
@@ -1081,8 +1077,8 @@
                         .Where(Skills => eligibleIds.Contains(Skills.Id))
                         .Include(Skills => Skills.UserSkills)
                         .ToList();
-                    var SkillsCheck = eligibleSkills.Any(
-                        Skills => Skills.UserSkills.Any(user => user.UserId == currentUserId)
+                    var SkillsCheck = eligibleSkills.Any(Skills =>
+                        Skills.UserSkills.Any(user => user.UserId == currentUserId)
                     );
                     if (SkillsCheck == true)
                     {
@@ -1094,14 +1090,14 @@
                     }
                 }
                 else if (
-                    course.TrainingEligibilities.Any(
-                        ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Training
+                    course.TrainingEligibilities.Any(ec =>
+                        ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Training
                     )
                 )
                 {
-                    var eligibleIds = course.TrainingEligibilities
-                        .Where(
-                            ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Assessment
+                    var eligibleIds = course
+                        .TrainingEligibilities.Where(ec =>
+                            ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Assessment
                         )
                         .Select(ec => ec.EligibilityId)
                         .ToList();
@@ -1111,9 +1107,8 @@
                         .GetAll()
                         .Where(Assessment => eligibleIds.Contains(Assessment.Id))
                         .ToList();
-                    var AssessmentCheck = eligibleAssessment.Any(
-                        Assessment =>
-                            Assessment.AssessmentResults.Any(user => user.Id == currentUserId)
+                    var AssessmentCheck = eligibleAssessment.Any(Assessment =>
+                        Assessment.AssessmentResults.Any(user => user.Id == currentUserId)
                     );
                     if (AssessmentCheck == true)
                     {
@@ -1125,13 +1120,15 @@
                     }
                 }
                 else if (
-                    course.TrainingEligibilities.Any(
-                        ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Training
+                    course.TrainingEligibilities.Any(ec =>
+                        ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Training
                     )
                 )
                 {
-                    var eligibleIds = course.TrainingEligibilities
-                        .Where(ec => ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Training)
+                    var eligibleIds = course
+                        .TrainingEligibilities.Where(ec =>
+                            ec.TrainingEligibilityEnum == TrainingEligibilityEnum.Training
+                        )
                         .Select(ec => ec.EligibilityId)
                         .ToList();
 
@@ -1140,8 +1137,8 @@
                         .GetAll()
                         .Where(Training => eligibleIds.Contains(course.Id))
                         .ToList();
-                    var TrainingCheck = eligibleTraining.Any(
-                        Training => Training.CourseEnrollments.Any(user => user.Id == currentUserId)
+                    var TrainingCheck = eligibleTraining.Any(Training =>
+                        Training.CourseEnrollments.Any(user => user.Id == currentUserId)
                     );
                     if (TrainingCheck == true)
                     {
@@ -1176,16 +1173,15 @@
                     CreatedOn = course.CreatedOn,
                     IsEligible = isEligible,
                 };
-                course.CourseTags
-                    .ToList()
+                course
+                    .CourseTags.ToList()
                     .ForEach(item => response.Tags.Add(new CourseTagResponseModel(item)));
-                course.TrainingEligibilities
-                    ?.ToList()
-                    .ForEach(
-                        item =>
-                            response.TrainingEligibilities.Add(
-                                new TrainingEligibilityCriteriaResponseModel(item)
-                            )
+                course
+                    .TrainingEligibilities?.ToList()
+                    .ForEach(item =>
+                        response.TrainingEligibilities.Add(
+                            new TrainingEligibilityCriteriaResponseModel(item)
+                        )
                     );
 
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId)
@@ -1196,22 +1192,18 @@
                     && !isSuperAdminOrAdmin
                 )
                 {
-                    course.Sections = course.Sections
-                        .Where(
-                            x =>
-                                x.Status == CourseStatus.Published
-                                || x.Status == CourseStatus.Completed
+                    course.Sections = course
+                        .Sections.Where(x =>
+                            x.Status == CourseStatus.Published || x.Status == CourseStatus.Completed
                         )
                         .ToList();
-                    course.Sections.ForEach(
-                        x =>
-                            x.Lessons = x.Lessons
-                                .Where(
-                                    x =>
-                                        x.Status == CourseStatus.Published
-                                        || x.Status == CourseStatus.Completed
-                                )
-                                .ToList()
+                    course.Sections.ForEach(x =>
+                        x.Lessons = x
+                            .Lessons.Where(x =>
+                                x.Status == CourseStatus.Published
+                                || x.Status == CourseStatus.Completed
+                            )
+                            .ToList()
                     );
                 }
 
@@ -1222,81 +1214,68 @@
 
                 var currentUserWatchHistories = await _unitOfWork
                     .GetRepository<WatchHistory>()
-                    .GetAllAsync(
-                        predicate: x =>
-                            currentUserId != default
-                            && x.UserId == currentUserId
-                            && x.CourseId == course.Id
+                    .GetAllAsync(predicate: x =>
+                        currentUserId != default
+                        && x.UserId == currentUserId
+                        && x.CourseId == course.Id
                     )
                     .ConfigureAwait(false);
 
-                response.Sections = course.Sections
-                    .Select(
-                        x =>
-                            new SectionResponseModel
+                response.Sections = course
+                    .Sections.Select(x => new SectionResponseModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Slug = x.Slug,
+                        Order = x.Order,
+                        Description = x.Description,
+                        CourseId = x.CourseId,
+                        Duration = x.Duration,
+                        Lessons = x
+                            .Lessons.Select(l => new LessonResponseModel
                             {
-                                Id = x.Id,
-                                Name = x.Name,
-                                Slug = x.Slug,
-                                Order = x.Order,
-                                Description = x.Description,
-                                CourseId = x.CourseId,
-                                Duration = x.Duration,
-                                Lessons = x.Lessons
-                                    .Select(
-                                        l =>
-                                            new LessonResponseModel
-                                            {
-                                                Id = l.Id,
-                                                Name = l.Name,
-                                                Slug = l.Slug,
-                                                Order = l.Order,
-                                                StartDate = l.StartDate,
-                                                EndDate = l.EndDate,
-                                                CourseId = l.CourseId,
-                                                SectionId = l.SectionId,
-                                                QuestionSetId = l.QuestionSetId,
-                                                MeetingId = l.MeetingId,
-                                                VideoUrl = l.VideoUrl,
-                                                DocumentUrl = l.DocumentUrl,
-                                                ThumbnailUrl = l.ThumbnailUrl,
-                                                Description = l.Description,
-                                                Type = l.Type,
-                                                Status = l.Status,
-                                                Duration = l.Duration,
-                                                IsMandatory = l.IsMandatory,
-                                                QuestionSet =
-                                                    l.Type == LessonType.Exam
-                                                        ? new QuestionSetResponseModel(
-                                                            _unitOfWork
-                                                                .GetRepository<QuestionSet>()
-                                                                .GetFirstOrDefault(
-                                                                    predicate: x =>
-                                                                        x.Id == l.QuestionSetId,
-                                                                    include: x =>
-                                                                        x.Include(
-                                                                            p =>
-                                                                                p.QuestionSetQuestions
-                                                                        )
-                                                                )
-                                                        )
-                                                        : null,
-                                                Meeting =
-                                                    l.Meeting != null
-                                                        ? new MeetingResponseModel(l.Meeting)
-                                                        : null,
-                                                IsCompleted = currentUserWatchHistories.Any(
-                                                    h => h.LessonId == l.Id && h.IsCompleted
-                                                ),
-                                                IsPassed = currentUserWatchHistories.Any(
-                                                    h => h.LessonId == l.Id && h.IsPassed
-                                                ),
-                                            }
-                                    )
-                                    .OrderBy(x => x.Order)
-                                    .ToList(),
-                            }
-                    )
+                                Id = l.Id,
+                                Name = l.Name,
+                                Slug = l.Slug,
+                                Order = l.Order,
+                                StartDate = l.StartDate,
+                                EndDate = l.EndDate,
+                                CourseId = l.CourseId,
+                                SectionId = l.SectionId,
+                                QuestionSetId = l.QuestionSetId,
+                                MeetingId = l.MeetingId,
+                                VideoUrl = l.VideoUrl,
+                                DocumentUrl = l.DocumentUrl,
+                                ThumbnailUrl = l.ThumbnailUrl,
+                                Description = l.Description,
+                                Type = l.Type,
+                                Status = l.Status,
+                                Duration = l.Duration,
+                                IsMandatory = l.IsMandatory,
+                                QuestionSet =
+                                    l.Type == LessonType.Exam
+                                        ? new QuestionSetResponseModel(
+                                            _unitOfWork
+                                                .GetRepository<QuestionSet>()
+                                                .GetFirstOrDefault(
+                                                    predicate: x => x.Id == l.QuestionSetId,
+                                                    include: x =>
+                                                        x.Include(p => p.QuestionSetQuestions)
+                                                )
+                                        )
+                                        : null,
+                                Meeting =
+                                    l.Meeting != null ? new MeetingResponseModel(l.Meeting) : null,
+                                IsCompleted = currentUserWatchHistories.Any(h =>
+                                    h.LessonId == l.Id && h.IsCompleted
+                                ),
+                                IsPassed = currentUserWatchHistories.Any(h =>
+                                    h.LessonId == l.Id && h.IsPassed
+                                ),
+                            })
+                            .OrderBy(x => x.Order)
+                            .ToList(),
+                    })
                     .OrderBy(x => x.Order)
                     .ToList();
                 return response;
@@ -1326,13 +1305,16 @@
             var predicate = PredicateBuilder.New<Course>(true);
             var group = await _unitOfWork
                 .GetRepository<Group>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p => p.Id.ToString() == identity || p.Slug == identity
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.Id.ToString() == identity || p.Slug == identity
                 )
                 .ConfigureAwait(false);
             if (group == null)
             {
-                _logger.LogWarning("Group with identity: {identity} not found.", identity);
+                _logger.LogWarning(
+                    "Group with identity: {identity} not found.",
+                    identity.SanitizeForLogger()
+                );
                 throw new EntityNotFoundException(_localizer.GetString("GroupNotFound"));
             }
 
@@ -1392,19 +1374,16 @@
                 }
 
                 var predicate = PredicateBuilder.New<Course>(true);
-                predicate = predicate.And(
-                    p =>
-                        p.CourseEnrollments.Any(
-                            x =>
-                                x.CourseId == p.Id
-                                && x.UserId == userId
-                                && !x.IsDeleted
-                                && (
-                                    x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
-                                    || x.EnrollmentMemberStatus
-                                        == EnrollmentMemberStatusEnum.Completed
-                                )
+                predicate = predicate.And(p =>
+                    p.CourseEnrollments.Any(x =>
+                        x.CourseId == p.Id
+                        && x.UserId == userId
+                        && !x.IsDeleted
+                        && (
+                            x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                            || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
                         )
+                    )
                 );
 
                 var courses = await _unitOfWork
@@ -1439,17 +1418,16 @@
                             Slug = x.Slug,
                             Name = x.Name,
                             ThumbnailUrl = x.ThumbnailUrl,
-                            Percentage = x.CourseEnrollments
-                                .FirstOrDefault(
-                                    predicate: p =>
-                                        p.UserId == userId
-                                        && !p.IsDeleted
-                                        && (
-                                            p.EnrollmentMemberStatus
-                                                == EnrollmentMemberStatusEnum.Enrolled
-                                            || p.EnrollmentMemberStatus
-                                                == EnrollmentMemberStatusEnum.Completed
-                                        )
+                            Percentage = x
+                                .CourseEnrollments.FirstOrDefault(predicate: p =>
+                                    p.UserId == userId
+                                    && !p.IsDeleted
+                                    && (
+                                        p.EnrollmentMemberStatus
+                                            == EnrollmentMemberStatusEnum.Enrolled
+                                        || p.EnrollmentMemberStatus
+                                            == EnrollmentMemberStatusEnum.Completed
+                                    )
                                 )
                                 ?.Percentage,
                             Language = x.Language,
@@ -1497,21 +1475,19 @@
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(
-                    x =>
-                        x.Name.ToLower().Trim().Contains(search)
-                        || x.Description.ToLower().Trim().Contains(search)
-                        || x.User.LastName.ToLower().Trim().Contains(search)
-                        || x.User.FirstName.ToLower().Trim().Contains(search)
+                predicate = predicate.And(x =>
+                    x.Name.ToLower().Trim().Contains(search)
+                    || x.Description.ToLower().Trim().Contains(search)
+                    || x.User.LastName.ToLower().Trim().Contains(search)
+                    || x.User.FirstName.ToLower().Trim().Contains(search)
                 );
             }
 
             predicate = predicate.And(p => p.GroupId == groupId);
-            predicate = predicate.And(
-                p =>
-                    p.Status == CourseStatus.Published
-                    || p.Status == CourseStatus.Completed
-                    || p.IsUpdate
+            predicate = predicate.And(p =>
+                p.Status == CourseStatus.Published
+                || p.Status == CourseStatus.Completed
+                || p.IsUpdate
             );
             return predicate;
         }
@@ -1609,26 +1585,24 @@
                 response.MeetingsList = newMeeting.OrderByDescending(x => x.StartDate);
                 response.TotalTeachers = course.CourseTeachers.Count;
                 response.TotalLessons = lessons.Count;
-                response.TotalMeetings = lessons.Count(
-                    x =>
-                        (x.Type == LessonType.LiveClass || x.Type == LessonType.RecordedVideo)
-                        && x.MeetingId != null
+                response.TotalMeetings = lessons.Count(x =>
+                    (x.Type == LessonType.LiveClass || x.Type == LessonType.RecordedVideo)
+                    && x.MeetingId != null
                 );
-                response.TotalLectures = lessons.Count(
-                    x => x.Type == LessonType.Video || x.Type == LessonType.RecordedVideo
+                response.TotalLectures = lessons.Count(x =>
+                    x.Type == LessonType.Video || x.Type == LessonType.RecordedVideo
                 );
                 response.TotalExams = lessons.Count(x => x.Type == LessonType.Exam);
                 response.TotalAssignments = lessons.Count(x => x.Type == LessonType.Assignment);
                 response.TotalDocuments = lessons.Count(x => x.Type == LessonType.Document);
                 response.TotalEnrollments = await _unitOfWork
                     .GetRepository<CourseEnrollment>()
-                    .CountAsync(
-                        predicate: p =>
-                            p.CourseId == course.Id
-                            && (
-                                p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
-                                || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
-                            )
+                    .CountAsync(predicate: p =>
+                        p.CourseId == course.Id
+                        && (
+                            p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                            || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
+                        )
                     );
 
                 return response;
@@ -1680,8 +1654,8 @@
                 var LessonIds = lessons.Select(x => x.Id).ToList();
                 var watchHistory = await _unitOfWork
                     .GetRepository<WatchHistory>()
-                    .GetAllAsync(
-                        predicate: p => p.CourseId == course.Id && LessonIds.Contains(p.LessonId)
+                    .GetAllAsync(predicate: p =>
+                        p.CourseId == course.Id && LessonIds.Contains(p.LessonId)
                     )
                     .ConfigureAwait(false);
                 watchHistory = watchHistory
@@ -1698,28 +1672,27 @@
                     TotalCount = searchResult.TotalCount,
                     TotalPage = searchResult.TotalPage,
                 };
-                searchResult.Items.ForEach(
-                    p =>
-                        response.Items.Add(
-                            new LessonStatisticsResponseModel
-                            {
-                                Id = p.Id,
-                                Slug = p.Slug,
-                                Name = p.Name,
-                                CourseId = course.Id,
-                                CourseSlug = course.Slug,
-                                CourseName = course.Name,
-                                LessonType = p.Type,
-                                SectionId = p.SectionId,
-                                SectionSlug = p.Section?.Slug,
-                                SectionName = p.Section?.Name,
-                                IsMandatory = p.IsMandatory,
-                                EnrolledStudent = course.CourseEnrollments.Count,
-                                LessonWatched = watchHistory
-                                    .Where(x => x.LessonId == p.Id && x.CourseId == course.Id)
-                                    .Count(),
-                            }
-                        )
+                searchResult.Items.ForEach(p =>
+                    response.Items.Add(
+                        new LessonStatisticsResponseModel
+                        {
+                            Id = p.Id,
+                            Slug = p.Slug,
+                            Name = p.Name,
+                            CourseId = course.Id,
+                            CourseSlug = course.Slug,
+                            CourseName = course.Name,
+                            LessonType = p.Type,
+                            SectionId = p.SectionId,
+                            SectionSlug = p.Section?.Slug,
+                            SectionName = p.Section?.Name,
+                            IsMandatory = p.IsMandatory,
+                            EnrolledStudent = course.CourseEnrollments.Count,
+                            LessonWatched = watchHistory
+                                .Where(x => x.LessonId == p.Id && x.CourseId == course.Id)
+                                .Count(),
+                        }
+                    )
                 );
 
                 return response;
@@ -1772,10 +1745,9 @@
             {
                 var examSubmissions = await _unitOfWork
                     .GetRepository<QuestionSetSubmission>()
-                    .GetAllAsync(
-                        predicate: p =>
-                            enrolledUserList.Select(x => x.Id).Contains(p.UserId)
-                            && p.QuestionSet.Lesson.Id == lesson.Id
+                    .GetAllAsync(predicate: p =>
+                        enrolledUserList.Select(x => x.Id).Contains(p.UserId)
+                        && p.QuestionSet.Lesson.Id == lesson.Id
                     )
                     .ConfigureAwait(false);
                 if (examSubmissions.Count != default)
@@ -1843,21 +1815,20 @@
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(
-                    x =>
+                predicate = predicate.And(x =>
+                    (
                         (
-                            (
-                                x.User.FirstName.ToLower().Trim()
-                                + " "
-                                + x.User.MiddleName.ToLower().Trim()
-                            ).Trim()
+                            x.User.FirstName.ToLower().Trim()
                             + " "
-                            + x.User.LastName.Trim()
-                        )
-                            .Trim()
-                            .Contains(search)
-                        || x.User.Email.ToLower().Trim().Contains(search)
-                        || x.User.MobileNumber.ToLower().Trim().Contains(search)
+                            + x.User.MiddleName.ToLower().Trim()
+                        ).Trim()
+                        + " "
+                        + x.User.LastName.Trim()
+                    )
+                        .Trim()
+                        .Contains(search)
+                    || x.User.Email.ToLower().Trim().Contains(search)
+                    || x.User.MobileNumber.ToLower().Trim().Contains(search)
                 );
             }
 
@@ -2335,19 +2306,17 @@
 
                 var predicate = PredicateBuilder.New<CourseEnrollment>(true);
                 predicate = predicate.And(p => p.CourseId == course.Id);
-                predicate = predicate.And(
-                    p =>
-                        p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
-                        || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
+                predicate = predicate.And(p =>
+                    p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                    || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
                 );
 
                 if (!string.IsNullOrWhiteSpace(criteria.Search))
                 {
                     var search = criteria.Search.ToLower().Trim();
-                    predicate = predicate.And(
-                        x =>
-                            x.User.LastName.ToLower().Trim().Contains(search)
-                            || x.User.FirstName.ToLower().Trim().Contains(search)
+                    predicate = predicate.And(x =>
+                        x.User.LastName.ToLower().Trim().Contains(search)
+                        || x.User.FirstName.ToLower().Trim().Contains(search)
                     );
                 }
 
@@ -2370,23 +2339,22 @@
                     TotalPage = searchResult.TotalPage,
                 };
 
-                searchResult.Items.ForEach(
-                    p =>
-                        response.Items.Add(
-                            new StudentCourseStatisticsResponseModel
-                            {
-                                UserId = p.UserId,
-                                FullName = p.User?.FullName,
-                                ImageUrl = p.User?.ImageUrl,
-                                LessonId = p.CurrentLessonId,
-                                LessonSlug = p.Lesson?.Slug,
-                                LessonName = p.Lesson?.Name,
-                                Percentage = p.Percentage,
-                                HasCertificateIssued = p.HasCertificateIssued,
-                                CertificateIssuedDate = p.CertificateIssuedDate,
-                                CertificateUrl = p.CertificateUrl
-                            }
-                        )
+                searchResult.Items.ForEach(p =>
+                    response.Items.Add(
+                        new StudentCourseStatisticsResponseModel
+                        {
+                            UserId = p.UserId,
+                            FullName = p.User?.FullName,
+                            ImageUrl = p.User?.ImageUrl,
+                            LessonId = p.CurrentLessonId,
+                            LessonSlug = p.Lesson?.Slug,
+                            LessonName = p.Lesson?.Name,
+                            Percentage = p.Percentage,
+                            HasCertificateIssued = p.HasCertificateIssued,
+                            CertificateIssuedDate = p.CertificateIssuedDate,
+                            CertificateUrl = p.CertificateUrl
+                        }
+                    )
                 );
                 return response;
             }
@@ -2437,10 +2405,9 @@
             var response = new List<LessonStudentResponseModel>();
             var lessons = await _unitOfWork
                 .GetRepository<Lesson>()
-                .GetAllAsync(
-                    predicate: p =>
-                        (p.Type == LessonType.Assignment || p.Type == LessonType.Physical)
-                        && p.CourseId == course.Id
+                .GetAllAsync(predicate: p =>
+                    (p.Type == LessonType.Assignment || p.Type == LessonType.Physical)
+                    && p.CourseId == course.Id
                 )
                 .ConfigureAwait(false);
 
@@ -2464,11 +2431,11 @@
                     {
                         bool? hasSubmitted = null;
                         if (
-                            assignmentSubmission.Any(
-                                x => x.LessonId == lessonId && x.UserId == userId
+                            assignmentSubmission.Any(x =>
+                                x.LessonId == lessonId && x.UserId == userId
                             )
-                            && !assignmentReview.Any(
-                                x => x.LessonId == lessonId && x.UserId == userId
+                            && !assignmentReview.Any(x =>
+                                x.LessonId == lessonId && x.UserId == userId
                             )
                         )
                         {
@@ -2476,11 +2443,11 @@
                         }
 
                         if (
-                            assignmentSubmission.Any(
-                                x => x.LessonId == lessonId && x.UserId == userId
+                            assignmentSubmission.Any(x =>
+                                x.LessonId == lessonId && x.UserId == userId
                             )
-                            && assignmentReview.Any(
-                                x => x.LessonId == lessonId && x.UserId == userId
+                            && assignmentReview.Any(x =>
+                                x.LessonId == lessonId && x.UserId == userId
                             )
                         )
                         {
@@ -2495,8 +2462,8 @@
                 {
                     var physicalLessonReviews = await _unitOfWork
                         .GetRepository<PhysicalLessonReview>()
-                        .GetAllAsync(
-                            predicate: p => lessonIds.Contains(p.LessonId) && p.UserId == userId
+                        .GetAllAsync(predicate: p =>
+                            lessonIds.Contains(p.LessonId) && p.UserId == userId
                         )
                         .ConfigureAwait(false);
                     if (physicalLessonReviews.Count != default)
@@ -2505,8 +2472,8 @@
                         {
                             bool? hasReviewed = null;
                             if (
-                                physicalLessonReviews.Any(
-                                    x => x.LessonId == lessonId && !x.IsReviewed
+                                physicalLessonReviews.Any(x =>
+                                    x.LessonId == lessonId && !x.IsReviewed
                                 )
                             )
                             {
@@ -2514,8 +2481,8 @@
                             }
 
                             if (
-                                physicalLessonReviews.Any(
-                                    x => x.LessonId == lessonId && x.IsReviewed
+                                physicalLessonReviews.Any(x =>
+                                    x.LessonId == lessonId && x.IsReviewed
                                 )
                             )
                             {
@@ -2528,33 +2495,32 @@
                 }
             }
 
-            watchHistories.ForEach(
-                x =>
-                    response.Add(
-                        new LessonStudentResponseModel
-                        {
-                            IsAssignmentReviewed = (bool?)(
-                                assignmentStatus
-                                    .FirstOrDefault(ur => ur.Value.LessonId == x.LessonId)
-                                    ?.IsReviewed
-                            ),
-                            LessonId = x.LessonId,
-                            LessonSlug = x.Lesson?.Slug,
-                            LessonName = x.Lesson?.Name,
-                            LessonType = x.Lesson.Type,
-                            QuestionSetId =
-                                x.Lesson.Type == LessonType.Exam ? x.Lesson?.QuestionSetId : null,
-                            IsCompleted = x.IsCompleted,
-                            IsPassed = x.IsPassed,
-                            UpdatedOn = x.UpdatedOn ?? x.CreatedOn,
-                            User = new UserModel(x.User),
-                            AttendanceReviewed = (bool?)(
-                                physicalLessonStatus
-                                    .FirstOrDefault(ur => ur.Value.LessonId == x.LessonId)
-                                    ?.IsReviewed
-                            )
-                        }
-                    )
+            watchHistories.ForEach(x =>
+                response.Add(
+                    new LessonStudentResponseModel
+                    {
+                        IsAssignmentReviewed = (bool?)(
+                            assignmentStatus
+                                .FirstOrDefault(ur => ur.Value.LessonId == x.LessonId)
+                                ?.IsReviewed
+                        ),
+                        LessonId = x.LessonId,
+                        LessonSlug = x.Lesson?.Slug,
+                        LessonName = x.Lesson?.Name,
+                        LessonType = x.Lesson.Type,
+                        QuestionSetId =
+                            x.Lesson.Type == LessonType.Exam ? x.Lesson?.QuestionSetId : null,
+                        IsCompleted = x.IsCompleted,
+                        IsPassed = x.IsPassed,
+                        UpdatedOn = x.UpdatedOn ?? x.CreatedOn,
+                        User = new UserModel(x.User),
+                        AttendanceReviewed = (bool?)(
+                            physicalLessonStatus
+                                .FirstOrDefault(ur => ur.Value.LessonId == x.LessonId)
+                                ?.IsReviewed
+                        )
+                    }
+                )
             );
             return response;
         }
@@ -2571,8 +2537,8 @@
             {
                 var user = await _unitOfWork
                     .GetRepository<User>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p => p.Id == CurrentUserID && p.Role != UserRole.Trainee
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id == CurrentUserID && p.Role != UserRole.Trainee
                     )
                     .ConfigureAwait(false);
                 if (user == default)
@@ -2606,11 +2572,11 @@
                     .ConfigureAwait(false);
 
                 responseModel.TotalUsers = users.Count();
-                responseModel.TotalActiveUsers = users.Count(
-                    predicate: p => p.Status == UserStatus.Active
+                responseModel.TotalActiveUsers = users.Count(predicate: p =>
+                    p.Status == UserStatus.Active
                 );
-                responseModel.TotalTrainers = users.Count(
-                    predicate: p => p.Status == UserStatus.Active && p.Role == UserRole.Trainer
+                responseModel.TotalTrainers = users.Count(predicate: p =>
+                    p.Status == UserStatus.Active && p.Role == UserRole.Trainer
                 );
 
                 responseModel.TotalGroups = await _unitOfWork
@@ -2619,11 +2585,10 @@
                     .ConfigureAwait(false);
                 responseModel.TotalTrainings = await _unitOfWork
                     .GetRepository<Course>()
-                    .CountAsync(
-                        predicate: p =>
-                            p.Status == CourseStatus.Published
-                            || p.Status == CourseStatus.Completed
-                            || p.IsUpdate
+                    .CountAsync(predicate: p =>
+                        p.Status == CourseStatus.Published
+                        || p.Status == CourseStatus.Completed
+                        || p.IsUpdate
                     )
                     .ConfigureAwait(false);
             }
@@ -2632,34 +2597,31 @@
             {
                 responseModel.TotalGroups = await _unitOfWork
                     .GetRepository<Group>()
-                    .CountAsync(
-                        predicate: p =>
-                            p.GroupMembers.Any(x => x.UserId == currentUserId) && p.IsActive
+                    .CountAsync(predicate: p =>
+                        p.GroupMembers.Any(x => x.UserId == currentUserId) && p.IsActive
                     )
                     .ConfigureAwait(false);
 
                 var trainings = await _unitOfWork
                     .GetRepository<Course>()
-                    .GetAllAsync(
-                        predicate: p => p.CourseTeachers.Any(x => x.UserId == currentUserId)
+                    .GetAllAsync(predicate: p =>
+                        p.CourseTeachers.Any(x => x.UserId == currentUserId)
                     )
                     .ConfigureAwait(false);
 
                 responseModel.TotalEnrolledCourses = await _unitOfWork
                     .GetRepository<CourseEnrollment>()
-                    .CountAsync(
-                        predicate: p =>
-                            p.EnrollmentMemberStatus.Equals(EnrollmentMemberStatusEnum.Enrolled)
-                            && p.UserId.Equals(currentUserId)
+                    .CountAsync(predicate: p =>
+                        p.EnrollmentMemberStatus.Equals(EnrollmentMemberStatusEnum.Enrolled)
+                        && p.UserId.Equals(currentUserId)
                     );
 
-                responseModel.TotalActiveTrainings = trainings.Count(
-                    predicate: p =>
-                        p.Status == CourseStatus.Published
-                        || p.IsUpdate && p.Status != CourseStatus.Completed
+                responseModel.TotalActiveTrainings = trainings.Count(predicate: p =>
+                    p.Status == CourseStatus.Published
+                    || p.IsUpdate && p.Status != CourseStatus.Completed
                 );
-                responseModel.TotalCompletedTrainings = trainings.Count(
-                    predicate: p => p.Status == CourseStatus.Completed
+                responseModel.TotalCompletedTrainings = trainings.Count(predicate: p =>
+                    p.Status == CourseStatus.Completed
                 );
             }
 
@@ -2670,15 +2632,14 @@
                     .GetAllAsync(predicate: p => p.UserId == currentUserId && !p.IsDeleted)
                     .ConfigureAwait(false);
 
-                responseModel.TotalEnrolledCourses = trainings.Count(
-                    predicate: p =>
-                        p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled
+                responseModel.TotalEnrolledCourses = trainings.Count(predicate: p =>
+                    p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled
                 );
-                responseModel.TotalInProgressCourses = trainings.Count(
-                    predicate: p => p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                responseModel.TotalInProgressCourses = trainings.Count(predicate: p =>
+                    p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
                 );
-                responseModel.TotalCompletedCourses = trainings.Count(
-                    predicate: p => p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
+                responseModel.TotalCompletedCourses = trainings.Count(predicate: p =>
+                    p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
                 );
             }
 
@@ -2706,44 +2667,37 @@
                 || currentUserRole == UserRole.Trainer
             )
             {
-                predicate = predicate.And(
-                    p => p.CourseTeachers.Any(x => x.CourseId == p.Id && x.UserId == currentUserId)
+                predicate = predicate.And(p =>
+                    p.CourseTeachers.Any(x => x.CourseId == p.Id && x.UserId == currentUserId)
                 );
                 if (currentUserRole == UserRole.Trainer)
                 {
-                    predicate = predicate.Or(
-                        p =>
-                            p.CourseEnrollments.Any(
-                                x =>
-                                    x.CourseId == p.Id
-                                    && x.UserId == currentUserId
-                                    && !x.IsDeleted
-                                    && (
-                                        x.EnrollmentMemberStatus
-                                            == EnrollmentMemberStatusEnum.Enrolled
-                                        || x.EnrollmentMemberStatus
-                                            == EnrollmentMemberStatusEnum.Completed
-                                    )
+                    predicate = predicate.Or(p =>
+                        p.CourseEnrollments.Any(x =>
+                            x.CourseId == p.Id
+                            && x.UserId == currentUserId
+                            && !x.IsDeleted
+                            && (
+                                x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                                || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
                             )
+                        )
                     );
                 }
             }
 
             if (currentUserRole == UserRole.Trainee)
             {
-                predicate = predicate.And(
-                    p =>
-                        p.CourseEnrollments.Any(
-                            x =>
-                                x.CourseId == p.Id
-                                && x.UserId == currentUserId
-                                && !x.IsDeleted
-                                && (
-                                    x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
-                                    || x.EnrollmentMemberStatus
-                                        == EnrollmentMemberStatusEnum.Completed
-                                )
+                predicate = predicate.And(p =>
+                    p.CourseEnrollments.Any(x =>
+                        x.CourseId == p.Id
+                        && x.UserId == currentUserId
+                        && !x.IsDeleted
+                        && (
+                            x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                            || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
                         )
+                    )
                 );
             }
 
@@ -2776,13 +2730,12 @@
             {
                 result.Items.ForEach(x =>
                 {
-                    var courseEnrollments = x.CourseEnrollments.Where(
-                        p =>
-                            !p.IsDeleted
-                            && (
-                                p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
-                                || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
-                            )
+                    var courseEnrollments = x.CourseEnrollments.Where(p =>
+                        !p.IsDeleted
+                        && (
+                            p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                            || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
+                        )
                     );
 
                     var students = new List<UserModel>();
@@ -2813,17 +2766,16 @@
                             Slug = x.Slug,
                             Name = x.Name,
                             ThumbnailUrl = x.ThumbnailUrl,
-                            Percentage = x.CourseEnrollments
-                                .FirstOrDefault(
-                                    predicate: p =>
-                                        p.UserId == currentUserId
-                                        && !p.IsDeleted
-                                        && (
-                                            p.EnrollmentMemberStatus
-                                                == EnrollmentMemberStatusEnum.Enrolled
-                                            || p.EnrollmentMemberStatus
-                                                == EnrollmentMemberStatusEnum.Completed
-                                        )
+                            Percentage = x
+                                .CourseEnrollments.FirstOrDefault(predicate: p =>
+                                    p.UserId == currentUserId
+                                    && !p.IsDeleted
+                                    && (
+                                        p.EnrollmentMemberStatus
+                                            == EnrollmentMemberStatusEnum.Enrolled
+                                        || p.EnrollmentMemberStatus
+                                            == EnrollmentMemberStatusEnum.Completed
+                                    )
                                 )
                                 ?.Percentage,
                             User = new UserModel(x.User),
@@ -2856,23 +2808,20 @@
                 {
                     var course = await _unitOfWork
                         .GetRepository<Course>()
-                        .GetAllAsync(
-                            include: src =>
-                                src.Include(
-                                        x =>
-                                            x.Lessons.Where(x => x.Status == CourseStatus.Published)
-                                    )
-                                    .ThenInclude(x => x.Meeting)
+                        .GetAllAsync(include: src =>
+                            src.Include(x =>
+                                    x.Lessons.Where(x => x.Status == CourseStatus.Published)
+                                )
+                                .ThenInclude(x => x.Meeting)
                         )
                         .ConfigureAwait(false);
                     var currentDateTime = DateTime.UtcNow;
                     var response = new List<DashboardLessonResponseModel>();
                     var upcomingLessons = course
                         .SelectMany(x => x.Lessons)
-                        .Where(
-                            x =>
-                                x.Meeting.StartDate.Value.AddSeconds(x.Meeting.Duration)
-                                >= currentDateTime
+                        .Where(x =>
+                            x.Meeting.StartDate.Value.AddSeconds(x.Meeting.Duration)
+                            >= currentDateTime
                         )
                         .ToList();
                     foreach (var lesson in upcomingLessons)
@@ -2912,19 +2861,17 @@
                                     p.CourseTeachers.Any(x => x.UserId == currentUserId)
                                     || p.CourseEnrollments.Any(x => x.UserId == currentUserId)
                                 )
-                                && p.Lessons.Any(
-                                    x =>
-                                        x.Meeting.StartDate.Value.AddSeconds(x.Meeting.Duration)
-                                            > currentDateTime
-                                        && x.Type == LessonType.LiveClass
-                                        && !x.IsDeleted
-                                        && x.Status == CourseStatus.Published
+                                && p.Lessons.Any(x =>
+                                    x.Meeting.StartDate.Value.AddSeconds(x.Meeting.Duration)
+                                        > currentDateTime
+                                    && x.Type == LessonType.LiveClass
+                                    && !x.IsDeleted
+                                    && x.Status == CourseStatus.Published
                                 ),
                             include: src =>
                                 src.Include(x => x.CourseEnrollments)
-                                    .Include(
-                                        x =>
-                                            x.Lessons.Where(x => x.Status == CourseStatus.Published)
+                                    .Include(x =>
+                                        x.Lessons.Where(x => x.Status == CourseStatus.Published)
                                     )
                                     .ThenInclude(x => x.Meeting)
                         )
@@ -2938,12 +2885,11 @@
                                     p.CourseTeachers.Any(x => x.UserId == currentUserId)
                                     || p.CourseEnrollments.Any(x => x.UserId == currentUserId)
                                 )
-                                && p.Lessons.Any(
-                                    x =>
-                                        x.QuestionSet.EndTime >= currentDateTime
-                                        && x.Type == LessonType.Exam
-                                        && !x.IsDeleted
-                                        && x.Status == CourseStatus.Published
+                                && p.Lessons.Any(x =>
+                                    x.QuestionSet.EndTime >= currentDateTime
+                                    && x.Type == LessonType.Exam
+                                    && !x.IsDeleted
+                                    && x.Status == CourseStatus.Published
                                 ),
                             include: src =>
                                 src.Include(x => x.CourseEnrollments)
@@ -2960,18 +2906,16 @@
                                     p.CourseTeachers.Any(x => x.UserId == currentUserId)
                                     || p.CourseEnrollments.Any(x => x.UserId == currentUserId)
                                 )
-                                && p.Lessons.Any(
-                                    x =>
-                                        x.EndDate >= currentDateTime
-                                        && x.Type == LessonType.Assignment
-                                        && !x.IsDeleted
-                                        && x.Status == CourseStatus.Published
+                                && p.Lessons.Any(x =>
+                                    x.EndDate >= currentDateTime
+                                    && x.Type == LessonType.Assignment
+                                    && !x.IsDeleted
+                                    && x.Status == CourseStatus.Published
                                 ),
                             include: src =>
                                 src.Include(x => x.CourseEnrollments)
-                                    .Include(
-                                        x =>
-                                            x.Lessons.Where(x => x.Status == CourseStatus.Published)
+                                    .Include(x =>
+                                        x.Lessons.Where(x => x.Status == CourseStatus.Published)
                                     )
                                     .ThenInclude(x => x.Assignments)
                         )
@@ -3014,13 +2958,10 @@
                                 LessonType = lesson.Type,
                                 LessonName = lesson.Name,
                                 StartDate = lesson.Meeting.StartDate,
-                                CourseEnrollmentBool = courseLiveLessons.Any(
-                                    x =>
-                                        x.CourseEnrollments.Any(
-                                            x =>
-                                                x.CourseId == lesson.CourseId
-                                                && x.UserId == currentUserId
-                                        )
+                                CourseEnrollmentBool = courseLiveLessons.Any(x =>
+                                    x.CourseEnrollments.Any(x =>
+                                        x.CourseId == lesson.CourseId && x.UserId == currentUserId
+                                    )
                                 ),
                                 CourseSlug = courseLiveLessons
                                     .Where(x => x.Id == lesson.CourseId)
@@ -3044,13 +2985,10 @@
                                 LessonType = lesson.Type,
                                 LessonName = lesson.Name,
                                 StartDate = lesson.StartDate,
-                                CourseEnrollmentBool = CourseAssignmentLesson.Any(
-                                    x =>
-                                        x.CourseEnrollments.Any(
-                                            x =>
-                                                x.CourseId == lesson.CourseId
-                                                && x.UserId == currentUserId
-                                        )
+                                CourseEnrollmentBool = CourseAssignmentLesson.Any(x =>
+                                    x.CourseEnrollments.Any(x =>
+                                        x.CourseId == lesson.CourseId && x.UserId == currentUserId
+                                    )
                                 ),
                                 CourseSlug = CourseAssignmentLesson
                                     .Where(x => x.Id == lesson.CourseId)
@@ -3073,13 +3011,10 @@
                                 LessonType = lesson.Type,
                                 LessonName = lesson.Name,
                                 StartDate = lesson.QuestionSet.StartTime,
-                                CourseEnrollmentBool = courseExamLessons.Any(
-                                    x =>
-                                        x.CourseEnrollments.Any(
-                                            x =>
-                                                x.CourseId == lesson.CourseId
-                                                && x.UserId == currentUserId
-                                        )
+                                CourseEnrollmentBool = courseExamLessons.Any(x =>
+                                    x.CourseEnrollments.Any(x =>
+                                        x.CourseId == lesson.CourseId && x.UserId == currentUserId
+                                    )
                                 ),
                                 CourseSlug = courseExamLessons
                                     .Where(x => x.Id == lesson.CourseId)
@@ -3279,11 +3214,10 @@
                 }
 
                 var predicate = PredicateBuilder.New<CourseEnrollment>(true);
-                predicate = predicate.And(
-                    p =>
-                        p.CourseId == course.Id
-                        && !p.IsDeleted
-                        && p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled
+                predicate = predicate.And(p =>
+                    p.CourseId == course.Id
+                    && !p.IsDeleted
+                    && p.EnrollmentMemberStatus != EnrollmentMemberStatusEnum.Unenrolled
                 );
                 if (!model.IssueAll)
                 {
@@ -3337,13 +3271,8 @@
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 if (certificateIssuedUser.Count != default)
                 {
-                    BackgroundJob.Enqueue<IHangfireJobService>(
-                        job =>
-                            job.SendCertificateIssueMailAsync(
-                                course.Name,
-                                certificateIssuedUser,
-                                null
-                            )
+                    BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                        job.SendCertificateIssueMailAsync(course.Name, certificateIssuedUser, null)
                     );
                 }
 
@@ -3478,7 +3407,10 @@
                     .ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Training with identity: {identity} not found.", identity);
+                    _logger.LogWarning(
+                        "Training with identity: {identity} not found.",
+                        identity.SanitizeForLogger()
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
@@ -3489,8 +3421,8 @@
                 if (courseCertificate == default)
                 {
                     _logger.LogWarning(
-                        "cannot Created Signature without Certificate in lesson :",
-                        identity
+                        "Cannot Created Signature without Certificate in lesson : {identity}",
+                        identity.SanitizeForLogger()
                     );
                     throw new ForbiddenException(
                         _localizer.GetString("CannotAddSignatureWithoutCertificate")
@@ -3611,7 +3543,10 @@
                     .ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Training with identity: {identity} not found.", identity);
+                    _logger.LogWarning(
+                        "Training with identity: {identity} not found.",
+                        identity.SanitizeForLogger()
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
@@ -3861,7 +3796,10 @@
                 .ConfigureAwait(false);
             if (course == null)
             {
-                _logger.LogWarning("Training with identity: {identity} not found.", identity);
+                _logger.LogWarning(
+                    "Training with identity: {identity} not found.",
+                    identity.SanitizeForLogger()
+                );
                 throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             }
 
@@ -3977,8 +3915,7 @@
             var lesson = await _unitOfWork
                 .GetRepository<Lesson>()
                 .GetFirstOrDefaultAsync(
-                    predicate: p =>
-                        p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity,
+                    predicate: p => p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity,
                     include: src => src.Include(x => x.CourseEnrollments).ThenInclude(x => x.User)
                 )
                 .ConfigureAwait(false);
@@ -4016,8 +3953,8 @@
         {
             var enrolled = _unitOfWork
                 .GetRepository<CourseEnrollment>()
-                .GetFirstOrDefault(
-                    predicate: p => p.UserId == currentUserId && course.Id == p.CourseId
+                .GetFirstOrDefault(predicate: p =>
+                    p.UserId == currentUserId && course.Id == p.CourseId
                 );
             if (enrolled != null)
             {
@@ -4025,8 +3962,8 @@
             }
 
             // Fetch the department IDs that match the eligibility criteria
-            var eligibleDepartmentIds = course.TrainingEligibilities
-                .Select(eligibility => eligibility.EligibilityId)
+            var eligibleDepartmentIds = course
+                .TrainingEligibilities.Select(eligibility => eligibility.EligibilityId)
                 .ToList(); // Materialize the query to execute it in memory
 
             // Fetch the departments and filter them based on the eligibility criteria
@@ -4038,8 +3975,8 @@
                 .ToList(); // Materialize the query to execute it in memory
 
             // Check if the current user is in any of the eligible departments
-            var departmentCheck = eligibleDepartments.Any(
-                department => department.Users.Any(user => user.Id == currentUserId)
+            var departmentCheck = eligibleDepartments.Any(department =>
+                department.Users.Any(user => user.Id == currentUserId)
             );
 
             if (departmentCheck == true)

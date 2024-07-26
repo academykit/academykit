@@ -1,8 +1,10 @@
-## Academykit LMS
+# AcademyKit
+
+🔥 🔥 👋 🚀 AI-driven Lightweight Open Source Thinkific, Teachable, and fresh Moodle alternative. AcademyKit helps you build your academy for your team or customer in the simplest way possible.
 
 ## Technologies
 
-- [ASP.NET Core 7](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core)
+- [ASP.NET Core 8](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core)
 - [NodeJS 18.x](https://nodejs.org)
 - [Entity Framework Core tools](https://learn.microsoft.com/en-us/ef/core/cli/dotnet)
   - `dotnet tool install --global dotnet-ef`
@@ -66,13 +68,13 @@ dotnet ef database update  --project src/Infrastructure --startup-project src/Ap
 Build docker image
 
 ```bash
-docker build -t standalone .
+docker build -t academy .
 ```
 
 Run docker container
 
 ```bash
-docker run -d -p 8080:80 --name vurilo-standalone standalone
+docker run -d -p 8080:80 --name academy academy
 ```
 
 ## Known issues

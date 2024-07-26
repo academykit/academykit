@@ -1,15 +1,11 @@
-﻿// <copyright file="PhysicalLessonController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Api.Controllers
+﻿namespace Api.Controllers
 {
+    using AcademyKit.Api.Common;
+    using AcademyKit.Api.Controllers;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Infrastructure.Localization;
+    using AcademyKit.Infrastructure.Services;
     using FluentValidation;
-    using Lingtren.Api.Common;
-    using Lingtren.Api.Controllers;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Infrastructure.Localization;
-    using Lingtren.Infrastructure.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
 
@@ -21,7 +17,11 @@ namespace Api.Controllers
         private readonly IStringLocalizer<ExceptionLocalizer> localizer;
         private readonly IValidator<PhysicalLessonReviewRequestModel> validator;
 
-        public PhysicalLessonController(IStringLocalizer<ExceptionLocalizer> localizer, IPhysicalLessonServices physicsLessonServices, IValidator<PhysicalLessonReviewRequestModel> validator)
+        public PhysicalLessonController(
+            IStringLocalizer<ExceptionLocalizer> localizer,
+            IPhysicalLessonServices physicsLessonServices,
+            IValidator<PhysicalLessonReviewRequestModel> validator
+        )
         {
             this.physicsLessonServices = physicsLessonServices;
             this.localizer = localizer;
@@ -36,8 +36,16 @@ namespace Api.Controllers
         [HttpPost("Attendance")]
         public async Task<IActionResult> Attendance(string idenity)
         {
-            await physicsLessonServices.PhysicalLessonAttendanceAsync(idenity, CurrentUser.Id.ToString()).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("SuccessfulAttendance") });
+            await physicsLessonServices
+                .PhysicalLessonAttendanceAsync(idenity, CurrentUser.Id.ToString())
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("SuccessfulAttendance")
+                }
+            );
         }
 
         /// <summary>
@@ -48,9 +56,19 @@ namespace Api.Controllers
         [HttpPost("Review")]
         public async Task<IActionResult> Review(PhysicalLessonReviewRequestModel model)
         {
-            await validator.ValidateAsync(model, option => option.ThrowOnFailures()).ConfigureAwait(false);
-            await physicsLessonServices.PhysicalLessonReviewAsync(model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("SuccessfullyReviewed") });
+            await validator
+                .ValidateAsync(model, option => option.ThrowOnFailures())
+                .ConfigureAwait(false);
+            await physicsLessonServices
+                .PhysicalLessonReviewAsync(model, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("SuccessfullyReviewed")
+                }
+            );
         }
     }
 }

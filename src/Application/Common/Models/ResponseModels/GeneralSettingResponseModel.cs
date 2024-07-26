@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Domain.Entities;
 
     public class GeneralSettingResponseModel
     {
@@ -13,6 +13,7 @@
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
         public string CustomConfiguration { get; set; }
+
         public GeneralSettingResponseModel(GeneralSetting model)
         {
             Id = model.Id;

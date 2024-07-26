@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
-  "name": "lingtren",
+  "name": "academy-kit",
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/workspaces/",
@@ -21,7 +21,7 @@
   },
   "mounts": [
     // "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
-    "source=lingtren-bashhistory,target=/commandhistory,type=volume"
+    "source=academy-kit-bashhistory,target=/commandhistory,type=volume"
   ],
   "customizations": {
     "vscode": {

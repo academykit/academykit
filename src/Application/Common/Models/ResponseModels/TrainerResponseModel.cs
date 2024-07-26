@@ -1,7 +1,7 @@
-﻿using Lingtren.Domain.Entities;
-using Lingtren.Domain.Enums;
+﻿using AcademyKit.Domain.Entities;
+using AcademyKit.Domain.Enums;
 
-namespace Lingtren.Application.Common.Models.ResponseModels
+namespace AcademyKit.Application.Common.Models.ResponseModels
 {
     public class TrainerResponseModel
     {
@@ -9,10 +9,7 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public UserRole Role { get; set; }
         public string Email { get; set; }
 
-        public TrainerResponseModel()
-        {
-
-        }
+        public TrainerResponseModel() { }
 
         public TrainerResponseModel(User user)
         {

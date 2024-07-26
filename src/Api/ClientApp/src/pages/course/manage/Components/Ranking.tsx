@@ -23,12 +23,12 @@ const Ranking = ({ title, data = [] }: IProps) => {
                 ? 'fullName' in item
                   ? (item as IUser).fullName
                   : 'name' in item
-                  ? (item as IQuestion).name
-                  : null
+                    ? (item as IQuestion).name
+                    : null
                 : typeof item === 'string'
-                ? // Handle the case when it's a string (mostWrongAnsQues)
-                  item
-                : null}
+                  ? // Handle the case when it's a string (mostWrongAnsQues)
+                    item
+                  : null}
             </List.Item>
           ))}
         </List>

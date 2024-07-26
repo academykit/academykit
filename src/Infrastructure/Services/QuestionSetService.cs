@@ -1,15 +1,16 @@
-﻿namespace Lingtren.Infrastructure.Services
+﻿namespace AcademyKit.Infrastructure.Services
 {
     using System.Linq.Expressions;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Localization;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Helpers;
+    using AcademyKit.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
@@ -87,8 +88,8 @@
                     throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
 
-                var isCourseTeacher = questionSet.Lesson.Course.CourseTeachers.Any(
-                    x => x.UserId == currentUserId
+                var isCourseTeacher = questionSet.Lesson.Course.CourseTeachers.Any(x =>
+                    x.UserId == currentUserId
                 );
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId)
                     .ConfigureAwait(false);
@@ -214,8 +215,8 @@
                 throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
             }
 
-            var isCourseTeacher = questionSet.Lesson.Course.CourseTeachers.Any(
-                x => x.UserId == currentUserId
+            var isCourseTeacher = questionSet.Lesson.Course.CourseTeachers.Any(x =>
+                x.UserId == currentUserId
             );
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId)
                 .ConfigureAwait(false);
@@ -451,9 +452,8 @@
 
                 var questionSetSubmissionCount = await _unitOfWork
                     .GetRepository<QuestionSetSubmission>()
-                    .CountAsync(
-                        predicate: p =>
-                            p.QuestionSetId == questionSet.Id && p.UserId == currentUserId
+                    .CountAsync(predicate: p =>
+                        p.QuestionSetId == questionSet.Id && p.UserId == currentUserId
                     )
                     .ConfigureAwait(false);
 
@@ -493,11 +493,10 @@
                         .GetAllAsync(
                             predicate: p => p.QuestionSetId == questionSet.Id,
                             include: src =>
-                                src.Include(
-                                    x =>
-                                        x.QuestionPoolQuestion.Question.QuestionOptions.OrderBy(
-                                            o => o.Order
-                                        )
+                                src.Include(x =>
+                                    x.QuestionPoolQuestion.Question.QuestionOptions.OrderBy(o =>
+                                        o.Order
+                                    )
                                 )
                         )
                         .ConfigureAwait(false);
@@ -514,11 +513,10 @@
                         .GetAllAsync(
                             predicate: p => p.QuestionSetId == questionSet.Id,
                             include: src =>
-                                src.Include(
-                                    x =>
-                                        x.QuestionPoolQuestion.Question.QuestionOptions.OrderBy(
-                                            o => o.Order
-                                        )
+                                src.Include(x =>
+                                    x.QuestionPoolQuestion.Question.QuestionOptions.OrderBy(o =>
+                                        o.Order
+                                    )
                                 )
                         )
                         .ConfigureAwait(false);
@@ -535,11 +533,10 @@
                         .GetAllAsync(
                             predicate: p => p.QuestionSetId == questionSet.Id,
                             include: src =>
-                                src.Include(
-                                    x =>
-                                        x.QuestionPoolQuestion.Question.QuestionOptions.OrderBy(
-                                            o => o.Order
-                                        )
+                                src.Include(x =>
+                                    x.QuestionPoolQuestion.Question.QuestionOptions.OrderBy(o =>
+                                        o.Order
+                                    )
                                 )
                         )
                         .ConfigureAwait(false);
@@ -568,11 +565,10 @@
                         .GetAllAsync(
                             predicate: p => p.QuestionSetId == questionSet.Id,
                             include: src =>
-                                src.Include(
-                                    x =>
-                                        x.QuestionPoolQuestion.Question.QuestionOptions.OrderBy(
-                                            o => o.Order
-                                        )
+                                src.Include(x =>
+                                    x.QuestionPoolQuestion.Question.QuestionOptions.OrderBy(o =>
+                                        o.Order
+                                    )
                                 )
                         )
                         .ConfigureAwait(false);
@@ -598,11 +594,10 @@
                         .GetAllAsync(
                             predicate: p => p.QuestionSetId == questionSet.Id,
                             include: src =>
-                                src.Include(
-                                    x =>
-                                        x.QuestionPoolQuestion.Question.QuestionOptions.OrderBy(
-                                            o => o.Order
-                                        )
+                                src.Include(x =>
+                                    x.QuestionPoolQuestion.Question.QuestionOptions.OrderBy(o =>
+                                        o.Order
+                                    )
                                 ),
                             orderBy: o => o.OrderBy(a => a.Order)
                         )
@@ -642,15 +637,14 @@
                     Description = questionSet.Description,
                     Questions = new List<QuestionResponseModel>()
                 };
-                questionSetQuestions.ForEach(
-                    x =>
-                        response.Questions.Add(
-                            new QuestionResponseModel(
-                                x.QuestionPoolQuestion.Question,
-                                questionSetQuestionId: x.Id,
-                                showHints: false
-                            )
+                questionSetQuestions.ForEach(x =>
+                    response.Questions.Add(
+                        new QuestionResponseModel(
+                            x.QuestionPoolQuestion.Question,
+                            questionSetQuestionId: x.Id,
+                            showHints: false
                         )
+                    )
                 );
                 if (
                     !course.CourseTeachers.Any(x => x.UserId == currentUserId)
@@ -725,11 +719,10 @@
 
                 var questionSetSubmission = await _unitOfWork
                     .GetRepository<QuestionSetSubmission>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p =>
-                            p.Id == questionSetSubmissionId
-                            && p.QuestionSetId == questionSet.Id
-                            && p.UserId == currentUserId
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id == questionSetSubmissionId
+                        && p.QuestionSetId == questionSet.Id
+                        && p.UserId == currentUserId
                     )
                     .ConfigureAwait(false);
                 if (questionSetSubmission == null)
@@ -746,8 +739,8 @@
 
                 var questionSetSubmissionAnswerCount = await _unitOfWork
                     .GetRepository<QuestionSetSubmissionAnswer>()
-                    .CountAsync(
-                        predicate: p => p.QuestionSetSubmissionId == questionSetSubmissionId
+                    .CountAsync(predicate: p =>
+                        p.QuestionSetSubmissionId == questionSetSubmissionId
                     )
                     .ConfigureAwait(false);
                 if (questionSetSubmissionAnswerCount > 0)
@@ -762,11 +755,10 @@
 
                 var answerSubmissionCount = await _unitOfWork
                     .GetRepository<QuestionSetSubmission>()
-                    .CountAsync(
-                        predicate: p =>
-                            p.UserId == currentUserId
-                            && p.QuestionSetId == questionSet.Id
-                            && p.EndTime != default
+                    .CountAsync(predicate: p =>
+                        p.UserId == currentUserId
+                        && p.QuestionSetId == questionSet.Id
+                        && p.EndTime != default
                     )
                     .ConfigureAwait(false);
                 if (
@@ -832,15 +824,14 @@
                 questionSetSubmission.UpdatedOn = currentTimeStamp;
                 foreach (var item in answers)
                 {
-                    var questionSetQuestion = questionSetQuestions.FirstOrDefault(
-                        x => x.Id == item.QuestionSetQuestionId
+                    var questionSetQuestion = questionSetQuestions.FirstOrDefault(x =>
+                        x.Id == item.QuestionSetQuestionId
                     );
                     if (questionSetQuestion != null)
                     {
-                        var answerIds =
-                            questionSetQuestion.QuestionPoolQuestion.Question.QuestionOptions
-                                .Where(x => x.IsCorrect)
-                                .Select(x => x.Id);
+                        var answerIds = questionSetQuestion
+                            .QuestionPoolQuestion.Question.QuestionOptions.Where(x => x.IsCorrect)
+                            .Select(x => x.Id);
                         var isCorrect = answerIds
                             .OrderBy(x => x)
                             .ToList()
@@ -880,8 +871,8 @@
                     questionSetResult.TotalMark = questionSet.QuestionMarking * correctAnswersCount;
                     if (questionSet.NegativeMarking > 0)
                     {
-                        var incorrectAnswersCount = answerSubmissionAnswers.Count(
-                            x => !x.IsCorrect && !string.IsNullOrEmpty(x.SelectedAnswers)
+                        var incorrectAnswersCount = answerSubmissionAnswers.Count(x =>
+                            !x.IsCorrect && !string.IsNullOrEmpty(x.SelectedAnswers)
                         );
                         questionSetResult.NegativeMark =
                             incorrectAnswersCount * questionSet.NegativeMarking;
@@ -960,15 +951,14 @@
 
             var isEnrolled = await _unitOfWork
                 .GetRepository<CourseEnrollment>()
-                .ExistsAsync(
-                    predicate: p =>
-                        p.CourseId == lesson.CourseId
-                        && p.UserId == currentUserId
-                        && !p.IsDeleted
-                        && (
-                            p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
-                            || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
-                        )
+                .ExistsAsync(predicate: p =>
+                    p.CourseId == lesson.CourseId
+                    && p.UserId == currentUserId
+                    && !p.IsDeleted
+                    && (
+                        p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                        || p.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Completed
+                    )
                 )
                 .ConfigureAwait(false);
             if (isEnrolled == true)
@@ -1006,7 +996,7 @@
                 {
                     _logger.LogWarning(
                         "Question set not found with identity: {identity}.",
-                        identity
+                        identity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
@@ -1034,10 +1024,9 @@
                 if (!string.IsNullOrWhiteSpace(searchCriteria.Search))
                 {
                     var search = searchCriteria.Search.ToLower().Trim();
-                    predicate = predicate.And(
-                        x =>
-                            x.User.LastName.ToLower().Trim().Contains(search)
-                            || x.User.FirstName.ToLower().Trim().Contains(search)
+                    predicate = predicate.And(x =>
+                        x.User.LastName.ToLower().Trim().Contains(search)
+                        || x.User.FirstName.ToLower().Trim().Contains(search)
                     );
                 }
 
@@ -1048,29 +1037,22 @@
 
                 var result = query
                     .GroupBy(x => x.UserId)
-                    .Select(
-                        x =>
-                            new QuestionSetResult
-                            {
-                                Id = x.FirstOrDefault(
-                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
-                                ).Id,
-                                QuestionSetId = questionSet.Id,
-                                UserId = x.FirstOrDefault(
-                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
-                                ).UserId,
-                                TotalMark = x.FirstOrDefault(
-                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
-                                ).TotalMark,
-                                NegativeMark = x.FirstOrDefault(
-                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
-                                ).NegativeMark,
-                                User = x.FirstOrDefault(
-                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
-                                ).User,
-                                CreatedOn = x.Max(a => a.CreatedOn),
-                            }
-                    )
+                    .Select(x => new QuestionSetResult
+                    {
+                        Id = x.FirstOrDefault(a => a.CreatedOn == x.Max(b => b.CreatedOn)).Id,
+                        QuestionSetId = questionSet.Id,
+                        UserId = x.FirstOrDefault(a =>
+                            a.CreatedOn == x.Max(b => b.CreatedOn)
+                        ).UserId,
+                        TotalMark = x.FirstOrDefault(a =>
+                            a.CreatedOn == x.Max(b => b.CreatedOn)
+                        ).TotalMark,
+                        NegativeMark = x.FirstOrDefault(a =>
+                            a.CreatedOn == x.Max(b => b.CreatedOn)
+                        ).NegativeMark,
+                        User = x.FirstOrDefault(a => a.CreatedOn == x.Max(b => b.CreatedOn)).User,
+                        CreatedOn = x.Max(a => a.CreatedOn),
+                    })
                     .ToList();
 
                 var paginatedResult = result.ToIPagedList(searchCriteria.Page, searchCriteria.Size);
@@ -1082,26 +1064,25 @@
                     TotalCount = paginatedResult.TotalCount,
                     TotalPage = paginatedResult.TotalPage,
                 };
-                paginatedResult.Items.ForEach(
-                    res =>
-                        response.Items.Add(
-                            new QuestionSetResultResponseModel
+                paginatedResult.Items.ForEach(res =>
+                    response.Items.Add(
+                        new QuestionSetResultResponseModel
+                        {
+                            Id = res.Id,
+                            QuestionSetId = res.QuestionSetId,
+                            ObtainedMarks =
+                                (res.TotalMark - res.NegativeMark) > 0
+                                    ? (res.TotalMark - res.NegativeMark)
+                                    : 0,
+                            User = new UserModel
                             {
-                                Id = res.Id,
-                                QuestionSetId = res.QuestionSetId,
-                                ObtainedMarks =
-                                    (res.TotalMark - res.NegativeMark) > 0
-                                        ? (res.TotalMark - res.NegativeMark)
-                                        : 0,
-                                User = new UserModel
-                                {
-                                    Id = (Guid)res.User?.Id,
-                                    FullName = res.User?.FullName,
-                                    Email = res.User?.Email,
-                                    ImageUrl = res.User.ImageUrl,
-                                }
+                                Id = (Guid)res.User?.Id,
+                                FullName = res.User?.FullName,
+                                Email = res.User?.Email,
+                                ImageUrl = res.User.ImageUrl,
                             }
-                        )
+                        }
+                    )
                 );
                 return response;
             }
@@ -1145,7 +1126,7 @@
                 {
                     _logger.LogWarning(
                         "Question set not found with identity: {identity}.",
-                        identity
+                        identity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
@@ -1166,11 +1147,11 @@
                 predicate = predicate.And(p => p.QuestionSetId == questionSet.Id);
                 predicate = predicate.And(p => p.UserId == userId);
                 predicate = predicate.And(p => p.EndTime != default);
-                predicate = predicate.And(
-                    p => p.QuestionSetSubmissionAnswers.Any(x => x.QuestionSetSubmissionId == p.Id)
+                predicate = predicate.And(p =>
+                    p.QuestionSetSubmissionAnswers.Any(x => x.QuestionSetSubmissionId == p.Id)
                 );
-                predicate = predicate.And(
-                    p => p.QuestionSetResults.Any(x => x.QuestionSetSubmissionId == p.Id)
+                predicate = predicate.And(p =>
+                    p.QuestionSetResults.Any(x => x.QuestionSetSubmissionId == p.Id)
                 );
 
                 var questionSetSubmissions = await _unitOfWork
@@ -1201,72 +1182,63 @@
                 };
                 response.HasExceededAttempt = response.AttemptCount >= questionSet.AllowedRetake;
                 response.EndDate = questionSet.EndTime.Value;
-                questionSetSubmissions.ForEach(
-                    res =>
-                        response.QuestionSetSubmissions.Add(
-                            new QuestionSetResultDetailModel
-                            {
-                                QuestionSetSubmissionId = res.Id,
-                                SubmissionDate =
-                                    res.EndTime != default
-                                        ? res.EndTime
-                                        : res.StartTime != default
-                                            ? res.StartTime
-                                            : res.CreatedOn,
-                                TotalMarks =
-                                    res.QuestionSetResults.Count > 0
-                                        ? res.QuestionSetResults
-                                            .FirstOrDefault()
-                                            .TotalMark.ToString()
-                                        : "",
-                                NegativeMarks =
-                                    res.QuestionSetResults.Count > 0
-                                        ? res.QuestionSetResults
-                                            .FirstOrDefault()
-                                            .NegativeMark.ToString()
-                                        : "",
-                                ObtainedMarks =
-                                    res.QuestionSetResults.Count > 0
-                                        ? (
-                                            (
+                questionSetSubmissions.ForEach(res =>
+                    response.QuestionSetSubmissions.Add(
+                        new QuestionSetResultDetailModel
+                        {
+                            QuestionSetSubmissionId = res.Id,
+                            SubmissionDate =
+                                res.EndTime != default
+                                    ? res.EndTime
+                                    : res.StartTime != default
+                                        ? res.StartTime
+                                        : res.CreatedOn,
+                            TotalMarks =
+                                res.QuestionSetResults.Count > 0
+                                    ? res.QuestionSetResults.FirstOrDefault().TotalMark.ToString()
+                                    : "",
+                            NegativeMarks =
+                                res.QuestionSetResults.Count > 0
+                                    ? res
+                                        .QuestionSetResults.FirstOrDefault()
+                                        .NegativeMark.ToString()
+                                    : "",
+                            ObtainedMarks =
+                                res.QuestionSetResults.Count > 0
+                                    ? (
+                                        (
+                                            res.QuestionSetResults.FirstOrDefault().TotalMark
+                                            - res.QuestionSetResults.FirstOrDefault().NegativeMark
+                                        ) > 0
+                                            ? (
                                                 res.QuestionSetResults.FirstOrDefault().TotalMark
-                                                - res.QuestionSetResults
-                                                    .FirstOrDefault()
-                                                    .NegativeMark
-                                            ) > 0
-                                                ? (
-                                                    res.QuestionSetResults
-                                                        .FirstOrDefault()
-                                                        .TotalMark
-                                                    - res.QuestionSetResults
-                                                        .FirstOrDefault()
-                                                        .NegativeMark
-                                                )
-                                                : 0
-                                        ).ToString()
-                                        : "",
-                                Duration =
-                                    questionSet.Duration != 0
-                                        ? TimeSpan
-                                            .FromSeconds(questionSet.Duration)
-                                            .ToString(@"hh\:mm\:ss")
-                                        : string.Empty,
-                                CompleteDuration =
-                                    questionSet.Duration == 0 || res.EndTime == default
-                                        ? string.Empty
-                                        : TimeSpan
-                                            .FromSeconds(
-                                                (
-                                                    Convert.ToDateTime(res.StartTime)
-                                                    - Convert.ToDateTime(res.EndTime)
-                                                ).TotalSeconds
+                                                - res.QuestionSetResults.FirstOrDefault().NegativeMark
                                             )
-                                            .ToString(@"hh\:mm\:ss"),
-                            }
-                        )
+                                            : 0
+                                    ).ToString()
+                                    : "",
+                            Duration =
+                                questionSet.Duration != 0
+                                    ? TimeSpan
+                                        .FromSeconds(questionSet.Duration)
+                                        .ToString(@"hh\:mm\:ss")
+                                    : string.Empty,
+                            CompleteDuration =
+                                questionSet.Duration == 0 || res.EndTime == default
+                                    ? string.Empty
+                                    : TimeSpan
+                                        .FromSeconds(
+                                            (
+                                                Convert.ToDateTime(res.StartTime)
+                                                - Convert.ToDateTime(res.EndTime)
+                                            ).TotalSeconds
+                                        )
+                                        .ToString(@"hh\:mm\:ss"),
+                        }
+                    )
                 );
-                response.QuestionSetSubmissions = response.QuestionSetSubmissions
-                    .OrderByDescending(x => x.SubmissionDate)
+                response.QuestionSetSubmissions = response
+                    .QuestionSetSubmissions.OrderByDescending(x => x.SubmissionDate)
                     .ToList();
                 return response;
             }
@@ -1310,7 +1282,7 @@
                 {
                     _logger.LogWarning(
                         "Question set not found with identity: {identity}.",
-                        identity
+                        identity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
@@ -1328,10 +1300,9 @@
                 var isTeacher = course.CourseTeachers.Any(x => x.UserId == currentUserId);
 
                 var predicate = PredicateBuilder.New<QuestionSetResult>(true);
-                predicate = predicate.And(
-                    p =>
-                        p.QuestionSetId == questionSet.Id
-                        && p.QuestionSetSubmissionId == questionSetSubmissionId
+                predicate = predicate.And(p =>
+                    p.QuestionSetId == questionSet.Id
+                    && p.QuestionSetSubmissionId == questionSetSubmissionId
                 );
                 var questionSetResult = await _unitOfWork
                     .GetRepository<QuestionSetResult>()
@@ -1352,9 +1323,8 @@
 
                 var questionSetSubmission = await _unitOfWork
                     .GetRepository<QuestionSetSubmission>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p =>
-                            p.Id == questionSetSubmissionId && p.QuestionSetId == questionSet.Id
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id == questionSetSubmissionId && p.QuestionSetId == questionSet.Id
                     )
                     .ConfigureAwait(false);
                 if (questionSetSubmission == null)
@@ -1374,12 +1344,8 @@
                     .GetAllAsync(
                         predicate: p => p.QuestionSetSubmissionId == questionSetSubmissionId,
                         include: src =>
-                            src.Include(
-                                x =>
-                                    x.QuestionSetQuestion
-                                        .QuestionPoolQuestion
-                                        .Question
-                                        .QuestionOptions
+                            src.Include(x =>
+                                x.QuestionSetQuestion.QuestionPoolQuestion.Question.QuestionOptions
                             )
                     )
                     .ConfigureAwait(false);
@@ -1447,19 +1413,19 @@
                     var selectedAnsIds = !string.IsNullOrWhiteSpace(item.SelectedAnswers)
                         ? item.SelectedAnswers.Split(",").Select(Guid.Parse).ToList()
                         : new List<Guid>();
-                    item.QuestionSetQuestion.QuestionPoolQuestion.Question?.QuestionOptions
-                        .OrderBy(o => o.Order)
-                        .ForEach(
-                            opt =>
-                                result.QuestionOptions.Add(
-                                    new QuestionResultOption
-                                    {
-                                        Id = opt.Id,
-                                        Value = opt.Option,
-                                        IsCorrect = opt.IsCorrect,
-                                        IsSelected = selectedAnsIds.Contains(opt.Id)
-                                    }
-                                )
+                    item.QuestionSetQuestion.QuestionPoolQuestion.Question?.QuestionOptions.OrderBy(
+                            o => o.Order
+                        )
+                        .ForEach(opt =>
+                            result.QuestionOptions.Add(
+                                new QuestionResultOption
+                                {
+                                    Id = opt.Id,
+                                    Value = opt.Option,
+                                    IsCorrect = opt.IsCorrect,
+                                    IsSelected = selectedAnsIds.Contains(opt.Id)
+                                }
+                            )
                         );
 
                     responseModel.Results.Add(result);
@@ -1498,11 +1464,10 @@
         {
             var history = await _unitOfWork
                 .GetRepository<WatchHistory>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p =>
-                        p.UserId == currentUserId
-                        && p.LessonId == questionSet.Lesson.Id
-                        && p.CourseId == questionSet.Lesson.CourseId
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.UserId == currentUserId
+                    && p.LessonId == questionSet.Lesson.Id
+                    && p.CourseId == questionSet.Lesson.CourseId
                 )
                 .ConfigureAwait(false);
             var totalQuestionMarks = totalQuestion * questionSet.QuestionMarking;

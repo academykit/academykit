@@ -1,11 +1,11 @@
-﻿namespace Lingtren.Infrastructure.Services
+﻿namespace AcademyKit.Infrastructure.Services
 {
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Persistence;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Persistence;
 
     public class UnitOfWork : Disposable, IUnitOfWork
     {
@@ -40,7 +40,8 @@
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns>An instance of type inherited from <see cref="IRepository{TEntity}"/> interface.</returns>
-        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
+        public IRepository<TEntity> GetRepository<TEntity>()
+            where TEntity : class
         {
             repositories ??= new Dictionary<Type, object>();
 

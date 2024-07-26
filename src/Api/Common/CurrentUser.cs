@@ -1,10 +1,6 @@
-﻿// <copyright file="CurrentUser.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Common
+﻿namespace AcademyKit.Api.Common
 {
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Domain.Enums;
 
     public class CurrentUser
     {

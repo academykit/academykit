@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Domain.Entities
+﻿namespace AcademyKit.Domain.Entities
 {
     public class Setting
     {

@@ -1,13 +1,13 @@
-﻿namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
     using System.IdentityModel.Tokens.Jwt;
+    using AcademyKit.Api.Common;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Infrastructure.Localization;
     using Application.Common.Dtos;
     using FluentValidation;
-    using Lingtren.Api.Common;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Infrastructure.Localization;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
@@ -24,7 +24,7 @@
         private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
 
         /// <summary>
-        /// Initializes the new instance of <see cref="AccountController" /> 
+        /// Initializes the new instance of <see cref="AccountController" />
         /// </summary>
         /// <param name="userService"> the instance of <see cref="IUserService" /> .</param>
         /// <param name="validator"> the instance of <se cref="IValidator" />  for the instance of <see cref="LoginRequestModel" /> </param>
@@ -37,7 +37,7 @@
             IValidator<ResetPasswordRequestModel> resetPasswordValidator,
             IValidator<ChangePasswordRequestModel> changePasswordValidator,
             IStringLocalizer<ExceptionLocalizer> localizer
-          )
+        )
         {
             this.userService = userService;
             _validator = validator;
@@ -66,7 +66,9 @@
         [AllowAnonymous]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel model)
         {
-            await _validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await _validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
             var result = await userService.VerifyUserAndGetToken(model).ConfigureAwait(false);
             if (!result.IsAuthenticated)
             {
@@ -86,16 +88,26 @@
         {
             if (string.IsNullOrWhiteSpace(model.Token))
             {
-                return BadRequest(new CommonResponseModel { Message = _localizer.GetString("TokenRequired") });
+                return BadRequest(
+                    new CommonResponseModel { Message = _localizer.GetString("TokenRequired") }
+                );
             }
 
             var response = await userService.Logout(model.Token, CurrentUser.Id);
             if (!response)
             {
-                return NotFound(new CommonResponseModel { Message = _localizer.GetString("TokenNotMatched") });
+                return NotFound(
+                    new CommonResponseModel { Message = _localizer.GetString("TokenNotMatched") }
+                );
             }
 
-            return Ok(new CommonResponseModel { Message = _localizer.GetString("LogoutSuccess"), Success = true });
+            return Ok(
+                new CommonResponseModel
+                {
+                    Message = _localizer.GetString("LogoutSuccess"),
+                    Success = true
+                }
+            );
         }
 
         /// <summary>
@@ -110,11 +122,19 @@
             var user = await userService.GetUserByEmailAsync(model.Email);
             if (user == null)
             {
-                return BadRequest(new CommonResponseModel { Message = _localizer.GetString("UserNotFound") });
+                return BadRequest(
+                    new CommonResponseModel { Message = _localizer.GetString("UserNotFound") }
+                );
             }
 
             await userService.ResetPasswordAsync(user).ConfigureAwait(false);
-            return Ok(new CommonResponseModel { Message = _localizer.GetString("ForgetPasswordExecuted"), Success = true });
+            return Ok(
+                new CommonResponseModel
+                {
+                    Message = _localizer.GetString("ForgetPasswordExecuted"),
+                    Success = true
+                }
+            );
         }
 
         /// <summary>
@@ -124,7 +144,9 @@
         /// <returns> the instance of <see cref="VerificationTokenResponseModel"/></returns>
         [HttpPost("VerifyResetToken")]
         [AllowAnonymous]
-        public async Task<VerificationTokenResponseModel> VerifyResetToken([FromBody] VerifyResetTokenModel model) => await userService.VerifyPasswordResetTokenAsync(model).ConfigureAwait(false);
+        public async Task<VerificationTokenResponseModel> VerifyResetToken(
+            [FromBody] VerifyResetTokenModel model
+        ) => await userService.VerifyPasswordResetTokenAsync(model).ConfigureAwait(false);
 
         /// <summary>
         /// reset password of account
@@ -135,7 +157,9 @@
         [AllowAnonymous]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestModel model)
         {
-            await _resetPasswordValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await _resetPasswordValidator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
             var token = new JwtSecurityTokenHandler().ReadJwtToken(model.PasswordChangeToken);
 
             var email = (string)token.Payload["email"];
@@ -143,19 +167,29 @@
 
             if (DateTimeOffset.FromUnixTimeSeconds(exp).ToUniversalTime() <= DateTimeOffset.UtcNow)
             {
-                return BadRequest(new CommonResponseModel { Message = _localizer.GetString("TokenExpired") });
+                return BadRequest(
+                    new CommonResponseModel { Message = _localizer.GetString("TokenExpired") }
+                );
             }
 
             var user = await userService.GetUserByEmailAsync(email.Trim().ToLower());
 
             if (user == null)
             {
-                return BadRequest(new CommonResponseModel { Message = _localizer.GetString("UserNotFound") });
+                return BadRequest(
+                    new CommonResponseModel { Message = _localizer.GetString("UserNotFound") }
+                );
             }
 
             user.HashPassword = userService.HashPassword(model.NewPassword);
             await userService.UpdateAsync(user, includeProperties: false);
-            return Ok(new CommonResponseModel { Message = _localizer.GetString("PasswordResetSuccess"), Success = true });
+            return Ok(
+                new CommonResponseModel
+                {
+                    Message = _localizer.GetString("PasswordResetSuccess"),
+                    Success = true
+                }
+            );
         }
 
         /// <summary>
@@ -186,9 +220,17 @@
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestModel model)
         {
-            await _changePasswordValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await _changePasswordValidator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
             await userService.ChangePasswordAsync(model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel { Message = _localizer.GetString("PasswordChanged"), Success = true });
+            return Ok(
+                new CommonResponseModel
+                {
+                    Message = _localizer.GetString("PasswordChanged"),
+                    Success = true
+                }
+            );
         }
     }
 }

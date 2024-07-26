@@ -1,6 +1,6 @@
-﻿using Lingtren.Domain.Enums;
+﻿using AcademyKit.Domain.Enums;
 
-namespace Lingtren.Application.Common.Dtos
+namespace AcademyKit.Application.Common.Dtos
 {
     /// <summary>
     /// Base search criteria
@@ -48,8 +48,6 @@ namespace Lingtren.Application.Common.Dtos
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseSearchCriteria"/> class.
         /// </summary>
-        public BaseSearchCriteria()
-        {
-        }
+        public BaseSearchCriteria() { }
     }
 }

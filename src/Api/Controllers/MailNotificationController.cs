@@ -1,19 +1,14 @@
-// <copyright file="DepartmentController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+namespace AcademyKit.Api.Controllers
 {
+    using AcademyKit.Api.Common;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Infrastructure.Localization;
     using FluentValidation;
-    using Lingtren.Api.Common;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
-
-    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
@@ -62,8 +57,8 @@ namespace Lingtren.Api.Controllers
                 TotalPage = searchResult.TotalPage,
             };
 
-            searchResult.Items.ForEach(
-                p => response.Items.Add(new MailNotificationResponseModel(p))
+            searchResult.Items.ForEach(p =>
+                response.Items.Add(new MailNotificationResponseModel(p))
             );
 
             return response;

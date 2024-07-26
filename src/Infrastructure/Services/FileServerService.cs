@@ -1,14 +1,14 @@
-﻿namespace Lingtren.Infrastructure.Services
+﻿namespace AcademyKit.Infrastructure.Services
 {
     using System;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Localization;
     using Application.Common.Dtos;
     using global::Infrastructure.Helpers;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Localization;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using MimeKit;
@@ -70,8 +70,8 @@
             catch (Exception ex)
             {
                 _logger.LogError(
-                    "An error occurred while attempting to upload file to the server.",
-                    ex
+                    ex,
+                    "An error occurred while attempting to upload file to the server."
                 );
                 throw ex is ServiceException ? ex : new ServiceException(ex.Message);
             }
@@ -107,8 +107,8 @@
             catch (Exception ex)
             {
                 _logger.LogError(
-                    "An error occurred while attempting to upload file to the server.",
-                    ex
+                    ex,
+                    "An error occurred while attempting to upload file to the server."
                 );
                 throw ex is ServiceException
                     ? ex
@@ -139,7 +139,7 @@
             }
             catch (Exception ex)
             {
-                _logger.LogError("An error occurred while getting file presigned url.", ex);
+                _logger.LogError(ex, "An error occurred while getting file presigned url.");
                 throw ex is ServiceException
                     ? ex
                     : new ServiceException(_localizer.GetString("FilePresignedUrlError"));

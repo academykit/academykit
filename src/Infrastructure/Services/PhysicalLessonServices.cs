@@ -1,15 +1,15 @@
-﻿using Lingtren.Application.Common.Dtos;
-using Lingtren.Application.Common.Exceptions;
-using Lingtren.Application.Common.Models.RequestModels;
-using Lingtren.Domain.Entities;
-using Lingtren.Domain.Enums;
-using Lingtren.Infrastructure.Common;
-using Lingtren.Infrastructure.Localization;
+﻿using AcademyKit.Application.Common.Dtos;
+using AcademyKit.Application.Common.Exceptions;
+using AcademyKit.Application.Common.Models.RequestModels;
+using AcademyKit.Domain.Entities;
+using AcademyKit.Domain.Enums;
+using AcademyKit.Infrastructure.Common;
+using AcademyKit.Infrastructure.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
-namespace Lingtren.Infrastructure.Services
+namespace AcademyKit.Infrastructure.Services
 {
     public class PhysicalLessonService
         : BaseGenericService<PhysicalLessonReview, BaseSearchCriteria>,
@@ -61,9 +61,8 @@ namespace Lingtren.Infrastructure.Services
                     .ConfigureAwait(false);
                 var Review = await _unitOfWork
                     .GetRepository<PhysicalLessonReview>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p =>
-                            p.UserId.ToString() == currentUserId && p.LessonId == lesson.Id
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.UserId.ToString() == currentUserId && p.LessonId == lesson.Id
                     )
                     .ConfigureAwait(false);
                 if (
@@ -102,8 +101,8 @@ namespace Lingtren.Infrastructure.Services
 
                     var watchHistory = await _unitOfWork
                         .GetRepository<WatchHistory>()
-                        .GetFirstOrDefaultAsync(
-                            predicate: p => p.LessonId == lesson.Id && p.UserId == user.Id
+                        .GetFirstOrDefaultAsync(predicate: p =>
+                            p.LessonId == lesson.Id && p.UserId == user.Id
                         )
                         .ConfigureAwait(false);
                     if (watchHistory == default)
@@ -175,8 +174,8 @@ namespace Lingtren.Infrastructure.Services
                 var physicalLessonReview = new PhysicalLessonReview();
                 var review = await _unitOfWork
                     .GetRepository<PhysicalLessonReview>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p => p.UserId == model.UserId && p.LessonId == lesson.Id
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.UserId == model.UserId && p.LessonId == lesson.Id
                     )
                     .ConfigureAwait(false);
                 if (review == default)
@@ -217,8 +216,8 @@ namespace Lingtren.Infrastructure.Services
 
                 var watchHistory = await _unitOfWork
                     .GetRepository<WatchHistory>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p => p.UserId == user.Id && p.LessonId == lesson.Id
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.UserId == user.Id && p.LessonId == lesson.Id
                     )
                     .ConfigureAwait(false);
                 if (watchHistory != null)

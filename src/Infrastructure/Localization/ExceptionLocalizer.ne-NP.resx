@@ -22,8 +22,10 @@
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
         <value>[base64 mime encoded serialized .NET Framework object]</value>
     </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing"
+  mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework
+  object]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -115,10 +117,12 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TrainingRemoved" xml:space="preserve">
     <value> तालिम सफलतापूर्वक हटाइयो।</value>
@@ -300,7 +304,7 @@
   <data name="LessonNotpublished" xml:space="preserve">
     <value>पाठ प्रकाशित भएको छैन।</value>
   </data>
-  <data name="QuestionpoolModifynotallowed" xml:space="preserve">
+  <data name="QuestionPoolModifyNotAllowed" xml:space="preserve">
     <value>तपाइँलाई यो प्रश्न पूल परिमार्जन गर्न अनुमति छैन।</value>
   </data>
   <data name="RecordingFileinS3BucketSave" xml:space="preserve">
@@ -330,7 +334,7 @@
   <data name="TrainerNotAllowedDepartmentUser" xml:space="preserve">
     <value>प्रशिक्षार्थीलाई विभाग प्रयोगकर्ता हेर्न अनुमति छैन।</value>
   </data>
-  <data name="Trainingaccessnotallowed" xml:space="preserve">
+  <data name="TrainingAccessNotAllowed" xml:space="preserve">
     <value>तपाइँलाई यो प्रशिक्षण पहुँच गर्न अनुमति छैन।</value>
   </data>
   <data name="TrainingAuthorAdded" xml:space="preserve">
@@ -342,7 +346,7 @@
   <data name="TrainingCompletePercentage" xml:space="preserve">
     <value>तालिम पूरा भएको प्रतिशत गणना गर्ने प्रयास गर्दा त्रुटि भयो।</value>
   </data>
-  <data name="TrainingModifynotallowed" xml:space="preserve">
+  <data name="TrainingModifyNotAllowed" xml:space="preserve">
     <value>तपाईंलाई यो प्रशिक्षण परिमार्जन गर्न अनुमति छैन।</value>
   </data>
   <data name="TrainingTrainerCannotSubmitFeedback" xml:space="preserve">
@@ -920,7 +924,8 @@
   <data name="IncorrectLastName" xml:space="preserve">
     <value>पङ्क्ति नम्बरको अन्तिम नाम अनिवार्य फिल्डमा डाटा प्रविष्ट गर्नुहोस्</value>
   </data>
-  <data name="IncorrectMoblieNumberFormaIncorrectMoblieNumberFormaIncorrectMoblieNumberForma" xml:space="preserve">
+  <data name="IncorrectMoblieNumberFormaIncorrectMoblieNumberFormaIncorrectMoblieNumberForma"
+    xml:space="preserve">
     <value>पङ्क्ति नम्बरको स्तम्भ मोबाइल नम्बर सही गर्नुहोस्</value>
   </data>
   <data name="IncorrectRole" xml:space="preserve">

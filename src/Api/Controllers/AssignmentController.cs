@@ -1,23 +1,17 @@
-﻿// <copyright file="AssignmentController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
     using System.Globalization;
-
+    using AcademyKit.Api.Common;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Helpers;
+    using AcademyKit.Infrastructure.Localization;
     using CsvHelper;
-
     using FluentValidation;
-    using Lingtren.Api.Common;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Helpers;
-    using Lingtren.Infrastructure.Localization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
 
@@ -32,7 +26,8 @@ namespace Lingtren.Api.Controllers
             IAssignmentService assignmentService,
             IValidator<AssignmentRequestModel> validator,
             IValidator<AssignmentReviewRequestModel> reviewValidator,
-            IStringLocalizer<ExceptionLocalizer> localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
         {
             this.assignmentService = assignmentService;
             this.validator = validator;
@@ -45,9 +40,14 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <returns> the list of <see cref="AssignmentResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<IList<AssignmentResponseModel>> SearchAsync([FromQuery] AssignmentBaseSearchCriteria searchCriteria)
+        public async Task<IList<AssignmentResponseModel>> SearchAsync(
+            [FromQuery] AssignmentBaseSearchCriteria searchCriteria
+        )
         {
-            CommonHelper.ValidateArgumentNotNullOrEmpty(searchCriteria.LessonIdentity, nameof(searchCriteria.LessonIdentity));
+            CommonHelper.ValidateArgumentNotNullOrEmpty(
+                searchCriteria.LessonIdentity,
+                nameof(searchCriteria.LessonIdentity)
+            );
             searchCriteria.CurrentUserId = CurrentUser.Id;
             return await assignmentService.SearchAsync(searchCriteria).ConfigureAwait(false);
         }
@@ -62,7 +62,9 @@ namespace Lingtren.Api.Controllers
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
             var currentTimeStamp = DateTime.UtcNow;
             var entity = new Assignment
             {
@@ -84,36 +86,43 @@ namespace Lingtren.Api.Controllers
             {
                 foreach (var item in model.FileUrls.Select((fileUrl, i) => new { i, fileUrl }))
                 {
-                    entity.AssignmentAttachments.Add(new AssignmentAttachment
-                    {
-                        Id = Guid.NewGuid(),
-                        AssignmentId = entity.Id,
-                        FileUrl = item.fileUrl,
-                        Order = item.i + 1,
-                        CreatedBy = CurrentUser.Id,
-                        CreatedOn = currentTimeStamp,
-                        UpdatedBy = CurrentUser.Id,
-                        UpdatedOn = currentTimeStamp,
-                    });
+                    entity.AssignmentAttachments.Add(
+                        new AssignmentAttachment
+                        {
+                            Id = Guid.NewGuid(),
+                            AssignmentId = entity.Id,
+                            FileUrl = item.fileUrl,
+                            Order = item.i + 1,
+                            CreatedBy = CurrentUser.Id,
+                            CreatedOn = currentTimeStamp,
+                            UpdatedBy = CurrentUser.Id,
+                            UpdatedOn = currentTimeStamp,
+                        }
+                    );
                 }
             }
 
-            if (model.Type == QuestionTypeEnum.SingleChoice || model.Type == QuestionTypeEnum.MultipleChoice)
+            if (
+                model.Type == QuestionTypeEnum.SingleChoice
+                || model.Type == QuestionTypeEnum.MultipleChoice
+            )
             {
                 foreach (var item in model.Answers.Select((answer, i) => new { i, answer }))
                 {
-                    entity.AssignmentQuestionOptions.Add(new AssignmentQuestionOption
-                    {
-                        Id = Guid.NewGuid(),
-                        AssignmentId = entity.Id,
-                        Order = item.i + 1,
-                        Option = item.answer.Option,
-                        IsCorrect = item.answer.IsCorrect,
-                        CreatedBy = CurrentUser.Id,
-                        CreatedOn = currentTimeStamp,
-                        UpdatedBy = CurrentUser.Id,
-                        UpdatedOn = currentTimeStamp,
-                    });
+                    entity.AssignmentQuestionOptions.Add(
+                        new AssignmentQuestionOption
+                        {
+                            Id = Guid.NewGuid(),
+                            AssignmentId = entity.Id,
+                            Order = item.i + 1,
+                            Option = item.answer.Option,
+                            IsCorrect = item.answer.IsCorrect,
+                            CreatedBy = CurrentUser.Id,
+                            CreatedOn = currentTimeStamp,
+                            UpdatedBy = CurrentUser.Id,
+                            UpdatedOn = currentTimeStamp,
+                        }
+                    );
                 }
             }
 
@@ -140,11 +149,18 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the instance of <see cref="AssignmentRequestModel" />. </param>
         /// <returns> the instance of <see cref="AssignmentResponseModel" /> .</returns>
         [HttpPut("{identity}")]
-        public async Task<AssignmentResponseModel> UpdateAsync(string identity, AssignmentRequestModel model)
+        public async Task<AssignmentResponseModel> UpdateAsync(
+            string identity,
+            AssignmentRequestModel model
+        )
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var savedEntity = await assignmentService.UpdateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var savedEntity = await assignmentService
+                .UpdateAsync(identity, model, CurrentUser.Id)
+                .ConfigureAwait(false);
             return new AssignmentResponseModel(savedEntity, showHints: true, showCorrect: true);
         }
 
@@ -158,7 +174,13 @@ namespace Lingtren.Api.Controllers
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
             await assignmentService.DeleteAsync(identity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("AssignmentRemoved") });
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("AssignmentRemoved")
+                }
+            );
         }
 
         /// <summary>
@@ -167,10 +189,21 @@ namespace Lingtren.Api.Controllers
         /// <param name="identity">lesson id or slug. </param>
         /// <returns> the task complete. </returns>
         [HttpPost("{lessonIdentity}/submissions")]
-        public async Task<IActionResult> SubmissionAsync(string lessonIdentity, IList<AssignmentSubmissionRequestModel> model)
+        public async Task<IActionResult> SubmissionAsync(
+            string lessonIdentity,
+            IList<AssignmentSubmissionRequestModel> model
+        )
         {
-            await assignmentService.AssignmentSubmissionAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("AssignmentSubmitted") });
+            await assignmentService
+                .AssignmentSubmissionAsync(lessonIdentity, model, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("AssignmentSubmitted")
+                }
+            );
         }
 
         /// <summary>
@@ -180,8 +213,13 @@ namespace Lingtren.Api.Controllers
         /// <param name="userId">the user id.</param>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpGet("{lessonIdentity}/user/{userId}")]
-        public async Task<AssignmentSubmissionStudentResponseModel> SubmissionAsync(string lessonIdentity, Guid userId) =>
-            await assignmentService.GetStudentSubmittedAssignment(lessonIdentity, userId, CurrentUser.Id).ConfigureAwait(false);
+        public async Task<AssignmentSubmissionStudentResponseModel> SubmissionAsync(
+            string lessonIdentity,
+            Guid userId
+        ) =>
+            await assignmentService
+                .GetStudentSubmittedAssignment(lessonIdentity, userId, CurrentUser.Id)
+                .ConfigureAwait(false);
 
         /// <summary>
         /// assignment review api.
@@ -190,11 +228,24 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"></param>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpPost("{lessonIdentity}/review")]
-        public async Task<IActionResult> ReviewAsync(string lessonIdentity, AssignmentReviewRequestModel model)
+        public async Task<IActionResult> ReviewAsync(
+            string lessonIdentity,
+            AssignmentReviewRequestModel model
+        )
         {
-            await reviewValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            await assignmentService.AssignmentReviewAsync(lessonIdentity, model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("AssignmentReviewed") });
+            await reviewValidator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            await assignmentService
+                .AssignmentReviewAsync(lessonIdentity, model, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("AssignmentReviewed")
+                }
+            );
         }
 
         /// <summary>
@@ -204,11 +255,25 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"></param>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpPut("{lessonIdentity}/review/{id}")]
-        public async Task<IActionResult> UpdateReviewAsync(string lessonIdentity, Guid id, AssignmentReviewRequestModel model)
+        public async Task<IActionResult> UpdateReviewAsync(
+            string lessonIdentity,
+            Guid id,
+            AssignmentReviewRequestModel model
+        )
         {
-            await reviewValidator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            await assignmentService.UpdateAssignmentReviewAsync(lessonIdentity, id, model, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("AssignmentReviewUpdate") });
+            await reviewValidator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            await assignmentService
+                .UpdateAssignmentReviewAsync(lessonIdentity, id, model, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("AssignmentReviewUpdate")
+                }
+            );
         }
 
         /// <summary>
@@ -220,8 +285,16 @@ namespace Lingtren.Api.Controllers
         [HttpDelete("{lessonIdentity}/review/{id}")]
         public async Task<IActionResult> DeleteReviewAsync(string lessonIdentity, Guid id)
         {
-            await assignmentService.DeleteReviewAsync(lessonIdentity, id, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("AssignmentReviewDeleted") });
+            await assignmentService
+                .DeleteReviewAsync(lessonIdentity, id, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("AssignmentReviewDeleted")
+                }
+            );
         }
 
         [HttpGet("{lessonIdentity}/AssignmentExport")]
@@ -242,7 +315,6 @@ namespace Lingtren.Api.Controllers
             return File(memoryStream.ToArray(), "text/csv", "Results.csv");
         }
 
-
         [HttpGet("{lessonIdentity}/AssignmentIndividualExport")]
         public async Task<IActionResult> ExportIndividual(string lessonIdentity)
         {
@@ -260,6 +332,5 @@ namespace Lingtren.Api.Controllers
 
             return File(memoryStream.ToArray(), "text/csv", "Results.csv");
         }
-
     }
 }

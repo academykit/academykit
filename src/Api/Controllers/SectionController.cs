@@ -1,20 +1,16 @@
-﻿// <copyright file="SectionController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
+    using AcademyKit.Api.Common;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Helpers;
+    using AcademyKit.Infrastructure.Localization;
     using FluentValidation;
-    using Lingtren.Api.Common;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Helpers;
-    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
@@ -31,7 +27,8 @@ namespace Lingtren.Api.Controllers
             ICourseService courseService,
             ISectionService sectionService,
             IValidator<SectionRequestModel> validator,
-            IStringLocalizer<ExceptionLocalizer> localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
         {
             this.courseService = courseService;
             this.sectionService = sectionService;
@@ -44,14 +41,23 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <returns> the list of <see cref="SectionResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<SearchResult<SectionResponseModel>> SearchAsync(string identity, [FromQuery] SectionBaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<SectionResponseModel>> SearchAsync(
+            string identity,
+            [FromQuery] SectionBaseSearchCriteria searchCriteria
+        )
         {
             CommonHelper.ValidateArgumentNotNullOrEmpty(identity, nameof(identity));
-            var course = await courseService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false) ?? throw new EntityNotFoundException(localizer.GetString("TrainingNotFound"));
+            var course =
+                await courseService
+                    .GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id)
+                    .ConfigureAwait(false)
+                ?? throw new EntityNotFoundException(localizer.GetString("TrainingNotFound"));
             searchCriteria.CurrentUserId = CurrentUser.Id;
             searchCriteria.CourseId = course.Id;
 
-            var searchResult = await sectionService.SearchAsync(searchCriteria).ConfigureAwait(false);
+            var searchResult = await sectionService
+                .SearchAsync(searchCriteria)
+                .ConfigureAwait(false);
 
             var response = new SearchResult<SectionResponseModel>
             {
@@ -63,7 +69,8 @@ namespace Lingtren.Api.Controllers
             };
 
             searchResult.Items.ForEach(p =>
-                 response.Items.Add(new SectionResponseModel(p, fetchLesson: true)));
+                response.Items.Add(new SectionResponseModel(p, fetchLesson: true))
+            );
             return response;
         }
 
@@ -80,8 +87,14 @@ namespace Lingtren.Api.Controllers
                 throw new ForbiddenException(localizer.GetString("SectionNameCannotBeNull"));
             }
 
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var course = await courseService.GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id).ConfigureAwait(false) ?? throw new EntityNotFoundException(localizer.GetString("TrainingNotFound"));
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var course =
+                await courseService
+                    .GetByIdOrSlugAsync(identity, currentUserId: CurrentUser.Id)
+                    .ConfigureAwait(false)
+                ?? throw new EntityNotFoundException(localizer.GetString("TrainingNotFound"));
             if (course.Status == CourseStatus.Completed)
             {
                 throw new ArgumentException(localizer.GetString("CourseCompleted"));
@@ -109,8 +122,14 @@ namespace Lingtren.Api.Controllers
         [HttpGet("{sectionIdentity}")]
         public async Task<SectionResponseModel> Get(string identity, string sectionIdentity)
         {
-            _ = await courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false) ?? throw new EntityNotFoundException(localizer.GetString("TrainingNotFound"));
-            var model = await sectionService.GetByIdOrSlugAsync(sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
+            _ =
+                await courseService
+                    .GetByIdOrSlugAsync(identity, CurrentUser.Id)
+                    .ConfigureAwait(false)
+                ?? throw new EntityNotFoundException(localizer.GetString("TrainingNotFound"));
+            var model = await sectionService
+                .GetByIdOrSlugAsync(sectionIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
             return new SectionResponseModel(model, fetchLesson: true);
         }
 
@@ -120,12 +139,26 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the instance of <see cref="SectionRequestModel" /> .</param>
         /// <returns> the instance of <see cref="SectionResponseModel" /> .</returns>
         [HttpPatch("{sectionIdentity}")]
-        public async Task<SectionResponseModel> Update(string identity, string sectionIdentity, SectionRequestModel model)
+        public async Task<SectionResponseModel> Update(
+            string identity,
+            string sectionIdentity,
+            SectionRequestModel model
+        )
         {
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
 
-            var course = await courseService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false) ?? throw new EntityNotFoundException(localizer.GetString("TrainingNotFound"));
-            var entity = await sectionService.GetByIdOrSlugAsync(sectionIdentity, CurrentUser.Id).ConfigureAwait(false) ?? throw new EntityNotFoundException(localizer.GetString("SectionNotFound"));
+            var course =
+                await courseService
+                    .GetByIdOrSlugAsync(identity, CurrentUser.Id)
+                    .ConfigureAwait(false)
+                ?? throw new EntityNotFoundException(localizer.GetString("TrainingNotFound"));
+            var entity =
+                await sectionService
+                    .GetByIdOrSlugAsync(sectionIdentity, CurrentUser.Id)
+                    .ConfigureAwait(false)
+                ?? throw new EntityNotFoundException(localizer.GetString("SectionNotFound"));
             entity.Name = model.Name;
             entity.CourseId = course.Id;
             entity.UpdatedBy = CurrentUser.Id;
@@ -143,8 +176,16 @@ namespace Lingtren.Api.Controllers
         [HttpDelete("{sectionIdentity}")]
         public async Task<IActionResult> Delete(string identity, string sectionIdentity)
         {
-            await sectionService.DeleteSectionAsync(identity, sectionIdentity, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("SectionRemoved") });
+            await sectionService
+                .DeleteSectionAsync(identity, sectionIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("SectionRemoved")
+                }
+            );
         }
 
         /// <summary>
@@ -157,7 +198,13 @@ namespace Lingtren.Api.Controllers
         public async Task<IActionResult> SectionOrder(string identity, IList<Guid> ids)
         {
             await sectionService.ReorderAsync(identity, ids, CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel() { Success = true, Message = localizer.GetString("SectionReorder") });
+            return Ok(
+                new CommonResponseModel()
+                {
+                    Success = true,
+                    Message = localizer.GetString("SectionReorder")
+                }
+            );
         }
     }
 }

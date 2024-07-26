@@ -1,9 +1,9 @@
-﻿namespace Lingtren.Application.Common.Validators
+﻿namespace AcademyKit.Application.Common.Validators
 {
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.ValidatorLocalization;
+    using AcademyKit.Domain.Enums;
     using FluentValidation;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.ValidatorLocalization;
-    using Lingtren.Domain.Enums;
     using Microsoft.Extensions.Localization;
 
     public class AssessmentQuestionValidator : AbstractValidator<AssessmentQuestionRequestModel>
@@ -25,25 +25,22 @@
             RuleFor(x => x.assessmentQuestionOptions)
                 .NotNull()
                 .WithMessage(context => stringLocalizer.GetString("OptionIsRequired"))
-                .When(
-                    x =>
-                        x.Type == AssessmentTypeEnum.SingleChoice
-                        || x.Type == AssessmentTypeEnum.MultipleChoice
+                .When(x =>
+                    x.Type == AssessmentTypeEnum.SingleChoice
+                    || x.Type == AssessmentTypeEnum.MultipleChoice
                 );
             RuleFor(x => x.assessmentQuestionOptions)
                 .Must(x => x.Count >= 2)
                 .WithMessage(context => stringLocalizer.GetString("OptionMoreThanOne"))
-                .When(
-                    x =>
-                        x.Type == AssessmentTypeEnum.SingleChoice
-                        || x.Type == AssessmentTypeEnum.MultipleChoice
+                .When(x =>
+                    x.Type == AssessmentTypeEnum.SingleChoice
+                    || x.Type == AssessmentTypeEnum.MultipleChoice
                 );
             RuleForEach(x => x.assessmentQuestionOptions)
                 .SetValidator(new AssessmentQuestionOptionValidator(stringLocalizer))
-                .When(
-                    x =>
-                        x.Type == AssessmentTypeEnum.SingleChoice
-                        || x.Type == AssessmentTypeEnum.MultipleChoice
+                .When(x =>
+                    x.Type == AssessmentTypeEnum.SingleChoice
+                    || x.Type == AssessmentTypeEnum.MultipleChoice
                 );
         }
     }

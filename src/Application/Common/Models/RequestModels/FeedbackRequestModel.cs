@@ -1,6 +1,6 @@
-﻿using Lingtren.Domain.Enums;
+﻿using AcademyKit.Domain.Enums;
 
-namespace Lingtren.Application.Common.Models.RequestModels
+namespace AcademyKit.Application.Common.Models.RequestModels
 {
     public class FeedbackRequestModel
     {
@@ -9,6 +9,7 @@ namespace Lingtren.Application.Common.Models.RequestModels
         public FeedbackTypeEnum Type { get; set; }
         public IList<FeedbackQuestionOptionRequestModel> Answers { get; set; }
     }
+
     public class FeedbackQuestionOptionRequestModel
     {
         public string Option { get; set; }

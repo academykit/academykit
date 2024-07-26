@@ -1,20 +1,16 @@
-﻿// <copyright file="QuestionPoolTeacherController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
+    using AcademyKit.Api.Common;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Helpers;
+    using AcademyKit.Infrastructure.Localization;
     using FluentValidation;
-    using Lingtren.Api.Common;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Helpers;
-    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
@@ -34,7 +30,8 @@ namespace Lingtren.Api.Controllers
             IUserService userService,
             IValidator<QuestionPoolTeacherRequestModel> validator,
             ILogger<QuestionPoolTeacherController> logger,
-            IStringLocalizer<ExceptionLocalizer> localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
         {
             this.questionPoolService = questionPoolService;
             this.questionPoolTeacherService = questionPoolTeacherService;
@@ -50,12 +47,19 @@ namespace Lingtren.Api.Controllers
         /// <param name="criteria">The search criteria.</param>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpGet]
-        public async Task<SearchResult<QuestionPoolTeacherResponseModel>> Search([FromQuery] QuestionPoolTeacherBaseSearchCriteria criteria)
+        public async Task<SearchResult<QuestionPoolTeacherResponseModel>> Search(
+            [FromQuery] QuestionPoolTeacherBaseSearchCriteria criteria
+        )
         {
             // question pool id is required
-            CommonHelper.ValidateArgumentNotNullOrEmpty(criteria.QuestionPoolIdentity, nameof(criteria.QuestionPoolIdentity));
+            CommonHelper.ValidateArgumentNotNullOrEmpty(
+                criteria.QuestionPoolIdentity,
+                nameof(criteria.QuestionPoolIdentity)
+            );
             criteria.CurrentUserId = CurrentUser.Id;
-            var searchResult = await questionPoolTeacherService.SearchAsync(criteria).ConfigureAwait(false);
+            var searchResult = await questionPoolTeacherService
+                .SearchAsync(criteria)
+                .ConfigureAwait(false);
 
             var response = new SearchResult<QuestionPoolTeacherResponseModel>
             {
@@ -67,7 +71,8 @@ namespace Lingtren.Api.Controllers
             };
 
             searchResult.Items.ForEach(p =>
-                 response.Items.Add(new QuestionPoolTeacherResponseModel(p)));
+                response.Items.Add(new QuestionPoolTeacherResponseModel(p))
+            );
 
             return response;
         }
@@ -78,22 +83,33 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the instance of <see cref="QuestionPoolTeacherRequestModel" /> .</param>
         /// <returns> the instance of <see cref="QuestionPoolTeacherResponseModel" /> .</returns>
         [HttpPost]
-        public async Task<QuestionPoolTeacherResponseModel> Create(QuestionPoolTeacherRequestModel model)
+        public async Task<QuestionPoolTeacherResponseModel> Create(
+            QuestionPoolTeacherRequestModel model
+        )
         {
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
 
-            var questionPool = await questionPoolService.GetByIdOrSlugAsync(model.QuestionPoolIdentity, CurrentUser.Id).ConfigureAwait(false);
+            var questionPool = await questionPoolService
+                .GetByIdOrSlugAsync(model.QuestionPoolIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
             var user = await userService.GetUserByEmailAsync(model.Email).ConfigureAwait(false);
 
             if (user == null)
             {
-                logger.LogWarning("User with email: {email} not found while adding user in pool creator with poolId: {poolId}.", model.Email, questionPool.Id);
+                logger.LogWarning("User with email not found while adding user in pool creator.");
                 throw new EntityNotFoundException(localizer.GetString("UserNotFound"));
             }
 
             if (user.Role == UserRole.Trainee)
             {
-                logger.LogWarning("User with id: {id} having role: {role} cannot added as exam pool creator with poolId: {poolId}.", user.Id, user.Role, questionPool.Id);
+                logger.LogWarning(
+                    "User with id: {id} having role: {role} cannot added as exam pool creator with poolId: {poolId}.",
+                    user.Id,
+                    user.Role,
+                    questionPool.Id
+                );
                 throw new ForbiddenException(localizer.GetString("TraineeRoleNotAllowed"));
             }
 
@@ -110,7 +126,9 @@ namespace Lingtren.Api.Controllers
                 UpdatedOn = currentTimeStamp,
             };
 
-            var response = await questionPoolTeacherService.CreateAsync(questionPoolTeacher).ConfigureAwait(false);
+            var response = await questionPoolTeacherService
+                .CreateAsync(questionPoolTeacher)
+                .ConfigureAwait(false);
             return new QuestionPoolTeacherResponseModel(response);
         }
 
@@ -121,25 +139,34 @@ namespace Lingtren.Api.Controllers
         /// <param name="enabled">the boolean.</param>
         /// <returns>the instance of <see cref="QuestionPoolTeacherResponseModel"/>.</returns>
         [HttpPatch("{identity}/status")]
-        public async Task<QuestionPoolTeacherResponseModel> ChangeStatus(string identity, [FromQuery] PoolRole role)
+        public async Task<QuestionPoolTeacherResponseModel> ChangeStatus(
+            string identity,
+            [FromQuery] PoolRole role
+        )
         {
             IsSuperAdminOrAdminOrTrainer(CurrentUser.Role);
 
             var statusExists = Enum.IsDefined(typeof(PoolRole), role);
             if (!statusExists)
             {
-                logger.LogWarning("Invalid question pool teacher role : {role} requested for role change by the user with id : {userId}", role, CurrentUser.Id);
+                logger.LogWarning(
+                    "Invalid question pool teacher role requested for role change by the user"
+                );
                 throw new ForbiddenException(localizer.GetString("InvalidQuestionPoolTeacherRole"));
             }
 
-            var existing = await questionPoolTeacherService.GetByIdOrSlugAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            var existing = await questionPoolTeacherService
+                .GetByIdOrSlugAsync(identity, CurrentUser.Id)
+                .ConfigureAwait(false);
 
             existing.Id = existing.Id;
             existing.Role = role;
             existing.UpdatedBy = CurrentUser.Id;
             existing.UpdatedOn = DateTime.UtcNow;
 
-            var savedEntity = await questionPoolTeacherService.UpdateAsync(existing).ConfigureAwait(false);
+            var savedEntity = await questionPoolTeacherService
+                .UpdateAsync(existing)
+                .ConfigureAwait(false);
             return new QuestionPoolTeacherResponseModel(savedEntity);
         }
 
@@ -151,8 +178,16 @@ namespace Lingtren.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await questionPoolTeacherService.DeleteAsync(id.ToString(), CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel { Success = true, Message = localizer.GetString("QuestionpoolTeacherRemoved") });
+            await questionPoolTeacherService
+                .DeleteAsync(id.ToString(), CurrentUser.Id)
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel
+                {
+                    Success = true,
+                    Message = localizer.GetString("QuestionpoolTeacherRemoved")
+                }
+            );
         }
     }
 }

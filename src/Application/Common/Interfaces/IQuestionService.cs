@@ -1,10 +1,8 @@
-﻿namespace Lingtren.Application.Common.Interfaces
+﻿namespace AcademyKit.Application.Common.Interfaces
 {
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Domain.Entities;
 
     public interface IQuestionService : IGenericService<Question, QuestionBaseSearchCriteria>
     {

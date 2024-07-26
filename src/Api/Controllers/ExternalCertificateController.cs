@@ -1,16 +1,12 @@
-﻿// <copyright file="ExternalCertificateController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Helpers;
     using FluentValidation;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Helpers;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/certificate")]
@@ -19,7 +15,10 @@ namespace Lingtren.Api.Controllers
         private readonly ICertificateService certificateService;
         private readonly IValidator<CertificateRequestModel> validator;
 
-        public ExternalCertificateController(ICertificateService certificateService, IValidator<CertificateRequestModel> validator)
+        public ExternalCertificateController(
+            ICertificateService certificateService,
+            IValidator<CertificateRequestModel> validator
+        )
         {
             this.certificateService = certificateService;
             this.validator = validator;
@@ -33,8 +32,12 @@ namespace Lingtren.Api.Controllers
         [HttpPost("external")]
         public async Task<CertificateResponseModel> External(CertificateRequestModel model)
         {
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var response = await certificateService.SaveExternalCertificateAsync(model, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var response = await certificateService
+                .SaveExternalCertificateAsync(model, CurrentUser.Id)
+                .ConfigureAwait(false);
             return response;
         }
 
@@ -45,10 +48,15 @@ namespace Lingtren.Api.Controllers
         /// <param name="model"> the instance of <see cref="CertificateRequestModel" /> .</param>
         /// <returns> the instance of <see cref="CertificateResponseModel" /> .</returns>
         [HttpPut("{identity}/external")]
-        public async Task<CertificateResponseModel> UpdateExternal(Guid identity, CertificateRequestModel model)
+        public async Task<CertificateResponseModel> UpdateExternal(
+            Guid identity,
+            CertificateRequestModel model
+        )
         {
             CommonHelper.ValidateArgumentNotNullOrEmpty(model.Name, nameof(model.Name));
-            var response = await certificateService.UpdateExternalCertificateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
+            var response = await certificateService
+                .UpdateExternalCertificateAsync(identity, model, CurrentUser.Id)
+                .ConfigureAwait(false);
             return response;
         }
 
@@ -60,7 +68,9 @@ namespace Lingtren.Api.Controllers
         [HttpDelete("{identity}/external")]
         public async Task<IActionResult> DeleteExternal(Guid identity)
         {
-            await certificateService.DeleteExternalCertificateAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            await certificateService
+                .DeleteExternalCertificateAsync(identity, CurrentUser.Id)
+                .ConfigureAwait(false);
             return Ok();
         }
 
@@ -69,14 +79,20 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <returns> the list of <see cref="CertificateResponseModel" /> .</returns>
         [HttpGet("external")]
-        public async Task<IList<CertificateResponseModel>> GetExternal() => await certificateService.GetExternalCertificateAsync(CurrentUser.Id).ConfigureAwait(false);
+        public async Task<IList<CertificateResponseModel>> GetExternal() =>
+            await certificateService
+                .GetExternalCertificateAsync(CurrentUser.Id)
+                .ConfigureAwait(false);
 
         /// <summary>
         /// get internal certificate api.
         /// </summary>
         /// <returns> the list of <see cref="CourseCertificateIssuedResponseModel" /> .</returns>
         [HttpGet("internal")]
-        public async Task<IList<CourseCertificateIssuedResponseModel>> GetInternal() => await certificateService.GetInternalCertificateAsync(CurrentUser.Id).ConfigureAwait(false);
+        public async Task<IList<CourseCertificateIssuedResponseModel>> GetInternal() =>
+            await certificateService
+                .GetInternalCertificateAsync(CurrentUser.Id)
+                .ConfigureAwait(false);
 
         /// <summary>
         /// get certificate api.
@@ -84,7 +100,10 @@ namespace Lingtren.Api.Controllers
         /// <param name="identity"> the certificate id or slug. </param>
         /// <returns> the instance of <see cerf="CertificateResponseModel" /> .</returns>
         [HttpGet("{identity}")]
-        public async Task<CertificateResponseModel> Certificate(Guid identity) => await certificateService.GetCertificateDetailAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+        public async Task<CertificateResponseModel> Certificate(Guid identity) =>
+            await certificateService
+                .GetCertificateDetailAsync(identity, CurrentUser.Id)
+                .ConfigureAwait(false);
 
         /// <summary>
         /// verify certificate api.
@@ -94,7 +113,9 @@ namespace Lingtren.Api.Controllers
         [HttpPatch("{identity}/verify")]
         public async Task<IActionResult> Verify(Guid identity, [FromQuery] CertificateStatus status)
         {
-            await certificateService.VerifyCertificateAsync(identity, status, CurrentUser.Id).ConfigureAwait(false);
+            await certificateService
+                .VerifyCertificateAsync(identity, status, CurrentUser.Id)
+                .ConfigureAwait(false);
             return Ok();
         }
 
@@ -104,7 +125,8 @@ namespace Lingtren.Api.Controllers
         /// <param name="userId"> the user id. </param>
         /// <returns> the list of <see cref="CertificateResponseModel" /> .</returns>
         [HttpGet("external/{userId}")]
-        public async Task<IList<CertificateResponseModel>> UserCertificate(Guid userId) => await certificateService.GetUserCertificateAsync(userId).ConfigureAwait(false);
+        public async Task<IList<CertificateResponseModel>> UserCertificate(Guid userId) =>
+            await certificateService.GetUserCertificateAsync(userId).ConfigureAwait(false);
 
         /// <summary>
         /// get in review certificate async.
@@ -112,9 +134,13 @@ namespace Lingtren.Api.Controllers
         /// <param name="criteria"> the instance of <see cref="CertificateBaseSearchCriteria" /> .</param>
         /// <returns> the list of <see cref="CertificateResponseModel" /> .</returns>
         [HttpGet("review")]
-        public async Task<SearchResult<CertificateResponseModel>> GetReviews([FromQuery] CertificateBaseSearchCriteria criteria)
+        public async Task<SearchResult<CertificateResponseModel>> GetReviews(
+            [FromQuery] CertificateBaseSearchCriteria criteria
+        )
         {
-            var searchResult = await certificateService.GetReviewCertificatesAsync(criteria, CurrentUser.Id).ConfigureAwait(false);
+            var searchResult = await certificateService
+                .GetReviewCertificatesAsync(criteria, CurrentUser.Id)
+                .ConfigureAwait(false);
             var response = new SearchResult<CertificateResponseModel>()
             {
                 Items = searchResult.Items,

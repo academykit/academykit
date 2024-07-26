@@ -1,13 +1,9 @@
-﻿// <copyright file="CertificateController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
     using FluentValidation;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/course/{identity}/certificate")]
@@ -18,7 +14,8 @@ namespace Lingtren.Api.Controllers
 
         public CertificateController(
             ICourseService courseService,
-            IValidator<CourseCertificateRequestModel> validator)
+            IValidator<CourseCertificateRequestModel> validator
+        )
         {
             this.courseService = courseService;
             this.validator = validator;
@@ -31,7 +28,9 @@ namespace Lingtren.Api.Controllers
         [HttpGet("detail")]
         public async Task<CourseCertificateResponseModel> GetDetail(string identity)
         {
-            return await courseService.GetCertificateDetailAsync(identity, CurrentUser.Id).ConfigureAwait(false);
+            return await courseService
+                .GetCertificateDetailAsync(identity, CurrentUser.Id)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -41,10 +40,15 @@ namespace Lingtren.Api.Controllers
         /// <param name="model">the instance of <see cref="CertificateIssueRequestModel"/>.</param>
         /// <returns>the list of <see cref="CourseCertificateResponseModel"/>.</returns>
         [HttpPost]
-        public async Task<CourseCertificateResponseModel> CertificateDetail(string identity, CourseCertificateRequestModel model)
+        public async Task<CourseCertificateResponseModel> CertificateDetail(
+            string identity,
+            CourseCertificateRequestModel model
+        )
         {
             await validator.ValidateAsync(model, x => x.ThrowOnFailures()).ConfigureAwait(false);
-            return await courseService.InsertCertificateDetail(identity, model, CurrentUser.Id).ConfigureAwait(false);
+            return await courseService
+                .InsertCertificateDetail(identity, model, CurrentUser.Id)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -54,9 +58,14 @@ namespace Lingtren.Api.Controllers
         /// <param name="model">the instance of <see cref="CertificateIssueRequestModel"/>.</param>
         /// <returns>the list of <see cref="CourseCertificateResponseModel"/>.</returns>
         [HttpPost("issue")]
-        public async Task<IList<CourseCertificateIssuedResponseModel>> IssueCertificateAsync(string identity, CertificateIssueRequestModel model)
+        public async Task<IList<CourseCertificateIssuedResponseModel>> IssueCertificateAsync(
+            string identity,
+            CertificateIssueRequestModel model
+        )
         {
-            return await courseService.IssueCertificateAsync(identity, model, CurrentUser.Id).ConfigureAwait(false);
+            return await courseService
+                .IssueCertificateAsync(identity, model, CurrentUser.Id)
+                .ConfigureAwait(false);
         }
     }
 }

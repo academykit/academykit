@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Application.Common.Models.RequestModels
+﻿namespace AcademyKit.Application.Common.Models.RequestModels
 {
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Domain.Enums;
 
     public class AssignmentRequestModel
     {
@@ -14,6 +14,7 @@
         public IList<string> FileUrls { get; set; }
         public IList<AssignmentQuestionOptionRequestModel> Answers { get; set; }
     }
+
     public class AssignmentQuestionOptionRequestModel
     {
         public string Option { get; set; }

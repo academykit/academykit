@@ -5,18 +5,19 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using AcademyKit.Application.Common.Dtos;
+using AcademyKit.Application.Common.Exceptions;
+using AcademyKit.Application.Common.Interfaces;
+using AcademyKit.Application.Common.Models.RequestModels;
+using AcademyKit.Application.Common.Models.ResponseModels;
+using AcademyKit.Domain.Entities;
+using AcademyKit.Domain.Enums;
+using AcademyKit.Infrastructure.Common;
+using AcademyKit.Infrastructure.Configurations;
+using AcademyKit.Infrastructure.Helpers;
+using AcademyKit.Infrastructure.Localization;
 using CsvHelper;
 using Hangfire;
-using Lingtren.Application.Common.Dtos;
-using Lingtren.Application.Common.Exceptions;
-using Lingtren.Application.Common.Interfaces;
-using Lingtren.Application.Common.Models.RequestModels;
-using Lingtren.Application.Common.Models.ResponseModels;
-using Lingtren.Domain.Entities;
-using Lingtren.Domain.Enums;
-using Lingtren.Infrastructure.Common;
-using Lingtren.Infrastructure.Configurations;
-using Lingtren.Infrastructure.Localization;
 using LinqKit;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +30,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MimeKit;
 
-namespace Lingtren.Infrastructure.Services
+namespace AcademyKit.Infrastructure.Services
 {
     public class UserService : BaseGenericService<User, UserSearchCriteria>, IUserService
     {
@@ -118,10 +119,9 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var existUsers = await _unitOfWork
                         .GetRepository<GroupMember>()
-                        .ExistsAsync(
-                            predicate: p =>
-                                p.GroupId == new Guid("7df8d749-6172-482b-b5a1-016fbe478795")
-                                && p.UserId == user.Id
+                        .ExistsAsync(predicate: p =>
+                            p.GroupId == new Guid("7df8d749-6172-482b-b5a1-016fbe478795")
+                            && p.UserId == user.Id
                         )
                         .ConfigureAwait(false);
 
@@ -368,16 +368,15 @@ namespace Lingtren.Infrastructure.Services
                 if (!string.IsNullOrWhiteSpace(criteria.Search))
                 {
                     var search = criteria.Search.ToLower().Trim();
-                    predicate = predicate.And(
-                        x =>
-                            x.FirstName.ToLower().Trim().Contains(search)
-                            || x.LastName.ToLower().Trim().Contains(search)
-                            || x.Email.ToLower().Trim().Contains(search)
+                    predicate = predicate.And(x =>
+                        x.FirstName.ToLower().Trim().Contains(search)
+                        || x.LastName.ToLower().Trim().Contains(search)
+                        || x.Email.ToLower().Trim().Contains(search)
                     );
                 }
 
-                predicate = predicate.And(
-                    p => p.Role == UserRole.Admin || p.Role == UserRole.Trainer
+                predicate = predicate.And(p =>
+                    p.Role == UserRole.Admin || p.Role == UserRole.Trainer
                 );
                 //for filtering course trainers
                 if (
@@ -387,10 +386,9 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var courseTeacher = await _unitOfWork
                         .GetRepository<CourseTeacher>()
-                        .GetAllAsync(
-                            predicate: p =>
-                                p.CourseId.ToString() == criteria.Identity
-                                || p.Course.Slug.ToLower() == criteria.Identity.ToLower().Trim()
+                        .GetAllAsync(predicate: p =>
+                            p.CourseId.ToString() == criteria.Identity
+                            || p.Course.Slug.ToLower() == criteria.Identity.ToLower().Trim()
                         )
                         .ConfigureAwait(false);
 
@@ -405,11 +403,9 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var questionPoolTeachers = await _unitOfWork
                         .GetRepository<QuestionPoolTeacher>()
-                        .GetAllAsync(
-                            predicate: p =>
-                                p.QuestionPoolId.ToString() == criteria.Identity
-                                || p.QuestionPool.Slug.ToLower()
-                                    == criteria.Identity.ToLower().Trim()
+                        .GetAllAsync(predicate: p =>
+                            p.QuestionPoolId.ToString() == criteria.Identity
+                            || p.QuestionPool.Slug.ToLower() == criteria.Identity.ToLower().Trim()
                         )
                         .ConfigureAwait(false);
 
@@ -466,12 +462,11 @@ namespace Lingtren.Infrastructure.Services
 
                 await CheckBulkImport(checkForValidRows, currentUserId);
                 var message = new StringBuilder();
-                users = checkForValidRows.userList
-                    .Where(
-                        x =>
-                            !string.IsNullOrWhiteSpace(x.FirstName)
-                            && !string.IsNullOrWhiteSpace(x.LastName)
-                            && !string.IsNullOrWhiteSpace(x.Email)
+                users = checkForValidRows
+                    .userList.Where(x =>
+                        !string.IsNullOrWhiteSpace(x.FirstName)
+                        && !string.IsNullOrWhiteSpace(x.LastName)
+                        && !string.IsNullOrWhiteSpace(x.Email)
                     )
                     .ToList();
                 var company = await _unitOfWork
@@ -553,8 +548,8 @@ namespace Lingtren.Infrastructure.Services
                             .InsertAsync(newUsers)
                             .ConfigureAwait(false);
                         await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                        BackgroundJob.Enqueue<IHangfireJobService>(
-                            job => job.SendEmailImportedUserAsync(newUserEmails, null)
+                        BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                            job.SendEmailImportedUserAsync(newUserEmails, null)
                         );
                         message.AppendLine(
                             $"{newUsers.Count}" + " " + _localizer.GetString("UserImported")
@@ -652,7 +647,10 @@ namespace Lingtren.Infrastructure.Services
                 var user = await GetUserByEmailAsync(model.Email).ConfigureAwait(false);
                 if (user == null)
                 {
-                    _logger.LogWarning("User not found with email: {email}.", model.Email);
+                    _logger.LogWarning(
+                        "User not found with email: {email}.",
+                        model.Email.SanitizeForLogger()
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
                 }
 
@@ -667,7 +665,10 @@ namespace Lingtren.Infrastructure.Services
 
                 if (model.Token != user.PasswordResetToken)
                 {
-                    _logger.LogWarning("User not found with email: {email}.", model.Email);
+                    _logger.LogWarning(
+                        "User not found with email: {email}.",
+                        model.Email.SanitizeForLogger()
+                    );
                     throw new ForbiddenException(_localizer.GetString("ResetTokenNotMatched"));
                 }
 
@@ -854,16 +855,15 @@ namespace Lingtren.Infrastructure.Services
                 var company = await _generalSettingService
                     .GetFirstOrDefaultAsync()
                     .ConfigureAwait(false);
-                BackgroundJob.Enqueue<IHangfireJobService>(
-                    job =>
-                        job.SendUserCreatedPasswordEmail(
-                            user.Email,
-                            user.FullName,
-                            password,
-                            company.CompanyName,
-                            company.CompanyContactNumber,
-                            null
-                        )
+                BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                    job.SendUserCreatedPasswordEmail(
+                        user.Email,
+                        user.FullName,
+                        password,
+                        company.CompanyName,
+                        company.CompanyContactNumber,
+                        null
+                    )
                 );
             }
             catch (Exception ex)
@@ -966,8 +966,8 @@ namespace Lingtren.Infrastructure.Services
 
             _unitOfWork.GetRepository<User>().Update(user);
             await _unitOfWork.SaveChangesAsync();
-            BackgroundJob.Enqueue<IHangfireJobService>(
-                job => job.SendEmailChangedMailAsync(newEmail, oldEmail, user.FirstName, null)
+            BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                job.SendEmailChangedMailAsync(newEmail, oldEmail, user.FirstName, null)
             );
         }
 
@@ -1105,17 +1105,16 @@ namespace Lingtren.Infrastructure.Services
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(
-                    x =>
-                        (
-                            (x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim()
-                            + " "
-                            + x.LastName.Trim()
-                        )
-                            .Trim()
-                            .Contains(search)
-                        || x.Email.ToLower().Trim().Contains(search)
-                        || x.MobileNumber.ToLower().Trim().Contains(search)
+                predicate = predicate.And(x =>
+                    (
+                        (x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim()
+                        + " "
+                        + x.LastName.Trim()
+                    )
+                        .Trim()
+                        .Contains(search)
+                    || x.Email.ToLower().Trim().Contains(search)
+                    || x.MobileNumber.ToLower().Trim().Contains(search)
                 );
             }
 
@@ -1407,9 +1406,8 @@ namespace Lingtren.Infrastructure.Services
         {
             var checkDuplicateEmail = await _unitOfWork
                 .GetRepository<User>()
-                .ExistsAsync(
-                    predicate: p =>
-                        p.Id != entity.Id && p.Email.ToLower().Equals(entity.Email.ToLower())
+                .ExistsAsync(predicate: p =>
+                    p.Id != entity.Id && p.Email.ToLower().Equals(entity.Email.ToLower())
                 )
                 .ConfigureAwait(false);
             if (checkDuplicateEmail)
@@ -1429,9 +1427,8 @@ namespace Lingtren.Infrastructure.Services
         {
             var checkDuplicateMemberId = await _unitOfWork
                 .GetRepository<User>()
-                .ExistsAsync(
-                    predicate: p =>
-                        p.Id != entity.Id && p.MemberId.ToLower().Equals(entity.MemberId.ToLower())
+                .ExistsAsync(predicate: p =>
+                    p.Id != entity.Id && p.MemberId.ToLower().Equals(entity.MemberId.ToLower())
                 )
                 .ConfigureAwait(false);
             if (checkDuplicateMemberId)
@@ -1474,9 +1471,8 @@ namespace Lingtren.Infrastructure.Services
                     .ConfigureAwait(false);
                 var externalCertificates = await _unitOfWork
                     .GetRepository<Certificate>()
-                    .GetAllAsync(
-                        predicate: p =>
-                            p.CreatedBy == userId && p.Status == CertificateStatus.Approved
+                    .GetAllAsync(predicate: p =>
+                        p.CreatedBy == userId && p.Status == CertificateStatus.Approved
                     )
                     .ConfigureAwait(false);
                 var response = new UserResponseModel(user);
@@ -1558,14 +1554,13 @@ namespace Lingtren.Infrastructure.Services
                 var user = users.FirstOrDefault(x => x.Id == userId);
                 if (user.Role == UserRole.Admin || user.Role == UserRole.SuperAdmin)
                 {
-                    var trimmedUsers = users.Where(
-                        x =>
-                            x.Id != userId
-                            && x.CourseEnrollments != course.CourseEnrollments
-                            && x.Role != UserRole.SuperAdmin
-                            && x.Role != UserRole.Admin
-                            && x.Id != course.CreatedBy
-                            && x.CourseTeachers != course.CourseTeachers
+                    var trimmedUsers = users.Where(x =>
+                        x.Id != userId
+                        && x.CourseEnrollments != course.CourseEnrollments
+                        && x.Role != UserRole.SuperAdmin
+                        && x.Role != UserRole.Admin
+                        && x.Id != course.CreatedBy
+                        && x.CourseTeachers != course.CourseTeachers
                     );
 
                     var response = new List<UserResponseModel>();
@@ -1634,8 +1629,8 @@ namespace Lingtren.Infrastructure.Services
 
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.FirstName)))
                 {
-                    var selectedSNs = checkForValidRows.userList
-                        .Select((user, index) => new { User = user, Index = index })
+                    var selectedSNs = checkForValidRows
+                        .userList.Select((user, index) => new { User = user, Index = index })
                         .Where(x => string.IsNullOrWhiteSpace(x.User.FirstName))
                         .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) + 1)
                         .ToList();
@@ -1653,8 +1648,8 @@ namespace Lingtren.Infrastructure.Services
 
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.LastName)))
                 {
-                    var selectedSNs = checkForValidRows.userList
-                        .Select((user, index) => new { User = user, Index = index })
+                    var selectedSNs = checkForValidRows
+                        .userList.Select((user, index) => new { User = user, Index = index })
                         .Where(x => string.IsNullOrWhiteSpace(x.User.LastName))
                         .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) + 1)
                         .ToList();
@@ -1673,8 +1668,8 @@ namespace Lingtren.Infrastructure.Services
 
                 if (checkForValidRows.userList.Any(x => string.IsNullOrWhiteSpace(x.Email)))
                 {
-                    var selectedSNs = checkForValidRows.userList
-                        .Select((user, index) => new { User = user, Index = index })
+                    var selectedSNs = checkForValidRows
+                        .userList.Select((user, index) => new { User = user, Index = index })
                         .Where(x => string.IsNullOrWhiteSpace(x.User.Email))
                         .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) + 1)
                         .ToList();
@@ -1693,8 +1688,8 @@ namespace Lingtren.Infrastructure.Services
                         @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}"
                         + @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\"
                         + @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
-                    var invalidEmailRows = checkForValidRows.userList
-                        .Select((user, index) => (user.Email, index))
+                    var invalidEmailRows = checkForValidRows
+                        .userList.Select((user, index) => (user.Email, index))
                         .Where(entry => !Regex.IsMatch(entry.Email, emailPattern))
                         .Select(entry => entry.Item2 + 2)
                         .ToList();
@@ -1714,8 +1709,8 @@ namespace Lingtren.Infrastructure.Services
                 {
                     var mobileNumberPattern = @"^[+\d]+$";
 
-                    var invalidMobileNumberRows = checkForValidRows.userList
-                        .Select((user, index) => (user.MobileNumber, index))
+                    var invalidMobileNumberRows = checkForValidRows
+                        .userList.Select((user, index) => (user.MobileNumber, index))
                         .Where(entry => !Regex.IsMatch(entry.MobileNumber, mobileNumberPattern))
                         .Select(entry => entry.Item2 + 2)
                         .ToList();
@@ -1732,15 +1727,13 @@ namespace Lingtren.Infrastructure.Services
                 }
 
                 if (
-                    checkForValidRows.userList.Any(
-                        x =>
-                            string.IsNullOrWhiteSpace(x.Role)
-                            || !Enum.TryParse<UserRole>(x.Role, out _)
+                    checkForValidRows.userList.Any(x =>
+                        string.IsNullOrWhiteSpace(x.Role) || !Enum.TryParse<UserRole>(x.Role, out _)
                     )
                 )
                 {
-                    var selectedSN = checkForValidRows.userList
-                        .Select((user, index) => new { User = user, Index = index })
+                    var selectedSN = checkForValidRows
+                        .userList.Select((user, index) => new { User = user, Index = index })
                         .Where(x => string.IsNullOrWhiteSpace(x.User.Role))
                         .Select(x => checkForValidRows.SN.ElementAtOrDefault(x.Index) + 1)
                         .ToList();
@@ -1756,19 +1749,17 @@ namespace Lingtren.Infrastructure.Services
                         );
                     }
 
-                    var selectedSNs = checkForValidRows.userList
-                        .Select((user, index) => new { User = user, Index = index })
-                        .Where(
-                            x =>
-                                !Enum.GetNames(typeof(UserRole))
-                                    .Any(
-                                        enumValue =>
-                                            string.Equals(
-                                                enumValue,
-                                                x.User.Role,
-                                                StringComparison.OrdinalIgnoreCase
-                                            )
+                    var selectedSNs = checkForValidRows
+                        .userList.Select((user, index) => new { User = user, Index = index })
+                        .Where(x =>
+                            !Enum.GetNames(typeof(UserRole))
+                                .Any(enumValue =>
+                                    string.Equals(
+                                        enumValue,
+                                        x.User.Role,
+                                        StringComparison.OrdinalIgnoreCase
                                     )
+                                )
                         )
                         .Join(
                             checkForValidRows.SN.Select(
@@ -1794,13 +1785,12 @@ namespace Lingtren.Infrastructure.Services
                     var selectedIndices = Enum.GetValues(typeof(UserRole))
                         .Cast<UserRole>()
                         .Select((role, index) => new { Role = role, Index = index })
-                        .Where(
-                            x =>
-                                string.Equals(
-                                    x.Role.ToString(),
-                                    UserRole.Admin.ToString(),
-                                    StringComparison.OrdinalIgnoreCase
-                                )
+                        .Where(x =>
+                            string.Equals(
+                                x.Role.ToString(),
+                                UserRole.Admin.ToString(),
+                                StringComparison.OrdinalIgnoreCase
+                            )
                         )
                         .Select(x => x.Index + 1)
                         .ToList();
@@ -1824,10 +1814,9 @@ namespace Lingtren.Infrastructure.Services
         {
             var existUsers = await _unitOfWork
                 .GetRepository<GroupMember>()
-                .ExistsAsync(
-                    predicate: p =>
-                        p.GroupId == new Guid("d3c343d8-adf8-45d4-afbe-e09c3285da24")
-                        && p.UserId == userId
+                .ExistsAsync(predicate: p =>
+                    p.GroupId == new Guid("d3c343d8-adf8-45d4-afbe-e09c3285da24")
+                    && p.UserId == userId
                 )
                 .ConfigureAwait(false);
 

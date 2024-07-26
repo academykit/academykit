@@ -1,8 +1,8 @@
-﻿namespace Lingtren.Application.Common.Interfaces
+﻿namespace AcademyKit.Application.Common.Interfaces
 {
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Domain.Entities;
     using Hangfire.Server;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Domain.Entities;
 
     public interface IHangfireJobService
     {

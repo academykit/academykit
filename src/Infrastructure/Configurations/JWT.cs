@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Infrastructure.Configurations
+﻿namespace AcademyKit.Infrastructure.Configurations
 {
     public class JWT
     {

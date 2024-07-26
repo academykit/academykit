@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Infrastructure.Configurations
+﻿namespace AcademyKit.Infrastructure.Configurations
 {
     using System;
     using System.Linq;
@@ -6,9 +6,9 @@
     using System.Security;
     using System.Text;
     using System.Threading.Tasks;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Models.ResponseModels;
     using FluentValidation;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
@@ -50,10 +50,15 @@
         /// <param name="context">The current http context.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="logger">The logger instance.</param>
-        private static async Task HandleExceptionAsync(HttpContext context, Exception exception,
-            ILogger<ExceptionHandlingMiddleware> logger)
+        private static async Task HandleExceptionAsync(
+            HttpContext context,
+            Exception exception,
+            ILogger<ExceptionHandlingMiddleware> logger
+        )
         {
-            var isNotDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != Environments.Development;
+            var isNotDevelopment =
+                Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+                != Environments.Development;
 
             HttpStatusCode statusCode;
             object message;
@@ -62,19 +67,13 @@
                 case SecurityException:
                     statusCode = HttpStatusCode.Forbidden;
 
-                    message = new ApiError
-                    {
-                        Message = "You shall not pass!"
-                    };
+                    message = new ApiError { Message = "You shall not pass!" };
 
                     break;
                 case ArgumentException argumentInValid:
                     statusCode = HttpStatusCode.BadRequest;
 
-                    message = new ApiError
-                    {
-                        Message = argumentInValid.Message
-                    };
+                    message = new ApiError { Message = argumentInValid.Message };
                     break;
                 case ValidationException validation:
                     statusCode = HttpStatusCode.BadRequest;
@@ -90,7 +89,8 @@
 
                     message = new ApiError
                     {
-                        Message = forbidden.Message ?? "You are not allowed to access this resource."
+                        Message =
+                            forbidden.Message ?? "You are not allowed to access this resource."
                     };
                     break;
                 case EntityNotFoundException entityNotFound:
@@ -98,30 +98,28 @@
 
                     message = new ApiError
                     {
-                        Message = entityNotFound.Message ?? "These aren't the droids you're looking for..."
+                        Message =
+                            entityNotFound.Message
+                            ?? "These aren't the droids you're looking for..."
                     };
 
                     break;
                 case ServiceException serviceError:
                     statusCode = HttpStatusCode.InternalServerError;
-                    message = new ApiError
-                    {
-                        Message = serviceError.Message
-                    };
+                    message = new ApiError { Message = serviceError.Message };
                     break;
                 default:
                     statusCode = HttpStatusCode.InternalServerError;
 
                     var defaultEx = new ApiError
                     {
-                        // TODO: replace with generic message after APIs refactor are done and stable
                         Message = exception.InnerException?.Message ?? exception.Message
-                        // Message = "Something is not right at our side. Please, call one of our developer at developer@sursatech.com"
                     };
 
                     if (!isNotDevelopment)
                     {
-                        defaultEx.Message = $"Exception: {exception.Message} - Inner: {exception.InnerException?.Message} - Stacktrace: {exception.StackTrace}";
+                        defaultEx.Message =
+                            $"Exception: {exception.Message} - Inner: {exception.InnerException?.Message} - Stacktrace: {exception.StackTrace}";
                     }
 
                     message = defaultEx;
@@ -129,15 +127,16 @@
             }
 
             logger.LogError("EXCEPTION HANDLING {statusCode} | {exception}", statusCode, exception);
-            DefaultContractResolver contractResolver = new()
-            {
-                NamingStrategy = new CamelCaseNamingStrategy()
-            };
-            var result = JsonConvert.SerializeObject(message, new JsonSerializerSettings
-            {
-                ContractResolver = contractResolver,
-                Formatting = Formatting.Indented
-            });
+            DefaultContractResolver contractResolver =
+                new() { NamingStrategy = new CamelCaseNamingStrategy() };
+            var result = JsonConvert.SerializeObject(
+                message,
+                new JsonSerializerSettings
+                {
+                    ContractResolver = contractResolver,
+                    Formatting = Formatting.Indented
+                }
+            );
 
             context.Response.ContentType = "application/json; charset=utf-8";
             context.Response.StatusCode = (int)statusCode;

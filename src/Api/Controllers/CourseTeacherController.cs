@@ -1,16 +1,16 @@
-﻿namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
+    using AcademyKit.Api.Common;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Helpers;
+    using AcademyKit.Infrastructure.Localization;
     using FluentValidation;
-    using Lingtren.Api.Common;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Helpers;
-    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
@@ -24,11 +24,12 @@
         private readonly IStringLocalizer<ExceptionLocalizer> localizer;
 
         public CourseTeacherController(
-                ICourseTeacherService courseTeacherService,
-                ICourseService courseService,
-                IUserService userService,
-                IValidator<CourseTeacherRequestModel> validator,
-                IStringLocalizer<ExceptionLocalizer> localizer)
+            ICourseTeacherService courseTeacherService,
+            ICourseService courseService,
+            IUserService userService,
+            IValidator<CourseTeacherRequestModel> validator,
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
         {
             this.courseTeacherService = courseTeacherService;
             this.courseService = courseService;
@@ -43,12 +44,19 @@
         /// <param name="criteria">The search criteria.</param>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpGet]
-        public async Task<SearchResult<CourseTeacherResponseModel>> Search([FromQuery] CourseTeacherSearchCriteria criteria)
+        public async Task<SearchResult<CourseTeacherResponseModel>> Search(
+            [FromQuery] CourseTeacherSearchCriteria criteria
+        )
         {
             // question pool id is required
-            CommonHelper.ValidateArgumentNotNullOrEmpty(criteria.CourseIdentity, nameof(criteria.CourseIdentity));
+            CommonHelper.ValidateArgumentNotNullOrEmpty(
+                criteria.CourseIdentity,
+                nameof(criteria.CourseIdentity)
+            );
             criteria.CurrentUserId = CurrentUser.Id;
-            var searchResult = await courseTeacherService.SearchAsync(criteria).ConfigureAwait(false);
+            var searchResult = await courseTeacherService
+                .SearchAsync(criteria)
+                .ConfigureAwait(false);
 
             var response = new SearchResult<CourseTeacherResponseModel>
             {
@@ -59,8 +67,7 @@
                 TotalPage = searchResult.TotalPage,
             };
 
-            searchResult.Items.ForEach(p =>
-                response.Items.Add(new CourseTeacherResponseModel(p)));
+            searchResult.Items.ForEach(p => response.Items.Add(new CourseTeacherResponseModel(p)));
 
             return response;
         }
@@ -73,14 +80,20 @@
         [HttpPost]
         public async Task<CourseTeacherResponseModel> Create(CourseTeacherRequestModel model)
         {
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var course = await courseService.GetByIdOrSlugAsync(model.CourseIdentity, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var course = await courseService
+                .GetByIdOrSlugAsync(model.CourseIdentity, CurrentUser.Id)
+                .ConfigureAwait(false);
             if (course.Status == CourseStatus.Completed)
             {
                 throw new InvalidOperationException(localizer.GetString("CompletedCourseIssue"));
             }
 
-            var user = await userService.GetUserByEmailAsync(model.Email).ConfigureAwait(false) ?? throw new EntityNotFoundException(localizer.GetString("UserNotFound"));
+            var user =
+                await userService.GetUserByEmailAsync(model.Email).ConfigureAwait(false)
+                ?? throw new EntityNotFoundException(localizer.GetString("UserNotFound"));
             if (user.Role == UserRole.Trainee)
             {
                 throw new InvalidOperationException(localizer.GetString("TraineeCannotBeTrainer"));
@@ -96,7 +109,9 @@
                 UpdatedBy = CurrentUser.Id,
                 UpdatedOn = currentTimeStamp,
             };
-            var response = await courseTeacherService.CreateAsync(courseTeacher).ConfigureAwait(false);
+            var response = await courseTeacherService
+                .CreateAsync(courseTeacher)
+                .ConfigureAwait(false);
             return new CourseTeacherResponseModel(response);
         }
 
@@ -108,8 +123,16 @@
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await courseTeacherService.DeleteAsync(id.ToString(), CurrentUser.Id).ConfigureAwait(false);
-            return Ok(new CommonResponseModel { Success = true, Message = localizer.GetString("TrainingTrainer") });
+            await courseTeacherService
+                .DeleteAsync(id.ToString(), CurrentUser.Id)
+                .ConfigureAwait(false);
+            return Ok(
+                new CommonResponseModel
+                {
+                    Success = true,
+                    Message = localizer.GetString("TrainingTrainer")
+                }
+            );
         }
     }
 }

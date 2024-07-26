@@ -1,6 +1,7 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Domain.Entities;
+
     public class AssignmentAttachmentResponseModel
     {
         public Guid AssignmentId { get; set; }
@@ -10,6 +11,7 @@
         public string Name { get; set; }
         public string MimeType { get; set; }
         public UserModel User { get; set; }
+
         public AssignmentAttachmentResponseModel(AssignmentAttachment attachment)
         {
             AssignmentId = attachment.AssignmentId;

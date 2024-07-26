@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Lingtren.Application.Common.Models.RequestModels
+namespace AcademyKit.Application.Common.Models.RequestModels
 {
     public class MailSendRequestModel
     {

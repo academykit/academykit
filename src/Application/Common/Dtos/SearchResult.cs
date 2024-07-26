@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Application.Common.Dtos
+﻿namespace AcademyKit.Application.Common.Dtos
 {
     /// <summary>
     /// An entity class that represents search result.
@@ -42,8 +42,6 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchResult{T}"/> class.
         /// </summary>
-        public SearchResult()
-        {
-        }
+        public SearchResult() { }
     }
 }

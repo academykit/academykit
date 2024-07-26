@@ -1,15 +1,11 @@
-﻿// <copyright file="MediaController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Application.ValidatorLocalization;
     using FluentValidation;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Application.ValidatorLocalization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
 
@@ -22,7 +18,8 @@ namespace Lingtren.Api.Controllers
         public MediaController(
             IMediaService mediaService,
             IValidator<MediaRequestModel> validator,
-            IStringLocalizer<ValidatorLocalizer> localizer)
+            IStringLocalizer<ValidatorLocalizer> localizer
+        )
         {
             this.mediaService = mediaService;
             this.validator = validator;
@@ -42,7 +39,9 @@ namespace Lingtren.Api.Controllers
                 throw new ForbiddenException(localizer.GetString("ValueCannotBeNullOrEmpty"));
             }
 
-            var response = await mediaService.StorageUpdateSettingAsync(model, CurrentUser.Id).ConfigureAwait(false);
+            var response = await mediaService
+                .StorageUpdateSettingAsync(model, CurrentUser.Id)
+                .ConfigureAwait(false);
             return response;
         }
 
@@ -51,7 +50,8 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         /// <returns> the instance of <see cref="StorageSettingResponseModel" /> .</returns>
         [HttpGet("setting")]
-        public async Task<IList<StorageSettingResponseModel>> Setting() => await mediaService.GetStorageSettingAsync(CurrentUser.Id).ConfigureAwait(false);
+        public async Task<IList<StorageSettingResponseModel>> Setting() =>
+            await mediaService.GetStorageSettingAsync(CurrentUser.Id).ConfigureAwait(false);
 
         /// <summary>
         /// upload file api.
@@ -63,7 +63,9 @@ namespace Lingtren.Api.Controllers
         [RequestSizeLimit(2147483648)]
         public async Task<string> File([FromForm] MediaRequestModel model)
         {
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
             return await mediaService.UploadFileAsync(model).ConfigureAwait(false);
         }
 
@@ -73,6 +75,7 @@ namespace Lingtren.Api.Controllers
         /// <param name="key"> the file key. </param>
         /// <returns> the presigned url. </returns>
         [HttpGet("file")]
-        public async Task<string> GetFile([FromQuery] string key) => await mediaService.GetFileAsync(key).ConfigureAwait(false);
+        public async Task<string> GetFile([FromQuery] string key) =>
+            await mediaService.GetFileAsync(key).ConfigureAwait(false);
     }
 }

@@ -1,11 +1,11 @@
-﻿namespace Lingtren.Application.Common.Interfaces
+﻿namespace AcademyKit.Application.Common.Interfaces
 {
     using System;
     using System.Threading.Tasks;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
 
     public interface ICommentService : IGenericService<Comment, BaseSearchCriteria>
     {
@@ -15,7 +15,10 @@
         /// <param name="identity">the course id or slug</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the paginated items</returns>
-        Task<SearchResult<CommentResponseModel>> SearchAsync(string identity, BaseSearchCriteria criteria);
+        Task<SearchResult<CommentResponseModel>> SearchAsync(
+            string identity,
+            BaseSearchCriteria criteria
+        );
 
         /// <summary>
         /// Handle to create comment
@@ -24,7 +27,11 @@
         /// <param name="model">the instance of <see cref="CommentRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the instance of <see cref="CommentResponseModel"/></returns>
-        Task<CommentResponseModel> CreateAsync(string identity, CommentRequestModel model, Guid currentUserId);
+        Task<CommentResponseModel> CreateAsync(
+            string identity,
+            CommentRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to create comment
@@ -34,7 +41,12 @@
         /// <param name="model">the instance of <see cref="CommentRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns>the instance of <see cref="CommentResponseModel"/></returns>
-        Task<CommentResponseModel> UpdateAsync(string identity, Guid commentId, CommentRequestModel model, Guid currentUserId);
+        Task<CommentResponseModel> UpdateAsync(
+            string identity,
+            Guid commentId,
+            CommentRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to delete comment
@@ -52,7 +64,11 @@
         /// <param name="id">the comment id</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the paginated result</returns>
-        Task<SearchResult<CommentReplyResponseModel>> SearchReplyAsync(string identity, Guid id, BaseSearchCriteria criteria);
+        Task<SearchResult<CommentReplyResponseModel>> SearchReplyAsync(
+            string identity,
+            Guid id,
+            BaseSearchCriteria criteria
+        );
 
         /// <summary>
         /// Handle to create comment reply
@@ -62,7 +78,12 @@
         /// <param name="model">the instance of <see cref="CommentRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user</param>
         /// <returns></returns>
-        Task<CommentReplyResponseModel> CreateReplyAsync(string identity, Guid commentId, CommentRequestModel model, Guid currentUserId);
+        Task<CommentReplyResponseModel> CreateReplyAsync(
+            string identity,
+            Guid commentId,
+            CommentRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to create comment reply
@@ -72,7 +93,13 @@
         /// <param name="model">the instance of <see cref="CommentRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user</param>
         /// <returns>the instance of <see cref="CommentReplyResponseModel"/></returns>
-        Task<CommentReplyResponseModel> UpdateReplyAsync(string identity, Guid commentId, Guid replyId, CommentRequestModel model, Guid currentUserId);
+        Task<CommentReplyResponseModel> UpdateReplyAsync(
+            string identity,
+            Guid commentId,
+            Guid replyId,
+            CommentRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to delete comment

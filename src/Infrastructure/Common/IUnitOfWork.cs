@@ -1,7 +1,7 @@
-﻿namespace Lingtren.Infrastructure.Common
+﻿namespace AcademyKit.Infrastructure.Common
 {
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Infrastructure.Persistence;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Infrastructure.Persistence;
 
     public interface IUnitOfWork : IDisposable
     {
@@ -28,6 +28,7 @@
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns>An instance of type inherited from <see cref="IRepository{TEntity}"/> interface.</returns>
-        IRepository<TEntity> GetRepository<TEntity>() where TEntity : class;
+        IRepository<TEntity> GetRepository<TEntity>()
+            where TEntity : class;
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
     using System;
     using System.Linq;
@@ -25,7 +25,9 @@
         /// <param name="modelState">State of the model.</param>
         public ApiError(ModelStateDictionary modelState)
         {
-            var errors = modelState?.Keys.SelectMany(key => modelState[key].Errors.Select(x => x.ErrorMessage));
+            var errors = modelState?.Keys.SelectMany(key =>
+                modelState[key].Errors.Select(x => x.ErrorMessage)
+            );
             Message = string.Join(Environment.NewLine, errors);
         }
     }

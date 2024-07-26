@@ -1,24 +1,22 @@
-﻿namespace Lingtren.Infrastructure.Services
+﻿namespace AcademyKit.Infrastructure.Services
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
-
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Localization;
-    using Microsoft.Extensions.Localization;
-    using Microsoft.Extensions.Logging;
     using System.Linq;
-    using Microsoft.EntityFrameworkCore;
+    using System.Threading.Tasks;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Http;
-    using Lingtren.Domain.Enums;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Logging;
 
     public class AssessmentSubmissionService
         : BaseGenericService<AssessmentSubmission, BaseSearchCriteria>,
@@ -42,8 +40,8 @@
 
             var assessment = await _unitOfWork
                 .GetRepository<Assessment>()
-                .GetFirstOrDefaultAsync(
-                    predicate: x => x.Id.ToString() == identity || x.Slug == identity
+                .GetFirstOrDefaultAsync(predicate: x =>
+                    x.Id.ToString() == identity || x.Slug == identity
                 )
                 .ConfigureAwait(false);
             if (assessment == null)
@@ -93,8 +91,8 @@
 
                 if (existingQuestion != null)
                 {
-                    var answerIds = existingQuestion.AssessmentOptions
-                        .Where(x => x.IsCorrect)
+                    var answerIds = existingQuestion
+                        .AssessmentOptions.Where(x => x.IsCorrect)
                         .Select(x => x.Id);
                     var isCorrect = answerIds
                         .OrderBy(x => x)
@@ -147,12 +145,11 @@
             var assessmentAchieve = await _unitOfWork
                 .GetRepository<AssessmentSubmission>()
                 .GetAll()
-                .Where(
-                    p =>
-                        p.AssessmentId == assessment.Id
-                        && p.UserId == currentUserId
-                        && p.EndTime != default
-                        && p.IsSubmissionError == false
+                .Where(p =>
+                    p.AssessmentId == assessment.Id
+                    && p.UserId == currentUserId
+                    && p.EndTime != default
+                    && p.IsSubmissionError == false
                 )
                 .OrderByDescending(p => p.EndTime)
                 .FirstOrDefaultAsync()
@@ -162,8 +159,8 @@
                 .CountAsync(x => x.AssessmentId == assessmentAchieve.AssessmentId);
             var assessmentResult = await _unitOfWork
                 .GetRepository<AssessmentResult>()
-                .GetFirstOrDefaultAsync(
-                    predicate: x => x.AssessmentSubmissionId == assessmentAchieve.Id
+                .GetFirstOrDefaultAsync(predicate: x =>
+                    x.AssessmentSubmissionId == assessmentAchieve.Id
                 )
                 .ConfigureAwait(false);
             var totalMarksObtained =
@@ -177,7 +174,7 @@
                 .GetAllAsync(predicate: p => p.UserId == currentUserId)
                 .ConfigureAwait(false);
 
-            var greater=(decimal)0;
+            var greater = (decimal)0;
             foreach (var item in existingSkills)
             {
                 // Check if the skill already exists for the user
@@ -188,9 +185,9 @@
                     && !skillExists // Check if the skill does not already exist for the user
                 )
                 {
-                    if(item.Percentage > greater)
+                    if (item.Percentage > greater)
                     {
-                        greater=item.Percentage;
+                        greater = item.Percentage;
                         var userSkill = new UserSkills
                         {
                             UserId = assessmentResult.UserId,
@@ -200,7 +197,7 @@
                         };
                         await _unitOfWork.GetRepository<UserSkills>().InsertAsync(userSkill); // Add the new userSkill to the context
                     }
-                }    
+                }
             }
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -225,8 +222,8 @@
                 var currentTimeStamp = DateTime.UtcNow;
                 var assessment = await _unitOfWork
                     .GetRepository<Assessment>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p => p.Id.ToString() == identity || p.Slug == identity
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id.ToString() == identity || p.Slug == identity
                     )
                     .ConfigureAwait(false);
 
@@ -253,10 +250,9 @@
                 if (!string.IsNullOrWhiteSpace(searchCriteria.Search))
                 {
                     var search = searchCriteria.Search.ToLower().Trim();
-                    predicate = predicate.And(
-                        x =>
-                            x.User.LastName.ToLower().Trim().Contains(search)
-                            || x.User.FirstName.ToLower().Trim().Contains(search)
+                    predicate = predicate.And(x =>
+                        x.User.LastName.ToLower().Trim().Contains(search)
+                        || x.User.FirstName.ToLower().Trim().Contains(search)
                     );
                 }
 
@@ -267,29 +263,22 @@
 
                 var result = query
                     .GroupBy(x => x.UserId)
-                    .Select(
-                        x =>
-                            new AssessmentResult
-                            {
-                                Id = x.FirstOrDefault(
-                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
-                                ).Id,
-                                AssessmentId = assessment.Id,
-                                UserId = x.FirstOrDefault(
-                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
-                                ).UserId,
-                                TotalMark = x.FirstOrDefault(
-                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
-                                ).TotalMark,
-                                NegativeMark = x.FirstOrDefault(
-                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
-                                ).NegativeMark,
-                                User = x.FirstOrDefault(
-                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
-                                ).User,
-                                CreatedOn = x.Max(a => a.CreatedOn),
-                            }
-                    )
+                    .Select(x => new AssessmentResult
+                    {
+                        Id = x.FirstOrDefault(a => a.CreatedOn == x.Max(b => b.CreatedOn)).Id,
+                        AssessmentId = assessment.Id,
+                        UserId = x.FirstOrDefault(a =>
+                            a.CreatedOn == x.Max(b => b.CreatedOn)
+                        ).UserId,
+                        TotalMark = x.FirstOrDefault(a =>
+                            a.CreatedOn == x.Max(b => b.CreatedOn)
+                        ).TotalMark,
+                        NegativeMark = x.FirstOrDefault(a =>
+                            a.CreatedOn == x.Max(b => b.CreatedOn)
+                        ).NegativeMark,
+                        User = x.FirstOrDefault(a => a.CreatedOn == x.Max(b => b.CreatedOn)).User,
+                        CreatedOn = x.Max(a => a.CreatedOn),
+                    })
                     .ToList();
 
                 var paginatedResult = result.ToIPagedList(searchCriteria.Page, searchCriteria.Size);
@@ -301,26 +290,25 @@
                     TotalCount = paginatedResult.TotalCount,
                     TotalPage = paginatedResult.TotalPage,
                 };
-                paginatedResult.Items.ForEach(
-                    res =>
-                        response.Items.Add(
-                            new AssessmentResultResponseModel
+                paginatedResult.Items.ForEach(res =>
+                    response.Items.Add(
+                        new AssessmentResultResponseModel
+                        {
+                            Id = res.Id,
+                            AssessmentId = res.AssessmentId,
+                            ObtainedMarks =
+                                (res.TotalMark - res.NegativeMark) > 0
+                                    ? (res.TotalMark - res.NegativeMark)
+                                    : 0,
+                            User = new UserModel
                             {
-                                Id = res.Id,
-                                AssessmentId = res.AssessmentId,
-                                ObtainedMarks =
-                                    (res.TotalMark - res.NegativeMark) > 0
-                                        ? (res.TotalMark - res.NegativeMark)
-                                        : 0,
-                                User = new UserModel
-                                {
-                                    Id = (Guid)res.User?.Id,
-                                    FullName = res.User?.FullName,
-                                    Email = res.User?.Email,
-                                    ImageUrl = res.User.ImageUrl,
-                                }
+                                Id = (Guid)res.User?.Id,
+                                FullName = res.User?.FullName,
+                                Email = res.User?.Email,
+                                ImageUrl = res.User.ImageUrl,
                             }
-                        )
+                        }
+                    )
                 );
                 return response;
             }
@@ -354,8 +342,8 @@
                 var currentTimeStamp = DateTime.UtcNow;
                 var assessment = await _unitOfWork
                     .GetRepository<Assessment>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p => p.Id.ToString() == identity || p.Slug == identity
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id.ToString() == identity || p.Slug == identity
                     )
                     .ConfigureAwait(false);
 
@@ -375,11 +363,11 @@
                 predicate = predicate.And(p => p.AssessmentId == assessment.Id);
                 predicate = predicate.And(p => p.UserId == userId);
                 predicate = predicate.And(p => p.EndTime != default);
-                predicate = predicate.And(
-                    p => p.AssessmentSubmissionAnswers.Any(x => x.AssessmentSubmissionId == p.Id)
+                predicate = predicate.And(p =>
+                    p.AssessmentSubmissionAnswers.Any(x => x.AssessmentSubmissionId == p.Id)
                 );
-                predicate = predicate.And(
-                    p => p.AssessmentResults.Any(x => x.AssessmentSubmissionId == p.Id)
+                predicate = predicate.And(p =>
+                    p.AssessmentResults.Any(x => x.AssessmentSubmissionId == p.Id)
                 );
 
                 var questionSetSubmissions = await _unitOfWork
@@ -410,70 +398,61 @@
                 };
                 response.HasExceededAttempt = response.AttemptCount >= assessment.Retakes;
                 response.EndDate = assessment.EndDate;
-                questionSetSubmissions.ForEach(
-                    res =>
-                        response.AssessmentSetResultDetails.Add(
-                            new AssessmentSetResultDetailModel
-                            {
-                                QuestionSetSubmissionId = res.Id,
-                                SubmissionDate =
-                                    res.EndTime != default
-                                        ? res.EndTime
-                                        : res.StartTime != default
-                                            ? res.StartTime
-                                            : res.CreatedOn,
-                                TotalMarks =
-                                    res.AssessmentResults.Count > 0
-                                        ? res.AssessmentResults
-                                            .FirstOrDefault()
-                                            .TotalMark.ToString()
-                                        : "",
-                                NegativeMarks =
-                                    res.AssessmentResults.Count > 0
-                                        ? res.AssessmentResults
-                                            .FirstOrDefault()
-                                            .NegativeMark.ToString()
-                                        : "",
-                                ObtainedMarks =
-                                    res.AssessmentResults.Count > 0
-                                        ? (
-                                            (
+                questionSetSubmissions.ForEach(res =>
+                    response.AssessmentSetResultDetails.Add(
+                        new AssessmentSetResultDetailModel
+                        {
+                            QuestionSetSubmissionId = res.Id,
+                            SubmissionDate =
+                                res.EndTime != default
+                                    ? res.EndTime
+                                    : res.StartTime != default
+                                        ? res.StartTime
+                                        : res.CreatedOn,
+                            TotalMarks =
+                                res.AssessmentResults.Count > 0
+                                    ? res.AssessmentResults.FirstOrDefault().TotalMark.ToString()
+                                    : "",
+                            NegativeMarks =
+                                res.AssessmentResults.Count > 0
+                                    ? res.AssessmentResults.FirstOrDefault().NegativeMark.ToString()
+                                    : "",
+                            ObtainedMarks =
+                                res.AssessmentResults.Count > 0
+                                    ? (
+                                        (
+                                            res.AssessmentResults.FirstOrDefault().TotalMark
+                                            - res.AssessmentResults.FirstOrDefault().NegativeMark
+                                        ) > 0
+                                            ? (
                                                 res.AssessmentResults.FirstOrDefault().TotalMark
-                                                - res.AssessmentResults
-                                                    .FirstOrDefault()
-                                                    .NegativeMark
-                                            ) > 0
-                                                ? (
-                                                    res.AssessmentResults.FirstOrDefault().TotalMark
-                                                    - res.AssessmentResults
-                                                        .FirstOrDefault()
-                                                        .NegativeMark
-                                                )
-                                                : 0
-                                        ).ToString()
-                                        : "",
-                                Duration =
-                                    assessment.Duration != 0
-                                        ? TimeSpan
-                                            .FromSeconds(assessment.Duration)
-                                            .ToString(@"hh\:mm\:ss")
-                                        : string.Empty,
-                                CompleteDuration =
-                                    assessment.Duration == 0 || res.EndTime == default
-                                        ? string.Empty
-                                        : TimeSpan
-                                            .FromSeconds(
-                                                (
-                                                    Convert.ToDateTime(res.StartTime)
-                                                    - Convert.ToDateTime(res.EndTime)
-                                                ).TotalSeconds
+                                                - res.AssessmentResults.FirstOrDefault().NegativeMark
                                             )
-                                            .ToString(@"hh\:mm\:ss"),
-                            }
-                        )
+                                            : 0
+                                    ).ToString()
+                                    : "",
+                            Duration =
+                                assessment.Duration != 0
+                                    ? TimeSpan
+                                        .FromSeconds(assessment.Duration)
+                                        .ToString(@"hh\:mm\:ss")
+                                    : string.Empty,
+                            CompleteDuration =
+                                assessment.Duration == 0 || res.EndTime == default
+                                    ? string.Empty
+                                    : TimeSpan
+                                        .FromSeconds(
+                                            (
+                                                Convert.ToDateTime(res.StartTime)
+                                                - Convert.ToDateTime(res.EndTime)
+                                            ).TotalSeconds
+                                        )
+                                        .ToString(@"hh\:mm\:ss"),
+                        }
+                    )
                 );
-                response.AssessmentSetResultDetails = response.AssessmentSetResultDetails
-                    .OrderByDescending(x => x.SubmissionDate)
+                response.AssessmentSetResultDetails = response
+                    .AssessmentSetResultDetails.OrderByDescending(x => x.SubmissionDate)
                     .ToList();
                 return response;
             }
@@ -507,8 +486,8 @@
                 var currentTimeStamp = DateTime.UtcNow;
                 var assessment = await _unitOfWork
                     .GetRepository<Assessment>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p => p.Id.ToString() == identity || p.Slug == identity
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id.ToString() == identity || p.Slug == identity
                     )
                     .ConfigureAwait(false);
 
@@ -525,10 +504,9 @@
                     .ConfigureAwait(false);
 
                 var predicate = PredicateBuilder.New<AssessmentResult>(true);
-                predicate = predicate.And(
-                    p =>
-                        p.AssessmentId == assessment.Id
-                        && p.AssessmentSubmissionId == assessmentSubmissionId
+                predicate = predicate.And(p =>
+                    p.AssessmentId == assessment.Id
+                    && p.AssessmentSubmissionId == assessmentSubmissionId
                 );
                 var assessmentResult = await _unitOfWork
                     .GetRepository<AssessmentResult>()
@@ -551,9 +529,8 @@
 
                 var assessmentSubmission = await _unitOfWork
                     .GetRepository<AssessmentSubmission>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p =>
-                            p.Id == assessmentSubmissionId && p.AssessmentId == assessment.Id
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id == assessmentSubmissionId && p.AssessmentId == assessment.Id
                     )
                     .ConfigureAwait(false);
                 if (assessmentSubmission == null)
@@ -632,19 +609,17 @@
                     var selectedAnsIds = !string.IsNullOrWhiteSpace(item.SelectedAnswers)
                         ? item.SelectedAnswers.Split(",").Select(Guid.Parse).ToList()
                         : new List<Guid>();
-                    item.AssessmentQuestion.AssessmentOptions
-                        .OrderBy(o => o.Order)
-                        .ForEach(
-                            opt =>
-                                result.QuestionOptions.Add(
-                                    new AssessmentQuestionResultOption
-                                    {
-                                        Id = opt.Id,
-                                        Value = opt.Option,
-                                        IsCorrect = opt.IsCorrect,
-                                        IsSelected = selectedAnsIds.Contains(opt.Id)
-                                    }
-                                )
+                    item.AssessmentQuestion.AssessmentOptions.OrderBy(o => o.Order)
+                        .ForEach(opt =>
+                            result.QuestionOptions.Add(
+                                new AssessmentQuestionResultOption
+                                {
+                                    Id = opt.Id,
+                                    Value = opt.Option,
+                                    IsCorrect = opt.IsCorrect,
+                                    IsSelected = selectedAnsIds.Contains(opt.Id)
+                                }
+                            )
                         );
 
                     responseModel.Results.Add(result);
@@ -668,69 +643,59 @@
         )
         {
             var assessment = await _unitOfWork
-                    .GetRepository<Assessment>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p => p.Id.ToString() == identity || p.Slug == identity
-                    )
-                    .ConfigureAwait(false);
+                .GetRepository<Assessment>()
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.Id.ToString() == identity || p.Slug == identity
+                )
+                .ConfigureAwait(false);
 
-                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId)
-                    .ConfigureAwait(false);
+            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId)
+                .ConfigureAwait(false);
 
-                var predicate = PredicateBuilder.New<AssessmentResult>(true);
-                predicate = predicate.And(p => p.AssessmentId == assessment.Id);
+            var predicate = PredicateBuilder.New<AssessmentResult>(true);
+            predicate = predicate.And(p => p.AssessmentId == assessment.Id);
 
-                if (assessment.CreatedBy != currentUserId && !isSuperAdminOrAdmin)
+            if (assessment.CreatedBy != currentUserId && !isSuperAdminOrAdmin)
+            {
+                predicate = predicate.And(p => p.UserId == currentUserId);
+            }
+
+            var query = await _unitOfWork
+                .GetRepository<AssessmentResult>()
+                .GetAllAsync(predicate: predicate, include: src => src.Include(x => x.User))
+                .ConfigureAwait(false);
+
+            var result = query
+                .GroupBy(x => x.UserId)
+                .Select(x => new AssessmentResult
                 {
-                    predicate = predicate.And(p => p.UserId == currentUserId);
-                }
-
-                var query = await _unitOfWork
-                    .GetRepository<AssessmentResult>()
-                    .GetAllAsync(predicate: predicate, include: src => src.Include(x => x.User))
-                    .ConfigureAwait(false);
-
-                var result = query
-                    .GroupBy(x => x.UserId)
-                    .Select(
-                        x =>
-                            new AssessmentResult
-                            {
-                                Id = x.FirstOrDefault(
-                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
-                                ).Id,
-                                AssessmentId = assessment.Id,
-                                UserId = x.FirstOrDefault(
-                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
-                                ).UserId,
-                                TotalMark = x.FirstOrDefault(
-                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
-                                ).TotalMark,
-                                NegativeMark = x.FirstOrDefault(
-                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
-                                ).NegativeMark,
-                                User = x.FirstOrDefault(
-                                    a => a.CreatedOn == x.Max(b => b.CreatedOn)
-                                ).User,
-                                CreatedOn = x.Max(a => a.CreatedOn),
-                            }
-                    )
-                    .ToList();
-                var response = new List<AssessmentResultExportModel>();
-                result.ForEach(
-                    res =>response.Add(
-                            new AssessmentResultExportModel
-                            {
-                                TotalMarks =
-                                    (res.TotalMark - res.NegativeMark) > 0
-                                        ? (res.TotalMark - res.NegativeMark)
-                                        : 0,
-                                StudentName=res.User?.FullName
-                            }
-                        )
-                        
-                );
-                return response;
+                    Id = x.FirstOrDefault(a => a.CreatedOn == x.Max(b => b.CreatedOn)).Id,
+                    AssessmentId = assessment.Id,
+                    UserId = x.FirstOrDefault(a => a.CreatedOn == x.Max(b => b.CreatedOn)).UserId,
+                    TotalMark = x.FirstOrDefault(a =>
+                        a.CreatedOn == x.Max(b => b.CreatedOn)
+                    ).TotalMark,
+                    NegativeMark = x.FirstOrDefault(a =>
+                        a.CreatedOn == x.Max(b => b.CreatedOn)
+                    ).NegativeMark,
+                    User = x.FirstOrDefault(a => a.CreatedOn == x.Max(b => b.CreatedOn)).User,
+                    CreatedOn = x.Max(a => a.CreatedOn),
+                })
+                .ToList();
+            var response = new List<AssessmentResultExportModel>();
+            result.ForEach(res =>
+                response.Add(
+                    new AssessmentResultExportModel
+                    {
+                        TotalMarks =
+                            (res.TotalMark - res.NegativeMark) > 0
+                                ? (res.TotalMark - res.NegativeMark)
+                                : 0,
+                        StudentName = res.User?.FullName
+                    }
+                )
+            );
+            return response;
         }
     }
 }

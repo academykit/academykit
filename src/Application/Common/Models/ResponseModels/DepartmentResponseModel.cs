@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Domain.Entities;
 
     public class DepartmentResponseModel
     {
@@ -10,6 +10,7 @@
         public bool IsActive { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
+
         public DepartmentResponseModel(Department model)
         {
             Id = model.Id;

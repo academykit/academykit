@@ -1,20 +1,20 @@
-﻿namespace Lingtren.Infrastructure.Services
+﻿namespace AcademyKit.Infrastructure.Services
 {
     using System.Data;
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq.Expressions;
     using System.Text;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Localization;
     using Hangfire;
     using Hangfire.Server;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
@@ -53,10 +53,8 @@
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(
-                    x =>
-                        x.LicenseEmail.ToLower().Trim().Contains(search)
-                        || x.HostId.Contains(search)
+                predicate = predicate.And(x =>
+                    x.LicenseEmail.ToLower().Trim().Contains(search) || x.HostId.Contains(search)
                 );
             }
 
@@ -119,9 +117,8 @@
             {
                 var emailExist = await _unitOfWork
                     .GetRepository<ZoomLicense>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p =>
-                            p.LicenseEmail.ToLower() == model.LicenseEmail.ToLower() && p.IsActive
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.LicenseEmail.ToLower() == model.LicenseEmail.ToLower() && p.IsActive
                     )
                     .ConfigureAwait(false);
                 if (emailExist != null)
@@ -177,8 +174,8 @@
                     );
                 var emailAddress = zoomLicenses.Where(x => x.LicenseEmail == model.LicenseEmail);
                 if (
-                    emailAddress.Any(
-                        x => x.LicenseEmail == model.LicenseEmail && x.Id != zoomLicense.Id
+                    emailAddress.Any(x =>
+                        x.LicenseEmail == model.LicenseEmail && x.Id != zoomLicense.Id
                     )
                 )
                 {
@@ -225,18 +222,17 @@
                     .ConfigureAwait(false);
                 if (meetingsWithStartDate.Count == 0)
                 {
-                    zoomLicenses.ForEach(
-                        x =>
-                            response.Add(
-                                new ZoomLicenseResponseModel
-                                {
-                                    Id = x.Id,
-                                    HostId = x.HostId,
-                                    Capacity = x.Capacity,
-                                    LicenseEmail = x.LicenseEmail,
-                                    IsActive = x.IsActive,
-                                }
-                            )
+                    zoomLicenses.ForEach(x =>
+                        response.Add(
+                            new ZoomLicenseResponseModel
+                            {
+                                Id = x.Id,
+                                HostId = x.HostId,
+                                Capacity = x.Capacity,
+                                LicenseEmail = x.LicenseEmail,
+                                IsActive = x.IsActive,
+                            }
+                        )
                     );
                     return response;
                 }
@@ -258,38 +254,17 @@
                     }
                 }
 
-                var hasOverlappingMeetings = meetingsWithStartDate.Where(
-                    m =>
-                        (
-                            m.StartDate.HasValue
-                            && m.StartDate.Value <= endTime
-                            && m.StartDate.Value.AddMinutes(m.Duration / 60)
-                                >= zoomLicenseIdRequestModel.StartDateTime
-                        )
+                var hasOverlappingMeetings = meetingsWithStartDate.Where(m =>
+                    (
+                        m.StartDate.HasValue
+                        && m.StartDate.Value <= endTime
+                        && m.StartDate.Value.AddMinutes(m.Duration / 60)
+                            >= zoomLicenseIdRequestModel.StartDateTime
+                    )
                 );
                 if (hasOverlappingMeetings.ToList().Count == 0)
                 {
-                    zoomLicenses.ForEach(
-                        x =>
-                            response.Add(
-                                new ZoomLicenseResponseModel
-                                {
-                                    Id = x.Id,
-                                    HostId = x.HostId,
-                                    Capacity = x.Capacity,
-                                    LicenseEmail = x.LicenseEmail,
-                                    IsActive = x.IsActive,
-                                }
-                            )
-                    );
-                    return response;
-                }
-
-                var filteredZoomLicenses = zoomLicenses.Where(
-                    z => !hasOverlappingMeetings.Any(m => m.ZoomLicenseId == z.Id)
-                );
-                filteredZoomLicenses.ForEach(
-                    x =>
+                    zoomLicenses.ForEach(x =>
                         response.Add(
                             new ZoomLicenseResponseModel
                             {
@@ -300,6 +275,24 @@
                                 IsActive = x.IsActive,
                             }
                         )
+                    );
+                    return response;
+                }
+
+                var filteredZoomLicenses = zoomLicenses.Where(z =>
+                    !hasOverlappingMeetings.Any(m => m.ZoomLicenseId == z.Id)
+                );
+                filteredZoomLicenses.ForEach(x =>
+                    response.Add(
+                        new ZoomLicenseResponseModel
+                        {
+                            Id = x.Id,
+                            HostId = x.HostId,
+                            Capacity = x.Capacity,
+                            LicenseEmail = x.LicenseEmail,
+                            IsActive = x.IsActive,
+                        }
+                    )
                 );
                 if (response.Count == 0)
                 {
@@ -341,29 +334,26 @@
                 await _unitOfWork.GetRepository<Meeting>().GetAllAsync().ConfigureAwait(false)
             )
                 .AsEnumerable()
-                .Where(
-                    p =>
-                        meetinglist.Any(
-                            m =>
-                                m.StartDate.HasValue
-                                && p.StartDate.HasValue
-                                && m.StartDate.Value.Date == p.StartDate.Value.Date
-                        )
+                .Where(p =>
+                    meetinglist.Any(m =>
+                        m.StartDate.HasValue
+                        && p.StartDate.HasValue
+                        && m.StartDate.Value.Date == p.StartDate.Value.Date
+                    )
                 )
                 .ToList();
 
-            var hasOverlappingMeetings = userMeetings.Where(
-                m =>
-                    (
-                        m.StartDate.HasValue
-                        && m.StartDate.Value >= startDateTime
-                        && m.StartDate.Value < endTime
-                    )
-                    || (
-                        m.StartDate.HasValue
-                        && m.StartDate.Value.AddMinutes(m.Duration) > startDateTime
-                        && m.StartDate.Value.AddMinutes(m.Duration) <= endTime
-                    )
+            var hasOverlappingMeetings = userMeetings.Where(m =>
+                (
+                    m.StartDate.HasValue
+                    && m.StartDate.Value >= startDateTime
+                    && m.StartDate.Value < endTime
+                )
+                || (
+                    m.StartDate.HasValue
+                    && m.StartDate.Value.AddMinutes(m.Duration) > startDateTime
+                    && m.StartDate.Value.AddMinutes(m.Duration) <= endTime
+                )
             );
 
             if (hasOverlappingMeetings.Count() != 0)
@@ -389,17 +379,14 @@
                 };
 
             var response = data.Where(x => x.Count < 2)
-                .Select(
-                    x =>
-                        new ZoomLicenseResponseModel
-                        {
-                            Id = x.Id,
-                            HostId = x.HostId,
-                            Capacity = x.Capacity,
-                            LicenseEmail = x.LicenseEmail,
-                            IsActive = x.IsActive,
-                        }
-                )
+                .Select(x => new ZoomLicenseResponseModel
+                {
+                    Id = x.Id,
+                    HostId = x.HostId,
+                    Capacity = x.Capacity,
+                    LicenseEmail = x.LicenseEmail,
+                    IsActive = x.IsActive,
+                })
                 .ToList();
 
             return response;
@@ -479,7 +466,7 @@
         )
         {
             var tokenString = await GetOAuthAccessToken().ConfigureAwait(false);
-            if (!existingMeetingId.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(existingMeetingId))
             {
                 var id = (long)Convert.ToInt64(existingMeetingId);
                 var clientDelete = new RestClient($"{zoomAPIPath}/meetings/{id}");

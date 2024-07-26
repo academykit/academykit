@@ -1,6 +1,6 @@
-namespace Lingtren.Infrastructure.Persistence.Configurations
+namespace AcademyKit.Infrastructure.Persistence.Configurations
 {
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Domain.Entities;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

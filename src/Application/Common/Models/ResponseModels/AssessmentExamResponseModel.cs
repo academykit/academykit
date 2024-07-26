@@ -1,6 +1,4 @@
-using Lingtren.Application.Common.Dtos;
-
-namespace Lingtren.Application.Common.Models.ResponseModels
+namespace AcademyKit.Application.Common.Models.ResponseModels
 {
     public class AssessmentExamResponseModel
     {

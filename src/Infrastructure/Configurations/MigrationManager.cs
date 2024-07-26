@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Infrastructure.Configurations
+﻿namespace AcademyKit.Infrastructure.Configurations
 {
-    using Lingtren.Infrastructure.Persistence;
+    using AcademyKit.Infrastructure.Persistence;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +10,9 @@
         public static WebApplication MigrateDatabase(this WebApplication webApp)
         {
             using (var scope = webApp.Services.CreateScope())
-            using (var appContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>())
+            using (
+                var appContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>()
+            )
             {
                 try
                 {

@@ -1,6 +1,6 @@
-﻿using Lingtren.Domain.Enums;
+﻿using AcademyKit.Domain.Enums;
 
-namespace Lingtren.Application.Common.Dtos
+namespace AcademyKit.Application.Common.Dtos
 {
     public class TagBaseSearchCriteria : BaseSearchCriteria
     {
@@ -10,7 +10,7 @@ namespace Lingtren.Application.Common.Dtos
         public string Idenitiy { get; set; }
 
         /// <summary>
-        /// type of training 
+        /// type of training
         /// </summary>
         public TrainingTypeEnum TrainingType { get; set; }
     }

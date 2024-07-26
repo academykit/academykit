@@ -1,15 +1,11 @@
-﻿// <copyright file="WebhookController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
     using System;
     using System.Text;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.ResponseModels;
     using Hangfire;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
@@ -22,7 +18,9 @@ namespace Lingtren.Api.Controllers
 
         public WebhookController(
             IZoomSettingService zoomSettingService,
-        IWebhookService webhookService, ILogger<WebhookController> logger)
+            IWebhookService webhookService,
+            ILogger<WebhookController> logger
+        )
         {
             this.zoomSettingService = zoomSettingService;
             this.webhookService = webhookService;
@@ -60,7 +58,9 @@ namespace Lingtren.Api.Controllers
                     return Ok(response);
                 }
 
-                BackgroundJob.Enqueue<IWebhookService>(job => job.UploadZoomRecordingAsync(model, null));
+                BackgroundJob.Enqueue<IWebhookService>(job =>
+                    job.UploadZoomRecordingAsync(model, null)
+                );
             }
 
             return Ok();

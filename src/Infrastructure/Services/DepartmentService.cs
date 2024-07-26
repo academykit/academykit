@@ -1,22 +1,21 @@
-﻿namespace Lingtren.Infrastructure.Services
+﻿namespace AcademyKit.Infrastructure.Services
 {
     using System.Data;
     using System.Linq.Expressions;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Helpers;
-    using Lingtren.Infrastructure.Localization;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Helpers;
+    using AcademyKit.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
-    using Microsoft.IdentityModel.Tokens;
 
     public class DepartmentService
         : BaseGenericService<Department, DepartmentBaseSearchCriteria>,
@@ -84,7 +83,7 @@
                 predicate = predicate.And(p => p.IsActive == criteria.IsActive);
             }
 
-            if (!criteria.departmentName.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(criteria.departmentName))
             {
                 predicate = predicate.And(p => p.Name.ToLower() == criteria.departmentName);
             }
@@ -165,8 +164,8 @@
         {
             var departmentExist = await _unitOfWork
                 .GetRepository<Department>()
-                .ExistsAsync(
-                    predicate: p => p.Id != entity.Id && p.Name.ToLower() == entity.Name.ToLower()
+                .ExistsAsync(predicate: p =>
+                    p.Id != entity.Id && p.Name.ToLower() == entity.Name.ToLower()
                 )
                 .ConfigureAwait(false);
             if (departmentExist)
@@ -198,24 +197,23 @@
                 .ConfigureAwait(false);
 
             var predicate = PredicateBuilder.New<User>(true);
-            predicate = predicate.And(
-                p => p.DepartmentId == department.Id && p.Status == UserStatus.Active
+            predicate = predicate.And(p =>
+                p.DepartmentId == department.Id && p.Status == UserStatus.Active
             );
 
             if (!string.IsNullOrWhiteSpace(searchCriteria.Search))
             {
                 var search = searchCriteria.Search.ToLower().Trim();
-                predicate = predicate.And(
-                    x =>
-                        (
-                            (x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim()
-                            + " "
-                            + x.LastName.Trim()
-                        )
-                            .Trim()
-                            .Contains(search)
-                        || x.Email.ToLower().Trim().Contains(search)
-                        || x.MobileNumber.ToLower().Trim().Contains(search)
+                predicate = predicate.And(x =>
+                    (
+                        (x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim()
+                        + " "
+                        + x.LastName.Trim()
+                    )
+                        .Trim()
+                        .Contains(search)
+                    || x.Email.ToLower().Trim().Contains(search)
+                    || x.MobileNumber.ToLower().Trim().Contains(search)
                 );
             }
 
@@ -269,11 +267,10 @@
                         .ConfigureAwait(false);
                     var resopnse = new List<UserResponseModel>();
                     foreach (
-                        var departmentUser in department.SelectMany(
-                            x =>
-                                x.Users.Where(
-                                    x => x.Role != UserRole.Admin && x.Role != UserRole.SuperAdmin
-                                )
+                        var departmentUser in department.SelectMany(x =>
+                            x.Users.Where(x =>
+                                x.Role != UserRole.Admin && x.Role != UserRole.SuperAdmin
+                            )
                         )
                     )
                     {

@@ -50,8 +50,8 @@ function RenderList({
   };
 
   const items = options
-    .filter(
-      (item) => item.label?.toLowerCase().includes(search.toLowerCase().trim())
+    .filter((item) =>
+      item.label?.toLowerCase().includes(search.toLowerCase().trim())
     )
     .map((item) => (
       <Combobox.Option

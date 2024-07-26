@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Domain.Entities;
 
     public class FeedbackQuestionOptionResponseModel
     {
@@ -21,8 +21,7 @@
             Order = model.Order;
             User = model.User != null ? new UserModel(model.User) : new UserModel();
         }
-        public FeedbackQuestionOptionResponseModel()
-        {
-        }
+
+        public FeedbackQuestionOptionResponseModel() { }
     }
 }

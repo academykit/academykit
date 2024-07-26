@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Domain.Entities;
 
     public class ZoomSettingResponseModel
     {
@@ -14,6 +14,7 @@
         public bool IsRecordingEnabled { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
+
         public ZoomSettingResponseModel(ZoomSetting model)
         {
             Id = model.Id;

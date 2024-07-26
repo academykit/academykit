@@ -1,14 +1,10 @@
-﻿// <copyright file="EnrollmentController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Api.Controllers
+﻿namespace Api.Controllers
 {
-    using Lingtren.Api.Common;
-    using Lingtren.Api.Controllers;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.ResponseModels;
+    using AcademyKit.Api.Common;
+    using AcademyKit.Api.Controllers;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]")]
@@ -29,9 +25,14 @@ namespace Api.Controllers
         /// <param name="courseIdentity">Course id or slug.</param>
         /// <returns>Task completed.</returns>
         [HttpPost("Enrollment")]
-        public async Task<IActionResult> EnrollUser(IList<string> emailOrMobileNumber, string courseIdentity)
+        public async Task<IActionResult> EnrollUser(
+            IList<string> emailOrMobileNumber,
+            string courseIdentity
+        )
         {
-            var message = await enrollmentService.EnrollUserAsync(emailOrMobileNumber, CurrentUser.Id, courseIdentity).ConfigureAwait(false);
+            var message = await enrollmentService
+                .EnrollUserAsync(emailOrMobileNumber, CurrentUser.Id, courseIdentity)
+                .ConfigureAwait(false);
             return Ok(new CommonResponseModel() { Success = true, Message = message });
         }
 
@@ -41,10 +42,14 @@ namespace Api.Controllers
         /// <param name="searchCriteria"></param>
         /// <returns>List of user.</returns>
         [HttpGet("User")]
-        public async Task<SearchResult<UserResponseModel>> SearchUser([FromQuery] EnrollmentBaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<UserResponseModel>> SearchUser(
+            [FromQuery] EnrollmentBaseSearchCriteria searchCriteria
+        )
         {
             searchCriteria.CurrentUserId = CurrentUser.Id;
-            var result = await enrollmentService.CourseUserSearchAsync(searchCriteria).ConfigureAwait(false);
+            var result = await enrollmentService
+                .CourseUserSearchAsync(searchCriteria)
+                .ConfigureAwait(false);
             return result;
         }
     }

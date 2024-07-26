@@ -1,18 +1,18 @@
-﻿namespace Lingtren.Infrastructure.Services
+﻿namespace AcademyKit.Infrastructure.Services
 {
     using System.Linq.Expressions;
     using System.Net;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Helpers;
+    using AcademyKit.Infrastructure.Localization;
     using Hangfire;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Helpers;
-    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
@@ -23,12 +23,15 @@
     {
         private readonly IMediaService _mediaService;
         private readonly IFileServerService _fileServerService;
+
         public GroupService(
             IUnitOfWork unitOfWork,
             ILogger<GroupService> logger,
             IMediaService mediaService,
             IFileServerService fileServerService,
-            IStringLocalizer<ExceptionLocalizer> localizer) : base(unitOfWork, logger, localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
+            : base(unitOfWork, logger, localizer)
         {
             _mediaService = mediaService;
             _fileServerService = fileServerService;
@@ -44,8 +47,15 @@
         /// </remarks>
         protected override async Task CreatePreHookAsync(Group entity)
         {
-            entity.Slug = CommonHelper.GetEntityTitleSlug<Group>(_unitOfWork, (slug) => q => q.Slug == slug, entity.Name);
-            await _unitOfWork.GetRepository<GroupMember>().InsertAsync(entity.GroupMembers).ConfigureAwait(false);
+            entity.Slug = CommonHelper.GetEntityTitleSlug<Group>(
+                _unitOfWork,
+                (slug) => q => q.Slug == slug,
+                entity.Name
+            );
+            await _unitOfWork
+                .GetRepository<GroupMember>()
+                .InsertAsync(entity.GroupMembers)
+                .ConfigureAwait(false);
             await Task.FromResult(0);
         }
 
@@ -55,19 +65,26 @@
         /// <param name="predicate">The predicate.</param>
         /// <param name="criteria">The search criteria.</param>
         /// <returns>The updated predicate with applied filters.</returns>
-        protected override Expression<Func<Group, bool>> ConstructQueryConditions(Expression<Func<Group, bool>> predicate, GroupBaseSearchCriteria criteria)
+        protected override Expression<Func<Group, bool>> ConstructQueryConditions(
+            Expression<Func<Group, bool>> predicate,
+            GroupBaseSearchCriteria criteria
+        )
         {
             if (!string.IsNullOrWhiteSpace(criteria.Search))
             {
                 var search = criteria.Search.ToLower().Trim();
-                predicate = predicate.And(x => x.Name.ToLower().Trim().Contains(search)
-                 || x.User.FirstName.ToLower().Trim().Contains(search)
-                 || x.User.Email.ToLower().Trim().Contains(search));
+                predicate = predicate.And(x =>
+                    x.Name.ToLower().Trim().Contains(search)
+                    || x.User.FirstName.ToLower().Trim().Contains(search)
+                    || x.User.Email.ToLower().Trim().Contains(search)
+                );
             }
 
             if (criteria.Role != UserRole.SuperAdmin && criteria.Role != UserRole.Admin)
             {
-                predicate = predicate.And(p => p.GroupMembers.Any(x => x.UserId == criteria.CurrentUserId && x.IsActive));
+                predicate = predicate.And(p =>
+                    p.GroupMembers.Any(x => x.UserId == criteria.CurrentUserId && x.IsActive)
+                );
             }
 
             return predicate;
@@ -91,7 +108,9 @@
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>The updated query.</returns>
-        protected override IIncludableQueryable<Group, object> IncludeNavigationProperties(IQueryable<Group> query)
+        protected override IIncludableQueryable<Group, object> IncludeNavigationProperties(
+            IQueryable<Group> query
+        )
         {
             return query
                 .Include(x => x.User)
@@ -114,7 +133,10 @@
         /// Check if entity could be accessed by current user
         /// </summary>
         /// <param name="entityToReturn">The entity being returned</param>
-        protected override async Task CheckGetPermissionsAsync(Group entityToReturn, Guid? CurrentUserId = null)
+        protected override async Task CheckGetPermissionsAsync(
+            Group entityToReturn,
+            Guid? CurrentUserId = null
+        )
         {
             if (!CurrentUserId.HasValue)
             {
@@ -122,11 +144,20 @@
                 throw new ForbiddenException(_localizer.GetString("CurrentUserRequired"));
             }
 
-            var userAccess = await ValidateUserCanAccessGroup(entityToReturn.Id, CurrentUserId.Value).ConfigureAwait(false);
-            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(CurrentUserId.Value).ConfigureAwait(false);
+            var userAccess = await ValidateUserCanAccessGroup(
+                    entityToReturn.Id,
+                    CurrentUserId.Value
+                )
+                .ConfigureAwait(false);
+            var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(CurrentUserId.Value)
+                .ConfigureAwait(false);
             if (!userAccess && !isSuperAdminOrAdmin)
             {
-                _logger.LogWarning("User with id: {userId} is not authorized user to access the group with id: {groupId}", CurrentUserId.Value, entityToReturn.Id);
+                _logger.LogWarning(
+                    "User with id: {userId} is not authorized user to access the group with id: {groupId}",
+                    CurrentUserId.Value,
+                    entityToReturn.Id
+                );
                 throw new ForbiddenException(_localizer.GetString("UserCannotAccessGroup"));
             }
         }
@@ -139,18 +170,32 @@
         /// <returns></returns>
         protected override async Task CheckDeletePermissionsAsync(Group entity, Guid currentUserId)
         {
-            var courseCount = await _unitOfWork.GetRepository<Course>().CountAsync(
-                predicate: p => p.GroupId == entity.Id && (p.IsUpdate || p.Status == CourseStatus.Draft)
-                ).ConfigureAwait(false);
+            var courseCount = await _unitOfWork
+                .GetRepository<Course>()
+                .CountAsync(predicate: p =>
+                    p.GroupId == entity.Id && (p.IsUpdate || p.Status == CourseStatus.Draft)
+                )
+                .ConfigureAwait(false);
 
             if (courseCount > 0)
             {
-                _logger.LogWarning("Group with id: {id} cannot be removed since some trainings is associated with it.", entity.Id);
-                throw new ForbiddenException(_localizer.GetString("TrainingAssociateToGroupCannotRemoved"));
+                _logger.LogWarning(
+                    "Group with id: {id} cannot be removed since some trainings is associated with it.",
+                    entity.Id
+                );
+                throw new ForbiddenException(
+                    _localizer.GetString("TrainingAssociateToGroupCannotRemoved")
+                );
             }
 
-            var groupFiles = await _unitOfWork.GetRepository<GroupFile>().GetAllAsync(predicate: p => p.GroupId == entity.Id).ConfigureAwait(false);
-            var groupMembers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(predicate: p => p.GroupId == entity.Id).ConfigureAwait(false);
+            var groupFiles = await _unitOfWork
+                .GetRepository<GroupFile>()
+                .GetAllAsync(predicate: p => p.GroupId == entity.Id)
+                .ConfigureAwait(false);
+            var groupMembers = await _unitOfWork
+                .GetRepository<GroupMember>()
+                .GetAllAsync(predicate: p => p.GroupId == entity.Id)
+                .ConfigureAwait(false);
 
             _unitOfWork.GetRepository<GroupFile>().Delete(groupFiles);
             _unitOfWork.GetRepository<GroupMember>().Delete(groupMembers);
@@ -168,151 +213,235 @@
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
         /// <exception cref="ForbiddenException"></exception>
-        public async Task<GroupAddMemberResponseModel> AddMemberAsync(string identity, AddGroupMemberRequestModel model, Guid currentUserId)
+        public async Task<GroupAddMemberResponseModel> AddMemberAsync(
+            string identity,
+            AddGroupMemberRequestModel model,
+            Guid currentUserId
+        )
         {
             return await ExecuteWithResultAsync(async () =>
-            {
-                if (model.Emails.Any(_ => default))
                 {
-                    _logger.LogInformation("Please enter user email for group with identity : {identity}", identity);
-                    throw new ForbiddenException(_localizer.GetString("EnterUserEmail"));
-                }
-
-                var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(
-                    predicate: p => p.Slug.ToLower().Equals(identity) || p.Id.ToString().Equals(identity),
-                    include: source => source.Include(x => x.Courses)).ConfigureAwait(false);
-
-                CommonHelper.CheckFoundEntity(group);
-
-                var isAdminOrTeacher = await _unitOfWork.GetRepository<User>().ExistsAsync(
-                    predicate: p => p.Id == currentUserId && (p.Role == UserRole.Admin || p.Role == UserRole.Trainer)
-                                && p.Status == UserStatus.Active).ConfigureAwait(false);
-
-                var isAccess = await IsSuperAdminOrAdminOrTrainer(currentUserId).ConfigureAwait(false);
-                if (!isAccess)
-                {
-                    _logger.LogWarning("User with userId : {userId} is not admin/teacher to add member in the group", currentUserId);
-                    throw new ForbiddenException(_localizer.GetString("OnlySuperAdminTrainerAccessToAddMember"));
-                }
-
-                var users = await _unitOfWork.GetRepository<User>().GetAllAsync(
-                    predicate: p => model.Emails.Contains(p.Email)).ConfigureAwait(false);
-
-                var userIds = users.Select(x => x.Id).ToList();
-
-                var nonUsers = model.Emails.Select(x => x.Trim().ToLower()).ToList().Except(users.Select(x => x.Email.Trim().ToLower())).ToList();
-
-                var duplicateUsers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(
-                    predicate: p => p.GroupId == group.Id && userIds.Contains(p.UserId) && p.IsActive,
-                    include: src => src.Include(x => x.User)).ConfigureAwait(false);
-
-                var inActiveUsers = await _unitOfWork.GetRepository<GroupMember>().GetAllAsync(
-                    predicate: p => p.GroupId == group.Id && userIds.Contains(p.UserId) && !p.IsActive,
-                    include: src => src.Include(x => x.User)).ConfigureAwait(false);
-
-                var adminAndSuperAdmin = await _unitOfWork.GetRepository<User>().GetAllAsync(
-                    predicate: p => (p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin) && model.Emails.Contains(p.Email)).ConfigureAwait(false);
-
-                var usersToBeAdded = userIds.Except(duplicateUsers.Select(x => x.UserId))
-                                            .Except(inActiveUsers.Select(x => x.UserId))
-                                            .Except(adminAndSuperAdmin.Select(x => x.Id));
-
-                var groupMembers = new List<GroupMember>();
-                var currentTimeStamp = DateTime.UtcNow;
-                foreach (var userId in usersToBeAdded)
-                {
-                    groupMembers.Add(new GroupMember()
+                    if (model.Emails.Any(_ => default))
                     {
-                        Id = Guid.NewGuid(),
-                        UserId = userId,
-                        GroupId = group.Id,
-                        IsActive = true,
-                        CreatedBy = currentUserId,
-                        CreatedOn = currentTimeStamp,
-                        UpdatedBy = currentUserId,
-                        UpdatedOn = currentTimeStamp
-                    });
-                }
+                        _logger.LogInformation(
+                            "Please enter user email for group with identity : {identity}",
+                            identity.SanitizeForLogger()
+                        );
+                        throw new ForbiddenException(_localizer.GetString("EnterUserEmail"));
+                    }
 
-                if (inActiveUsers?.Count > 0)
-                {
-                    inActiveUsers.ForEach(x =>
-                    {
-                        x.IsActive = true;
-                        x.UpdatedBy = currentUserId;
-                        x.UpdatedOn = currentTimeStamp;
-                    });
-                    _unitOfWork.GetRepository<GroupMember>().Update(inActiveUsers);
-                }
+                    var group = await _unitOfWork
+                        .GetRepository<Group>()
+                        .GetFirstOrDefaultAsync(
+                            predicate: p =>
+                                p.Slug.ToLower().Equals(identity)
+                                || p.Id.ToString().Equals(identity),
+                            include: source => source.Include(x => x.Courses)
+                        )
+                        .ConfigureAwait(false);
 
-                if (group.Courses?.Count > 0)
-                {
-                    var unenrolledUsers = inActiveUsers?.Select(x => x.UserId).ToList();
-                    unenrolledUsers?.AddRange(usersToBeAdded);
-                    if (unenrolledUsers?.Count > 0)
+                    CommonHelper.CheckFoundEntity(group);
+
+                    var isAdminOrTeacher = await _unitOfWork
+                        .GetRepository<User>()
+                        .ExistsAsync(predicate: p =>
+                            p.Id == currentUserId
+                            && (p.Role == UserRole.Admin || p.Role == UserRole.Trainer)
+                            && p.Status == UserStatus.Active
+                        )
+                        .ConfigureAwait(false);
+
+                    var isAccess = await IsSuperAdminOrAdminOrTrainer(currentUserId)
+                        .ConfigureAwait(false);
+                    if (!isAccess)
                     {
-                        var inactiveEnrollment = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(predicate: p => p.IsDeleted && p.EnrollmentMemberStatus
-                                           == EnrollmentMemberStatusEnum.Unenrolled && unenrolledUsers.Contains(p.UserId) && group.Courses.Select(x =>
-                                           x.Id).Contains(p.CourseId)).ConfigureAwait(false);
-                        if (inactiveEnrollment?.Count > 0)
-                        {
-                            inactiveEnrollment.ForEach(x =>
+                        _logger.LogWarning(
+                            "User with userId : {userId} is not admin/teacher to add member in the group",
+                            currentUserId
+                        );
+                        throw new ForbiddenException(
+                            _localizer.GetString("OnlySuperAdminTrainerAccessToAddMember")
+                        );
+                    }
+
+                    var users = await _unitOfWork
+                        .GetRepository<User>()
+                        .GetAllAsync(predicate: p => model.Emails.Contains(p.Email))
+                        .ConfigureAwait(false);
+
+                    var userIds = users.Select(x => x.Id).ToList();
+
+                    var nonUsers = model
+                        .Emails.Select(x => x.Trim().ToLower())
+                        .ToList()
+                        .Except(users.Select(x => x.Email.Trim().ToLower()))
+                        .ToList();
+
+                    var duplicateUsers = await _unitOfWork
+                        .GetRepository<GroupMember>()
+                        .GetAllAsync(
+                            predicate: p =>
+                                p.GroupId == group.Id && userIds.Contains(p.UserId) && p.IsActive,
+                            include: src => src.Include(x => x.User)
+                        )
+                        .ConfigureAwait(false);
+
+                    var inActiveUsers = await _unitOfWork
+                        .GetRepository<GroupMember>()
+                        .GetAllAsync(
+                            predicate: p =>
+                                p.GroupId == group.Id && userIds.Contains(p.UserId) && !p.IsActive,
+                            include: src => src.Include(x => x.User)
+                        )
+                        .ConfigureAwait(false);
+
+                    var adminAndSuperAdmin = await _unitOfWork
+                        .GetRepository<User>()
+                        .GetAllAsync(predicate: p =>
+                            (p.Role == UserRole.SuperAdmin || p.Role == UserRole.Admin)
+                            && model.Emails.Contains(p.Email)
+                        )
+                        .ConfigureAwait(false);
+
+                    var usersToBeAdded = userIds
+                        .Except(duplicateUsers.Select(x => x.UserId))
+                        .Except(inActiveUsers.Select(x => x.UserId))
+                        .Except(adminAndSuperAdmin.Select(x => x.Id));
+
+                    var groupMembers = new List<GroupMember>();
+                    var currentTimeStamp = DateTime.UtcNow;
+                    foreach (var userId in usersToBeAdded)
+                    {
+                        groupMembers.Add(
+                            new GroupMember()
                             {
-                                x.IsDeleted = false;
-                                x.EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Enrolled;
-                                x.UpdatedBy = currentUserId;
-                                x.UpdatedOn = currentTimeStamp;
-                            });
-                            _unitOfWork.GetRepository<CourseEnrollment>().Update(inactiveEnrollment);
+                                Id = Guid.NewGuid(),
+                                UserId = userId,
+                                GroupId = group.Id,
+                                IsActive = true,
+                                CreatedBy = currentUserId,
+                                CreatedOn = currentTimeStamp,
+                                UpdatedBy = currentUserId,
+                                UpdatedOn = currentTimeStamp
+                            }
+                        );
+                    }
+
+                    if (inActiveUsers?.Count > 0)
+                    {
+                        inActiveUsers.ForEach(x =>
+                        {
+                            x.IsActive = true;
+                            x.UpdatedBy = currentUserId;
+                            x.UpdatedOn = currentTimeStamp;
+                        });
+                        _unitOfWork.GetRepository<GroupMember>().Update(inActiveUsers);
+                    }
+
+                    if (group.Courses?.Count > 0)
+                    {
+                        var unenrolledUsers = inActiveUsers?.Select(x => x.UserId).ToList();
+                        unenrolledUsers?.AddRange(usersToBeAdded);
+                        if (unenrolledUsers?.Count > 0)
+                        {
+                            var inactiveEnrollment = await _unitOfWork
+                                .GetRepository<CourseEnrollment>()
+                                .GetAllAsync(predicate: p =>
+                                    p.IsDeleted
+                                    && p.EnrollmentMemberStatus
+                                        == EnrollmentMemberStatusEnum.Unenrolled
+                                    && unenrolledUsers.Contains(p.UserId)
+                                    && group.Courses.Select(x => x.Id).Contains(p.CourseId)
+                                )
+                                .ConfigureAwait(false);
+                            if (inactiveEnrollment?.Count > 0)
+                            {
+                                inactiveEnrollment.ForEach(x =>
+                                {
+                                    x.IsDeleted = false;
+                                    x.EnrollmentMemberStatus = EnrollmentMemberStatusEnum.Enrolled;
+                                    x.UpdatedBy = currentUserId;
+                                    x.UpdatedOn = currentTimeStamp;
+                                });
+                                _unitOfWork
+                                    .GetRepository<CourseEnrollment>()
+                                    .Update(inactiveEnrollment);
+                            }
                         }
                     }
-                }
 
-                await _unitOfWork.GetRepository<GroupMember>().InsertAsync(groupMembers).ConfigureAwait(false);
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                if (usersToBeAdded.ToList().Count != default)
-                {
-                    BackgroundJob.Enqueue<IHangfireJobService>(job => job.SendMailNewGroupMember(group.Name, group.Slug, usersToBeAdded.ToList(), null));
-                }
-
-                var result = new GroupAddMemberResponseModel();
-
-                if (duplicateUsers.Count > 0 || nonUsers.Count > 0 || adminAndSuperAdmin.Count > 0)
-                {
-                    result.HttpStatusCode = HttpStatusCode.PartialContent;
-                    if (duplicateUsers.Count > 0)
+                    await _unitOfWork
+                        .GetRepository<GroupMember>()
+                        .InsertAsync(groupMembers)
+                        .ConfigureAwait(false);
+                    await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                    if (usersToBeAdded.ToList().Count != default)
                     {
-                        result.Message += _localizer.GetString($"AlreadyAddedMember") + " : " + string.Join(", ", duplicateUsers.Select(x => x.User.Email)) + Environment.NewLine;
-
-                    }
-                    //if (inActiveUsers.Count > 0)
-                    //{
-                    //    result.Message = _localizer.GetString("InactiveGroupMember") + " : " + string.Join(", ", inActiveUsers.Select(x => x.User.Email)) + Environment.NewLine;
-                    //}
-                    if (nonUsers.Count > 0)
-                    {
-                        result.Message += _localizer.GetString("NotASystemUser") + " : " + string.Join(", ", adminAndSuperAdmin.Select(x => x.Email)) + Environment.NewLine;
+                        BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                            job.SendMailNewGroupMember(
+                                group.Name,
+                                group.Slug,
+                                usersToBeAdded.ToList(),
+                                null
+                            )
+                        );
                     }
 
-                    if (adminAndSuperAdmin.Count > 0)
+                    var result = new GroupAddMemberResponseModel();
+
+                    if (
+                        duplicateUsers.Count > 0
+                        || nonUsers.Count > 0
+                        || adminAndSuperAdmin.Count > 0
+                    )
                     {
-                        result.Message += _localizer.GetString("AdminOrSuperAdmin") + " : " + string.Join(", ", adminAndSuperAdmin.Select(x => x.Email)) + Environment.NewLine;
+                        result.HttpStatusCode = HttpStatusCode.PartialContent;
+                        if (duplicateUsers.Count > 0)
+                        {
+                            result.Message +=
+                                _localizer.GetString($"AlreadyAddedMember")
+                                + " : "
+                                + string.Join(", ", duplicateUsers.Select(x => x.User.Email))
+                                + Environment.NewLine;
+                        }
+                        //if (inActiveUsers.Count > 0)
+                        //{
+                        //    result.Message = _localizer.GetString("InactiveGroupMember") + " : " + string.Join(", ", inActiveUsers.Select(x => x.User.Email)) + Environment.NewLine;
+                        //}
+                        if (nonUsers.Count > 0)
+                        {
+                            result.Message +=
+                                _localizer.GetString("NotASystemUser")
+                                + " : "
+                                + string.Join(", ", adminAndSuperAdmin.Select(x => x.Email))
+                                + Environment.NewLine;
+                        }
+
+                        if (adminAndSuperAdmin.Count > 0)
+                        {
+                            result.Message +=
+                                _localizer.GetString("AdminOrSuperAdmin")
+                                + " : "
+                                + string.Join(", ", adminAndSuperAdmin.Select(x => x.Email))
+                                + Environment.NewLine;
+                        }
+
+                        result.Message = result.Message.TrimStart(' ', '&');
+                        if (usersToBeAdded.Any())
+                        {
+                            result.Message += _localizer.GetString("OtherAddedSuccessfully");
+                            result.Message +=
+                                " & Other remaining users are added successfully in the group";
+                        }
+                    }
+                    else
+                    {
+                        result.Message = _localizer.GetString("GroupMemberAdded");
                     }
 
-                    result.Message = result.Message.TrimStart(' ', '&');
-                    if (usersToBeAdded.Any())
-                    {
-                        result.Message += _localizer.GetString("OtherAddedSuccessfully");
-                        result.Message += " & Other remaining users are added successfully in the group";
-                    }
-                }
-                else
-                {
-                    result.Message = _localizer.GetString("GroupMemberAdded");
-                }
-
-                return result;
-            }).ConfigureAwait(false);
+                    return result;
+                })
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -324,29 +453,49 @@
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
         /// <exception cref="EntityNotFoundException"></exception>
-        public async Task ChangeMemberStatusAsync(string identity, Guid id, bool enabled, Guid currentUserId)
+        public async Task ChangeMemberStatusAsync(
+            string identity,
+            Guid id,
+            bool enabled,
+            Guid currentUserId
+        )
         {
             await ExecuteAsync(async () =>
             {
                 var group = await GetByIdOrSlugAsync(identity).ConfigureAwait(false);
                 if (group == null)
                 {
-                    _logger.LogWarning("Group not found with identity : {identity}.", identity);
+                    _logger.LogWarning(
+                        "Group not found with identity : {identity}.",
+                        identity.SanitizeForLogger()
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("GroupNotFound"));
                 }
 
-                var isAccess = await IsSuperAdminOrAdminOrTrainer(currentUserId).ConfigureAwait(false);
+                var isAccess = await IsSuperAdminOrAdminOrTrainer(currentUserId)
+                    .ConfigureAwait(false);
                 if (!isAccess)
                 {
-                    _logger.LogWarning("User with userId : {userId} is not admin/teacher to remove member from the group.", currentUserId);
-                    throw new ForbiddenException(_localizer.GetString("OnlySuperAdminTrainerAllowedToRemoveMember"));
+                    _logger.LogWarning(
+                        "User with userId : {userId} is not admin/teacher to remove member from the group.",
+                        currentUserId
+                    );
+                    throw new ForbiddenException(
+                        _localizer.GetString("OnlySuperAdminTrainerAllowedToRemoveMember")
+                    );
                 }
 
-                var groupMember = await _unitOfWork.GetRepository<GroupMember>().GetFirstOrDefaultAsync(
-                    predicate: p => p.GroupId == group.Id && p.Id == id).ConfigureAwait(false);
+                var groupMember = await _unitOfWork
+                    .GetRepository<GroupMember>()
+                    .GetFirstOrDefaultAsync(predicate: p => p.GroupId == group.Id && p.Id == id)
+                    .ConfigureAwait(false);
                 if (groupMember == null)
                 {
-                    _logger.LogWarning("Group member with id : {id} not found in the group with id : {groupId}.", id, group.Id);
+                    _logger.LogWarning(
+                        "Group member with id : {id} not found in the group with id : {groupId}.",
+                        id,
+                        group.Id
+                    );
                     throw new ForbiddenException(_localizer.GetString("GroupMemberNotFound"));
                 }
 
@@ -370,33 +519,57 @@
         {
             await ExecuteAsync(async () =>
             {
-                var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(predicate: x => x.Id.ToString() == identity ||
-                            x.Slug.Equals(identity), include: source => source.Include(x => x.GroupMembers.Where(x => x.Id == id)).
-                            Include(x => x.Courses).ThenInclude(x => x.CourseTeachers)).ConfigureAwait(false);
+                var group = await _unitOfWork
+                    .GetRepository<Group>()
+                    .GetFirstOrDefaultAsync(
+                        predicate: x => x.Id.ToString() == identity || x.Slug.Equals(identity),
+                        include: source =>
+                            source
+                                .Include(x => x.GroupMembers.Where(x => x.Id == id))
+                                .Include(x => x.Courses)
+                                .ThenInclude(x => x.CourseTeachers)
+                    )
+                    .ConfigureAwait(false);
                 if (group == null)
                 {
                     _logger.LogWarning("Group not found with identity : {identity}.", identity);
                     throw new EntityNotFoundException(_localizer.GetString("GroupNotFound"));
                 }
 
-                var isAccess = await IsSuperAdminOrAdminOrTrainer(currentUserId).ConfigureAwait(false);
+                var isAccess = await IsSuperAdminOrAdminOrTrainer(currentUserId)
+                    .ConfigureAwait(false);
                 if (!isAccess)
                 {
-                    _logger.LogWarning("User with userId : {userId} is not admin/teacher to remove member from the group.", currentUserId);
-                    throw new ForbiddenException(_localizer.GetString("OnlySuperAdminTrainerAllowedToRemoveMember"));
+                    _logger.LogWarning(
+                        "User with userId : {userId} is not admin/teacher to remove member from the group.",
+                        currentUserId
+                    );
+                    throw new ForbiddenException(
+                        _localizer.GetString("OnlySuperAdminTrainerAllowedToRemoveMember")
+                    );
                 }
 
                 var groupMember = group.GroupMembers.FirstOrDefault(x => x.Id == id);
                 if (groupMember == null)
                 {
-                    _logger.LogWarning("Group member with id : {id} not found in the group with id : {groupId}.", id, group.Id);
+                    _logger.LogWarning(
+                        "Group member with id : {id} not found in the group with id : {groupId}.",
+                        id,
+                        group.Id
+                    );
                     throw new ForbiddenException(_localizer.GetString("GroupMemberNotFound"));
                 }
 
                 if (group.Courses.Any())
                 {
-                    var courseTeacher = group.Courses.SelectMany(x => x.CourseTeachers.Where(x => x.UserId == groupMember.UserId)).ToList();
-                    var courseAuthor = group.Courses.Where(x => x.CreatedBy == groupMember.UserId).ToList();
+                    var courseTeacher = group
+                        .Courses.SelectMany(x =>
+                            x.CourseTeachers.Where(x => x.UserId == groupMember.UserId)
+                        )
+                        .ToList();
+                    var courseAuthor = group
+                        .Courses.Where(x => x.CreatedBy == groupMember.UserId)
+                        .ToList();
                     courseAuthor.ForEach(x =>
                     {
                         x.CreatedBy = currentUserId;
@@ -404,8 +577,13 @@
                         x.UpdatedBy = currentUserId;
                     });
 
-                    var courseEnrollmentUsers = await _unitOfWork.GetRepository<CourseEnrollment>().GetAllAsync(predicate: p => p.UserId == groupMember.UserId &&
-                                               group.Courses.Select(x => x.Id).Contains(p.CourseId)).ConfigureAwait(false);
+                    var courseEnrollmentUsers = await _unitOfWork
+                        .GetRepository<CourseEnrollment>()
+                        .GetAllAsync(predicate: p =>
+                            p.UserId == groupMember.UserId
+                            && group.Courses.Select(x => x.Id).Contains(p.CourseId)
+                        )
+                        .ConfigureAwait(false);
                     if (courseEnrollmentUsers.Any())
                     {
                         courseEnrollmentUsers.ForEach(x =>
@@ -428,7 +606,6 @@
                 _unitOfWork.GetRepository<GroupMember>().Update(groupMember);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             });
-
         }
 
         #endregion Group Member
@@ -441,28 +618,48 @@
         /// <param name="model"> the instance of <see cref="GroupFileRequestModel" />. </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the instance of <see cref="GroupFile" /> .</returns>
-        public async Task<GroupFile> UploadGroupFileAsync(GroupFileRequestModel model, Guid currentUserId)
+        public async Task<GroupFile> UploadGroupFileAsync(
+            GroupFileRequestModel model,
+            Guid currentUserId
+        )
         {
             try
             {
-                var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(predicate: p => p.Id.ToString() == model.GroupIdentity ||
-                             p.Slug.Equals(model.GroupIdentity)).ConfigureAwait(false);
+                var group = await _unitOfWork
+                    .GetRepository<Group>()
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id.ToString() == model.GroupIdentity || p.Slug.Equals(model.GroupIdentity)
+                    )
+                    .ConfigureAwait(false);
                 if (group == null)
                 {
-                    _logger.LogWarning("Group with identity: {identity} not found.", model.GroupIdentity);
+                    _logger.LogWarning(
+                        "Group with identity: {identity} not found.",
+                        model.GroupIdentity
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("GroupNotFound"));
                 }
 
-                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
-                var isGroupTeacher = await IsGroupTeacher(group.Id, currentUserId).ConfigureAwait(false);
+                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId)
+                    .ConfigureAwait(false);
+                var isGroupTeacher = await IsGroupTeacher(group.Id, currentUserId)
+                    .ConfigureAwait(false);
 
                 if (!isSuperAdminOrAdmin && !isGroupTeacher)
                 {
-                    _logger.LogWarning("User with id: {userId} is not super-admin or admin or teacher for the group with id :{groupId}.", currentUserId, group.Id);
-                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUserToCreateAttachment"));
+                    _logger.LogWarning(
+                        "User with id: {userId} is not super-admin or admin or teacher for the group with id :{groupId}.",
+                        currentUserId,
+                        group.Id
+                    );
+                    throw new ForbiddenException(
+                        _localizer.GetString("UnauthorizedUserToCreateAttachment")
+                    );
                 }
 
-                var url = await _mediaService.UploadGroupFileAsync(model.File).ConfigureAwait(false);
+                var url = await _mediaService
+                    .UploadGroupFileAsync(model.File)
+                    .ConfigureAwait(false);
 
                 var groupFile = new GroupFile
                 {
@@ -475,14 +672,22 @@
                     Size = model.File.Length,
                     CreatedOn = DateTime.UtcNow
                 };
-                await _unitOfWork.GetRepository<GroupFile>().InsertAsync(groupFile).ConfigureAwait(false);
+                await _unitOfWork
+                    .GetRepository<GroupFile>()
+                    .InsertAsync(groupFile)
+                    .ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return groupFile;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to upload the file in the group.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredUploadFileToGroup"));
+                _logger.LogError(
+                    ex,
+                    "An error occurred while trying to upload the file in the group."
+                );
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("ErrorOccurredUploadFileToGroup"));
             }
         }
 
@@ -493,33 +698,55 @@
         /// <param name="fileId"> the file id</param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
-        public async Task RemoveGroupFileAsync(string groupIdentity, Guid fileId, Guid currentUserId)
+        public async Task RemoveGroupFileAsync(
+            string groupIdentity,
+            Guid fileId,
+            Guid currentUserId
+        )
         {
             try
             {
-                var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(
-                    predicate: p => p.Id.ToString() == groupIdentity || p.Slug == groupIdentity
-                    ).ConfigureAwait(false);
+                var group = await _unitOfWork
+                    .GetRepository<Group>()
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id.ToString() == groupIdentity || p.Slug == groupIdentity
+                    )
+                    .ConfigureAwait(false);
                 if (group == null)
                 {
-                    _logger.LogWarning("Group with identity : {identity} not found.", groupIdentity);
+                    _logger.LogWarning(
+                        "Group with identity : {identity} not found.",
+                        groupIdentity
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("GroupNotFound"));
                 }
 
-                var file = await _unitOfWork.GetRepository<GroupFile>().GetFirstOrDefaultAsync(
-                    predicate: p => p.Id == fileId && p.GroupId == group.Id
-                    ).ConfigureAwait(false);
+                var file = await _unitOfWork
+                    .GetRepository<GroupFile>()
+                    .GetFirstOrDefaultAsync(predicate: p => p.Id == fileId && p.GroupId == group.Id)
+                    .ConfigureAwait(false);
                 if (file == null)
                 {
-                    _logger.LogWarning("File with id : {fileId} not found for group with id: {groupId}.", fileId, group.Id);
+                    _logger.LogWarning(
+                        "File with id : {fileId} not found for group with id: {groupId}.",
+                        fileId,
+                        group.Id
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("FileNotFound"));
                 }
 
-                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId).ConfigureAwait(false);
+                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId)
+                    .ConfigureAwait(false);
                 if (file.CreatedBy != currentUserId && !isSuperAdminOrAdmin)
                 {
-                    _logger.LogWarning("User with id: {userId} is not authorized user to remove file from the group with id : {groupId}.", currentUserId, group.Id);
-                    throw new ForbiddenException(_localizer.GetString("UnauthorizedUserToRemoveFileFromGroup"));
+                    _logger.LogWarning(
+                        "User with id: {userId} is not authorized user to remove file from the group with id : {groupId}.",
+                        currentUserId,
+                        group.Id
+                    );
+                    throw new ForbiddenException(
+                        _localizer.GetString("UnauthorizedUserToRemoveFileFromGroup")
+                    );
                 }
 
                 _unitOfWork.GetRepository<GroupFile>().Delete(file);
@@ -532,8 +759,15 @@
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while trying to remove the file from group.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredRemoveFileFromGroup"));
+                _logger.LogError(
+                    ex,
+                    "An error occurred while trying to remove the file from group."
+                );
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(
+                        _localizer.GetString("ErrorOccurredRemoveFileFromGroup")
+                    );
             }
         }
 
@@ -542,33 +776,57 @@
         /// </summary>
         /// <param name="searchCriteria"> the instance of <see cref="GroupSearchCriteria" /> . </param>
         /// <returns> the list of <see cref="GroupFile" /> .</returns>
-        public async Task<SearchResult<GroupFile>> GetGroupFilesAsync(GroupFileSearchCriteria searchCriteria)
+        public async Task<SearchResult<GroupFile>> GetGroupFilesAsync(
+            GroupFileSearchCriteria searchCriteria
+        )
         {
             try
             {
-                var group = await _unitOfWork.GetRepository<Group>().GetFirstOrDefaultAsync(
-                    predicate: p => p.Id.ToString() == searchCriteria.GroupIdentity || p.Slug.Equals(searchCriteria.GroupIdentity)
-                    ).ConfigureAwait(false);
+                var group = await _unitOfWork
+                    .GetRepository<Group>()
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id.ToString() == searchCriteria.GroupIdentity
+                        || p.Slug.Equals(searchCriteria.GroupIdentity)
+                    )
+                    .ConfigureAwait(false);
                 if (group == null)
                 {
-                    _logger.LogWarning("Group with identity: {identity} not found.", searchCriteria.GroupIdentity);
+                    _logger.LogWarning(
+                        "Group with identity: {identity} not found.",
+                        searchCriteria.GroupIdentity.SanitizeForLogger()
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("GroupNotFound"));
                 }
 
-                var userAccess = await ValidateUserCanAccessGroup(group.Id, searchCriteria.CurrentUserId).ConfigureAwait(false);
-                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(searchCriteria.CurrentUserId).ConfigureAwait(false);
+                var userAccess = await ValidateUserCanAccessGroup(
+                        group.Id,
+                        searchCriteria.CurrentUserId
+                    )
+                    .ConfigureAwait(false);
+                var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(searchCriteria.CurrentUserId)
+                    .ConfigureAwait(false);
                 if (!userAccess && !isSuperAdminOrAdmin)
                 {
-                    _logger.LogWarning("User with id: {userId} is not authorized user to access the group with id: {groupId}.", searchCriteria.CurrentUserId, group.Id);
+                    _logger.LogWarning(
+                        "User with id: {userId} is not authorized user to access the group with id: {groupId}.",
+                        searchCriteria.CurrentUserId,
+                        group.Id
+                    );
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
 
-                var files = await _unitOfWork.GetRepository<GroupFile>().GetAllAsync(
-                    predicate: p => p.GroupId == group.Id,
-                    include: src => src.Include(x => x.User)).ConfigureAwait(false);
+                var files = await _unitOfWork
+                    .GetRepository<GroupFile>()
+                    .GetAllAsync(
+                        predicate: p => p.GroupId == group.Id,
+                        include: src => src.Include(x => x.User)
+                    )
+                    .ConfigureAwait(false);
                 if (files.Count != default && !string.IsNullOrEmpty(searchCriteria.Search))
                 {
-                    files = files.Where(x => x.Name.ToLower().Trim().Contains(searchCriteria.Search)).ToList();
+                    files = files
+                        .Where(x => x.Name.ToLower().Trim().Contains(searchCriteria.Search))
+                        .ToList();
                 }
 
                 return files.ToIPagedList(searchCriteria.Page, searchCriteria.Size);
@@ -576,7 +834,9 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while trying to fetch the group files.");
-                throw ex is ServiceException ? ex : new ServiceException(_localizer.GetString("ErrorOccurredFetchGroupFiles"));
+                throw ex is ServiceException
+                    ? ex
+                    : new ServiceException(_localizer.GetString("ErrorOccurredFetchGroupFiles"));
             }
         }
 
@@ -592,10 +852,13 @@
         /// <returns>the boolean true or false</returns>
         private async Task<bool> IsGroupTeacher(Guid groupId, Guid currentUserId)
         {
-            var groupMember = await _unitOfWork.GetRepository<GroupMember>().GetFirstOrDefaultAsync(
-               predicate: p => p.GroupId == groupId && p.UserId == currentUserId && p.IsActive,
-               include: src => src.Include(x => x.User)
-               ).ConfigureAwait(false);
+            var groupMember = await _unitOfWork
+                .GetRepository<GroupMember>()
+                .GetFirstOrDefaultAsync(
+                    predicate: p => p.GroupId == groupId && p.UserId == currentUserId && p.IsActive,
+                    include: src => src.Include(x => x.User)
+                )
+                .ConfigureAwait(false);
             return groupMember?.User.Role == UserRole.Trainer;
         }
 
@@ -607,11 +870,15 @@
         /// <param name="identity">the group id or slug</param>
         /// <param name="criteria">the instance of <see cref="BaseSearchCriteria"/></param>
         /// <returns>the search result of <see cref="UserModel"/></returns>
-        public async Task<SearchResult<UserModel>> GetNonGroupMembers(string identity, GroupBaseSearchCriteria criteria)
+        public async Task<SearchResult<UserModel>> GetNonGroupMembers(
+            string identity,
+            GroupBaseSearchCriteria criteria
+        )
         {
             return await ExecuteWithResultAsync(async () =>
             {
-                var group = await GetByIdOrSlugAsync(identity, criteria.CurrentUserId).ConfigureAwait(false);
+                var group = await GetByIdOrSlugAsync(identity, criteria.CurrentUserId)
+                    .ConfigureAwait(false);
                 if (group == null)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("GroupNotFound"));
@@ -622,21 +889,41 @@
                 {
                     var search = criteria.Search.ToLower().Trim();
                     predicate = predicate.And(x =>
-                        ((x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim() + " " + x.LastName.Trim()).Trim().Contains(search)
-                     || x.Email.ToLower().Trim().Contains(search)
-                     || x.MobileNumber.ToLower().Trim().Contains(search));
+                        (
+                            (x.FirstName.Trim() + " " + x.MiddleName.Trim()).Trim()
+                            + " "
+                            + x.LastName.Trim()
+                        )
+                            .Trim()
+                            .Contains(search)
+                        || x.Email.ToLower().Trim().Contains(search)
+                        || x.MobileNumber.ToLower().Trim().Contains(search)
+                    );
                 }
 
                 if (!string.IsNullOrWhiteSpace(criteria.DepartmentIdentity))
                 {
                     var departmentId = criteria.DepartmentIdentity.ToLower().Trim();
-                    predicate = predicate.And(x => x.DepartmentId.ToString() == departmentId || x.Department.Slug.ToLower().Trim() == departmentId);
+                    predicate = predicate.And(x =>
+                        x.DepartmentId.ToString() == departmentId
+                        || x.Department.Slug.ToLower().Trim() == departmentId
+                    );
                 }
 
-                predicate = predicate.And(p => !p.GroupMembers.Any(x => x.GroupId == group.Id && x.UserId == p.Id && x.IsActive));
-                predicate = predicate.And(p => p.Status == UserStatus.Active && (p.Role != UserRole.SuperAdmin && p.Role != UserRole.Admin));
+                predicate = predicate.And(p =>
+                    !p.GroupMembers.Any(x =>
+                        x.GroupId == group.Id && x.UserId == p.Id && x.IsActive
+                    )
+                );
+                predicate = predicate.And(p =>
+                    p.Status == UserStatus.Active
+                    && (p.Role != UserRole.SuperAdmin && p.Role != UserRole.Admin)
+                );
 
-                var users = await _unitOfWork.GetRepository<User>().GetAllAsync(predicate, include: (x) => x.Include(p => p.Department)).ConfigureAwait(false);
+                var users = await _unitOfWork
+                    .GetRepository<User>()
+                    .GetAllAsync(predicate, include: (x) => x.Include(p => p.Department))
+                    .ConfigureAwait(false);
                 var result = users.ToIPagedList(criteria.Page, criteria.Size);
                 var response = new SearchResult<UserModel>
                 {
@@ -651,7 +938,11 @@
             });
         }
 
-        public Task<GroupAddMemberResponseModel> AddMembersByDepartment(string identity, string departmentId, Guid currentUserId)
+        public Task<GroupAddMemberResponseModel> AddMembersByDepartment(
+            string identity,
+            string departmentId,
+            Guid currentUserId
+        )
         {
             throw new NotImplementedException();
         }

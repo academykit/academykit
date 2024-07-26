@@ -1,6 +1,6 @@
-﻿using Lingtren.Application.Common.Dtos;
+﻿using AcademyKit.Application.Common.Dtos;
 
-namespace Lingtren.Application.Common.Models.ResponseModels
+namespace AcademyKit.Application.Common.Models.ResponseModels
 {
     public class QuestionSetSubmissionResponseModel
     {

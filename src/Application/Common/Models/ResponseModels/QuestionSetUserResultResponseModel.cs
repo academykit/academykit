@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Domain.Enums;
 
     public class QuestionSetUserResultResponseModel
     {
@@ -18,6 +18,7 @@
         public string CompleteDuration { get; set; }
         public IList<QuestionSetAnswerResultModel> Results { get; set; }
     }
+
     public class QuestionSetAnswerResultModel
     {
         public Guid Id { get; set; }
@@ -30,6 +31,7 @@
         public bool IsCorrect { get; set; }
         public int? OrderNumber { get; set; }
     }
+
     public class QuestionResultOption
     {
         public Guid Id { get; set; }

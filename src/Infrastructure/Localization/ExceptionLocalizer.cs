@@ -1,6 +1,4 @@
-﻿namespace Lingtren.Infrastructure.Localization
+﻿namespace AcademyKit.Infrastructure.Localization
 {
-    public class ExceptionLocalizer
-    {
-    }
+    public class ExceptionLocalizer { }
 }

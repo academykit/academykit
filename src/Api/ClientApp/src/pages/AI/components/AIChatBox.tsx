@@ -8,7 +8,7 @@ const AIChatBox = () => {
         <Flex align={'center'} gap={10}>
           <Avatar radius="xl" size={'sm'} />
           <Text size={'sm'} fw="bolder">
-            Vurilo AI
+            Academy Kit AI
           </Text>
         </Flex>
 

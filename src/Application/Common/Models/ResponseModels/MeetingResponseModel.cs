@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Domain.Entities;
 
     public class MeetingResponseModel
     {
@@ -11,6 +11,7 @@
         public int Duration { get; set; }
         public DateTime? StartDate { get; set; }
         public UserModel User { get; set; }
+
         public MeetingResponseModel(Meeting model, bool showPasscode = false)
         {
             Id = model.Id;

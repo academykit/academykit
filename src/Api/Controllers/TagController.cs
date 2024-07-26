@@ -1,15 +1,11 @@
-﻿// <copyright file="TagController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
     using LinqKit;
     using Microsoft.AspNetCore.Mvc;
 
@@ -28,9 +24,13 @@ namespace Lingtren.Api.Controllers
         /// <param name="searchCriteria"> the instance of <see cref=" TagBaseSearchCriteria" /> .</param>
         /// <returns> the list of <see cref="TagResponseModel" /> .</returns>
         [HttpGet]
-        public async Task<SearchResult<TagResponseModel>> SearchAsync([FromQuery] TagBaseSearchCriteria searchCriteria)
+        public async Task<SearchResult<TagResponseModel>> SearchAsync(
+            [FromQuery] TagBaseSearchCriteria searchCriteria
+        )
         {
-            var searchResult = await tagService.SearchAsync(searchCriteria, includeAllProperties: false).ConfigureAwait(false);
+            var searchResult = await tagService
+                .SearchAsync(searchCriteria, includeAllProperties: false)
+                .ConfigureAwait(false);
 
             var response = new SearchResult<TagResponseModel>
             {
@@ -41,8 +41,7 @@ namespace Lingtren.Api.Controllers
                 TotalPage = searchResult.TotalPage,
             };
 
-            searchResult.Items.ForEach(p =>
-                 response.Items.Add(new TagResponseModel(p)));
+            searchResult.Items.ForEach(p => response.Items.Add(new TagResponseModel(p)));
             return response;
         }
 
@@ -54,7 +53,9 @@ namespace Lingtren.Api.Controllers
         [HttpPost]
         public async Task<TagResponseModel> CreateTag(TagRequestModel model)
         {
-            var response = await tagService.CreateTagAsync(model.Name, CurrentUser.Id).ConfigureAwait(false);
+            var response = await tagService
+                .CreateTagAsync(model.Name, CurrentUser.Id)
+                .ConfigureAwait(false);
             return new TagResponseModel(response);
         }
 
@@ -67,7 +68,9 @@ namespace Lingtren.Api.Controllers
         [HttpPut("{identity}")]
         public async Task<TagResponseModel> UpdateTag(string identity, TagRequestModel model)
         {
-            var tag = await tagService.UpdateTagAsync(identity, model.Name, CurrentUser.Id).ConfigureAwait(false);
+            var tag = await tagService
+                .UpdateTagAsync(identity, model.Name, CurrentUser.Id)
+                .ConfigureAwait(false);
             return new TagResponseModel(tag);
         }
 

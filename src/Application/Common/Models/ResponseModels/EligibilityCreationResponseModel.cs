@@ -1,7 +1,6 @@
-namespace Lingtren.Application.Common.Models.ResponseModels
+namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Domain.Enums;
 
     public class EligibilityCreationResponseModel
     {
@@ -18,6 +17,5 @@ namespace Lingtren.Application.Common.Models.ResponseModels
         public Guid? GroupId { get; set; }
         public string GroupName { get; set; }
         public bool IsEligible { get; set; }
-
     }
 }

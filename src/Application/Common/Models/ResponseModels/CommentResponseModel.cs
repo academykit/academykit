@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
     public class CommentResponseModel
     {
@@ -9,6 +9,7 @@
         public int RepliesCount { get; set; }
         public UserModel User { get; set; }
     }
+
     public class CommentReplyResponseModel
     {
         public Guid Id { get; set; }

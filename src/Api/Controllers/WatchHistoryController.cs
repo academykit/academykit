@@ -1,16 +1,12 @@
-﻿// <copyright file="WatchHistoryController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
+    using AcademyKit.Api.Common;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Infrastructure.Helpers;
+    using AcademyKit.Infrastructure.Localization;
     using FluentValidation;
-    using Lingtren.Api.Common;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Infrastructure.Helpers;
-    using Lingtren.Infrastructure.Localization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
 
@@ -23,7 +19,8 @@ namespace Lingtren.Api.Controllers
         public WatchHistoryController(
             IWatchHistoryService watchHistoryService,
             IValidator<WatchHistoryRequestModel> validator,
-            IStringLocalizer<ExceptionLocalizer> localizer)
+            IStringLocalizer<ExceptionLocalizer> localizer
+        )
         {
             this.watchHistoryService = watchHistoryService;
             this.validator = validator;
@@ -38,8 +35,12 @@ namespace Lingtren.Api.Controllers
         [HttpPost]
         public async Task<WatchHistoryResponseModel> AddHistory(WatchHistoryRequestModel model)
         {
-            await validator.ValidateAsync(model, options => options.ThrowOnFailures()).ConfigureAwait(false);
-            var response = await watchHistoryService.CreateAsync(model, CurrentUser.Id).ConfigureAwait(false);
+            await validator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var response = await watchHistoryService
+                .CreateAsync(model, CurrentUser.Id)
+                .ConfigureAwait(false);
             return response;
         }
 
@@ -52,11 +53,23 @@ namespace Lingtren.Api.Controllers
         [HttpPatch("pass/{userId}")]
         public async Task<CommonResponseModel> Pass(Guid userId, WatchHistoryRequestModel model)
         {
-            CommonHelper.ValidateArgumentNotNullOrEmpty(model.CourseIdentity, nameof(model.CourseIdentity));
-            CommonHelper.ValidateArgumentNotNullOrEmpty(model.LessonIdentity, nameof(model.LessonIdentity));
+            CommonHelper.ValidateArgumentNotNullOrEmpty(
+                model.CourseIdentity,
+                nameof(model.CourseIdentity)
+            );
+            CommonHelper.ValidateArgumentNotNullOrEmpty(
+                model.LessonIdentity,
+                nameof(model.LessonIdentity)
+            );
 
-            await watchHistoryService.PassAsync(userId, model, CurrentUser.Id).ConfigureAwait(false);
-            return new CommonResponseModel { Success = true, Message = localizer.GetString("WatchHistory") };
+            await watchHistoryService
+                .PassAsync(userId, model, CurrentUser.Id)
+                .ConfigureAwait(false);
+            return new CommonResponseModel
+            {
+                Success = true,
+                Message = localizer.GetString("WatchHistory")
+            };
         }
     }
 }

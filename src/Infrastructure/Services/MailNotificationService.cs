@@ -1,17 +1,17 @@
 using System.Data;
 using System.Linq.Expressions;
+using AcademyKit.Application.Common.Dtos;
+using AcademyKit.Application.Common.Exceptions;
+using AcademyKit.Application.Common.Interfaces;
+using AcademyKit.Domain.Entities;
+using AcademyKit.Infrastructure.Common;
+using AcademyKit.Infrastructure.Localization;
 using Humanizer;
-using Lingtren.Application.Common.Dtos;
-using Lingtren.Application.Common.Exceptions;
-using Lingtren.Application.Common.Interfaces;
-using Lingtren.Domain.Entities;
-using Lingtren.Infrastructure.Common;
-using Lingtren.Infrastructure.Localization;
 using LinqKit;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
-namespace Lingtren.Infrastructure.Services
+namespace AcademyKit.Infrastructure.Services
 {
     public class MailNotificationService
         : BaseGenericService<MailNotification, MailNotificationBaseSearchCriteria>,
@@ -144,8 +144,8 @@ namespace Lingtren.Infrastructure.Services
 
             if (criteria.MailType.HasValue)
             {
-                predicate = predicate.And(
-                    p => p.MailType == criteria.MailType && p.IsActive == true
+                predicate = predicate.And(p =>
+                    p.MailType == criteria.MailType && p.IsActive == true
                 );
             }
 

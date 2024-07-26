@@ -1,19 +1,12 @@
-// <copyright file="DepartmentController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+namespace AcademyKit.Api.Controllers
 {
     using System.Globalization;
-
+    using AcademyKit.Api.Common;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Infrastructure.Localization;
     using CsvHelper;
-
-    using Lingtren.Api.Common;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Infrastructure.Localization;
-    using Lingtren.Infrastructure.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
 
@@ -86,15 +79,11 @@ namespace Lingtren.Api.Controllers
                 .GetResultDetail(identity, assessmentSubmissionId, CurrentUser.Id)
                 .ConfigureAwait(false);
 
-        
         [HttpGet("{identity}/GetStudentResults/{userId}/Export")]
-        public async Task<IActionResult> ExportStudentResults(
-            string identity,
-            Guid userId
-        ) 
+        public async Task<IActionResult> ExportStudentResults(string identity, Guid userId)
         {
             var response = await assessmentSubmissionService
-                .GetResultsExportAsync(identity,userId)
+                .GetResultsExportAsync(identity, userId)
                 .ConfigureAwait(false);
 
             using var memoryStream = new MemoryStream();

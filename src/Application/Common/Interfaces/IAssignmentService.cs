@@ -1,12 +1,12 @@
-﻿namespace Lingtren.Application.Common.Interfaces
+﻿namespace AcademyKit.Application.Common.Interfaces
 {
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
 
     public interface IAssignmentService : IGenericService<Assignment, AssignmentBaseSearchCriteria>
     {
@@ -17,7 +17,11 @@
         /// <param name="model">the instance of <see cref="AssignmentRequestModel"/> </param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns></returns>
-        Task<Assignment> UpdateAsync(string identity, AssignmentRequestModel model, Guid currentUserId);
+        Task<Assignment> UpdateAsync(
+            string identity,
+            AssignmentRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to submit assignments by the user
@@ -26,7 +30,11 @@
         /// <param name="model">the list of <see cref="AssignmentSubmissionRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user</param>
         /// <returns></returns>
-        Task AssignmentSubmissionAsync(string lessonIdentity, IList<AssignmentSubmissionRequestModel> model, Guid currentUserId);
+        Task AssignmentSubmissionAsync(
+            string lessonIdentity,
+            IList<AssignmentSubmissionRequestModel> model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to fetch student submitted assignment
@@ -35,14 +43,20 @@
         /// <param name="userId">the user id</param>
         /// <param name="currentUserId">the current user id</param>
         /// <returns>the instance of <see cref="AssignmentSubmissionStudentResponseModel"/></returns>
-        Task<AssignmentSubmissionStudentResponseModel> GetStudentSubmittedAssignment(string lessonIdentity, Guid userId, Guid currentUserId);
+        Task<AssignmentSubmissionStudentResponseModel> GetStudentSubmittedAssignment(
+            string lessonIdentity,
+            Guid userId,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to search assignment
         /// </summary>
         /// <param name="searchCriteria">the instance of <see cref="AssignmentBaseSearchCriteria"/></param>
         /// <returns></returns>
-        Task<IList<AssignmentResponseModel>> SearchAsync(AssignmentBaseSearchCriteria searchCriteria);
+        Task<IList<AssignmentResponseModel>> SearchAsync(
+            AssignmentBaseSearchCriteria searchCriteria
+        );
 
         /// <summary>
         /// Handle to review user assignment
@@ -51,7 +65,11 @@
         /// <param name="model">the instance of <see cref="AssignmentReviewRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns></returns>
-        Task AssignmentReviewAsync(string lessonIdentity, AssignmentReviewRequestModel model, Guid currentUserId);
+        Task AssignmentReviewAsync(
+            string lessonIdentity,
+            AssignmentReviewRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to update user assignment review
@@ -61,7 +79,12 @@
         /// <param name="model">the instance of <see cref="AssignmentReviewRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user id</param>
         /// <returns></returns>
-        Task UpdateAssignmentReviewAsync(string lessonIdentity, Guid id, AssignmentReviewRequestModel model, Guid currentUserId);
+        Task UpdateAssignmentReviewAsync(
+            string lessonIdentity,
+            Guid id,
+            AssignmentReviewRequestModel model,
+            Guid currentUserId
+        );
 
         /// <summary>
         /// Handle to delete assignment review
@@ -79,7 +102,11 @@
         /// <param name="lessonIdentity">lesson identity</param>
         /// <param name="ids">list of assignment question id</param>
         /// <returns>Task completed</returns>
-        Task ReorderAssignmentQuestionAsync(Guid currentUserId, string lessonIdentity, IList<Guid> ids);
+        Task ReorderAssignmentQuestionAsync(
+            Guid currentUserId,
+            string lessonIdentity,
+            IList<Guid> ids
+        );
 
         Task<IList<AssignmentResultExportModel>> GetResultsExportAsync(
             string lessonIdentity,
@@ -97,6 +124,5 @@
             string lessonIdentity,
             Guid currentUserId
         );
-
     }
 }

@@ -1,13 +1,9 @@
-﻿// <copyright file="BaseApiController.cs" company="Vurilo Nepal Pvt. Ltd.">
-// Copyright (c) Vurilo Nepal Pvt. Ltd.. All rights reserved.
-// </copyright>
-
-namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
+    using AcademyKit.Api.Common;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Domain.Enums;
     using Asp.Versioning;
-    using Lingtren.Api.Common;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Domain.Enums;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -16,7 +12,6 @@ namespace Lingtren.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
-
     // [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class BaseApiController : ControllerBase
@@ -26,9 +21,7 @@ namespace Lingtren.Api.Controllers
         /// </summary>
         private CurrentUser currentUser;
 
-        protected BaseApiController()
-        {
-        }
+        protected BaseApiController() { }
 
         /// <summary>
         /// Gets the current user.

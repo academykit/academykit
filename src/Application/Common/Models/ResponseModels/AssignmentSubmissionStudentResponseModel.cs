@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Dtos;
 
     public class AssignmentSubmissionStudentResponseModel
     {
@@ -11,6 +11,7 @@
         public AssignmentReviewResponseModel AssignmentReview { get; set; }
         public IList<AssignmentResponseModel> Assignments { get; set; }
     }
+
     public class AssignmentReviewResponseModel
     {
         public Guid Id { get; set; }

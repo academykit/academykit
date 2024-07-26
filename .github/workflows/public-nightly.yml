@@ -3,7 +3,7 @@ on:
   push:
     branches: ["main"]
     tags:
-      - 'v*.*.*' # publish on version tags, updates 'latest' tag
+      - "v*.*.*" # publish on version tags, updates 'latest' tag
 
 jobs:
   release-nightly:

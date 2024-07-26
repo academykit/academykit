@@ -1,19 +1,19 @@
-﻿namespace Lingtren.Infrastructure.Services
+﻿namespace AcademyKit.Infrastructure.Services
 {
     using System;
     using System.Linq.Expressions;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Helpers;
+    using AcademyKit.Infrastructure.Localization;
     using AngleSharp.Common;
     using Hangfire;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Helpers;
-    using Lingtren.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
@@ -71,18 +71,17 @@
             ).Result;
             var section = _unitOfWork
                 .GetRepository<Section>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p =>
-                        p.CourseId == course.Id
-                        && (
-                            p.Id.ToString() == criteria.SectionIdentity
-                            || p.Slug == criteria.SectionIdentity
-                        )
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.CourseId == course.Id
+                    && (
+                        p.Id.ToString() == criteria.SectionIdentity
+                        || p.Slug == criteria.SectionIdentity
+                    )
                 )
                 .Result;
 
-            return predicate.And(
-                p => p.CourseId == course.Id && p.SectionId == section.Id && !p.IsDeleted
+            return predicate.And(p =>
+                p.CourseId == course.Id && p.SectionId == section.Id && !p.IsDeleted
             );
         }
 
@@ -177,9 +176,8 @@
 
             var userCompletedWatchHistories = await _unitOfWork
                 .GetRepository<WatchHistory>()
-                .GetAllAsync(
-                    predicate: p =>
-                        p.UserId == currentUserId && p.CourseId == course.Id && p.IsPassed
+                .GetAllAsync(predicate: p =>
+                    p.UserId == currentUserId && p.CourseId == course.Id && p.IsPassed
                 )
                 .ConfigureAwait(false);
 
@@ -234,20 +232,18 @@
                     .ConfigureAwait(false);
                 var containResults = await _unitOfWork
                     .GetRepository<QuestionSetResult>()
-                    .ExistsAsync(
-                        predicate: p =>
-                            p.UserId == currentUserId && p.QuestionSetId == lesson.QuestionSetId
+                    .ExistsAsync(predicate: p =>
+                        p.UserId == currentUserId && p.QuestionSetId == lesson.QuestionSetId
                     )
                     .ConfigureAwait(false);
 
                 var submissionCount = await _unitOfWork
                     .GetRepository<QuestionSetSubmission>()
-                    .CountAsync(
-                        predicate: p =>
-                            p.QuestionSetId == lesson.QuestionSetId
-                            && p.UserId == currentUserId
-                            && p.StartTime != default
-                            && p.EndTime != default
+                    .CountAsync(predicate: p =>
+                        p.QuestionSetId == lesson.QuestionSetId
+                        && p.UserId == currentUserId
+                        && p.StartTime != default
+                        && p.EndTime != default
                     )
                     .ConfigureAwait(false);
 
@@ -274,8 +270,8 @@
                     .ConfigureAwait(false);
                 var assignmentSubmission = await _unitOfWork
                     .GetRepository<AssignmentSubmission>()
-                    .ExistsAsync(
-                        predicate: p => p.UserId == currentUserId && p.LessonId == lesson.Id
+                    .ExistsAsync(predicate: p =>
+                        p.UserId == currentUserId && p.LessonId == lesson.Id
                     )
                     .ConfigureAwait(false);
                 if (assignmentSubmission)
@@ -326,9 +322,8 @@
 
                 var isFeedbackSubmissionExists = await _unitOfWork
                     .GetRepository<FeedbackSubmission>()
-                    .ExistsAsync(
-                        predicate: p =>
-                            feedbackIds.Contains(p.FeedbackId) && p.UserId == currentUserId
+                    .ExistsAsync(predicate: p =>
+                        feedbackIds.Contains(p.FeedbackId) && p.UserId == currentUserId
                     )
                     .ConfigureAwait(false);
 
@@ -340,8 +335,8 @@
 
             var currentLessonWatchHistory = await _unitOfWork
                 .GetRepository<WatchHistory>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p => p.LessonId == lesson.Id && p.UserId == currentUserId
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    p.LessonId == lesson.Id && p.UserId == currentUserId
                 )
                 .ConfigureAwait(false);
             var responseModel = new LessonResponseModel(lesson);
@@ -369,8 +364,8 @@
             {
                 HasAttended = await _unitOfWork
                     .GetRepository<PhysicalLessonReview>()
-                    .ExistsAsync(
-                        predicate: p => p.UserId == currentUserId && p.LessonId == lesson.Id
+                    .ExistsAsync(predicate: p =>
+                        p.UserId == currentUserId && p.LessonId == lesson.Id
                     )
                     .ConfigureAwait(false);
             }
@@ -435,13 +430,12 @@
 
                 var section = await _unitOfWork
                     .GetRepository<Section>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p =>
-                            p.CourseId == course.Id
-                            && (
-                                p.Id.ToString() == model.SectionIdentity
-                                || p.Slug == model.SectionIdentity
-                            )
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.CourseId == course.Id
+                        && (
+                            p.Id.ToString() == model.SectionIdentity
+                            || p.Slug == model.SectionIdentity
+                        )
                     )
                     .ConfigureAwait(false);
                 if (section == null)
@@ -517,8 +511,8 @@
                         .GetRepository<VideoQueue>()
                         .InsertAsync(videoQueue)
                         .ConfigureAwait(false);
-                    BackgroundJob.Enqueue<IHangfireJobService>(
-                        job => job.LessonVideoUploadedAsync(lesson.Id, null)
+                    BackgroundJob.Enqueue<IHangfireJobService>(job =>
+                        job.LessonVideoUploadedAsync(lesson.Id, null)
                     );
                 }
 
@@ -599,13 +593,12 @@
 
                 var section = await _unitOfWork
                     .GetRepository<Section>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p =>
-                            p.CourseId == course.Id
-                            && (
-                                p.Id.ToString() == model.SectionIdentity
-                                || p.Slug == model.SectionIdentity
-                            )
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.CourseId == course.Id
+                        && (
+                            p.Id.ToString() == model.SectionIdentity
+                            || p.Slug == model.SectionIdentity
+                        )
                     )
                     .ConfigureAwait(false);
                 if (section == null)
@@ -621,11 +614,10 @@
 
                 var existing = await _unitOfWork
                     .GetRepository<Lesson>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p =>
-                            p.CourseId == course.Id
-                            && p.SectionId == section.Id
-                            && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity)
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.CourseId == course.Id
+                        && p.SectionId == section.Id
+                        && (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity)
                     )
                     .ConfigureAwait(false);
                 if (existing == null)
@@ -791,10 +783,9 @@
 
                     var lesson = await _unitOfWork
                         .GetRepository<Lesson>()
-                        .GetFirstOrDefaultAsync(
-                            predicate: p =>
-                                (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity)
-                                && p.CourseId == course.Id
+                        .GetFirstOrDefaultAsync(predicate: p =>
+                            (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity)
+                            && p.CourseId == course.Id
                         )
                         .ConfigureAwait(false);
                     if (lesson == null)
@@ -1057,8 +1048,8 @@
             {
                 var user = await _unitOfWork
                     .GetRepository<User>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p => p.Id == currentUserId && p.Status == UserStatus.Active
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.Id == currentUserId && p.Status == UserStatus.Active
                     )
                     .ConfigureAwait(false);
                 if (user == null)
@@ -1141,14 +1132,13 @@
                     .ConfigureAwait(false);
                 if (!isModerator)
                 {
-                    var isMember = course.CourseEnrollments.Any(
-                        x =>
-                            x.UserId == currentUserId
-                            && !x.IsDeleted
-                            && (
-                                x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
-                                || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
-                            )
+                    var isMember = course.CourseEnrollments.Any(x =>
+                        x.UserId == currentUserId
+                        && !x.IsDeleted
+                        && (
+                            x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                            || x.EnrollmentMemberStatus == EnrollmentMemberStatusEnum.Enrolled
+                        )
                     );
                     if (!isMember)
                     {
@@ -1231,11 +1221,10 @@
                 .ConfigureAwait(false);
             var lesson = await _unitOfWork
                 .GetRepository<Lesson>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p =>
-                        (p.Id.ToString() == lessonIdentity || p.Slug.Equals(lessonIdentity))
-                        && (p.Type == LessonType.LiveClass || p.Type == LessonType.RecordedVideo)
-                        && p.MeetingId != null
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    (p.Id.ToString() == lessonIdentity || p.Slug.Equals(lessonIdentity))
+                    && (p.Type == LessonType.LiveClass || p.Type == LessonType.RecordedVideo)
+                    && p.MeetingId != null
                 )
                 .ConfigureAwait(false);
             if (lesson == default)
@@ -1257,8 +1246,8 @@
 
             var reports = await _unitOfWork
                 .GetRepository<MeetingReport>()
-                .GetAllAsync(
-                    predicate: p => p.MeetingId == lesson.MeetingId && p.UserId.ToString() == userId
+                .GetAllAsync(predicate: p =>
+                    p.MeetingId == lesson.MeetingId && p.UserId.ToString() == userId
                 )
                 .ConfigureAwait(false);
             if (reports == default)
@@ -1270,25 +1259,20 @@
             }
 
             return reports
-                .Select(
-                    x =>
-                        new MeetingReportResponseModel
-                        {
-                            UserId = x.UserId,
-                            Name = user.FullName,
-                            Email = user.Email,
-                            MobileNumber = user.MobileNumber,
-                            StartDate = x.StartTime,
-                            JoinedTime = x.JoinTime.ToShortTimeString(),
-                            LeftTime = x.LeftTime.HasValue
-                                ? x.LeftTime.Value.ToShortTimeString()
-                                : string.Empty,
-                            LessonId = lesson.Id,
-                            Duration = x.Duration.HasValue
-                                ? (int)x.Duration.Value.TotalSeconds
-                                : default,
-                        }
-                )
+                .Select(x => new MeetingReportResponseModel
+                {
+                    UserId = x.UserId,
+                    Name = user.FullName,
+                    Email = user.Email,
+                    MobileNumber = user.MobileNumber,
+                    StartDate = x.StartTime,
+                    JoinedTime = x.JoinTime.ToShortTimeString(),
+                    LeftTime = x.LeftTime.HasValue
+                        ? x.LeftTime.Value.ToShortTimeString()
+                        : string.Empty,
+                    LessonId = lesson.Id,
+                    Duration = x.Duration.HasValue ? (int)x.Duration.Value.TotalSeconds : default,
+                })
                 .ToList();
         }
 
@@ -1325,13 +1309,12 @@
 
                 var section = await _unitOfWork
                     .GetRepository<Section>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p =>
-                            p.CourseId == course.Id
-                            && (
-                                p.Id.ToString() == model.SectionIdentity
-                                || p.Slug == model.SectionIdentity
-                            )
+                    .GetFirstOrDefaultAsync(predicate: p =>
+                        p.CourseId == course.Id
+                        && (
+                            p.Id.ToString() == model.SectionIdentity
+                            || p.Slug == model.SectionIdentity
+                        )
                     )
                     .ConfigureAwait(false);
                 if (section == null)
@@ -1347,8 +1330,8 @@
 
                 var lessons = await _unitOfWork
                     .GetRepository<Lesson>()
-                    .GetAllAsync(
-                        predicate: p => p.CourseId == course.Id && model.Ids.Contains(p.Id)
+                    .GetAllAsync(predicate: p =>
+                        p.CourseId == course.Id && model.Ids.Contains(p.Id)
                     )
                     .ConfigureAwait(false);
 
@@ -1395,16 +1378,16 @@
         /// <exception cref="EntityNotFoundException"></exception>
         private async Task<Lesson> GetCurrentLesson(Guid currentUserId, Course course)
         {
-            var currentLessonWatched = course.CourseEnrollments.FirstOrDefault(
-                x => x.UserId == currentUserId
+            var currentLessonWatched = course.CourseEnrollments.FirstOrDefault(x =>
+                x.UserId == currentUserId
             );
             var currentLessonId = currentLessonWatched?.CurrentLessonId;
             if (currentLessonId == default)
             {
                 var watchHistories = await _unitOfWork
                     .GetRepository<WatchHistory>()
-                    .GetAllAsync(
-                        predicate: p => p.CourseId == course.Id && p.UserId == currentUserId
+                    .GetAllAsync(predicate: p =>
+                        p.CourseId == course.Id && p.UserId == currentUserId
                     )
                     .ConfigureAwait(false);
                 if (watchHistories.Count == 0)
@@ -1589,8 +1572,8 @@
 
             var existing = await _unitOfWork
                 .GetRepository<Lesson>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p => (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity)
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity)
                 )
                 .ConfigureAwait(false);
             if (existing == null)
@@ -1650,8 +1633,8 @@
 
             var existing = await _unitOfWork
                 .GetRepository<Lesson>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p => (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity)
+                .GetFirstOrDefaultAsync(predicate: p =>
+                    (p.Id.ToString() == lessonIdentity || p.Slug == lessonIdentity)
                 )
                 .ConfigureAwait(false);
             if (existing == null)

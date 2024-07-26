@@ -1,8 +1,5 @@
-﻿namespace Lingtren.Application.Common.Exceptions
+﻿namespace AcademyKit.Application.Common.Exceptions
 {
-    using System.Runtime.Serialization;
-
-    [Serializable]
     public class PersistenceException : ServiceException
     {
         /// <summary>
@@ -16,7 +13,8 @@
         /// </summary>
         ///
         /// <param name="message">The message that describes the error.</param>
-        public PersistenceException(string message) : base(message) { }
+        public PersistenceException(string message)
+            : base(message) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PersistenceException"/> class
@@ -30,18 +28,7 @@
         /// The exception that is the cause of the current exception, or a null reference if no inner exception is
         /// specified.
         /// </param>
-        public PersistenceException(string message, Exception innerException) : base(message, innerException) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PersistenceException"/> class with serialized data.
-        /// </summary>
-        ///
-        /// <param name="info">
-        /// The <see cref="SerializationInfo"/> that holds the serialized object data about the exception being thrown.
-        /// </param>
-        /// <param name="context">
-        /// The <see cref="StreamingContext"/> that contains contextual information about the source or destination.
-        /// </param>
-        protected PersistenceException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        public PersistenceException(string message, Exception innerException)
+            : base(message, innerException) { }
     }
 }

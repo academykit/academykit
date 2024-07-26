@@ -1,15 +1,15 @@
-﻿namespace Lingtren.Infrastructure.Configurations
+﻿namespace AcademyKit.Infrastructure.Configurations
 {
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Persistence;
     using Application.Common.Validators;
     using FluentValidation;
     using Hangfire;
     using Hangfire.MySql;
     using Infrastructure.Services;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Persistence;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;

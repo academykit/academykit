@@ -1,6 +1,6 @@
-using Lingtren.Domain.Entities;
+using AcademyKit.Domain.Entities;
 
-namespace Lingtren.Application.Common.Models.ResponseModels
+namespace AcademyKit.Application.Common.Models.ResponseModels
 {
     public class ExamResultExportSubmissionModel
     {
@@ -22,11 +22,9 @@ namespace Lingtren.Application.Common.Models.ResponseModels
             TotalMarks = examResult.TotalMark;
             NegativeMarks = examResult.NegativeMark;
             ObtainedMarks = examResult.TotalMark - examResult.NegativeMark;
-            ResultStatus = examResult.QuestionSet.Lesson.Course.WatchHistories
-                .FirstOrDefault(
-                    x =>
-                        x.UserId == examResult.UserId
-                        && x.LessonId == examResult.QuestionSet.Lesson.Id
+            ResultStatus = examResult
+                .QuestionSet.Lesson.Course.WatchHistories.FirstOrDefault(x =>
+                    x.UserId == examResult.UserId && x.LessonId == examResult.QuestionSet.Lesson.Id
                 )
                 .IsPassed
                 ? "Passed"

@@ -1,7 +1,7 @@
-﻿namespace Lingtren.Infrastructure.Persistence
+﻿namespace AcademyKit.Infrastructure.Persistence
 {
     using System.Reflection;
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Domain.Entities;
     using Microsoft.EntityFrameworkCore;
 
     public class ApplicationDbContext : DbContext
