@@ -1311,7 +1311,10 @@
                 .ConfigureAwait(false);
             if (group == null)
             {
-                _logger.LogWarning("Group with identity: {identity} not found.", identity);
+                _logger.LogWarning(
+                    "Group with identity: {identity} not found.",
+                    identity.SanitizeForLogger()
+                );
                 throw new EntityNotFoundException(_localizer.GetString("GroupNotFound"));
             }
 
@@ -3404,7 +3407,10 @@
                     .ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Training with identity: {identity} not found.", identity);
+                    _logger.LogWarning(
+                        "Training with identity: {identity} not found.",
+                        identity.SanitizeForLogger()
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
@@ -3537,7 +3543,10 @@
                     .ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Training with identity: {identity} not found.", identity);
+                    _logger.LogWarning(
+                        "Training with identity: {identity} not found.",
+                        identity.SanitizeForLogger()
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
@@ -3787,7 +3796,10 @@
                 .ConfigureAwait(false);
             if (course == null)
             {
-                _logger.LogWarning("Training with identity: {identity} not found.", identity);
+                _logger.LogWarning(
+                    "Training with identity: {identity} not found.",
+                    identity.SanitizeForLogger()
+                );
                 throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             }
 

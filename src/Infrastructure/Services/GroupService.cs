@@ -225,7 +225,7 @@
                     {
                         _logger.LogInformation(
                             "Please enter user email for group with identity : {identity}",
-                            identity
+                            identity.SanitizeForLogger()
                         );
                         throw new ForbiddenException(_localizer.GetString("EnterUserEmail"));
                     }
@@ -790,7 +790,7 @@
                 {
                     _logger.LogWarning(
                         "Group with identity: {identity} not found.",
-                        searchCriteria.GroupIdentity
+                        searchCriteria.GroupIdentity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(_localizer.GetString("GroupNotFound"));
                 }

@@ -14,6 +14,7 @@ using AcademyKit.Domain.Entities;
 using AcademyKit.Domain.Enums;
 using AcademyKit.Infrastructure.Common;
 using AcademyKit.Infrastructure.Configurations;
+using AcademyKit.Infrastructure.Helpers;
 using AcademyKit.Infrastructure.Localization;
 using CsvHelper;
 using Hangfire;
@@ -661,7 +662,10 @@ namespace AcademyKit.Infrastructure.Services
 
                 if (model.Token != user.PasswordResetToken)
                 {
-                    _logger.LogWarning("User not found with email: {email}.", model.Email);
+                    _logger.LogWarning(
+                        "User not found with email: {email}.",
+                        model.Email.SanitizeForLogger()
+                    );
                     throw new ForbiddenException(_localizer.GetString("ResetTokenNotMatched"));
                 }
 

@@ -419,5 +419,15 @@
                 + @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
             return Regex.IsMatch(email, emailPattern);
         }
+
+        /// <summary>
+        /// Sanitize the user provided value to prevent Log Injection in .NET
+        /// </summary>
+        /// <param name="value">The text to sanitize</param>
+        /// <returns>Sanitized string</returns>
+        public static string SanitizeForLogger(this string value)
+        {
+            return value.Replace("\n", "").Replace("\r", "");
+        }
     }
 }

@@ -9,6 +9,7 @@
     using AcademyKit.Domain.Entities;
     using AcademyKit.Domain.Enums;
     using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Helpers;
     using AcademyKit.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
@@ -1125,7 +1126,7 @@
                 {
                     _logger.LogWarning(
                         "Question set not found with identity: {identity}.",
-                        identity
+                        identity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
@@ -1281,7 +1282,7 @@
                 {
                     _logger.LogWarning(
                         "Question set not found with identity: {identity}.",
-                        identity
+                        identity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
