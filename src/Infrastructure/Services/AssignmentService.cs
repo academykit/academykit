@@ -657,11 +657,6 @@
 
             if (lesson == null)
             {
-                _logger.LogWarning(
-                    "Lesson with identity: {identity} not found for user with id: {id}",
-                    searchCriteria.LessonIdentity,
-                    searchCriteria.CurrentUserId
-                );
                 throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
             }
 
@@ -774,11 +769,6 @@
                     .ConfigureAwait(false);
                 if (lesson == null)
                 {
-                    _logger.LogWarning(
-                        "Lesson with identity: {identity} not found for user with id: {id}.",
-                        lessonIdentity,
-                        currentUserId
-                    );
                     throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
 
@@ -883,11 +873,6 @@
                     .ConfigureAwait(false);
                 if (lesson == null)
                 {
-                    _logger.LogWarning(
-                        "Lesson with identity: {identity} not found for user with id: {id}.",
-                        lessonIdentity,
-                        currentUserId
-                    );
                     throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
 
@@ -997,21 +982,11 @@
                     .ConfigureAwait(false);
                 if (lesson == null)
                 {
-                    _logger.LogWarning(
-                        "Lesson with identity: {identity} not found for user with id: {id}.",
-                        lessonIdentity,
-                        currentUserId
-                    );
                     throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
                 }
 
                 if (lesson.Type != LessonType.Assignment)
                 {
-                    _logger.LogWarning(
-                        "Lesson type not matched for assignment submission for lesson with id: {id} and user with id: {userId}.",
-                        lesson.Id,
-                        currentUserId
-                    );
                     throw new ForbiddenException(
                         _localizer.GetString("InvalidLessonAssignmentType")
                     );
