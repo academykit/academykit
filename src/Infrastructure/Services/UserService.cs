@@ -647,7 +647,10 @@ namespace AcademyKit.Infrastructure.Services
                 var user = await GetUserByEmailAsync(model.Email).ConfigureAwait(false);
                 if (user == null)
                 {
-                    _logger.LogWarning("User not found with email: {email}.", model.Email);
+                    _logger.LogWarning(
+                        "User not found with email: {email}.",
+                        model.Email.SanitizeForLogger()
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("UserNotFound"));
                 }
 

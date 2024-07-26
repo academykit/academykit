@@ -3422,7 +3422,7 @@
                 {
                     _logger.LogWarning(
                         "Cannot Created Signature without Certificate in lesson : {identity}",
-                        identity
+                        identity.SanitizeForLogger()
                     );
                     throw new ForbiddenException(
                         _localizer.GetString("CannotAddSignatureWithoutCertificate")
