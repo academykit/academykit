@@ -33,7 +33,7 @@ services:
       - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: 4ubiY2A163@f
-      MYSQL_DATABASE: standalone
+      MYSQL_DATABASE: academykit
       MYSQL_USER: dev
       MYSQL_PASSWORD: 4ubiY2A163@f
     volumes:

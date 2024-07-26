@@ -7,7 +7,7 @@
 - [ASP.NET Core 8](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core)
 - [NodeJS 18.x](https://nodejs.org)
 - [Entity Framework Core tools](https://learn.microsoft.com/en-us/ef/core/cli/dotnet)
-  - `dotnet tool install --global dotnet-ef`
+- [MySQL]
 
 ## Database Setup
 
