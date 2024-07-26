@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Application.Common.Dtos
+﻿namespace AcademyKit.Application.Common.Dtos
 {
     /// <summary>
     /// An entity class that represents search result.

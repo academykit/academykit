@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Application.Common.Interfaces
+﻿namespace AcademyKit.Application.Common.Interfaces
 {
-    using Lingtren.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Dtos;
     using Microsoft.EntityFrameworkCore;
 
     public static class IQueryablePageListExtensions

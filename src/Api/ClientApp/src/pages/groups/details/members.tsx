@@ -150,9 +150,9 @@ const GroupMemberRow = ({
   return (
     <Table.Tr>
       <DeleteModal
-        title={`${t('sure_want_to_remove')} "${data.user.fullName?.split(
-          ' '
-        )[0]}" ?`}
+        title={`${t('sure_want_to_remove')} "${
+          data.user.fullName?.split(' ')[0]
+        }" ?`}
         open={deleteDialog}
         onClose={setDeleteDialog}
         onConfirm={deleteMember}

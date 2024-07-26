@@ -1,7 +1,7 @@
-namespace Lingtren.Domain.Entities
+namespace AcademyKit.Domain.Entities
 {
-    using Lingtren.Domain.Common;
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Domain.Common;
+    using AcademyKit.Domain.Enums;
 
     public class AssessmentQuestion : AuditableEntity
     {

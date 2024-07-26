@@ -1,13 +1,13 @@
-﻿namespace Lingtren.Infrastructure.Helpers
+﻿namespace AcademyKit.Infrastructure.Helpers
 {
     using System.Data;
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Text.RegularExpressions;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Domain.Common;
-    using Lingtren.Infrastructure.Common;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Domain.Common;
+    using AcademyKit.Infrastructure.Common;
     using Newtonsoft.Json;
 
     /// <summary>

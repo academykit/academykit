@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Application.Common.Dtos
+﻿namespace AcademyKit.Application.Common.Dtos
 {
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Domain.Enums;
 
     public class AuthenticationModel
     {

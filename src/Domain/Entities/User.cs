@@ -1,8 +1,8 @@
-﻿namespace Lingtren.Domain.Entities
+﻿namespace AcademyKit.Domain.Entities
 {
     using System.Text.RegularExpressions;
-    using Lingtren.Domain.Common;
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Domain.Common;
+    using AcademyKit.Domain.Enums;
 
     public class User : AuditableEntity
     {

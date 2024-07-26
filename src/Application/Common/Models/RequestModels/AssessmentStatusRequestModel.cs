@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Application.Common.Models.RequestModels
+﻿namespace AcademyKit.Application.Common.Models.RequestModels
 {
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Domain.Enums;
 
     public class AssessmentStatusRequestModel
     {

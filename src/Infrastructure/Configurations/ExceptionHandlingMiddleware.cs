@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Infrastructure.Configurations
+﻿namespace AcademyKit.Infrastructure.Configurations
 {
     using System;
     using System.Linq;
@@ -6,9 +6,9 @@
     using System.Security;
     using System.Text;
     using System.Threading.Tasks;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Models.ResponseModels;
     using FluentValidation;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;

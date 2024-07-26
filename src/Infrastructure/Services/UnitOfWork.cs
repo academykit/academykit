@@ -1,11 +1,11 @@
-﻿namespace Lingtren.Infrastructure.Services
+﻿namespace AcademyKit.Infrastructure.Services
 {
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Persistence;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Persistence;
 
     public class UnitOfWork : Disposable, IUnitOfWork
     {

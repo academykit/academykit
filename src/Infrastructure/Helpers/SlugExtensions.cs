@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Infrastructure.Helpers
+﻿namespace AcademyKit.Infrastructure.Helpers
 {
     using System.Globalization;
     using System.Linq;

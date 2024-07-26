@@ -1,10 +1,10 @@
 ﻿namespace Api.Controllers
 {
-    using Lingtren.Api.Common;
-    using Lingtren.Api.Controllers;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.ResponseModels;
+    using AcademyKit.Api.Common;
+    using AcademyKit.Api.Controllers;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]")]

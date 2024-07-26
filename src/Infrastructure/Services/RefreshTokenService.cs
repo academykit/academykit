@@ -1,10 +1,10 @@
-﻿namespace Lingtren.Infrastructure.Services
+﻿namespace AcademyKit.Infrastructure.Services
 {
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Infrastructure.Common;
-    using Lingtren.Infrastructure.Localization;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Localization;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
 

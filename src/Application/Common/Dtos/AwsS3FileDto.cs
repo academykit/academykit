@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Lingtren.Application.Common.Dtos
+namespace AcademyKit.Application.Common.Dtos
 {
     public class AwsS3FileDto
     {

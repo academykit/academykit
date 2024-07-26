@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Infrastructure.Configurations
+﻿namespace AcademyKit.Infrastructure.Configurations
 {
     using System.Text;
     using Microsoft.AspNetCore.Authentication.JwtBearer;

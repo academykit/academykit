@@ -42,11 +42,11 @@ export function AppFooter({ name }: { name: string }) {
           {t('powered_by')}
         </Text>
         <Anchor
-          href={'https://www.sursatech.com/'}
+          href={'https://www.academykit.co'}
           style={{ textDecoration: 'none' }}
         >
           <Text size={'xs'} c={'dimmed'}>
-            Sursatech
+            Academy Kit
           </Text>
         </Anchor>
       </Center>

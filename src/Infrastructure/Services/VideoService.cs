@@ -1,8 +1,8 @@
 ﻿using System.Runtime.InteropServices;
+using AcademyKit.Application.Common.Interfaces;
 using FFmpeg.NET;
-using Lingtren.Application.Common.Interfaces;
 
-namespace Lingtren.Infrastructure.Services
+namespace AcademyKit.Infrastructure.Services
 {
     public class VideoService : IVideoService
     {

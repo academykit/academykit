@@ -1,7 +1,7 @@
-﻿namespace Lingtren.Application.Common.Interfaces
+﻿namespace AcademyKit.Application.Common.Interfaces
 {
+    using AcademyKit.Application.Common.Dtos;
     using Hangfire.Server;
-    using Lingtren.Application.Common.Dtos;
 
     public interface IWebhookService
     {

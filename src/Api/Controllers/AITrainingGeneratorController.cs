@@ -1,10 +1,10 @@
-using Lingtren.Application.Common.Exceptions;
-using Lingtren.Application.Common.Interfaces;
+using AcademyKit.Application.Common.Exceptions;
+using AcademyKit.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using OpenAI.Extensions;
 using OpenAI.Interfaces;
 
-namespace Lingtren.Api.Controllers
+namespace AcademyKit.Api.Controllers
 {
     public class AITrainingGeneratorController : BaseApiController
     {

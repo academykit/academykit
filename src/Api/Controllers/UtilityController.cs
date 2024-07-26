@@ -1,7 +1,7 @@
-﻿namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Domain.Entities;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
@@ -44,7 +44,7 @@
         public IActionResult GenerateCertificate()
         {
             var companyLogo = "https://i.ibb.co/0jZzQYH/Group-1.png";
-            var companyName = "Lingtren Pvt . Ltd .";
+            var companyName = "AcademyKit";
             var name = "Aryan Phuyal";
             var training =
                 "advanceReact js advanceReact js advanceReact js advanceReact js advanceReact js advanceReact js advanceReact js advanceReact js advanceReact js";

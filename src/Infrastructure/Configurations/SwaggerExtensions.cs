@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Infrastructure.Configurations
+﻿namespace AcademyKit.Infrastructure.Configurations
 {
     using Asp.Versioning.ApiExplorer;
     using Microsoft.AspNetCore.Builder;

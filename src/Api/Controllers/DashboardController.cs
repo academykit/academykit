@@ -1,9 +1,9 @@
-﻿namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
     using Microsoft.AspNetCore.Mvc;
 
     public class DashboardController : BaseApiController

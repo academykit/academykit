@@ -1,8 +1,8 @@
-﻿using Lingtren.Domain.Entities;
+﻿using AcademyKit.Domain.Entities;
 
-namespace Lingtren.Application.Common.Models.ResponseModels
+namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Domain.Enums;
 
     public class AssessmentQuestionResponseModel
     {

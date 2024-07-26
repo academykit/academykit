@@ -1,6 +1,6 @@
-using Lingtren.Domain.Enums;
+using AcademyKit.Domain.Enums;
 
-namespace Lingtren.Application.Common.Dtos
+namespace AcademyKit.Application.Common.Dtos
 {
     public class MailNotificationBaseSearchCriteria : BaseSearchCriteria
     {

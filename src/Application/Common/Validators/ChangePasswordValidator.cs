@@ -1,9 +1,9 @@
-﻿namespace Lingtren.Application.Common.Validators
+﻿namespace AcademyKit.Application.Common.Validators
 {
     using System.Text.RegularExpressions;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.ValidatorLocalization;
     using FluentValidation;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.ValidatorLocalization;
     using Microsoft.Extensions.Localization;
 
     public class ChangePasswordValidator : AbstractValidator<ChangePasswordRequestModel>

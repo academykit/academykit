@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Infrastructure.Configurations
+﻿namespace AcademyKit.Infrastructure.Configurations
 {
-    using Lingtren.Infrastructure.Persistence;
+    using AcademyKit.Infrastructure.Persistence;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;

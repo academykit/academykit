@@ -1,7 +1,7 @@
-﻿namespace Lingtren.Infrastructure.Common
+﻿namespace AcademyKit.Infrastructure.Common
 {
-    using Lingtren.Application.Common.Interfaces;
-    using Lingtren.Infrastructure.Persistence;
+    using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Infrastructure.Persistence;
 
     public interface IUnitOfWork : IDisposable
     {

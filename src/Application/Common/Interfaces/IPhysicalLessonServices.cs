@@ -1,9 +1,9 @@
-﻿using Lingtren.Application.Common.Dtos;
-using Lingtren.Application.Common.Interfaces;
-using Lingtren.Application.Common.Models.RequestModels;
-using Lingtren.Domain.Entities;
+﻿using AcademyKit.Application.Common.Dtos;
+using AcademyKit.Application.Common.Interfaces;
+using AcademyKit.Application.Common.Models.RequestModels;
+using AcademyKit.Domain.Entities;
 
-namespace Lingtren.Infrastructure.Services
+namespace AcademyKit.Infrastructure.Services
 {
     public interface IPhysicalLessonServices
         : IGenericService<PhysicalLessonReview, BaseSearchCriteria>

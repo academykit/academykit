@@ -1,9 +1,9 @@
 ﻿using System.Text;
+using AcademyKit.Application.Common.Models.RequestModels;
 using FluentValidation;
-using Lingtren.Application.Common.Models.RequestModels;
 using Microsoft.Extensions.Localization;
 
-namespace Lingtren.Application.Common.Validators
+namespace AcademyKit.Application.Common.Validators
 {
     public class PhysicalLessonReviewRequestModelValidator
         : AbstractValidator<PhysicalLessonReviewRequestModel>

@@ -1,9 +1,9 @@
-﻿namespace Lingtren.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
+    using AcademyKit.Api.Common;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Domain.Enums;
     using Asp.Versioning;
-    using Lingtren.Api.Common;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Domain.Enums;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;

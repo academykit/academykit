@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Application.Common.Exceptions
+﻿namespace AcademyKit.Application.Common.Exceptions
 {
     public class ServiceException : Exception
     {

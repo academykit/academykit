@@ -1,9 +1,9 @@
+using AcademyKit.Application.Common.Models.RequestModels;
+using AcademyKit.Application.ValidatorLocalization;
 using FluentValidation;
-using Lingtren.Application.Common.Models.RequestModels;
-using Lingtren.Application.ValidatorLocalization;
 using Microsoft.Extensions.Localization;
 
-namespace Lingtren.Application.Common.Validators
+namespace AcademyKit.Application.Common.Validators
 {
     public class SkillsValidator : AbstractValidator<SkillsRequestModel>
     {

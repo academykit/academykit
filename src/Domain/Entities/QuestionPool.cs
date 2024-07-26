@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Domain.Entities
+﻿namespace AcademyKit.Domain.Entities
 {
-    using Lingtren.Domain.Common;
+    using AcademyKit.Domain.Common;
 
     public class QuestionPool : AuditableEntity
     {

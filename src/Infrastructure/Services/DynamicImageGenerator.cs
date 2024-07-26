@@ -1,10 +1,10 @@
 ﻿// create class
 using System.Text;
-using Lingtren.Application.Common.Interfaces;
-using Lingtren.Domain.Entities;
+using AcademyKit.Application.Common.Interfaces;
+using AcademyKit.Domain.Entities;
 using PuppeteerSharp;
 
-namespace Lingtren.Infrastructure.Services
+namespace AcademyKit.Infrastructure.Services
 {
     public class DynamicImageGenerator : IDynamicImageGenerator
     {

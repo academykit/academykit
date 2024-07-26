@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Api.Common
+﻿namespace AcademyKit.Api.Common
 {
     public class CommonResponseModel
     {

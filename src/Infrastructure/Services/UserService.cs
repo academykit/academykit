@@ -5,18 +5,18 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using AcademyKit.Application.Common.Dtos;
+using AcademyKit.Application.Common.Exceptions;
+using AcademyKit.Application.Common.Interfaces;
+using AcademyKit.Application.Common.Models.RequestModels;
+using AcademyKit.Application.Common.Models.ResponseModels;
+using AcademyKit.Domain.Entities;
+using AcademyKit.Domain.Enums;
+using AcademyKit.Infrastructure.Common;
+using AcademyKit.Infrastructure.Configurations;
+using AcademyKit.Infrastructure.Localization;
 using CsvHelper;
 using Hangfire;
-using Lingtren.Application.Common.Dtos;
-using Lingtren.Application.Common.Exceptions;
-using Lingtren.Application.Common.Interfaces;
-using Lingtren.Application.Common.Models.RequestModels;
-using Lingtren.Application.Common.Models.ResponseModels;
-using Lingtren.Domain.Entities;
-using Lingtren.Domain.Enums;
-using Lingtren.Infrastructure.Common;
-using Lingtren.Infrastructure.Configurations;
-using Lingtren.Infrastructure.Localization;
 using LinqKit;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +29,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MimeKit;
 
-namespace Lingtren.Infrastructure.Services
+namespace AcademyKit.Infrastructure.Services
 {
     public class UserService : BaseGenericService<User, UserSearchCriteria>, IUserService
     {

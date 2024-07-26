@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Api.Common
+﻿namespace AcademyKit.Api.Common
 {
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Domain.Enums;
 
     public class CurrentUser
     {

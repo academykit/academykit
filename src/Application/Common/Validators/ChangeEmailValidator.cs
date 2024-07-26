@@ -1,9 +1,9 @@
-﻿namespace Lingtren.Application.Common.Validators
+﻿namespace AcademyKit.Application.Common.Validators
 {
     using System.Text.RegularExpressions;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.ValidatorLocalization;
     using FluentValidation;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.ValidatorLocalization;
     using Microsoft.Extensions.Localization;
 
     public class ChangeEmailValidator : AbstractValidator<ChangeEmailRequestModel>

@@ -1,6 +1,6 @@
-﻿using Lingtren.Domain.Entities;
+﻿using AcademyKit.Domain.Entities;
 
-namespace Lingtren.Application.Common.Interfaces
+namespace AcademyKit.Application.Common.Interfaces
 {
     public interface IDynamicImageGenerator
     {

@@ -1,6 +1,6 @@
-﻿namespace Lingtren.Application.Common.Interfaces
+﻿namespace AcademyKit.Application.Common.Interfaces
 {
-    using Lingtren.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.RequestModels;
 
     public interface IFileServerService
     {

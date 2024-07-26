@@ -1,15 +1,15 @@
-﻿using Lingtren.Application.Common.Dtos;
-using Lingtren.Application.Common.Exceptions;
-using Lingtren.Application.Common.Models.RequestModels;
-using Lingtren.Domain.Entities;
-using Lingtren.Domain.Enums;
-using Lingtren.Infrastructure.Common;
-using Lingtren.Infrastructure.Localization;
+﻿using AcademyKit.Application.Common.Dtos;
+using AcademyKit.Application.Common.Exceptions;
+using AcademyKit.Application.Common.Models.RequestModels;
+using AcademyKit.Domain.Entities;
+using AcademyKit.Domain.Enums;
+using AcademyKit.Infrastructure.Common;
+using AcademyKit.Infrastructure.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
-namespace Lingtren.Infrastructure.Services
+namespace AcademyKit.Infrastructure.Services
 {
     public class PhysicalLessonService
         : BaseGenericService<PhysicalLessonReview, BaseSearchCriteria>,

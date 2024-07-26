@@ -104,8 +104,8 @@ const AddUpdateUserForm = ({
           item?.status === UserStatus.Pending
             ? UserStatus.Pending
             : data.isActive
-            ? UserStatus.Active
-            : UserStatus.InActive;
+              ? UserStatus.Active
+              : UserStatus.InActive;
         data = { ...userData, role: Number(data?.role), status };
         await apiHooks.mutateAsync({ id: item?.id as string, data });
       }

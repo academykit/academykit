@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Domain.Common
+﻿namespace AcademyKit.Domain.Common
 {
     public static class HttpClientUtils
     {

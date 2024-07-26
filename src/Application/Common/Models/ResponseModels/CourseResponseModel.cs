@@ -1,8 +1,8 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
 
     public class CourseResponseModel
     {

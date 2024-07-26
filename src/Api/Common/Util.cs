@@ -1,9 +1,9 @@
-﻿namespace Lingtren.Api.Common
+﻿namespace AcademyKit.Api.Common
 {
     using System.Linq;
     using System.Security.Claims;
-    using Lingtren.Application.Common.Exceptions;
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Domain.Enums;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
 

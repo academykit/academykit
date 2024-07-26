@@ -67,53 +67,53 @@ const ExamDetails = ({
       m: moment().isBefore(exam?.startTime + 'Z')
         ? `%d ${t('in_minute')}`
         : `%d ${t('minute_ago')}` && moment().isBefore(exam?.endTime + 'Z')
-        ? `%d ${t('in_minute')}`
-        : `%d ${t('minute_ago')}`,
+          ? `%d ${t('in_minute')}`
+          : `%d ${t('minute_ago')}`,
       mm: moment().isBefore(exam?.startTime + 'Z')
         ? `%d ${t('in_minutes')}`
         : `%d ${t('minutes_ago')}` && moment().isBefore(exam?.endTime + 'Z')
-        ? `%d ${t('in_minutes')}`
-        : `%d ${t('minutes_ago')}`,
+          ? `%d ${t('in_minutes')}`
+          : `%d ${t('minutes_ago')}`,
       h: moment().isBefore(exam?.startTime + 'Z')
         ? `%d ${t('in_hour')}`
         : `%d ${t('hour_ago')}` && moment().isBefore(exam?.endTime + 'Z')
-        ? `%d ${t('in_hour')}`
-        : `%d ${t('hour_ago')}`,
+          ? `%d ${t('in_hour')}`
+          : `%d ${t('hour_ago')}`,
       hh: moment().isBefore(exam?.startTime + 'Z')
         ? `%d ${t('in_hours')}`
         : `%d ${t('hours_ago')}` && moment().isBefore(exam?.endTime + 'Z')
-        ? `%d ${t('in_hours')}`
-        : `%d ${t('hours_ago')}`,
+          ? `%d ${t('in_hours')}`
+          : `%d ${t('hours_ago')}`,
       d: moment().isBefore(exam?.startTime + 'Z')
         ? `%d ${t('in_day')}`
         : `%d ${t('day_ago')}` && moment().isBefore(exam?.endTime + 'Z')
-        ? `%d ${t('in_day')}`
-        : `%d ${t('day_ago')}`,
+          ? `%d ${t('in_day')}`
+          : `%d ${t('day_ago')}`,
       dd: moment().isBefore(exam?.startTime + 'Z')
         ? `%d ${t('in_days')}`
         : `%d ${t('days_ago')}` && moment().isBefore(exam?.endTime + 'Z')
-        ? `%d ${t('in_days')}`
-        : `%d ${t('days_ago')}`,
+          ? `%d ${t('in_days')}`
+          : `%d ${t('days_ago')}`,
       M: moment().isBefore(exam?.startTime + 'Z')
         ? `%d ${t('in_month')}`
         : `%d ${t('month_ago')}` && moment().isBefore(exam?.endTime + 'Z')
-        ? `%d ${t('in_month')}`
-        : `%d ${t('month_ago')}`,
+          ? `%d ${t('in_month')}`
+          : `%d ${t('month_ago')}`,
       MM: moment().isBefore(exam?.startTime + 'Z')
         ? `%d ${t('in_months')}`
         : `%d ${t('months_ago')}` && moment().isBefore(exam?.endTime + 'Z')
-        ? `%d ${t('in_months')}`
-        : `%d ${t('months_ago')}`,
+          ? `%d ${t('in_months')}`
+          : `%d ${t('months_ago')}`,
       y: moment().isBefore(exam?.startTime + 'Z')
         ? `%d ${t('in_year')}`
         : `%d ${t('year_ago')}` && moment().isBefore(exam?.endTime + 'Z')
-        ? `%d ${t('in_year')}`
-        : `%d ${t('year_ago')}`,
+          ? `%d ${t('in_year')}`
+          : `%d ${t('year_ago')}`,
       yy: moment().isBefore(exam?.startTime + 'Z')
         ? `%d ${t('in_years')}`
         : `%d ${t('years_ago')}` && moment().isBefore(exam?.endTime + 'Z')
-        ? `%d ${t('in_years')}`
-        : `%d ${t('years_ago')}`,
+          ? `%d ${t('in_years')}`
+          : `%d ${t('years_ago')}`,
     },
   });
 

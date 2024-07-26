@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 
-namespace Lingtren.Infrastructure.Configurations
+namespace AcademyKit.Infrastructure.Configurations
 {
     public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
     {

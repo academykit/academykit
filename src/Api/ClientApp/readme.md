@@ -5,6 +5,7 @@
 1. node version >16+
 
 ## Development
+
 Debug application
 
 ```
@@ -26,6 +27,7 @@ npm run preview
 ## Lint & Format
 
 Run
+
 ```bash
 npm run format
 npm run lint

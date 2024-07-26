@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
+using AcademyKit.Infrastructure.Configurations;
 using Asp.Versioning;
 using Hangfire;
 using Hangfire.Dashboard;
-using Lingtren.Infrastructure.Configurations;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using PuppeteerSharp;

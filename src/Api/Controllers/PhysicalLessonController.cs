@@ -1,11 +1,11 @@
 ﻿namespace Api.Controllers
 {
+    using AcademyKit.Api.Common;
+    using AcademyKit.Api.Controllers;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Infrastructure.Localization;
+    using AcademyKit.Infrastructure.Services;
     using FluentValidation;
-    using Lingtren.Api.Common;
-    using Lingtren.Api.Controllers;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Infrastructure.Localization;
-    using Lingtren.Infrastructure.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
 

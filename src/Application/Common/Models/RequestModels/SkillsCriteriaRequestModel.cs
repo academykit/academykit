@@ -1,6 +1,6 @@
-using Lingtren.Domain.Enums;
+using AcademyKit.Domain.Enums;
 
-namespace Lingtren.Application.Common.Models.RequestModels
+namespace AcademyKit.Application.Common.Models.RequestModels
 {
     public class SkillsCriteriaRequestModel
     {

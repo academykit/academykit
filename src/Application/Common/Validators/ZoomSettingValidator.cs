@@ -1,8 +1,8 @@
-﻿namespace Lingtren.Application.Common.Validators
+﻿namespace AcademyKit.Application.Common.Validators
 {
+    using AcademyKit.Application.ValidatorLocalization;
     using Application.Common.Models.RequestModels;
     using FluentValidation;
-    using Lingtren.Application.ValidatorLocalization;
     using Microsoft.Extensions.Localization;
 
     public class ZoomSettingValidator : AbstractValidator<ZoomSettingRequestModel>

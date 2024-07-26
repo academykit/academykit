@@ -1,9 +1,9 @@
-﻿namespace Lingtren.Application.Common.Validators
+﻿namespace AcademyKit.Application.Common.Validators
 {
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.ValidatorLocalization;
+    using AcademyKit.Domain.Enums;
     using FluentValidation;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.ValidatorLocalization;
-    using Lingtren.Domain.Enums;
     using Microsoft.Extensions.Localization;
 
     public class AssessmentQuestionValidator : AbstractValidator<AssessmentQuestionRequestModel>

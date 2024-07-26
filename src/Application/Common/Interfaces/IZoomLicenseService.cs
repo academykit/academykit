@@ -1,10 +1,10 @@
-﻿namespace Lingtren.Application.Common.Interfaces
+﻿namespace AcademyKit.Application.Common.Interfaces
 {
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Models.RequestModels;
+    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Domain.Entities;
     using Hangfire.Server;
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Application.Common.Models.RequestModels;
-    using Lingtren.Application.Common.Models.ResponseModels;
-    using Lingtren.Domain.Entities;
 
     public interface IZoomLicenseService
         : IGenericService<ZoomLicense, ZoomLicenseBaseSearchCriteria>

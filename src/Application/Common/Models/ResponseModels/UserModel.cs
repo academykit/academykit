@@ -1,7 +1,7 @@
-﻿namespace Lingtren.Application.Common.Models.ResponseModels
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels
 {
-    using Lingtren.Domain.Entities;
-    using Lingtren.Domain.Enums;
+    using AcademyKit.Domain.Entities;
+    using AcademyKit.Domain.Enums;
 
     public class UserModel
     {

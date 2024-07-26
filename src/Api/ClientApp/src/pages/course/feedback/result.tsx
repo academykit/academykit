@@ -23,7 +23,7 @@ const FeedbackResult = () => {
   const { t } = useTranslation();
   const getUserFeedback = useGetUserFeedback(
     id as string,
-    studentId ? (studentId as string) : auth.data?.id ?? ''
+    studentId ? (studentId as string) : (auth.data?.id ?? '')
   );
 
   if (getUserFeedback.isError) {

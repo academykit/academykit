@@ -1,7 +1,7 @@
-﻿using Lingtren.Application.Common.Dtos;
-using Lingtren.Application.Common.Models.ResponseModels;
+﻿using AcademyKit.Application.Common.Dtos;
+using AcademyKit.Application.Common.Models.ResponseModels;
 
-namespace Lingtren.Application.Common.Interfaces
+namespace AcademyKit.Application.Common.Interfaces
 {
     public interface ILogsService
     {

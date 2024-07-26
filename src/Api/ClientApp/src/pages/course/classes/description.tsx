@@ -15,13 +15,13 @@ const CourseDescriptionSection = () => {
       <TextViewer
         key={
           isExam
-            ? courseLesson.data?.questionSet.description ?? ''
-            : courseLesson.data?.description ?? ''
+            ? (courseLesson.data?.questionSet.description ?? '')
+            : (courseLesson.data?.description ?? '')
         }
         content={
           isExam
-            ? courseLesson.data?.questionSet.description ?? ''
-            : courseLesson.data?.description ?? ''
+            ? (courseLesson.data?.questionSet.description ?? '')
+            : (courseLesson.data?.description ?? '')
         }
         // id="rte"
       />

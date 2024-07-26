@@ -1,7 +1,7 @@
-﻿namespace Lingtren.Application.Common.Interfaces
+﻿namespace AcademyKit.Application.Common.Interfaces
 {
-    using Lingtren.Application.Common.Dtos;
-    using Lingtren.Domain.Common;
+    using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Domain.Common;
 
     /// <summary>
     /// This service interface defines methods to manage <typeparamref name="T"/> entities.

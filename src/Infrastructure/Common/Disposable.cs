@@ -1,4 +1,4 @@
-﻿namespace Lingtren.Infrastructure.Common
+﻿namespace AcademyKit.Infrastructure.Common
 {
     /// <summary>
     /// Disposable
