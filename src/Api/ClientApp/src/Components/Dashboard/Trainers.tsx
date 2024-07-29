@@ -6,7 +6,11 @@ import {
   Text,
   useMantineColorScheme,
 } from '@mantine/core';
-import { IconActivity, IconCertificate, IconFileCheck } from '@tabler/icons';
+import {
+  IconActivity,
+  IconCertificate,
+  IconFileCheck,
+} from '@tabler/icons-react';
 import {
   DashboardCourses,
   DashboardStats,

@@ -17,7 +17,7 @@ import {
   Title,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
-import { IconDownload, IconEye } from '@tabler/icons';
+import { IconDownload, IconEye } from '@tabler/icons-react';
 import { DATE_FORMAT } from '@utils/constants';
 import downloadImage from '@utils/downloadImage';
 import { UserRole } from '@utils/enums';

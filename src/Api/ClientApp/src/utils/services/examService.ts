@@ -38,7 +38,9 @@ const getStartExam = (lessonId: string) =>
   httpClient.post<ILessonExamStart>(api.exam.startExam(lessonId), {});
 
 export const useStartExam = (lessonId: string) =>
-  useMutation([api.exam.startExam(lessonId)], () => getStartExam(lessonId), {
+  useMutation({
+    mutationKey: [api.exam.startExam(lessonId)],
+    mutationFn: () => getStartExam(lessonId),
     retry: false,
   });
 
@@ -59,7 +61,10 @@ const postExamSubmit = ({
   httpClient.post(api.exam.submitExam(lessonId, questionSetSubmissionId), data);
 
 export const useSubmitExam = () =>
-  useMutation(['submitExam'], postExamSubmit, {});
+  useMutation({
+    mutationKey: ['submitExam'],
+    mutationFn: postExamSubmit,
+  });
 
 export interface QuestionSetSubmissionResult {
   attemptCount: 0;
@@ -84,13 +89,11 @@ const getMyResult = (lessonId: string, userId: string) =>
   );
 
 export const useMyResult = (lessonId: string, userId: string) =>
-  useQuery(
-    [api.exam.getStudentResults(lessonId, userId)],
-    () => getMyResult(lessonId, userId),
-    {
-      select: (data) => data.data,
-    }
-  );
+  useQuery({
+    queryKey: [api.exam.getStudentResults(lessonId, userId)],
+    queryFn: () => getMyResult(lessonId, userId),
+    select: (data) => data.data,
+  });
 
 export interface ILessonResultQuestionOption {
   id: string;
@@ -123,13 +126,11 @@ export const useGetOneExamResult = (
   lessonId: string,
   questionSetSubmissionId: string
 ) =>
-  useQuery(
-    [api.exam.getOneExamResult(lessonId, questionSetSubmissionId)],
-    () => getOneExamResult(lessonId, questionSetSubmissionId),
-    {
-      select: (data) => data.data,
-    }
-  );
+  useQuery({
+    queryKey: [api.exam.getOneExamResult(lessonId, questionSetSubmissionId)],
+    queryFn: () => getOneExamResult(lessonId, questionSetSubmissionId),
+    select: (data) => data.data,
+  });
 
 export interface IExamStatus {
   totalAttend: number;
@@ -156,13 +157,11 @@ const getExamSummary = (courseIdentity: string, lessonId: string) =>
   );
 
 export const useGetExamSummary = (courseIdentity: string, lessonId: string) =>
-  useQuery(
-    [api.course.examSummary(courseIdentity, lessonId)],
-    () => getExamSummary(courseIdentity, lessonId),
-    {
-      select: (data) => data.data,
-    }
-  );
+  useQuery({
+    queryKey: [api.course.examSummary(courseIdentity, lessonId)],
+    queryFn: () => getExamSummary(courseIdentity, lessonId),
+    select: (data) => data.data,
+  });
 
 export interface IExamSubmission {
   student: {
@@ -188,10 +187,8 @@ export const useGetExamSubmission = (
   courseIdentity: string,
   lessonId: string
 ) =>
-  useQuery(
-    [api.course.examSubmission(courseIdentity, lessonId)],
-    () => getExamSubmission(courseIdentity, lessonId),
-    {
-      select: (data) => data.data,
-    }
-  );
+  useQuery({
+    queryKey: [api.course.examSubmission(courseIdentity, lessonId)],
+    queryFn: () => getExamSubmission(courseIdentity, lessonId),
+    select: (data) => data.data,
+  });

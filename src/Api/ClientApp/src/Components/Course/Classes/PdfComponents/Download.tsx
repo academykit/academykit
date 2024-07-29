@@ -2,7 +2,7 @@
 import { ActionIcon } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { ToolbarSlot } from '@react-pdf-viewer/toolbar';
-import { IconDownload } from '@tabler/icons';
+import { IconDownload } from '@tabler/icons-react';
 
 const Download = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {
   const matchesSmallScreen = useMediaQuery('(min-width: 450px');

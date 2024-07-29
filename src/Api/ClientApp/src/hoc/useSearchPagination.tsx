@@ -1,7 +1,11 @@
 import SearchBar from '@components/Ui/SearchBar';
 import { Pagination, Select, UnstyledButton } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import { IconArrowsSort, IconChevronDown, IconChevronUp } from '@tabler/icons';
+import {
+  IconArrowsSort,
+  IconChevronDown,
+  IconChevronUp,
+} from '@tabler/icons-react';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import moment from 'moment';
 import React, { useEffect, useMemo, useState } from 'react';

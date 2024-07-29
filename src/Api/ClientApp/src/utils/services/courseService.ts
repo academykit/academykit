@@ -48,7 +48,9 @@ const getCourse = async (search: string) =>
   await httpClient.get<IPaginated<ICourse>>(api.course.list + `?${search}`);
 
 export const useCourse = (search: string) =>
-  useQuery([api.course.list, search], () => getCourse(search), {
+  useQuery({
+    queryKey: [api.course.list, search],
+    queryFn: () => getCourse(search),
     select: (data) => data.data,
     enabled: !!search,
   });
@@ -63,13 +65,11 @@ const getMyCourse = async (userId: string, search: string) =>
   );
 
 export const useMyCourse = (userId: string, search: string) =>
-  useQuery(
-    [api.course.userList(userId), search],
-    () => getMyCourse(userId, search),
-    {
-      select: (data) => data.data,
-    }
-  );
+  useQuery({
+    queryKey: [api.course.userList(userId), search],
+    queryFn: () => getMyCourse(userId, search),
+    select: (data) => data.data,
+  });
 
 const getCourseTeacher = async (course_id: string, searchParams: string) =>
   await httpClient.get<IPaginated<ICreateCourseTeacher>>(
@@ -77,14 +77,12 @@ const getCourseTeacher = async (course_id: string, searchParams: string) =>
   );
 
 export const useCourseTeacher = (course_id: string, searchParams: string) =>
-  useQuery(
-    ['get_course_teachers' + api.courseTeacher.list + searchParams],
-    () => getCourseTeacher(course_id, searchParams),
-    {
-      enabled: true,
-      select: (data) => data.data,
-    }
-  );
+  useQuery({
+    queryKey: ['get_course_teachers' + api.courseTeacher.list + searchParams],
+    queryFn: () => getCourseTeacher(course_id, searchParams),
+    enabled: true,
+    select: (data) => data.data,
+  });
 
 //start
 export interface ICreateCourseTeacher {
@@ -107,11 +105,16 @@ const createTeacherCourse = async (data: {
 export const useCreateTeacherCourse = (searchParams: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation(['post' + api.courseTeacher.list], createTeacherCourse, {
+  return useMutation({
+    mutationKey: ['post' + api.courseTeacher.list],
+    mutationFn: createTeacherCourse,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([
-        'get_course_teachers' + api.courseTeacher.list + searchParams,
-      ]);
+      queryClient.invalidateQueries({
+        queryKey: [
+          'get_course_teachers' + api.courseTeacher.list + searchParams,
+        ],
+      });
     },
   });
 };
@@ -122,17 +125,18 @@ const deleteCourseTeacher = async (id: string) => {
 };
 export const useDeleteCourseTeacher = (searchParams: string) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['delete' + api.courseTeacher.detail],
-    deleteCourseTeacher,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([
+  return useMutation({
+    mutationKey: ['delete' + api.courseTeacher.detail],
+    mutationFn: deleteCourseTeacher,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [
           'get_course_teachers' + api.courseTeacher.list + searchParams,
-        ]);
-      },
-    }
-  );
+        ],
+      });
+    },
+  });
 };
 
 export interface IBaseTrainingEligibility {
@@ -160,10 +164,16 @@ const createCourse = async (course: ICreateCourse) =>
 
 export const useCreateCourse = () => {
   const queryClient = useQueryClient();
-  return useMutation([api.course.list], createCourse, {
+  return useMutation({
+    mutationKey: [api.course.list],
+    mutationFn: createCourse,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.course]);
+      queryClient.invalidateQueries({
+        queryKey: [api.course],
+      });
     },
+
     onError: (err) => {
       return errorType(err);
     },
@@ -182,7 +192,9 @@ const getCourseDescription = async (id: string) =>
   await httpClient.get<IFullCourse>(api.course.detail(id));
 
 export const useCourseDescription = (id: string) =>
-  useQuery([api.course.detail(id)], () => getCourseDescription(id), {
+  useQuery({
+    queryKey: [api.course.detail(id)],
+    queryFn: () => getCourseDescription(id),
     select: (data) => data.data,
     retry: 2,
   });
@@ -197,8 +209,14 @@ const lessonReorder = async ({
 
 export const useLessonReorder = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation([], lessonReorder, {
-    onSuccess: () => queryClient.invalidateQueries([api.course.detail(id)]),
+  return useMutation({
+    mutationKey: [],
+    mutationFn: lessonReorder,
+
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [api.course.detail(id)],
+      }),
   });
 };
 
@@ -207,8 +225,14 @@ const sectionReorder = async ({ id, data }: { id: string; data: string[] }) =>
 
 export const useSectionReorder = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation([], sectionReorder, {
-    onSuccess: () => queryClient.invalidateQueries([api.course.detail(id)]),
+  return useMutation({
+    mutationKey: [],
+    mutationFn: sectionReorder,
+
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [api.course.detail(id)],
+      }),
   });
 };
 
@@ -231,42 +255,53 @@ const assignmentReorder = async ({
 
 export const useQuestionReorder = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation([], assignmentReorder, {
+  return useMutation({
+    mutationKey: [],
+    mutationFn: assignmentReorder,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.course.detail(id)]);
-      queryClient.invalidateQueries([api.questionSet.getQuestion(id)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.course.detail(id)],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [api.questionSet.getQuestion(id)],
+      });
     },
   });
 };
 
 export const useUpdateCourse = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['update' + api.course.list],
-    (data: any) => {
+  return useMutation({
+    mutationKey: ['update' + api.course.list],
+
+    mutationFn: (data: any) => {
       return httpClient.put(api.course.update(id), data);
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.course.detail(id)]);
-      },
-    }
-  );
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.course.detail(id)],
+      });
+    },
+  });
 };
 
 export const useUpdateGeneralSetting = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['update' + api.course.list],
-    (data: any) => {
+  return useMutation({
+    mutationKey: ['update' + api.course.list],
+
+    mutationFn: (data: any) => {
       return httpClient.put(api.course.update(id), data);
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getGeneralSettings]);
-      },
-    }
-  );
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getGeneralSettings],
+      });
+    },
+  });
 };
 
 const deleteCourse = async (id: string) => {
@@ -274,9 +309,14 @@ const deleteCourse = async (id: string) => {
 };
 export const useDeleteCourse = (search: string) => {
   const queryClient = useQueryClient();
-  return useMutation(['delete' + api.course.detail], deleteCourse, {
+  return useMutation({
+    mutationKey: ['delete' + api.course.detail],
+    mutationFn: deleteCourse,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.course.list, search]);
+      queryClient.invalidateQueries({
+        queryKey: [api.course.list, search],
+      });
     },
   });
 };
@@ -333,9 +373,14 @@ const createSection = async (data: { courseIdentity: string; name: string }) =>
 export const useCreateSection = (slug: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation(['post' + api.section.common], createSection, {
+  return useMutation({
+    mutationKey: ['post' + api.section.common],
+    mutationFn: createSection,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.course.detail(slug)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.course.detail(slug)],
+      });
     },
   });
 };
@@ -346,15 +391,14 @@ const getSection = async (courseIdentity: string) => {
   );
 };
 export const useGetSection = (courseIdentity: string) => {
-  return useQuery(
-    ['get' + api.section.common],
-    () => getSection(courseIdentity),
-    {
-      select: (data) => {
-        return data.data;
-      },
-    }
-  );
+  return useQuery({
+    queryKey: ['get' + api.section.common],
+    queryFn: () => getSection(courseIdentity),
+
+    select: (data) => {
+      return data.data;
+    },
+  });
 };
 
 const updateSectionName = async (data: {
@@ -369,9 +413,14 @@ const updateSectionName = async (data: {
 };
 export const useUpdateSectionName = (slug: string) => {
   const queryClient = useQueryClient();
-  return useMutation(['patch' + api.section.common], updateSectionName, {
+  return useMutation({
+    mutationKey: ['patch' + api.section.common],
+    mutationFn: updateSectionName,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.course.detail(slug)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.course.detail(slug)],
+      });
     },
   });
 };
@@ -383,9 +432,14 @@ const deleteSection = async (data: { id: string; sectionId: string }) => {
 };
 export const useDeleteSection = (slug: string) => {
   const queryClient = useQueryClient();
-  return useMutation(['delete' + api.section.common], deleteSection, {
+  return useMutation({
+    mutationKey: ['delete' + api.section.common],
+    mutationFn: deleteSection,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.course.detail(slug)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.course.detail(slug)],
+      });
     },
   });
 };
@@ -402,9 +456,14 @@ const createLesson = async (
 export const useCreateLesson = (slug: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation(['post' + api.lesson.common], createLesson, {
+  return useMutation({
+    mutationKey: ['post' + api.lesson.common],
+    mutationFn: createLesson,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.course.detail(slug)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.course.detail(slug)],
+      });
     },
   });
 };
@@ -430,13 +489,20 @@ export const useUpdateLesson = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation(['update' + api.lesson.common], updateLesson, {
+  return useMutation({
+    mutationKey: ['update' + api.lesson.common],
+    mutationFn: updateLesson,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.lesson.courseLesson(courseIdentity)]);
-      queryClient.invalidateQueries([
-        api.lesson.courseLesson(courseId ?? '', lessonId),
-      ]);
-      queryClient.invalidateQueries([api.course.detail(courseIdentity)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.lesson.courseLesson(courseIdentity)],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [api.lesson.courseLesson(courseId ?? '', lessonId)],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [api.course.detail(courseIdentity)],
+      });
     },
   });
 };
@@ -448,9 +514,14 @@ const deleteLesson = async (data: { id: string; lessonId: string }) => {
 };
 export const useDeleteLesson = (slug: string) => {
   const queryClient = useQueryClient();
-  return useMutation(['delete' + api.lesson.common], deleteLesson, {
+  return useMutation({
+    mutationKey: ['delete' + api.lesson.common],
+    mutationFn: deleteLesson,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.course.detail(slug)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.course.detail(slug)],
+      });
     },
   });
 };
@@ -465,10 +536,17 @@ const courseStatus = async (data: {
 };
 export const useCourseStatus = (id: string, search: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.course.enroll(id)], courseStatus, {
+  return useMutation({
+    mutationKey: [api.course.enroll(id)],
+    mutationFn: courseStatus,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.course.detail(id)]);
-      queryClient.invalidateQueries([api.course.list, search]);
+      queryClient.invalidateQueries({
+        queryKey: [api.course.detail(id)],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [api.course.list, search],
+      });
     },
   });
 };
@@ -479,9 +557,14 @@ const courseUpdateStatus = async (data: { id: string }) => {
 };
 export const useCourseUpdateStatus = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.course.updateCourse(id)], courseUpdateStatus, {
+  return useMutation({
+    mutationKey: [api.course.updateCourse(id)],
+    mutationFn: courseUpdateStatus,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.course.detail(id)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.course.detail(id)],
+      });
     },
   });
 };
@@ -491,9 +574,14 @@ const enrollCourse = async (data: { id: string }) => {
 };
 export const useEnrollCourse = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.course.enroll(id)], enrollCourse, {
+  return useMutation({
+    mutationKey: [api.course.enroll(id)],
+    mutationFn: enrollCourse,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.course.detail(id)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.course.detail(id)],
+      });
     },
   });
 };
@@ -589,20 +677,23 @@ export const useGetCourseLesson = (
   lessonIdentity?: string,
   enabled?: boolean
 ) => {
-  return useQuery(
-    [api.lesson.courseLesson(courseIdentity, lessonIdentity)],
-    () => getCourseLesson(courseIdentity, lessonIdentity),
-    {
-      select: (data) => {
-        return data.data;
-      },
-      enabled,
-      retry: 0,
-      onError: () => {},
-      refetchOnMount: true, // to reflect the changes made after submission of various assignments
-      refetchOnWindowFocus: false,
-    }
-  );
+  return useQuery({
+    queryKey: [api.lesson.courseLesson(courseIdentity, lessonIdentity)],
+    queryFn: () => getCourseLesson(courseIdentity, lessonIdentity),
+
+    select: (data) => {
+      return data.data;
+    },
+
+    enabled,
+    retry: 0,
+    onError: () => {},
+
+    // to reflect the changes made after submission of various assignments
+    refetchOnMount: true,
+
+    refetchOnWindowFocus: false,
+  });
 };
 
 export interface ISignature {
@@ -629,9 +720,14 @@ const addSignature = ({ data, id }: { data: IGetSignature; id: string }) => {
 };
 export const useAddSignature = (courseId: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.course.createSignature], addSignature, {
+  return useMutation({
+    mutationKey: [api.course.createSignature],
+    mutationFn: addSignature,
+
     onSuccess: () =>
-      queryClient.invalidateQueries([api.course.getSignature(courseId)]),
+      queryClient.invalidateQueries({
+        queryKey: [api.course.getSignature(courseId)],
+      }),
   });
 };
 
@@ -639,13 +735,11 @@ const getSignatures = (identity: string) => {
   return httpClient.get<IGetSignature[]>(api.course.getSignature(identity));
 };
 export const useGetSignature = (identity: string) => {
-  return useQuery(
-    [api.course.getSignature(identity)],
-    () => getSignatures(identity),
-    {
-      select: (data) => data.data,
-    }
-  );
+  return useQuery({
+    queryKey: [api.course.getSignature(identity)],
+    queryFn: () => getSignatures(identity),
+    select: (data) => data.data,
+  });
 };
 
 const deleteSignature = ({ id, sigId }: { sigId: string; id: string }) => {
@@ -653,9 +747,14 @@ const deleteSignature = ({ id, sigId }: { sigId: string; id: string }) => {
 };
 export const useDeleteSignature = (courseId: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.course.createSignature], deleteSignature, {
+  return useMutation({
+    mutationKey: [api.course.createSignature],
+    mutationFn: deleteSignature,
+
     onSuccess: () =>
-      queryClient.invalidateQueries([api.course.getSignature(courseId)]),
+      queryClient.invalidateQueries({
+        queryKey: [api.course.getSignature(courseId)],
+      }),
   });
 };
 
@@ -664,9 +763,14 @@ const editSignature = ({ data, id }: { data: IGetSignature; id: string }) => {
 };
 export const useEditSignature = (courseId: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.course.editSignature], editSignature, {
+  return useMutation({
+    mutationKey: [api.course.editSignature],
+    mutationFn: editSignature,
+
     onSuccess: () =>
-      queryClient.invalidateQueries([api.course.getSignature(courseId)]),
+      queryClient.invalidateQueries({
+        queryKey: [api.course.getSignature(courseId)],
+      }),
   });
 };
 
@@ -696,17 +800,16 @@ const addCertificate = ({
 };
 export const useAddCertificate = (courseId: string) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    [api.course.addCertificateDetails(courseId)],
-    addCertificate,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([
-          api.course.getCertificateDetails(courseId),
-        ]);
-      },
-    }
-  );
+  return useMutation({
+    mutationKey: [api.course.addCertificateDetails(courseId)],
+    mutationFn: addCertificate,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.course.getCertificateDetails(courseId)],
+      });
+    },
+  });
 };
 
 const getSingleCertificate = (id: string) => {
@@ -715,9 +818,11 @@ const getSingleCertificate = (id: string) => {
   );
 };
 export const useGetCertificateDetails = (id: string) => {
-  return useQuery([api.course.getCertificateDetails(id)], () =>
-    getSingleCertificate(id)
-  );
+  return useQuery({
+    queryKey: [api.course.getCertificateDetails(id)],
+
+    queryFn: () => getSingleCertificate(id),
+  });
 };
 
 const addTrainee = ({ courseId, data }: { data: any; courseId: string }) => {
@@ -726,9 +831,14 @@ const addTrainee = ({ courseId, data }: { data: any; courseId: string }) => {
 
 export const useAddTrainee = (courseId: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.enrollment.enrollTrainee(courseId)], addTrainee, {
+  return useMutation({
+    mutationKey: [api.enrollment.enrollTrainee(courseId)],
+    mutationFn: addTrainee,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([]);
+      queryClient.invalidateQueries({
+        queryKey: [],
+      });
     },
   });
 };
@@ -740,13 +850,11 @@ const getTrainee = (courseId: string, query: string) => {
 };
 
 export const useGetTrainee = (courseId: string, query: string) => {
-  return useQuery(
-    [api.enrollment.trainee(courseId, query)],
-    () => getTrainee(courseId, query),
-    {
-      select: (data) => data.data,
-    }
-  );
+  return useQuery({
+    queryKey: [api.enrollment.trainee(courseId, query)],
+    queryFn: () => getTrainee(courseId, query),
+    select: (data) => data.data,
+  });
 };
 
 export interface IUpdateShuffle {
@@ -765,13 +873,11 @@ export const useGetShuffleDetails = (
   trainingSlug: string,
   lessonSlug: string
 ) => {
-  return useQuery(
-    [api.course.getShuffle(trainingSlug, lessonSlug)],
-    () => getShuffleDetails(trainingSlug, lessonSlug),
-    {
-      select: (data) => data.data,
-    }
-  );
+  return useQuery({
+    queryKey: [api.course.getShuffle(trainingSlug, lessonSlug)],
+    queryFn: () => getShuffleDetails(trainingSlug, lessonSlug),
+    select: (data) => data.data,
+  });
 };
 
 const updateShuffleDetails = ({
@@ -788,14 +894,13 @@ const updateShuffleDetails = ({
 
 export const useUpdateShuffle = (trainingSlug: string, lessonSlug: string) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    [api.course.getShuffle(trainingSlug, lessonSlug)],
-    updateShuffleDetails,
-    {
-      onSuccess: () =>
-        queryClient.invalidateQueries([
-          api.course.getShuffle(trainingSlug, lessonSlug),
-        ]),
-    }
-  );
+  return useMutation({
+    mutationKey: [api.course.getShuffle(trainingSlug, lessonSlug)],
+    mutationFn: updateShuffleDetails,
+
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [api.course.getShuffle(trainingSlug, lessonSlug)],
+      }),
+  });
 };

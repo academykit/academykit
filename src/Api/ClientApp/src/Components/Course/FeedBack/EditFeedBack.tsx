@@ -13,9 +13,8 @@ import {
 } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { IconPlus, IconTrash } from '@tabler/icons';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { FeedbackType } from '@utils/enums';
-import * as Yup from 'yup';
 import errorType from '@utils/services/axiosError';
 import {
   ICreateFeedback,
@@ -23,6 +22,7 @@ import {
   useAddFeedbackQuestion,
   useEditFeedbackQuestion,
 } from '@utils/services/feedbackService';
+import * as Yup from 'yup';
 
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import { useTranslation } from 'react-i18next';

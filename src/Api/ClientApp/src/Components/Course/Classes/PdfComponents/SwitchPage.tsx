@@ -3,7 +3,7 @@
 import { ActionIcon, Group, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { ToolbarSlot } from '@react-pdf-viewer/toolbar';
-import { IconArrowDown, IconArrowUp } from '@tabler/icons';
+import { IconArrowDown, IconArrowUp } from '@tabler/icons-react';
 
 const SwitchPage = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {
   const matchesSmallScreen = useMediaQuery('(min-width: 450px');

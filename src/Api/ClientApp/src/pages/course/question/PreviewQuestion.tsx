@@ -1,6 +1,6 @@
 import Breadcrumb from '@components/Ui/BreadCrumb';
 import { Box, Button, Flex, Loader, Paper, Text, Title } from '@mantine/core';
-import { IconChevronLeft } from '@tabler/icons';
+import { IconChevronLeft } from '@tabler/icons-react';
 import { LessonType } from '@utils/enums';
 import { useQuestionReorder } from '@utils/services/courseService';
 import {

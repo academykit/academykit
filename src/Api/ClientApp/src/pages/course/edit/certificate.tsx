@@ -17,7 +17,7 @@ import { DatePickerInput } from '@mantine/dates';
 import { useForm, yupResolver } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconCalendar, IconDownload, IconEye } from '@tabler/icons';
+import { IconCalendar, IconDownload, IconEye } from '@tabler/icons-react';
 import downloadImage from '@utils/downloadImage';
 import errorType from '@utils/services/axiosError';
 import {

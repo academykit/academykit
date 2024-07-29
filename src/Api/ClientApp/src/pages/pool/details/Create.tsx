@@ -18,7 +18,7 @@ import {
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import TagMultiSelectCreatable from '@pages/course/component/TagMultiSelectCreatable';
-import { IconPlus, IconTrash } from '@tabler/icons';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { QuestionType } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import errorType from '@utils/services/axiosError';

@@ -16,7 +16,7 @@ import {
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import SubmitResultHeader from '@pages/course/exam/Components/SubmitResultHeader';
-import { IconCircleCheck, IconSquareRoundedX } from '@tabler/icons';
+import { IconCircleCheck, IconSquareRoundedX } from '@tabler/icons-react';
 import { IResults } from '@utils/services/assessmentService';
 import { IUser } from '@utils/services/types';
 import cx from 'clsx';

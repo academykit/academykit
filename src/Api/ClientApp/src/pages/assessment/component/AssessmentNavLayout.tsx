@@ -4,7 +4,7 @@ import {
   IconClipboard,
   IconListNumbers,
   IconTool,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import { useTranslation } from 'react-i18next';

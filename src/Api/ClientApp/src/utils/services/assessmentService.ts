@@ -187,7 +187,9 @@ const getAssessments = async (search: string) =>
   );
 
 export const useAssessments = (search: string) => {
-  return useQuery([api.assessment.list, search], () => getAssessments(search), {
+  return useQuery({
+    queryKey: [api.assessment.list, search],
+    queryFn: () => getAssessments(search),
     select: (data) => data.data,
   });
 };
@@ -198,28 +200,28 @@ const getSingleAssessment = async (slug: string) =>
   );
 
 export const useGetSingleAssessment = (slug: string) => {
-  return useQuery(
-    [api.assessment.getSingle(slug), slug],
-    () => getSingleAssessment(slug),
-    {
-      select: (data) => data.data,
-    }
-  );
+  return useQuery({
+    queryKey: [api.assessment.getSingle(slug), slug],
+    queryFn: () => getSingleAssessment(slug),
+    select: (data) => data.data,
+  });
 };
 
 export const usePostAssessment = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['post' + api.assessment.list],
-    (data: IPostAssessment) => {
+  return useMutation({
+    mutationKey: ['post' + api.assessment.list],
+
+    mutationFn: (data: IPostAssessment) => {
       return httpClient.post<IAssessment>(api.assessment.list, data);
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.assessment.list]);
-      },
-    }
-  );
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.assessment.list],
+      });
+    },
+  });
 };
 
 const updateAssessmentDetails = async ({
@@ -232,15 +234,16 @@ const updateAssessmentDetails = async ({
 
 export const useUpdateAssessment = (slug: string) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['update' + api.assessment.getSingle(slug)],
-    updateAssessmentDetails,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.assessment.getSingle(slug)]);
-      },
-    }
-  );
+  return useMutation({
+    mutationKey: ['update' + api.assessment.getSingle(slug)],
+    mutationFn: updateAssessmentDetails,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.assessment.getSingle(slug)],
+      });
+    },
+  });
 };
 
 const deleteAssessment = async (id: string) =>
@@ -248,9 +251,14 @@ const deleteAssessment = async (id: string) =>
 
 export const useDeleteAssessment = () => {
   const queryClient = useQueryClient();
-  return useMutation(['delete' + api.assessment.list], deleteAssessment, {
+  return useMutation({
+    mutationKey: ['delete' + api.assessment.list],
+    mutationFn: deleteAssessment,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.assessment.list]);
+      queryClient.invalidateQueries({
+        queryKey: [api.assessment.list],
+      });
     },
   });
 };
@@ -263,13 +271,11 @@ const getAssessmentQuestion = async (search: string, id: string) =>
   );
 
 export const useAssessmentQuestion = (search: string, id: string) => {
-  return useQuery(
-    [api.assessmentQuestion.list, search, id],
-    () => getAssessmentQuestion(search, id),
-    {
-      select: (data) => data.data,
-    }
-  );
+  return useQuery({
+    queryKey: [api.assessmentQuestion.list, search, id],
+    queryFn: () => getAssessmentQuestion(search, id),
+    select: (data) => data.data,
+  });
 };
 
 interface IPostAssessmentQuestion {
@@ -282,17 +288,25 @@ interface IPostAssessmentQuestion {
 
 export const usePostAssessmentQuestion = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['post' + api.assessmentQuestion.list],
-    ({ id, data }: { id: string; data: IPostAssessmentQuestion }) => {
+  return useMutation({
+    mutationKey: ['post' + api.assessmentQuestion.list],
+
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: IPostAssessmentQuestion;
+    }) => {
       return httpClient.post(api.assessmentQuestion.update(id), data);
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.assessmentQuestion.list]);
-      },
-    }
-  );
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.assessmentQuestion.list],
+      });
+    },
+  });
 };
 
 const deleteAssessmentQuestion = async (id: string) =>
@@ -300,15 +314,16 @@ const deleteAssessmentQuestion = async (id: string) =>
 
 export const useDeleteAssessmentQuestion = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['delete' + api.assessmentQuestion.list],
-    deleteAssessmentQuestion,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.assessmentQuestion.list]);
-      },
-    }
-  );
+  return useMutation({
+    mutationKey: ['delete' + api.assessmentQuestion.list],
+    mutationFn: deleteAssessmentQuestion,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.assessmentQuestion.list],
+      });
+    },
+  });
 };
 
 const updateAssessmentQuestion = async ({
@@ -321,15 +336,16 @@ const updateAssessmentQuestion = async ({
 
 export const useUpdateAssessmentQuestion = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['update' + api.assessmentQuestion.list],
-    updateAssessmentQuestion,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.assessmentQuestion.list]);
-      },
-    }
-  );
+  return useMutation({
+    mutationKey: ['update' + api.assessmentQuestion.list],
+    mutationFn: updateAssessmentQuestion,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.assessmentQuestion.list],
+      });
+    },
+  });
 };
 
 // ---------------------------------- Assessment Exam ----------------------------------------------
@@ -367,15 +383,13 @@ const getAssessmentExamQuestions = async (id: string) =>
   );
 
 export const useAssessmentExamQuestions = (id: string) => {
-  return useQuery(
-    [api.assessmentQuestion.getExam(id)],
-    () => getAssessmentExamQuestions(id),
-    {
-      select: (data) => data.data,
-      retry: false,
-      enabled: false,
-    }
-  );
+  return useQuery({
+    queryKey: [api.assessmentQuestion.getExam(id)],
+    queryFn: () => getAssessmentExamQuestions(id),
+    select: (data) => data.data,
+    retry: false,
+    enabled: false,
+  });
 };
 
 interface IAssessmentStatusUpdate {
@@ -393,15 +407,16 @@ const updateAssessmentStatus = async (data: IAssessmentStatusUpdate) =>
 
 export const useUpdateAssessmentStatus = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['update' + api.assessment.updateStatus],
-    updateAssessmentStatus,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.assessment.getSingle(id)]);
-      },
-    }
-  );
+  return useMutation({
+    mutationKey: ['update' + api.assessment.updateStatus],
+    mutationFn: updateAssessmentStatus,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.assessment.getSingle(id)],
+      });
+    },
+  });
 };
 
 const postAssessmentExam = async ({
@@ -414,7 +429,10 @@ const postAssessmentExam = async ({
   await httpClient.post(api.assessmentQuestion.submitExam(assessmentId), data);
 
 export const useSubmitAssessmentExam = () =>
-  useMutation(['submitAssessmentExam'], postAssessmentExam, {});
+  useMutation({
+    mutationKey: ['submitAssessmentExam'],
+    mutationFn: postAssessmentExam,
+  });
 
 // ---------------------------------- Assessment Stats ----------------------------------------------
 
@@ -424,7 +442,9 @@ const getAllResults = async (id: string) =>
   );
 
 export const useGetAllResults = (id: string) => {
-  return useQuery([api.assessment.getResults(id)], () => getAllResults(id), {
+  return useQuery({
+    queryKey: [api.assessment.getResults(id)],
+    queryFn: () => getAllResults(id),
     select: (data) => data.data,
   });
 };
@@ -438,13 +458,11 @@ export const useGetStudentResult = (
   assessmentId: string,
   studentId: string
 ) => {
-  return useQuery(
-    [api.assessment.getStudentResult(assessmentId, studentId)],
-    () => getStudentResult(assessmentId, studentId),
-    {
-      select: (data) => data.data,
-    }
-  );
+  return useQuery({
+    queryKey: [api.assessment.getStudentResult(assessmentId, studentId)],
+    queryFn: () => getStudentResult(assessmentId, studentId),
+    select: (data) => data.data,
+  });
 };
 
 const getOneExamResult = (
@@ -459,15 +477,14 @@ export const useGetOneExamResult = (
   assessmentId: string,
   assessmentSubmissionId: string
 ) =>
-  useQuery(
-    [
+  useQuery({
+    queryKey: [
       api.assessment.getOneAssessmentResult(
         assessmentId,
         assessmentSubmissionId
       ),
     ],
-    () => getOneExamResult(assessmentId, assessmentSubmissionId),
-    {
-      select: (data) => data.data,
-    }
-  );
+
+    queryFn: () => getOneExamResult(assessmentId, assessmentSubmissionId),
+    select: (data) => data.data,
+  });

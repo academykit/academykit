@@ -1,5 +1,5 @@
 import { RichTextEditor, useRichTextEditorContext } from '@mantine/tiptap';
-import { IconBrandYoutube } from '@tabler/icons';
+import { IconBrandYoutube } from '@tabler/icons-react';
 
 export const YoutubeVideoControl = () => {
   const { editor } = useRichTextEditorContext();

@@ -1,5 +1,5 @@
 import { ActionIcon, MantineSize, useMantineColorScheme } from '@mantine/core';
-import { IconMoonStars, IconSun } from '@tabler/icons';
+import { IconMoonStars, IconSun } from '@tabler/icons-react';
 
 type Props = {
   size: MantineSize;

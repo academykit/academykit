@@ -51,7 +51,6 @@ const ReviewedCourse = ({
           {searchComponent(t('search_trainings') as string)}
         </Flex>
       </Container>
-
       {data &&
         data?.items &&
         (data.totalCount >= 1 ? (

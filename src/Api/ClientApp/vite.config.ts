@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 import react from '@vitejs/plugin-react';
 import { readFileSync } from 'fs';
 import path, { join } from 'path';
@@ -13,7 +14,14 @@ const certificateName = process.env.npm_package_name;
 const certFilePath = join(baseFolder, `${certificateName}.pem`);
 const keyFilePath = join(baseFolder, `${certificateName}.key`);
 export default defineConfig({
-  plugins: [react(), eslintPlugin({ fix: true })],
+  plugins: [
+    react(),
+    eslintPlugin({ fix: true }),
+    sentryVitePlugin({
+      org: 'academy-kit',
+      project: 'academykit-web',
+    }),
+  ],
   server: {
     https: {
       key: readFileSync(keyFilePath),
@@ -46,7 +54,7 @@ export default defineConfig({
     },
   },
   build: {
-    sourcemap: false,
+    sourcemap: true,
     rollupOptions: {
       input: {
         main: path.resolve(dir, 'index.html'),

@@ -1,5 +1,5 @@
 import { Alert, Button, Container } from '@mantine/core';
-import { IconAlertCircle, IconTrophy } from '@tabler/icons';
+import { IconAlertCircle, IconTrophy } from '@tabler/icons-react';
 import { useVerifyChangeEmail } from '@utils/services/authService';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router-dom';

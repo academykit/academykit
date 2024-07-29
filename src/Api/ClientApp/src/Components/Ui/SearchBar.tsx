@@ -1,7 +1,7 @@
 import { Cross } from '@components/Icons';
 import { ActionIcon, TextInput, Tooltip } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconSearch } from '@tabler/icons';
+import { IconSearch } from '@tabler/icons-react';
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 

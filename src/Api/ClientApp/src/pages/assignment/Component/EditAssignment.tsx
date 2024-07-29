@@ -16,7 +16,7 @@ import {
 } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { IconPlus, IconTrash } from '@tabler/icons';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { QuestionType } from '@utils/enums';
 import {
   IAssignmentQuestion,

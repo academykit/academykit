@@ -9,7 +9,7 @@ import {
   IconDotsVertical,
   IconEdit,
   IconTrash,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import errorType from '@utils/services/axiosError';

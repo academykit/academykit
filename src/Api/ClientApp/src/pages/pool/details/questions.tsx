@@ -16,7 +16,7 @@ import {
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconEdit, IconTrash } from '@tabler/icons';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { QuestionType } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import {

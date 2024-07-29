@@ -21,12 +21,17 @@ export const useWatchHistory = (
   lessonIdentity: string | undefined
 ) => {
   const queryClient = useQueryClient();
-  return useMutation([api.watchHistory.create], watchHistory, {
+  return useMutation({
+    mutationKey: [api.watchHistory.create],
+    mutationFn: watchHistory,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([
-        api.lesson.courseLesson(courseIdentity, lessonIdentity),
-      ]);
-      queryClient.invalidateQueries([api.course.detail(courseIdentity)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.lesson.courseLesson(courseIdentity, lessonIdentity)],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [api.course.detail(courseIdentity)],
+      });
     },
   });
 };
@@ -52,15 +57,21 @@ export const useWatchHistoryUser = (
   lessonId: string
 ) => {
   const queryClient = useQueryClient();
-  return useMutation([api.watchHistory.updateUser(userId)], watchHistoryUser, {
+  return useMutation({
+    mutationKey: [api.watchHistory.updateUser(userId)],
+    mutationFn: watchHistoryUser,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([
-        api.course.lessonStatDetails(courseId, lessonId, 'page=1&size=12'),
-      ]);
-      queryClient.invalidateQueries([
-        api.course.studentStatDetails(courseId, userId),
-      ]);
+      queryClient.invalidateQueries({
+        queryKey: [
+          api.course.lessonStatDetails(courseId, lessonId, 'page=1&size=12'),
+        ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [api.course.studentStatDetails(courseId, userId)],
+      });
     },
+
     onError: (err) => {
       return errorType(err);
     },

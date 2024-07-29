@@ -20,7 +20,7 @@ import {
   IconEdit,
   IconTrash,
   IconX,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { AssessmentStatus, UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import {

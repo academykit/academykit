@@ -3,7 +3,7 @@ import UserShortProfile from '@components/UserShortProfile';
 import { Anchor, Button, Card, Group, Menu, Text } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons';
+import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
 import RoutePath from '@utils/routeConstants';
 import errorType from '@utils/services/axiosError';
 import { IPool, useDeleteQuestionPool } from '@utils/services/poolService';

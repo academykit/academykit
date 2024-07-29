@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconEdit, IconTrash } from '@tabler/icons';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { AssessmentType, FeedbackType, ReadableEnum } from '@utils/enums';
 import {
   IAssessmentQuestion,

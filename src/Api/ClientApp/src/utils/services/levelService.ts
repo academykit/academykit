@@ -14,7 +14,9 @@ export interface ILevel {
 const getLevels = async () => await httpClient.get<ILevel[]>(api.levels.list);
 
 export const useLevels = () =>
-  useQuery([api.levels.list], () => getLevels(), {
+  useQuery({
+    queryKey: [api.levels.list],
+    queryFn: () => getLevels(),
     select: (data) => data.data,
   });
 
@@ -23,10 +25,16 @@ const addLevel = async (tagName: string) =>
 
 export const useAddLevel = () => {
   const queryClient = useQueryClient();
-  return useMutation([api.levels.list], addLevel, {
+  return useMutation({
+    mutationKey: [api.levels.list],
+    mutationFn: addLevel,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.levels.list]);
+      queryClient.invalidateQueries({
+        queryKey: [api.levels.list],
+      });
     },
+
     onError: (err) => {
       return errorType(err);
     },

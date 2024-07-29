@@ -9,7 +9,7 @@ import DeleteModal from '@components/Ui/DeleteModal';
 import { Button, Grid, Group, Text } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconTrashX } from '@tabler/icons';
+import { IconTrashX } from '@tabler/icons-react';
 import { LessonType, ReadableEnum } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import { ILessons, useDeleteLesson } from '@utils/services/courseService';

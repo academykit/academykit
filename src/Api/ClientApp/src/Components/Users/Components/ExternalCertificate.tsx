@@ -10,7 +10,7 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { IconDownload, IconEye } from '@tabler/icons';
+import { IconDownload, IconEye } from '@tabler/icons-react';
 import { DATE_FORMAT } from '@utils/constants';
 import downloadImage from '@utils/downloadImage';
 import {

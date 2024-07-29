@@ -14,7 +14,7 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconInfoSquare } from '@tabler/icons';
+import { IconInfoSquare } from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import { useGeneralSetting } from '@utils/services/adminService';
 import { IUser } from '@utils/services/types';

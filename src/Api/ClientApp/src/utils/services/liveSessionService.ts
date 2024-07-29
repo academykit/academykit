@@ -16,16 +16,14 @@ const joinMeeting = (courseId: string, lessonId: string) =>
   httpClient.get<IStartExam>(api.meeting.joinMeeting(courseId, lessonId));
 
 export const useJoinMeeting = (courseId: string, lessonId: string) =>
-  useQuery(
-    [api.meeting.joinMeeting(courseId, lessonId)],
-    () => joinMeeting(courseId, lessonId),
-    {
-      select: (data) => data.data,
-      retry: false,
-      retryOnMount: false,
-      refetchOnMount: false,
-    }
-  );
+  useQuery({
+    queryKey: [api.meeting.joinMeeting(courseId, lessonId)],
+    queryFn: () => joinMeeting(courseId, lessonId),
+    select: (data) => data.data,
+    retry: false,
+    retryOnMount: false,
+    refetchOnMount: false,
+  });
 
 export interface IReportDetail {
   userId: string;
@@ -50,12 +48,10 @@ export const useGetMeetingReport = (
   userId: string,
   enabled: boolean
 ) =>
-  useQuery(
-    [api.meeting.meetingReport(courseId, lessonId, userId)],
-    () => getMeetingReport(courseId, lessonId, userId),
-    {
-      select: (data) => data.data,
-      retry: false,
-      enabled,
-    }
-  );
+  useQuery({
+    queryKey: [api.meeting.meetingReport(courseId, lessonId, userId)],
+    queryFn: () => getMeetingReport(courseId, lessonId, userId),
+    select: (data) => data.data,
+    retry: false,
+    enabled,
+  });
