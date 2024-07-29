@@ -9,7 +9,6 @@
     using AcademyKit.Domain.Entities;
     using AcademyKit.Infrastructure.Common;
     using AcademyKit.Infrastructure.Helpers;
-
     using AcademyKit.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;

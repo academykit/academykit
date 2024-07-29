@@ -211,7 +211,10 @@
 
             if (questionSet == null)
             {
-                _logger.LogWarning("Question set not found with identity: {identity}.", identity.SanitizeForLogger());
+                _logger.LogWarning(
+                    "Question set not found with identity: {identity}.",
+                    identity.SanitizeForLogger()
+                );
                 throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
             }
 

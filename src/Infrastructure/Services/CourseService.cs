@@ -3358,7 +3358,10 @@
                     .ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Training with identity: {identity} not found.", identity.SanitizeForLogger());
+                    _logger.LogWarning(
+                        "Training with identity: {identity} not found.",
+                        identity.SanitizeForLogger()
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
@@ -3679,7 +3682,10 @@
                     .ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Training with identity: {identity} not found.", identity.SanitizeForLogger());
+                    _logger.LogWarning(
+                        "Training with identity: {identity} not found.",
+                        identity.SanitizeForLogger()
+                    );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
@@ -3891,7 +3897,10 @@
                 .ConfigureAwait(false);
             if (course == null)
             {
-                _logger.LogWarning("Training with identity: {identity} not found.", identity.SanitizeForLogger());
+                _logger.LogWarning(
+                    "Training with identity: {identity} not found.",
+                    identity.SanitizeForLogger()
+                );
                 throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             }
 

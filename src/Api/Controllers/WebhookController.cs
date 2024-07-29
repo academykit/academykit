@@ -6,7 +6,6 @@
     using AcademyKit.Application.Common.Interfaces;
     using AcademyKit.Application.Common.Models.ResponseModels;
     using AcademyKit.Infrastructure.Helpers;
-
     using Hangfire;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
