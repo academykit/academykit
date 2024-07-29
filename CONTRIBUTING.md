@@ -16,6 +16,14 @@ We welcome pull requests that fix bugs, add new features, or improve existing fu
 
 1. Create a new branch from `main`.
 2. Make your changes, ensuring code quality and following any existing conventions.
- `Commit Messages: Use clear, concise commit messages. A typical format is [Type]: [Short Description]. For example, Fix: Correct README typo.`
+
+`Commit Messages: Use clear, concise commit messages. A typical format is [Type]: [Short Description]. For example, Fix: Correct README typo.`
+
 3. Test your changes thoroughly.
 4. Submit a pull request, explaining the changes made and their purpose.
+
+## Contact
+
+If you have any further questions or need clarification regarding contributing, feel free to contact the project maintainers via [email](mailto:hello@academykit.co) or by opening an issue.
+
+Thank you for contributing to AcademyKit!
