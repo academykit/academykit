@@ -1,18 +1,18 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import withSearchPagination, {
-    IWithSearchPagination,
+  IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import {
-    Badge,
-    Box,
-    Button,
-    Center,
-    Container,
-    Flex,
-    Loader,
-    Paper,
-    ScrollArea,
-    Table,
+  Badge,
+  Box,
+  Button,
+  Center,
+  Container,
+  Flex,
+  Loader,
+  Paper,
+  ScrollArea,
+  Table,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
@@ -20,9 +20,9 @@ import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { QuestionType } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import {
-    IQuestion,
-    useDeleteQuestion,
-    useQuestion,
+  IQuestion,
+  useDeleteQuestion,
+  useQuestion,
 } from '@utils/services/questionService';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';

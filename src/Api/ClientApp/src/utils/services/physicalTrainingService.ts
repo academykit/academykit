@@ -18,14 +18,12 @@ export const usePostAttendance = (courseId: string, lessonId: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          api.lesson.courseLesson(courseId, lessonId),
-        ]
+        queryKey: [api.lesson.courseLesson(courseId, lessonId)],
       });
       queryClient.invalidateQueries({
-        queryKey: [api.course.detail(courseId)]
+        queryKey: [api.course.detail(courseId)],
       });
-    }
+    },
   });
 };
 
@@ -55,13 +53,11 @@ export const useReviewAttendance = (
       queryClient.invalidateQueries({
         queryKey: [
           api.course.lessonStatDetails(courseId, lessonId, 'page=1&size=12'),
-        ]
+        ],
       });
       queryClient.invalidateQueries({
-        queryKey: [
-          api.course.studentStatDetails(courseId, userId),
-        ]
+        queryKey: [api.course.studentStatDetails(courseId, userId)],
       });
-    }
+    },
   });
 };

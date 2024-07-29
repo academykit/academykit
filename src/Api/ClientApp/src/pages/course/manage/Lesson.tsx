@@ -1,25 +1,25 @@
 import ProgressBar from '@components/Ui/ProgressBar';
 import withSearchPagination, {
-    IWithSearchPagination,
+  IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import {
-    Anchor,
-    Badge,
-    Box,
-    Button,
-    Center,
-    Loader,
-    Paper,
-    ScrollArea,
-    Table,
-    Tooltip,
+  Anchor,
+  Badge,
+  Box,
+  Button,
+  Center,
+  Loader,
+  Paper,
+  ScrollArea,
+  Table,
+  Tooltip,
 } from '@mantine/core';
 import { IconEye } from '@tabler/icons-react';
 import { LessonType } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import {
-    ILessonStats,
-    useGetLessonStatistics,
+  ILessonStats,
+  useGetLessonStatistics,
 } from '@utils/services/manageCourseService';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';

@@ -38,7 +38,7 @@ export const useGetLessonStatistics = (
 
     select: (data) => {
       return data.data;
-    }
+    },
   });
 };
 
@@ -76,7 +76,7 @@ export const useGetLessonStatisticsDetails = (
 
     select: (data) => {
       return data.data;
-    }
+    },
   });
 };
 
@@ -109,7 +109,7 @@ export const useGetStudentStatistics = (
 
     select: (data) => {
       return data.data;
-    }
+    },
   });
 };
 
@@ -147,7 +147,7 @@ export const useGetStudentStatisticsDetails = (
 
     select: (data) => {
       return data.data;
-    }
+    },
   });
 };
 
@@ -184,7 +184,7 @@ export const useGetStudentStatisticsCertificate = (
 
     select: (data) => {
       return data.data;
-    }
+    },
   });
 };
 
@@ -215,21 +215,16 @@ export const usePostStatisticsCertificate = (
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          api.course.certificate(identity, search),
-        ]
+        queryKey: [api.course.certificate(identity, search)],
       });
       queryClient.invalidateQueries({
-        queryKey: [
-          api.course.studentStat(identity),
-          search,
-        ]
+        queryKey: [api.course.studentStat(identity), search],
       });
     },
 
     onError: (err) => {
       return errorType(err);
-    }
+    },
   });
 };
 
@@ -259,6 +254,6 @@ export const useGetCourseManageStatistics = (courseIdentity: string) => {
       return data.data;
     },
 
-    retry: false
+    retry: false,
   });
 };

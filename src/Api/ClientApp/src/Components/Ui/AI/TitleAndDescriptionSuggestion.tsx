@@ -1,15 +1,15 @@
 import AIStar from '@components/Icons/AIStar';
 import {
-    ActionIcon,
-    Flex,
-    Group,
-    Input,
-    Loader,
-    Popover,
-    Text,
-    TextInput,
-    Textarea,
-    Tooltip,
+  ActionIcon,
+  Flex,
+  Group,
+  Input,
+  Loader,
+  Popover,
+  Text,
+  TextInput,
+  Textarea,
+  Tooltip,
 } from '@mantine/core';
 import { IconReload, IconThumbUp } from '@tabler/icons-react';
 import { t } from 'i18next';

@@ -1,13 +1,13 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import {
-    Box,
-    Button,
-    Flex,
-    Group,
-    Paper,
-    Select,
-    Text,
-    Title,
+  Box,
+  Button,
+  Flex,
+  Group,
+  Paper,
+  Select,
+  Text,
+  Title,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
@@ -17,8 +17,8 @@ import { FeedbackType, ReadableEnum } from '@utils/enums';
 import TextViewer from '@components/Ui/RichTextViewer';
 import errorType from '@utils/services/axiosError';
 import {
-    IFeedbackQuestions,
-    useDeleteFeedbackQuestion,
+  IFeedbackQuestions,
+  useDeleteFeedbackQuestion,
 } from '@utils/services/feedbackService';
 import { useTranslation } from 'react-i18next';
 import classes from '../styles/feedbackList.module.css';

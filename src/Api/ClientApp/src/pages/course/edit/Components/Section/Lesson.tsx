@@ -14,12 +14,12 @@ import { LessonType, ReadableEnum } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import { ILessons, useDeleteLesson } from '@utils/services/courseService';
 import {
-    ILessonAssignment,
-    ILessonFeedback,
-    ILessonFile,
-    ILessonMCQ,
-    ILessonMeeting,
-    IPhysicalTraining,
+  ILessonAssignment,
+  ILessonFeedback,
+  ILessonFile,
+  ILessonMCQ,
+  ILessonMeeting,
+  IPhysicalTraining,
 } from '@utils/services/types';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -34,7 +34,7 @@ export const useTags = (
     queryFn: () => getTags(search, trainingType, identity),
 
     // keepPreviousData: true,
-    select: (data) => data.data
+    select: (data) => data.data,
   });
 
 const addTag = async (tagName: string) =>
@@ -48,12 +48,12 @@ export const useAddTag = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.tags.list]
+        queryKey: [api.tags.list],
       });
     },
 
     onError: (err) => {
       return errorType(err);
-    }
+    },
   });
 };

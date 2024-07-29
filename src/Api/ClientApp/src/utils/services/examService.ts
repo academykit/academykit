@@ -41,7 +41,7 @@ export const useStartExam = (lessonId: string) =>
   useMutation({
     mutationKey: [api.exam.startExam(lessonId)],
     mutationFn: () => getStartExam(lessonId),
-    retry: false
+    retry: false,
   });
 
 export interface ILessonExamSubmit {
@@ -63,7 +63,7 @@ const postExamSubmit = ({
 export const useSubmitExam = () =>
   useMutation({
     mutationKey: ['submitExam'],
-    mutationFn: postExamSubmit
+    mutationFn: postExamSubmit,
   });
 
 export interface QuestionSetSubmissionResult {
@@ -92,7 +92,7 @@ export const useMyResult = (lessonId: string, userId: string) =>
   useQuery({
     queryKey: [api.exam.getStudentResults(lessonId, userId)],
     queryFn: () => getMyResult(lessonId, userId),
-    select: (data) => data.data
+    select: (data) => data.data,
   });
 
 export interface ILessonResultQuestionOption {
@@ -129,7 +129,7 @@ export const useGetOneExamResult = (
   useQuery({
     queryKey: [api.exam.getOneExamResult(lessonId, questionSetSubmissionId)],
     queryFn: () => getOneExamResult(lessonId, questionSetSubmissionId),
-    select: (data) => data.data
+    select: (data) => data.data,
   });
 
 export interface IExamStatus {
@@ -160,7 +160,7 @@ export const useGetExamSummary = (courseIdentity: string, lessonId: string) =>
   useQuery({
     queryKey: [api.course.examSummary(courseIdentity, lessonId)],
     queryFn: () => getExamSummary(courseIdentity, lessonId),
-    select: (data) => data.data
+    select: (data) => data.data,
   });
 
 export interface IExamSubmission {
@@ -190,5 +190,5 @@ export const useGetExamSubmission = (
   useQuery({
     queryKey: [api.course.examSubmission(courseIdentity, lessonId)],
     queryFn: () => getExamSubmission(courseIdentity, lessonId),
-    select: (data) => data.data
+    select: (data) => data.data,
   });

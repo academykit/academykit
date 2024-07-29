@@ -56,9 +56,9 @@ export const useAddFeedbackQuestion = (lessonId: string, search: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.feedback.list(lessonId, search)]
+        queryKey: [api.feedback.list(lessonId, search)],
       });
-    }
+    },
   });
 };
 
@@ -72,7 +72,7 @@ export const useFeedbackQuestion = (lessonId: string, search: string) => {
     queryKey: [api.feedback.list(lessonId, search)],
     queryFn: () => getFeedbackQuestion(lessonId, search),
     select: (data) => data.data,
-    enabled: lessonId ? true : false
+    enabled: lessonId ? true : false,
   });
 };
 
@@ -90,7 +90,7 @@ export const useGetUserFeedback = (
     queryKey: [api.feedback.userFeedback(lessonId, userId, search)],
     queryFn: () => getUserFeedback(lessonId, userId, search),
     select: (data) => data.data,
-    enabled: !!lessonId
+    enabled: !!lessonId,
   });
 };
 
@@ -107,9 +107,9 @@ export const useDeleteFeedbackQuestion = (lessonId: string, search: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.feedback.list(lessonId, search)]
+        queryKey: [api.feedback.list(lessonId, search)],
       });
-    }
+    },
   });
 };
 
@@ -135,9 +135,9 @@ export const useEditFeedbackQuestion = (lessonId: string, search: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.feedback.list(lessonId, search)]
+        queryKey: [api.feedback.list(lessonId, search)],
       });
-    }
+    },
   });
 };
 
@@ -166,9 +166,9 @@ export const useFeedbackSubmission = ({ lessonId }: { lessonId: string }) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.feedback.list(lessonId, '')]
+        queryKey: [api.feedback.list(lessonId, '')],
       });
-    }
+    },
   });
 };
 
@@ -233,6 +233,6 @@ export const useGetFeedbackGraph = (lessonId: string) => {
     queryFn: () => getFeedbackGraph(lessonId),
     select: (data) => data.data,
     retry: 2,
-    enabled: false
+    enabled: false,
   });
 };

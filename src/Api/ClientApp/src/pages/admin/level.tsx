@@ -1,26 +1,26 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-    ActionIcon,
-    Box,
-    Button,
-    Drawer,
-    Group,
-    Paper,
-    Table,
-    Text,
-    TextInput,
-    Title,
+  ActionIcon,
+  Box,
+  Button,
+  Drawer,
+  Group,
+  Paper,
+  Table,
+  Text,
+  TextInput,
+  Title,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconPencil, IconTrash } from '@tabler/icons-react';
 import {
-    useDeleteLevelSetting,
-    useLevelSetting,
-    usePostLevelSetting,
-    useUpdateLevelSetting,
+  useDeleteLevelSetting,
+  useLevelSetting,
+  usePostLevelSetting,
+  useUpdateLevelSetting,
 } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import { IUser } from '@utils/services/types';

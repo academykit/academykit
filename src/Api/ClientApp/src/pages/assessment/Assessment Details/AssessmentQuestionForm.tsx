@@ -2,27 +2,27 @@ import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAuto
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-    Box,
-    Button,
-    Card,
-    Checkbox,
-    Container,
-    Flex,
-    Group,
-    Radio,
-    Select,
-    Text,
-    UnstyledButton,
+  Box,
+  Button,
+  Card,
+  Checkbox,
+  Container,
+  Flex,
+  Group,
+  Radio,
+  Select,
+  Text,
+  UnstyledButton,
 } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { QuestionType } from '@utils/enums';
 import {
-    IAddAssessment,
-    IAssessmentQuestion,
-    usePostAssessmentQuestion,
-    useUpdateAssessmentQuestion,
+  IAddAssessment,
+  IAssessmentQuestion,
+  usePostAssessmentQuestion,
+  useUpdateAssessmentQuestion,
 } from '@utils/services/assessmentService';
 import errorType from '@utils/services/axiosError';
 import { t } from 'i18next';

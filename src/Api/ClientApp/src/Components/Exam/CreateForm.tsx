@@ -1,14 +1,14 @@
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import {
-    Box,
-    Checkbox,
-    Flex,
-    Loader,
-    MultiSelect,
-    Select,
-    Text,
-    TextInput,
-    UnstyledButton,
+  Box,
+  Checkbox,
+  Flex,
+  Loader,
+  MultiSelect,
+  Select,
+  Text,
+  TextInput,
+  UnstyledButton,
 } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 import { IconPlus, IconTrash } from '@tabler/icons-react';

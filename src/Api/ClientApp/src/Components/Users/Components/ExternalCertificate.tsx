@@ -1,21 +1,21 @@
 import {
-    ActionIcon,
-    Badge,
-    Box,
-    Image,
-    Paper,
-    ScrollArea,
-    Table,
-    Text,
-    Title,
-    Tooltip,
+  ActionIcon,
+  Badge,
+  Box,
+  Image,
+  Paper,
+  ScrollArea,
+  Table,
+  Text,
+  Title,
+  Tooltip,
 } from '@mantine/core';
 import { IconDownload, IconEye } from '@tabler/icons-react';
 import { DATE_FORMAT } from '@utils/constants';
 import downloadImage from '@utils/downloadImage';
 import {
-    GetExternalCertificate,
-    useGetUserCertificate,
+  GetExternalCertificate,
+  useGetUserCertificate,
 } from '@utils/services/certificateService';
 import { TFunction } from 'i18next';
 import moment from 'moment';

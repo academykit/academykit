@@ -1,28 +1,28 @@
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-    Box,
-    Button,
-    Checkbox,
-    Container,
-    Flex,
-    Group,
-    Paper,
-    Radio,
-    Select,
-    Text,
-    TextInput,
-    UnstyledButton,
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  Flex,
+  Group,
+  Paper,
+  Radio,
+  Select,
+  Text,
+  TextInput,
+  UnstyledButton,
 } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { QuestionType } from '@utils/enums';
 import {
-    IAssignmentQuestion,
-    ICreateAssignment,
-    useAddAssignmentQuestion,
-    useEditAssignmentQuestion,
+  IAssignmentQuestion,
+  ICreateAssignment,
+  useAddAssignmentQuestion,
+  useEditAssignmentQuestion,
 } from '@utils/services/assignmentService';
 import errorType from '@utils/services/axiosError';
 import { useMemo } from 'react';

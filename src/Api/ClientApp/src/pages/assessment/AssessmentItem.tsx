@@ -1,22 +1,22 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import TextViewer from '@components/Ui/RichTextViewer';
 import {
-    Box,
-    Button,
-    Flex,
-    Group,
-    Paper,
-    Select,
-    Text,
-    Title,
+  Box,
+  Button,
+  Flex,
+  Group,
+  Paper,
+  Select,
+  Text,
+  Title,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { AssessmentType, FeedbackType, ReadableEnum } from '@utils/enums';
 import {
-    IAssessmentQuestion,
-    useDeleteAssessmentQuestion,
+  IAssessmentQuestion,
+  useDeleteAssessmentQuestion,
 } from '@utils/services/assessmentService';
 import errorType from '@utils/services/axiosError';
 import { t } from 'i18next';

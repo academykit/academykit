@@ -27,14 +27,12 @@ export const useWatchHistory = (
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          api.lesson.courseLesson(courseIdentity, lessonIdentity),
-        ]
+        queryKey: [api.lesson.courseLesson(courseIdentity, lessonIdentity)],
       });
       queryClient.invalidateQueries({
-        queryKey: [api.course.detail(courseIdentity)]
+        queryKey: [api.course.detail(courseIdentity)],
       });
-    }
+    },
   });
 };
 
@@ -67,17 +65,15 @@ export const useWatchHistoryUser = (
       queryClient.invalidateQueries({
         queryKey: [
           api.course.lessonStatDetails(courseId, lessonId, 'page=1&size=12'),
-        ]
+        ],
       });
       queryClient.invalidateQueries({
-        queryKey: [
-          api.course.studentStatDetails(courseId, userId),
-        ]
+        queryKey: [api.course.studentStatDetails(courseId, userId)],
       });
     },
 
     onError: (err) => {
       return errorType(err);
-    }
+    },
   });
 };

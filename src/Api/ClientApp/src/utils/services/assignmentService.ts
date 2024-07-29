@@ -52,7 +52,7 @@ export const useAssignmentQuestion = (lessonId: string, search: string) => {
     queryKey: [api.assignment.list(lessonId, search)],
     queryFn: () => getAssignmentQuestion(lessonId, search),
     select: (data) => data.data,
-    enabled: lessonId ? true : false
+    enabled: lessonId ? true : false,
   });
 };
 
@@ -66,7 +66,7 @@ export const useSingleAssignment = (assignmentId: string) => {
     queryKey: [api.assignment.listOne(assignmentId)],
     queryFn: () => getSingleAssignment(assignmentId),
     select: (data) => data.data,
-    enabled: assignmentId ? true : false
+    enabled: assignmentId ? true : false,
   });
 };
 
@@ -100,9 +100,9 @@ export const useAddAssignmentQuestion = (lessonId: string, search: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.assignment.list(lessonId, search)]
+        queryKey: [api.assignment.list(lessonId, search)],
       });
-    }
+    },
   });
 };
 
@@ -128,9 +128,9 @@ export const useEditAssignmentQuestion = (lessonId: string, search: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.assignment.list(lessonId, search)]
+        queryKey: [api.assignment.list(lessonId, search)],
       });
-    }
+    },
   });
 };
 
@@ -154,9 +154,9 @@ export const useDeleteAssignmentQuestion = (
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.assignment.list(lessonId, search)]
+        queryKey: [api.assignment.list(lessonId, search)],
       });
-    }
+    },
   });
 };
 
@@ -185,9 +185,9 @@ export const useSubmitAssignment = ({ lessonId }: { lessonId: string }) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.assignment.list(lessonId, '')]
+        queryKey: [api.assignment.list(lessonId, '')],
       });
-    }
+    },
   });
 };
 
@@ -219,7 +219,7 @@ export const useAssignmentReview = (lessonId: string, userId: string) => {
     queryKey: [api.assignment.assignmentReview(lessonId, userId)],
     queryFn: () => getAssignmentReview(lessonId, userId),
     select: (data) => data.data,
-    enabled: lessonId ? true : false
+    enabled: lessonId ? true : false,
   });
 };
 
@@ -248,10 +248,8 @@ export const useAddReview = (lessonId: string, userId: string) => {
 
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: [
-          api.assignment.assignmentReview(lessonId, userId),
-        ]
-      })
+        queryKey: [api.assignment.assignmentReview(lessonId, userId)],
+      }),
   });
 };
 
@@ -275,10 +273,8 @@ export const useEditReview = (lessonId: string, userId: string) => {
 
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: [
-          api.assignment.assignmentReview(lessonId, userId),
-        ]
-      })
+        queryKey: [api.assignment.assignmentReview(lessonId, userId)],
+      }),
   });
 };
 
@@ -308,7 +304,7 @@ export const useGetAssignmentSummary = (
   useQuery({
     queryKey: [api.course.assignmentSummary(courseIdentity, lessonId)],
     queryFn: () => getAssignmentSummary(courseIdentity, lessonId),
-    select: (data) => data.data
+    select: (data) => data.data,
   });
 
 export interface IAssignmentSubmission {
@@ -341,7 +337,9 @@ export const useGetAssignmentSubmission = (
   search: string
 ) =>
   useQuery({
-    queryKey: [api.course.assignmentSubmission(courseIdentity, lessonId, search)],
+    queryKey: [
+      api.course.assignmentSubmission(courseIdentity, lessonId, search),
+    ],
     queryFn: () => getAssignmentSubmission(courseIdentity, lessonId, search),
-    select: (data) => data.data
+    select: (data) => data.data,
   });

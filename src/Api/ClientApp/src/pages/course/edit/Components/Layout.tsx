@@ -1,12 +1,12 @@
 import NavOutlet from '@components/Layout/NavOutlet';
 import {
-    IconBooks,
-    IconCertificate,
-    IconChartInfographic,
-    IconClipboard,
-    IconGraph,
-    IconTool,
-    IconUsersGroup,
+  IconBooks,
+  IconCertificate,
+  IconChartInfographic,
+  IconClipboard,
+  IconGraph,
+  IconTool,
+  IconUsersGroup,
 } from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';

@@ -1,5 +1,5 @@
 import withSearchPagination, {
-    IWithSearchPagination,
+  IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import { Box, Button, Group, Paper, Table } from '@mantine/core';
 import { IconTableExport } from '@tabler/icons-react';

@@ -1,16 +1,16 @@
 import {
-    AspectRatio,
-    Badge,
-    Box,
-    Button,
-    Center,
-    Container,
-    Group,
-    Image,
-    List,
-    Text,
-    ThemeIcon,
-    Title,
+  AspectRatio,
+  Badge,
+  Box,
+  Button,
+  Center,
+  Container,
+  Group,
+  Image,
+  List,
+  Text,
+  ThemeIcon,
+  Title,
 } from '@mantine/core';
 import { IconCheck } from '@tabler/icons-react';
 import RoutePath from '@utils/routeConstants';

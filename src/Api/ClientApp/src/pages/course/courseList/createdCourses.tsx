@@ -39,7 +39,7 @@ const ReviewedCourse = ({
   }, []);
 
   return (
-    (<Container fluid>
+    <Container fluid>
       <Container fluid>
         <Flex
           pb={20}
@@ -55,17 +55,21 @@ const ReviewedCourse = ({
         data?.items &&
         (data.totalCount >= 1 ? (
           // Show CourseList based on the state value
-          (showCourseList ? (<CourseList
-            role={role}
-            courses={data.items}
-            search={searchParams}
-          />) : (<Loader />))
+          showCourseList ? (
+            <CourseList
+              role={role}
+              courses={data.items}
+              search={searchParams}
+            />
+          ) : (
+            <Loader />
+          )
         ) : (
           <Box>{t('no_trainings_found')}</Box>
         ))}
       {isLoading && <Loader />}
       {showCourseList && data && pagination(data.totalPage, data.items.length)}
-    </Container>)
+    </Container>
   );
 };
 

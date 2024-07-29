@@ -1,25 +1,25 @@
 import withSearchPagination, {
-    IWithSearchPagination,
+  IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import {
-    Box,
-    Flex,
-    Grid,
-    Group,
-    Loader,
-    Modal,
-    Paper,
-    ScrollArea,
-    Table,
-    Text,
-    Title,
+  Box,
+  Flex,
+  Grid,
+  Group,
+  Loader,
+  Modal,
+  Paper,
+  ScrollArea,
+  Table,
+  Text,
+  Title,
 } from '@mantine/core';
 import { IconEye } from '@tabler/icons-react';
 import { SeverityType } from '@utils/enums';
 import {
-    IServerLogs,
-    useGetServerLogs,
-    useGetSingleLog,
+  IServerLogs,
+  useGetServerLogs,
+  useGetSingleLog,
 } from '@utils/services/adminService';
 import { IPaginated } from '@utils/services/types';
 import { useState } from 'react';

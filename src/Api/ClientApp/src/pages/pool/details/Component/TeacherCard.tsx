@@ -8,8 +8,8 @@ import { IconTrash } from '@tabler/icons-react';
 import { PoolRole } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import {
-    IPoolTeacher,
-    useDeletePoolTeacher,
+  IPoolTeacher,
+  useDeletePoolTeacher,
 } from '@utils/services/poolService';
 import { useTranslation } from 'react-i18next';
 

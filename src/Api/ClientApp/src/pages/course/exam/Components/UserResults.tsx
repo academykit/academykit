@@ -1,11 +1,11 @@
 import useAuth from '@hooks/useAuth';
 import {
-    ActionIcon,
-    Box,
-    Loader,
-    Table,
-    Title,
-    useMantineTheme,
+  ActionIcon,
+  Box,
+  Loader,
+  Table,
+  Title,
+  useMantineTheme,
 } from '@mantine/core';
 import { IconEye } from '@tabler/icons-react';
 import { DATE_FORMAT } from '@utils/constants';

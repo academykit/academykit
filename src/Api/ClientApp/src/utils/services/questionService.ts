@@ -26,7 +26,7 @@ export const useQuestion = (poolId: string, query: string) =>
     queryKey: [api.questions.list(poolId), query],
     queryFn: () => getPoolQuestion(poolId, query),
     select: (data) => data.data,
-    enabled: !!poolId && !!query
+    enabled: !!poolId && !!query,
   });
 
 export interface IAddQuestionType {
@@ -64,11 +64,9 @@ export const useAddQuestion = (poolId: string, search: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          api.questions.list(poolId) + `?${search}`,
-        ]
+        queryKey: [api.questions.list(poolId) + `?${search}`],
       });
-    }
+    },
   });
 };
 
@@ -87,9 +85,9 @@ export const useDeleteQuestion = (poolId: string, search: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.questions.list(poolId), search]
+        queryKey: [api.questions.list(poolId), search],
       });
-    }
+    },
   });
 };
 
@@ -110,9 +108,9 @@ export const useAddQuestionQuestionSet = (identity: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.questionSet.getQuestion(identity)]
+        queryKey: [api.questionSet.getQuestion(identity)],
       });
-    }
+    },
   });
 };
 
@@ -146,7 +144,7 @@ export const useGetQuestion = (poolId: string, questionId: string) => {
   return useQuery({
     queryKey: [api.questions.one(poolId, questionId)],
     queryFn: () => getQuestion(poolId, questionId),
-    select: (data) => data.data
+    select: (data) => data.data,
   });
 };
 
@@ -167,7 +165,7 @@ const editQuestion = ({
 export const useEditQuestion = (poolId: string, quesitonId: string) => {
   return useMutation({
     mutationKey: [api.questions.put(poolId, quesitonId)],
-    mutationFn: editQuestion
+    mutationFn: editQuestion,
   });
 };
 
@@ -202,6 +200,6 @@ export const useQuestionSetQuestions = (identity: string) => {
   return useQuery({
     queryKey: [api.questionSet.getQuestion(identity)],
     queryFn: () => getQuestionSetQuestions(identity),
-    select: (data) => data.data
+    select: (data) => data.data,
   });
 };

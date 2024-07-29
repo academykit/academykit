@@ -1,26 +1,26 @@
 import ConfirmationModal from '@components/Ui/ConfirmationModal';
 import ProgressBar from '@components/Ui/ProgressBar';
 import withSearchPagination, {
-    IWithSearchPagination,
+  IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import {
-    Anchor,
-    Avatar,
-    Badge,
-    Box,
-    Button,
-    Checkbox,
-    Drawer,
-    Flex,
-    Group,
-    Loader,
-    Paper,
-    ScrollArea,
-    Table,
-    Text,
-    Title,
-    Tooltip,
-    UnstyledButton,
+  Anchor,
+  Avatar,
+  Badge,
+  Box,
+  Button,
+  Checkbox,
+  Drawer,
+  Flex,
+  Group,
+  Loader,
+  Paper,
+  ScrollArea,
+  Table,
+  Text,
+  Title,
+  Tooltip,
+  UnstyledButton,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
@@ -31,9 +31,9 @@ import { getInitials } from '@utils/getInitialName';
 import RoutePath from '@utils/routeConstants';
 import errorType from '@utils/services/axiosError';
 import {
-    IStudentStat,
-    useGetStudentStatistics,
-    usePostStatisticsCertificate,
+  IStudentStat,
+  useGetStudentStatistics,
+  usePostStatisticsCertificate,
 } from '@utils/services/manageCourseService';
 import moment from 'moment';
 import { Dispatch, SetStateAction, useState } from 'react';

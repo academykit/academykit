@@ -1,32 +1,32 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import withSearchPagination, {
-    IWithSearchPagination,
+  IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-    ActionIcon,
-    Badge,
-    Box,
-    Button,
-    Drawer,
-    Flex,
-    Group,
-    Paper,
-    Switch,
-    Table,
-    Text,
-    TextInput,
-    Title,
+  ActionIcon,
+  Badge,
+  Box,
+  Button,
+  Drawer,
+  Flex,
+  Group,
+  Paper,
+  Switch,
+  Table,
+  Text,
+  TextInput,
+  Title,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconPencil, IconTrash } from '@tabler/icons-react';
 import {
-    useDeleteDepartmentSetting,
-    useDepartmentSetting,
-    usePostDepartmentSetting,
-    useUpdateDepartmentSetting,
+  useDeleteDepartmentSetting,
+  useDepartmentSetting,
+  usePostDepartmentSetting,
+  useUpdateDepartmentSetting,
 } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import { IUser } from '@utils/services/types';

@@ -1,16 +1,20 @@
 import TextViewer from '@components/Ui/RichTextViewer';
 import {
-    ActionIcon,
-    Box,
-    Collapse,
-    Flex,
-    Group,
-    Paper,
-    Select,
-    Text,
+  ActionIcon,
+  Box,
+  Collapse,
+  Flex,
+  Group,
+  Paper,
+  Select,
+  Text,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconChevronDown, IconChevronUp, IconDragDrop } from '@tabler/icons-react';
+import {
+  IconChevronDown,
+  IconChevronUp,
+  IconDragDrop,
+} from '@tabler/icons-react';
 import { QuestionType, ReadableEnum } from '@utils/enums';
 import { QuestionSetQuestions } from '@utils/services/questionService';
 import { useTranslation } from 'react-i18next';

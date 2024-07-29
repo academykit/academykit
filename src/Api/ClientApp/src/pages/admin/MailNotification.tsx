@@ -3,49 +3,49 @@ import EmptyRow from '@components/Ui/EmptyRow';
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import TextViewer from '@components/Ui/RichTextViewer';
 import withSearchPagination, {
-    IWithSearchPagination,
+  IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-    ActionIcon,
-    Badge,
-    Box,
-    Button,
-    Drawer,
-    Flex,
-    Grid,
-    Group,
-    Modal,
-    Paper,
-    ScrollArea,
-    Select,
-    Switch,
-    Table,
-    Text,
-    TextInput,
-    Title,
-    Tooltip,
+  ActionIcon,
+  Badge,
+  Box,
+  Button,
+  Drawer,
+  Flex,
+  Grid,
+  Group,
+  Modal,
+  Paper,
+  ScrollArea,
+  Select,
+  Switch,
+  Table,
+  Text,
+  TextInput,
+  Title,
+  Tooltip,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { useDisclosure, useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import {
-    IconAsteriskSimple,
-    IconFileSearch,
-    IconInfoCircle,
-    IconPencil,
-    IconSend,
-    IconTrash,
+  IconAsteriskSimple,
+  IconFileSearch,
+  IconInfoCircle,
+  IconPencil,
+  IconSend,
+  IconTrash,
 } from '@tabler/icons-react';
 import { MailType } from '@utils/enums';
 import {
-    IMailNotification,
-    useDeleteMailNotification,
-    useMailNotification,
-    useMailPreview,
-    usePostMailNotification,
-    useTestEmail,
-    useUpdateMailNotification,
+  IMailNotification,
+  useDeleteMailNotification,
+  useMailNotification,
+  useMailPreview,
+  usePostMailNotification,
+  useTestEmail,
+  useUpdateMailNotification,
 } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import { useEffect, useState } from 'react';

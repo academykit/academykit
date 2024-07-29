@@ -22,7 +22,7 @@ export const useTrainingSuggestion = (enabled?: boolean) => {
     queryKey: [api.ai.trainingSuggest],
     queryFn: () => getTrainingSuggestion(),
     select: (data) => data.data,
-    enabled: enabled ?? true
+    enabled: enabled ?? true,
   });
 };
 
@@ -33,7 +33,7 @@ export const useAIMaster = () => {
   return useQuery({
     queryKey: [api.ai.aiMasterSetup],
     queryFn: () => getAiMaster(),
-    select: (data) => data.data
+    select: (data) => data.data,
   });
 };
 
@@ -48,8 +48,8 @@ export const useUpdateAISetup = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.ai.aiMasterSetup]
+        queryKey: [api.ai.aiMasterSetup],
       });
-    }
+    },
   });
 };

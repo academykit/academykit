@@ -1,18 +1,18 @@
 import TextViewer from '@components/Ui/RichTextViewer';
 import UserShortProfile from '@components/UserShortProfile';
 import {
-    Box,
-    Button,
-    Card,
-    Container,
-    Grid,
-    Group,
-    Paper,
-    ScrollArea,
-    Text,
-    Title,
-    UnstyledButton,
-    useMantineTheme,
+  Box,
+  Button,
+  Card,
+  Container,
+  Grid,
+  Group,
+  Paper,
+  ScrollArea,
+  Text,
+  Title,
+  UnstyledButton,
+  useMantineTheme,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import SubmitResultHeader from '@pages/course/exam/Components/SubmitResultHeader';

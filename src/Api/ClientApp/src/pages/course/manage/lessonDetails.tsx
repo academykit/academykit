@@ -1,24 +1,24 @@
 import withSearchPagination, {
-    IWithSearchPagination,
+  IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import {
-    Box,
-    Button,
-    Center,
-    Group,
-    Loader,
-    Paper,
-    Table,
-    Tabs,
-    Title,
+  Box,
+  Button,
+  Center,
+  Group,
+  Loader,
+  Paper,
+  Table,
+  Tabs,
+  Title,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IconChevronLeft, IconTableExport } from '@tabler/icons-react';
 import { LessonType } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import {
-    exportFeedback,
-    useGetFeedbackGraph,
+  exportFeedback,
+  useGetFeedbackGraph,
 } from '@utils/services/feedbackService';
 import { downloadCSVFile } from '@utils/services/fileService';
 import { useGetLessonStatisticsDetails } from '@utils/services/manageCourseService';

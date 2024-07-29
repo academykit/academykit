@@ -1,15 +1,15 @@
 import {
-    ActionIcon,
-    Anchor,
-    Badge,
-    Box,
-    Loader,
-    Pagination,
-    Paper,
-    ScrollArea,
-    Table,
-    Title,
-    Tooltip,
+  ActionIcon,
+  Anchor,
+  Badge,
+  Box,
+  Loader,
+  Pagination,
+  Paper,
+  ScrollArea,
+  Table,
+  Title,
+  Tooltip,
 } from '@mantine/core';
 import { IconEdit } from '@tabler/icons-react';
 import { DATE_FORMAT } from '@utils/constants';

@@ -1,15 +1,15 @@
 import UserShortProfile from '@components/UserShortProfile';
 import useAuth from '@hooks/useAuth';
 import {
-    ActionIcon,
-    Badge,
-    Button,
-    Group,
-    Modal,
-    Table,
-    Text,
-    Textarea,
-    Tooltip,
+  ActionIcon,
+  Badge,
+  Button,
+  Group,
+  Modal,
+  Table,
+  Text,
+  Textarea,
+  Tooltip,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';

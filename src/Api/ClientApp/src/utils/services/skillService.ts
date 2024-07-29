@@ -21,7 +21,7 @@ export const useSkills = (search: string) => {
     queryFn: () => getSkills(search),
     staleTime: Infinity,
     cacheTime: Infinity,
-    select: (data) => data.data
+    select: (data) => data.data,
   });
 };
 
@@ -32,15 +32,19 @@ export const usePostDepartmentSetting = () => {
   return useMutation({
     mutationKey: ['post' + api.skill.list],
 
-    mutationFn: (data: { skillName: string; isActive: boolean; description: string }) => {
+    mutationFn: (data: {
+      skillName: string;
+      isActive: boolean;
+      description: string;
+    }) => {
       return httpClient.post<IPostSkill>(api.skill.list, data);
     },
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.skill.list]
+        queryKey: [api.skill.list],
       });
-    }
+    },
   });
 };
 
@@ -55,9 +59,9 @@ export const useUpdateSkill = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.skill.list]
+        queryKey: [api.skill.list],
       });
-    }
+    },
   });
 };
 
@@ -72,12 +76,12 @@ export const useDeleteSkill = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.skill.list]
+        queryKey: [api.skill.list],
       });
     },
 
     onError: (err) => {
       return errorType(err);
-    }
+    },
   });
 };

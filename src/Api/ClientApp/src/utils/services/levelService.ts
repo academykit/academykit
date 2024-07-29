@@ -17,7 +17,7 @@ export const useLevels = () =>
   useQuery({
     queryKey: [api.levels.list],
     queryFn: () => getLevels(),
-    select: (data) => data.data
+    select: (data) => data.data,
   });
 
 const addLevel = async (tagName: string) =>
@@ -31,12 +31,12 @@ export const useAddLevel = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.levels.list]
+        queryKey: [api.levels.list],
       });
     },
 
     onError: (err) => {
       return errorType(err);
-    }
+    },
   });
 };

@@ -1,23 +1,23 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import TextViewer from '@components/Ui/RichTextViewer';
 import {
-    Box,
-    Button,
-    Checkbox,
-    Flex,
-    Group,
-    Paper,
-    Select,
-    Text,
-    Title,
+  Box,
+  Button,
+  Checkbox,
+  Flex,
+  Group,
+  Paper,
+  Select,
+  Text,
+  Title,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { IconDragDrop, IconEdit, IconTrash } from '@tabler/icons-react';
 import { QuestionType } from '@utils/enums';
 import {
-    IAssignmentQuestion,
-    useDeleteAssignmentQuestion,
+  IAssignmentQuestion,
+  useDeleteAssignmentQuestion,
 } from '@utils/services/assignmentService';
 import errorType from '@utils/services/axiosError';
 import { useTranslation } from 'react-i18next';

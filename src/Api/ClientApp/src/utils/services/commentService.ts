@@ -20,7 +20,7 @@ export const useGetComments = (courseId: string) => {
   return useQuery({
     queryKey: [api.comments.list(courseId)],
     queryFn: () => getComments(courseId),
-    select: (data) => data.data
+    select: (data) => data.data,
   });
 };
 
@@ -40,8 +40,8 @@ export const usePostComment = (courseId: string) => {
 
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: [api.comments.list(courseId)]
-      })
+        queryKey: [api.comments.list(courseId)],
+      }),
   });
 };
 
@@ -61,8 +61,8 @@ export const useDeleteComment = (courseId: string) => {
 
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: [api.comments.list(courseId)]
-      })
+        queryKey: [api.comments.list(courseId)],
+      }),
   });
 };
 
@@ -84,8 +84,8 @@ export const useEditComment = (courseId: string, commentId: string) => {
 
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: [api.comments.list(courseId)]
-      })
+        queryKey: [api.comments.list(courseId)],
+      }),
   });
 };
 
@@ -118,7 +118,7 @@ export const useGetCommentReplies = (
   return useQuery({
     queryKey: [api.comments.getRepliesList(courseId, commentId, replyCount)],
     queryFn: () => getCommentReplies(courseId, commentId, replyCount),
-    select: (data) => data.data
+    select: (data) => data.data,
   });
 };
 
@@ -143,14 +143,12 @@ export const usePostCommentReply = (courseId: string, commentId: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          api.comments.getRepliesList(courseId, commentId),
-        ]
+        queryKey: [api.comments.getRepliesList(courseId, commentId)],
       });
       queryClient.invalidateQueries({
-        queryKey: [api.comments.list(courseId)]
+        queryKey: [api.comments.list(courseId)],
       });
-    }
+    },
   });
 };
 
@@ -173,14 +171,12 @@ export const useDeleteCommentReply = (courseId: string, commentId: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          api.comments.getRepliesList(courseId, commentId),
-        ]
+        queryKey: [api.comments.getRepliesList(courseId, commentId)],
       });
       queryClient.invalidateQueries({
-        queryKey: [api.comments.list(courseId)]
+        queryKey: [api.comments.list(courseId)],
       });
-    }
+    },
   });
 };
 
@@ -207,10 +203,8 @@ export const useEditCommentReply = (courseId: string, commentId: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          api.comments.getRepliesList(courseId, commentId),
-        ]
+        queryKey: [api.comments.getRepliesList(courseId, commentId)],
       });
-    }
+    },
   });
 };

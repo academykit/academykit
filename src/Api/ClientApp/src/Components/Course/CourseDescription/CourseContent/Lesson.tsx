@@ -1,14 +1,14 @@
 import {
-    Badge,
-    Box,
-    Flex,
-    Group,
-    Paper,
-    Popover,
-    Text,
-    Title,
-    useMantineColorScheme,
-    useMantineTheme,
+  Badge,
+  Box,
+  Flex,
+  Group,
+  Paper,
+  Popover,
+  Text,
+  Title,
+  useMantineColorScheme,
+  useMantineTheme,
 } from '@mantine/core';
 import { useHover, useMediaQuery } from '@mantine/hooks';
 import { IconCheck } from '@tabler/icons-react';

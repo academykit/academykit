@@ -5,17 +5,17 @@ import { ActionIcon, Container, Group, Paper } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import {
-    IconChevronRight,
-    IconDragDrop,
-    IconPencilMinus,
-    IconTrashX,
+  IconChevronRight,
+  IconDragDrop,
+  IconPencilMinus,
+  IconTrashX,
 } from '@tabler/icons-react';
 import { CourseStatus } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import {
-    ISection,
-    useDeleteSection,
-    useUpdateSectionName,
+  ISection,
+  useDeleteSection,
+  useUpdateSectionName,
 } from '@utils/services/courseService';
 import cx from 'clsx';
 import { useState } from 'react';

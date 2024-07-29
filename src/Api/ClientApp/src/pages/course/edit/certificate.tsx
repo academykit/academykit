@@ -1,17 +1,17 @@
 import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-    ActionIcon,
-    Box,
-    Button,
-    Container,
-    Flex,
-    Grid,
-    Image,
-    SimpleGrid,
-    Text,
-    Title,
-    Tooltip,
+  ActionIcon,
+  Box,
+  Button,
+  Container,
+  Flex,
+  Grid,
+  Image,
+  SimpleGrid,
+  Text,
+  Title,
+  Tooltip,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { useForm, yupResolver } from '@mantine/form';
@@ -21,9 +21,9 @@ import { IconCalendar, IconDownload, IconEye } from '@tabler/icons-react';
 import downloadImage from '@utils/downloadImage';
 import errorType from '@utils/services/axiosError';
 import {
-    useAddCertificate,
-    useGetCertificateDetails,
-    useGetSignature,
+  useAddCertificate,
+  useGetCertificateDetails,
+  useGetSignature,
 } from '@utils/services/courseService';
 import moment from 'moment';
 import { useEffect } from 'react';

@@ -2,18 +2,18 @@ import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAuto
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-    Box,
-    Button,
-    Card,
-    Checkbox,
-    Container,
-    Flex,
-    Group,
-    Loader,
-    Radio,
-    Select,
-    Text,
-    UnstyledButton,
+  Box,
+  Button,
+  Card,
+  Checkbox,
+  Container,
+  Flex,
+  Group,
+  Loader,
+  Radio,
+  Select,
+  Text,
+  UnstyledButton,
 } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
@@ -24,9 +24,9 @@ import queryStringGenerator from '@utils/queryStringGenerator';
 import errorType from '@utils/services/axiosError';
 import { usePools } from '@utils/services/poolService';
 import {
-    IAddQuestionType,
-    useEditQuestion,
-    useGetQuestion,
+  IAddQuestionType,
+  useEditQuestion,
+  useGetQuestion,
 } from '@utils/services/questionService';
 import { ITag, useAddTag, useTags } from '@utils/services/tagService';
 import { useEffect, useState } from 'react';
@@ -231,7 +231,7 @@ const EditQuestion = () => {
   };
 
   return (
-    (<Container fluid>
+    <Container fluid>
       <FormProvider form={form}>
         <Card mt={20}>
           <form onSubmit={form.onSubmit(onSubmit)}>
@@ -262,12 +262,12 @@ const EditQuestion = () => {
               //   label={t('tags')}
               //   placeholder={t('select_tags') as string}
               // />
-              (<TagMultiSelectCreatable
+              <TagMultiSelectCreatable
                 data={tagsLists ?? []}
                 mutateAsync={mutateAsync}
                 form={form}
                 size="lg"
-              />)
+              />
             ) : (
               <Loader />
             )}
@@ -386,7 +386,7 @@ const EditQuestion = () => {
           </form>
         </Card>
       </FormProvider>
-    </Container>)
+    </Container>
   );
 };
 

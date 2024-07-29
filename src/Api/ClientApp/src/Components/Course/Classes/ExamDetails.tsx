@@ -47,7 +47,7 @@ const ExamDetails = ({
             id as string,
             lessonId === '1' ? undefined : lessonId
           ),
-        ]
+        ],
       });
 
       window.history.pushState(

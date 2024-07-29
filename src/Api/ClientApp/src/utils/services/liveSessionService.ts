@@ -22,7 +22,7 @@ export const useJoinMeeting = (courseId: string, lessonId: string) =>
     select: (data) => data.data,
     retry: false,
     retryOnMount: false,
-    refetchOnMount: false
+    refetchOnMount: false,
   });
 
 export interface IReportDetail {
@@ -53,5 +53,5 @@ export const useGetMeetingReport = (
     queryFn: () => getMeetingReport(courseId, lessonId, userId),
     select: (data) => data.data,
     retry: false,
-    enabled
+    enabled,
   });
