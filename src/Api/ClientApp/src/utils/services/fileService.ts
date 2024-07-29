@@ -32,13 +32,17 @@ export const uploadVideo = (file: File, type: number) => {
 };
 
 export const getFileUrl = (key: string, enabled: boolean) => {
-  return useQuery(
-    ['/api/media/file/' + key],
-    () => {
+  return useQuery({
+    queryKey: ['/api/media/file/' + key],
+
+    queryFn: () => {
       return httpClient.get<string>('/api/media/file?key=' + key);
     },
-    { select: (data) => data.data, retry: false, enabled }
-  );
+
+    select: (data) => data.data,
+    retry: false,
+    enabled,
+  });
 };
 
 export const uploadUserCsv = (file: File | null) => {

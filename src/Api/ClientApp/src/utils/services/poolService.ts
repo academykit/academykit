@@ -15,7 +15,9 @@ const getPoolsTeacher = (q_id: string) => {
   return httpClient.get<IPaginated<IPoolTeacher>>(api.poolTeacher.get(q_id));
 };
 export const usePoolsTeacher = (q_id: string) => {
-  return useQuery([api.poolTeacher.get(q_id)], () => getPoolsTeacher(q_id), {
+  return useQuery({
+    queryKey: [api.poolTeacher.get(q_id)],
+    queryFn: () => getPoolsTeacher(q_id),
     select: (data) => data.data,
   });
 };
@@ -39,9 +41,14 @@ const createTeacherPool = async (data: {
 export const useCreateTeacherPool = (id: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation(['post' + api.poolTeacher.list], createTeacherPool, {
+  return useMutation({
+    mutationKey: ['post' + api.poolTeacher.list],
+    mutationFn: createTeacherPool,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.poolTeacher.get(id)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.poolTeacher.get(id)],
+      });
     },
   });
 };
@@ -51,9 +58,14 @@ const deletePoolTeacher = async (id: string) => {
 };
 export const useDeletePoolTeacher = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation(['delete' + api.poolTeacher.detail], deletePoolTeacher, {
+  return useMutation({
+    mutationKey: ['delete' + api.poolTeacher.detail],
+    mutationFn: deletePoolTeacher,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.poolTeacher.get(id)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.poolTeacher.get(id)],
+      });
     },
   });
 };
@@ -71,7 +83,9 @@ const getPools = (search: string) =>
   httpClient.get<IPaginated<IPool>>(api.pool.list + `?${search}`);
 
 export const usePools = (search: string) =>
-  useQuery([api.pool.list, search], () => getPools(search), {
+  useQuery({
+    queryKey: [api.pool.list, search],
+    queryFn: () => getPools(search),
     select: (data) => data.data,
   });
 
@@ -80,10 +94,16 @@ const addPool = async (name: string) =>
 
 export const useAddPool = (searchParams: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.pool.list, searchParams], addPool, {
+  return useMutation({
+    mutationKey: [api.pool.list, searchParams],
+    mutationFn: addPool,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.pool.list, searchParams]);
+      queryClient.invalidateQueries({
+        queryKey: [api.pool.list, searchParams],
+      });
     },
+
     onError: (err) => {
       return errorType(err);
     },
@@ -94,7 +114,9 @@ const getOnePool = (poolId: string) =>
   httpClient.get<IPool>(api.pool.getOne(poolId));
 
 export const useOnePool = (poolId: string) =>
-  useQuery([api.pool.getOne(poolId)], () => getOnePool(poolId), {
+  useQuery({
+    queryKey: [api.pool.getOne(poolId)],
+    queryFn: () => getOnePool(poolId),
     select: (data) => data.data,
   });
 
@@ -103,10 +125,16 @@ const addOnePool = async ({ name, poolId }: { name: string; poolId: string }) =>
 
 export const useAddOnePool = (poolId: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.pool.getOne(poolId)], addOnePool, {
+  return useMutation({
+    mutationKey: [api.pool.getOne(poolId)],
+    mutationFn: addOnePool,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.pool.getOne(poolId)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.pool.getOne(poolId)],
+      });
     },
+
     onError: (err) => {
       return errorType(err);
     },
@@ -121,18 +149,20 @@ export const useDeleteQuestionPool = (
   searchParams: string
 ) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['delete' + api.pool.getOne(identity)],
-    deleteQuestionPool,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.pool.list, searchParams]);
-      },
-      onError: (err) => {
-        return errorType(err);
-      },
-    }
-  );
+  return useMutation({
+    mutationKey: ['delete' + api.pool.getOne(identity)],
+    mutationFn: deleteQuestionPool,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.pool.list, searchParams],
+      });
+    },
+
+    onError: (err) => {
+      return errorType(err);
+    },
+  });
 };
 
 // export interface IPoolMember {

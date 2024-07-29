@@ -1,15 +1,19 @@
 import {
-    Flex,
-    Group,
-    Paper,
-    SimpleGrid,
-    Text,
-    useMantineColorScheme,
+  Flex,
+  Group,
+  Paper,
+  SimpleGrid,
+  Text,
+  useMantineColorScheme,
 } from '@mantine/core';
-import { IconActivity, IconCertificate, IconFileCheck } from '@tabler/icons-react';
 import {
-    DashboardCourses,
-    DashboardStats,
+  IconActivity,
+  IconCertificate,
+  IconFileCheck,
+} from '@tabler/icons-react';
+import {
+  DashboardCourses,
+  DashboardStats,
 } from '@utils/services/dashboardService';
 import { useTranslation } from 'react-i18next';
 import { StatsCard } from './StatsCard';

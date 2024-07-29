@@ -5,10 +5,10 @@ import { Anchor, Button, Card, Group, Menu, Text } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import {
-    IconChevronRight,
-    IconDotsVertical,
-    IconEdit,
-    IconTrash,
+  IconChevronRight,
+  IconDotsVertical,
+  IconEdit,
+  IconTrash,
 } from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';

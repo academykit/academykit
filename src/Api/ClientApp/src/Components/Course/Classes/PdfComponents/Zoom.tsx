@@ -4,32 +4,30 @@ import { IconZoomIn, IconZoomOut } from '@tabler/icons-react';
 
 const Zoom = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {
   return (
-    <Group>
+    (<Group>
       <toolbarSlot.ZoomIn
         // eslint-disable-next-line react/no-children-prop
         children={(props) => (
           // eslint-disable-next-line react/prop-types
-          <ActionIcon onClick={props.onClick}>
+          (<ActionIcon onClick={props.onClick}>
             <IconZoomIn />
-          </ActionIcon>
+          </ActionIcon>)
         )}
       />
-
       <toolbarSlot.Zoom
         // eslint-disable-next-line react/no-children-prop, react/prop-types
         children={(props) => <Text color={'dimmed'}>{props.scale}</Text>}
       />
-
       <toolbarSlot.ZoomOut
         // eslint-disable-next-line react/no-children-prop
         children={(props) => (
           // eslint-disable-next-line react/prop-types
-          <ActionIcon onClick={props.onClick}>
+          (<ActionIcon onClick={props.onClick}>
             <IconZoomOut />
-          </ActionIcon>
+          </ActionIcon>)
         )}
       />
-    </Group>
+    </Group>)
   );
 };
 

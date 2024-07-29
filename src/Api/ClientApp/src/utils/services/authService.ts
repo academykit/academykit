@@ -17,20 +17,21 @@ export interface ILogin {
 }
 
 export const useLogin = () => {
-  return useMutation(
-    [api.auth.login],
-    ({ email, password }: { email: string; password: string }) => {
+  return useMutation({
+    mutationKey: [api.auth.login],
+
+    mutationFn: ({ email, password }: { email: string; password: string }) => {
       return httpClient.post<ILogin>(api.auth.login, { email, password });
     },
-    {
-      onError: () => {},
-      onSuccess: (data) => {
-        localStorage.setItem(TOKEN_STORAGE, data?.data?.token);
-        localStorage.setItem(REFRESH_TOKEN_STORAGE, data?.data?.refreshToken);
-        localStorage.setItem('id', data?.data?.userId);
-      },
-    }
-  );
+
+    onError: () => {},
+
+    onSuccess: (data) => {
+      localStorage.setItem(TOKEN_STORAGE, data?.data?.token);
+      localStorage.setItem(REFRESH_TOKEN_STORAGE, data?.data?.refreshToken);
+      localStorage.setItem('id', data?.data?.userId);
+    },
+  });
 };
 
 export const useLogout = () => {
@@ -50,40 +51,38 @@ export const useLogout = () => {
 };
 
 export const useReAuth = () => {
-  return useQuery(
-    [api.auth.me],
-    () => {
+  return useQuery({
+    queryKey: [api.auth.me],
+
+    queryFn: () => {
       return httpClient.get<IUserProfile>(api.auth.me);
     },
-    {
-      retry: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      retryOnMount: false,
 
-      onError: () => {},
-      select: (data) => data.data,
-      enabled: !!localStorage.getItem(TOKEN_STORAGE),
-      onSuccess: () => {},
-    }
-  );
+    retry: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    retryOnMount: false,
+    onError: () => {},
+    select: (data) => data.data,
+    enabled: !!localStorage.getItem(TOKEN_STORAGE),
+    onSuccess: () => {},
+  });
 };
 
 export const useProfileAuth = (id: string) => {
-  return useQuery(
-    [api.auth.getUser(id)],
-    () => {
+  return useQuery({
+    queryKey: [api.auth.getUser(id)],
+
+    queryFn: () => {
       return httpClient.get<IUserProfile>(api.auth.getUser(id as string));
     },
 
-    {
-      onError: () => {},
-      select: (data) => data.data,
-      enabled: !!localStorage.getItem(TOKEN_STORAGE),
-      onSuccess: () => {},
-    }
-  );
+    onError: () => {},
+    select: (data) => data.data,
+    enabled: !!localStorage.getItem(TOKEN_STORAGE),
+    onSuccess: () => {},
+  });
 };
 
 const changePassword = (data: {
@@ -93,17 +92,20 @@ const changePassword = (data: {
 }) => httpClient.post<IPasswordResetResponse>(api.auth.changePassword, data);
 
 export const useChangePassword = () => {
-  return useMutation([api.auth.changePassword], changePassword, {});
+  return useMutation({
+    mutationKey: [api.auth.changePassword],
+    mutationFn: changePassword,
+  });
 };
 
 export const useForgotPassword = () => {
-  return useMutation(
-    [api.auth.forgotPassword],
-    ({ email }: { email: string }) => {
+  return useMutation({
+    mutationKey: [api.auth.forgotPassword],
+
+    mutationFn: ({ email }: { email: string }) => {
       return httpClient.post<ILogin>(api.auth.forgotPassword, { email });
     },
-    {}
-  );
+  });
 };
 
 export interface ResponseData {
@@ -116,31 +118,34 @@ export interface ResponseDataToken {
 }
 
 export const useResetPasswordToken = () => {
-  return useMutation(
-    [api.auth.resetToken],
-    (data: { email?: string | null; token: string }) => {
+  return useMutation({
+    mutationKey: [api.auth.resetToken],
+
+    mutationFn: (data: { email?: string | null; token: string }) => {
       return httpClient.post<ResponseDataToken>(api.auth.resetToken, data);
-    }
-  );
+    },
+  });
 };
 
 export const useResetPassword = () => {
-  return useMutation(
-    [api.auth.resetPassword],
-    (data: {
+  return useMutation({
+    mutationKey: [api.auth.resetPassword],
+
+    mutationFn: (data: {
       newPassword: string;
       confirmPassword: string;
       passwordChangeToken: string;
     }) => {
       return httpClient.post(api.auth.resetPassword, data);
-    }
-  );
+    },
+  });
 };
 
 export const useChangeEmail = () => {
-  return useMutation(
-    [api.auth.changeEmail],
-    (data: {
+  return useMutation({
+    mutationKey: [api.auth.changeEmail],
+
+    mutationFn: (data: {
       oldEmail: string;
       newEmail: string;
       confirmEmail: string;
@@ -151,32 +156,35 @@ export const useChangeEmail = () => {
         data
       );
     },
-    {}
-  );
+  });
 };
 
 export const useResendEmailVerification = () => {
-  return useMutation(
-    [api.auth.resendEmailVerification],
-    (data: { token: string }) => {
+  return useMutation({
+    mutationKey: [api.auth.resendEmailVerification],
+
+    mutationFn: (data: { token: string }) => {
       return httpClient.put(api.auth.resendEmailVerification, data);
     },
-    {}
-  );
+  });
 };
 
 export const useVerifyChangeEmail = (token: string) => {
   const url = `${api.auth.verifyChangeEmail}?token=${token}`;
   const queryClient = useQueryClient();
 
-  return useQuery([api.auth.verifyChangeEmail], () => httpClient.get(url), {
+  return useQuery({
+    queryKey: [api.auth.verifyChangeEmail],
+    queryFn: () => httpClient.get(url),
     select: (data) => data.data,
     staleTime: Infinity,
     cacheTime: Infinity,
     retry: false,
 
     onSuccess: () => {
-      queryClient.invalidateQueries([api.auth.me]);
+      queryClient.invalidateQueries({
+        queryKey: [api.auth.me],
+      });
     },
   });
 };

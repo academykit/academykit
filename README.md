@@ -85,3 +85,8 @@ docker run -d -p 8080:80 --name academy academy
 # mac
 sudo lsof -t -i tcp:7042 | xargs kill -9
 ```
+
+npx jscodeshift@latest ./ \
+ --extensions=ts,tsx \
+ --parser=tsx \
+ --transform=./node_modules/@tanstack/react-query/build/codemods/src/v5/remove-overloads/remove-overloads.cjs

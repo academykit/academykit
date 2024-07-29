@@ -1,20 +1,20 @@
 import UserShortProfile from '@components/UserShortProfile';
 import { IAuthContext } from '@context/AuthProvider';
 import withSearchPagination, {
-    IWithSearchPagination,
+  IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import useAuth from '@hooks/useAuth';
 import {
-    ActionIcon,
-    Badge,
-    Box,
-    Button,
-    Card,
-    Container,
-    Flex,
-    Image,
-    Text,
-    Title,
+  ActionIcon,
+  Badge,
+  Box,
+  Button,
+  Card,
+  Container,
+  Flex,
+  Image,
+  Text,
+  Title,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IconDownload, IconEye } from '@tabler/icons-react';
@@ -23,10 +23,10 @@ import downloadImage from '@utils/downloadImage';
 import { UserRole } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import {
-    CertificateStatus,
-    ListCertificate,
-    useGetListCertificate,
-    useUpdateCertificateStatus,
+  CertificateStatus,
+  ListCertificate,
+  useGetListCertificate,
+  useUpdateCertificateStatus,
 } from '@utils/services/certificateService';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';

@@ -2,16 +2,16 @@ import { IAuthContext } from '@context/AuthProvider';
 import { IWithSearchPagination } from '@hoc/useSearchPagination';
 import useAuth from '@hooks/useAuth';
 import {
-    ActionIcon,
-    Avatar,
-    Badge,
-    Loader,
-    Modal,
-    Paper,
-    Table,
-    Text,
-    Tooltip,
-    useMantineColorScheme,
+  ActionIcon,
+  Avatar,
+  Badge,
+  Loader,
+  Modal,
+  Paper,
+  Table,
+  Text,
+  Tooltip,
+  useMantineColorScheme,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IconEdit, IconSend } from '@tabler/icons-react';

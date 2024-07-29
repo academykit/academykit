@@ -22,14 +22,12 @@ const getPoolQuestion = async (poolId: string, query: string) =>
   );
 
 export const useQuestion = (poolId: string, query: string) =>
-  useQuery(
-    [api.questions.list(poolId), query],
-    () => getPoolQuestion(poolId, query),
-    {
-      select: (data) => data.data,
-      enabled: !!poolId && !!query,
-    }
-  );
+  useQuery({
+    queryKey: [api.questions.list(poolId), query],
+    queryFn: () => getPoolQuestion(poolId, query),
+    select: (data) => data.data,
+    enabled: !!poolId && !!query
+  });
 
 export interface IAddQuestionType {
   name: string;
@@ -60,12 +58,17 @@ const addQuestion = ({
 
 export const useAddQuestion = (poolId: string, search: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.questions.list(poolId) + `?${search}`], addQuestion, {
+  return useMutation({
+    mutationKey: [api.questions.list(poolId) + `?${search}`],
+    mutationFn: addQuestion,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([
-        api.questions.list(poolId) + `?${search}`,
-      ]);
-    },
+      queryClient.invalidateQueries({
+        queryKey: [
+          api.questions.list(poolId) + `?${search}`,
+        ]
+      });
+    }
   });
 };
 
@@ -78,15 +81,16 @@ const deleteQuestion = ({
 }) => httpClient.delete(api.questions.delete(poolId, questionId));
 export const useDeleteQuestion = (poolId: string, search: string) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    [api.questions.list(poolId) + `?${search}`],
-    deleteQuestion,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.questions.list(poolId), search]);
-      },
+  return useMutation({
+    mutationKey: [api.questions.list(poolId) + `?${search}`],
+    mutationFn: deleteQuestion,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.questions.list(poolId), search]
+      });
     }
-  );
+  });
 };
 
 const addQueSet = (data: {
@@ -100,10 +104,15 @@ const addQueSet = (data: {
 export const useAddQuestionQuestionSet = (identity: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation(['post' + api.questionSet.common], addQueSet, {
+  return useMutation({
+    mutationKey: ['post' + api.questionSet.common],
+    mutationFn: addQueSet,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.questionSet.getQuestion(identity)]);
-    },
+      queryClient.invalidateQueries({
+        queryKey: [api.questionSet.getQuestion(identity)]
+      });
+    }
   });
 };
 
@@ -134,13 +143,11 @@ const getQuestion = (poolId: string, questionId: string) => {
   return httpClient.get<Question>(api.questions.one(poolId, questionId));
 };
 export const useGetQuestion = (poolId: string, questionId: string) => {
-  return useQuery(
-    [api.questions.one(poolId, questionId)],
-    () => getQuestion(poolId, questionId),
-    {
-      select: (data) => data.data,
-    }
-  );
+  return useQuery({
+    queryKey: [api.questions.one(poolId, questionId)],
+    queryFn: () => getQuestion(poolId, questionId),
+    select: (data) => data.data
+  });
 };
 
 const editQuestion = ({
@@ -158,7 +165,10 @@ const editQuestion = ({
   });
 };
 export const useEditQuestion = (poolId: string, quesitonId: string) => {
-  return useMutation([api.questions.put(poolId, quesitonId)], editQuestion, {});
+  return useMutation({
+    mutationKey: [api.questions.put(poolId, quesitonId)],
+    mutationFn: editQuestion
+  });
 };
 
 export interface QuestionSetQuestions {
@@ -189,11 +199,9 @@ const getQuestionSetQuestions = (identity: string) => {
   );
 };
 export const useQuestionSetQuestions = (identity: string) => {
-  return useQuery(
-    [api.questionSet.getQuestion(identity)],
-    () => getQuestionSetQuestions(identity),
-    {
-      select: (data) => data.data,
-    }
-  );
+  return useQuery({
+    queryKey: [api.questionSet.getQuestion(identity)],
+    queryFn: () => getQuestionSetQuestions(identity),
+    select: (data) => data.data
+  });
 };

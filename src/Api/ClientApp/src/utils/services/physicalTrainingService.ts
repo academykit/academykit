@@ -12,13 +12,20 @@ const postAttendance = async ({ identity }: { identity: string }) =>
 export const usePostAttendance = (courseId: string, lessonId: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation(['attend'], postAttendance, {
+  return useMutation({
+    mutationKey: ['attend'],
+    mutationFn: postAttendance,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([
-        api.lesson.courseLesson(courseId, lessonId),
-      ]);
-      queryClient.invalidateQueries([api.course.detail(courseId)]);
-    },
+      queryClient.invalidateQueries({
+        queryKey: [
+          api.lesson.courseLesson(courseId, lessonId),
+        ]
+      });
+      queryClient.invalidateQueries({
+        queryKey: [api.course.detail(courseId)]
+      });
+    }
   });
 };
 
@@ -40,14 +47,21 @@ export const useReviewAttendance = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation(['review'], reviewAttendance, {
+  return useMutation({
+    mutationKey: ['review'],
+    mutationFn: reviewAttendance,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([
-        api.course.lessonStatDetails(courseId, lessonId, 'page=1&size=12'),
-      ]);
-      queryClient.invalidateQueries([
-        api.course.studentStatDetails(courseId, userId),
-      ]);
-    },
+      queryClient.invalidateQueries({
+        queryKey: [
+          api.course.lessonStatDetails(courseId, lessonId, 'page=1&size=12'),
+        ]
+      });
+      queryClient.invalidateQueries({
+        queryKey: [
+          api.course.studentStatDetails(courseId, userId),
+        ]
+      });
+    }
   });
 };

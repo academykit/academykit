@@ -29,26 +29,31 @@ export const useTags = (
   identity?: string,
   trainingType?: number
 ) =>
-  useQuery(
-    [api.tags.list, search],
-    () => getTags(search, trainingType, identity),
-    {
-      select: (data) => data.data,
-      // keepPreviousData: true,
-    }
-  );
+  useQuery({
+    queryKey: [api.tags.list, search],
+    queryFn: () => getTags(search, trainingType, identity),
+
+    // keepPreviousData: true,
+    select: (data) => data.data
+  });
 
 const addTag = async (tagName: string) =>
   await httpClient.post<ITag>(api.tags.list, { name: tagName });
 
 export const useAddTag = () => {
   const queryClient = useQueryClient();
-  return useMutation([api.tags.list], addTag, {
+  return useMutation({
+    mutationKey: [api.tags.list],
+    mutationFn: addTag,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.tags.list]);
+      queryClient.invalidateQueries({
+        queryKey: [api.tags.list]
+      });
     },
+
     onError: (err) => {
       return errorType(err);
-    },
+    }
   });
 };

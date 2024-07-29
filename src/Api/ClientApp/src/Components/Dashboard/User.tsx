@@ -1,21 +1,21 @@
 import {
-    Group,
-    Paper,
-    SimpleGrid,
-    Text,
-    useMantineColorScheme,
+  Group,
+  Paper,
+  SimpleGrid,
+  Text,
+  useMantineColorScheme,
 } from '@mantine/core';
 import {
-    IconArrowDownRight,
-    IconArrowUpRight,
-    IconCoin,
-    IconDiscount2,
-    IconReceipt2,
-    IconUserPlus,
+  IconArrowDownRight,
+  IconArrowUpRight,
+  IconCoin,
+  IconDiscount2,
+  IconReceipt2,
+  IconUserPlus,
 } from '@tabler/icons-react';
 import {
-    DashboardCourses,
-    DashboardStats,
+  DashboardCourses,
+  DashboardStats,
 } from '@utils/services/dashboardService';
 import { useTranslation } from 'react-i18next';
 import { StatsCard } from './StatsCard';

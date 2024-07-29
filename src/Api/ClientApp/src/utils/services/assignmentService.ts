@@ -48,14 +48,12 @@ const getAssignmentQuestion = (lessonId: string, search: string) => {
 };
 
 export const useAssignmentQuestion = (lessonId: string, search: string) => {
-  return useQuery(
-    [api.assignment.list(lessonId, search)],
-    () => getAssignmentQuestion(lessonId, search),
-    {
-      select: (data) => data.data,
-      enabled: lessonId ? true : false,
-    }
-  );
+  return useQuery({
+    queryKey: [api.assignment.list(lessonId, search)],
+    queryFn: () => getAssignmentQuestion(lessonId, search),
+    select: (data) => data.data,
+    enabled: lessonId ? true : false
+  });
 };
 
 const getSingleAssignment = (assignmentId: string) => {
@@ -64,14 +62,12 @@ const getSingleAssignment = (assignmentId: string) => {
   );
 };
 export const useSingleAssignment = (assignmentId: string) => {
-  return useQuery(
-    [api.assignment.listOne(assignmentId)],
-    () => getSingleAssignment(assignmentId),
-    {
-      select: (data) => data.data,
-      enabled: assignmentId ? true : false,
-    }
-  );
+  return useQuery({
+    queryKey: [api.assignment.listOne(assignmentId)],
+    queryFn: () => getSingleAssignment(assignmentId),
+    select: (data) => data.data,
+    enabled: assignmentId ? true : false
+  });
 };
 
 export interface ICreateAssignment {
@@ -98,10 +94,15 @@ const addAssignmentQuestion = ({ data }: { data: ICreateAssignment }) => {
 export const useAddAssignmentQuestion = (lessonId: string, search: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation([api.assignment.list], addAssignmentQuestion, {
+  return useMutation({
+    mutationKey: [api.assignment.list],
+    mutationFn: addAssignmentQuestion,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.assignment.list(lessonId, search)]);
-    },
+      queryClient.invalidateQueries({
+        queryKey: [api.assignment.list(lessonId, search)]
+      });
+    }
   });
 };
 
@@ -121,15 +122,16 @@ const editAssignmentQuestion = ({
 export const useEditAssignmentQuestion = (lessonId: string, search: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    [api.assignment.listOne(lessonId)],
-    editAssignmentQuestion,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.assignment.list(lessonId, search)]);
-      },
+  return useMutation({
+    mutationKey: [api.assignment.listOne(lessonId)],
+    mutationFn: editAssignmentQuestion,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.assignment.list(lessonId, search)]
+      });
     }
-  );
+  });
 };
 
 const deleteAssignmentQuestion = ({
@@ -146,15 +148,16 @@ export const useDeleteAssignmentQuestion = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    [api.assignment.listOne(lessonId)],
-    deleteAssignmentQuestion,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.assignment.list(lessonId, search)]);
-      },
+  return useMutation({
+    mutationKey: [api.assignment.listOne(lessonId)],
+    mutationFn: deleteAssignmentQuestion,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.assignment.list(lessonId, search)]
+      });
     }
-  );
+  });
 };
 
 export interface IAssignmentSubmission {
@@ -176,10 +179,15 @@ const postAssigmentSubmit = ({
 };
 export const useSubmitAssignment = ({ lessonId }: { lessonId: string }) => {
   const queryClient = useQueryClient();
-  return useMutation(['submitAssignment'], postAssigmentSubmit, {
+  return useMutation({
+    mutationKey: ['submitAssignment'],
+    mutationFn: postAssigmentSubmit,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.assignment.list(lessonId, '')]);
-    },
+      queryClient.invalidateQueries({
+        queryKey: [api.assignment.list(lessonId, '')]
+      });
+    }
   });
 };
 
@@ -207,14 +215,12 @@ const getAssignmentReview = (lessonId: string, userId: string) => {
 };
 
 export const useAssignmentReview = (lessonId: string, userId: string) => {
-  return useQuery(
-    [api.assignment.assignmentReview(lessonId, userId)],
-    () => getAssignmentReview(lessonId, userId),
-    {
-      select: (data) => data.data,
-      enabled: lessonId ? true : false,
-    }
-  );
+  return useQuery({
+    queryKey: [api.assignment.assignmentReview(lessonId, userId)],
+    queryFn: () => getAssignmentReview(lessonId, userId),
+    select: (data) => data.data,
+    enabled: lessonId ? true : false
+  });
 };
 
 export interface IAddAssignmentReview {
@@ -236,11 +242,16 @@ const addReview = ({
 
 export const useAddReview = (lessonId: string, userId: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.assignment.addReview(lessonId)], addReview, {
+  return useMutation({
+    mutationKey: [api.assignment.addReview(lessonId)],
+    mutationFn: addReview,
+
     onSuccess: () =>
-      queryClient.invalidateQueries([
-        api.assignment.assignmentReview(lessonId, userId),
-      ]),
+      queryClient.invalidateQueries({
+        queryKey: [
+          api.assignment.assignmentReview(lessonId, userId),
+        ]
+      })
   });
 };
 
@@ -258,11 +269,16 @@ const editReview = ({
 
 export const useEditReview = (lessonId: string, userId: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.assignment.addReview(lessonId)], editReview, {
+  return useMutation({
+    mutationKey: [api.assignment.addReview(lessonId)],
+    mutationFn: editReview,
+
     onSuccess: () =>
-      queryClient.invalidateQueries([
-        api.assignment.assignmentReview(lessonId, userId),
-      ]),
+      queryClient.invalidateQueries({
+        queryKey: [
+          api.assignment.assignmentReview(lessonId, userId),
+        ]
+      })
   });
 };
 
@@ -289,13 +305,11 @@ export const useGetAssignmentSummary = (
   courseIdentity: string,
   lessonId: string
 ) =>
-  useQuery(
-    [api.course.assignmentSummary(courseIdentity, lessonId)],
-    () => getAssignmentSummary(courseIdentity, lessonId),
-    {
-      select: (data) => data.data,
-    }
-  );
+  useQuery({
+    queryKey: [api.course.assignmentSummary(courseIdentity, lessonId)],
+    queryFn: () => getAssignmentSummary(courseIdentity, lessonId),
+    select: (data) => data.data
+  });
 
 export interface IAssignmentSubmission {
   student: {
@@ -326,10 +340,8 @@ export const useGetAssignmentSubmission = (
   lessonId: string,
   search: string
 ) =>
-  useQuery(
-    [api.course.assignmentSubmission(courseIdentity, lessonId, search)],
-    () => getAssignmentSubmission(courseIdentity, lessonId, search),
-    {
-      select: (data) => data.data,
-    }
-  );
+  useQuery({
+    queryKey: [api.course.assignmentSubmission(courseIdentity, lessonId, search)],
+    queryFn: () => getAssignmentSubmission(courseIdentity, lessonId, search),
+    select: (data) => data.data
+  });

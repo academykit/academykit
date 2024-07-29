@@ -1,23 +1,23 @@
 import UserShortProfile from '@components/UserShortProfile';
 import useAuth from '@hooks/useAuth';
 import {
-    ActionIcon,
-    Anchor,
-    Avatar,
-    Box,
-    Card,
-    Flex,
-    Group,
-    Image,
-    Menu,
-    Progress,
-    Text,
+  ActionIcon,
+  Anchor,
+  Avatar,
+  Box,
+  Card,
+  Flex,
+  Group,
+  Image,
+  Menu,
+  Progress,
+  Text,
 } from '@mantine/core';
 import {
-    IconChevronRight,
-    IconDotsVertical,
-    IconGraph,
-    IconSettings,
+  IconChevronRight,
+  IconDotsVertical,
+  IconGraph,
+  IconSettings,
 } from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import getCourseOgImageUrl from '@utils/getCourseOGImage';

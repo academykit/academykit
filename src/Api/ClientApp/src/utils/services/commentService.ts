@@ -17,8 +17,10 @@ const getComments = (courseId: string) => {
 };
 
 export const useGetComments = (courseId: string) => {
-  return useQuery([api.comments.list(courseId)], () => getComments(courseId), {
-    select: (data) => data.data,
+  return useQuery({
+    queryKey: [api.comments.list(courseId)],
+    queryFn: () => getComments(courseId),
+    select: (data) => data.data
   });
 };
 
@@ -32,9 +34,14 @@ const postComment = ({
 
 export const usePostComment = (courseId: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.comments.list(courseId)], postComment, {
+  return useMutation({
+    mutationKey: [api.comments.list(courseId)],
+    mutationFn: postComment,
+
     onSuccess: () =>
-      queryClient.invalidateQueries([api.comments.list(courseId)]),
+      queryClient.invalidateQueries({
+        queryKey: [api.comments.list(courseId)]
+      })
   });
 };
 
@@ -48,9 +55,14 @@ const deleteComment = ({
 
 export const useDeleteComment = (courseId: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.comments.list(courseId)], deleteComment, {
+  return useMutation({
+    mutationKey: [api.comments.list(courseId)],
+    mutationFn: deleteComment,
+
     onSuccess: () =>
-      queryClient.invalidateQueries([api.comments.list(courseId)]),
+      queryClient.invalidateQueries({
+        queryKey: [api.comments.list(courseId)]
+      })
   });
 };
 
@@ -66,9 +78,14 @@ const editComment = ({
 
 export const useEditComment = (courseId: string, commentId: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.comments.details(courseId, commentId)], editComment, {
+  return useMutation({
+    mutationKey: [api.comments.details(courseId, commentId)],
+    mutationFn: editComment,
+
     onSuccess: () =>
-      queryClient.invalidateQueries([api.comments.list(courseId)]),
+      queryClient.invalidateQueries({
+        queryKey: [api.comments.list(courseId)]
+      })
   });
 };
 
@@ -98,13 +115,11 @@ export const useGetCommentReplies = (
   commentId: string,
   replyCount: number
 ) => {
-  return useQuery(
-    [api.comments.getRepliesList(courseId, commentId, replyCount)],
-    () => getCommentReplies(courseId, commentId, replyCount),
-    {
-      select: (data) => data.data,
-    }
-  );
+  return useQuery({
+    queryKey: [api.comments.getRepliesList(courseId, commentId, replyCount)],
+    queryFn: () => getCommentReplies(courseId, commentId, replyCount),
+    select: (data) => data.data
+  });
 };
 
 const postCommentReply = ({
@@ -122,18 +137,21 @@ const postCommentReply = ({
 
 export const usePostCommentReply = (courseId: string, commentId: string) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    [api.comments.getRepliesList(courseId, commentId)],
-    postCommentReply,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([
+  return useMutation({
+    mutationKey: [api.comments.getRepliesList(courseId, commentId)],
+    mutationFn: postCommentReply,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [
           api.comments.getRepliesList(courseId, commentId),
-        ]);
-        queryClient.invalidateQueries([api.comments.list(courseId)]);
-      },
+        ]
+      });
+      queryClient.invalidateQueries({
+        queryKey: [api.comments.list(courseId)]
+      });
     }
-  );
+  });
 };
 
 const deleteCommentReply = ({
@@ -149,13 +167,20 @@ const deleteCommentReply = ({
 
 export const useDeleteCommentReply = (courseId: string, commentId: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.comments.repliesDetails], deleteCommentReply, {
+  return useMutation({
+    mutationKey: [api.comments.repliesDetails],
+    mutationFn: deleteCommentReply,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([
-        api.comments.getRepliesList(courseId, commentId),
-      ]);
-      queryClient.invalidateQueries([api.comments.list(courseId)]);
-    },
+      queryClient.invalidateQueries({
+        queryKey: [
+          api.comments.getRepliesList(courseId, commentId),
+        ]
+      });
+      queryClient.invalidateQueries({
+        queryKey: [api.comments.list(courseId)]
+      });
+    }
   });
 };
 
@@ -176,11 +201,16 @@ const editCommentReply = ({
 
 export const useEditCommentReply = (courseId: string, commentId: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.comments.repliesDetails], editCommentReply, {
+  return useMutation({
+    mutationKey: [api.comments.repliesDetails],
+    mutationFn: editCommentReply,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([
-        api.comments.getRepliesList(courseId, commentId),
-      ]);
-    },
+      queryClient.invalidateQueries({
+        queryKey: [
+          api.comments.getRepliesList(courseId, commentId),
+        ]
+      });
+    }
   });
 };

@@ -41,12 +41,14 @@ const ExamDetails = ({
 
   useEffect(() => {
     if (invalidate) {
-      queryClient.invalidateQueries([
-        api.lesson.courseLesson(
-          id as string,
-          lessonId === '1' ? undefined : lessonId
-        ),
-      ]);
+      queryClient.invalidateQueries({
+        queryKey: [
+          api.lesson.courseLesson(
+            id as string,
+            lessonId === '1' ? undefined : lessonId
+          ),
+        ]
+      });
 
       window.history.pushState(
         { fromJs: true },

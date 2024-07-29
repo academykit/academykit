@@ -1,12 +1,12 @@
 import {
-    ActionIcon,
-    Box,
-    Card,
-    Container,
-    Flex,
-    Image,
-    Text,
-    Tooltip,
+  ActionIcon,
+  Box,
+  Card,
+  Container,
+  Flex,
+  Image,
+  Text,
+  Tooltip,
 } from '@mantine/core';
 import { IconDownload, IconEye } from '@tabler/icons-react';
 import { DATE_FORMAT } from '@utils/constants';

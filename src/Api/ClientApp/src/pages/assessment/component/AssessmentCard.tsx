@@ -1,31 +1,31 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import UserShortProfile from '@components/UserShortProfile';
 import {
-    Anchor,
-    Badge,
-    Button,
-    Card,
-    Flex,
-    Group,
-    List,
-    Menu,
-    Text,
+  Anchor,
+  Badge,
+  Button,
+  Card,
+  Flex,
+  Group,
+  List,
+  Menu,
+  Text,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import {
-    IconCheck,
-    IconChevronRight,
-    IconDotsVertical,
-    IconEdit,
-    IconTrash,
-    IconX,
+  IconCheck,
+  IconChevronRight,
+  IconDotsVertical,
+  IconEdit,
+  IconTrash,
+  IconX,
 } from '@tabler/icons-react';
 import { AssessmentStatus, UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import {
-    IAssessmentResponse,
-    useDeleteAssessment,
+  IAssessmentResponse,
+  useDeleteAssessment,
 } from '@utils/services/assessmentService';
 import { t } from 'i18next';
 import { Link, useNavigate } from 'react-router-dom';

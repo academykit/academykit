@@ -219,7 +219,7 @@ const Create = () => {
   };
 
   return (
-    <Container fluid>
+    (<Container fluid>
       <FormProvider form={form}>
         <Card mt={20}>
           <form onSubmit={form.onSubmit(onSubmit)}>
@@ -249,12 +249,12 @@ const Create = () => {
               //   label={t('tags')}
               //   placeholder={t('select_tags') as string}
               // />
-              <TagMultiSelectCreatable
+              (<TagMultiSelectCreatable
                 data={tagsLists ?? []}
                 mutateAsync={mutateAsync}
                 form={form}
                 size="lg"
-              />
+              />)
             ) : (
               <Loader />
             )}
@@ -372,7 +372,7 @@ const Create = () => {
           </form>
         </Card>
       </FormProvider>
-    </Container>
+    </Container>)
   );
 };
 
