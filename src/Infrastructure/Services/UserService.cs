@@ -745,7 +745,10 @@ namespace AcademyKit.Infrastructure.Services
             var user = await GetUserByEmailAsync(model.OldEmail).ConfigureAwait(false);
             if (user == null)
             {
-                _logger.LogWarning("User with email : {email} not found.", model.OldEmail);
+                _logger.LogWarning(
+                    "User with email : {email} not found.",
+                    model.OldEmail.SanitizeForLogger()
+                );
                 throw new ForbiddenException(
                     _localizer.GetString("UserNotFoundWithEmail") + " " + model.OldEmail
                 );
@@ -759,7 +762,7 @@ namespace AcademyKit.Infrastructure.Services
             {
                 _logger.LogWarning(
                     "User with new email : {email} found in the system.",
-                    model.NewEmail
+                    model.NewEmail.SanitizeForLogger()
                 );
                 throw new ForbiddenException(
                     model.NewEmail + " " + _localizer.GetString("AlreadyExistInAnotherAccount")
@@ -1541,7 +1544,7 @@ namespace AcademyKit.Infrastructure.Services
                 {
                     _logger.LogWarning(
                         "Training with identity : {identity} not found for user with id : {currentUserId}.",
-                        courseId,
+                        courseId.SanitizeForLogger(),
                         userId
                     );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));

@@ -9,6 +9,7 @@
     using AcademyKit.Domain.Entities;
     using AcademyKit.Domain.Enums;
     using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Helpers;
     using AcademyKit.Infrastructure.Localization;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
@@ -267,7 +268,7 @@
                 {
                     _logger.LogWarning(
                         "Training with identity: {identity} not found for user with :{id}.",
-                        model.CourseIdentity,
+                        model.CourseIdentity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
