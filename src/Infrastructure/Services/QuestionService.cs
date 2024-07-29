@@ -8,6 +8,8 @@
     using AcademyKit.Application.Common.Models.ResponseModels;
     using AcademyKit.Domain.Entities;
     using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Helpers;
+
     using AcademyKit.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
@@ -139,7 +141,7 @@
                 {
                     _logger.LogWarning(
                         "Question pool not found with identity: {identity}.",
-                        identity
+                        identity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
                 }
@@ -281,7 +283,7 @@
                 {
                     _logger.LogWarning(
                         "Question pool not found with identity: {poolIdentity}.",
-                        poolIdentity
+                        poolIdentity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
                 }
@@ -459,7 +461,7 @@
                 {
                     _logger.LogWarning(
                         "Question pool not found with identity: {poolIdentity}.",
-                        poolIdentity
+                        poolIdentity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(_localizer.GetString("QuestionPoolNotFound"));
                 }

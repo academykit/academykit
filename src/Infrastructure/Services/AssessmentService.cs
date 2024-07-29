@@ -335,7 +335,7 @@ namespace AcademyKit.Infrastructure.Services
                         "Training with id: {id} cannot be changed from {status} status to {changeStatus} status.",
                         existingAssessment.Id,
                         existingAssessment.AssessmentStatus,
-                        model.Status
+                        model.Status.ToString().SanitizeForLogger()
                     );
                     throw new ForbiddenException(
                         _localizer.GetString("TrainingStatusCannotChanged")
@@ -357,7 +357,7 @@ namespace AcademyKit.Infrastructure.Services
                         currentUserId,
                         existingAssessment.Id,
                         existingAssessment.AssessmentStatus,
-                        model.Status
+                        model.Status.ToString().SanitizeForLogger()
                     );
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
@@ -436,7 +436,7 @@ namespace AcademyKit.Infrastructure.Services
                     {
                         _logger.LogWarning(
                             "DeleteAssessmentAsync(): Assessment with identity : {AssessmentIdentity} was not found for user with id : {userId}",
-                            assessmentIdentity,
+                            assessmentIdentity.SanitizeForLogger(),
                             currentUserId
                         );
                         throw new EntityNotFoundException(
@@ -465,7 +465,7 @@ namespace AcademyKit.Infrastructure.Services
                     {
                         _logger.LogWarning(
                             "DeleteAssessmentAsync(): Assessment with identity : {AssessmentIdentity} was not found for user with id : {userId}",
-                            assessmentIdentity,
+                            assessmentIdentity.SanitizeForLogger(),
                             currentUserId
                         );
                         throw new EntityNotFoundException(

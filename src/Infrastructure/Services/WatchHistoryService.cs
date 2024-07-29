@@ -130,7 +130,7 @@
                 {
                     _logger.LogWarning(
                         "Training with identity: {identity} not found for user with :{id}.",
-                        model.CourseIdentity,
+                        model.CourseIdentity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
@@ -150,7 +150,7 @@
                 {
                     _logger.LogWarning(
                         "Lesson with identity: {identity} not found for user with :{id} and training with id : {courseId}.",
-                        model.LessonIdentity,
+                        model.LessonIdentity.SanitizeForLogger(),
                         currentUserId,
                         course.Id
                     );
@@ -288,7 +288,7 @@
                 {
                     _logger.LogWarning(
                         "Lesson with identity: {identity} not found for user with :{id} and training with id : {courseId}.",
-                        model.LessonIdentity,
+                        model.LessonIdentity.SanitizeForLogger(),
                         currentUserId,
                         course.Id
                     );

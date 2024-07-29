@@ -494,7 +494,7 @@
                         "Training with id: {id} cannot be changed from {status} status to {changeStatus} status.",
                         course.Id,
                         course.Status,
-                        model.Status
+                        model.Status.ToString().SanitizeForLogger()
                     );
                     throw new ForbiddenException(
                         _localizer.GetString("TrainingStatusCannotChanged")
@@ -516,7 +516,7 @@
                         currentUserId,
                         course.Id,
                         course.Status,
-                        model.Status
+                        model.Status.ToString().SanitizeForLogger()
                     );
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
@@ -683,7 +683,7 @@
             {
                 _logger.LogWarning(
                     "Training with identity: {identity} not found for user with id: {userId}.",
-                    identity,
+                    identity.SanitizeForLogger(),
                     currentUserId
                 );
                 throw new ForbiddenException(_localizer.GetString("TrainingNotFound"));
@@ -820,7 +820,7 @@
                 {
                     _logger.LogWarning(
                         "Training with identity : {identity} not found for user with id : {currentUserId}.",
-                        identity,
+                        identity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
@@ -830,7 +830,7 @@
                 {
                     _logger.LogWarning(
                         "Training with identity : {identity} is in {status} status. So, it cannot be removed.",
-                        identity,
+                        identity.SanitizeForLogger(),
                         course.Status
                     );
                     throw new EntityNotFoundException(
@@ -842,7 +842,7 @@
                 {
                     _logger.LogWarning(
                         "Training with identity : {identity} contains enrollments.",
-                        identity
+                        identity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(
                         _localizer.GetString("EnrollmentFoundInTraining")
@@ -1003,7 +1003,7 @@
                 {
                     _logger.LogWarning(
                         "Training with identity : {identity} not found for user with id : {currentUserId}.",
-                        identity,
+                        identity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
@@ -3358,7 +3358,7 @@
                     .ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Training with identity: {identity} not found.", identity);
+                    _logger.LogWarning("Training with identity: {identity} not found.", identity.SanitizeForLogger());
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
@@ -3679,7 +3679,7 @@
                     .ConfigureAwait(false);
                 if (course == null)
                 {
-                    _logger.LogWarning("Training with identity: {identity} not found.", identity);
+                    _logger.LogWarning("Training with identity: {identity} not found.", identity.SanitizeForLogger());
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
                 }
 
@@ -3891,7 +3891,7 @@
                 .ConfigureAwait(false);
             if (course == null)
             {
-                _logger.LogWarning("Training with identity: {identity} not found.", identity);
+                _logger.LogWarning("Training with identity: {identity} not found.", identity.SanitizeForLogger());
                 throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
             }
 

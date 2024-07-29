@@ -532,7 +532,7 @@
                     .ConfigureAwait(false);
                 if (group == null)
                 {
-                    _logger.LogWarning("Group not found with identity : {identity}.", identity);
+                    _logger.LogWarning("Group not found with identity : {identity}.", identity.SanitizeForLogger());
                     throw new EntityNotFoundException(_localizer.GetString("GroupNotFound"));
                 }
 
@@ -635,7 +635,7 @@
                 {
                     _logger.LogWarning(
                         "Group with identity: {identity} not found.",
-                        model.GroupIdentity
+                        model.GroupIdentity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(_localizer.GetString("GroupNotFound"));
                 }
@@ -716,7 +716,7 @@
                 {
                     _logger.LogWarning(
                         "Group with identity : {identity} not found.",
-                        groupIdentity
+                        groupIdentity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(_localizer.GetString("GroupNotFound"));
                 }

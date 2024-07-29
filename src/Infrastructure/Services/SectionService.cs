@@ -212,7 +212,7 @@
                 {
                     _logger.LogWarning(
                         "ReorderAsync(): Training with identity : {identity} not found for user with id :{userId}.",
-                        identity,
+                        identity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
