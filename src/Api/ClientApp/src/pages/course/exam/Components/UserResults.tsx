@@ -7,7 +7,7 @@ import {
   Title,
   useMantineTheme,
 } from '@mantine/core';
-import { IconEye } from '@tabler/icons';
+import { IconEye } from '@tabler/icons-react';
 import { DATE_FORMAT } from '@utils/constants';
 import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';

@@ -21,7 +21,7 @@ import {
 import { useForm, yupResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconPencil, IconTrash } from '@tabler/icons';
+import { IconPencil, IconTrash } from '@tabler/icons-react';
 import {
   useDeleteDepartmentSetting,
   useDepartmentSetting,

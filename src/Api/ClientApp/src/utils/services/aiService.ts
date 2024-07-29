@@ -18,7 +18,9 @@ const getTrainingSuggestion = async () =>
   await httpClient.get<ITrainingSuggest>(api.ai.trainingSuggest);
 
 export const useTrainingSuggestion = (enabled?: boolean) => {
-  return useQuery([api.ai.trainingSuggest], () => getTrainingSuggestion(), {
+  return useQuery({
+    queryKey: [api.ai.trainingSuggest],
+    queryFn: () => getTrainingSuggestion(),
     select: (data) => data.data,
     enabled: enabled ?? true,
   });
@@ -28,7 +30,9 @@ const getAiMaster = async () =>
   await httpClient.get<IMasterSetup>(api.ai.aiMasterSetup);
 
 export const useAIMaster = () => {
-  return useQuery([api.ai.aiMasterSetup], () => getAiMaster(), {
+  return useQuery({
+    queryKey: [api.ai.aiMasterSetup],
+    queryFn: () => getAiMaster(),
     select: (data) => data.data,
   });
 };
@@ -38,9 +42,14 @@ const updateAISetup = async ({ data }: { data: IMasterSetup }) =>
 
 export const useUpdateAISetup = () => {
   const queryClient = useQueryClient();
-  return useMutation(['update' + api.ai.aiMasterSetup], updateAISetup, {
+  return useMutation({
+    mutationKey: ['update' + api.ai.aiMasterSetup],
+    mutationFn: updateAISetup,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.ai.aiMasterSetup]);
+      queryClient.invalidateQueries({
+        queryKey: [api.ai.aiMasterSetup],
+      });
     },
   });
 };

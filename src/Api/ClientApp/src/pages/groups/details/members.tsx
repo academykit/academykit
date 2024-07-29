@@ -19,7 +19,7 @@ import {
 } from '@mantine/core';
 import { useDisclosure, useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconPlus, IconTrash } from '@tabler/icons';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import {

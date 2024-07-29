@@ -9,7 +9,7 @@ import {
   IconDragDrop,
   IconPencilMinus,
   IconTrashX,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { CourseStatus } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import {

@@ -15,8 +15,7 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconSquareRoundedX } from '@tabler/icons';
-import { IconCircleCheck } from '@tabler/icons-react';
+import { IconCircleCheck, IconSquareRoundedX } from '@tabler/icons-react';
 import {
   ILessonResultQuestionOption,
   ILessonStartQuestion,

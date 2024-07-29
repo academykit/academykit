@@ -14,7 +14,7 @@ import {
 import { DatePickerInput, TimeInput } from '@mantine/dates';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { IconCalendar } from '@tabler/icons';
+import { IconCalendar } from '@tabler/icons-react';
 import { LessonType } from '@utils/enums';
 import { getDateTime } from '@utils/getDateTime';
 import errorType from '@utils/services/axiosError';

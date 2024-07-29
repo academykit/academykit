@@ -107,26 +107,33 @@ const getUsers = (search: string) => {
 };
 
 export const useUsers = (search: string) =>
-  useQuery(
-    ['user-list', search],
-    () => {
+  useQuery({
+    queryKey: ['user-list', search],
+
+    queryFn: () => {
       return getUsers(search);
     },
-    {
-      enabled: true,
-      select: (data) => data.data,
-    }
-  );
+
+    enabled: true,
+    select: (data) => data.data,
+  });
 
 const updateUser = ({ data, id }: { data: any; id: string }) =>
   httpClient.put(api.auth.getUser(id), data);
 export const useUpdateUser = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation(['update' + api.auth.getUser], updateUser, {
-    onSuccess: () => {
-      queryClient.invalidateQueries([api.auth.me]);
+  return useMutation({
+    mutationKey: ['update' + api.auth.getUser],
+    mutationFn: updateUser,
 
-      queryClient.invalidateQueries([api.auth.getUser(id)]);
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.auth.me],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [api.auth.getUser(id)],
+      });
     },
   });
 };
@@ -141,9 +148,14 @@ const updateUserStatus = async ({
 
 export const useUpdateUserStatus = (search: string) => {
   const queryClient = useQueryClient();
-  return useMutation(['user-list', search], updateUserStatus, {
+  return useMutation({
+    mutationKey: ['user-list', search],
+    mutationFn: updateUserStatus,
+
     onSuccess: () => {
-      queryClient.invalidateQueries(['user-list', search]);
+      queryClient.invalidateQueries({
+        queryKey: ['user-list', search],
+      });
     },
   });
 };
@@ -153,9 +165,14 @@ const addUser = (data: IAddUser) =>
 
 export const useAddUser = (search: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.adminUser.addUsers], addUser, {
+  return useMutation({
+    mutationKey: [api.adminUser.addUsers],
+    mutationFn: addUser,
+
     onSuccess: () => {
-      queryClient.invalidateQueries(['user-list', search]);
+      queryClient.invalidateQueries({
+        queryKey: ['user-list', search],
+      });
     },
   });
 };
@@ -165,36 +182,46 @@ const editUser = async ({ id, data }: { id: string; data: IAddUser }) =>
 
 export const useEditUser = (id: string, search: string) => {
   const queryClient = useQueryClient();
-  return useMutation(['update' + api.adminUser.editUsers(id)], editUser, {
+  return useMutation({
+    mutationKey: ['update' + api.adminUser.editUsers(id)],
+    mutationFn: editUser,
+
     onSuccess: () => {
-      queryClient.invalidateQueries(['user-list', search]);
+      queryClient.invalidateQueries({
+        queryKey: ['user-list', search],
+      });
     },
   });
 };
 
 export const useLevelSetting = () => {
-  return useQuery(
-    [api.adminUser.getLevelSetting],
-    () => {
+  return useQuery({
+    queryKey: [api.adminUser.getLevelSetting],
+
+    queryFn: () => {
       return httpClient.get<ILevel[]>(api.adminUser.getLevelSetting);
     },
 
-    { staleTime: Infinity, cacheTime: Infinity, select: (data) => data.data }
-  );
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    select: (data) => data.data,
+  });
 };
 export const usePostLevelSetting = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['post' + api.adminUser.postLevelSetting],
-    (data: { name: string }) => {
+  return useMutation({
+    mutationKey: ['post' + api.adminUser.postLevelSetting],
+
+    mutationFn: (data: { name: string }) => {
       return httpClient.post<ILevel>(api.adminUser.postLevelSetting, data);
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getLevelSetting]);
-      },
-    }
-  );
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getLevelSetting],
+      });
+    },
+  });
 };
 
 const updateLevelSetting = async ({
@@ -209,15 +236,16 @@ const updateLevelSetting = async ({
 
 export const useUpdateLevelSetting = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['update' + api.adminUser.getLevelSetting],
-    updateLevelSetting,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getLevelSetting]);
-      },
-    }
-  );
+  return useMutation({
+    mutationKey: ['update' + api.adminUser.getLevelSetting],
+    mutationFn: updateLevelSetting,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getLevelSetting],
+      });
+    },
+  });
 };
 
 const deleteLevelSetting = async (id: string) => {
@@ -225,37 +253,40 @@ const deleteLevelSetting = async (id: string) => {
 };
 export const useDeleteLevelSetting = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    [api.adminUser.deleteLevelSetting],
-    deleteLevelSetting,
+  return useMutation({
+    mutationKey: [api.adminUser.deleteLevelSetting],
+    mutationFn: deleteLevelSetting,
 
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getLevelSetting]);
-      },
-      onError: (err) => {
-        return errorType(err);
-      },
-    }
-  );
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getLevelSetting],
+      });
+    },
+
+    onError: (err) => {
+      return errorType(err);
+    },
+  });
 };
 
 export const updateDepartmentStatus = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['update' + api.adminUser.updateDepartmentSetting(id)],
-    (data: { name: string }) => {
+  return useMutation({
+    mutationKey: ['update' + api.adminUser.updateDepartmentSetting(id)],
+
+    mutationFn: (data: { name: string }) => {
       return httpClient.put<ILevel>(
         api.adminUser.updateDepartmentSetting(id),
         data
       );
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getLevelSetting]);
-      },
-    }
-  );
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getLevelSetting],
+      });
+    },
+  });
 };
 
 const getDepartment = async (search: string) =>
@@ -264,32 +295,32 @@ const getDepartment = async (search: string) =>
   );
 
 export const useDepartmentSetting = (search: string) => {
-  return useQuery(
-    [api.adminUser.getDepartmentSettings, search],
-    () => getDepartment(search),
-    {
-      staleTime: Infinity,
-      cacheTime: Infinity,
-      select: (data) => data.data,
-    }
-  );
+  return useQuery({
+    queryKey: [api.adminUser.getDepartmentSettings, search],
+    queryFn: () => getDepartment(search),
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    select: (data) => data.data,
+  });
 };
 export const usePostDepartmentSetting = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['post' + api.adminUser.getDepartmentSettings],
-    (data: { name: string; isActive: boolean }) => {
+  return useMutation({
+    mutationKey: ['post' + api.adminUser.getDepartmentSettings],
+
+    mutationFn: (data: { name: string; isActive: boolean }) => {
       return httpClient.post<IDepartmentSetting>(
         api.adminUser.getDepartmentSettings,
         data
       );
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getDepartmentSettings]);
-      },
-    }
-  );
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getDepartmentSettings],
+      });
+    },
+  });
 };
 
 const deleteDepartmentSetting = async (id: string) => {
@@ -298,19 +329,20 @@ const deleteDepartmentSetting = async (id: string) => {
 
 export const useDeleteDepartmentSetting = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    [api.adminUser.deleteDepartmentSetting],
-    deleteDepartmentSetting,
+  return useMutation({
+    mutationKey: [api.adminUser.deleteDepartmentSetting],
+    mutationFn: deleteDepartmentSetting,
 
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getDepartmentSettings]);
-      },
-      onError: (err) => {
-        return errorType(err);
-      },
-    }
-  );
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getDepartmentSettings],
+      });
+    },
+
+    onError: (err) => {
+      return errorType(err);
+    },
+  });
 };
 
 export const useUpdateDepartmentSettingStatus = (
@@ -318,17 +350,19 @@ export const useUpdateDepartmentSettingStatus = (
   status: boolean
 ) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['patch' + api.adminUser.updateDepartmentStatus(id, status)],
-    () => {
+  return useMutation({
+    mutationKey: ['patch' + api.adminUser.updateDepartmentStatus(id, status)],
+
+    mutationFn: () => {
       return httpClient.patch(api.adminUser.updateDepartmentStatus(id, status));
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getDepartmentSettings]);
-      },
-    }
-  );
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getDepartmentSettings],
+      });
+    },
+  });
 };
 //start
 
@@ -346,33 +380,38 @@ const updateDepartmentSetting = async ({
 
 export const useUpdateDepartmentSetting = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['update' + api.adminUser.getDepartmentSettings],
-    updateDepartmentSetting,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getDepartmentSettings]);
-      },
-    }
-  );
+  return useMutation({
+    mutationKey: ['update' + api.adminUser.getDepartmentSettings],
+    mutationFn: updateDepartmentSetting,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getDepartmentSettings],
+      });
+    },
+  });
 };
 //end
 
 export const useZoomSetting = () => {
-  return useQuery(
-    [api.adminUser.getZoomSettings],
-    () => {
+  return useQuery({
+    queryKey: [api.adminUser.getZoomSettings],
+
+    queryFn: () => {
       return httpClient.get<IZoomSetting>(api.adminUser.getZoomSettings);
     },
-    { staleTime: Infinity, cacheTime: Infinity }
-  );
+
+    staleTime: Infinity,
+    cacheTime: Infinity,
+  });
 };
 
 export const useUpdateZoomSetting = (id: string | undefined) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['update' + api.adminUser.getZoomSettings],
-    (data: {
+  return useMutation({
+    mutationKey: ['update' + api.adminUser.getZoomSettings],
+
+    mutationFn: (data: {
       oAuthAccountId: string;
       oAuthClientId: string;
       oAuthClientSecret: string;
@@ -385,85 +424,103 @@ export const useUpdateZoomSetting = (id: string | undefined) => {
         data
       );
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getZoomSettings]);
-      },
-    }
-  );
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getZoomSettings],
+      });
+    },
+  });
 };
 
 export const useSMTPSetting = () => {
-  return useQuery(
-    [api.adminUser.getSMTPSettings],
-    () => {
+  return useQuery({
+    queryKey: [api.adminUser.getSMTPSettings],
+
+    queryFn: () => {
       return httpClient.get<ISMTPSetting>(api.adminUser.getSMTPSettings);
     },
-    { staleTime: Infinity, cacheTime: Infinity }
-  );
+
+    staleTime: Infinity,
+    cacheTime: Infinity,
+  });
 };
 
 export const useUpdateSMTPSetting = (id: string | undefined) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['update' + api.adminUser.getSMTPSettings],
-    (data: ISMTPSettingUpdate) => {
+  return useMutation({
+    mutationKey: ['update' + api.adminUser.getSMTPSettings],
+
+    mutationFn: (data: ISMTPSettingUpdate) => {
       return httpClient.put<ISMTPSetting>(
         api.adminUser.updateSMTPSettings(id),
         data
       );
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getZoomSettings]);
-      },
-    }
-  );
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getZoomSettings],
+      });
+    },
+  });
 };
 
 // General Settings
 export const useGeneralSetting = () => {
-  return useQuery(
-    [api.adminUser.getGeneralSettings],
-    () => {
+  return useQuery({
+    queryKey: [api.adminUser.getGeneralSettings],
+
+    queryFn: () => {
       return httpClient.get<IGeneralSetting>(api.adminUser.getGeneralSettings);
     },
-    { staleTime: Infinity, cacheTime: Infinity }
-  );
+
+    staleTime: Infinity,
+    cacheTime: Infinity,
+  });
 };
 // company settings
 export const useCompanySetting = () => {
-  return useQuery([api.adminUser.getCompanySettings], () => {
-    return httpClient.get<ICompanySetting>(api.adminUser.getCompanySettings);
+  return useQuery({
+    queryKey: [api.adminUser.getCompanySettings],
+
+    queryFn: () => {
+      return httpClient.get<ICompanySetting>(api.adminUser.getCompanySettings);
+    },
   });
 };
 
 export const useUpdateGeneralSetting = (id: string | undefined) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['update' + api.adminUser.getGeneralSettings],
-    (data: IGeneralSettingUpdate) => {
+  return useMutation({
+    mutationKey: ['update' + api.adminUser.getGeneralSettings],
+
+    mutationFn: (data: IGeneralSettingUpdate) => {
       return httpClient.put(api.adminUser.updateGeneralSettings(id), data);
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getGeneralSettings]);
-      },
-    }
-  );
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getGeneralSettings],
+      });
+    },
+  });
 };
 
 //Zoom License
 export const useZoomLicense = () => {
-  return useQuery(
-    [api.adminUser.getZoomLicense],
-    () => {
+  return useQuery({
+    queryKey: [api.adminUser.getZoomLicense],
+
+    queryFn: () => {
       return httpClient.get<IPaginated<IZoomLicense<IUser>>>(
         api.adminUser.getZoomLicense
       );
     },
-    { staleTime: Infinity, cacheTime: Infinity }
-  );
+
+    staleTime: Infinity,
+    cacheTime: Infinity,
+  });
 };
 
 const getActiveZoomLicense = (
@@ -485,14 +542,17 @@ export const useActiveZoomLicense = (
   duration: number,
   lessonIdentity?: string
 ) => {
-  return useQuery(
-    ['active' + api.adminUser.getZoomLicense, startDateTime, duration],
-    () => getActiveZoomLicense(startDateTime, duration, lessonIdentity),
-    {
-      select: (data) => data,
-      enabled: !!startDateTime && !!duration,
-    }
-  );
+  return useQuery({
+    queryKey: [
+      'active' + api.adminUser.getZoomLicense,
+      startDateTime,
+      duration,
+    ],
+    queryFn: () =>
+      getActiveZoomLicense(startDateTime, duration, lessonIdentity),
+    select: (data) => data,
+    enabled: !!startDateTime && !!duration,
+  });
 };
 
 export const updateZoomLicenseStatus = async ({
@@ -513,19 +573,20 @@ const deleteZoomLicense = async (id: string) => {
 
 export const useDeleteZoomLicense = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    [api.adminUser.deleteZoomLicense],
-    deleteZoomLicense,
+  return useMutation({
+    mutationKey: [api.adminUser.deleteZoomLicense],
+    mutationFn: deleteZoomLicense,
 
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getZoomLicense]);
-      },
-      onError: (err) => {
-        return errorType(err);
-      },
-    }
-  );
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getZoomLicense],
+      });
+    },
+
+    onError: (err) => {
+      return errorType(err);
+    },
+  });
 };
 
 const updateZoomLicense = ({ id, data }: { id: string; data: any }) =>
@@ -533,15 +594,16 @@ const updateZoomLicense = ({ id, data }: { id: string; data: any }) =>
 
 export const useUpdateZoomLicense = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['update' + api.adminUser.getZoomLicense],
-    updateZoomLicense,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getZoomLicense]);
-      },
-    }
-  );
+  return useMutation({
+    mutationKey: ['update' + api.adminUser.getZoomLicense],
+    mutationFn: updateZoomLicense,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getZoomLicense],
+      });
+    },
+  });
 };
 
 const addZoomLicense = (data: {
@@ -551,10 +613,16 @@ const addZoomLicense = (data: {
 }) => httpClient.post(api.adminUser.addZoomLicense, data);
 export const useAddZoomLicense = () => {
   const queryClient = useQueryClient();
-  return useMutation([api.adminUser.addZoomLicense], addZoomLicense, {
+  return useMutation({
+    mutationKey: [api.adminUser.addZoomLicense],
+    mutationFn: addZoomLicense,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.adminUser.getZoomLicense]);
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getZoomLicense],
+      });
     },
+
     onError: () => {},
   });
 };
@@ -576,25 +644,25 @@ const getFileStorageSetting = async () => {
 };
 
 export const useGetFileStorageSetting = () => {
-  return useQuery(
-    [api.fileStorage.getFileStorageSetting],
-    () => getFileStorageSetting(),
-    {
-      select: (data) => {
-        return data.data;
-      },
-      // retry: 0,
-      onError: (err) => {
-        if (axios.isAxiosError(err)) {
-          if (err.response?.status === 403) {
-            return null;
-          }
+  return useQuery({
+    queryKey: [api.fileStorage.getFileStorageSetting],
+    queryFn: () => getFileStorageSetting(),
+
+    select: (data) => {
+      return data.data;
+    },
+
+    // retry: 0,
+    // refetchOnMount: false,
+    // refetchOnWindowFocus: false,
+    onError: (err) => {
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 403) {
+          return null;
         }
-      },
-      // refetchOnMount: false,
-      // refetchOnWindowFocus: false,
-    }
-  );
+      }
+    },
+  });
 };
 
 //putfilestorage
@@ -607,25 +675,30 @@ const updateFileStorage = async (data: IFileStorage[]) =>
 
 export const useUpdateFileStorage = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    [api.fileStorage.updateFileStorageSetting],
-    updateFileStorage,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.fileStorage.getFileStorageSetting]);
-      },
-      onError: (err) => {
-        return errorType(err);
-      },
-    }
-  );
+  return useMutation({
+    mutationKey: [api.fileStorage.updateFileStorageSetting],
+    mutationFn: updateFileStorage,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.fileStorage.getFileStorageSetting],
+      });
+    },
+
+    onError: (err) => {
+      return errorType(err);
+    },
+  });
 };
 
 // ------------Resend Email-------------------
 const resendEmail = async (id: string) =>
   await httpClient.patch(api.auth.resendEmail(id));
 export const useResendEmail = (id: string) =>
-  useMutation([api.auth.resendEmail(id)], resendEmail);
+  useMutation({
+    mutationKey: [api.auth.resendEmail(id)],
+    mutationFn: resendEmail,
+  });
 
 //----------------------Get Trainers-------------------
 
@@ -644,14 +717,12 @@ export const useGetTrainers = (
   lessonType?: number,
   id?: string
 ) =>
-  useQuery(
-    [api.adminUser.getTrainer(search, lessonType, id)],
-    () => getTrainers(search, lessonType, id),
-    {
-      enabled: true,
-      select: (data) => data.data,
-    }
-  );
+  useQuery({
+    queryKey: [api.adminUser.getTrainer(search, lessonType, id)],
+    queryFn: () => getTrainers(search, lessonType, id),
+    enabled: true,
+    select: (data) => data.data,
+  });
 
 //----------------------Get server logs-------------------
 
@@ -668,9 +739,12 @@ const getLogs = async (query: string) => {
 };
 
 export const useGetServerLogs = (query: string) => {
-  return useQuery(['logs' + query], () => getLogs(query), {
-    select: (data) => data.data,
+  return useQuery({
+    queryKey: ['logs' + query],
+    queryFn: () => getLogs(query),
+
     //enabled: !!startDateTime && !!duration,
+    select: (data) => data.data,
   });
 };
 
@@ -679,7 +753,9 @@ const getSingleLog = async (id: string) => {
 };
 
 export const useGetSingleLog = (id: string) => {
-  return useQuery(['log' + id], () => getSingleLog(id), {
+  return useQuery({
+    queryKey: ['log' + id],
+    queryFn: () => getSingleLog(id),
     select: (data) => data.data,
   });
 };
@@ -692,15 +768,13 @@ const getMailNotification = async (search: string) =>
   );
 
 export const useMailNotification = (search: string) => {
-  return useQuery(
-    [api.adminUser.getMailNotification, search],
-    () => getMailNotification(search),
-    {
-      staleTime: Infinity,
-      cacheTime: Infinity,
-      select: (data) => data.data,
-    }
-  );
+  return useQuery({
+    queryKey: [api.adminUser.getMailNotification, search],
+    queryFn: () => getMailNotification(search),
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    select: (data) => data.data,
+  });
 };
 
 type IPostMailNotification = Omit<IMailNotification, 'id'>;
@@ -714,49 +788,50 @@ const updateMailNotificationDetail = ({
 
 export const useUpdateMailNotification = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['update' + api.adminUser.getMailNotification],
-    updateMailNotificationDetail,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getMailNotification]);
-      },
-    }
-  );
+  return useMutation({
+    mutationKey: ['update' + api.adminUser.getMailNotification],
+    mutationFn: updateMailNotificationDetail,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getMailNotification],
+      });
+    },
+  });
 };
 
 export const usePostMailNotification = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['post' + api.adminUser.getMailNotification],
-    (data: IPostMailNotification) => {
+  return useMutation({
+    mutationKey: ['post' + api.adminUser.getMailNotification],
+
+    mutationFn: (data: IPostMailNotification) => {
       return httpClient.post<IMailNotification>(
         api.adminUser.getMailNotification,
         data
       );
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getMailNotification]);
-      },
-    }
-  );
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getMailNotification],
+      });
+    },
+  });
 };
 
 const getMailPreview = async (id: string) =>
   httpClient.get<string>(api.adminUser.updateMailNotification(id));
 
 export const useMailPreview = (id: string) => {
-  return useQuery(
-    [api.adminUser.updateMailNotification(id)],
-    () => getMailPreview(id),
-    {
-      staleTime: Infinity,
-      cacheTime: Infinity,
-      select: (data) => data.data,
-      enabled: false,
-    }
-  );
+  return useQuery({
+    queryKey: [api.adminUser.updateMailNotification(id)],
+    queryFn: () => getMailPreview(id),
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    select: (data) => data.data,
+    enabled: false,
+  });
 };
 
 // interface ITestEmail {
@@ -767,9 +842,14 @@ const testEmail = async ({ id, data }: { id: string; data: any }) =>
 
 export const useTestEmail = () => {
   const queryClient = useQueryClient();
-  return useMutation(['test' + api.adminUser.testEmail], testEmail, {
+  return useMutation({
+    mutationKey: ['test' + api.adminUser.testEmail],
+    mutationFn: testEmail,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.adminUser.testEmail]);
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.testEmail],
+      });
     },
   });
 };
@@ -779,16 +859,18 @@ const deleteMailNotification = async (id: string) =>
 
 export const useDeleteMailNotification = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    [api.adminUser.getMailNotification],
-    deleteMailNotification,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.adminUser.getMailNotification]);
-      },
-      onError: (err) => {
-        return errorType(err);
-      },
-    }
-  );
+  return useMutation({
+    mutationKey: [api.adminUser.getMailNotification],
+    mutationFn: deleteMailNotification,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.getMailNotification],
+      });
+    },
+
+    onError: (err) => {
+      return errorType(err);
+    },
+  });
 };

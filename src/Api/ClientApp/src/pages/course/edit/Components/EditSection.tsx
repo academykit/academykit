@@ -13,7 +13,7 @@ import {
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { IconDragDrop } from '@tabler/icons';
+import { IconDragDrop } from '@tabler/icons-react';
 import { CourseStatus } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import {

@@ -32,15 +32,14 @@ export const useGetLessonStatistics = (
   courseIdentity: string,
   query: string
 ) => {
-  return useQuery(
-    [api.course.lessonStat(courseIdentity), query],
-    () => getLessonStatistics(courseIdentity, query),
-    {
-      select: (data) => {
-        return data.data;
-      },
-    }
-  );
+  return useQuery({
+    queryKey: [api.course.lessonStat(courseIdentity), query],
+    queryFn: () => getLessonStatistics(courseIdentity, query),
+
+    select: (data) => {
+      return data.data;
+    },
+  });
 };
 
 // manage one lesson stat
@@ -71,15 +70,14 @@ export const useGetLessonStatisticsDetails = (
   lessonId: string,
   qs: string
 ) => {
-  return useQuery(
-    [api.course.lessonStatDetails(courseIdentity, lessonId, qs)],
-    () => getLessonStatisticsDetails(courseIdentity, lessonId, qs),
-    {
-      select: (data) => {
-        return data.data;
-      },
-    }
-  );
+  return useQuery({
+    queryKey: [api.course.lessonStatDetails(courseIdentity, lessonId, qs)],
+    queryFn: () => getLessonStatisticsDetails(courseIdentity, lessonId, qs),
+
+    select: (data) => {
+      return data.data;
+    },
+  });
 };
 
 //manage student stat
@@ -105,15 +103,14 @@ export const useGetStudentStatistics = (
   courseIdentity: string,
   query: string
 ) => {
-  return useQuery(
-    [api.course.studentStat(courseIdentity), query],
-    () => getStudentStatistics(courseIdentity, query),
-    {
-      select: (data) => {
-        return data.data;
-      },
-    }
-  );
+  return useQuery({
+    queryKey: [api.course.studentStat(courseIdentity), query],
+    queryFn: () => getStudentStatistics(courseIdentity, query),
+
+    select: (data) => {
+      return data.data;
+    },
+  });
 };
 
 // student Statics for one user
@@ -144,15 +141,14 @@ export const useGetStudentStatisticsDetails = (
   courseIdentity: string,
   userId: string
 ) => {
-  return useQuery(
-    [api.course.studentStatDetails(courseIdentity, userId)],
-    () => getStudentStatisticsDetails(courseIdentity, userId),
-    {
-      select: (data) => {
-        return data.data;
-      },
-    }
-  );
+  return useQuery({
+    queryKey: [api.course.studentStatDetails(courseIdentity, userId)],
+    queryFn: () => getStudentStatisticsDetails(courseIdentity, userId),
+
+    select: (data) => {
+      return data.data;
+    },
+  });
 };
 
 //course certificate
@@ -182,15 +178,14 @@ export const useGetStudentStatisticsCertificate = (
   courseIdentity: string,
   search: string
 ) => {
-  return useQuery(
-    [api.course.certificate(courseIdentity, search)],
-    () => getStudentStatisticsCertificate(courseIdentity, search),
-    {
-      select: (data) => {
-        return data.data;
-      },
-    }
-  );
+  return useQuery({
+    queryKey: [api.course.certificate(courseIdentity, search)],
+    queryFn: () => getStudentStatisticsCertificate(courseIdentity, search),
+
+    select: (data) => {
+      return data.data;
+    },
+  });
 };
 
 //stat course certificate post
@@ -214,24 +209,23 @@ export const usePostStatisticsCertificate = (
   search: string
 ) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    [api.course.postCertificate(identity)],
-    postStudentStatisticsCertificate,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([
-          api.course.certificate(identity, search),
-        ]);
-        queryClient.invalidateQueries([
-          api.course.studentStat(identity),
-          search,
-        ]);
-      },
-      onError: (err) => {
-        return errorType(err);
-      },
-    }
-  );
+  return useMutation({
+    mutationKey: [api.course.postCertificate(identity)],
+    mutationFn: postStudentStatisticsCertificate,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.course.certificate(identity, search)],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [api.course.studentStat(identity), search],
+      });
+    },
+
+    onError: (err) => {
+      return errorType(err);
+    },
+  });
 };
 
 //manage stat
@@ -252,14 +246,14 @@ const getCourseManageStatistics = async (courseIdentity: string) => {
   );
 };
 export const useGetCourseManageStatistics = (courseIdentity: string) => {
-  return useQuery(
-    [api.course.getManageStat(courseIdentity)],
-    () => getCourseManageStatistics(courseIdentity),
-    {
-      select: (data) => {
-        return data.data;
-      },
-      retry: false,
-    }
-  );
+  return useQuery({
+    queryKey: [api.course.getManageStat(courseIdentity)],
+    queryFn: () => getCourseManageStatistics(courseIdentity),
+
+    select: (data) => {
+      return data.data;
+    },
+
+    retry: false,
+  });
 };

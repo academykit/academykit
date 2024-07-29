@@ -25,7 +25,7 @@ import {
   IconSettings,
   IconTrash,
   IconUsers,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { DATE_FORMAT, color } from '@utils/constants';
 import {
   CourseLanguage,

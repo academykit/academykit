@@ -29,7 +29,7 @@ import {
   IconMilitaryAward,
   IconRepeat,
   IconX,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { DATE_FORMAT } from '@utils/constants';
 import { AssessmentStatus, SkillAssessmentRule, UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';

@@ -16,7 +16,9 @@ const getSkills = async (search: string) =>
   await httpClient.get<IPaginated<ISkill>>(api.skill.list + `?${search}`);
 
 export const useSkills = (search: string) => {
-  return useQuery([api.skill.list, search], () => getSkills(search), {
+  return useQuery({
+    queryKey: [api.skill.list, search],
+    queryFn: () => getSkills(search),
     staleTime: Infinity,
     cacheTime: Infinity,
     select: (data) => data.data,
@@ -27,17 +29,23 @@ type IPostSkill = Omit<ISkill, 'id' | 'userModel'>;
 
 export const usePostDepartmentSetting = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    ['post' + api.skill.list],
-    (data: { skillName: string; isActive: boolean; description: string }) => {
+  return useMutation({
+    mutationKey: ['post' + api.skill.list],
+
+    mutationFn: (data: {
+      skillName: string;
+      isActive: boolean;
+      description: string;
+    }) => {
       return httpClient.post<IPostSkill>(api.skill.list, data);
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.skill.list]);
-      },
-    }
-  );
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.skill.list],
+      });
+    },
+  });
 };
 
 const updateSkillDetail = ({ id, data }: { id: string; data: IPostSkill }) =>
@@ -45,9 +53,14 @@ const updateSkillDetail = ({ id, data }: { id: string; data: IPostSkill }) =>
 
 export const useUpdateSkill = () => {
   const queryClient = useQueryClient();
-  return useMutation(['update' + api.skill.list], updateSkillDetail, {
+  return useMutation({
+    mutationKey: ['update' + api.skill.list],
+    mutationFn: updateSkillDetail,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.skill.list]);
+      queryClient.invalidateQueries({
+        queryKey: [api.skill.list],
+      });
     },
   });
 };
@@ -57,10 +70,16 @@ const deleteSkill = async (id: string) =>
 
 export const useDeleteSkill = () => {
   const queryClient = useQueryClient();
-  return useMutation([api.skill.list], deleteSkill, {
+  return useMutation({
+    mutationKey: [api.skill.list],
+    mutationFn: deleteSkill,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.skill.list]);
+      queryClient.invalidateQueries({
+        queryKey: [api.skill.list],
+      });
     },
+
     onError: (err) => {
       return errorType(err);
     },

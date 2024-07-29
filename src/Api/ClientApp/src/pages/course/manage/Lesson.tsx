@@ -14,7 +14,7 @@ import {
   Table,
   Tooltip,
 } from '@mantine/core';
-import { IconEye } from '@tabler/icons';
+import { IconEye } from '@tabler/icons-react';
 import { LessonType } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import {

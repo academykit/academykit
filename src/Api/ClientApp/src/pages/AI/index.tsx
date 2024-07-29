@@ -1,6 +1,6 @@
 import useAuth from '@hooks/useAuth';
 import { ActionIcon, Box, Loader, ScrollArea, Textarea } from '@mantine/core';
-import { IconSend } from '@tabler/icons';
+import { IconSend } from '@tabler/icons-react';
 import {
   KeyboardEvent,
   useEffect,

@@ -11,7 +11,7 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { IconEdit } from '@tabler/icons';
+import { IconEdit } from '@tabler/icons-react';
 import { DATE_FORMAT } from '@utils/constants';
 import { CourseLanguage, UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';

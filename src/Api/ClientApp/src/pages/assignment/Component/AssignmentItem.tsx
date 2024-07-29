@@ -13,7 +13,7 @@ import {
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconDragDrop, IconEdit, IconTrash } from '@tabler/icons';
+import { IconDragDrop, IconEdit, IconTrash } from '@tabler/icons-react';
 import { QuestionType } from '@utils/enums';
 import {
   IAssignmentQuestion,

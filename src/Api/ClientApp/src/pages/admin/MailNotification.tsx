@@ -36,7 +36,7 @@ import {
   IconPencil,
   IconSend,
   IconTrash,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { MailType } from '@utils/enums';
 import {
   IMailNotification,

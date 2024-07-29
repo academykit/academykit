@@ -3,7 +3,7 @@ import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import { Button, Grid, Group, Select, Switch, TextInput } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { IconInfoCircle } from '@tabler/icons';
+import { IconInfoCircle } from '@tabler/icons-react';
 import { PHONE_VALIDATION } from '@utils/constants';
 import { UserRole, UserStatus } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';

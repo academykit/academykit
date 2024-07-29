@@ -6,8 +6,8 @@ import {
   IconClipboard,
   IconGraph,
   IconTool,
-} from '@tabler/icons';
-import { IconUsersGroup } from '@tabler/icons-react';
+  IconUsersGroup,
+} from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import { useTranslation } from 'react-i18next';

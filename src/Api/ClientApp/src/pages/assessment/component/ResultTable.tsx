@@ -1,5 +1,5 @@
 import { ActionIcon, Table, Title } from '@mantine/core';
-import { IconEye } from '@tabler/icons';
+import { IconEye } from '@tabler/icons-react';
 import { DATE_FORMAT } from '@utils/constants';
 import RoutePath from '@utils/routeConstants';
 import { useGetStudentResult } from '@utils/services/assessmentService';

@@ -6,7 +6,7 @@ import {
   SimpleGrid,
   Text,
 } from '@mantine/core';
-import { IconArrowDownRight, IconArrowUpRight } from '@tabler/icons';
+import { IconArrowDownRight, IconArrowUpRight } from '@tabler/icons-react';
 
 interface StatsRingProps {
   data: {

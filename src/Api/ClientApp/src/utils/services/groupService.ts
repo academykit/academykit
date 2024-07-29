@@ -20,7 +20,10 @@ export interface IGroup {
 const getGroupDetail = (id: string) =>
   httpClient.get<IGroup>(api.groups.details(id));
 export const useGetGroupDetail = (id: string) =>
-  useQuery([api.groups.details(id)], () => getGroupDetail(id), {
+  useQuery({
+    queryKey: [api.groups.details(id)],
+    queryFn: () => getGroupDetail(id),
+
     retry: (count: number, error: AxiosError) => {
       if (error?.response?.status === 403) {
         return false;
@@ -40,9 +43,14 @@ const updateGroupDetail = (data: {
 export const useUpdateGroup = (id: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation([api.groups.details(id)], updateGroupDetail, {
+  return useMutation({
+    mutationKey: [api.groups.details(id)],
+    mutationFn: updateGroupDetail,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.groups.details(id)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.groups.details(id)],
+      });
     },
   });
 };
@@ -51,7 +59,10 @@ const getGroups = (query: string) =>
   httpClient.get<IPaginated<IGroup>>(api.groups.list + `?${query}`);
 
 export const useGroups = (query: string) =>
-  useQuery([api.groups.list, query], () => getGroups(query));
+  useQuery({
+    queryKey: [api.groups.list, query],
+    queryFn: () => getGroups(query),
+  });
 
 const addGroup = async (name: string) =>
   await httpClient.post<IGroup>(api.groups.list, {
@@ -60,10 +71,16 @@ const addGroup = async (name: string) =>
 
 export const useAddGroup = () => {
   const queryClient = useQueryClient();
-  return useMutation([api.groups.list], addGroup, {
+  return useMutation({
+    mutationKey: [api.groups.list],
+    mutationFn: addGroup,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.groups.list]);
+      queryClient.invalidateQueries({
+        queryKey: [api.groups.list],
+      });
     },
+
     onError: (err) => {
       return errorType(err);
     },
@@ -82,7 +99,9 @@ const getGroupMember = (id: string, query: string) =>
   httpClient.get<IPaginated<IGroupMember>>(api.groups.member(id, query));
 
 export const useGroupMember = (id: string, query: string) =>
-  useQuery([api.groups.member(id, query)], () => getGroupMember(id, query), {
+  useQuery({
+    queryKey: [api.groups.member(id, query)],
+    queryFn: () => getGroupMember(id, query),
     select: (data) => data.data,
     retry: false,
   });
@@ -92,10 +111,16 @@ const addMember = ({ id, data }: { id: string; data: any }) => {
 };
 export const useAddGroupMember = (id: string, query: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.groups.addMember(id)], addMember, {
+  return useMutation({
+    mutationKey: [api.groups.addMember(id)],
+    mutationFn: addMember,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.groups.member(id, query)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.groups.member(id, query)],
+      });
     },
+
     onError: (err) => {
       return errorType(err);
     },
@@ -116,27 +141,34 @@ export const useRemoveGroupMember = (
   memberId: string
 ) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    [api.groups.removeMember(id, memberId)],
-    removeGroupMember,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.groups.member(id, query)]);
-      },
-      onError: (err) => {
-        return errorType(err);
-      },
-    }
-  );
+  return useMutation({
+    mutationKey: [api.groups.removeMember(id, memberId)],
+    mutationFn: removeGroupMember,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.groups.member(id, query)],
+      });
+    },
+
+    onError: (err) => {
+      return errorType(err);
+    },
+  });
 };
 
 const deleteGroup = ({ id }: { id: string }) =>
   httpClient.delete(api.groups.details(id));
 export const useDeleteGroup = (id: string, query: string) => {
   const queryClient = useQueryClient();
-  return useMutation(['delete', api.groups.details(id)], deleteGroup, {
+  return useMutation({
+    mutationKey: ['delete', api.groups.details(id)],
+    mutationFn: deleteGroup,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.groups.list, query]);
+      queryClient.invalidateQueries({
+        queryKey: [api.groups.list, query],
+      });
     },
   });
 };
@@ -148,14 +180,12 @@ const getGroupCourse = (id: string, search: string) => {
 };
 
 export const useGroupCourse = (id: string, search: string) => {
-  return useQuery(
-    [api.groups.course(id) + `?${search}`],
-    () => getGroupCourse(id, search),
-    {
-      select: (data) => data.data,
-      retry: false,
-    }
-  );
+  return useQuery({
+    queryKey: [api.groups.course(id) + `?${search}`],
+    queryFn: () => getGroupCourse(id, search),
+    select: (data) => data.data,
+    retry: false,
+  });
 };
 
 //get group attachment
@@ -178,14 +208,12 @@ const getGroupAttachment = (groupId: string, search: string) => {
 };
 
 export const useGroupAttachment = (groupId: string, search: string) => {
-  return useQuery(
-    [api.groups.attachment + search],
-    () => getGroupAttachment(groupId, search),
-    {
-      select: (data) => data.data,
-      retry: false,
-    }
-  );
+  return useQuery({
+    queryKey: [api.groups.attachment + search],
+    queryFn: () => getGroupAttachment(groupId, search),
+    select: (data) => data.data,
+    retry: false,
+  });
 };
 interface IGroupType {
   id: string;
@@ -220,10 +248,16 @@ const addGroupAttachement = ({
 };
 export const useAddGroupAttachment = (search: string) => {
   const queryClient = useQueryClient();
-  return useMutation([api.groups.addAttachment], addGroupAttachement, {
+  return useMutation({
+    mutationKey: [api.groups.addAttachment],
+    mutationFn: addGroupAttachement,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.groups.attachment + search]);
+      queryClient.invalidateQueries({
+        queryKey: [api.groups.attachment + search],
+      });
     },
+
     onError: (err) => {
       return errorType(err);
     },
@@ -244,18 +278,20 @@ export const useRemoveGroupAttachment = (
   search: string
 ) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    [api.groups.removeAttachment(id, fileId)],
-    removeGroupAttachment,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([api.groups.attachment + search]);
-      },
-      onError: (err) => {
-        return errorType(err);
-      },
-    }
-  );
+  return useMutation({
+    mutationKey: [api.groups.removeAttachment(id, fileId)],
+    mutationFn: removeGroupAttachment,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.groups.attachment + search],
+      });
+    },
+
+    onError: (err) => {
+      return errorType(err);
+    },
+  });
 };
 
 //group notmember list
@@ -282,10 +318,8 @@ export const useGroupNotMember = (
   query: string,
   departmentId: string | undefined
 ) =>
-  useQuery(
-    [api.groups.notMembers(id, query, departmentId)],
-    () => getGroupNotMember(id, query, departmentId),
-    {
-      select: (data) => data.data,
-    }
-  );
+  useQuery({
+    queryKey: [api.groups.notMembers(id, query, departmentId)],
+    queryFn: () => getGroupNotMember(id, query, departmentId),
+    select: (data) => data.data,
+  });

@@ -18,7 +18,7 @@ import {
   IconDotsVertical,
   IconGraph,
   IconSettings,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import getCourseOgImageUrl from '@utils/getCourseOGImage';
 import { getInitials } from '@utils/getInitialName';

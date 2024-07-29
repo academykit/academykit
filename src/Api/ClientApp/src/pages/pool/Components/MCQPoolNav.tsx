@@ -1,5 +1,5 @@
 import NavOutlet from '@components/Layout/NavOutlet';
-import { IconClipboard, IconListNumbers } from '@tabler/icons';
+import { IconClipboard, IconListNumbers } from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import i18next from 'i18next';

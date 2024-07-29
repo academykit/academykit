@@ -12,7 +12,7 @@ import {
   IconUserCheck,
   IconUserCircle,
   IconUsers,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import {
   DashboardStats,
   DashboardStatsData,

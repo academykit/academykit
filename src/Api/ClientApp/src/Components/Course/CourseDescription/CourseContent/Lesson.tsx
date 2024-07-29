@@ -11,7 +11,7 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useHover, useMediaQuery } from '@mantine/hooks';
-import { IconCheck } from '@tabler/icons';
+import { IconCheck } from '@tabler/icons-react';
 import { LessonType } from '@utils/enums';
 import formatDuration from '@utils/formatDuration';
 import RoutePath from '@utils/routeConstants';

@@ -11,7 +11,7 @@ import {
   Textarea,
   Tooltip,
 } from '@mantine/core';
-import { IconReload, IconThumbUp } from '@tabler/icons';
+import { IconReload, IconThumbUp } from '@tabler/icons-react';
 import { t } from 'i18next';
 import Copy from '../Copy';
 

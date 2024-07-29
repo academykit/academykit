@@ -5,7 +5,7 @@ import {
   Tooltip,
   rem,
 } from '@mantine/core';
-import { IconCheck, IconCopy } from '@tabler/icons';
+import { IconCheck, IconCopy } from '@tabler/icons-react';
 
 interface IProps extends ActionIconProps {
   value: string;

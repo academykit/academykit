@@ -8,7 +8,7 @@ import {
   IconSettings,
   IconUser,
   IconUsers,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { TOKEN_STORAGE } from '@utils/constants';
 import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';

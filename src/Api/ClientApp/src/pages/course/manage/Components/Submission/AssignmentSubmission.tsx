@@ -2,7 +2,7 @@ import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import { Box, Button, Group, Paper, Table } from '@mantine/core';
-import { IconTableExport } from '@tabler/icons';
+import { IconTableExport } from '@tabler/icons-react';
 import { useGetAssignmentSubmission } from '@utils/services/assignmentService';
 import { downloadCSVFile } from '@utils/services/fileService';
 import { t } from 'i18next';

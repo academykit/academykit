@@ -1,5 +1,5 @@
 import { ActionIcon } from '@mantine/core';
-import { IconArrowDown } from '@tabler/icons';
+import { IconArrowDown } from '@tabler/icons-react';
 
 interface IProps {
   scrollToBottom: () => void;

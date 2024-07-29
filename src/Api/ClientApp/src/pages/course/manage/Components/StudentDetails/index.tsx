@@ -14,7 +14,7 @@ import { useForm } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import UserResults from '@pages/course/exam/Components/UserResults';
-import { IconCheck, IconEye } from '@tabler/icons';
+import { IconCheck, IconEye } from '@tabler/icons-react';
 import { DATE_FORMAT } from '@utils/constants';
 import { LessonType } from '@utils/enums';
 import formatDuration from '@utils/formatDuration';

@@ -11,7 +11,7 @@ import {
   UnstyledButton,
 } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
-import { IconPlus, IconTrash } from '@tabler/icons';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { QuestionType, ReadableEnum } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import { IAddQuestionType } from '@utils/services/questionService';

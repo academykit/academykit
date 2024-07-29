@@ -13,7 +13,7 @@ import {
   Title,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
-import { IconChevronLeft, IconTableExport } from '@tabler/icons';
+import { IconChevronLeft, IconTableExport } from '@tabler/icons-react';
 import { LessonType } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import {

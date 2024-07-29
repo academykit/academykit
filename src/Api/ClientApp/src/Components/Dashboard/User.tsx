@@ -12,7 +12,7 @@ import {
   IconDiscount2,
   IconReceipt2,
   IconUserPlus,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import {
   DashboardCourses,
   DashboardStats,

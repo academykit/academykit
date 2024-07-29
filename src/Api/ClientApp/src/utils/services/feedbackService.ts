@@ -50,9 +50,14 @@ const addFeedbackQuestion = ({ data }: { data: ICreateFeedback }) => {
 export const useAddFeedbackQuestion = (lessonId: string, search: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation([api.feedback.list], addFeedbackQuestion, {
+  return useMutation({
+    mutationKey: [api.feedback.list],
+    mutationFn: addFeedbackQuestion,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.feedback.list(lessonId, search)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.feedback.list(lessonId, search)],
+      });
     },
   });
 };
@@ -63,14 +68,12 @@ const getFeedbackQuestion = (lessonId: string, search: string) => {
   );
 };
 export const useFeedbackQuestion = (lessonId: string, search: string) => {
-  return useQuery(
-    [api.feedback.list(lessonId, search)],
-    () => getFeedbackQuestion(lessonId, search),
-    {
-      select: (data) => data.data,
-      enabled: lessonId ? true : false,
-    }
-  );
+  return useQuery({
+    queryKey: [api.feedback.list(lessonId, search)],
+    queryFn: () => getFeedbackQuestion(lessonId, search),
+    select: (data) => data.data,
+    enabled: lessonId ? true : false,
+  });
 };
 
 const getUserFeedback = (lessonId: string, userId: string, search?: string) => {
@@ -83,14 +86,12 @@ export const useGetUserFeedback = (
   userId: string,
   search?: string
 ) => {
-  return useQuery(
-    [api.feedback.userFeedback(lessonId, userId, search)],
-    () => getUserFeedback(lessonId, userId, search),
-    {
-      select: (data) => data.data,
-      enabled: !!lessonId,
-    }
-  );
+  return useQuery({
+    queryKey: [api.feedback.userFeedback(lessonId, userId, search)],
+    queryFn: () => getUserFeedback(lessonId, userId, search),
+    select: (data) => data.data,
+    enabled: !!lessonId,
+  });
 };
 
 const deleteFeedbackQuestion = ({ feedbackId }: { feedbackId: string }) => {
@@ -100,9 +101,14 @@ const deleteFeedbackQuestion = ({ feedbackId }: { feedbackId: string }) => {
 export const useDeleteFeedbackQuestion = (lessonId: string, search: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation([api.feedback.listOne(lessonId)], deleteFeedbackQuestion, {
+  return useMutation({
+    mutationKey: [api.feedback.listOne(lessonId)],
+    mutationFn: deleteFeedbackQuestion,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.feedback.list(lessonId, search)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.feedback.list(lessonId, search)],
+      });
     },
   });
 };
@@ -123,9 +129,14 @@ const editFeedbackQuestion = ({
 export const useEditFeedbackQuestion = (lessonId: string, search: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation([api.feedback.listOne(lessonId)], editFeedbackQuestion, {
+  return useMutation({
+    mutationKey: [api.feedback.listOne(lessonId)],
+    mutationFn: editFeedbackQuestion,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.feedback.list(lessonId, search)]);
+      queryClient.invalidateQueries({
+        queryKey: [api.feedback.list(lessonId, search)],
+      });
     },
   });
 };
@@ -149,9 +160,14 @@ const postFeedbackSubmission = ({
 };
 export const useFeedbackSubmission = ({ lessonId }: { lessonId: string }) => {
   const queryClient = useQueryClient();
-  return useMutation(['submitFeeback'], postFeedbackSubmission, {
+  return useMutation({
+    mutationKey: ['submitFeeback'],
+    mutationFn: postFeedbackSubmission,
+
     onSuccess: () => {
-      queryClient.invalidateQueries([api.feedback.list(lessonId, '')]);
+      queryClient.invalidateQueries({
+        queryKey: [api.feedback.list(lessonId, '')],
+      });
     },
   });
 };
@@ -212,13 +228,11 @@ const getFeedbackGraph = (lessonId: string) => {
 };
 
 export const useGetFeedbackGraph = (lessonId: string) => {
-  return useQuery(
-    [api.feedback.graph(lessonId)],
-    () => getFeedbackGraph(lessonId),
-    {
-      select: (data) => data.data,
-      retry: 2,
-      enabled: false,
-    }
-  );
+  return useQuery({
+    queryKey: [api.feedback.graph(lessonId)],
+    queryFn: () => getFeedbackGraph(lessonId),
+    select: (data) => data.data,
+    retry: 2,
+    enabled: false,
+  });
 };

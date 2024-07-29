@@ -14,7 +14,7 @@ import {
 import { useForm } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconEdit, IconEye, IconFileCheck } from '@tabler/icons';
+import { IconEdit, IconEye, IconFileCheck } from '@tabler/icons-react';
 import { color } from '@utils/constants';
 import { CourseStatus, CourseUserStatus, UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';

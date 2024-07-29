@@ -9,7 +9,7 @@ import {
   Tabs,
   Text,
 } from '@mantine/core';
-import { IconEdit, IconFileDescription, IconSchool } from '@tabler/icons';
+import { IconEdit, IconFileDescription, IconSchool } from '@tabler/icons-react';
 import { useProfileAuth } from '@utils/services/authService';
 import { useTranslation } from 'react-i18next';
 import {

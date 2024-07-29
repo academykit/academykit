@@ -55,32 +55,29 @@ export interface UpcomingEvents {
 }
 
 export const useDashboard = () => {
-  return useQuery(
-    [api.course.dashboard],
-    () => httpClient.get<DashboardStats>(api.course.dashboard),
-    {
-      select: (data) => data.data,
-    }
-  );
+  return useQuery({
+    queryKey: [api.course.dashboard],
+    queryFn: () => httpClient.get<DashboardStats>(api.course.dashboard),
+    select: (data) => data.data,
+  });
 };
 
 export const useDashboardCourse = () => {
-  return useQuery(
-    [api.course.dashboardCourse],
-    () =>
+  return useQuery({
+    queryKey: [api.course.dashboardCourse],
+
+    queryFn: () =>
       httpClient.get<IPaginated<DashboardCourses>>(api.course.dashboardCourse),
-    {
-      select: (data) => data.data,
-    }
-  );
+
+    select: (data) => data.data,
+  });
 };
 
 export const useUpcomingDashboardDetail = () => {
-  return useQuery(
-    [api.course.dashboardUpcoming],
-    () => httpClient.get<UpcomingEvents[]>(api.course.dashboardUpcoming),
-    {
-      select: (data) => data.data,
-    }
-  );
+  return useQuery({
+    queryKey: [api.course.dashboardUpcoming],
+    queryFn: () =>
+      httpClient.get<UpcomingEvents[]>(api.course.dashboardUpcoming),
+    select: (data) => data.data,
+  });
 };

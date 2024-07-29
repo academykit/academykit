@@ -14,7 +14,7 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { IconEye } from '@tabler/icons';
+import { IconEye } from '@tabler/icons-react';
 import { SeverityType } from '@utils/enums';
 import {
   IServerLogs,

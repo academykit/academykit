@@ -17,7 +17,7 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
-import { IconEye, IconTableExport } from '@tabler/icons';
+import { IconEye, IconTableExport } from '@tabler/icons-react';
 import {
   IAssessmentResult,
   useGetAllResults,

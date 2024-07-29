@@ -22,7 +22,12 @@ import { DatePickerInput } from '@mantine/dates';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconDownload, IconEdit, IconEye, IconTrash } from '@tabler/icons';
+import {
+  IconDownload,
+  IconEdit,
+  IconEye,
+  IconTrash,
+} from '@tabler/icons-react';
 import downloadImage from '@utils/downloadImage';
 import { UserRole } from '@utils/enums';
 import errorType from '@utils/services/axiosError';

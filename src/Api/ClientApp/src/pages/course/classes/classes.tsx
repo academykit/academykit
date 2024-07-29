@@ -17,7 +17,7 @@ import {
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconFileDescription, IconMessage } from '@tabler/icons';
+import { IconFileDescription, IconMessage } from '@tabler/icons-react';
 import { CourseUserStatus, LessonType, UserRole } from '@utils/enums';
 import lazyWithRetry from '@utils/lazyImportWithReload';
 import RoutePath from '@utils/routeConstants';
