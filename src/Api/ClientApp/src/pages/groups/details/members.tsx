@@ -1,31 +1,31 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import { IAuthContext } from '@context/AuthProvider';
 import withSearchPagination, {
-  IWithSearchPagination,
+    IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import useAuth from '@hooks/useAuth';
 import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Drawer,
-  Group,
-  Loader,
-  Paper,
-  Table,
-  Text,
-  Title,
+    Avatar,
+    Box,
+    Button,
+    Container,
+    Drawer,
+    Group,
+    Loader,
+    Paper,
+    Table,
+    Text,
+    Title,
 } from '@mantine/core';
 import { useDisclosure, useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconPlus, IconTrash } from '@tabler/icons';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import {
-  IGroupMember,
-  useGroupMember,
-  useRemoveGroupMember,
+    IGroupMember,
+    useGroupMember,
+    useRemoveGroupMember,
 } from '@utils/services/groupService';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';

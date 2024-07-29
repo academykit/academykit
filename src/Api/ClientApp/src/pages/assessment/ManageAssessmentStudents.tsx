@@ -1,26 +1,26 @@
 import EmptyRow from '@components/Ui/EmptyRow';
 import UserShortProfile from '@components/UserShortProfile';
 import withSearchPagination, {
-  IWithSearchPagination,
+    IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import useAuth from '@hooks/useAuth';
 import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  Group,
-  Modal,
-  Paper,
-  ScrollArea,
-  Table,
-  Tooltip,
+    Box,
+    Button,
+    Center,
+    Flex,
+    Group,
+    Modal,
+    Paper,
+    ScrollArea,
+    Table,
+    Tooltip,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
-import { IconEye, IconTableExport } from '@tabler/icons';
+import { IconEye, IconTableExport } from '@tabler/icons-react';
 import {
-  IAssessmentResult,
-  useGetAllResults,
+    IAssessmentResult,
+    useGetAllResults,
 } from '@utils/services/assessmentService';
 import { downloadCSVFile } from '@utils/services/fileService';
 import { t } from 'i18next';

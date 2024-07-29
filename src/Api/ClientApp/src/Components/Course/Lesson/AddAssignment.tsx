@@ -2,25 +2,25 @@ import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAuto
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-  Box,
-  Button,
-  Grid,
-  Group,
-  Paper,
-  Switch,
-  Text,
-  Tooltip,
+    Box,
+    Button,
+    Grid,
+    Group,
+    Paper,
+    Switch,
+    Text,
+    Tooltip,
 } from '@mantine/core';
 import { DatePickerInput, TimeInput } from '@mantine/dates';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { IconCalendar } from '@tabler/icons';
+import { IconCalendar } from '@tabler/icons-react';
 import { LessonType } from '@utils/enums';
 import { getDateTime } from '@utils/getDateTime';
 import errorType from '@utils/services/axiosError';
 import {
-  useCreateLesson,
-  useUpdateLesson,
+    useCreateLesson,
+    useUpdateLesson,
 } from '@utils/services/courseService';
 import { ILessonAssignment } from '@utils/services/types';
 import moment from 'moment';

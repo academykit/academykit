@@ -2,31 +2,31 @@ import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAuto
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-  Box,
-  Button,
-  Card,
-  Checkbox,
-  Container,
-  Flex,
-  Group,
-  Loader,
-  Radio,
-  Select,
-  Text,
-  UnstyledButton,
+    Box,
+    Button,
+    Card,
+    Checkbox,
+    Container,
+    Flex,
+    Group,
+    Loader,
+    Radio,
+    Select,
+    Text,
+    UnstyledButton,
 } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import TagMultiSelectCreatable from '@pages/course/component/TagMultiSelectCreatable';
-import { IconPlus, IconTrash } from '@tabler/icons';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { QuestionType } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import errorType from '@utils/services/axiosError';
 import { usePools } from '@utils/services/poolService';
 import {
-  IAddQuestionType,
-  useEditQuestion,
-  useGetQuestion,
+    IAddQuestionType,
+    useEditQuestion,
+    useGetQuestion,
 } from '@utils/services/questionService';
 import { ITag, useAddTag, useTags } from '@utils/services/tagService';
 import { useEffect, useState } from 'react';

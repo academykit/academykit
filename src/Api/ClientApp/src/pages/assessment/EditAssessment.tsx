@@ -1,29 +1,29 @@
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-  Accordion,
-  ActionIcon,
-  Box,
-  Button,
-  Flex,
-  NumberInput,
-  Select,
-  SimpleGrid,
-  Text,
-  TextInput,
+    Accordion,
+    ActionIcon,
+    Box,
+    Button,
+    Flex,
+    NumberInput,
+    Select,
+    SimpleGrid,
+    Text,
+    TextInput,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { IconPlus, IconTrash } from '@tabler/icons';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { SkillAssessmentRule } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import RoutePath from '@utils/routeConstants';
 import { useDepartmentSetting } from '@utils/services/adminService';
 import {
-  useAssessments,
-  useGetSingleAssessment,
-  useUpdateAssessment,
+    useAssessments,
+    useGetSingleAssessment,
+    useUpdateAssessment,
 } from '@utils/services/assessmentService';
 import errorType from '@utils/services/axiosError';
 import { useCourse } from '@utils/services/courseService';
@@ -34,9 +34,9 @@ import moment from 'moment';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-  EligibilityCriteriaRequestModels,
-  IAssessmentForm,
-  SkillsCriteriaRequestModels,
+    EligibilityCriteriaRequestModels,
+    IAssessmentForm,
+    SkillsCriteriaRequestModels,
 } from './CreateAssessment';
 import schema from './component/AssessmentFormSchema';
 

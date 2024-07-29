@@ -1,19 +1,19 @@
 import {
-  ActionIcon,
-  Anchor,
-  Badge,
-  Box,
-  CopyButton,
-  Flex,
-  Image,
-  Modal,
-  Paper,
-  ScrollArea,
-  Table,
-  Title,
-  Tooltip,
+    ActionIcon,
+    Anchor,
+    Badge,
+    Box,
+    CopyButton,
+    Flex,
+    Image,
+    Modal,
+    Paper,
+    ScrollArea,
+    Table,
+    Title,
+    Tooltip,
 } from '@mantine/core';
-import { IconCheck, IconDownload, IconEye } from '@tabler/icons';
+import { IconCheck, IconDownload, IconEye } from '@tabler/icons-react';
 import { useProfileAuth } from '@utils/services/authService';
 import { ICertificateList } from '@utils/services/manageCourseService';
 import { TFunction } from 'i18next';

@@ -1,37 +1,37 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import UserShortProfile from '@components/UserShortProfile';
 import withSearchPagination, {
-  IWithSearchPagination,
+    IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import useAuth from '@hooks/useAuth';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-  Box,
-  Button,
-  Card,
-  Container,
-  Flex,
-  Group,
-  Loader,
-  ScrollArea,
-  Select,
-  Text,
-  Title,
-  Transition,
+    Box,
+    Button,
+    Card,
+    Container,
+    Flex,
+    Group,
+    Loader,
+    ScrollArea,
+    Select,
+    Text,
+    Title,
+    Transition,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconTrash } from '@tabler/icons';
+import { IconTrash } from '@tabler/icons-react';
 import { TrainingTypeEnum } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import { useGetTrainers } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import {
-  ICreateCourseTeacher,
-  useCourseTeacher,
-  useCreateTeacherCourse,
-  useDeleteCourseTeacher,
+    ICreateCourseTeacher,
+    useCourseTeacher,
+    useCreateTeacherCourse,
+    useDeleteCourseTeacher,
 } from '@utils/services/courseService';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';

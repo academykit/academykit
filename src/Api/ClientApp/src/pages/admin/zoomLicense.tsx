@@ -1,31 +1,31 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-  ActionIcon,
-  Badge,
-  Button,
-  Drawer,
-  Group,
-  Paper,
-  ScrollArea,
-  Switch,
-  Table,
-  Text,
-  TextInput,
-  Title,
-  useMantineColorScheme,
+    ActionIcon,
+    Badge,
+    Button,
+    Drawer,
+    Group,
+    Paper,
+    ScrollArea,
+    Switch,
+    Table,
+    Text,
+    TextInput,
+    Title,
+    useMantineColorScheme,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconEdit, IconTrash } from '@tabler/icons';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
 import {
-  IZoomLicense,
-  updateZoomLicenseStatus,
-  useAddZoomLicense,
-  useDeleteZoomLicense,
-  useUpdateZoomLicense,
-  useZoomLicense,
+    IZoomLicense,
+    updateZoomLicenseStatus,
+    useAddZoomLicense,
+    useDeleteZoomLicense,
+    useUpdateZoomLicense,
+    useZoomLicense,
 } from '@utils/services/adminService';
 import errorType from '@utils/services/axiosError';
 import { IUser } from '@utils/services/types';

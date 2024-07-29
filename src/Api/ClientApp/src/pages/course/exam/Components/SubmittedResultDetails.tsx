@@ -1,25 +1,24 @@
 import TextViewer from '@components/Ui/RichTextViewer';
 import UserShortProfile from '@components/UserShortProfile';
 import {
-  Box,
-  Button,
-  Card,
-  Container,
-  Grid,
-  Group,
-  Paper,
-  ScrollArea,
-  Text,
-  Title,
-  UnstyledButton,
-  useMantineTheme,
+    Box,
+    Button,
+    Card,
+    Container,
+    Grid,
+    Group,
+    Paper,
+    ScrollArea,
+    Text,
+    Title,
+    UnstyledButton,
+    useMantineTheme,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconSquareRoundedX } from '@tabler/icons';
-import { IconCircleCheck } from '@tabler/icons-react';
+import { IconCircleCheck, IconSquareRoundedX } from '@tabler/icons-react';
 import {
-  ILessonResultQuestionOption,
-  ILessonStartQuestion,
+    ILessonResultQuestionOption,
+    ILessonStartQuestion,
 } from '@utils/services/examService';
 import { IUser } from '@utils/services/types';
 import cx from 'clsx';

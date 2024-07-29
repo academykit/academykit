@@ -2,7 +2,7 @@
 import { ActionIcon } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { ToolbarSlot } from '@react-pdf-viewer/toolbar';
-import { IconArrowsMaximize } from '@tabler/icons';
+import { IconArrowsMaximize } from '@tabler/icons-react';
 
 const FullScreen = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {
   const matchesSmallScreen = useMediaQuery('(min-width: 450px');

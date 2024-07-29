@@ -1,12 +1,12 @@
 import useAuth from '@hooks/useAuth';
 import { ActionIcon, Box, Loader, ScrollArea, Textarea } from '@mantine/core';
-import { IconSend } from '@tabler/icons';
+import { IconSend } from '@tabler/icons-react';
 import {
-  KeyboardEvent,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
+    KeyboardEvent,
+    useEffect,
+    useLayoutEffect,
+    useRef,
+    useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import AIChatBox from './components/AIChatBox';

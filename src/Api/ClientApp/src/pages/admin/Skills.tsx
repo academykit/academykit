@@ -1,39 +1,39 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import EmptyRow from '@components/Ui/EmptyRow';
 import withSearchPagination, {
-  IWithSearchPagination,
+    IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-  ActionIcon,
-  Badge,
-  Box,
-  Button,
-  Drawer,
-  Flex,
-  Grid,
-  Group,
-  Modal,
-  Paper,
-  ScrollArea,
-  Switch,
-  Table,
-  Text,
-  TextInput,
-  Textarea,
-  Title,
+    ActionIcon,
+    Badge,
+    Box,
+    Button,
+    Drawer,
+    Flex,
+    Grid,
+    Group,
+    Modal,
+    Paper,
+    ScrollArea,
+    Switch,
+    Table,
+    Text,
+    TextInput,
+    Textarea,
+    Title,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconPencil, IconTrash, IconUsers } from '@tabler/icons';
+import { IconPencil, IconTrash, IconUsers } from '@tabler/icons-react';
 import errorType from '@utils/services/axiosError';
 import {
-  ISkill,
-  useDeleteSkill,
-  usePostDepartmentSetting,
-  useSkills,
-  useUpdateSkill,
+    ISkill,
+    useDeleteSkill,
+    usePostDepartmentSetting,
+    useSkills,
+    useUpdateSkill,
 } from '@utils/services/skillService';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

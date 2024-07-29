@@ -1,17 +1,15 @@
 import AdminNavOutlet from '@components/Layout/AdminNavOutlet';
 import {
-  IconCertificate,
-  IconFileCertificate,
-  IconLicense,
-  IconServerCog,
-  IconUser,
-  IconUserCircle,
-  IconVideo,
-} from '@tabler/icons';
-import {
-  IconBrandOpenai,
-  IconMailCode,
-  IconMailCog,
+    IconBrandOpenai,
+    IconCertificate,
+    IconFileCertificate,
+    IconLicense,
+    IconMailCode,
+    IconMailCog,
+    IconServerCog,
+    IconUser,
+    IconUserCircle,
+    IconVideo,
 } from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';

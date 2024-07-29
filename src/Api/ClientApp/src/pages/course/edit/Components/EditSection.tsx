@@ -2,23 +2,23 @@ import InlineInput from '@components/Ui/InlineInput';
 import { useSection } from '@context/SectionProvider';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Text,
-  Title,
-  useMantineColorScheme,
-  useMantineTheme,
+    Box,
+    Button,
+    Container,
+    Grid,
+    Text,
+    Title,
+    useMantineColorScheme,
+    useMantineTheme,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { IconDragDrop } from '@tabler/icons';
+import { IconDragDrop } from '@tabler/icons-react';
 import { CourseStatus } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import {
-  useCourseDescription,
-  useCreateSection,
+    useCourseDescription,
+    useCreateSection,
 } from '@utils/services/courseService';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';

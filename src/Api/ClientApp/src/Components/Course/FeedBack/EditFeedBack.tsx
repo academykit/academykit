@@ -1,28 +1,28 @@
 import RichTextEditor from '@components/Ui/RichTextEditor/Index';
 import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Group,
-  Paper,
-  Select,
-  Text,
-  TextInput,
-  UnstyledButton,
+    Box,
+    Button,
+    Container,
+    Flex,
+    Group,
+    Paper,
+    Select,
+    Text,
+    TextInput,
+    UnstyledButton,
 } from '@mantine/core';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { IconPlus, IconTrash } from '@tabler/icons';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { FeedbackType } from '@utils/enums';
-import * as Yup from 'yup';
 import errorType from '@utils/services/axiosError';
 import {
-  ICreateFeedback,
-  IFeedbackQuestions,
-  useAddFeedbackQuestion,
-  useEditFeedbackQuestion,
+    ICreateFeedback,
+    IFeedbackQuestions,
+    useAddFeedbackQuestion,
+    useEditFeedbackQuestion,
 } from '@utils/services/feedbackService';
+import * as Yup from 'yup';
 
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import { useTranslation } from 'react-i18next';

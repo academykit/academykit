@@ -1,20 +1,20 @@
 import UserShortProfile from '@components/UserShortProfile';
 import useAuth from '@hooks/useAuth';
 import {
-  ActionIcon,
-  Badge,
-  Button,
-  Group,
-  Modal,
-  Table,
-  Text,
-  Textarea,
-  Tooltip,
+    ActionIcon,
+    Badge,
+    Button,
+    Group,
+    Modal,
+    Table,
+    Text,
+    Textarea,
+    Tooltip,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconEdit, IconEye, IconFileCheck } from '@tabler/icons';
+import { IconEdit, IconEye, IconFileCheck } from '@tabler/icons-react';
 import { color } from '@utils/constants';
 import { CourseStatus, CourseUserStatus, UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';

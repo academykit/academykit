@@ -6,25 +6,25 @@ import CourseContent from '@components/Course/CourseDescription/CourseContent/Co
 import Meetings from '@components/Course/Meetings';
 import useAuth from '@hooks/useAuth';
 import {
-  AspectRatio,
-  Box,
-  Button,
-  Center,
-  Container,
-  Grid,
-  Loader,
-  Tabs,
+    AspectRatio,
+    Box,
+    Button,
+    Center,
+    Container,
+    Grid,
+    Loader,
+    Tabs,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconFileDescription, IconMessage } from '@tabler/icons';
+import { IconFileDescription, IconMessage } from '@tabler/icons-react';
 import { CourseUserStatus, LessonType, UserRole } from '@utils/enums';
 import lazyWithRetry from '@utils/lazyImportWithReload';
 import RoutePath from '@utils/routeConstants';
 import errorType from '@utils/services/axiosError';
 import {
-  useCourseDescription,
-  useGetCourseLesson,
+    useCourseDescription,
+    useGetCourseLesson,
 } from '@utils/services/courseService';
 import { useWatchHistory } from '@utils/services/watchHistory';
 import { AxiosError } from 'axios';

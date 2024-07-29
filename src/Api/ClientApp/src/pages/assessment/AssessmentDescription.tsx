@@ -2,41 +2,41 @@ import TextViewer from '@components/Ui/RichTextViewer';
 import UserShortProfile from '@components/UserShortProfile';
 import useAuth from '@hooks/useAuth';
 import {
-  Badge,
-  Box,
-  Button,
-  Container,
-  Flex,
-  Grid,
-  Group,
-  List,
-  Modal,
-  Paper,
-  ScrollArea,
-  Text,
-  Textarea,
-  Title,
+    Badge,
+    Box,
+    Button,
+    Container,
+    Flex,
+    Grid,
+    Group,
+    List,
+    Modal,
+    Paper,
+    ScrollArea,
+    Text,
+    Textarea,
+    Title,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import {
-  IconArrowForward,
-  IconCalendar,
-  IconCheck,
-  IconClockHour10,
-  IconHelp,
-  IconMilitaryAward,
-  IconRepeat,
-  IconX,
-} from '@tabler/icons';
+    IconArrowForward,
+    IconCalendar,
+    IconCheck,
+    IconClockHour10,
+    IconHelp,
+    IconMilitaryAward,
+    IconRepeat,
+    IconX,
+} from '@tabler/icons-react';
 import { DATE_FORMAT } from '@utils/constants';
 import { AssessmentStatus, SkillAssessmentRule, UserRole } from '@utils/enums';
 import RoutePath from '@utils/routeConstants';
 import {
-  IResponseEligibilityCreation,
-  useGetSingleAssessment,
-  useUpdateAssessmentStatus,
+    IResponseEligibilityCreation,
+    useGetSingleAssessment,
+    useUpdateAssessmentStatus,
 } from '@utils/services/assessmentService';
 import errorType from '@utils/services/axiosError';
 import { t } from 'i18next';

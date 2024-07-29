@@ -1,18 +1,18 @@
 import {
-  AspectRatio,
-  Badge,
-  Box,
-  Button,
-  Center,
-  Container,
-  Group,
-  Image,
-  List,
-  Text,
-  ThemeIcon,
-  Title,
+    AspectRatio,
+    Badge,
+    Box,
+    Button,
+    Center,
+    Container,
+    Group,
+    Image,
+    List,
+    Text,
+    ThemeIcon,
+    Title,
 } from '@mantine/core';
-import { IconCheck } from '@tabler/icons';
+import { IconCheck } from '@tabler/icons-react';
 import RoutePath from '@utils/routeConstants';
 import { Link } from 'react-router-dom';
 import classes from './styles/session.module.css';

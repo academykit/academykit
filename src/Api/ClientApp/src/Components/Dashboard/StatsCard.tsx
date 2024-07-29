@@ -1,21 +1,21 @@
 import { Group, Paper, Text } from '@mantine/core';
 import {
-  IconBook2,
-  IconBooks,
-  IconBrandZoom,
-  IconCertificate,
-  IconFile,
-  IconFileCheck,
-  IconPencil,
-  IconPlayerPlay,
-  IconSchool,
-  IconUserCheck,
-  IconUserCircle,
-  IconUsers,
-} from '@tabler/icons';
+    IconBook2,
+    IconBooks,
+    IconBrandZoom,
+    IconCertificate,
+    IconFile,
+    IconFileCheck,
+    IconPencil,
+    IconPlayerPlay,
+    IconSchool,
+    IconUserCheck,
+    IconUserCircle,
+    IconUsers,
+} from '@tabler/icons-react';
 import {
-  DashboardStats,
-  DashboardStatsData,
+    DashboardStats,
+    DashboardStatsData,
 } from '@utils/services/dashboardService';
 
 const icons = {

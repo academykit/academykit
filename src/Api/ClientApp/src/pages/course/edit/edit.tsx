@@ -7,22 +7,22 @@ import useAuth from '@hooks/useAuth';
 import useCustomForm from '@hooks/useCustomForm';
 import useFormErrorHooks from '@hooks/useFormErrorHooks';
 import {
-  Accordion,
-  ActionIcon,
-  Box,
-  Button,
-  Checkbox,
-  Flex,
-  Group,
-  Loader,
-  Select,
-  Text,
+    Accordion,
+    ActionIcon,
+    Box,
+    Button,
+    Checkbox,
+    Flex,
+    Group,
+    Loader,
+    Select,
+    Text,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { createFormContext, yupResolver } from '@mantine/form';
 import { useScrollIntoView } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { IconPlus, IconTrash } from '@tabler/icons';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { TrainingEligibilityEnum } from '@utils/enums';
 import queryStringGenerator from '@utils/queryStringGenerator';
 import RoutePath from '@utils/routeConstants';
@@ -30,9 +30,9 @@ import { useDepartmentSetting } from '@utils/services/adminService';
 import { useAssessments } from '@utils/services/assessmentService';
 import errorType from '@utils/services/axiosError';
 import {
-  useCourse,
-  useCourseDescription,
-  useUpdateCourse,
+    useCourse,
+    useCourseDescription,
+    useUpdateCourse,
 } from '@utils/services/courseService';
 import { useAddGroup, useGroups } from '@utils/services/groupService';
 import { useLevels } from '@utils/services/levelService';

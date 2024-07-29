@@ -34,21 +34,19 @@ export const useLogin = () => {
 };
 
 export const useLogout = () => {
-  return useMutation(
-    [api.auth.logout],
-    () => {
+  return useMutation({
+    mutationKey: [api.auth.logout],
+    mutationFn: () => {
       return httpClient.post(api.auth.logout, {
         token: localStorage.getItem(REFRESH_TOKEN_STORAGE),
       });
     },
-    {
-      onSuccess: () => {
-        localStorage.removeItem(TOKEN_STORAGE);
-        localStorage.removeItem(REFRESH_TOKEN_STORAGE);
-        localStorage.removeItem('id');
-      },
-    }
-  );
+    onSuccess: () => {
+      localStorage.removeItem(TOKEN_STORAGE);
+      localStorage.removeItem(REFRESH_TOKEN_STORAGE);
+      localStorage.removeItem('id');
+    },
+  });
 };
 
 export const useReAuth = () => {

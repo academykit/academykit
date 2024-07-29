@@ -1,6 +1,11 @@
 import useAuth from '@hooks/useAuth';
 import { Avatar, Box, Divider, Group, Menu, Text } from '@mantine/core';
-import { IconLock, IconLogout, IconPencil, IconUser } from '@tabler/icons';
+import {
+  IconLock,
+  IconLogout,
+  IconPencil,
+  IconUser,
+} from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import { getInitials } from '@utils/getInitialName';
 import { IUser } from '@utils/services/types';

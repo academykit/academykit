@@ -1,38 +1,38 @@
 import DeleteModal from '@components/Ui/DeleteModal';
 import useAuth from '@hooks/useAuth';
 import {
-  Anchor,
-  AspectRatio,
-  Badge,
-  Box,
-  Button,
-  Card,
-  Center,
-  Flex,
-  Group,
-  Image,
-  Menu,
-  Text,
-  useMantineTheme,
+    Anchor,
+    AspectRatio,
+    Badge,
+    Box,
+    Button,
+    Card,
+    Center,
+    Flex,
+    Group,
+    Image,
+    Menu,
+    Text,
+    useMantineTheme,
 } from '@mantine/core';
 import { useMediaQuery, useToggle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import {
-  IconCalendar,
-  IconChevronRight,
-  IconDotsVertical,
-  IconGraph,
-  IconSettings,
-  IconTrash,
-  IconUsers,
-} from '@tabler/icons';
+    IconCalendar,
+    IconChevronRight,
+    IconDotsVertical,
+    IconGraph,
+    IconSettings,
+    IconTrash,
+    IconUsers,
+} from '@tabler/icons-react';
 import { DATE_FORMAT, color } from '@utils/constants';
 import {
-  CourseLanguage,
-  CourseStatus,
-  CourseUserStatus,
-  CourseUserStatusValue,
-  UserRole,
+    CourseLanguage,
+    CourseStatus,
+    CourseUserStatus,
+    CourseUserStatusValue,
+    UserRole,
 } from '@utils/enums';
 import getCourseOgImageUrl from '@utils/getCourseOGImage';
 import RoutePath from '@utils/routeConstants';

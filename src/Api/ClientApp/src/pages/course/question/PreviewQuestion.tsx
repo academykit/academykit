@@ -1,18 +1,18 @@
 import Breadcrumb from '@components/Ui/BreadCrumb';
 import { Box, Button, Flex, Loader, Paper, Text, Title } from '@mantine/core';
-import { IconChevronLeft } from '@tabler/icons';
+import { IconChevronLeft } from '@tabler/icons-react';
 import { LessonType } from '@utils/enums';
 import { useQuestionReorder } from '@utils/services/courseService';
 import {
-  QuestionSetQuestions,
-  useQuestionSetQuestions,
+    QuestionSetQuestions,
+    useQuestionSetQuestions,
 } from '@utils/services/questionService';
 import { useEffect, useState } from 'react';
 import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-  Droppable,
+    DragDropContext,
+    Draggable,
+    DropResult,
+    Droppable,
 } from 'react-beautiful-dnd';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';

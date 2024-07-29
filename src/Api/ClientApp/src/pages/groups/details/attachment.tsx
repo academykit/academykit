@@ -18,7 +18,7 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
-import { IconDownload, IconTrash } from '@tabler/icons';
+import { IconDownload, IconTrash } from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import errorType from '@utils/services/axiosError';
 import { getFileUrl } from '@utils/services/fileService';

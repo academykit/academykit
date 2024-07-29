@@ -1,6 +1,6 @@
 import { ActionIcon, Group, Text } from '@mantine/core';
 import { ToolbarSlot } from '@react-pdf-viewer/toolbar';
-import { IconZoomIn, IconZoomOut } from '@tabler/icons';
+import { IconZoomIn, IconZoomOut } from '@tabler/icons-react';
 
 const Zoom = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {
   return (

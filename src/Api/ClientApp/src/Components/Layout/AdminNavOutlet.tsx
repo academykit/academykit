@@ -1,7 +1,7 @@
 import useAuth from '@hooks/useAuth';
 import { ActionIcon, Loader, Menu, ScrollArea, Tabs } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconDotsVertical, IconSettings, IconUser } from '@tabler/icons';
+import { IconDotsVertical, IconSettings, IconUser } from '@tabler/icons-react';
 import { UserRole } from '@utils/enums';
 import { getCurrentGroup, routeGroupAdmin } from '@utils/routeGroups';
 import { t } from 'i18next';
