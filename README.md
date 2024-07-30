@@ -11,6 +11,35 @@
 
 ## Database Setup
 
+1. Login into mysql using terminal(CLI)
+
+```bash
+mysql -u root -p
+```
+
+2. Create a Database
+
+```bash
+CREATE DATABASE academykit;
+SHOW DATABASES;
+```
+
+3 Create a new User
+
+```bash
+CREATE USER 'dev'@'localhost' IDENTIFIED BY '4ubiY2A163@f';
+```
+
+4.Grant privileges to the new user
+
+```bash
+GRANT ALL PRIVILEGES ON academykit.* TO 'dev'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+5 Exit the MySQL CLI
+EXIT;
+
 To setup database on development run below sql statements on the database
 
 1. `/db/data/seed.sql`
