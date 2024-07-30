@@ -1,14 +1,16 @@
 # Contributing
+
 Thank you for considering contributing to AcademyKit! We appreciate your interest and effort in helping us improve. Please follow these guidelines to ensure a smooth contribution process.
 
 # How to contribute to AcademyKit?
+
 ## Submitting Issues
+
 If you encounter a bug, have a feature request, or want to propose a change, please open an issue to report it. When creating an issue, provide as much detail as possible, including:
 
 - Steps to reproduce (if it's a bug)
 - Expected behavior
 - Any relevant screenshots or code snippets
-
 
 ## Code Contribution
 
@@ -19,7 +21,7 @@ We welcome pull requests that fix bugs, add new features, or improve existing fu
 3. Commit Your Changes: Write clear and concise commit messages using the format: [Type]: [Description] (e.g., Fix: Resolve issue with user login).
 4. Test your changes thoroughly.
 5. Push your changes: Push your changes to your branch.
-5. Submit a pull request: Open a pull request to the main branch of the main repository. Include a detailed description of your changes, referencing any related issues.
+6. Submit a pull request: Open a pull request to the main branch of the main repository. Include a detailed description of your changes, referencing any related issues.
 
 ## Contact
 

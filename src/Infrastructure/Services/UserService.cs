@@ -895,7 +895,6 @@ namespace AcademyKit.Infrastructure.Services
             var user = await GetUserByEmailAsync(oldEmail).ConfigureAwait(false);
             if (user == null)
             {
-                _logger.LogWarning("User with email : {email} not found.", oldEmail);
                 throw new ForbiddenException(
                     _localizer.GetString("UserNotFoundWithEmail") + " " + newEmail
                 );
@@ -953,7 +952,6 @@ namespace AcademyKit.Infrastructure.Services
             var user = await GetUserByEmailAsync(oldEmail).ConfigureAwait(false);
             if (user == null)
             {
-                _logger.LogWarning("User with email : {email} not found.", oldEmail);
                 throw new ForbiddenException(
                     _localizer.GetString("UserNotFoundWithEmail") + " " + newEmail
                 );
