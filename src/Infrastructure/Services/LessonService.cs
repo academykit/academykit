@@ -132,7 +132,7 @@
             {
                 _logger.LogWarning(
                     "Training with identity: {identity} not found for user with :{id}.",
-                    identity,
+                    identity.SanitizeForLogger(),
                     currentUserId
                 );
                 throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
@@ -156,7 +156,7 @@
                 {
                     _logger.LogWarning(
                         "Lesson with identity : {identity} and training with id: {courseId} not found for user with :{id}.",
-                        identity,
+                        identity.SanitizeForLogger(),
                         course.Id,
                         currentUserId
                     );
@@ -422,7 +422,7 @@
                 {
                     _logger.LogWarning(
                         "Training with identity: {identity} not found for user with :{id}.",
-                        courseIdentity,
+                        courseIdentity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
@@ -442,7 +442,7 @@
                 {
                     _logger.LogWarning(
                         "Section with identity: {identity} not found for user with id:{id} and training with id: {courseId}.",
-                        courseIdentity,
+                        courseIdentity.SanitizeForLogger(),
                         currentUserId,
                         course.Id
                     );
@@ -578,7 +578,7 @@
                 {
                     _logger.LogWarning(
                         "Training with identity: {identity} not found for user with :{id}.",
-                        identity,
+                        identity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
@@ -605,7 +605,7 @@
                 {
                     _logger.LogWarning(
                         "Section with identity: {identity} not found for user with id:{id} and training with id: {courseId}.",
-                        identity,
+                        identity.SanitizeForLogger(),
                         currentUserId,
                         course.Id
                     );
@@ -624,7 +624,7 @@
                 {
                     _logger.LogWarning(
                         "Lesson with identity: {identity} not found for user with id: {id} and training with id: {courseId} and section with id: {sectionId}.",
-                        lessonIdentity,
+                        lessonIdentity.SanitizeForLogger(),
                         currentUserId,
                         course.Id,
                         section.Id
@@ -775,7 +775,7 @@
                     {
                         _logger.LogWarning(
                             "DeleteLessonAsync(): Training with identity : {identity} not found for user with id :{currentUserId}.",
-                            identity,
+                            identity.SanitizeForLogger(),
                             currentUserId
                         );
                         throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
@@ -792,7 +792,7 @@
                     {
                         _logger.LogWarning(
                             "DeleteLessonAsync(): Lesson with identity : {lessonIdentity} was not found for user with id : {userId} and having training with id : {courseId}.",
-                            lessonIdentity,
+                            lessonIdentity.SanitizeForLogger(),
                             currentUserId,
                             course.Id
                         );
@@ -1068,7 +1068,7 @@
                 {
                     _logger.LogWarning(
                         "Training with identity: {identity} not found for user with id :{id}.",
-                        identity,
+                        identity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
@@ -1087,7 +1087,7 @@
                 {
                     _logger.LogWarning(
                         "Lesson with identity : {identity} and training with id: {courseId} not found for user with :{id}.",
-                        identity,
+                        identity.SanitizeForLogger(),
                         course.Id,
                         currentUserId
                     );
@@ -1230,7 +1230,7 @@
             if (lesson == default)
             {
                 _logger.LogError(
-                    $"GetMeetingReportAsync: Lesson with identity : {identity} not found."
+                    $"GetMeetingReportAsync: Lesson with identity : {identity.SanitizeForLogger()} not found."
                 );
                 throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
             }
@@ -1253,7 +1253,7 @@
             if (reports == default)
             {
                 _logger.LogError(
-                    $"GetMeetingReportAsync : Meeting report of user with id {userId} not found."
+                    $"GetMeetingReportAsync : Meeting report of user with id {userId.SanitizeForLogger()} not found."
                 );
                 throw new EntityNotFoundException(_localizer.GetString("MeetingReportNotFound"));
             }
@@ -1301,7 +1301,7 @@
                 {
                     _logger.LogWarning(
                         "ReorderAsync(): Training with identity : {identity} not found for user with id :{userId}.",
-                        identity,
+                        identity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
@@ -1321,7 +1321,7 @@
                 {
                     _logger.LogWarning(
                         "ReorderAsync(): Section with identity : {identity} not found for training with id : {id} and user with id :{userId}.",
-                        model.SectionIdentity,
+                        model.SectionIdentity.SanitizeForLogger(),
                         course.Id,
                         currentUserId
                     );
@@ -1559,7 +1559,7 @@
             {
                 _logger.LogWarning(
                     "Training with identity: {identity} not found for user with :{id}.",
-                    identity,
+                    identity.SanitizeForLogger(),
                     currentUserId
                 );
                 throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
@@ -1580,7 +1580,7 @@
             {
                 _logger.LogWarning(
                     "Lesson with identity: {identity} not found for user with id: {id} and training with id: {courseId}",
-                    lessonIdentity,
+                    lessonIdentity.SanitizeForLogger(),
                     currentUserId,
                     course.Id
                 );
@@ -1620,7 +1620,7 @@
             {
                 _logger.LogWarning(
                     "Training with identity: {identity} not found for user with :{id}.",
-                    identity,
+                    identity.SanitizeForLogger(),
                     currentUserId
                 );
                 throw new EntityNotFoundException(_localizer.GetString("TrainingNotFound"));
@@ -1641,7 +1641,7 @@
             {
                 _logger.LogWarning(
                     "Lesson with identity: {identity} not found for user with id: {id} and training with id: {courseId}",
-                    lessonIdentity,
+                    lessonIdentity.SanitizeForLogger(),
                     currentUserId,
                     course.Id
                 );

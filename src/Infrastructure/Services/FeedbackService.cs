@@ -239,7 +239,7 @@
                 {
                     _logger.LogWarning(
                         "Lesson with identity: {identity} not found for user with id: {id}.",
-                        lessonIdentity,
+                        lessonIdentity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
@@ -404,7 +404,7 @@
                 {
                     _logger.LogWarning(
                         "Lesson with identity: {identity} not found for user with id: {id}.",
-                        lessonIdentity,
+                        lessonIdentity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
@@ -585,7 +585,7 @@
                 {
                     _logger.LogWarning(
                         "Lesson with identity: {identity} not found for user with id: {id}.",
-                        lessonIdentity,
+                        lessonIdentity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
@@ -830,7 +830,7 @@
             {
                 _logger.LogWarning(
                     "Lesson with identity: {identity} not found for user with id: {id}.",
-                    searchCriteria.LessonIdentity,
+                    searchCriteria.LessonIdentity.SanitizeForLogger(),
                     searchCriteria.CurrentUserId
                 );
                 throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));
@@ -1039,7 +1039,7 @@
             {
                 _logger.LogWarning(
                     "Lesson with identity: {identity} not found for user with id: {id}.",
-                    lessonIdentity,
+                    lessonIdentity.SanitizeForLogger(),
                     currentUserId
                 );
                 throw new EntityNotFoundException(_localizer.GetString("LessonNotFound"));

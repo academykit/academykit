@@ -83,7 +83,7 @@
                 {
                     _logger.LogWarning(
                         "Question set not found with identity: {identity}.",
-                        identity
+                        identity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
@@ -211,7 +211,10 @@
 
             if (questionSet == null)
             {
-                _logger.LogWarning("Question set not found with identity: {identity}.", identity);
+                _logger.LogWarning(
+                    "Question set not found with identity: {identity}.",
+                    identity.SanitizeForLogger()
+                );
                 throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
             }
 
@@ -381,7 +384,7 @@
                 {
                     _logger.LogWarning(
                         "Question set not found with identity: {identity} for user with id : {currentUserId}.",
-                        identity,
+                        identity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
@@ -391,7 +394,7 @@
                 {
                     _logger.LogWarning(
                         "Question set with identity: {identity} has not started yet for user with id : {currentUserId}.",
-                        identity,
+                        identity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new ForbiddenException(_localizer.GetString("QuestionSetNotStarted"));
@@ -401,7 +404,7 @@
                 {
                     _logger.LogWarning(
                         "Question set with identity: {identity} has ended for user with id : {currentUserId}.",
-                        identity,
+                        identity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new ForbiddenException(_localizer.GetString("QuestionSetEnded"));
@@ -702,7 +705,7 @@
                 {
                     _logger.LogWarning(
                         "Question set not found with identity: {identity} for user with id : {currentUserId}.",
-                        identity,
+                        identity.SanitizeForLogger(),
                         currentUserId
                     );
                     throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));

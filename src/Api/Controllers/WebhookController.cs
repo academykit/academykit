@@ -5,6 +5,7 @@
     using AcademyKit.Application.Common.Dtos;
     using AcademyKit.Application.Common.Interfaces;
     using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Infrastructure.Helpers;
     using Hangfire;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -80,7 +81,7 @@
             {
                 var reader = await stream.ReadToEndAsync();
                 var model = JsonConvert.DeserializeObject<ZoomPayLoadDto>(reader);
-                logger.LogInformation(model.Event);
+                logger.LogInformation(model.Event.SanitizeForLogger());
                 if (model.Event.Equals("endpoint.url_validation"))
                 {
                     var plainToken = model.Payload.PlainToken;

@@ -97,7 +97,7 @@
                 logger.LogWarning(
                     "{CurrentUser.Role} cannot create user with role {model.Role}.",
                     CurrentUser.Role,
-                    model.Role
+                    model.Role.ToString().SanitizeForLogger()
                 );
                 throw new ForbiddenException(
                     $"{CurrentUser.Role} cannot create user with role {model.Role}."

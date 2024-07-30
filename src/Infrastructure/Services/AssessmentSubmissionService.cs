@@ -11,6 +11,7 @@
     using AcademyKit.Domain.Entities;
     using AcademyKit.Domain.Enums;
     using AcademyKit.Infrastructure.Common;
+    using AcademyKit.Infrastructure.Helpers;
     using AcademyKit.Infrastructure.Localization;
     using LinqKit;
     using Microsoft.AspNetCore.Http;
@@ -48,7 +49,7 @@
             {
                 _logger.LogWarning(
                     "assessment not found with identity: {identity} for user with id : {currentUserId}.",
-                    identity,
+                    identity.SanitizeForLogger(),
                     currentUserId
                 );
                 throw new EntityNotFoundException(_localizer.GetString("AssessmentNotFound"));
@@ -231,7 +232,7 @@
                 {
                     _logger.LogWarning(
                         "Question set not found with identity: {identity}.",
-                        identity
+                        identity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(_localizer.GetString("AssessmentNotFound"));
                 }
@@ -351,7 +352,7 @@
                 {
                     _logger.LogWarning(
                         "Question set not found with identity: {identity}.",
-                        identity
+                        identity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(_localizer.GetString("AssessmentNotFound"));
                 }
@@ -495,7 +496,7 @@
                 {
                     _logger.LogWarning(
                         "Question set not found with identity: {identity}.",
-                        identity
+                        identity.SanitizeForLogger()
                     );
                     throw new EntityNotFoundException(_localizer.GetString("QuestionSetNotFound"));
                 }
