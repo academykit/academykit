@@ -16,7 +16,7 @@ SET SQL_SAFE_UPDATES = 1;
 
 -- Insert User data
 INSERT INTO Users (id, first_name, middle_name, last_name, address, email, mobile_number, created_by, created_on, updated_by, updated_on, STATUS, hash_password, ROLE)
-VALUES ('30fcd978-f256-4733-840f-759181bc5e63', 'Superadmin', NULL, 'User', 'ADDRESS', 'academykit@localhost.com', '1234567890', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', 1, '+gURQgHBT1zJz5AljZhAMyaNRFQBVorq5HIlEmhf+ZQ=:BBLvXedGXzdz0ZlypoKQxQ==', 1);
+VALUES ('30fcd978-f256-4733-840f-759181bc5e63', 'Superadmin', NULL, 'User', 'ADDRESS', 'academykit@localhost.com', '1234567890', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', 1, 'SKN7zJDnqOtL0+4zVwx68H3p12LoJw0kNZ06d1wRs28=:pbOoXC3dmcTXhib+l/nYuQ==', 1);
 
 -- Insert SMTPSetting data
 INSERT INTO SMTPSettings (Id, Mail_Port, Mail_Server, Password, Reply_To, Sender_Email, Sender_Name, User_Name, UseSSL, Created_By, Created_On, Updated_By, Updated_On)
