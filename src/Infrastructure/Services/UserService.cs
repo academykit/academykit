@@ -348,8 +348,7 @@ namespace AcademyKit.Infrastructure.Services
         /// Handle to get trainer
         /// </summary>
         /// <param name="currentUserId"> the current user id </param>
-        /// <param name="criteria"> the instance of <see cref="TeacherSearchCriteria"></see></param>
-        /// <returns> the list of <see cref="TrainerResponseModel"/></returns>
+        /// <param name="criteria"> the instance of <see cr            const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";/></returns>
         public async Task<IList<TrainerResponseModel>> GetTrainerAsync(
             Guid currentUserId,
             TeacherSearchCriteria criteria
@@ -696,18 +695,11 @@ namespace AcademyKit.Infrastructure.Services
         /// </summary>
         /// <param name="length"></param>
         /// <returns></returns>
-        public async Task<string> GenerateRandomPassword(int length)
-        {
-            Random random = new();
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            var password = new string(
-                Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray()
-            );
-            return await Task.FromResult(password.ToLower());
-        }
+        public async Task<string> GenerateRandomPassword(int length) =>
+            await PasswordGenerator.GenerateStrongPassword(length);
 
         /// <summary>
-        /// Handle to change user password
+        /// /// Handle to change user password
         /// </summary>
         /// <param name="model">the instance of <see cref="ChangePasswordRequestModel"/></param>
         /// <param name="currentUserId">the current logged in user</param>
@@ -716,7 +708,9 @@ namespace AcademyKit.Infrastructure.Services
         {
             var user = await GetAsync(currentUserId, includeProperties: false)
                 .ConfigureAwait(false);
+
             var currentPasswordMatched = VerifyPassword(user.HashPassword, model.CurrentPassword);
+
             if (!currentPasswordMatched)
             {
                 _logger.LogWarning(
@@ -728,6 +722,7 @@ namespace AcademyKit.Infrastructure.Services
 
             user.HashPassword = HashPassword(model.NewPassword);
             user.UpdatedOn = DateTime.UtcNow;
+
             _unitOfWork.GetRepository<User>().Update(user);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
