@@ -37,3 +37,10 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      - name: Deploy Image to CapRover
+        uses: caprover/deploy-from-github@v1.1.2
+        with:
+          server: "${{ secrets.CAPROVER_SERVER }}"
+          app: "${{ secrets.CAPROVER_APP_NAME }}"
+          token: "${{ secrets.CAPROVER_APP_TOKEN }}"
+          image: academykit/academy:latest
