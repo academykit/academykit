@@ -19,7 +19,7 @@ jobs:
           images: academykit/academy
           # generate Docker tags based on the following events/attributes
           tags: |
-            type=ref,event=branch
+            type=ref,event=branch,pattern=latest
             type=semver,pattern=v{{version}}
             type=semver,pattern=v{{major}}.{{minor}}
       - name: Set up Docker Buildx
