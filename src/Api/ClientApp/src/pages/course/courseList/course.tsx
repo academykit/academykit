@@ -3,7 +3,17 @@ import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import useAuth from '@hooks/useAuth';
-import { Box, Container, Flex, Group, Loader, Switch } from '@mantine/core';
+import {
+  Box,
+  Center,
+  Container,
+  Flex,
+  Group,
+  Loader,
+  rem,
+  SegmentedControl,
+} from '@mantine/core';
+import { IconList, IconTable } from '@tabler/icons-react';
 import { CourseUserStatus, UserRole } from '@utils/enums';
 import { useCourse } from '@utils/services/courseService';
 import { useState } from 'react';
@@ -17,7 +27,7 @@ const CoursePage = ({
   searchComponent,
 }: IWithSearchPagination) => {
   const { data, isLoading } = useCourse(searchParams);
-  const [showTable, setShowTable] = useState(false);
+  const [selectedView, setSelectedView] = useState('list');
   const auth = useAuth();
   const role = auth?.auth?.role ?? UserRole.Trainee;
   const { t } = useTranslation();
@@ -55,18 +65,34 @@ const CoursePage = ({
       </Container>
 
       <Group justify="flex-end" my={30}>
-        <Switch
-          checked={showTable}
-          onChange={() => setShowTable(!showTable)}
-          size="md"
-          label="Table Mode"
+        <SegmentedControl
+          value={selectedView}
+          onChange={setSelectedView}
+          data={[
+            {
+              value: 'list',
+              label: (
+                <Center style={{ gap: 10 }}>
+                  <IconList style={{ width: rem(16), height: rem(16) }} />
+                </Center>
+              ),
+            },
+            {
+              value: 'table',
+              label: (
+                <Center style={{ gap: 10 }}>
+                  <IconTable style={{ width: rem(16), height: rem(16) }} />
+                </Center>
+              ),
+            },
+          ]}
         />
       </Group>
 
       {data &&
         data?.items &&
         (data.totalCount >= 1 ? (
-          showTable ? (
+          selectedView === 'table' ? (
             <TrainingTable courses={data?.items} search={searchParams} />
           ) : (
             <CourseList
@@ -79,7 +105,9 @@ const CoursePage = ({
           <Box>{t('no_trainings_found')}</Box>
         ))}
       {isLoading && <Flex justify={'center'}>{<Loader mx={'auto'} />}</Flex>}
-      {showTable && data && pagination(data.totalPage, data.items.length)}
+      {selectedView === 'table' &&
+        data &&
+        pagination(data.totalPage, data.items.length)}
     </Container>
   );
 };
