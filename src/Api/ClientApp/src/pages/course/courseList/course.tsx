@@ -1,10 +1,12 @@
+import TrainingTable from '@components/Course/TrainingTable';
 import withSearchPagination, {
   IWithSearchPagination,
 } from '@hoc/useSearchPagination';
 import useAuth from '@hooks/useAuth';
-import { Box, Container, Flex, Loader } from '@mantine/core';
+import { Box, Container, Flex, Group, Loader, Switch } from '@mantine/core';
 import { CourseUserStatus, UserRole } from '@utils/enums';
 import { useCourse } from '@utils/services/courseService';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CourseList from './component/List';
 
@@ -15,6 +17,7 @@ const CoursePage = ({
   searchComponent,
 }: IWithSearchPagination) => {
   const { data, isLoading } = useCourse(searchParams);
+  const [showTable, setShowTable] = useState(false);
   const auth = useAuth();
   const role = auth?.auth?.role ?? UserRole.Trainee;
   const { t } = useTranslation();
@@ -37,6 +40,7 @@ const CoursePage = ({
       label: t('trainer'),
     },
   ];
+
   return (
     <Container fluid>
       <Container fluid>
@@ -49,15 +53,33 @@ const CoursePage = ({
           )}
         </Flex>
       </Container>
+
+      <Group justify="flex-end" my={30}>
+        <Switch
+          checked={showTable}
+          onChange={() => setShowTable(!showTable)}
+          size="md"
+          label="Table Mode"
+        />
+      </Group>
+
       {data &&
         data?.items &&
         (data.totalCount >= 1 ? (
-          <CourseList role={role} courses={data.items} search={searchParams} />
+          showTable ? (
+            <TrainingTable courses={data?.items} search={searchParams} />
+          ) : (
+            <CourseList
+              role={role}
+              courses={data.items}
+              search={searchParams}
+            />
+          )
         ) : (
           <Box>{t('no_trainings_found')}</Box>
         ))}
       {isLoading && <Flex justify={'center'}>{<Loader mx={'auto'} />}</Flex>}
-      {data && pagination(data.totalPage, data.items.length)}
+      {showTable && data && pagination(data.totalPage, data.items.length)}
     </Container>
   );
 };
