@@ -100,7 +100,8 @@ const AssessmentList = ({
           ))}
       </ScrollArea>
 
-      {assessmentData.data &&
+      {selectedView === "table" &&
+        assessmentData.data &&
         pagination(
           assessmentData.data?.totalPage,
           assessmentData.data?.items.length
