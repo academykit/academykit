@@ -2,10 +2,22 @@ import withSearchPagination, {
   IWithSearchPagination,
 } from "@hoc/useSearchPagination";
 import useAuth from "@hooks/useAuth";
-import { Flex, SimpleGrid } from "@mantine/core";
+import {
+  Box,
+  Center,
+  Flex,
+  Group,
+  rem,
+  ScrollArea,
+  SegmentedControl,
+  SimpleGrid,
+} from "@mantine/core";
+import { IconColumns, IconLayoutGrid } from "@tabler/icons-react";
 import { UserRole } from "@utils/enums";
 import { useAssessments } from "@utils/services/assessmentService";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import AssessmentTable from "./AssessmentTable";
 import AssessmentCard from "./component/AssessmentCard";
 
 const AssessmentList = ({
@@ -17,6 +29,7 @@ const AssessmentList = ({
   const { t } = useTranslation();
   const assessmentData = useAssessments(searchParams);
   const auth = useAuth();
+  const [selectedView, setSelectedView] = useState("list");
 
   return (
     <>
@@ -35,16 +48,57 @@ const AssessmentList = ({
           )}
       </Flex>
 
-      <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }}>
-        {assessmentData.data?.items.map((assessmentData) => (
-          <AssessmentCard
-            key={assessmentData.id}
-            data={assessmentData}
-            userRole={auth?.auth?.role as UserRole}
-            currentUser={(auth?.auth?.id as string) ?? ""}
-          />
-        ))}
-      </SimpleGrid>
+      <Group justify="flex-end" my={30}>
+        <SegmentedControl
+          value={selectedView}
+          onChange={setSelectedView}
+          data={[
+            {
+              value: "list",
+              label: (
+                <Center style={{ gap: 10 }}>
+                  <IconLayoutGrid style={{ width: rem(20), height: rem(20) }} />
+                </Center>
+              ),
+            },
+            {
+              value: "table",
+              label: (
+                <Center style={{ gap: 10 }}>
+                  <IconColumns style={{ width: rem(20), height: rem(20) }} />
+                </Center>
+              ),
+            },
+          ]}
+        />
+      </Group>
+
+      <ScrollArea>
+        {assessmentData &&
+          assessmentData?.data?.items &&
+          (assessmentData.data?.totalCount >= 1 ? (
+            selectedView === "table" ? (
+              <AssessmentTable
+                assessment={assessmentData.data.items}
+                userRole={auth?.auth?.role as UserRole}
+                currentUser={(auth?.auth?.id as string) ?? ""}
+              />
+            ) : (
+              <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }}>
+                {assessmentData.data?.items.map((assessmentData) => (
+                  <AssessmentCard
+                    key={assessmentData.id}
+                    data={assessmentData}
+                    userRole={auth?.auth?.role as UserRole}
+                    currentUser={(auth?.auth?.id as string) ?? ""}
+                  />
+                ))}
+              </SimpleGrid>
+            )
+          ) : (
+            <Box>{t("no_trainings_found")}</Box>
+          ))}
+      </ScrollArea>
 
       {assessmentData.data &&
         pagination(
